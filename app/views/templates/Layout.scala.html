@@ -1,0 +1,136 @@
+@*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import config.FrontendAppConfig
+@import views.html.helper.CSPNonce
+
+@this(
+  appConfig: FrontendAppConfig,
+  govukLayout: GovukLayout,
+  govukBackLink: GovukBackLink,
+  govukBreadcrumbs: GovukBreadcrumbs,
+  govukNotificationBanner: GovukNotificationBanner,
+  hmrcHead: HmrcHead,
+  hmrcStandardHeader: HmrcStandardHeader,
+  hmrcStandardFooter: HmrcStandardFooter,
+  hmrcLanguageSelect: HmrcLanguageSelect,
+  hmrcTimeoutDialog: HmrcTimeoutDialog,
+  hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
+  hmrcScripts: HmrcScripts,
+  betaBanner: StandardBetaBanner
+)
+
+@(pageTitle: String,
+  showBackLink: Boolean = true,
+  breadcrumbs: Option[List[(String, String)]] = None,
+  timeout: Boolean = true,
+  showSignOut: Boolean = true,
+  refresh: Option[Int] = None,
+  notificationBanner: Option[(String, String, String)] = None
+)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
+
+@head = {
+
+  @hmrcHead(
+    headBlock = if(timeout) { Some(
+      hmrcTimeoutDialog(TimeoutDialog(
+        timeout             = None,
+        countdown           = None,
+        keepAliveUrl        = None,
+        keepAliveButtonText = Some(messages("timeout.keepAlive")),
+        signOutUrl          = None,
+        timeoutUrl          = None,
+        signOutButtonText   = Some(messages("timeout.signOut")),
+        title               = Some(messages("timeout.title")),
+        message             = Some(messages("timeout.message"))
+      )))
+    } else None
+  )
+
+  <link href="@routes.Assets.versioned("stylesheets/application.css")"
+    media="all"
+    rel="stylesheet"
+    type="text/css"
+    @CSPNonce.attr />
+    @refresh.map { i =>
+      <meta http-equiv="refresh" content="@i">
+  }
+}
+
+@additionalScripts = {
+  <script src='@controllers.routes.Assets.versioned("javascripts/application.min.js")' @CSPNonce.attr></script>
+  <script @{CSPNonce.attr} src="@routes.Assets.versioned("javascripts/print.js")"></script>
+}
+
+@beforeContent = {
+
+  @if(showBackLink) {
+    @govukBackLink(BackLinkViewModel(href = "#").withCssClass("js-visible"))
+  }
+
+@if(breadcrumbs.isDefined) {
+  @govukBreadcrumbs(
+    Breadcrumbs(
+      items = breadcrumbs.get.map { breadcrumb =>
+        BreadcrumbsItem(content = Text(breadcrumb._1), href = Some(breadcrumb._2))
+      }
+    )
+  )
+}
+
+  @if(notificationBanner.isDefined) {
+    @govukNotificationBanner(NotificationBanner(
+      content = HtmlContent(
+          s"""
+          | <h3 class="govuk-notification-banner__heading">
+          |   ${messages(notificationBanner.get._2)}
+          | </h3>
+          | <p class="govuk-body">${messages(notificationBanner.get._3)}</p>
+          |""".stripMargin
+      ),
+      disableAutoFocus = Some(true),
+      title = Text(notificationBanner.get._1),
+      titleHeadingLevel = Some(3),
+      role = Some("alert"),
+      classes = "govuk-!-margin-top-7 govuk-!-margin-bottom-2"
+    ))
+  }
+}
+
+@content = {
+  <div data-testid="main-content">
+    @contentBlock
+  </div>
+
+  <div class="govuk-!-margin-top-8">
+    @hmrcReportTechnicalIssueHelper()
+  </div>
+}
+
+@govukLayout(
+  pageTitle   = Some(pageTitle),
+  headBlock   = Some(head),
+  headerBlock = Some(hmrcStandardHeader(
+    serviceUrl  = None,
+    signOutUrl  = None,
+    phaseBanner = None
+  )),
+  beforeContentBlock = Some(beforeContent),
+  footerBlock        = Some(hmrcStandardFooter()),
+  scriptsBlock       = Some(hmrcScripts(
+    scriptsBlock = Some(additionalScripts)
+  ))
+)(content)
