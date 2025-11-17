@@ -30,7 +30,7 @@ trait HtmlHelper {
 
   def title(html: Html): String = Jsoup.parse(html.body).title()
 
-  def h1(html: Html): String = mainContent(html).getElementsByTag("h1").first().text()
+  def h1(html: Html): String       = mainContent(html).getElementsByTag("h1").first().text()
   def h2(html: Html): List[String] =
     mainContent(html).getElementsByTag("h2").iterator().asScala.map(_.text()).toList
 
@@ -50,8 +50,8 @@ trait HtmlHelper {
     mainContent(html).getElementsByTag("span").iterator().asScala.map(_.text()).toList
 
   def panel(html: Html): Panel = {
-    val parent = mainContent(html).getElementsByClass("govuk-panel").first()
-    val title = parent.getElementsByClass("govuk-panel__title").first()
+    val parent    = mainContent(html).getElementsByClass("govuk-panel").first()
+    val title     = parent.getElementsByClass("govuk-panel__title").first()
     val maybeBody = parent.getElementsByClass("govuk-panel__body").iterator().asScala.toList.headOption
     Panel(title, maybeBody)
   }

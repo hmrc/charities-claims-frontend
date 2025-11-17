@@ -57,7 +57,7 @@ abstract class BaseSpec
     with Generators {
 
   implicit val actorSystem: ActorSystem = ActorSystem("unit-tests")
-  implicit val mat: Materializer = Materializer.createMaterializer(actorSystem)
+  implicit val mat: Materializer        = Materializer.createMaterializer(actorSystem)
 
   override implicit val patienceConfig: PatienceConfig =
     PatienceConfig(timeout = scaled(Span(1000, Millis)), interval = scaled(Span(50, Millis)))
@@ -66,7 +66,7 @@ abstract class BaseSpec
     new GuiceApplicationBuilder()
       .configure(
         "auditing.enabled" -> false,
-        "metric.enabled" -> false
+        "metric.enabled"   -> false
       )
 
   implicit def createMessages(implicit app: Application): Messages =
@@ -74,5 +74,5 @@ abstract class BaseSpec
 
   protected def messages(key: String)(implicit m: Messages): String = m(key)
 
-  protected def messages(key: String, args: String*)(implicit m: Messages): String = m(key, args *)
+  protected def messages(key: String, args: String*)(implicit m: Messages): String = m(key, args*)
 }

@@ -17,9 +17,9 @@
 package repositories
 
 import uk.gov.hmrc.mongo.{MongoComponent, TimestampSupport}
-import com.google.inject.{ImplementedBy, Singleton, Inject}
+import com.google.inject.{ImplementedBy, Inject, Singleton}
 import config.FrontendAppConfig
-import uk.gov.hmrc.mongo.cache.{MongoCacheRepository, CacheIdType, DataKey}
+import uk.gov.hmrc.mongo.cache.{CacheIdType, DataKey, MongoCacheRepository}
 import uk.gov.hmrc.http.HeaderCarrier
 import models.SessionData
 import scala.util.Success
@@ -46,24 +46,20 @@ trait SessionCache {
     get()
       .flatMap {
         case Some(sessionData) =>
-          update(sessionData).andThen {
-            case Success(updatedSessionData) =>
-              if sessionData == updatedSessionData 
-              then Future.successful(())
-              else store(updatedSessionData)
+          update(sessionData).andThen { case Success(updatedSessionData) =>
+            if sessionData == updatedSessionData
+            then Future.successful(())
+            else store(updatedSessionData)
           }
 
         case None =>
           if forceSessionCreation then
             update(SessionData())
-            .flatMap {
-              updatedSessionData =>
+              .flatMap { updatedSessionData =>
                 store(updatedSessionData)
-                .map(_ => updatedSessionData)
-            }
-            
-          else
-            Future.failed(new Exception("no session found in mongodb"))
+                  .map(_ => updatedSessionData)
+              }
+          else Future.failed(new Exception("no session found in mongodb"))
       }
 
 }
@@ -100,13 +96,13 @@ class DefaultSessionCache @Inject() (
   final def get()(implicit
     hc: HeaderCarrier
   ): Future[Option[SessionData]] =
-      super.get[SessionData](hc)(sessionDataKey)
+    super.get[SessionData](hc)(sessionDataKey)
 
   final def store(
     sessionData: SessionData
   )(implicit hc: HeaderCarrier): Future[Unit] =
-      super
-        .put(hc)(sessionDataKey, sessionData)
-        .map(_ => ())
+    super
+      .put(hc)(sessionDataKey, sessionData)
+      .map(_ => ())
 
 }

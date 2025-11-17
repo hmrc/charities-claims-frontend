@@ -20,7 +20,7 @@ import play.api.libs.json.Format
 import play.api.libs.json.Json
 
 final case class SessionData(
-    sectionOneAnswers: Option[SectionOneAnswers] = None
+  sectionOneAnswers: Option[SectionOneAnswers] = None
 )
 
 object SessionData {

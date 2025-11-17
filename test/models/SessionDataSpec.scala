@@ -23,7 +23,7 @@ class SessionDataSpec extends BaseSpec {
 
   "SessionData" - {
     "be serializable and deserializable" in {
-      val sessionData = SessionData(
+      val sessionData             = SessionData(
         sectionOneAnswers = Some(
           SectionOneAnswers(
             claimingGiftAid = Some(true),
@@ -33,7 +33,7 @@ class SessionDataSpec extends BaseSpec {
           )
         )
       )
-      val json = Json.toJson(sessionData)
+      val json                    = Json.toJson(sessionData)
       val deserializedSessionData = json.as[SessionData]
       deserializedSessionData must be(sessionData)
     }
