@@ -19,7 +19,7 @@ package viewmodels
 package object govuk {
 
   object all
-    extends BackLinkFluency
+      extends BackLinkFluency
       with ButtonFluency
       with CheckboxFluency
       with DateFluency

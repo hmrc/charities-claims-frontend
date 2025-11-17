@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package views
+package models
 
-import play.api.test.FakeRequest
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import util.BaseSpec
+import play.api.libs.json.Format
+import play.api.libs.json.Json
 
-trait ViewSpec extends BaseSpec with ScalaCheckPropertyChecks with HtmlHelper {
+final case class SectionOneAnswers(
+  claimingGiftAid: Option[Boolean] = None,
+  claimingTaxDeducted: Option[Boolean] = None,
+  claimingUnderGasds: Option[Boolean] = None,
+  claimReferenceNumber: Option[String] = None
+)
 
-  implicit val request: FakeRequest[?] = FakeRequest("GET", "/test")
+object SectionOneAnswers {
+  given Format[SectionOneAnswers] = Json.format[SectionOneAnswers]
 }

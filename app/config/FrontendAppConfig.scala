@@ -18,8 +18,10 @@ package config
 
 import com.google.inject.{Inject, Singleton}
 import play.api.Configuration
+import scala.concurrent.duration.Duration
 
 @Singleton
 class FrontendAppConfig @Inject()(config: Configuration) { self =>
   val appName: String = config.get[String]("appName")
+  val mongoDbTTL: Duration = config.get[Duration]("mongodb.ttl")
 }
