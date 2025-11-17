@@ -18,6 +18,7 @@ package viewmodels.govuk
 
 import play.api.data.Field
 import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.Aliases.Empty
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.fieldset.{Fieldset, Legend}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
@@ -60,6 +61,14 @@ trait RadiosFluency {
       yesNo(
         field = field,
         fieldset = FieldsetViewModel(legend)
+      )
+
+    def yesNo(
+      field: Field
+    )(implicit messages: Messages): Radios =
+      yesNo(
+        field = field,
+        fieldset = FieldsetViewModel(Legend(Empty))
       )
 
     def yesNo(
