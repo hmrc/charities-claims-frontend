@@ -9,4 +9,6 @@ POST        /claiming-tax-relief                                                
 
 GET         /claiming-Gift-Aid-Small-Donations                                                                 controllers.ClaimingGiftAidSmallDonationsController.onPageLoad()
 POST        /claiming-Gift-Aid-Small-Donations                                                                 controllers.ClaimingGiftAidSmallDonationsController.onSubmit()
+GET         /claim-reference-number-check                                                                      controllers.ClaimReferenceNumberCheckController.onPageLoad()
+POST        /claim-reference-number-check                                                                      controllers.ClaimReferenceNumberCheckController.onSubmit()
 
