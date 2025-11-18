@@ -23,7 +23,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton
-)(implicit config: FrontendAppConfig)
+)(using config: FrontendAppConfig)
 
 @(form: Form[?])(implicit request: Request[?], messages: Messages)
 
