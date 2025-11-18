@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,33 @@
 
 package controllers
 
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import views.html.IndexView
+import com.google.inject.Inject
+import forms.YesNoFormProvider
+import play.api.data.Form
 import play.api.i18n.I18nSupport
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.ClaimingOtherIncomeView
 
-import javax.inject.Inject
-
-class IndexController @Inject() (
+class ClaimingOtherIncomeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: IndexView
+  view: ClaimingOtherIncomeView,
+  formProvider: YesNoFormProvider
 ) extends FrontendBaseController
     with I18nSupport {
 
+  val form: Form[Boolean] = formProvider("claimingOtherIncome.error.required")
+
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(view())
+    Ok(view(form))
+  }
+
+  def onSubmit(): Action[AnyContent] = Action { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => BadRequest(view(formWithErrors)),
+        _ => Ok(view(form))
+      )
   }
 }
