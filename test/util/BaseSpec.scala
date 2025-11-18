@@ -39,18 +39,21 @@ import org.apache.pekko.stream.Materializer
 import generators.Generators
 import org.apache.pekko.actor.ActorSystem
 import play.api.i18n.{Messages, MessagesApi}
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject.guice.GuiceApplicationBuilder
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, OptionValues}
 import play.api.Application
 import org.scalatest.time.{Millis, Span}
+import org.scalamock.scalatest.MockFactory
+import config.FrontendAppConfig
+import play.api.Configuration
+import com.typesafe.config.ConfigFactory
 
 abstract class BaseSpec
     extends AnyFreeSpec
     with Matchers
     with ScalaFutures
-    with MockitoSugar
+    with MockFactory
     with BeforeAndAfterEach
     with BeforeAndAfterAll
     with OptionValues
@@ -75,4 +78,22 @@ abstract class BaseSpec
   protected def messages(key: String)(implicit m: Messages): String = m(key)
 
   protected def messages(key: String, args: String*)(implicit m: Messages): String = m(key, args*)
+
+  protected val testFrontendAppConfig = new FrontendAppConfig(
+    Configuration(
+      ConfigFactory.parseString(
+        """
+          | appName = foo-bar-frontend
+          | mongodb {
+          |  ttl = 15 minutes
+          | }
+          | urls {
+          |  login = "http://foo.com/login"
+          |  loginContinue = "http://foo.com/bar"
+          |  signOut = "http://foo.com/sign-out"
+          | }
+          |""".stripMargin
+      )
+    )
+  )
 }
