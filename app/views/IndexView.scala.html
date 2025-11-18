@@ -14,9 +14,11 @@
  * limitations under the License.
  *@
 
+@import config.FrontendAppConfig
+
 @this(
     layout: templates.Layout
-)
+)(implicit config: FrontendAppConfig)
 
 @()(implicit request: Request[?], messages: Messages)
 

@@ -16,33 +16,25 @@
 
 package controllers
 
-import com.google.inject.Inject
-import forms.YesNoFormProvider
-import play.api.data.Form
-import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import com.google.inject.Inject
+import controllers.actions.AuthorisedAction
+import play.api.i18n.I18nSupport
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.ClaimingOtherIncomeView
 
-class ClaimingOtherIncomeController @Inject() (
+class StartController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimingOtherIncomeView,
-  formProvider: YesNoFormProvider
+  authorisedAction: AuthorisedAction
 ) extends FrontendBaseController
     with I18nSupport {
 
-  val form: Form[Boolean] = formProvider("claimingOtherIncome.error.required")
+  val start: Action[AnyContent] =
+    Action(_ => Redirect(controllers.sectionone.routes.ClaimingGiftAidController.onPageLoad.url))
 
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(view(form))
-  }
+  val keepAlive: Action[AnyContent] =
+    authorisedAction(_ => Ok)
 
-  def onSubmit(): Action[AnyContent] = Action { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => BadRequest(view(formWithErrors)),
-        _ => Ok(view(form))
-      )
-  }
+  val timedOut: Action[AnyContent] =
+    Action(implicit request => Ok(routes.StartController.start.url))
+
 }

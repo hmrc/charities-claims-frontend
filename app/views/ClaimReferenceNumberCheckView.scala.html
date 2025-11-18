@@ -14,27 +14,31 @@
  * limitations under the License.
  *@
 
-@this(
-layout: templates.Layout,
-formHelper: FormWithCSRF,
-govukErrorSummary: GovukErrorSummary,
-govukRadios: GovukRadios,
-govukButton: GovukButton
-)
+@import controllers.sectionone.routes
+@import config.FrontendAppConfig
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukRadios: GovukRadios,
+    govukButton: GovukButton
+)(implicit config: FrontendAppConfig)
+
+@(form: Form[?])(implicit request: Request[?], messages: Messages)
 
 @layout(
-pageTitle    = titleNoForm(messages("claimReferenceNumberCheck.title")),
-showBackLink = false
+    pageTitle    = titleNoForm(messages("claimReferenceNumberCheck.title")),
+    showBackLink = false
 ) {
+
 @if(form.errors.nonEmpty) {
-@govukErrorSummary(ErrorSummaryViewModel(form))
+    @govukErrorSummary(ErrorSummaryViewModel(form))
 }
 
 <h1 class="govuk-heading-l">@messages("claimReferenceNumberCheck.heading")</h1>
 
-@formHelper(action = routes.ClaimReferenceNumberCheckController.onSubmit(), Symbol("autoComplete") -> "off") {
+@formHelper(action = routes.ClaimReferenceNumberCheckController.onSubmit, Symbol("autoComplete") -> "off") {
 
 @govukRadios(
 RadiosViewModel.yesNo(form("value"))

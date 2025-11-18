@@ -1,5 +1,5 @@
 @*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,123 +14,90 @@
  * limitations under the License.
  *@
 
+@import play.twirl.api.Html
+@import play.api.mvc.Request
+@import play.api.i18n.Messages
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.timeoutdialog.TimeoutDialog
+@import uk.gov.hmrc.hmrcfrontend.views.Aliases.UserResearchBanner
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.backlink.BackLink
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardPage
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.*
 @import config.FrontendAppConfig
-@import views.html.helper.CSPNonce
 
 @this(
-  appConfig: FrontendAppConfig,
-  govukLayout: GovukLayout,
-  govukBackLink: GovukBackLink,
-  govukBreadcrumbs: GovukBreadcrumbs,
-  govukNotificationBanner: GovukNotificationBanner,
-  hmrcHead: HmrcHead,
-  hmrcStandardHeader: HmrcStandardHeader,
-  hmrcStandardFooter: HmrcStandardFooter,
-  hmrcLanguageSelect: HmrcLanguageSelect,
-  hmrcTimeoutDialog: HmrcTimeoutDialog,
-  hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
-  hmrcScripts: HmrcScripts,
-  betaBanner: StandardBetaBanner
+        hmrcStandardPage: HmrcStandardPage,
+        hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
+        hmrcTimeoutDialog: uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcTimeoutDialog,
+        timeoutDialogConfig: uk.gov.hmrc.hmrcfrontend.config.TimeoutDialogConfig,
 )
 
-@(pageTitle: String,
+@(
+  pageTitle: String,
+  headBlock: Option[Html] = None,
+  timeOut: Boolean = true,
+  scriptsBlock: Option[Html] = None,
   showBackLink: Boolean = true,
-  breadcrumbs: Option[List[(String, String)]] = None,
-  timeout: Boolean = true,
-  showSignOut: Boolean = true,
-  refresh: Option[Int] = None,
-  notificationBanner: Option[(String, String, String)] = None
-)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
+  suppressSignOutLink: Boolean = false,
+  hasErrors: Boolean = false,
+  suppressLanguageToggle: Boolean = false
+)(contentBlock: Html)(implicit request: Request[?], messages: Messages, config: FrontendAppConfig)
 
-@head = {
-
-  @hmrcHead(
-    headBlock = if(timeout) { Some(
-      hmrcTimeoutDialog(TimeoutDialog(
-        timeout             = None,
-        countdown           = None,
-        keepAliveUrl        = None,
-        keepAliveButtonText = Some(messages("timeout.keepAlive")),
-        signOutUrl          = None,
-        timeoutUrl          = None,
-        signOutButtonText   = Some(messages("timeout.signOut")),
-        title               = Some(messages("timeout.title")),
-        message             = Some(messages("timeout.message"))
-      )))
-    } else None
-  )
-
-  <link href="@routes.Assets.versioned("stylesheets/application.css")"
-    media="all"
-    rel="stylesheet"
-    type="text/css"
-    @CSPNonce.attr />
-    @refresh.map { i =>
-      <meta http-equiv="refresh" content="@i">
-  }
+@signOutUrl = @{
+    if(suppressSignOutLink || request.session.get("authToken").isEmpty) {
+        None
+    } else {
+        Some(config.signOutUrl)
+    }
 }
 
-@additionalScripts = {
-  <script src='@controllers.routes.Assets.versioned("javascripts/application.min.js")' @CSPNonce.attr></script>
-  <script @{CSPNonce.attr} src="@routes.Assets.versioned("javascripts/print.js")"></script>
+@additionalScriptsBlock = {
+    @scriptsBlock
 }
 
-@beforeContent = {
+@additionalHeadBlock = {
+    <link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css" />
+    @headBlock.getOrElse {
+        @if(timeOut && signOutUrl.isDefined) {
+            @hmrcTimeoutDialog(TimeoutDialog(
+                    timeout = Some(timeoutDialogConfig.timeoutInSeconds),
+                    countdown = Some(timeoutDialogConfig.countdownInSeconds),
+                    message= Some(messages("session-expired-message")),
+                    keepAliveUrl= Some(s"${routes.StartController.keepAlive.url}"),
+                    signOutUrl= signOutUrl,
+                    timeoutUrl= Some(s"${routes.StartController.timedOut.url}"),
+                    keepAliveButtonText= Some(messages("session-expired.keep-alive-button-text")),
+                    signOutButtonText= Some(messages("session-expired.sign-out-button-text")),
+                    language = Some(messages.lang.code),
+                    synchroniseTabs = Some(true)
+                )
+            )
+        } else {
+            
+        }
+    }
+}
 
-  @if(showBackLink) {
-    @govukBackLink(BackLinkViewModel(href = "#").withCssClass("js-visible"))
-  }
-
-@if(breadcrumbs.isDefined) {
-  @govukBreadcrumbs(
-    Breadcrumbs(
-      items = breadcrumbs.get.map { breadcrumb =>
-        BreadcrumbsItem(content = Text(breadcrumb._1), href = Some(breadcrumb._2))
-      }
+@hmrcStandardPage(HmrcStandardPageParams(
+    serviceURLs = ServiceURLs(
+        serviceUrl = Some(config.homePageUrl),
+        signOutUrl = signOutUrl,
+        accessibilityStatementUrl = Some(config.accessibilityStatementUrl)
+    ),
+    banners = Banners(
+        userResearchBanner = Some(UserResearchBanner(url = config.researchUrl))
+    ),
+    pageTitle = Some(config.pageTitleWithServiceNameAndError(pageTitle, messages("service.title"), messages("service.title.error"), hasErrors)),
+    isWelshTranslationAvailable = !suppressLanguageToggle && config.enableLanguageSwitching,
+    backLink = { if(showBackLink) Some(BackLink(content = Text(messages("back.text")))) else None },
+    templateOverrides = TemplateOverrides(
+        additionalScriptsBlock = Some(additionalScriptsBlock),
+        additionalHeadBlock = Some(additionalHeadBlock)
     )
-  )
-}
-
-  @if(notificationBanner.isDefined) {
-    @govukNotificationBanner(NotificationBanner(
-      content = HtmlContent(
-          s"""
-          | <h3 class="govuk-notification-banner__heading">
-          |   ${messages(notificationBanner.get._2)}
-          | </h3>
-          | <p class="govuk-body">${messages(notificationBanner.get._3)}</p>
-          |""".stripMargin
-      ),
-      disableAutoFocus = Some(true),
-      title = Text(notificationBanner.get._1),
-      titleHeadingLevel = Some(3),
-      role = Some("alert"),
-      classes = "govuk-!-margin-top-7 govuk-!-margin-bottom-2"
-    ))
-  }
-}
-
-@content = {
-  <div data-testid="main-content">
+)){
     @contentBlock
-  </div>
-
-  <div class="govuk-!-margin-top-8">
-    @hmrcReportTechnicalIssueHelper()
-  </div>
+    <div>
+        @hmrcReportTechnicalIssueHelper()
+    </div>
 }
-
-@govukLayout(
-  pageTitle   = Some(pageTitle),
-  headBlock   = Some(head),
-  headerBlock = Some(hmrcStandardHeader(
-    serviceUrl  = None,
-    signOutUrl  = None,
-    phaseBanner = None
-  )),
-  beforeContentBlock = Some(beforeContent),
-  footerBlock        = Some(hmrcStandardFooter()),
-  scriptsBlock       = Some(hmrcScripts(
-    scriptsBlock = Some(additionalScripts)
-  ))
-)(content)

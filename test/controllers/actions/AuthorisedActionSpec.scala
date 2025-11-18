@@ -27,17 +27,18 @@ import uk.gov.hmrc.auth.core.{AffinityGroup, AuthConnector}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
+
 import java.net.URLEncoder
 
 class AuthorisedActionSpec extends BaseSpec {
 
   class Harness(authorisedAction: AuthorisedAction) {
-    def onPageLoad(): Action[AnyContent] = authorisedAction { request =>
+    def onPageLoad: Action[AnyContent] = authorisedAction { request =>
       Results.Ok(request.affinityGroup.toString())
     }
   }
 
-  val bodyParser: BodyParser[AnyContent] = Helpers.stubBodyParser(AnyContentAsEmpty)
+  val bodyParser: BodyParsers.Default = BodyParsers.Default(Helpers.stubPlayBodyParsers(using mat))
 
   "AuthorisedAction" - {
     "create AuthorisedRequest when user has an Individual affinity group" in {
@@ -56,7 +57,7 @@ class AuthorisedActionSpec extends BaseSpec {
         new DefaultAuthorisedAction(mockAuthConnector, testFrontendAppConfig, bodyParser)
 
       val controller = new Harness(authorisedAction)
-      val result     = controller.onPageLoad()(FakeRequest("GET", "/test"))
+      val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
       status(result)          must be(OK)
       contentAsString(result) must be("Individual")
     }
@@ -77,7 +78,7 @@ class AuthorisedActionSpec extends BaseSpec {
         new DefaultAuthorisedAction(mockAuthConnector, testFrontendAppConfig, bodyParser)
 
       val controller = new Harness(authorisedAction)
-      val result     = controller.onPageLoad()(FakeRequest("GET", "/test"))
+      val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
       status(result)          must be(OK)
       contentAsString(result) must be("Organisation")
     }
@@ -98,7 +99,7 @@ class AuthorisedActionSpec extends BaseSpec {
         new DefaultAuthorisedAction(mockAuthConnector, testFrontendAppConfig, bodyParser)
 
       val controller = new Harness(authorisedAction)
-      val result     = controller.onPageLoad()(FakeRequest("GET", "/test"))
+      val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
       status(result)          must be(OK)
       contentAsString(result) must be("Agent")
     }
@@ -119,7 +120,7 @@ class AuthorisedActionSpec extends BaseSpec {
         new DefaultAuthorisedAction(mockAuthConnector, testFrontendAppConfig, bodyParser)
 
       val controller = new Harness(authorisedAction)
-      val result     = controller.onPageLoad()(FakeRequest("GET", "/test"))
+      val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
       status(result)           must be(SEE_OTHER)
       redirectLocation(result) must be(
         Some(
