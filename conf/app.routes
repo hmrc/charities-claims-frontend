@@ -7,3 +7,6 @@ GET         /assets/*file                                                       
 GET         /claiming-tax-relief                                                                               controllers.ClaimingOtherIncomeController.onPageLoad()
 POST        /claiming-tax-relief                                                                               controllers.ClaimingOtherIncomeController.onSubmit()
 
+GET         /claim-reference-number-check                                                                      controllers.ClaimReferenceNumberCheckController.onPageLoad()
+POST        /claim-reference-number-check                                                                      controllers.ClaimReferenceNumberCheckController.onSubmit()
+
