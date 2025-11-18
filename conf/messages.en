@@ -15,3 +15,7 @@ claimingOtherIncome.bullet.one =  Bank or Building Society interest
 claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate
 claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
 claimingOtherIncome.error.required = Select 'Yes' if you are claiming UK tax deducted from other income.
+
+claimReferenceNumberCheck.title = Do you have a claim reference number?
+claimReferenceNumberCheck.heading = Do you have a claim reference number?
+claimReferenceNumberCheck.error.required = Select 'Yes' if you have a reference number for this claim.
