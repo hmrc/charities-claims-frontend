@@ -29,17 +29,17 @@ import scala.concurrent.{ExecutionContext, Future}
 @ImplementedBy(classOf[DefaultSessionCache])
 trait SessionCache {
 
-  def get()(implicit
+  def get()(using
     hc: HeaderCarrier
   ): Future[Option[SessionData]]
 
-  def store(sessionData: SessionData)(implicit
+  def store(sessionData: SessionData)(using
     hc: HeaderCarrier
   ): Future[Unit]
 
-  final def update[R](forceSessionCreation: Boolean)(
+  final def update(forceSessionCreation: Boolean)(
     update: SessionData => Future[SessionData]
-  )(implicit
+  )(using
     hc: HeaderCarrier,
     ec: ExecutionContext
   ): Future[SessionData] =
@@ -79,7 +79,7 @@ class DefaultSessionCache @Inject() (
   mongoComponent: MongoComponent,
   timestampSupport: TimestampSupport,
   config: FrontendAppConfig
-)(implicit
+)(using
   ec: ExecutionContext
 ) extends MongoCacheRepository[HeaderCarrier](
       mongoComponent = mongoComponent,
@@ -93,14 +93,14 @@ class DefaultSessionCache @Inject() (
   val sessionDataKey: DataKey[SessionData] =
     DataKey[SessionData]("session-data")
 
-  final def get()(implicit
+  final def get()(using
     hc: HeaderCarrier
   ): Future[Option[SessionData]] =
     super.get[SessionData](hc)(sessionDataKey)
 
   final def store(
     sessionData: SessionData
-  )(implicit hc: HeaderCarrier): Future[Unit] =
+  )(using hc: HeaderCarrier): Future[Unit] =
     super
       .put(hc)(sessionDataKey, sessionData)
       .map(_ => ())
