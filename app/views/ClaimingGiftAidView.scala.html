@@ -28,22 +28,23 @@
 @(form: Form[?])(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle    = titleNoForm(messages("claimReferenceNumberCheck.title")),
-    showBackLink = false
+    pageTitle    = titleNoForm(messages("claimingGiftAid.title")),
+    showBackLink = true
 ) {
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
 
-@if(form.errors.nonEmpty) {
-    @govukErrorSummary(ErrorSummaryViewModel(form))
-}
+    <h1 class="govuk-heading-l">@messages("claimingGiftAid.heading")</h1>
 
-<h1 class="govuk-heading-l">@messages("claimReferenceNumberCheck.heading")</h1>
+    @formHelper(action = routes.ClaimingGiftAidController.onSubmit, Symbol("autoComplete") -> "off") {
 
-@formHelper(action = routes.ClaimReferenceNumberCheckController.onSubmit, Symbol("autoComplete") -> "off") {
+        @govukRadios(
+            RadiosViewModel
+                .yesNo(form("value"))
+                .withHint(HintViewModel(Text(messages("claimingGiftAid.hint"))))
+        )
 
-@govukRadios(
-RadiosViewModel.yesNo(form("value"))
-)
-
-@govukButton(ButtonViewModel(Text(messages("site.continue"))))
-}
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+    }
 }

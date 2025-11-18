@@ -12,8 +12,8 @@ lazy val appName: String = "charities-claims-frontend"
 
 lazy val root = Project(appName, file("."))
   .enablePlugins(PlayScala, SbtDistributablesPlugin)
-  .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
-  .settings(inConfig(Test)(testSettings) *)
+  .disablePlugins(JUnitXmlReportPlugin) // Required to prevent https://github.com/scalatest/scalatest/issues/1427
+  .settings(inConfig(Test)(testSettings)*)
   .settings(ThisBuild / useSuperShell := false)
   .settings(
     name := appName,
@@ -22,13 +22,13 @@ lazy val root = Project(appName, file("."))
     ),
     TwirlKeys.templateImports ++= Seq(
       "play.twirl.api.HtmlFormat",
-      "play.twirl.api.HtmlFormat._",
-      "uk.gov.hmrc.govukfrontend.views.html.components._",
-      "uk.gov.hmrc.hmrcfrontend.views.html.components._",
-      "uk.gov.hmrc.hmrcfrontend.views.html.helpers._",
-      "uk.gov.hmrc.hmrcfrontend.views.config._",
-      "views.ViewUtils._",
-      "viewmodels.govuk.all._"
+      "play.twirl.api.HtmlFormat.*",
+      "uk.gov.hmrc.govukfrontend.views.html.components.*",
+      "uk.gov.hmrc.hmrcfrontend.views.html.components.*",
+      "uk.gov.hmrc.hmrcfrontend.views.html.helpers.*",
+      "uk.gov.hmrc.hmrcfrontend.views.config.*",
+      "views.ViewUtils.*",
+      "viewmodels.govuk.all.*"
     ),
     PlayKeys.playDefaultPort := 8030,
     scalacOptions ++= Seq(
@@ -42,7 +42,7 @@ lazy val root = Project(appName, file("."))
     addCommandAlias("runLocal", "run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes"),
     scalafmtOnCompile := true
   )
-  .settings(CodeCoverageSettings.settings *)
+  .settings(CodeCoverageSettings.settings*)
 
 lazy val testSettings: Seq[Def.Setting[?]] = Seq(
   fork := true,

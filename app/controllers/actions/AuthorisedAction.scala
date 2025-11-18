@@ -40,7 +40,7 @@ trait AuthorisedAction
 class DefaultAuthorisedAction @Inject() (
   override val authConnector: AuthConnector,
   config: FrontendAppConfig,
-  val parser: BodyParser[AnyContent]
+  val parser: BodyParsers.Default
 )(implicit val executionContext: ExecutionContext)
     extends AuthorisedAction
     with AuthorisedFunctions {

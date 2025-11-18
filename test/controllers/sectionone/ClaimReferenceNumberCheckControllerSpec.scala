@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sectionone
 
 import forms.YesNoFormProvider
 import play.api.Application
@@ -22,8 +22,10 @@ import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.ClaimReferenceNumberCheckView
+import controllers.ControllerSpec
 
 class ClaimReferenceNumberCheckControllerSpec extends ControllerSpec {
+
   "ClaimReferenceNumberCheckController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
@@ -31,7 +33,7 @@ class ClaimReferenceNumberCheckControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberCheckController.onPageLoad().url)
+            FakeRequest(GET, routes.ClaimReferenceNumberCheckController.onPageLoad.url)
           val form: Form[Boolean]                            = new YesNoFormProvider()()
 
           val result = route(application, request).value
