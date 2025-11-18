@@ -28,7 +28,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
   "ClaimingGiftAidController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-        given application: Application = applicationBuilder.build()
+        given application: Application = applicationBuilder().build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =

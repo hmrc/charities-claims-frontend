@@ -17,32 +17,45 @@
 package controllers.sectionone
 
 import com.google.inject.Inject
+import controllers.BaseController
+import controllers.actions.Actions
 import forms.YesNoFormProvider
+import models.SessionData
 import play.api.data.Form
-import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import services.SaveService
 import views.html.ClaimingOtherIncomeView
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class ClaimingOtherIncomeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: ClaimingOtherIncomeView,
-  formProvider: YesNoFormProvider
-) extends FrontendBaseController
-    with I18nSupport {
+  actions: Actions,
+  formProvider: YesNoFormProvider,
+  saveService: SaveService
+)(using ec: ExecutionContext)
+    extends BaseController {
 
   val form: Form[Boolean] = formProvider("claimingOtherIncome.error.required")
 
-  val onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(view(form))
+  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+    val previousAnswer = SessionData.SectionOne.getClaimingTaxDeducted
+    previousAnswer match {
+      case Some(value) => Ok(view(form.fill(value)))
+      case None        => Ok(view(form))
+    }
   }
 
-  val onSubmit: Action[AnyContent] = Action { implicit request =>
+  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => BadRequest(view(formWithErrors)),
-        _ => Ok(view(form))
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        value =>
+          saveService
+            .save(SessionData.SectionOne.setClaimingTaxDeducted(value))
+            .map(_ => Redirect(controllers.sectionone.routes.ClaimingOtherIncomeController.onPageLoad))
       )
   }
 }

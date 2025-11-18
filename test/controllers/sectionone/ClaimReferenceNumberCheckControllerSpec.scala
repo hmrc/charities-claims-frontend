@@ -29,7 +29,7 @@ class ClaimReferenceNumberCheckControllerSpec extends ControllerSpec {
   "ClaimReferenceNumberCheckController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-        given application: Application = applicationBuilder.build()
+        given application: Application = applicationBuilder().build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
