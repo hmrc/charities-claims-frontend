@@ -19,3 +19,8 @@ claimingOtherIncome.error.required = Select 'Yes' if you are claiming UK tax ded
 claimReferenceNumberCheck.title = Do you have a claim reference number?
 claimReferenceNumberCheck.heading = Do you have a claim reference number?
 claimReferenceNumberCheck.error.required = Select 'Yes' if you have a reference number for this claim.
+
+claimDeclaration.title = Declaration
+claimDeclaration.heading = Declaration
+claimDeclaration.paragraph =  I declare that:
+claimDeclaration.bullet.one =  I will provide accurate information in this claim
