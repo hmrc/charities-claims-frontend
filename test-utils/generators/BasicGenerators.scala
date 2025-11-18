@@ -23,7 +23,7 @@ import org.scalatest.EitherValues
 trait BasicGenerators extends EitherValues {
 
   implicit val basicStringGen: Gen[String] = nonEmptyAlphaString
-  implicit val unitGen: Gen[Unit] = Gen.const(())
+  implicit val unitGen: Gen[Unit]          = Gen.const(())
 
   def nonEmptyString: Gen[String] =
     for {
@@ -35,7 +35,5 @@ trait BasicGenerators extends EitherValues {
     for {
       c <- alphaChar
       s <- alphaStr
-    } yield {
-      s"$c$s"
-    }
+    } yield s"$c$s"
 }

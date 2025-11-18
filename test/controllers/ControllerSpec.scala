@@ -44,7 +44,7 @@ trait ControllerSpec
   override protected def applicationBuilder: GuiceApplicationBuilder =
     super.applicationBuilder
       .overrides(
-        additionalBindings: _*
+        additionalBindings*
       )
       .configure("play.filters.csp.nonce.enabled" -> false)
 

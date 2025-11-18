@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package views
+package models.requests
 
-import play.api.test.FakeRequest
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import util.BaseSpec
+import play.api.mvc.WrappedRequest
+import play.api.mvc.Request
+import uk.gov.hmrc.auth.core.AffinityGroup
 
-trait ViewSpec extends BaseSpec with ScalaCheckPropertyChecks with HtmlHelper {
-
-  implicit val request: FakeRequest[?] = FakeRequest("GET", "/test")
-}
+final case class AuthorisedRequest[A](
+  request: Request[A],
+  affinityGroup: AffinityGroup
+) extends WrappedRequest[A](request)

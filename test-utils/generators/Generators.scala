@@ -20,7 +20,7 @@ import org.scalacheck.{Arbitrary, Gen, Shrink}
 
 trait Generators extends BasicGenerators {
 
-  implicit val dontShrinkString: Shrink[String] = Shrink.shrinkAny
+  implicit val dontShrinkString: Shrink[String]   = Shrink.shrinkAny
   implicit def dontShrinkList[T]: Shrink[List[T]] = Shrink.shrinkAny
 
   implicit def arbitraryGen[A](implicit g: Gen[A]): Arbitrary[A] = Arbitrary(g)

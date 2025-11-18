@@ -41,3 +41,4 @@ bin
 .bloop/
 project/.bloop/
 project/metals.sbt
+.cursor

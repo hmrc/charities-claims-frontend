@@ -18,8 +18,13 @@ package config
 
 import com.google.inject.{Inject, Singleton}
 import play.api.Configuration
+import scala.concurrent.duration.Duration
 
 @Singleton
-class FrontendAppConfig @Inject()(config: Configuration) { self =>
-  val appName: String = config.get[String]("appName")
+class FrontendAppConfig @Inject() (config: Configuration) { self =>
+  val appName: String          = config.get[String]("appName")
+  val mongoDbTTL: Duration     = config.get[Duration]("mongodb.ttl")
+  val loginUrl: String         = config.get[String]("urls.login")
+  val loginContinueUrl: String = config.get[String]("urls.loginContinue")
+  val signOutUrl: String       = config.get[String]("urls.signOut")
 }

@@ -23,7 +23,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.Inject
 
-class IndexController @Inject()(
+class IndexController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: IndexView
 ) extends FrontendBaseController

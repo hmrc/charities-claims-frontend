@@ -18,7 +18,7 @@ lazy val root = Project(appName, file("."))
   .settings(
     name := appName,
     RoutesKeys.routesImport ++= Seq(
-      "uk.gov.hmrc.play.bootstrap.binders.RedirectUrl",
+      "uk.gov.hmrc.play.bootstrap.binders.RedirectUrl"
     ),
     TwirlKeys.templateImports ++= Seq(
       "play.twirl.api.HtmlFormat",
@@ -39,7 +39,8 @@ lazy val root = Project(appName, file("."))
     retrieveManaged := true,
     pipelineStages := Seq(digest),
     Assets / pipelineStages := Seq(concat),
-    addCommandAlias("runLocal", "run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes")
+    addCommandAlias("runLocal", "run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes"),
+    scalafmtOnCompile := true
   )
   .settings(CodeCoverageSettings.settings *)
 
@@ -48,6 +49,7 @@ lazy val testSettings: Seq[Def.Setting[?]] = Seq(
   unmanagedSourceDirectories += baseDirectory.value / "test-utils"
 )
 
-lazy val it = project.in(file("it"))
+lazy val it = project
+  .in(file("it"))
   .enablePlugins(PlayScala)
   .dependsOn(root % "test->test") // the "test->test" allows reusing test code and test dependencies
