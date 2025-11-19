@@ -14,13 +14,21 @@
  * limitations under the License.
  */
 
-package models.requests
+package controllers
 
-import play.api.mvc.WrappedRequest
-import play.api.mvc.Request
-import uk.gov.hmrc.auth.core.AffinityGroup
+import models.SessionData
+import models.requests.DataRequest
+import play.api.i18n.I18nSupport
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import play.api.data.Form
 
-final case class AuthorisedRequest[A](
-  request: Request[A],
-  affinityGroup: AffinityGroup
-) extends WrappedRequest[A](request)
+trait BaseController extends FrontendBaseController with I18nSupport {
+
+  given sessionData(using req: DataRequest[?]): SessionData =
+    req.sessionData
+
+  extension [A](form: Form[A]) {
+    def withDefault(optValue: Option[A]): Form[A] =
+      optValue.map(form.fill).getOrElse(form)
+  }
+}

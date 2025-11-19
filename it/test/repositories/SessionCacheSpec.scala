@@ -62,31 +62,28 @@ class SessionCacheSpec
     "throw an exception if no session id is found" in {
       given HeaderCarrier = HeaderCarrier()
       intercept[Exception] {
-        whenReady(sessionCache.get()) { identity }
+        whenReady(sessionCache.get())(identity)
       }
     }
 
     "throw an exception if no session data is found and forceSessionCreation is false" in {
       given HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(UUID.randomUUID().toString)))
       intercept[Exception] {
-        whenReady(sessionCache.update(forceSessionCreation = false)(s => Future.successful(s))) { identity }
+        whenReady(sessionCache.update(forceSessionCreation = false)(s => s))(identity)
       }
     }
 
     "create a new session data if no session data is found and forceSessionCreation is true" in {
       given HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(UUID.randomUUID().toString)))
       whenReady(
-        sessionCache.update(forceSessionCreation = true)(
-          s =>
-            Future.successful(
-              s.copy(
-                sectionOneAnswers = Some(
-                  SectionOneAnswers(
-                    claimingGiftAid = Some(true)
-                  )
-                )
+        sessionCache.update(forceSessionCreation = true)(s =>
+          s.copy(
+            sectionOneAnswers = Some(
+              SectionOneAnswers(
+                claimingGiftAid = Some(true)
               )
             )
+          )
         )
       ) { result =>
         result should be(SessionData(sectionOneAnswers = Some(SectionOneAnswers(claimingGiftAid = Some(true)))))
@@ -94,24 +91,21 @@ class SessionCacheSpec
     }
 
     "update the session data if it exists" in {
-      given HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(UUID.randomUUID().toString)))
+      given HeaderCarrier    = HeaderCarrier(sessionId = Some(SessionId(UUID.randomUUID().toString)))
       val initialSessionData = SessionData(
         sectionOneAnswers = Some(SectionOneAnswers(claimingGiftAid = Some(true)))
       )
       whenReady(sessionCache.store(initialSessionData)) { _ =>
         whenReady(
-          sessionCache.update(forceSessionCreation = false)(
-            s =>
-              Future.successful(
-                s.copy(
-                  sectionOneAnswers = Some(
-                    SectionOneAnswers(
-                      claimingGiftAid = Some(true),
-                      claimingTaxDeducted = Some(true)
-                    )
-                  )
+          sessionCache.update(forceSessionCreation = false)(s =>
+            s.copy(
+              sectionOneAnswers = Some(
+                SectionOneAnswers(
+                  claimingGiftAid = Some(true),
+                  claimingTaxDeducted = Some(true)
                 )
               )
+            )
           )
         ) { result =>
           result should be(
@@ -129,15 +123,13 @@ class SessionCacheSpec
     }
 
     "skip updating the session data if it exists and the updated session data is the same" in {
-      given HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(UUID.randomUUID().toString)))
+      given HeaderCarrier    = HeaderCarrier(sessionId = Some(SessionId(UUID.randomUUID().toString)))
       val initialSessionData = SessionData(
         sectionOneAnswers = Some(SectionOneAnswers(claimingGiftAid = Some(true)))
       )
       whenReady(sessionCache.store(initialSessionData)) { _ =>
         whenReady(
-          sessionCache.update(forceSessionCreation = false)(
-            s => Future.successful(s)
-          )
+          sessionCache.update(forceSessionCreation = false)(s => s)
         ) { result =>
           result should be(initialSessionData)
         }

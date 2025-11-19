@@ -16,33 +16,43 @@
 
 package controllers.sectionone
 
-import com.google.inject.Inject
-import forms.YesNoFormProvider
-import play.api.data.Form
-import play.api.i18n.I18nSupport
+import services.SaveService
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import com.google.inject.Inject
+import controllers.BaseController
 import views.html.ClaimingGiftAidView
+import controllers.actions.Actions
+import forms.YesNoFormProvider
+import models.SessionData
+import play.api.data.Form
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class ClaimingGiftAidController @Inject() (
   val controllerComponents: MessagesControllerComponents,
+  actions: Actions,
   view: ClaimingGiftAidView,
-  formProvider: YesNoFormProvider
-) extends FrontendBaseController
-    with I18nSupport {
+  formProvider: YesNoFormProvider,
+  saveService: SaveService
+)(using ec: ExecutionContext)
+    extends BaseController {
 
   val form: Form[Boolean] = formProvider("claimingGiftAid.error.required")
 
-  val onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(view(form))
+  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+    val previousAnswer = request.sessionData.sectionOneAnswers.flatMap(_.claimingGiftAid)
+    Ok(view(form.withDefault(previousAnswer)))
   }
 
-  val onSubmit: Action[AnyContent] = Action { implicit request =>
+  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => BadRequest(view(formWithErrors)),
-        _ => Ok(view(form))
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        value =>
+          saveService
+            .save(SessionData.SectionOne.setClaimingGiftAid(value))
+            .map(_ => Redirect(controllers.sectionone.routes.ClaimingOtherIncomeController.onPageLoad))
       )
   }
 }

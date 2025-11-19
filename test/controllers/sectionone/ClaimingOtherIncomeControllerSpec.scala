@@ -17,31 +17,81 @@
 package controllers.sectionone
 
 import forms.YesNoFormProvider
+import models.SessionData
 import play.api.Application
 import play.api.data.Form
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import views.html.ClaimingOtherIncomeView
 import controllers.ControllerSpec
 
 class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
+
+  private val form: Form[Boolean] = new YesNoFormProvider()()
+
   "ClaimingOtherIncomeController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-        given application: Application = applicationBuilder.build()
+
+        given application: Application = applicationBuilder().build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad.url)
-          val form: Form[Boolean]                            = new YesNoFormProvider()()
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(form).body
+        }
+      }
+
+      "should render the page and pre-populate correctly" in {
+
+        val sessionData = SessionData.SectionOne.setClaimingTaxDeducted(true)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad.url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(form.fill(true)).body
+        }
+      }
+    }
+
+    "onSubmit" - {
+      "should redirect to the next page" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit.url)
+              .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
-          val view = application.injector.instanceOf[ClaimingOtherIncomeView]
+          status(result) mustEqual SEE_OTHER
+        }
+      }
 
-          status(result) mustEqual OK
+      "should reload the page with errors when a required field is missing" in {
+        given application: Application = applicationBuilder().build()
 
-          contentAsString(result) mustEqual view(form).body
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit.url)
+              .withFormUrlEncodedBody("other" -> "field")
+
+          val result = route(application, request).value
+
+          status(result) mustEqual BAD_REQUEST
         }
       }
     }

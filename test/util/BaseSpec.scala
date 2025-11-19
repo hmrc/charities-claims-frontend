@@ -32,28 +32,26 @@ package util
  * limitations under the License.
  */
 
-import play.api.test.FakeRequest
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.matchers.must.Matchers
-import org.apache.pekko.stream.Materializer
+import com.typesafe.config.ConfigFactory
+import config.FrontendAppConfig
 import generators.Generators
 import org.apache.pekko.actor.ActorSystem
-import play.api.i18n.{Messages, MessagesApi}
-import play.api.inject.guice.GuiceApplicationBuilder
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, OptionValues}
-import play.api.Application
-import org.scalatest.time.{Millis, Span}
+import org.apache.pekko.stream.Materializer
 import org.scalamock.scalatest.MockFactory
-import config.FrontendAppConfig
-import play.api.Configuration
-import com.typesafe.config.ConfigFactory
+import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.time.{Millis, Span}
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, OptionValues}
+import play.api.i18n.{Messages, MessagesApi}
+import play.api.test.FakeRequest
+import play.api.{Application, Configuration}
 
 abstract class BaseSpec
     extends AnyFreeSpec
+    with MockFactory
     with Matchers
     with ScalaFutures
-    with MockFactory
     with BeforeAndAfterEach
     with BeforeAndAfterAll
     with OptionValues
@@ -64,13 +62,6 @@ abstract class BaseSpec
 
   override implicit val patienceConfig: PatienceConfig =
     PatienceConfig(timeout = scaled(Span(1000, Millis)), interval = scaled(Span(50, Millis)))
-
-  protected def applicationBuilder: GuiceApplicationBuilder =
-    new GuiceApplicationBuilder()
-      .configure(
-        "auditing.enabled" -> false,
-        "metric.enabled"   -> false
-      )
 
   implicit def createMessages(implicit app: Application): Messages =
     app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
