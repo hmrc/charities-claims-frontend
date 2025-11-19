@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sectionone
 
 import com.google.inject.Inject
 import forms.YesNoFormProvider
@@ -22,22 +22,22 @@ import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.ClaimReferenceNumberCheckView
+import views.html.ClaimingGiftAidView
 
-class ClaimReferenceNumberCheckController @Inject() (
+class ClaimingGiftAidController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimReferenceNumberCheckView,
+  view: ClaimingGiftAidView,
   formProvider: YesNoFormProvider
 ) extends FrontendBaseController
     with I18nSupport {
 
-  val form: Form[Boolean] = formProvider("claimReferenceNumberCheck.error.required")
+  val form: Form[Boolean] = formProvider("claimingGiftAid.error.required")
 
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
+  val onPageLoad: Action[AnyContent] = Action { implicit request =>
     Ok(view(form))
   }
 
-  def onSubmit(): Action[AnyContent] = Action { implicit request =>
+  val onSubmit: Action[AnyContent] = Action { implicit request =>
     form
       .bindFromRequest()
       .fold(

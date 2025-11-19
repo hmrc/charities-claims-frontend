@@ -22,9 +22,34 @@ import scala.concurrent.duration.Duration
 
 @Singleton
 class FrontendAppConfig @Inject() (config: Configuration) { self =>
-  val appName: String          = config.get[String]("appName")
-  val mongoDbTTL: Duration     = config.get[Duration]("mongodb.ttl")
-  val loginUrl: String         = config.get[String]("urls.login")
-  val loginContinueUrl: String = config.get[String]("urls.loginContinue")
-  val signOutUrl: String       = config.get[String]("urls.signOut")
+
+  lazy val appName: String                   = config.get[String]("appName")
+  lazy val mongoDbTTL: Duration              = config.get[Duration]("mongodb.ttl")
+  lazy val loginUrl: String                  = config.get[String]("urls.login")
+  lazy val loginContinueUrl: String          = config.get[String]("urls.loginContinue")
+  lazy val signOutUrl: String                = config.get[String]("urls.signOut")
+  lazy val homePageUrl: String               = config.get[String]("urls.homePageUrl")
+  lazy val accessibilityStatementUrl: String = config.get[String]("urls.accessibilityStatementUrl")
+  lazy val betaFeedbackUrl: String           = config.get[String]("urls.betaFeedbackUrl")
+  lazy val researchUrl: String               = config.get[String]("urls.researchUrl")
+  lazy val enableLanguageSwitching: Boolean  = config.get[Boolean]("enableLanguageSwitching")
+  lazy val timeoutInSeconds: Int             = config.get[Int]("timeout-dialog.timeout")
+  lazy val countdownInSeconds: Int           = config.get[Int]("timeout-dialog.countdown")
+
+  def pageTitleWithServiceName(
+    pageTitle: String,
+    serviceName: String
+  ): String = {
+    val pageTitleNoHTML = pageTitle.replaceAll("\\<.*?\\>", "")
+    s"$pageTitleNoHTML - $serviceName - GOV.UK"
+  }
+
+  def pageTitleWithServiceNameAndError(
+    pageTitle: String,
+    serviceName: String,
+    errorPrefix: String,
+    hasErrors: Boolean
+  ): String =
+    if hasErrors then s"$errorPrefix ${pageTitleWithServiceName(pageTitle, serviceName)}"
+    else pageTitleWithServiceName(pageTitle, serviceName)
 }

@@ -14,29 +14,30 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sectionone
 
 import forms.YesNoFormProvider
 import play.api.Application
 import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.ClaimingOtherIncomeView
+import views.html.ClaimingGiftAidView
+import controllers.ControllerSpec
 
-class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
-  "ClaimingOtherIncomeController" - {
+class ClaimingGiftAidControllerSpec extends ControllerSpec {
+  "ClaimingGiftAidController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
         given application: Application = applicationBuilder.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad().url)
+            FakeRequest(GET, routes.ClaimingGiftAidController.onPageLoad.url)
           val form: Form[Boolean]                            = new YesNoFormProvider()()
 
           val result = route(application, request).value
 
-          val view = application.injector.instanceOf[ClaimingOtherIncomeView]
+          val view = application.injector.instanceOf[ClaimingGiftAidView]
 
           status(result) mustEqual OK
 
