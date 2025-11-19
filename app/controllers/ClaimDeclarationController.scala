@@ -16,12 +16,11 @@
 
 package controllers
 
-import com.google.inject.Inject
-import play.api.data.Form
-import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import com.google.inject.Inject
 import views.html.ClaimDeclarationView
+import play.api.i18n.I18nSupport
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 class ClaimDeclarationController @Inject() (
   val controllerComponents: MessagesControllerComponents,

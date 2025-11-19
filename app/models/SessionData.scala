@@ -26,6 +26,7 @@ object SessionData {
   given Format[SessionData] = Json.format[SessionData]
 
   object SectionOne {
+
     def getClaimingTaxDeducted(using session: SessionData): Option[Boolean] =
       session.sectionOneAnswers.flatMap(_.claimingTaxDeducted)
 
@@ -33,6 +34,15 @@ object SessionData {
       val updated = session.sectionOneAnswers match
         case Some(s1) => s1.copy(claimingTaxDeducted = Some(value))
         case None     => SectionOneAnswers(claimingTaxDeducted = Some(value))
+      session.copy(sectionOneAnswers = Some(updated))
+
+    def getClaimingGiftAid(using session: SessionData): Option[Boolean] =
+      session.sectionOneAnswers.flatMap(_.claimingGiftAid)
+
+    def setClaimingGiftAid(value: Boolean)(using session: SessionData): SessionData =
+      val updated = session.sectionOneAnswers match
+        case Some(s1) => s1.copy(claimingGiftAid = Some(value))
+        case None     => SectionOneAnswers(claimingGiftAid = Some(value))
       session.copy(sectionOneAnswers = Some(updated))
   }
 }
