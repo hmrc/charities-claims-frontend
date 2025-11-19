@@ -52,7 +52,7 @@ class ClaimingOtherIncomeController @Inject() (
         value =>
           saveService
             .save(SessionData.SectionOne.setClaimingTaxDeducted(value))
-            .map(_ => Redirect(controllers.sectionone.routes.ClaimingOtherIncomeController.onPageLoad))
+            .map(_ => Redirect(controllers.routes.ClaimingGiftAidSmallDonationsController.onPageLoad()))
       )
   }
 }
