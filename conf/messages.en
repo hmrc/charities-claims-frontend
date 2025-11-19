@@ -24,6 +24,12 @@ claimingOtherIncome.bullet.one =  Bank or Building Society interest
 claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate
 claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
 claimingOtherIncome.error.required = Select 'Yes' if you are claiming UK tax deducted from other income.
+claimingGiftAidSmallDonations.title = Gift Aid Small Donations Scheme
+claimingGiftAidSmallDonations.heading = Gift Aid Small Donations Scheme
+claimingGiftAidSmallDonations.paragraph =  This is separate to a Gift Aid claim. The Gift Aid Small Donation Scheme (GASDS) is for donations of £20 or less and does not need declaring.
+claimingGiftAidSmallDonations.legend =  Are you claiming for the Gift Aid Small Donations Scheme?
+claimingGiftAidSmallDonations.error.required = Select 'Yes' if you are claiming for the Gift Aid Small Donations Scheme.
+
 
 claimReferenceNumberCheck.title = Do you have a claim reference number?
 claimReferenceNumberCheck.heading = Do you have a claim reference number?
