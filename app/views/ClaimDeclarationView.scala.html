@@ -15,27 +15,27 @@
  *@
 
 @this(
-layout: templates.Layout,
-formHelper: FormWithCSRF,
-govukButton: GovukButton
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukButton: GovukButton
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
-pageTitle    = titleNoForm(messages("claimDeclaration.title")),
-showBackLink = false
+    pageTitle    = titleNoForm(messages("claimDeclaration.title")),
+    showBackLink = false
 ) {
 
-<h1 class="govuk-heading-l">@messages("claimDeclaration.heading")</h1>
+    <h1 class="govuk-heading-l">@messages("claimDeclaration.heading")</h1>
 
-<p class="govuk-body">@messages("claimDeclaration.paragraph")</p>
+    <p class="govuk-body">@messages("claimDeclaration.paragraph")</p>
 
-<ul class="govuk-list govuk-list--bullet">
-    <li>@messages("claimDeclaration.bullet.one")</li>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("claimDeclaration.bullet.one")</li>
 
-</ul>
+    </ul>
 
-@govukButton(ButtonViewModel(Text(messages("site.continue"))))
+    @govukButton(ButtonViewModel(Text(messages("site.continue"))))
 
 }
