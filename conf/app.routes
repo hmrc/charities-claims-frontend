@@ -7,8 +7,9 @@ GET         /assets/*file                                                       
 GET         /claiming-tax-relief                                                                               controllers.ClaimingOtherIncomeController.onPageLoad()
 POST        /claiming-tax-relief                                                                               controllers.ClaimingOtherIncomeController.onSubmit()
 
-GET         /claiming-Gift-Aid-Small-Donations                                                                 controllers.ClaimingGiftAidSmallDonationsController.onPageLoad()
-POST        /claiming-Gift-Aid-Small-Donations                                                                 controllers.ClaimingGiftAidSmallDonationsController.onSubmit()
+GET         /claiming-gift-aid-small-donations                                                                 controllers.ClaimingGiftAidSmallDonationsController.onPageLoad()
+POST        /claiming-gift-aid-small-donations                                                                 controllers.ClaimingGiftAidSmallDonationsController.onSubmit()
+
 GET         /claim-reference-number-check                                                                      controllers.ClaimReferenceNumberCheckController.onPageLoad()
 POST        /claim-reference-number-check                                                                      controllers.ClaimReferenceNumberCheckController.onSubmit()
 
