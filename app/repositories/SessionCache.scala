@@ -22,7 +22,6 @@ import config.FrontendAppConfig
 import uk.gov.hmrc.mongo.cache.{CacheIdType, DataKey, MongoCacheRepository}
 import uk.gov.hmrc.http.HeaderCarrier
 import models.SessionData
-import scala.util.Success
 
 import scala.concurrent.{ExecutionContext, Future}
 

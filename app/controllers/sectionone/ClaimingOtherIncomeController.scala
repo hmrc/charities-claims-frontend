@@ -41,10 +41,7 @@ class ClaimingOtherIncomeController @Inject() (
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     val previousAnswer = SessionData.SectionOne.getClaimingTaxDeducted
-    previousAnswer match {
-      case Some(value) => Ok(view(form.fill(value)))
-      case None        => Ok(view(form))
-    }
+    Ok(view(form.withDefault(previousAnswer)))
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
