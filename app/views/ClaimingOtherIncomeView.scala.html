@@ -15,7 +15,6 @@
  *@
 
 @import controllers.sectionone.routes
-@import config.FrontendAppConfig
 
 @this(
     layout: templates.Layout,
@@ -23,7 +22,7 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton
-)(using config: FrontendAppConfig)
+)
 
 @(form: Form[?])(implicit request: Request[?], messages: Messages)
 

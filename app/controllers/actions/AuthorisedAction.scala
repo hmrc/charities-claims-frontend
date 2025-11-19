@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,22 +47,19 @@ class DefaultAuthorisedAction @Inject() (
 
   val logger: Logger = Logger(this.getClass)
 
-  override def invokeBlock[A](request: Request[A], block: AuthorisedRequest[A] => Future[Result]) = {
+  override def invokeBlock[A](request: Request[A], block: AuthorisedRequest[A] => Future[Result]): Future[Result] = {
 
-    implicit val hc: HeaderCarrier =
-      HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+    given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     authorised()
       .retrieve(Retrievals.affinityGroup) {
         case Some(affinityGroup) =>
           block(AuthorisedRequest(request, affinityGroup))
-
-        case None =>
-          throw new UnsupportedAffinityGroup("No affinity group found")
+        case None                =>
+          throw UnsupportedAffinityGroup("No affinity group found")
       }
       .recover { case _: AuthorisationException =>
         Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
       }
   }
-
 }

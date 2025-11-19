@@ -1,5 +1,5 @@
-@*
- * Copyright 2024 HM Revenue & Customs
+/*
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,22 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import config.FrontendAppConfig
+package controllers.actions
 
-@this(
-    layout: templates.Layout
-)(using config: FrontendAppConfig)
+import com.google.inject.Inject
+import models.requests.DataRequest
+import play.api.mvc.{ActionBuilder, AnyContent, DefaultActionBuilder}
 
-@()(implicit request: Request[?], messages: Messages)
-
-@layout(
-    pageTitle    = titleNoForm(messages("index.title")),
-    showBackLink = false
+class Actions @Inject() (
+  actionBuilder: DefaultActionBuilder,
+  identify: AuthorisedAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction
 ) {
-
-    <h1 class="govuk-heading-xl">@messages("index.heading")</h1>
-
-    <p class="govuk-body">@messages("index.guidance")</p>
+  def authAndGetData(): ActionBuilder[DataRequest, AnyContent] =
+    actionBuilder.andThen(identify).andThen(getData).andThen(requireData)
 }

@@ -38,7 +38,7 @@ class AuthorisedActionSpec extends BaseSpec {
     }
   }
 
-  val bodyParser: BodyParsers.Default = BodyParsers.Default(Helpers.stubPlayBodyParsers(using mat))
+  val bodyParser: BodyParsers.Default = BodyParsers.Default(Helpers.stubPlayBodyParsers)
 
   "AuthorisedAction" - {
     "create AuthorisedRequest when user has an Individual affinity group" in {

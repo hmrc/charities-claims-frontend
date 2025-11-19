@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package forms
+package models.requests
 
-import play.api.data.Forms.of
-import play.api.data.validation.Constraints
-import play.api.data.FieldMapping
+import models.SessionData
+import play.api.mvc.{Request, WrappedRequest}
+import uk.gov.hmrc.auth.core.AffinityGroup
 
-trait Mappings extends Formatters with Constraints {
+final case class AuthorisedRequest[A](
+  underlying: Request[A],
+  affinityGroup: AffinityGroup
+) extends WrappedRequest[A](underlying)
 
-  protected def boolean(
-    requiredKey: String = "error.required",
-    invalidKey: String = "error.boolean",
-    args: Seq[String] = Seq.empty
-  ): FieldMapping[Boolean] =
-    of(using booleanFormatter(requiredKey, invalidKey, args))
+final case class OptionalDataRequest[A](
+  request: Request[A],
+  sessionData: Option[SessionData]
+) extends WrappedRequest[A](request)
 
-}
+final case class DataRequest[A](
+  request: Request[A],
+  sessionData: SessionData
+) extends WrappedRequest[A](request)

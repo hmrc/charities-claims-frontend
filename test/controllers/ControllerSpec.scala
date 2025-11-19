@@ -16,14 +16,23 @@
 
 package controllers
 
-import play.api.test._
-import play.api.inject.guice.{GuiceApplicationBuilder, GuiceableModule}
-import util.BaseSpec
-import play.api.http._
-import play.api.Application
-import play.api.data.Form
-import play.api.mvc.{Security => _, _}
 import com.softwaremill.diffx.scalatest.DiffShouldMatcher
+import controllers.actions.{AuthorisedAction, DataRetrievalAction}
+import models.SessionData
+import models.requests.DataRequest
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
+import play.api.data.Form
+import play.api.http.*
+import play.api.inject.guice.{GuiceApplicationBuilder, GuiceableModule}
+import play.api.mvc.{Security as _, *}
+import play.api.test.*
+import play.api.{inject, Application}
+import services.SaveService
+import uk.gov.hmrc.http.HeaderCarrier
+import util.{BaseSpec, FakeAuthorisedAction, FakeDataRetrievalAction}
+
+import scala.concurrent.Future
 
 trait ControllerSpec
     extends BaseSpec
@@ -41,17 +50,48 @@ trait ControllerSpec
 
   val testOnwardRoute: Call = Call("GET", "/foo")
 
-  override protected def applicationBuilder: GuiceApplicationBuilder =
-    super.applicationBuilder
+  given ActorSystem  = ActorSystem("unit-tests")
+  given Materializer = Materializer.createMaterializer(actorSystem)
+
+  given defaultSessionData: SessionData = SessionData(None)
+
+  protected def applicationBuilder(sessionData: SessionData = defaultSessionData): GuiceApplicationBuilder =
+    new GuiceApplicationBuilder()
       .overrides(
-        additionalBindings*
+        List[GuiceableModule](
+          inject
+            .bind[DataRetrievalAction]
+            .toInstance(new FakeDataRetrievalAction(Some(sessionData))),
+          inject
+            .bind[AuthorisedAction]
+            .toInstance(new FakeAuthorisedAction)
+        ) ++
+          additionalBindings*
       )
-      .configure("play.filters.csp.nonce.enabled" -> false)
+      .configure(
+        "play.filters.csp.nonce.enabled" -> false,
+        "auditing.enabled"               -> false,
+        "metric.enabled"                 -> false
+      )
+
+  extension (appBuilder: GuiceApplicationBuilder) {
+    def mockSaveSession: GuiceApplicationBuilder =
+      val mockSaveService: SaveService = mock[SaveService]
+      (mockSaveService
+        .save(_: SessionData)(using _: DataRequest[?], _: HeaderCarrier))
+        .expects(*, *, *)
+        .returning(Future.successful(()))
+      appBuilder.overrides(
+        inject
+          .bind[SaveService]
+          .toInstance(mockSaveService)
+      )
+  }
 
   protected val additionalBindings: List[GuiceableModule] = List()
 
   def runningApplication[T](block: Application => T): T =
-    running(_ => applicationBuilder)(block)
+    running(_ => applicationBuilder())(block)
 
   def formData[A](form: Form[A], data: A): List[(String, String)] = form.fill(data).data.toList
 }
