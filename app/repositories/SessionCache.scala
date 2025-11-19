@@ -37,31 +37,11 @@ trait SessionCache {
     hc: HeaderCarrier
   ): Future[Unit]
 
-  final def update(forceSessionCreation: Boolean)(
-    update: SessionData => Future[SessionData]
+  def update(forceSessionCreation: Boolean)(
+    update: SessionData => SessionData
   )(using
-    hc: HeaderCarrier,
-    ec: ExecutionContext
-  ): Future[SessionData] =
-    get()
-      .flatMap {
-        case Some(sessionData) =>
-          update(sessionData).andThen { case Success(updatedSessionData) =>
-            if sessionData == updatedSessionData
-            then Future.successful(())
-            else store(updatedSessionData)
-          }
-
-        case None =>
-          if forceSessionCreation then
-            update(SessionData())
-              .flatMap { updatedSessionData =>
-                store(updatedSessionData)
-                  .map(_ => updatedSessionData)
-              }
-          else Future.failed(new Exception("no session found in mongodb"))
-      }
-
+    hc: HeaderCarrier
+  ): Future[SessionData]
 }
 
 object HeaderCarrierCacheId extends CacheIdType[HeaderCarrier] {
@@ -105,4 +85,22 @@ class DefaultSessionCache @Inject() (
       .put(hc)(sessionDataKey, sessionData)
       .map(_ => ())
 
+  final def update(forceSessionCreation: Boolean)(
+    update: SessionData => SessionData
+  )(using hc: HeaderCarrier): Future[SessionData] =
+    get()
+      .flatMap {
+        case Some(sessionData) =>
+          val updatedSessionData = update(sessionData)
+          if sessionData == updatedSessionData
+          then Future.successful(updatedSessionData)
+          else store(updatedSessionData).map(_ => updatedSessionData)
+
+        case None =>
+          if forceSessionCreation then {
+            val updatedSessionData = update(SessionData())
+            store(updatedSessionData)
+              .map(_ => updatedSessionData)
+          } else Future.failed(new Exception("no session found in mongodb"))
+      }
 }
