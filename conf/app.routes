@@ -9,8 +9,8 @@ GET         /keep-alive                               controllers.StartControlle
 GET         /timed-out                                controllers.StartController.timedOut
 
 
-GET         /claiming-gift-aid-small-donations                                                                 controllers.ClaimingGiftAidSmallDonationsController.onPageLoad()
-POST        /claiming-gift-aid-small-donations                                                                 controllers.ClaimingGiftAidSmallDonationsController.onSubmit()
+GET         /claiming-gift-aid-small-donations        controllers.sectionone.ClaimingGiftAidSmallDonationsController.onPageLoad
+POST        /claiming-gift-aid-small-donations        controllers.sectionone.ClaimingGiftAidSmallDonationsController.onSubmit
 
 GET         /claiming-gift-aid                        controllers.sectionone.ClaimingGiftAidController.onPageLoad
 POST        /claiming-gift-aid                        controllers.sectionone.ClaimingGiftAidController.onSubmit

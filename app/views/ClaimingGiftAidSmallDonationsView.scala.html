@@ -14,35 +14,37 @@
  * limitations under the License.
  *@
 
+@import controllers.sectionone.routes
+
 @this(
-layout: templates.Layout,
-formHelper: FormWithCSRF,
-govukErrorSummary: GovukErrorSummary,
-govukRadios: GovukRadios,
-govukButton: GovukButton
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukRadios: GovukRadios,
+    govukButton: GovukButton
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[?])(implicit request: Request[_], messages: Messages)
 
 @layout(
-pageTitle    = titleNoForm(messages("claimingGiftAidSmallDonations.title")),
-showBackLink = false
+    pageTitle    = titleNoForm(messages("claimingGiftAidSmallDonations.title")),
+    showBackLink = false
 ) {
-@if(form.errors.nonEmpty) {
-@govukErrorSummary(ErrorSummaryViewModel(form))
-}
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
 
-<h1 class="govuk-heading-l">@messages("claimingGiftAidSmallDonations.heading")</h1>
+    <h1 class="govuk-heading-l">@messages("claimingGiftAidSmallDonations.heading")</h1>
 
-<p class="govuk-body">@messages("claimingGiftAidSmallDonations.paragraph")</p>
-<legend class="govuk-legend"><h2 class="govuk-field__heading">@messages("claimingGiftAidSmallDonations.legend")</h2></legend>
+    <p class="govuk-body">@messages("claimingGiftAidSmallDonations.paragraph")</p>
+    <legend class="govuk-legend"><h2 class="govuk-field__heading">@messages("claimingGiftAidSmallDonations.legend")</h2></legend>
 
-@formHelper(action = routes.ClaimingGiftAidSmallDonationsController.onSubmit(), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.ClaimingGiftAidSmallDonationsController.onSubmit, Symbol("autoComplete") -> "off") {
 
-@govukRadios(
-RadiosViewModel.yesNo(form("value"))
-)
+        @govukRadios(
+            RadiosViewModel.yesNo(form("value"))
+        )
 
-@govukButton(ButtonViewModel(Text(messages("site.continue"))))
-}
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+    }
 }

@@ -44,5 +44,14 @@ object SessionData {
         case Some(s1) => s1.copy(claimingGiftAid = Some(value))
         case None     => SectionOneAnswers(claimingGiftAid = Some(value))
       session.copy(sectionOneAnswers = Some(updated))
+
+    def getClaimingUnderGasds(using session: SessionData): Option[Boolean] =
+      session.sectionOneAnswers.flatMap(_.claimingUnderGasds)
+
+    def setClaimingUnderGasds(value: Boolean)(using session: SessionData): SessionData =
+      val updated = session.sectionOneAnswers match
+        case Some(s1) => s1.copy(claimingUnderGasds = Some(value))
+        case None     => SectionOneAnswers(claimingUnderGasds = Some(value))
+      session.copy(sectionOneAnswers = Some(updated))
   }
 }

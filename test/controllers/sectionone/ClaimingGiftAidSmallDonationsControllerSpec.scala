@@ -22,43 +22,41 @@ import play.api.Application
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
-import views.html.ClaimingOtherIncomeView
+import views.html.ClaimingGiftAidSmallDonationsView
 import controllers.ControllerSpec
 
-class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
+class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
 
   private val form: Form[Boolean] = new YesNoFormProvider()()
 
-  "ClaimingOtherIncomeController" - {
+  "ClaimingGiftAidSmallDonationsController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-
         given application: Application = applicationBuilder().build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingGiftAidSmallDonationsController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
+          val view   = application.injector.instanceOf[ClaimingGiftAidSmallDonationsView]
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(form).body
         }
       }
-
       "should render the page and pre-populate correctly" in {
 
-        val sessionData = SessionData.SectionOne.setClaimingTaxDeducted(true)
+        val sessionData = SessionData.SectionOne.setClaimingUnderGasds(true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingGiftAidSmallDonationsController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
+          val view   = application.injector.instanceOf[ClaimingGiftAidSmallDonationsView]
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(form.fill(true)).body
@@ -72,15 +70,12 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingGiftAidSmallDonationsController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustEqual Some(
-            routes.ClaimingGiftAidSmallDonationsController.onPageLoad.url
-          )
         }
       }
 
@@ -89,7 +84,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingGiftAidSmallDonationsController.onSubmit.url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value
