@@ -90,7 +90,7 @@
     ),
     pageTitle = Some(config.pageTitleWithServiceNameAndError(pageTitle, messages("service.title"), messages("service.title.error"), hasErrors)),
     isWelshTranslationAvailable = !suppressLanguageToggle && config.enableLanguageSwitching,
-    backLink = { if(showBackLink) Some(BackLink(content = Text(messages("back.text")))) else None },
+    backLink = { if(showBackLink) Some(BackLink.mimicsBrowserBackButtonViaJavaScript) else None },
     templateOverrides = TemplateOverrides(
         additionalScriptsBlock = Some(additionalScriptsBlock),
         additionalHeadBlock = Some(additionalHeadBlock)

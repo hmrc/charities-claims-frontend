@@ -28,7 +28,7 @@
 
 @layout(
     pageTitle    = titleNoForm(messages("claimingOtherIncome.title")),
-    showBackLink = false
+    showBackLink = true
 ) {
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
