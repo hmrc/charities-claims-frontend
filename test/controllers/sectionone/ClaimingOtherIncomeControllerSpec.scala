@@ -78,6 +78,9 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustEqual Some(
+            controllers.routes.ClaimingGiftAidSmallDonationsController.onPageLoad().url
+          )
         }
       }
 
