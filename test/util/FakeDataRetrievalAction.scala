@@ -33,5 +33,5 @@ class FakeDataRetrievalAction(
   override protected def refine[A](
     request: AuthorisedRequest[A]
   ): Future[Either[Result, OptionalDataRequest[A]]] =
-    Future(Right(OptionalDataRequest(request, sessionData)))
+    Future(Right(OptionalDataRequest(request, "test-user-id", sessionData)))
 }

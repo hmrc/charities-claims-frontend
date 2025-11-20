@@ -29,6 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DataRequiredActionSpec extends BaseSpec {
 
   val request       = FakeRequest("GET", "/test")
+  val userId        = "test-user-id"
   given SessionData = SessionData(None)
 
   "DataRequiredAction" - {
@@ -36,7 +37,7 @@ class DataRequiredActionSpec extends BaseSpec {
       val action = new DefaultDataRequiredAction()
 
       val dataRequest =
-        OptionalDataRequest(request, sessionData = Some(SessionData.SectionOne.setClaimingTaxDeducted(true)))
+        OptionalDataRequest(request, userId, sessionData = Some(SessionData.SectionOne.setClaimingTaxDeducted(true)))
       val result      = action.invokeBlock(dataRequest, _ => Future.successful(Ok))
       status(result) must be(OK)
     }
@@ -44,7 +45,7 @@ class DataRequiredActionSpec extends BaseSpec {
     "refines OptionalDataRequest into a DataRequest when session data object exists but is empty" in {
       val action = new DefaultDataRequiredAction()
 
-      val dataRequest = OptionalDataRequest(request, sessionData = Some(SessionData(None)))
+      val dataRequest = OptionalDataRequest(request, userId, sessionData = Some(SessionData(None)))
       val result      = action.invokeBlock(dataRequest, _ => Future.successful(Ok))
       status(result) must be(OK)
     }
@@ -52,7 +53,7 @@ class DataRequiredActionSpec extends BaseSpec {
     "returns error page when Session data does not exist" in {
       val action = new DefaultDataRequiredAction()
 
-      val dataRequest = OptionalDataRequest(request, sessionData = None)
+      val dataRequest = OptionalDataRequest(request, userId, sessionData = None)
       val result      = action.invokeBlock(dataRequest, _ => Future.successful(Ok))
       status(result) must be(INTERNAL_SERVER_ERROR)
     }

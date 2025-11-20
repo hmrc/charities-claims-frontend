@@ -32,7 +32,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class DataRetrievalActionSpec extends BaseSpec {
 
   val request           = FakeRequest("GET", "/test")
-  val authorisedRequest = AuthorisedRequest(request, AffinityGroup.Organisation)
+  val userId            = "test-user-id"
+  val authorisedRequest = AuthorisedRequest(request, userId)
   given SessionData     = SessionData(None)
 
   "DataRetrievalAction" - {

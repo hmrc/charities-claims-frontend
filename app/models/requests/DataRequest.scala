@@ -22,15 +22,17 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 
 final case class AuthorisedRequest[A](
   underlying: Request[A],
-  affinityGroup: AffinityGroup
+  userId: String
 ) extends WrappedRequest[A](underlying)
 
 final case class OptionalDataRequest[A](
-  request: Request[A],
+  underlying: Request[A],
+  userId: String,
   sessionData: Option[SessionData]
-) extends WrappedRequest[A](request)
+) extends WrappedRequest[A](underlying)
 
 final case class DataRequest[A](
-  request: Request[A],
+  underlying: Request[A],
+  userId: String,
   sessionData: SessionData
-) extends WrappedRequest[A](request)
+) extends WrappedRequest[A](underlying)

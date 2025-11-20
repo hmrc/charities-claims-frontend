@@ -40,7 +40,8 @@ class DefaultDataRequiredAction @Inject() ()(using val executionContext: Executi
         Future.successful(
           Right(
             DataRequest(
-              request.request,
+              request.underlying,
+              request.userId,
               data
             )
           )

@@ -20,7 +20,8 @@ import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers.*
 import util.BaseSpec
 import play.api.mvc.*
-import uk.gov.hmrc.auth.core.retrieve.Retrieval
+import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval}
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.{AffinityGroup, AuthConnector}
@@ -33,23 +34,27 @@ import java.net.URLEncoder
 class AuthorisedActionSpec extends BaseSpec {
 
   class Harness(authorisedAction: AuthorisedAction) {
-    def onPageLoad: Action[AnyContent] = authorisedAction { request =>
-      Results.Ok(request.affinityGroup.toString())
+    def onPageLoad: Action[AnyContent] = authorisedAction { _ =>
+      Results.Ok("")
     }
   }
 
   val bodyParser: BodyParsers.Default = BodyParsers.Default(Helpers.stubPlayBodyParsers)
+  val credentials                     = Credentials("test-user-id", "GovernmentGateway")
 
   "AuthorisedAction" - {
     "create AuthorisedRequest when user has an Individual affinity group" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
       (mockAuthConnector
-        .authorise(_: Predicate, _: Retrieval[Option[AffinityGroup]])(using _: HeaderCarrier, _: ExecutionContext))
+        .authorise(_: Predicate, _: Retrieval[Option[AffinityGroup] ~ Option[Credentials]])(using
+          _: HeaderCarrier,
+          _: ExecutionContext
+        ))
         .expects(*, *, *, *)
         .returning(
           Future.successful(
-            Some(AffinityGroup.Individual)
+            `~`(Some(AffinityGroup.Individual), Some(credentials))
           )
         )
 
@@ -58,19 +63,21 @@ class AuthorisedActionSpec extends BaseSpec {
 
       val controller = new Harness(authorisedAction)
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
-      status(result)          must be(OK)
-      contentAsString(result) must be("Individual")
+      status(result) must be(OK)
     }
 
     "create AuthorisedRequest when user has an Organisation affinity group" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
       (mockAuthConnector
-        .authorise(_: Predicate, _: Retrieval[Option[AffinityGroup]])(using _: HeaderCarrier, _: ExecutionContext))
+        .authorise(_: Predicate, _: Retrieval[Option[AffinityGroup] ~ Option[Credentials]])(using
+          _: HeaderCarrier,
+          _: ExecutionContext
+        ))
         .expects(*, *, *, *)
         .returning(
           Future.successful(
-            Some(AffinityGroup.Organisation)
+            `~`(Some(AffinityGroup.Organisation), Some(credentials))
           )
         )
 
@@ -79,19 +86,21 @@ class AuthorisedActionSpec extends BaseSpec {
 
       val controller = new Harness(authorisedAction)
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
-      status(result)          must be(OK)
-      contentAsString(result) must be("Organisation")
+      status(result) must be(OK)
     }
 
     "create AuthorisedRequest when user has an Agent affinity group" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
       (mockAuthConnector
-        .authorise(_: Predicate, _: Retrieval[Option[AffinityGroup]])(using _: HeaderCarrier, _: ExecutionContext))
+        .authorise(_: Predicate, _: Retrieval[Option[AffinityGroup] ~ Option[Credentials]])(using
+          _: HeaderCarrier,
+          _: ExecutionContext
+        ))
         .expects(*, *, *, *)
         .returning(
           Future.successful(
-            Some(AffinityGroup.Agent)
+            `~`(Some(AffinityGroup.Agent), Some(credentials))
           )
         )
 
@@ -100,19 +109,49 @@ class AuthorisedActionSpec extends BaseSpec {
 
       val controller = new Harness(authorisedAction)
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
-      status(result)          must be(OK)
-      contentAsString(result) must be("Agent")
+      status(result) must be(OK)
     }
 
     "redirect to login page when user has no affinity group" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
       (mockAuthConnector
-        .authorise(_: Predicate, _: Retrieval[Option[AffinityGroup]])(using _: HeaderCarrier, _: ExecutionContext))
+        .authorise(_: Predicate, _: Retrieval[Option[AffinityGroup] ~ Option[Credentials]])(using
+          _: HeaderCarrier,
+          _: ExecutionContext
+        ))
         .expects(*, *, *, *)
         .returning(
           Future.successful(
-            None
+            `~`(None, Some(credentials))
+          )
+        )
+
+      val authorisedAction =
+        new DefaultAuthorisedAction(mockAuthConnector, testFrontendAppConfig, bodyParser)
+
+      val controller = new Harness(authorisedAction)
+      val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
+      status(result)           must be(SEE_OTHER)
+      redirectLocation(result) must be(
+        Some(
+          s"${testFrontendAppConfig.loginUrl}?continue=${URLEncoder.encode(testFrontendAppConfig.loginContinueUrl, "UTF-8")}"
+        )
+      )
+    }
+
+    "redirect to login page when user has no credential provider id" in {
+      val mockAuthConnector: AuthConnector = mock[AuthConnector]
+
+      (mockAuthConnector
+        .authorise(_: Predicate, _: Retrieval[Option[AffinityGroup] ~ Option[Credentials]])(using
+          _: HeaderCarrier,
+          _: ExecutionContext
+        ))
+        .expects(*, *, *, *)
+        .returning(
+          Future.successful(
+            `~`(Some(AffinityGroup.Individual), None)
           )
         )
 

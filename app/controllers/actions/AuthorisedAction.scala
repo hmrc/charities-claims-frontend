@@ -20,6 +20,7 @@ import play.api.mvc.*
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
 import uk.gov.hmrc.auth.core.*
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
@@ -52,10 +53,12 @@ class DefaultAuthorisedAction @Inject() (
     given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     authorised()
-      .retrieve(Retrievals.affinityGroup) {
-        case Some(affinityGroup) =>
-          block(AuthorisedRequest(request, affinityGroup))
-        case None                =>
+      .retrieve(Retrievals.affinityGroup.and(Retrievals.credentials)) {
+        case Some(_) ~ Some(credentials) =>
+          block(AuthorisedRequest(request, credentials.providerId))
+        case _ ~ None                    =>
+          throw UnsupportedAuthProvider("No credential provider id (cred id / user id) found")
+        case None ~ _                    =>
           throw UnsupportedAffinityGroup("No affinity group found")
       }
       .recover { case _: AuthorisationException =>
