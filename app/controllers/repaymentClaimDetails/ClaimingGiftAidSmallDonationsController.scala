@@ -52,7 +52,7 @@ class ClaimingGiftAidSmallDonationsController @Inject() (
         value =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setClaimingUnderGasds(value))
-            .map(_ => Redirect(routes.ClaimingReferenceNumberCheckController.onPageLoad))
+            .map(_ => Redirect(controllers.routes.CheckYourAnswersController.onPageLoad()))
       )
   }
 }

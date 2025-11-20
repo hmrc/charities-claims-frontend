@@ -26,3 +26,6 @@ POST        /enter-claim-reference-number             controllers.repaymentclaim
 
 GET         /declaration                              controllers.repaymentclaimdetails.ClaimDeclarationController.onPageLoad
 POST        /declaration                              controllers.repaymentclaimdetails.ClaimDeclarationController.onSubmit
+
+GET         /check-your-answers                       controllers.CheckYourAnswersController.onPageLoad()
+POST        /check-your-answers                       controllers.CheckYourAnswersController.onSubmit()
