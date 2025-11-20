@@ -37,12 +37,14 @@
     <h1 class="govuk-heading-l">@messages("claimingGiftAidSmallDonations.heading")</h1>
 
     <p class="govuk-body">@messages("claimingGiftAidSmallDonations.paragraph")</p>
-    <legend class="govuk-legend"><h2 class="govuk-field__heading">@messages("claimingGiftAidSmallDonations.legend")</h2></legend>
 
     @formHelper(action = routes.ClaimingGiftAidSmallDonationsController.onSubmit, Symbol("autoComplete") -> "off") {
 
         @govukRadios(
-            RadiosViewModel.yesNo(form("value"))
+            RadiosViewModel.yesNo(
+                form("value"),
+                LegendViewModel(messages("claimingGiftAidSmallDonations.legend")).bold
+            )
         )
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
