@@ -79,7 +79,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result) mustEqual Some(
-            controllers.routes.ClaimingGiftAidSmallDonationsController.onPageLoad().url
+            routes.ClaimingGiftAidSmallDonationsController.onPageLoad.url
           )
         }
       }
