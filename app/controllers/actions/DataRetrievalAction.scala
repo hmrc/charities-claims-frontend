@@ -46,6 +46,7 @@ class DefaultDataRetrievalAction @Inject() (
           Right(
             OptionalDataRequest(
               request,
+              request.userId,
               Some(SessionData(None)) // todo will need changing once we fetch from backend
             )
           )
@@ -53,6 +54,7 @@ class DefaultDataRetrievalAction @Inject() (
           Right(
             OptionalDataRequest(
               request,
+              request.userId,
               Some(sessionData)
             )
           )
