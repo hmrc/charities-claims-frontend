@@ -52,7 +52,7 @@ class ClaimingGiftAidSmallDonationsController @Inject() (
         value =>
           saveService
             .save(SessionData.SectionOne.setClaimingUnderGasds(value))
-            .map(_ => Redirect(controllers.sectionone.routes.ClaimingGiftAidSmallDonationsController.onPageLoad))
+            .map(_ => Redirect(controllers.routes.CheckYourAnswersController.onPageLoad()))
       )
   }
 }

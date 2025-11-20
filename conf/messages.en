@@ -4,6 +4,7 @@ service.title = Charities Claims
 site.continue = Continue
 site.yes = Yes
 site.no = No
+site.change = Change
 
 back.text = Back
 
@@ -39,3 +40,12 @@ claimDeclaration.title = Declaration
 claimDeclaration.heading = Declaration
 claimDeclaration.paragraph =  I declare that:
 claimDeclaration.bullet.one =  I will provide accurate information in this claim
+
+checkYourAnswers.title = Check your answers
+checkYourAnswers.heading = Check your answers
+checkYourAnswers.giftAid.label = Are you claiming Gift Aid?
+checkYourAnswers.giftAid.change.hidden = if you are claiming Gift Aid
+checkYourAnswers.taxDeducted.label = Are you claiming UK tax deducted from other income?
+checkYourAnswers.gasds.label = Are you claiming for the Gift Aid Small Donations Scheme?
+checkYourAnswers.hasRef.label = Do you have a claim reference number?
+checkYourAnswers.refNumber.label = What is your reference number?

@@ -21,5 +21,8 @@ POST        /claiming-tax-relief                      controllers.sectionone.Cla
 GET         /claim-reference-number-check             controllers.sectionone.ClaimReferenceNumberCheckController.onPageLoad
 POST        /claim-reference-number-check             controllers.sectionone.ClaimReferenceNumberCheckController.onSubmit
 
-GET         /claim-declaration                                                                                 controllers.ClaimDeclarationController.onPageLoad()
-POST        /claim-declaration                                                                                 controllers.ClaimDeclarationController.onSubmit()
+GET         /claim-declaration                        controllers.ClaimDeclarationController.onPageLoad()
+POST        /claim-declaration                        controllers.ClaimDeclarationController.onSubmit()
+
+GET         /check-your-answers                       controllers.CheckYourAnswersController.onPageLoad()
+POST        /check-your-answers                       controllers.CheckYourAnswersController.onSubmit()
