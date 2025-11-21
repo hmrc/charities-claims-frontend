@@ -16,6 +16,7 @@
 
 package models
 
+import org.scalatest.matchers.should.Matchers.shouldBe
 import play.api.libs.json.Json
 import util.BaseSpec
 
@@ -29,13 +30,14 @@ class SessionDataSpec extends BaseSpec {
             claimingGiftAid = Some(true),
             claimingTaxDeducted = Some(true),
             claimingUnderGasds = Some(true),
-            claimingReferenceNumber = Some(true)
+            claimingReferenceNumber = Some(true),
+            claimReferenceNumber = Some("1234567890")
           )
         )
       )
       val json                    = Json.toJson(sessionData)
       val deserializedSessionData = json.as[SessionData]
-      deserializedSessionData must be(sessionData)
+      deserializedSessionData shouldBe sessionData
     }
   }
 
