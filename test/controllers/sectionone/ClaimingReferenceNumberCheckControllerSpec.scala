@@ -21,15 +21,16 @@ import play.api.Application
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
-import views.html.ClaimReferenceNumberCheckView
+import views.html.ClaimingReferenceNumberCheckView
 import controllers.ControllerSpec
 import models.SessionData
+import org.scalatest.matchers.should.Matchers.shouldBe
 
-class ClaimReferenceNumberCheckControllerSpec extends ControllerSpec {
+class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 
   private val form: Form[Boolean] = new YesNoFormProvider()()
 
-  "ClaimReferenceNumberCheckController" - {
+  "ClaimingReferenceNumberCheckController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
 
@@ -37,31 +38,31 @@ class ClaimReferenceNumberCheckControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberCheckController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingReferenceNumberCheckController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimReferenceNumberCheckView]
+          val view   = application.injector.instanceOf[ClaimingReferenceNumberCheckView]
 
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form).body
+          status(result)          shouldBe OK
+          contentAsString(result) shouldBe view(form).body
         }
       }
 
       "should render the page and pre-populate correctly" in {
 
-        val sessionData = SessionData.SectionOne.setClaimReferenceNumber(true)
+        val sessionData = SessionData.SectionOne.setClaimingReferenceNumber(true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberCheckController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingReferenceNumberCheckController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimReferenceNumberCheckView]
+          val view   = application.injector.instanceOf[ClaimingReferenceNumberCheckView]
 
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form.fill(true)).body
+          status(result)          shouldBe OK
+          contentAsString(result) shouldBe view(form.fill(true)).body
         }
       }
     }
@@ -72,14 +73,14 @@ class ClaimReferenceNumberCheckControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimReferenceNumberCheckController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingReferenceNumberCheckController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustEqual Some(
-            controllers.routes.ClaimingGiftAidSmallDonationsController.onPageLoad().url
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(
+            controllers.sectionone.routes.ClaimReferenceNumberInputController.onPageLoad.url
           )
         }
       }
@@ -89,12 +90,12 @@ class ClaimReferenceNumberCheckControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimReferenceNumberCheckController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingReferenceNumberCheckController.onSubmit.url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value
 
-          status(result) mustEqual BAD_REQUEST
+          status(result) shouldBe BAD_REQUEST
         }
       }
     }

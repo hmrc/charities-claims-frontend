@@ -24,13 +24,13 @@ import models.SessionData
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.ClaimReferenceNumberCheckView
+import views.html.ClaimingReferenceNumberCheckView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimReferenceNumberCheckController @Inject() (
+class ClaimingReferenceNumberCheckController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimReferenceNumberCheckView,
+  view: ClaimingReferenceNumberCheckView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService
@@ -40,7 +40,7 @@ class ClaimReferenceNumberCheckController @Inject() (
   val form: Form[Boolean] = formProvider("claimReferenceNumberCheck.error.required")
 
   val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = SessionData.SectionOne.getClaimReferenceNumber
+    val previousAnswer = SessionData.SectionOne.getClaimingReferenceNumber
     Ok(view(form.withDefault(previousAnswer)))
   }
 
@@ -51,8 +51,8 @@ class ClaimReferenceNumberCheckController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           saveService
-            .save(SessionData.SectionOne.setClaimReferenceNumber(value))
-            .map(_ => Redirect(controllers.routes.ClaimingGiftAidSmallDonationsController.onPageLoad()))
+            .save(SessionData.SectionOne.setClaimingReferenceNumber(value))
+            .map(_ => Redirect(controllers.sectionone.routes.ClaimReferenceNumberInputController.onPageLoad))
       )
   }
 }

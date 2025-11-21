@@ -23,7 +23,8 @@ final case class SectionOneAnswers(
   claimingGiftAid: Option[Boolean] = None,
   claimingTaxDeducted: Option[Boolean] = None,
   claimingUnderGasds: Option[Boolean] = None,
-  claimReferenceNumber: Option[Boolean] = None
+  claimingReferenceNumber: Option[Boolean] = None,
+  claimReferenceNumber: Option[String] = None
 )
 
 object SectionOneAnswers {

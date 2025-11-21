@@ -54,10 +54,19 @@ object SessionData {
         case None     => SectionOneAnswers(claimingUnderGasds = Some(value))
       session.copy(sectionOneAnswers = Some(updated))
 
-    def getClaimReferenceNumber(using session: SessionData): Option[Boolean] =
+    def getClaimingReferenceNumber(using session: SessionData): Option[Boolean] =
+      session.sectionOneAnswers.flatMap(_.claimingReferenceNumber)
+
+    def setClaimingReferenceNumber(value: Boolean)(using session: SessionData): SessionData =
+      val updated = session.sectionOneAnswers match
+        case Some(s1) => s1.copy(claimingReferenceNumber = Some(value))
+        case None     => SectionOneAnswers(claimingReferenceNumber = Some(value))
+      session.copy(sectionOneAnswers = Some(updated))
+
+    def getClaimReferenceNumber(using session: SessionData): Option[String] =
       session.sectionOneAnswers.flatMap(_.claimReferenceNumber)
 
-    def setClaimReferenceNumber(value: Boolean)(using session: SessionData): SessionData =
+    def setClaimReferenceNumber(value: String)(using session: SessionData): SessionData =
       val updated = session.sectionOneAnswers match
         case Some(s1) => s1.copy(claimReferenceNumber = Some(value))
         case None     => SectionOneAnswers(claimReferenceNumber = Some(value))

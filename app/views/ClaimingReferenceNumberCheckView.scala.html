@@ -37,7 +37,7 @@
 
 <h1 class="govuk-heading-l">@messages("claimReferenceNumberCheck.heading")</h1>
 
-@formHelper(action = routes.ClaimReferenceNumberCheckController.onSubmit, Symbol("autoComplete") -> "off") {
+@formHelper(action = routes.ClaimingReferenceNumberCheckController.onSubmit, Symbol("autoComplete") -> "off") {
 
 @govukRadios(
 RadiosViewModel.yesNo(form("value"))

@@ -76,7 +76,7 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustEqual Some(routes.ClaimReferenceNumberCheckController.onPageLoad.url)
+          redirectLocation(result) mustEqual Some(routes.ClaimingReferenceNumberCheckController.onPageLoad.url)
         }
       }
 
