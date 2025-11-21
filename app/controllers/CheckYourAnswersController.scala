@@ -37,7 +37,6 @@ class CheckYourAnswersController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = identify.andThen(getData).andThen(requireData) { implicit request =>
 
-    // If sectionOneAnswers is missing, we create an empty one so the page doesn't crash
     val list = helper.buildSummaryList(request.sessionData.sectionOneAnswers.getOrElse(models.SectionOneAnswers()))
 
     Ok(view(list))

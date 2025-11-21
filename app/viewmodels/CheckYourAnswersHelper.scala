@@ -28,118 +28,141 @@ class CheckYourAnswersHelper {
   def buildSummaryList(answers: SectionOneAnswers)(implicit messages: Messages): SummaryList = {
 
     val rows = Seq(
-      // Gift Aid Row
-      Some(
-        SummaryListRow(
-          key = Key(content = Text(messages("checkYourAnswers.giftAid.label"))),
-          value = Value(content = Text(if (answers.claimingGiftAid.getOrElse(false)) "Yes" else "No")),
-          actions = Some(
-            Actions(items =
-              Seq(
-                ActionItem(
-                  href = routes.ClaimingGiftAidController.onPageLoad.url,
-                  content = Text(messages("site.change")),
-                  visuallyHiddenText = Some(messages("checkYourAnswers.giftAid.change.hidden"))
-                )
-              )
-            )
-          )
-        )
-      ),
-
-      // Tax Deducted Row
-      Some(
-        SummaryListRow(
-          key = Key(content = Text(messages("checkYourAnswers.taxDeducted.label"))),
-          value = Value(content = Text(if (answers.claimingTaxDeducted.getOrElse(false)) "Yes" else "No")),
-          actions = Some(
-            Actions(items =
-              Seq(
-                ActionItem(
-                  href = routes.ClaimingOtherIncomeController.onPageLoad.url,
-                  content = Text(messages("site.change"))
-                )
-              )
-            )
-          )
-        )
-      ),
-
-      // Small Donations (GASDS) Row
-      Some(
-        SummaryListRow(
-          key = Key(content = Text(messages("checkYourAnswers.gasds.label"))),
-          value = Value(content = Text(if (answers.claimingUnderGasds.getOrElse(false)) "Yes" else "No")),
-          actions = Some(
-            Actions(items =
-              Seq(
-                ActionItem(
-                  href = routes.ClaimingGiftAidSmallDonationsController.onPageLoad.url,
-                  content = Text(messages("site.change"))
-                )
-              )
-            )
-          )
-        )
-      ),
-      // Row 4 (Do you have a reference number?)
-//        Some(
-//        SummaryListRow(
-//          key = Key(content = Text(messages("checkYourAnswers.hasRef.label"))),
-//          value = Value(content = Text(if (answers.SOMETHING.getOrElse(false)) "Yes" else "No")),
-//          actions = Some(
-//            Actions(items =
-//              Seq(
-//                ActionItem(
-//                  href = routes.ClaimReferenceNumberCheckController.onPageLoad.url,
-//                  content = Text(messages("site.change"))
-//                )
-//              )
-//            )
-//          )
-//        )),
-
-      // Row 5 (What is your reference number?)
-      answers.claimReferenceNumber match {
-        case Some(refNum) =>
-          // If they entered a number, show the number
+      answers.claimingGiftAid match {
+        case Some(value) =>
           Some(
-            SummaryListRow(
-              key = Key(content = Text(messages("checkYourAnswers.refNumber.label"))),
-              value = Value(content = Text(refNum)),
-              actions = Some(
-                Actions(items =
-                  Seq(
-                    ActionItem(
-                      href = routes.ClaimReferenceNumberCheckController.onPageLoad.url,
-                      content = Text(messages("site.change")),
-                      visuallyHiddenText = Some(messages("checkYourAnswers.refNumber.label"))
-                    )
-                  )
+            summaryRow(
+              messages("checkYourAnswers.giftAid.label"),
+              if (value) "Yes" else "No",
+              routes.ClaimingGiftAidController.onPageLoad.url,
+              messages("checkYourAnswers.giftAid.change.hidden")
+            )
+          )
+        case None        =>
+          Some(
+            missingDataRow(
+              messages("checkYourAnswers.giftAid.label"),
+              routes.ClaimingGiftAidController.onPageLoad.url,
+              messages("checkYourAnswers.giftAid.change.hidden")
+            )
+          )
+      },
+      answers.claimingTaxDeducted match {
+        case Some(value) =>
+          Some(
+            summaryRow(
+              messages("checkYourAnswers.taxDeducted.label"),
+              if (value) "Yes" else "No",
+              routes.ClaimingOtherIncomeController.onPageLoad.url,
+              messages("checkYourAnswers.taxDeducted.label")
+            )
+          )
+        case None        =>
+          Some(
+            missingDataRow(
+              messages("checkYourAnswers.taxDeducted.label"),
+              routes.ClaimingOtherIncomeController.onPageLoad.url,
+              messages("checkYourAnswers.taxDeducted.label")
+            )
+          )
+      },
+      answers.claimingUnderGasds match {
+        case Some(value) =>
+          Some(
+            summaryRow(
+              messages("checkYourAnswers.gasds.label"),
+              if (value) "Yes" else "No",
+              routes.ClaimingGiftAidSmallDonationsController.onPageLoad.url,
+              messages("checkYourAnswers.gasds.label")
+            )
+          )
+        case None        =>
+          Some(
+            missingDataRow(
+              messages("checkYourAnswers.gasds.label"),
+              routes.ClaimingGiftAidSmallDonationsController.onPageLoad.url,
+              messages("checkYourAnswers.gasds.label")
+            )
+          )
+      },
+      answers.hasClaimReferenceNumber match {
+        case Some(value) =>
+          Some(
+            summaryRow(
+              messages("checkYourAnswers.hasRef.label"),
+              if (value) "Yes" else "No",
+              routes.ClaimReferenceNumberCheckController.onPageLoad.url,
+              messages("checkYourAnswers.hasRef.label")
+            )
+          )
+        case None        =>
+          Some(
+            missingDataRow(
+              messages("checkYourAnswers.hasRef.label"),
+              routes.ClaimReferenceNumberCheckController.onPageLoad.url,
+              messages("checkYourAnswers.hasRef.label")
+            )
+          )
+      },
+      answers.hasClaimReferenceNumber match {
+        case Some(true) =>
+          answers.claimReferenceNumber match {
+            case Some(refNum) =>
+              Some(
+                summaryRow(
+                  messages("checkYourAnswers.refNumber.label"),
+                  refNum,
+                  routes.ClaimReferenceNumberCheckController.onPageLoad.url,
+                  messages("checkYourAnswers.refNumber.label")
                 )
               )
-            )
-          )
-        case None         =>
-          // If they skipped it, show the "Enter..." link
-          Some(
-            SummaryListRow(
-              key = Key(content = Text(messages("checkYourAnswers.refNumber.label"))),
-              value = Value(
-                content = HtmlContent(
-                  s"""<a class="govuk-link" href="${routes.ClaimReferenceNumberCheckController.onPageLoad.url}">
-                   |${messages("site.enter")} <span class="govuk-visually-hidden">${messages(
-                      "checkYourAnswers.refNumber.label"
-                    )}</span>
-                   |</a>""".stripMargin
+            case None         =>
+              Some(
+                missingDataRow(
+                  messages("checkYourAnswers.refNumber.label"),
+                  routes.ClaimReferenceNumberCheckController.onPageLoad.url,
+                  messages("checkYourAnswers.refNumber.label")
                 )
-              ),
-              actions = None
-            )
-          )
+              )
+          }
+        case _          => None
       }
     ).flatten
 
     SummaryList(rows)
   }
+
+  private def summaryRow(label: String, value: String, href: String, hiddenText: String)(implicit
+    messages: Messages
+  ): SummaryListRow =
+    SummaryListRow(
+      key = Key(content = Text(label)),
+      value = Value(content = Text(value)),
+      actions = Some(
+        Actions(items =
+          Seq(
+            ActionItem(
+              href = href,
+              content = Text(messages("site.change")),
+              visuallyHiddenText = Some(hiddenText)
+            )
+          )
+        )
+      )
+    )
+
+  private def missingDataRow(label: String, href: String, hiddenText: String)(implicit
+    messages: Messages
+  ): SummaryListRow =
+    SummaryListRow(
+      key = Key(content = Text(label)),
+      value = Value(
+        content = HtmlContent(
+          s"""<a class="govuk-link" href="$href">
+             |${messages("site.enter")} <span class="govuk-visually-hidden">$hiddenText</span>
+             |</a>""".stripMargin
+        )
+      ),
+      actions = None
+    )
 }
