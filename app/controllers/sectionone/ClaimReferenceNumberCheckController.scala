@@ -17,32 +17,42 @@
 package controllers.sectionone
 
 import com.google.inject.Inject
+import controllers.BaseController
+import controllers.actions.Actions
 import forms.YesNoFormProvider
+import models.SessionData
 import play.api.data.Form
-import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import services.SaveService
 import views.html.ClaimReferenceNumberCheckView
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class ClaimReferenceNumberCheckController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: ClaimReferenceNumberCheckView,
-  formProvider: YesNoFormProvider
-) extends FrontendBaseController
-    with I18nSupport {
+  actions: Actions,
+  formProvider: YesNoFormProvider,
+  saveService: SaveService
+)(using ec: ExecutionContext)
+    extends BaseController {
 
   val form: Form[Boolean] = formProvider("claimReferenceNumberCheck.error.required")
 
-  val onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(view(form))
+  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+    val previousAnswer = SessionData.SectionOne.getClaimReferenceNumber
+    Ok(view(form.withDefault(previousAnswer)))
   }
 
-  val onSubmit: Action[AnyContent] = Action { implicit request =>
+  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => BadRequest(view(formWithErrors)),
-        _ => Ok(view(form))
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        value =>
+          saveService
+            .save(SessionData.SectionOne.setClaimReferenceNumber(value))
+            .map(_ => Redirect(controllers.routes.ClaimingGiftAidSmallDonationsController.onPageLoad()))
       )
   }
 }

@@ -29,7 +29,7 @@ class SessionDataSpec extends BaseSpec {
             claimingGiftAid = Some(true),
             claimingTaxDeducted = Some(true),
             claimingUnderGasds = Some(true),
-            claimReferenceNumber = Some("1234567890")
+            claimReferenceNumber = Some(true)
           )
         )
       )
