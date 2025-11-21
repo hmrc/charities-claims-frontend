@@ -16,22 +16,6 @@
 
 package forms
 
-import play.api.data.Forms.of
-import play.api.data.FieldMapping
-
-trait Mappings extends Formatters with Constraints {
-
-  protected def boolean(
-    requiredKey: String = "error.required",
-    invalidKey: String = "error.boolean",
-    args: Seq[String] = Seq.empty
-  ): FieldMapping[Boolean] =
-    of(using booleanFormatter(requiredKey, invalidKey, args))
-
-  protected def text(
-    requiredKey: String,
-    args: Seq[String] = Seq.empty
-  ): FieldMapping[String] =
-    of(using stringFormatter(requiredKey, args))
-
+object Validation {
+  val claimReferenceNumberPattern = "^([\\x00-\\x7F\\xA0-\\xFF]{1,20})$"
 }
