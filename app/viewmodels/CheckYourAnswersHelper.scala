@@ -17,10 +17,11 @@
 package viewmodels.govuk
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.*
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import models.SectionOneAnswers
 import controllers.sectionone.routes
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 
 class CheckYourAnswersHelper {
 
@@ -80,10 +81,63 @@ class CheckYourAnswersHelper {
             )
           )
         )
-      )
-      // Row 4 (Do you have a reference number?):
-      // Row 5 (What is your reference number?):
+      ),
+      // Row 4 (Do you have a reference number?)
+//        Some(
+//        SummaryListRow(
+//          key = Key(content = Text(messages("checkYourAnswers.hasRef.label"))),
+//          value = Value(content = Text(if (answers.SOMETHING.getOrElse(false)) "Yes" else "No")),
+//          actions = Some(
+//            Actions(items =
+//              Seq(
+//                ActionItem(
+//                  href = routes.ClaimReferenceNumberCheckController.onPageLoad.url,
+//                  content = Text(messages("site.change"))
+//                )
+//              )
+//            )
+//          )
+//        )),
 
+      // Row 5 (What is your reference number?)
+      answers.claimReferenceNumber match {
+        case Some(refNum) =>
+          // If they entered a number, show the number
+          Some(
+            SummaryListRow(
+              key = Key(content = Text(messages("checkYourAnswers.refNumber.label"))),
+              value = Value(content = Text(refNum)),
+              actions = Some(
+                Actions(items =
+                  Seq(
+                    ActionItem(
+                      href = routes.ClaimReferenceNumberCheckController.onPageLoad.url,
+                      content = Text(messages("site.change")),
+                      visuallyHiddenText = Some(messages("checkYourAnswers.refNumber.label"))
+                    )
+                  )
+                )
+              )
+            )
+          )
+        case None         =>
+          // If they skipped it, show the "Enter..." link
+          Some(
+            SummaryListRow(
+              key = Key(content = Text(messages("checkYourAnswers.refNumber.label"))),
+              value = Value(
+                content = HtmlContent(
+                  s"""<a class="govuk-link" href="${routes.ClaimReferenceNumberCheckController.onPageLoad.url}">
+                   |${messages("site.enter")} <span class="govuk-visually-hidden">${messages(
+                      "checkYourAnswers.refNumber.label"
+                    )}</span>
+                   |</a>""".stripMargin
+                )
+              ),
+              actions = None
+            )
+          )
+      }
     ).flatten
 
     SummaryList(rows)
