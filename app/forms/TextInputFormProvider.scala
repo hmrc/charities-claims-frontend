@@ -34,7 +34,7 @@ class TextInputFormProvider @Inject() extends Mappings {
     regexPatternError: String
   ): Form[String] =
     Form(
-      mapping(
+      single(
         "referenceNumber" -> text(errorRequired)
           .verifying(
             firstError(

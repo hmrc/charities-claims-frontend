@@ -17,8 +17,9 @@
 package forms
 
 import play.api.data.validation.{Constraint, Invalid, Valid}
+import play.api.data.validation
 
-trait Constraints {
+trait Constraints extends validation.Constraints {
 
   protected def firstError[A](constraints: Constraint[A]*): Constraint[A] =
     Constraint { input =>

@@ -23,10 +23,6 @@ trait Formatters {
 
   def stringFormatter(
     errorKey: String,
-    invalidKey: String,
-    maxInputLength: Int,
-    maxInputLengthError: String,
-    regexPatternError: String,
     args: Seq[String] = Seq.empty
   ): Formatter[String] = new Formatter[String] {
 
