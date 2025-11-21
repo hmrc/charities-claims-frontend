@@ -29,4 +29,14 @@ trait Mappings extends Formatters with Constraints {
   ): FieldMapping[Boolean] =
     of(using booleanFormatter(requiredKey, invalidKey, args))
 
+  protected def text(
+    requiredKey: String = "error.required",
+    invalidKey: String = "error.string",
+    maxInputLength: Int = 20,
+    maxInputLengthError: String = "",
+    regexPatternError: String = "",
+    args: Seq[String] = Seq.empty
+  ): FieldMapping[String] =
+    of(using stringFormatter(requiredKey, invalidKey, maxInputLength, maxInputLengthError, regexPatternError, args))
+
 }

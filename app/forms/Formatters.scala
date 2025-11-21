@@ -21,7 +21,14 @@ import play.api.data.FormError
 
 trait Formatters {
 
-  def stringFormatter(errorKey: String, args: Seq[String] = Seq.empty): Formatter[String] = new Formatter[String] {
+  def stringFormatter(
+    errorKey: String,
+    invalidKey: String,
+    maxInputLength: Int,
+    maxInputLengthError: String,
+    regexPatternError: String,
+    args: Seq[String] = Seq.empty
+  ): Formatter[String] = new Formatter[String] {
 
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
       data.get(key) match {
