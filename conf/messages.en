@@ -5,6 +5,7 @@ site.continue = Continue
 site.yes = Yes
 site.no = No
 site.change = Change
+site.enter = Enter
 
 back.text = Back
 
