@@ -23,6 +23,7 @@ final case class SectionOneAnswers(
   claimingGiftAid: Option[Boolean] = None,
   claimingTaxDeducted: Option[Boolean] = None,
   claimingUnderGasds: Option[Boolean] = None,
+  hasClaimReferenceNumber: Option[Boolean] = None,
   claimReferenceNumber: Option[String] = None
 )
 
