@@ -40,10 +40,10 @@
 
     @formHelper(action = routes.ClaimReferenceNumberInputController.onSubmit, Symbol("autoComplete") -> "off") {
 
-    @govukInput(
-        InputViewModel(form("value"))
-    )
+        @govukInput(
+            InputViewModel(field=form("value"),label = LabelViewModel(messages("")).withCssClass("govuk-label--m"))
+        )
 
-    @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
     }
 }

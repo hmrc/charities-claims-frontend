@@ -42,7 +42,7 @@ class ClaimReferenceNumberInputController @Inject() (
     "claimReferenceNumberInput.error.required",
     20,
     "claimReferenceNumberInput.error.length",
-    "claimReferenceNumberInput.error.regex"
+    "claimReferenceNumberInput.error.regex.one"
   )
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>

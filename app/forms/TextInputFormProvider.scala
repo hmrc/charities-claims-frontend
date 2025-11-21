@@ -35,7 +35,7 @@ class TextInputFormProvider @Inject() extends Mappings {
   ): Form[String] =
     Form(
       single(
-        "referenceNumber" -> text(errorRequired)
+        "value" -> text(errorRequired)
           .verifying(
             firstError(
               maxLength(maxInputLength, maxInputLengthError),

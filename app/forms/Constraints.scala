@@ -37,12 +37,12 @@ trait Constraints extends validation.Constraints {
         Invalid(errorKey, regex)
     }
 
-  protected def maxLength(maximum: Int, errorKey: String): Constraint[String] =
-    Constraint {
-      case str if str.length <= maximum =>
-        Valid
-      case _                            =>
-        Invalid(errorKey, maximum)
-    }
+//  protected def maxLength(maximum: Int, errorKey: String): Constraint[String] =
+//    Constraint {
+//      case str if str.length <= maximum =>
+//        Valid
+//      case _                            =>
+//        Invalid(errorKey, maximum)
+//    }
 
 }
