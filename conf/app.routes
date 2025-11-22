@@ -18,11 +18,11 @@ POST        /claiming-gift-aid                        controllers.sectionone.Cla
 GET         /claiming-tax-relief                      controllers.sectionone.ClaimingOtherIncomeController.onPageLoad
 POST        /claiming-tax-relief                      controllers.sectionone.ClaimingOtherIncomeController.onSubmit
 
-GET         /claim-reference-number-check             controllers.sectionone.ClaimReferenceNumberCheckController.onPageLoad
-POST        /claim-reference-number-check             controllers.sectionone.ClaimReferenceNumberCheckController.onSubmit
+GET         /claim-reference-number-check             controllers.sectionone.ClaimingReferenceNumberCheckController.onPageLoad
+POST        /claim-reference-number-check             controllers.sectionone.ClaimingReferenceNumberCheckController.onSubmit
 
 GET         /claim-reference-number-input             controllers.sectionone.ClaimReferenceNumberInputController.onPageLoad
 POST        /claim-reference-number-input             controllers.sectionone.ClaimReferenceNumberInputController.onSubmit
 
-GET         /claim-declaration                                                                                 controllers.ClaimDeclarationController.onPageLoad()
-POST        /claim-declaration                                                                                 controllers.ClaimDeclarationController.onSubmit()
+GET         /claim-declaration                        controllers.ClaimDeclarationController.onPageLoad()
+POST        /claim-declaration                        controllers.ClaimDeclarationController.onSubmit()

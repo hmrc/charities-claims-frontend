@@ -24,35 +24,35 @@ import models.SessionData
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.ClaimingGiftAidSmallDonationsView
+import views.html.ClaimingReferenceNumberCheckView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimingGiftAidSmallDonationsController @Inject() (
+class ClaimingReferenceNumberCheckController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimingGiftAidSmallDonationsView,
+  view: ClaimingReferenceNumberCheckView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("claimingGiftAidSmallDonations.error.required")
+  val form: Form[Boolean] = formProvider("claimReferenceNumberCheck.error.required")
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = SessionData.SectionOne.getClaimingUnderGasds
+  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+    val previousAnswer = SessionData.SectionOne.getClaimingReferenceNumber
     Ok(view(form.withDefault(previousAnswer)))
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           saveService
-            .save(SessionData.SectionOne.setClaimingUnderGasds(value))
-            .map(_ => Redirect(routes.ClaimingReferenceNumberCheckController.onPageLoad))
+            .save(SessionData.SectionOne.setClaimingReferenceNumber(value))
+            .map(_ => Redirect(controllers.sectionone.routes.ClaimReferenceNumberInputController.onPageLoad))
       )
   }
 }
