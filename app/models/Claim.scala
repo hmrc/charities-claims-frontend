@@ -29,7 +29,7 @@ final case class Claim(
 )
 
 object Claim {
-  given format: Format[Claim] = Json.format[Claim]
+  given Format[Claim] = Json.format[Claim]
 }
 
 final case class ClaimData(
@@ -42,7 +42,7 @@ final case class ClaimData(
 )
 
 object ClaimData {
-  given format: Format[ClaimData] = Json.format[ClaimData]
+  given Format[ClaimData] = Json.format[ClaimData]
 }
 
 final case class RepaymentClaimDetails(
@@ -53,7 +53,7 @@ final case class RepaymentClaimDetails(
 )
 
 object RepaymentClaimDetails {
-  given format: Format[RepaymentClaimDetails] = Json.format[RepaymentClaimDetails]
+  given Format[RepaymentClaimDetails] = Json.format[RepaymentClaimDetails]
 }
 
 final case class OrganisationDetails(
@@ -66,7 +66,7 @@ final case class OrganisationDetails(
 )
 
 object OrganisationDetails {
-  given format: Format[OrganisationDetails] = Json.format[OrganisationDetails]
+  given Format[OrganisationDetails] = Json.format[OrganisationDetails]
 }
 
 final case class GiftAidScheduleData(
@@ -77,7 +77,7 @@ final case class GiftAidScheduleData(
 )
 
 object GiftAidScheduleData {
-  given format: Format[GiftAidScheduleData] = Json.format[GiftAidScheduleData]
+  given Format[GiftAidScheduleData] = Json.format[GiftAidScheduleData]
 }
 
 final case class DeclarationDetails(
@@ -86,7 +86,7 @@ final case class DeclarationDetails(
 )
 
 object DeclarationDetails {
-  given format: Format[DeclarationDetails] = Json.format[DeclarationDetails]
+  given Format[DeclarationDetails] = Json.format[DeclarationDetails]
 }
 
 final case class SubmissionDetails(
@@ -95,7 +95,7 @@ final case class SubmissionDetails(
 )
 
 object SubmissionDetails {
-  given format: Format[SubmissionDetails] = Json.format[SubmissionDetails]
+  given Format[SubmissionDetails] = Json.format[SubmissionDetails]
 }
 
 final case class Donation(
@@ -112,7 +112,7 @@ final case class Donation(
 )
 
 object Donation {
-  given format: Format[Donation] = Json.format[Donation]
+  given Format[Donation] = Json.format[Donation]
 }
 
 final case class OtherIncomeScheduleData(
@@ -123,7 +123,7 @@ final case class OtherIncomeScheduleData(
 )
 
 object OtherIncomeScheduleData {
-  given format: Format[OtherIncomeScheduleData] = Json.format[OtherIncomeScheduleData]
+  given Format[OtherIncomeScheduleData] = Json.format[OtherIncomeScheduleData]
 }
 
 final case class Payment(
@@ -135,7 +135,7 @@ final case class Payment(
 )
 
 object Payment {
-  given format: Format[Payment] = Json.format[Payment]
+  given Format[Payment] = Json.format[Payment]
 }
 
 final case class GasdsScheduleData(
@@ -146,7 +146,7 @@ final case class GasdsScheduleData(
 )
 
 object GasdsScheduleData {
-  given format: Format[GasdsScheduleData] = Json.format[GasdsScheduleData]
+  given Format[GasdsScheduleData] = Json.format[GasdsScheduleData]
 }
 
 final case class GasdsClaim(
@@ -155,7 +155,7 @@ final case class GasdsClaim(
 )
 
 object GasdsClaim {
-  given format: Format[GasdsClaim] = Json.format[GasdsClaim]
+  given Format[GasdsClaim] = Json.format[GasdsClaim]
 }
 
 final case class ConnectedCharity(
@@ -165,7 +165,7 @@ final case class ConnectedCharity(
 )
 
 object ConnectedCharity {
-  given format: Format[ConnectedCharity] = Json.format[ConnectedCharity]
+  given Format[ConnectedCharity] = Json.format[ConnectedCharity]
 }
 
 final case class CommunityBuilding(
@@ -182,5 +182,5 @@ final case class CommunityBuilding(
 )
 
 object CommunityBuilding {
-  given format: Format[CommunityBuilding] = Json.format[CommunityBuilding]
+  given Format[CommunityBuilding] = Json.format[CommunityBuilding]
 }
