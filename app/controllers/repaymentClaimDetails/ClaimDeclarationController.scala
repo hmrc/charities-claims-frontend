@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.sectionone
+package controllers.repaymentclaimdetails
 
 import com.google.inject.Inject
 import play.api.i18n.I18nSupport

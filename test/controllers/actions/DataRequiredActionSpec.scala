@@ -17,6 +17,7 @@
 package controllers.actions
 
 import models.SessionData
+import models.RepaymentClaimDetailsAnswers
 import models.requests.OptionalDataRequest
 import play.api.mvc.Results.*
 import play.api.test.Helpers.*
@@ -36,7 +37,10 @@ class DataRequiredActionSpec extends BaseSpec {
       val action = new DefaultDataRequiredAction()
 
       val dataRequest =
-        OptionalDataRequest(request, sessionData = Some(SessionData.SectionOne.setClaimingTaxDeducted(true)))
+        OptionalDataRequest(
+          request,
+          sessionData = Some(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+        )
       val result      = action.invokeBlock(dataRequest, _ => Future.successful(Ok))
       status(result) shouldBe OK
     }

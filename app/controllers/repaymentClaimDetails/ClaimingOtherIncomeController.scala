@@ -14,45 +14,47 @@
  * limitations under the License.
  */
 
-package controllers.sectionone
+package controllers.repaymentclaimdetails
 
-import services.SaveService
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
-import views.html.ClaimingGiftAidView
 import controllers.actions.Actions
 import forms.YesNoFormProvider
-import models.SessionData
+import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.SaveService
+import views.html.ClaimingOtherIncomeView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimingGiftAidController @Inject() (
+class ClaimingOtherIncomeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
+  view: ClaimingOtherIncomeView,
   actions: Actions,
-  view: ClaimingGiftAidView,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("claimingGiftAid.error.required")
+  val form: Form[Boolean] = formProvider("claimingOtherIncome.error.required")
 
-  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = request.sessionData.sectionOneAnswers.flatMap(_.claimingGiftAid)
+  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingTaxDeducted
     Ok(view(form.withDefault(previousAnswer)))
   }
 
-  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           saveService
-            .save(SessionData.SectionOne.setClaimingGiftAid(value))
-            .map(_ => Redirect(controllers.sectionone.routes.ClaimingOtherIncomeController.onPageLoad))
+            .save(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(value))
+            .map(_ =>
+              Redirect(controllers.repaymentclaimdetails.routes.ClaimingGiftAidSmallDonationsController.onPageLoad)
+            )
       )
   }
 }

@@ -17,6 +17,7 @@
 package controllers.actions
 
 import models.SessionData
+import models.RepaymentClaimDetailsAnswers
 import models.requests.{AuthorisedRequest, OptionalDataRequest}
 import play.api.mvc.Results.*
 import play.api.test.Helpers.*
@@ -40,7 +41,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       val mockSessionCache = mock[SessionCache]
       val action           = new DefaultDataRetrievalAction(mockSessionCache)
 
-      val sessionData = SessionData.SectionOne.setClaimingTaxDeducted(true)
+      val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
 
       (mockSessionCache
         .get()(using _: HeaderCarrier))

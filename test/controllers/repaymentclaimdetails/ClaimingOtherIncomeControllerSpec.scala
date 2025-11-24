@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package controllers.sectionone
+package controllers.repaymentclaimdetails
 
-import forms.YesNoFormProvider
-import models.SessionData
-import play.api.Application
-import play.api.data.Form
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
-import views.html.ClaimingOtherIncomeView
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import controllers.ControllerSpec
+import views.html.ClaimingOtherIncomeView
+import play.api.Application
+import forms.YesNoFormProvider
+import models.RepaymentClaimDetailsAnswers
+import play.api.data.Form
 
 class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
@@ -49,7 +49,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly" in {
 
-        val sessionData = SessionData.SectionOne.setClaimingTaxDeducted(true)
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 

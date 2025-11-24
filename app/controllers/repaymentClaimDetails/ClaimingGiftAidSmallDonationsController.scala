@@ -14,33 +14,33 @@
  * limitations under the License.
  */
 
-package controllers.sectionone
+package controllers.repaymentclaimdetails
 
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.YesNoFormProvider
-import models.SessionData
+import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.ClaimingOtherIncomeView
+import views.html.ClaimingGiftAidSmallDonationsView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimingOtherIncomeController @Inject() (
+class ClaimingGiftAidSmallDonationsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimingOtherIncomeView,
+  view: ClaimingGiftAidSmallDonationsView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("claimingOtherIncome.error.required")
+  val form: Form[Boolean] = formProvider("claimingGiftAidSmallDonations.error.required")
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = SessionData.SectionOne.getClaimingTaxDeducted
+    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingUnderGasds
     Ok(view(form.withDefault(previousAnswer)))
   }
 
@@ -51,8 +51,8 @@ class ClaimingOtherIncomeController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           saveService
-            .save(SessionData.SectionOne.setClaimingTaxDeducted(value))
-            .map(_ => Redirect(controllers.sectionone.routes.ClaimingGiftAidSmallDonationsController.onPageLoad))
+            .save(RepaymentClaimDetailsAnswers.setClaimingUnderGasds(value))
+            .map(_ => Redirect(routes.ClaimingReferenceNumberCheckController.onPageLoad))
       )
   }
 }
