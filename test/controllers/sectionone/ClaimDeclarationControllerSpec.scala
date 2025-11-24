@@ -36,9 +36,9 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
 
           val view = application.injector.instanceOf[ClaimDeclarationView]
 
-          status(result) mustEqual OK
+          status(result) shouldEqual OK
 
-          contentAsString(result) mustEqual view().body
+          contentAsString(result) shouldEqual view().body
         }
       }
     }
@@ -53,8 +53,8 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustEqual Some(routes.ClaimDeclarationController.onPageLoad.url)
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.ClaimDeclarationController.onPageLoad.url)
         }
       }
     }

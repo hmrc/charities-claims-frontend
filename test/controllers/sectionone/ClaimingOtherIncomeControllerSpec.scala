@@ -42,8 +42,8 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
 
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form).body
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form).body
         }
       }
 
@@ -60,8 +60,8 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
 
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form.fill(true)).body
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(true)).body
         }
       }
     }
@@ -77,8 +77,8 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustEqual Some(
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
             routes.ClaimingGiftAidSmallDonationsController.onPageLoad.url
           )
         }
@@ -94,7 +94,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result) mustEqual BAD_REQUEST
+          status(result) shouldEqual BAD_REQUEST
         }
       }
     }

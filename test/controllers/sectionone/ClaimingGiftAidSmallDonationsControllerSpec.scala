@@ -41,8 +41,8 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingGiftAidSmallDonationsView]
 
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form).body
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form).body
         }
       }
       "should render the page and pre-populate correctly" in {
@@ -58,8 +58,8 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingGiftAidSmallDonationsView]
 
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form.fill(true)).body
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(true)).body
         }
       }
     }
@@ -75,8 +75,8 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustEqual Some(routes.ClaimingReferenceNumberCheckController.onPageLoad.url)
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.ClaimingReferenceNumberCheckController.onPageLoad.url)
         }
       }
 
@@ -90,7 +90,7 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result) mustEqual BAD_REQUEST
+          status(result) shouldEqual BAD_REQUEST
         }
       }
     }

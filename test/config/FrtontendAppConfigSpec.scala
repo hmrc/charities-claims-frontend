@@ -24,23 +24,23 @@ class FrontendAppConfigSpec extends BaseSpec {
 
   "AppConfig" - {
     "return appName" in {
-      testFrontendAppConfig.appName mustBe "foo-bar-frontend"
+      testFrontendAppConfig.appName shouldBe "foo-bar-frontend"
     }
 
     "return mongoDbTTL" in {
-      testFrontendAppConfig.mongoDbTTL mustBe Duration.apply(15, "minutes")
+      testFrontendAppConfig.mongoDbTTL shouldBe Duration.apply(15, "minutes")
     }
 
     "return loginUrl" in {
-      testFrontendAppConfig.loginUrl mustBe "http://foo.com/login"
+      testFrontendAppConfig.loginUrl shouldBe "http://foo.com/login"
     }
 
     "return loginContinueUrl" in {
-      testFrontendAppConfig.loginContinueUrl mustBe "http://foo.com/bar"
+      testFrontendAppConfig.loginContinueUrl shouldBe "http://foo.com/bar"
     }
 
     "return signOutUrl" in {
-      testFrontendAppConfig.signOutUrl mustBe "http://foo.com/sign-out"
+      testFrontendAppConfig.signOutUrl shouldBe "http://foo.com/sign-out"
     }
   }
 

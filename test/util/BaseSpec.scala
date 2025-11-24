@@ -40,12 +40,15 @@ import org.apache.pekko.stream.Materializer
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.{Millis, Span}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, OptionValues}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import play.api.{Application, Configuration}
+import play.api.libs.json.Reads
+import play.api.libs.json.Json
+import scala.io.Source
 
 abstract class BaseSpec
     extends AnyFreeSpec
@@ -59,6 +62,9 @@ abstract class BaseSpec
 
   implicit val actorSystem: ActorSystem = ActorSystem("unit-tests")
   implicit val mat: Materializer        = Materializer.createMaterializer(actorSystem)
+
+  override protected def afterAll(): Unit =
+    actorSystem.terminate()
 
   override implicit val patienceConfig: PatienceConfig =
     PatienceConfig(timeout = scaled(Span(1000, Millis)), interval = scaled(Span(50, Millis)))
@@ -87,4 +93,10 @@ abstract class BaseSpec
       )
     )
   )
+
+  final def readTestResource[T](path: String): String =
+    Source.fromInputStream(this.getClass.getResourceAsStream(path)).getLines().mkString("\n")
+
+  final def readAndParseJson[T](path: String)(using Reads[T]): T =
+    Json.parse(readTestResource(path)).as[T]
 }
