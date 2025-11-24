@@ -9,3 +9,7 @@
 .js-enabled .js-visible {
   display: inline-block !important;
 }
+
+textarea.no-resize {
+  resize: none !important;
+}

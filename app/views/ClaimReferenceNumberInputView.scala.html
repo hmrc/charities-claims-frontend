@@ -20,8 +20,8 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    govukCharacterCount: GovukCharacterCount
 )
 
 @(form: Form[?])(implicit request: Request[?], messages: Messages)
@@ -39,8 +39,11 @@
 
     @formHelper(action = routes.ClaimReferenceNumberInputController.onSubmit, Symbol("autoComplete") -> "off") {
 
-        @govukInput(
-            InputViewModel(field=form("value"),label = LabelViewModel(messages("")).withCssClass("govuk-label--m"))
+        @govukCharacterCount(
+            CharacterCountViewModel(
+                form("value"),
+                LabelViewModel(messages("")).withCssClass("govuk-label--m")
+          ).noResize
         )
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
