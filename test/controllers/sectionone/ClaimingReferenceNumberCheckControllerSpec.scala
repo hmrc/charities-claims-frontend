@@ -16,15 +16,14 @@
 
 package controllers.sectionone
 
-import forms.YesNoFormProvider
-import play.api.Application
-import play.api.data.Form
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
-import views.html.ClaimingReferenceNumberCheckView
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import controllers.ControllerSpec
+import views.html.ClaimingReferenceNumberCheckView
+import play.api.Application
+import forms.YesNoFormProvider
 import models.SessionData
-import org.scalatest.matchers.should.Matchers.shouldBe
+import play.api.data.Form
 
 class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 

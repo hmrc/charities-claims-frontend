@@ -16,9 +16,8 @@
 
 package models
 
-import org.scalatest.matchers.should.Matchers.shouldBe
-import play.api.libs.json.Json
 import util.BaseSpec
+import play.api.libs.json.Json
 
 class SessionDataSpec extends BaseSpec {
 

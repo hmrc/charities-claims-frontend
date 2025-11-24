@@ -50,10 +50,10 @@ class DataRetrievalActionSpec extends BaseSpec {
       val result = action.invokeBlock(
         authorisedRequest,
         (req: OptionalDataRequest[?]) =>
-          req.sessionData must be(Some(sessionData))
+          req.sessionData shouldBe Some(sessionData)
           Future.successful(Ok)
       )
-      status(result) must be(OK)
+      status(result) shouldBe OK
     }
 
     "refines AuthorisedRequest into a OptionalDataRequest when session data object doesn't exist" in {
@@ -68,10 +68,10 @@ class DataRetrievalActionSpec extends BaseSpec {
       val result = action.invokeBlock(
         authorisedRequest,
         (req: OptionalDataRequest[?]) =>
-          req.sessionData must be(Some(SessionData(None)))
+          req.sessionData shouldBe Some(SessionData(None))
           Future.successful(Ok)
       )
-      status(result) must be(OK)
+      status(result) shouldBe OK
     }
   }
 }

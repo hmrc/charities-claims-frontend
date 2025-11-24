@@ -24,7 +24,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[?])(implicit request: Request[_], messages: Messages)
+@(form: Form[?])(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle    = titleNoForm(messages("claimingGiftAidSmallDonations.title"))

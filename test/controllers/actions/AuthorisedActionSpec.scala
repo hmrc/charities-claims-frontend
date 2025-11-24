@@ -58,8 +58,8 @@ class AuthorisedActionSpec extends BaseSpec {
 
       val controller = new Harness(authorisedAction)
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
-      status(result)          must be(OK)
-      contentAsString(result) must be("Individual")
+      status(result)          shouldBe OK
+      contentAsString(result) shouldBe "Individual"
     }
 
     "create AuthorisedRequest when user has an Organisation affinity group" in {
@@ -79,8 +79,8 @@ class AuthorisedActionSpec extends BaseSpec {
 
       val controller = new Harness(authorisedAction)
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
-      status(result)          must be(OK)
-      contentAsString(result) must be("Organisation")
+      status(result)          shouldBe OK
+      contentAsString(result) shouldBe "Organisation"
     }
 
     "create AuthorisedRequest when user has an Agent affinity group" in {
@@ -100,8 +100,8 @@ class AuthorisedActionSpec extends BaseSpec {
 
       val controller = new Harness(authorisedAction)
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
-      status(result)          must be(OK)
-      contentAsString(result) must be("Agent")
+      status(result)          shouldBe OK
+      contentAsString(result) shouldBe "Agent"
     }
 
     "redirect to login page when user has no affinity group" in {
@@ -121,12 +121,11 @@ class AuthorisedActionSpec extends BaseSpec {
 
       val controller = new Harness(authorisedAction)
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
-      status(result)           must be(SEE_OTHER)
-      redirectLocation(result) must be(
-        Some(
-          s"${testFrontendAppConfig.loginUrl}?continue=${URLEncoder.encode(testFrontendAppConfig.loginContinueUrl, "UTF-8")}"
-        )
+      status(result)           shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(
+        s"${testFrontendAppConfig.loginUrl}?continue=${URLEncoder.encode(testFrontendAppConfig.loginContinueUrl, "UTF-8")}"
       )
+
     }
 
   }

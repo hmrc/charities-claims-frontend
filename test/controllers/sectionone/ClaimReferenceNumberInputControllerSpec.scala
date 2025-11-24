@@ -47,8 +47,8 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimReferenceNumberInputView]
 
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form).body
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form).body
         }
       }
       "should render the page and pre-populate correctly" in {
@@ -64,8 +64,8 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimReferenceNumberInputView]
 
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(form.fill("123456")).body
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill("123456")).body
         }
       }
     }
@@ -81,8 +81,8 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustEqual Some(routes.ClaimDeclarationController.onPageLoad.url)
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.ClaimDeclarationController.onPageLoad.url)
         }
       }
 
@@ -96,7 +96,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result) mustEqual BAD_REQUEST
+          status(result) shouldEqual BAD_REQUEST
         }
       }
     }
