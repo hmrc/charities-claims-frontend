@@ -35,6 +35,6 @@ class StartController @Inject() (
     authorisedAction(_ => Ok)
 
   val timedOut: Action[AnyContent] =
-    Action(implicit request => Ok(routes.StartController.start.url))
+    Action(implicit request => Redirect(routes.StartController.start.url))
 
 }
