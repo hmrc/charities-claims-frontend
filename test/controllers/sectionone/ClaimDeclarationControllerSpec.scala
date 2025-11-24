@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sectionone
 
+import controllers.ControllerSpec
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -29,7 +30,7 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimDeclarationController.onPageLoad().url)
+            FakeRequest(GET, routes.ClaimDeclarationController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -38,6 +39,22 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
           status(result) mustEqual OK
 
           contentAsString(result) mustEqual view().body
+        }
+      }
+    }
+
+    "onSubmit" - {
+      "should redirect to the next page" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.ClaimDeclarationController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustEqual Some(routes.ClaimDeclarationController.onPageLoad.url)
         }
       }
     }

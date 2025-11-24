@@ -27,8 +27,7 @@
 @(form: Form[?])(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle    = titleNoForm(messages("claimingGiftAid.title")),
-    showBackLink = true
+    pageTitle    = titleNoForm(messages("claimingGiftAid.title"))
 ) {
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))

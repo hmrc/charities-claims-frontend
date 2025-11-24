@@ -58,7 +58,7 @@ class ClaimReferenceNumberInputController @Inject() (
         value =>
           saveService
             .save(SessionData.SectionOne.setClaimReferenceNumber(value))
-            .map(_ => Redirect(controllers.sectionone.routes.ClaimReferenceNumberInputController.onPageLoad))
+            .map(_ => Redirect(routes.ClaimDeclarationController.onPageLoad))
       )
   }
 }
