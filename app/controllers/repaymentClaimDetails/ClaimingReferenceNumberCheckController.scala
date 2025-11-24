@@ -14,51 +14,49 @@
  * limitations under the License.
  */
 
-package controllers.sectionone
+package controllers.repaymentclaimdetails
 
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
-import forms.TextInputFormProvider
-import models.SessionData
+import forms.YesNoFormProvider
+import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.ClaimReferenceNumberInputView
+import views.html.ClaimingReferenceNumberCheckView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimReferenceNumberInputController @Inject() (
+class ClaimingReferenceNumberCheckController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimReferenceNumberInputView,
+  view: ClaimingReferenceNumberCheckView,
   actions: Actions,
-  formProvider: TextInputFormProvider,
+  formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[String] = formProvider(
-    "claimReferenceNumberInput.error.required",
-    "claimReferenceNumberInput.error.required",
-    20,
-    "claimReferenceNumberInput.error.length",
-    "claimReferenceNumberInput.error.regex.one"
-  )
+  val form: Form[Boolean] = formProvider("claimReferenceNumberCheck.error.required")
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = SessionData.SectionOne.getClaimReferenceNumber
+  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingReferenceNumber
     Ok(view(form.withDefault(previousAnswer)))
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           saveService
-            .save(SessionData.SectionOne.setClaimReferenceNumber(value))
-            .map(_ => Redirect(routes.ClaimDeclarationController.onPageLoad))
+            .save(RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(value))
+            .map { _ =>
+              if value
+              then Redirect(routes.ClaimReferenceNumberInputController.onPageLoad)
+              else Redirect(routes.ClaimDeclarationController.onPageLoad)
+            }
       )
   }
 }

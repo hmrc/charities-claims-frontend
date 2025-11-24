@@ -24,8 +24,8 @@ class SessionDataSpec extends BaseSpec {
   "SessionData" - {
     "be serializable and deserializable" in {
       val sessionData             = SessionData(
-        sectionOneAnswers = Some(
-          SectionOneAnswers(
+        repaymentClaimDetailsAnswers = Some(
+          RepaymentClaimDetailsAnswers(
             claimingGiftAid = Some(true),
             claimingTaxDeducted = Some(true),
             claimingUnderGasds = Some(true),
