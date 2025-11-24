@@ -26,12 +26,15 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import connectors.ClaimsConnector
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 @ImplementedBy(classOf[DefaultDataRetrievalAction])
 trait DataRetrievalAction extends ActionRefiner[AuthorisedRequest, OptionalDataRequest]
 
 class DefaultDataRetrievalAction @Inject() (
-  cache: SessionCache
+  cache: SessionCache,
+  claimsConnector: ClaimsConnector
 )(using val executionContext: ExecutionContext)
     extends DataRetrievalAction {
 
@@ -41,19 +44,43 @@ class DefaultDataRetrievalAction @Inject() (
     given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request.underlying, request.underlying.session)
     cache
       .get()
-      .map {
-        case None              =>
-          Right(
-            OptionalDataRequest(
-              request,
-              Some(SessionData(None)) // todo will need changing once we fetch from backend
-            )
-          )
+      .flatMap {
+        case None =>
+          claimsConnector.retrieveUnsubmittedClaims
+            .map { getClaimsResponse =>
+              request.affinityGroup match {
+                case AffinityGroup.Organisation =>
+                  if getClaimsResponse.claimsCount > 0
+                  then
+                    Right(
+                      OptionalDataRequest(
+                        request,
+                        Some(
+                          // safe to assume there is at least one claim
+                          SessionData.from(getClaimsResponse.claimsList.head)
+                        )
+                      )
+                    )
+                  else
+                    Right(
+                      OptionalDataRequest(
+                        request,
+                        Some(SessionData())
+                      )
+                    )
+
+                case AffinityGroup.Agent =>
+                  throw new UnsupportedOperationException("Agents support coming soon, stay tuned!")
+              }
+            }
+
         case Some(sessionData) =>
-          Right(
-            OptionalDataRequest(
-              request,
-              Some(sessionData)
+          Future.successful(
+            Right(
+              OptionalDataRequest(
+                request,
+                Some(sessionData)
+              )
             )
           )
       }
