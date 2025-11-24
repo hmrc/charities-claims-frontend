@@ -99,6 +99,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustEqual Some(routes.ClaimingOtherIncomeController.onPageLoad.url)
         }
       }
 
@@ -113,6 +114,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustEqual Some(routes.ClaimingOtherIncomeController.onPageLoad.url)
         }
       }
 

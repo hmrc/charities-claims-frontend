@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.sectionone
 
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
-import views.html.ClaimDeclarationView
 import play.api.i18n.I18nSupport
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.ClaimDeclarationView
 
 class ClaimDeclarationController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -32,7 +32,7 @@ class ClaimDeclarationController @Inject() (
     Ok(view())
   }
 
-  def onSubmit(): Action[AnyContent] = Action { implicit request =>
-    Redirect(controllers.routes.ClaimDeclarationController.onPageLoad())
+  def onSubmit: Action[AnyContent] = Action { implicit request =>
+    Redirect(routes.ClaimDeclarationController.onPageLoad)
   }
 }
