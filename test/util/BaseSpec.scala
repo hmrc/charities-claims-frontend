@@ -82,6 +82,8 @@ abstract class BaseSpec
           |  ttl = 15 minutes
           | }
           | urls {
+          |  baseUrl = "http://foo.com"
+          |  authLoginStubSignInUrl = "http://foo.com/auth-login-stub/gg-sign-in"
           |  login = "http://foo.com/login"
           |  loginContinue = "http://foo.com/bar"
           |  signOut = "http://foo.com/sign-out"
