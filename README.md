@@ -1,7 +1,10 @@
 
 # charities-claims-frontend
 
-***
+Charities Claims frontend microservice allows organisations or agents to claim tax repayments for: 
+- Gift Aid
+- Other income eg. bank interest
+- Top-up payments under the Gift Aid Small Donations Scheme (GASDS)
 
 ## Technical documentation
 
@@ -12,6 +15,7 @@ Run the following command to start all the related services for this project:
 sm2 -start DASS_CHARITIES_ALL
 ```
 Included in the above command is `CHARITIES_CLAIMS_FRONTEND`, which is this repository's most recent release.
+
 If you want to run your local version of this code instead, run:
 ```bash
 sm2 -stop CHARITIES_CLAIMS_FRONTEND
@@ -21,7 +25,7 @@ then:
 > Note: this service runs on port 8030 by default
 
 ```bash
-sbt 'run'
+sbt run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes
 ```
 
 ***

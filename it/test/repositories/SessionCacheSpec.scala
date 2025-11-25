@@ -18,17 +18,14 @@ package repositories
 
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import play.api.inject.guice.GuiceApplicationBuilder
-import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
 import play.api.Application
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.SessionId
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import models.{RepaymentClaimDetailsAnswers, SessionData}
+
 import java.util.UUID
-import models.SessionData
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-import models.RepaymentClaimDetailsAnswers
 
 class SessionCacheSpec
     extends AnyWordSpec

@@ -31,6 +31,14 @@ class FrontendAppConfigSpec extends BaseSpec {
       testFrontendAppConfig.mongoDbTTL shouldBe Duration.apply(15, "minutes")
     }
 
+    "return baseUrl" in {
+      testFrontendAppConfig.baseUrl shouldBe "http://foo.com"
+    }
+
+    "return authLoginStubSignInUrl" in {
+      testFrontendAppConfig.authLoginStubSignInUrl shouldBe "http://foo.com/auth-login-stub/gg-sign-in"
+    }
+
     "return loginUrl" in {
       testFrontendAppConfig.loginUrl shouldBe "http://foo.com/login"
     }
