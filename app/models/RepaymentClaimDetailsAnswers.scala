@@ -37,6 +37,18 @@ object RepaymentClaimDetailsAnswers {
 
   given Format[RepaymentClaimDetailsAnswers] = Json.format[RepaymentClaimDetailsAnswers]
 
+  private def get[A](f: RepaymentClaimDetailsAnswers => Option[A])(using session: SessionData): Option[A] =
+    session.repaymentClaimDetailsAnswers.flatMap(f)
+
+  private def set[A](value: A)(f: (RepaymentClaimDetailsAnswers, A) => RepaymentClaimDetailsAnswers)(using
+    session: SessionData
+  ): SessionData =
+    val updated = session.repaymentClaimDetailsAnswers match
+      case Some(existing) => f(existing, value)
+      case None           => f(RepaymentClaimDetailsAnswers(), value)
+
+    session.copy(repaymentClaimDetailsAnswers = Some(updated))
+
   def from(repaymentClaimDetails: RepaymentClaimDetails): RepaymentClaimDetailsAnswers =
     RepaymentClaimDetailsAnswers(
       claimingGiftAid = Some(repaymentClaimDetails.claimingGiftAid),
@@ -51,48 +63,28 @@ object RepaymentClaimDetailsAnswers {
       makingAdjustmentToPreviousClaim = repaymentClaimDetails.makingAdjustmentToPreviousClaim
     )
 
-  def getClaimingTaxDeducted(using session: SessionData): Option[Boolean] =
-    session.repaymentClaimDetailsAnswers.flatMap(_.claimingTaxDeducted)
+  def getClaimingTaxDeducted(using session: SessionData): Option[Boolean] = get(_.claimingTaxDeducted)
 
   def setClaimingTaxDeducted(value: Boolean)(using session: SessionData): SessionData =
-    val updated = session.repaymentClaimDetailsAnswers match
-      case Some(s1) => s1.copy(claimingTaxDeducted = Some(value))
-      case None     => RepaymentClaimDetailsAnswers(claimingTaxDeducted = Some(value))
-    session.copy(repaymentClaimDetailsAnswers = Some(updated))
+    set(value)((a, v) => a.copy(claimingTaxDeducted = Some(v)))
 
-  def getClaimingGiftAid(using session: SessionData): Option[Boolean] =
-    session.repaymentClaimDetailsAnswers.flatMap(_.claimingGiftAid)
+  def getClaimingGiftAid(using session: SessionData): Option[Boolean] = get(_.claimingGiftAid)
 
   def setClaimingGiftAid(value: Boolean)(using session: SessionData): SessionData =
-    val updated = session.repaymentClaimDetailsAnswers match
-      case Some(s1) => s1.copy(claimingGiftAid = Some(value))
-      case None     => RepaymentClaimDetailsAnswers(claimingGiftAid = Some(value))
-    session.copy(repaymentClaimDetailsAnswers = Some(updated))
+    set(value)((a, v) => a.copy(claimingGiftAid = Some(v)))
 
-  def getClaimingUnderGasds(using session: SessionData): Option[Boolean] =
-    session.repaymentClaimDetailsAnswers.flatMap(_.claimingUnderGasds)
+  def getClaimingUnderGasds(using session: SessionData): Option[Boolean] = get(_.claimingUnderGasds)
 
   def setClaimingUnderGasds(value: Boolean)(using session: SessionData): SessionData =
-    val updated = session.repaymentClaimDetailsAnswers match
-      case Some(s1) => s1.copy(claimingUnderGasds = Some(value))
-      case None     => RepaymentClaimDetailsAnswers(claimingUnderGasds = Some(value))
-    session.copy(repaymentClaimDetailsAnswers = Some(updated))
+    set(value)((a, v) => a.copy(claimingUnderGasds = Some(v)))
 
-  def getClaimingReferenceNumber(using session: SessionData): Option[Boolean] =
-    session.repaymentClaimDetailsAnswers.flatMap(_.claimingReferenceNumber)
+  def getClaimingReferenceNumber(using session: SessionData): Option[Boolean] = get(_.claimingReferenceNumber)
 
   def setClaimingReferenceNumber(value: Boolean)(using session: SessionData): SessionData =
-    val updated = session.repaymentClaimDetailsAnswers match
-      case Some(s1) => s1.copy(claimingReferenceNumber = Some(value))
-      case None     => RepaymentClaimDetailsAnswers(claimingReferenceNumber = Some(value))
-    session.copy(repaymentClaimDetailsAnswers = Some(updated))
+    set(value)((a, v) => a.copy(claimingReferenceNumber = Some(v)))
 
-  def getClaimReferenceNumber(using session: SessionData): Option[String] =
-    session.repaymentClaimDetailsAnswers.flatMap(_.claimReferenceNumber)
+  def getClaimReferenceNumber(using session: SessionData): Option[String] = get(_.claimReferenceNumber)
 
   def setClaimReferenceNumber(value: String)(using session: SessionData): SessionData =
-    val updated = session.repaymentClaimDetailsAnswers match
-      case Some(s1) => s1.copy(claimReferenceNumber = Some(value))
-      case None     => RepaymentClaimDetailsAnswers(claimReferenceNumber = Some(value))
-    session.copy(repaymentClaimDetailsAnswers = Some(updated))
+    set(value)((a, v) => a.copy(claimReferenceNumber = Some(v)))
 }
