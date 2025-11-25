@@ -88,6 +88,10 @@ class FrontendAppConfigSpec extends BaseSpec {
       ) shouldBe "Test Page - Test Service - GOV.UK"
     }
 
+    "return agentUnsubmittedClaimLimit" in {
+      testFrontendAppConfig.agentUnsubmittedClaimLimit shouldBe 3
+    }
+
   }
 
 }

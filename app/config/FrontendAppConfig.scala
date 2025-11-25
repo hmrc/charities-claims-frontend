@@ -35,6 +35,7 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
   lazy val enableLanguageSwitching: Boolean  = config.get[Boolean]("enableLanguageSwitching")
   lazy val timeoutInSeconds: Int             = config.get[Int]("timeout-dialog.timeout")
   lazy val countdownInSeconds: Int           = config.get[Int]("timeout-dialog.countdown")
+  lazy val agentUnsubmittedClaimLimit: Int   = config.get[Int]("agentUnsubmittedClaimLimit")
 
   def pageTitleWithServiceName(
     pageTitle: String,

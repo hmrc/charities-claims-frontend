@@ -17,7 +17,7 @@
 package controllers.actions
 
 import play.api.test.{FakeRequest, Helpers}
-import play.api.test.Helpers.*
+import play.api.test.Helpers.{await, *}
 import util.{BaseSpec, TestClaims}
 import connectors.ClaimsConnector
 import uk.gov.hmrc.auth.core.AffinityGroup
@@ -32,8 +32,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class DataRetrievalActionSpec extends BaseSpec {
 
-  val request           = FakeRequest("GET", "/test")
-  val authorisedRequest = AuthorisedRequest(request, AffinityGroup.Organisation)
+  val request                      = FakeRequest("GET", "/test")
+  val authorisedRequestOrgnisation = AuthorisedRequest(request, AffinityGroup.Organisation)
+  val authorisedRequestAgent       = AuthorisedRequest(request, AffinityGroup.Agent)
 
   given SessionData = SessionData(None)
 
@@ -41,7 +42,7 @@ class DataRetrievalActionSpec extends BaseSpec {
     "refines AuthorisedRequest into a OptionalDataRequest when session data exists" in {
       val mockSessionCache    = mock[SessionCache]
       val mockClaimsConnector = mock[ClaimsConnector]
-      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector)
+      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
 
       val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
 
@@ -51,7 +52,7 @@ class DataRetrievalActionSpec extends BaseSpec {
         .returning(Future.successful(Some(sessionData)))
 
       val result = action.invokeBlock(
-        authorisedRequest,
+        authorisedRequestOrgnisation,
         (req: OptionalDataRequest[?]) =>
           req.sessionData shouldBe Some(sessionData)
           Future.successful(Ok)
@@ -62,7 +63,7 @@ class DataRetrievalActionSpec extends BaseSpec {
     "refines AuthorisedRequest into a OptionalDataRequest when session data object doesn't exist and no claims are retrieved from backend" in {
       val mockSessionCache    = mock[SessionCache]
       val mockClaimsConnector = mock[ClaimsConnector]
-      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector)
+      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
 
       (mockSessionCache
         .get()(using _: HeaderCarrier))
@@ -75,7 +76,7 @@ class DataRetrievalActionSpec extends BaseSpec {
         .returning(Future.successful(GetClaimsResponse(claimsCount = 0, claimsList = Seq())))
 
       val result = action.invokeBlock(
-        authorisedRequest,
+        authorisedRequestOrgnisation,
         (req: OptionalDataRequest[?]) =>
           req.sessionData shouldBe Some(SessionData())
           Future.successful(Ok)
@@ -86,7 +87,7 @@ class DataRetrievalActionSpec extends BaseSpec {
     "refines AuthorisedRequest into a OptionalDataRequest when session data object doesn't exist and some claims are retrieved from backend" in {
       val mockSessionCache    = mock[SessionCache]
       val mockClaimsConnector = mock[ClaimsConnector]
-      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector)
+      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
 
       (mockSessionCache
         .get()(using _: HeaderCarrier))
@@ -106,7 +107,7 @@ class DataRetrievalActionSpec extends BaseSpec {
         )
 
       val result = action.invokeBlock(
-        authorisedRequest,
+        authorisedRequestOrgnisation,
         (req: OptionalDataRequest[?]) =>
           req.sessionData                                           shouldBe Some(SessionData.from(TestClaims.testClaimWithRepaymentClaimDetailsOnly()))
           req.sessionData.flatMap(_.repaymentClaimDetailsAnswers)   shouldBe Some(
@@ -122,6 +123,94 @@ class DataRetrievalActionSpec extends BaseSpec {
           Future.successful(Ok)
       )
       status(result) shouldBe OK
+    }
+
+    "refines AuthorisedRequest into a OptionalDataRequest when session data exists when user is agent" in {
+      val mockSessionCache    = mock[SessionCache]
+      val mockClaimsConnector = mock[ClaimsConnector]
+      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
+
+      val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+
+      (mockSessionCache
+        .get()(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(Some(sessionData)))
+
+      val result = action.invokeBlock(
+        authorisedRequestAgent,
+        (req: OptionalDataRequest[?]) =>
+          req.sessionData shouldBe Some(sessionData)
+          Future.successful(Ok)
+      )
+      status(result) shouldBe OK
+    }
+
+    "refines AuthorisedRequest into a OptionalDataRequest when session data object doesn't exist and no claims are retrieved from backend for agent" in {
+      val mockSessionCache    = mock[SessionCache]
+      val mockClaimsConnector = mock[ClaimsConnector]
+      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
+
+      (mockSessionCache
+        .get()(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(None))
+
+      (mockClaimsConnector
+        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(GetClaimsResponse(claimsCount = 0, claimsList = Seq())))
+
+      val result = action.invokeBlock(
+        authorisedRequestAgent,
+        (req: OptionalDataRequest[?]) =>
+          req.sessionData shouldBe Some(SessionData())
+          Future.successful(Ok)
+      )
+      status(result) shouldBe OK
+    }
+
+    "refines AuthorisedRequest into a OptionalDataRequest when session data object doesn't exist and no claims are retrieved from backend less than limit for agent" in {
+      val mockSessionCache    = mock[SessionCache]
+      val mockClaimsConnector = mock[ClaimsConnector]
+      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
+
+      (mockSessionCache
+        .get()(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(None))
+
+      (mockClaimsConnector
+        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(GetClaimsResponse(claimsCount = 2, claimsList = Seq())))
+
+      val result =
+        action.invokeBlock(authorisedRequestAgent, (req: OptionalDataRequest[?]) => ???) // never going to be executed
+      status(result)           shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some("page-for-agent-to-select-claim")
+    }
+
+    "refines AuthorisedRequest into a OptionalDataRequest when session data object doesn't exist and no claims are retrieved from backend and equal to limit for agent" in {
+      val mockSessionCache    = mock[SessionCache]
+      val mockClaimsConnector = mock[ClaimsConnector]
+      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
+
+      (mockSessionCache
+        .get()(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(None))
+
+      (mockClaimsConnector
+        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(GetClaimsResponse(claimsCount = 3, claimsList = Seq())))
+
+      val result =
+        action.invokeBlock(authorisedRequestAgent, (req: OptionalDataRequest[?]) => ???) // never going to be executed
+      a[AgentOutOfLimitException] shouldBe thrownBy {
+        await(result)
+      }
     }
   }
 }

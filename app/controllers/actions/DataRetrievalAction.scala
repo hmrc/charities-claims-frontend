@@ -17,9 +17,10 @@
 package controllers.actions
 
 import com.google.inject.ImplementedBy
+import config.FrontendAppConfig
 import models.SessionData
 import models.requests.{AuthorisedRequest, OptionalDataRequest}
-import play.api.mvc.{ActionRefiner, Result}
+import play.api.mvc.{ActionRefiner, Result, Results}
 import repositories.SessionCache
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
@@ -34,7 +35,8 @@ trait DataRetrievalAction extends ActionRefiner[AuthorisedRequest, OptionalDataR
 
 class DefaultDataRetrievalAction @Inject() (
   cache: SessionCache,
-  claimsConnector: ClaimsConnector
+  claimsConnector: ClaimsConnector,
+  config: FrontendAppConfig
 )(using val executionContext: ExecutionContext)
     extends DataRetrievalAction {
 
@@ -45,7 +47,7 @@ class DefaultDataRetrievalAction @Inject() (
     cache
       .get()
       .flatMap {
-        case None =>
+        case None              =>
           claimsConnector.retrieveUnsubmittedClaims
             .map { getClaimsResponse =>
               request.affinityGroup match {
@@ -70,10 +72,26 @@ class DefaultDataRetrievalAction @Inject() (
                     )
 
                 case AffinityGroup.Agent =>
-                  throw new UnsupportedOperationException("Agents support coming soon, stay tuned!")
+                  getClaimsResponse.claimsCount match {
+                    case 0                                                   =>
+                      Right(
+                        OptionalDataRequest(
+                          request,
+                          Some(SessionData())
+                        )
+                      )
+                    case x if x > 0 && x < config.agentUnsubmittedClaimLimit =>
+                      Left(
+                        Results.Redirect(
+                          // TODO: replace with correct url when ready
+                          "page-for-agent-to-select-claim"
+                        )
+                      )
+                    case _                                                   =>
+                      throw new AgentOutOfLimitException()
+                  }
               }
             }
-
         case Some(sessionData) =>
           Future.successful(
             Right(
@@ -86,3 +104,5 @@ class DefaultDataRetrievalAction @Inject() (
       }
   }
 }
+
+case class AgentOutOfLimitException() extends Exception()

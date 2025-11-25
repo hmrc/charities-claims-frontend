@@ -97,6 +97,7 @@ abstract class BaseSpec
           |   timeout   = 10  
           |   countdown = 5
           | }
+          | agentUnsubmittedClaimLimit = 3
           |""".stripMargin
       )
     )
