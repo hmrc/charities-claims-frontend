@@ -4,6 +4,7 @@ service.title = Charities Claims
 site.continue = Continue
 site.yes = Yes
 site.no = No
+site.govuk = GOV.UK
 
 back.text = Back
 
@@ -13,9 +14,10 @@ phasebanner.phase=Beta
 index.heading = Charities Claims
 index.guidance = Hello
 
+claimingGiftAid.title = Are you claiming Gift Aid?
 claimingGiftAid.heading = Are you claiming Gift Aid?
-claimingGiftAid.hint = Select 'Yes' if you want to claim tax repayment on donations from a Gift Aid declaration.
-claimingGiftAid.error.required = Please select an option to proceed.
+claimingGiftAid.hint = Select ‘Yes’ if you want to claim tax repayment on donations from a Gift Aid declaration.
+claimingGiftAid.error.required = Select 'Yes' if you are claiming Gift Aid.
 
 claimingOtherIncome.title = Are you claiming UK tax deducted from other income?
 claimingOtherIncome.heading = Are you claiming UK tax deducted from other income?
@@ -23,17 +25,16 @@ claimingOtherIncome.paragraph =  Tax relief can include:
 claimingOtherIncome.bullet.one =  Bank or Building Society interest
 claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate
 claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
-claimingOtherIncome.error.required = Select 'Yes' if you are claiming UK tax deducted from other income.
+claimingOtherIncome.error.required = Select ‘Yes’ if you are claiming UK tax deducted from other income.
 claimingGiftAidSmallDonations.title = Gift Aid Small Donations Scheme
 claimingGiftAidSmallDonations.heading = Gift Aid Small Donations Scheme
 claimingGiftAidSmallDonations.paragraph =  This is separate to a Gift Aid claim. The Gift Aid Small Donation Scheme (GASDS) is for donations of £20 or less and does not need declaring.
 claimingGiftAidSmallDonations.legend =  Are you claiming for the Gift Aid Small Donations Scheme?
-claimingGiftAidSmallDonations.error.required = Select 'Yes' if you are claiming for the Gift Aid Small Donations Scheme.
-
+claimingGiftAidSmallDonations.error.required = Select ‘Yes’ if you are claiming for the Gift Aid Small Donations Scheme.
 
 claimReferenceNumberCheck.title = Do you have a claim reference number?
 claimReferenceNumberCheck.heading = Do you have a claim reference number?
-claimReferenceNumberCheck.error.required = Select 'Yes' if you have a reference number for this claim.
+claimReferenceNumberCheck.error.required = Select ‘Yes’ if you have a reference number for this claim.
 
 claimReferenceNumberInput.title = Your claim reference number
 claimReferenceNumberInput.heading = Your claim reference number
