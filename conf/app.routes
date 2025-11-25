@@ -9,20 +9,20 @@ GET         /keep-alive                               controllers.StartControlle
 GET         /timed-out                                controllers.StartController.timedOut
 
 
-GET         /claiming-gift-aid-small-donations        controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onPageLoad
-POST        /claiming-gift-aid-small-donations        controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onSubmit
+GET         /claiming-for-gift-aid-small-donations-scheme        controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onPageLoad
+POST        /claiming-for-gift-aid-small-donations-scheme        controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onSubmit
 
-GET         /claiming-gift-aid                        controllers.repaymentclaimdetails.ClaimingGiftAidController.onPageLoad
-POST        /claiming-gift-aid                        controllers.repaymentclaimdetails.ClaimingGiftAidController.onSubmit
+GET         /claim-gift-aid                           controllers.repaymentclaimdetails.ClaimingGiftAidController.onPageLoad
+POST        /claim-gift-aid                           controllers.repaymentclaimdetails.ClaimingGiftAidController.onSubmit
 
-GET         /claiming-tax-relief                      controllers.repaymentclaimdetails.ClaimingOtherIncomeController.onPageLoad
-POST        /claiming-tax-relief                      controllers.repaymentclaimdetails.ClaimingOtherIncomeController.onSubmit
+GET         /claiming-other-income                    controllers.repaymentclaimdetails.ClaimingOtherIncomeController.onPageLoad
+POST        /claiming-other-income                    controllers.repaymentclaimdetails.ClaimingOtherIncomeController.onSubmit
 
-GET         /claim-reference-number-check             controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onPageLoad
-POST        /claim-reference-number-check             controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onSubmit
+GET         /claim-reference-number                   controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onPageLoad
+POST        /claim-reference-number                   controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onSubmit
 
-GET         /claim-reference-number-input             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad
-POST        /claim-reference-number-input             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit
+GET         /check-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad
+POST        /check-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit
 
-GET         /claim-declaration                        controllers.repaymentclaimdetails.ClaimDeclarationController.onPageLoad
-POST        /claim-declaration                        controllers.repaymentclaimdetails.ClaimDeclarationController.onSubmit
+GET         /declaration                              controllers.repaymentclaimdetails.ClaimDeclarationController.onPageLoad
+POST        /declaration                              controllers.repaymentclaimdetails.ClaimDeclarationController.onSubmit
