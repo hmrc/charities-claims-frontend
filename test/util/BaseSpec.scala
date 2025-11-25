@@ -32,23 +32,20 @@ package util
  * limitations under the License.
  */
 
-import com.typesafe.config.ConfigFactory
+import play.api.test.FakeRequest
+import org.scalatest.concurrent.ScalaFutures
+import org.scalamock.scalatest.MockFactory
+import org.apache.pekko.stream.Materializer
 import config.FrontendAppConfig
 import generators.Generators
 import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.time.{Millis, Span}
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, OptionValues}
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.test.FakeRequest
+import org.scalatest.freespec.AnyFreeSpec
+import com.typesafe.config.ConfigFactory
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, OptionValues}
 import play.api.{Application, Configuration}
-import play.api.libs.json.Reads
-import play.api.libs.json.Json
-import scala.io.Source
+import org.scalatest.time.{Millis, Span}
 
 abstract class BaseSpec
     extends AnyFreeSpec
@@ -88,15 +85,20 @@ abstract class BaseSpec
           |  login = "http://foo.com/login"
           |  loginContinue = "http://foo.com/bar"
           |  signOut = "http://foo.com/sign-out"
+          |  homePageUrl = "http://foo.com/home"
+          |  accessibilityStatementUrl = "http://foo.com/accessibility-statement"
+          |  betaFeedbackUrl = "http://foo.com/beta-feedback"
+          |  researchUrl = "http://foo.com/research"
+          | }
+          |
+          | enableLanguageSwitching = true  
+          |
+          | timeout-dialog {
+          |   timeout   = 10  
+          |   countdown = 5
           | }
           |""".stripMargin
       )
     )
   )
-
-  final def readTestResource[T](path: String): String =
-    Source.fromInputStream(this.getClass.getResourceAsStream(path)).getLines().mkString("\n")
-
-  final def readAndParseJson[T](path: String)(using Reads[T]): T =
-    Json.parse(readTestResource(path)).as[T]
 }

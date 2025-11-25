@@ -23,13 +23,33 @@ final case class RepaymentClaimDetailsAnswers(
   claimingGiftAid: Option[Boolean] = None,
   claimingTaxDeducted: Option[Boolean] = None,
   claimingUnderGasds: Option[Boolean] = None,
+  // only when claiming Gift Aid
   claimingReferenceNumber: Option[Boolean] = None,
-  claimReferenceNumber: Option[String] = None
+  claimReferenceNumber: Option[String] = None,
+  // only when claiming under GASDS
+  claimingDonationsNotFromCommunityBuilding: Option[Boolean] = None,
+  claimingDonationsCollectedInCommunityBuildings: Option[Boolean] = None,
+  connectedToAnyOtherCharities: Option[Boolean] = None,
+  makingAdjustmentToPreviousClaim: Option[Boolean] = None
 )
 
 object RepaymentClaimDetailsAnswers {
 
   given Format[RepaymentClaimDetailsAnswers] = Json.format[RepaymentClaimDetailsAnswers]
+
+  def from(repaymentClaimDetails: RepaymentClaimDetails): RepaymentClaimDetailsAnswers =
+    RepaymentClaimDetailsAnswers(
+      claimingGiftAid = Some(repaymentClaimDetails.claimingGiftAid),
+      claimingTaxDeducted = Some(repaymentClaimDetails.claimingTaxDeducted),
+      claimingUnderGasds = Some(repaymentClaimDetails.claimingUnderGasds),
+      claimingReferenceNumber = Some(repaymentClaimDetails.claimReferenceNumber.isDefined),
+      claimReferenceNumber = repaymentClaimDetails.claimReferenceNumber,
+      claimingDonationsNotFromCommunityBuilding = repaymentClaimDetails.claimingDonationsNotFromCommunityBuilding,
+      claimingDonationsCollectedInCommunityBuildings =
+        repaymentClaimDetails.claimingDonationsCollectedInCommunityBuildings,
+      connectedToAnyOtherCharities = repaymentClaimDetails.connectedToAnyOtherCharities,
+      makingAdjustmentToPreviousClaim = repaymentClaimDetails.makingAdjustmentToPreviousClaim
+    )
 
   def getClaimingTaxDeducted(using session: SessionData): Option[Boolean] =
     session.repaymentClaimDetailsAnswers.flatMap(_.claimingTaxDeducted)

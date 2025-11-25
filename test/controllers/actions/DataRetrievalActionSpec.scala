@@ -16,30 +16,32 @@
 
 package controllers.actions
 
-import models.SessionData
-import models.RepaymentClaimDetailsAnswers
+import play.api.test.{FakeRequest, Helpers}
+import play.api.test.Helpers.*
+import util.{BaseSpec, TestClaims}
+import connectors.ClaimsConnector
+import uk.gov.hmrc.auth.core.AffinityGroup
+import models.{GetClaimsResponse, RepaymentClaimDetailsAnswers, SessionData}
 import models.requests.{AuthorisedRequest, OptionalDataRequest}
 import play.api.mvc.Results.*
-import play.api.test.Helpers.*
-import play.api.test.{FakeRequest, Helpers}
 import repositories.SessionCache
-import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.http.HeaderCarrier
-import util.BaseSpec
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class DataRetrievalActionSpec extends BaseSpec {
 
   val request           = FakeRequest("GET", "/test")
   val authorisedRequest = AuthorisedRequest(request, AffinityGroup.Organisation)
-  given SessionData     = SessionData(None)
+
+  given SessionData = SessionData(None)
 
   "DataRetrievalAction" - {
     "refines AuthorisedRequest into a OptionalDataRequest when session data exists" in {
-      val mockSessionCache = mock[SessionCache]
-      val action           = new DefaultDataRetrievalAction(mockSessionCache)
+      val mockSessionCache    = mock[SessionCache]
+      val mockClaimsConnector = mock[ClaimsConnector]
+      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector)
 
       val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
 
@@ -57,19 +59,66 @@ class DataRetrievalActionSpec extends BaseSpec {
       status(result) shouldBe OK
     }
 
-    "refines AuthorisedRequest into a OptionalDataRequest when session data object doesn't exist" in {
-      val mockSessionCache = mock[SessionCache]
-      val action           = new DefaultDataRetrievalAction(mockSessionCache)
+    "refines AuthorisedRequest into a OptionalDataRequest when session data object doesn't exist and no claims are retrieved from backend" in {
+      val mockSessionCache    = mock[SessionCache]
+      val mockClaimsConnector = mock[ClaimsConnector]
+      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector)
 
       (mockSessionCache
         .get()(using _: HeaderCarrier))
         .expects(*)
         .returning(Future.successful(None))
 
+      (mockClaimsConnector
+        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(GetClaimsResponse(claimsCount = 0, claimsList = Seq())))
+
       val result = action.invokeBlock(
         authorisedRequest,
         (req: OptionalDataRequest[?]) =>
-          req.sessionData shouldBe Some(SessionData(None))
+          req.sessionData shouldBe Some(SessionData())
+          Future.successful(Ok)
+      )
+      status(result) shouldBe OK
+    }
+
+    "refines AuthorisedRequest into a OptionalDataRequest when session data object doesn't exist and some claims are retrieved from backend" in {
+      val mockSessionCache    = mock[SessionCache]
+      val mockClaimsConnector = mock[ClaimsConnector]
+      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector)
+
+      (mockSessionCache
+        .get()(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(None))
+
+      (mockClaimsConnector
+        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
+        .expects(*)
+        .returning(
+          Future.successful(
+            GetClaimsResponse(
+              claimsCount = 1,
+              claimsList = Seq(TestClaims.testClaimWithRepaymentClaimDetailsOnly())
+            )
+          )
+        )
+
+      val result = action.invokeBlock(
+        authorisedRequest,
+        (req: OptionalDataRequest[?]) =>
+          req.sessionData                                           shouldBe Some(SessionData.from(TestClaims.testClaimWithRepaymentClaimDetailsOnly()))
+          req.sessionData.flatMap(_.repaymentClaimDetailsAnswers)   shouldBe Some(
+            RepaymentClaimDetailsAnswers.from(
+              TestClaims.testClaimWithRepaymentClaimDetailsOnly().claimData.repaymentClaimDetails
+            )
+          )
+          req.sessionData.flatMap(_.organisationDetailsAnswers)     shouldBe None
+          req.sessionData.flatMap(_.giftAidScheduleDataAnswers)     shouldBe None
+          req.sessionData.flatMap(_.declarationDetailsAnswers)      shouldBe None
+          req.sessionData.flatMap(_.otherIncomeScheduleDataAnswers) shouldBe None
+          req.sessionData.flatMap(_.gasdsScheduleDataAnswers)       shouldBe None
           Future.successful(Ok)
       )
       status(result) shouldBe OK

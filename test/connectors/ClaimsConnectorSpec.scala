@@ -16,21 +16,20 @@
 
 package connectors
 
-import util.BaseSpec
-import util.HttpV2Support
-import play.api.Configuration
-import com.typesafe.config.ConfigFactory
+import util.{BaseSpec, HttpV2Support}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import models.GetClaimsRequest
+import org.scalamock.handlers.CallHandler
+import play.api.test.Helpers.*
+import com.typesafe.config.ConfigFactory
+import play.api.Configuration
+import play.api.libs.json.Json
+
+import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.FiniteDuration
-import uk.gov.hmrc.http.HttpResponse
-import org.scalamock.handlers.CallHandler
-import scala.concurrent.Future
-import uk.gov.hmrc.http.HeaderCarrier
-import play.api.libs.json.Json
-import models.GetClaimsRequest
-import models.GetClaimsResponse
-import play.api.test.Helpers.*
+import util.TestClaims
 
 class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
@@ -67,9 +66,6 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
   given HeaderCarrier = HeaderCarrier()
 
-  val testClaimsUnsubmittedJson: String                    = readTestResource("/test-claims-unsubmitted.json")
-  val expectedClaimsUnsubmittedResponse: GetClaimsResponse = Json.parse(testClaimsUnsubmittedJson).as[GetClaimsResponse]
-
   "ClaimsConnector" - {
     "retrieveUnsubmittedClaims" - {
       "have retries defined" in {
@@ -77,8 +73,8 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       }
 
       "should return a list of unsubmitted claims" in {
-        givenServiceReturns(HttpResponse(200, testClaimsUnsubmittedJson)).once()
-        await(connector.retrieveUnsubmittedClaims) shouldEqual expectedClaimsUnsubmittedResponse
+        givenServiceReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)).once()
+        await(connector.retrieveUnsubmittedClaims) shouldEqual TestClaims.testGetClaimsResponseUnsubmitted
       }
 
       "throw an exception if the service returs malformed JSON" in {
@@ -121,15 +117,15 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
       "accept valid response in a second attempt" in {
         givenServiceReturns(HttpResponse(500, "")).once()
-        givenServiceReturns(HttpResponse(200, testClaimsUnsubmittedJson)).once()
-        await(connector.retrieveUnsubmittedClaims) shouldEqual expectedClaimsUnsubmittedResponse
+        givenServiceReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)).once()
+        await(connector.retrieveUnsubmittedClaims) shouldEqual TestClaims.testGetClaimsResponseUnsubmitted
       }
 
       "accept valid response in a third attempt" in {
         givenServiceReturns(HttpResponse(499, "")).once()
         givenServiceReturns(HttpResponse(500, "")).once()
-        givenServiceReturns(HttpResponse(200, testClaimsUnsubmittedJson)).once()
-        await(connector.retrieveUnsubmittedClaims) shouldEqual expectedClaimsUnsubmittedResponse
+        givenServiceReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)).once()
+        await(connector.retrieveUnsubmittedClaims) shouldEqual TestClaims.testGetClaimsResponseUnsubmitted
       }
     }
   }

@@ -19,9 +19,31 @@ package models
 import play.api.libs.json.{Format, Json}
 
 final case class SessionData(
-  repaymentClaimDetailsAnswers: Option[RepaymentClaimDetailsAnswers] = None
+  // claimId of the unsubmitted claim stored in the backend,
+  // if empty, the user has started a new claim
+  unsubmittedClaimId: Option[String] = None,
+  repaymentClaimDetailsAnswers: Option[RepaymentClaimDetailsAnswers] = None,
+  organisationDetailsAnswers: Option[OrganisationDetailsAnswers] = None,
+  giftAidScheduleDataAnswers: Option[GiftAidScheduleDataAnswers] = None,
+  declarationDetailsAnswers: Option[DeclarationDetailsAnswers] = None,
+  otherIncomeScheduleDataAnswers: Option[OtherIncomeScheduleDataAnswers] = None,
+  gasdsScheduleDataAnswers: Option[GasdsScheduleDataAnswers] = None
 )
 
 object SessionData {
+
   given Format[SessionData] = Json.format[SessionData]
+
+  def from(claim: Claim): SessionData =
+    SessionData(
+      unsubmittedClaimId = Some(claim.claimId),
+      repaymentClaimDetailsAnswers = Some(
+        RepaymentClaimDetailsAnswers.from(claim.claimData.repaymentClaimDetails)
+      ),
+      organisationDetailsAnswers = claim.claimData.organisationDetails.map(OrganisationDetailsAnswers.from),
+      giftAidScheduleDataAnswers = claim.claimData.giftAidScheduleData.map(GiftAidScheduleDataAnswers.from),
+      declarationDetailsAnswers = claim.claimData.declarationDetails.map(DeclarationDetailsAnswers.from),
+      otherIncomeScheduleDataAnswers = claim.claimData.otherIncomeScheduleData.map(OtherIncomeScheduleDataAnswers.from),
+      gasdsScheduleDataAnswers = claim.claimData.gasdsScheduleData.map(GasdsScheduleDataAnswers.from)
+    )
 }
