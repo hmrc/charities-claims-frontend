@@ -24,13 +24,13 @@ import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.ClaimingOtherIncomeView
+import views.html.ClaimingTaxReliefView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimingOtherIncomeController @Inject() (
+class ClaimingTaxReliefController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimingOtherIncomeView,
+  view: ClaimingTaxReliefView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService

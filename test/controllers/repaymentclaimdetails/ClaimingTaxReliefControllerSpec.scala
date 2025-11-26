@@ -19,17 +19,17 @@ package controllers.repaymentclaimdetails
 import play.api.test.FakeRequest
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import controllers.ControllerSpec
-import views.html.ClaimingOtherIncomeView
+import views.html.ClaimingTaxReliefView
 import play.api.Application
 import forms.YesNoFormProvider
 import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
 
-class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
+class ClaimingTaxReliefControllerSpec extends ControllerSpec {
 
   private val form: Form[Boolean] = new YesNoFormProvider()()
 
-  "ClaimingOtherIncomeController" - {
+  "ClaimingTaxReliefController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
 
@@ -37,10 +37,10 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingTaxReliefController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
+          val view   = application.injector.instanceOf[ClaimingTaxReliefView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form).body
@@ -55,10 +55,10 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingTaxReliefController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
+          val view   = application.injector.instanceOf[ClaimingTaxReliefView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form.fill(true)).body
@@ -72,7 +72,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingTaxReliefController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
@@ -89,7 +89,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingTaxReliefController.onSubmit.url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value
