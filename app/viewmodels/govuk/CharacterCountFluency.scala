@@ -19,9 +19,11 @@ package viewmodels.govuk
 import play.api.data.Field
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Empty
 import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
 import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
 import viewmodels.ErrorMessageAwareness
+import viewmodels.govuk.all.LabelViewModel
 
 object characterCount extends CharacterCountFluency
 
@@ -31,7 +33,13 @@ trait CharacterCountFluency {
 
     def apply(
       field: Field,
-      label: Label
+      maxLength: Int
+    )(implicit messages: Messages): CharacterCount = apply(field, LabelViewModel(Empty), maxLength)
+
+    def apply(
+      field: Field,
+      label: Label,
+      maxLength: Int
     )(implicit messages: Messages): CharacterCount =
       CharacterCount(
         id = field.id,
@@ -39,7 +47,8 @@ trait CharacterCountFluency {
         value = field.value,
         label = label,
         errorMessage = errorMessage(field),
-        rows = 1
+        rows = 1,
+        maxLength = Some(maxLength)
       )
   }
 
@@ -59,5 +68,11 @@ trait CharacterCountFluency {
 
     def withSpellcheck(on: Boolean = true): CharacterCount =
       characterCount.copy(spellcheck = Some(on))
+
+    def fullWidth(): CharacterCount =
+      withCssClass("govuk-input--width-50")
+
+    def withCharactersOverLimitText(text: String): CharacterCount =
+      characterCount.copy(charactersOverLimitText = Some(Map("test" -> "sdsd")))
   }
 }

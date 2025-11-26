@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.input.InputWrapper
 
 @this(govukInput: GovukInput,
     govukHint: GovukHint)
@@ -39,7 +39,7 @@
     ) ++ toGovukPluralisedI18nAttributes("characters-over-limit", charactersOverLimitText) ++ toGovukPluralisedI18nAttributes("words-under-limit", wordsUnderLimitText) ++ Map(
         "data-i18n.words-at-limit" -> wordsAtLimitText.getOrElse("")
     ) ++ toGovukPluralisedI18nAttributes("words-over-limit", wordsOverLimitText) ++ Map(
-        "data-i18n.input-description.other" -> inputDescriptionText.filter(_ => maxLength.isEmpty && maxWords.isEmpty).getOrElse("")
+        "data-i18n.input-description.other" -> textareaDescriptionText.filter(_ => maxLength.isEmpty && maxWords.isEmpty).getOrElse("")
     )
     maybeDataAttributes.filter { case (_, value) => value.nonEmpty }
 }
@@ -47,9 +47,9 @@
 @customInput = @{
     val max = maxWords.filter(_ > 0).orElse(maxLength).getOrElse("undefined")
     if(max == "undefined") {
-        { Input("") }
+        { Text("") }
     } else {
-        inputDescriptionText match {
+        textareaDescriptionText match {
             case Some(inputText) => { Text(inputText.replace("%{count}", "" + max)) }
             case None => { Text("You can enter up to " + max + " " + maxWords.filter(_ > 0).fold("characters")(_ => "words")) }
         }
@@ -59,7 +59,7 @@
 @characterCountMessage = {
     @govukHint(Hint(id=Some(nonEmptyId+"-info"),
     classes = toClasses("govuk-character-count__message", if (countMessageClasses.isEmpty) "" else s" $countMessageClasses"),
-    content = customTextArea
+    content = customInput
     ))
 }
 
@@ -80,8 +80,10 @@
     formGroup = formGroup.copy(
         classes = Some(toClasses("govuk-character-count", formGroup.classes.getOrElse(""))),
         beforeInput = formGroup.beforeInput,
+        attributes = dataAttributes ++ formGroup.attributes,
         afterInput = Some(HtmlContent(characterCountMessagePlusOptionalAfterInput))
     ),
     classes = toClasses("govuk-js-character-count", if (classes.isEmpty) "" else s" $classes"),
-    attributes = attributes
+    attributes = attributes,
+    inputWrapper = InputWrapper(classes = Some("character-count-input-wrapper"))
 ))

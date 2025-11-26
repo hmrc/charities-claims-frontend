@@ -26,17 +26,16 @@ class TextInputFormProvider @Inject() extends Mappings {
 
   def apply(
     errorRequired: String,
-    invalidKey: String = "error.string",
-    maxInputLength: Int,
-    maxInputLengthError: String,
+    maxInputLengthError: (Int, String),
     regexPatternError: String
   ): Form[String] =
+    val (maxInputLength, maxInputLengthErrorMessage) = maxInputLengthError
     Form(
       single(
         "value" -> text(errorRequired)
           .verifying(
             firstError(
-              maxLength(maxInputLength, maxInputLengthError),
+              maxLength(maxInputLength, maxInputLengthErrorMessage),
               regexp(Validation.claimReferenceNumberPattern, regexPatternError)
             )
           )
