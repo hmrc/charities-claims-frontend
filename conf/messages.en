@@ -22,6 +22,7 @@ claimingGiftAid.title = Claiming Gift Aid
 claimingGiftAid.heading = Are you claiming Gift Aid?
 claimingGiftAid.hint = Select ‘Yes’ if you want to claim tax repayment on donations from a Gift Aid declaration.
 claimingGiftAid.error.required = Select ‘Yes’ if you are claiming Gift Aid.
+claimingGiftAid.legend = Are you claiming Gift Aid?
 
 claimingOtherIncome.title = Are you claiming tax deducted from other income?
 claimingOtherIncome.heading = Are you claiming tax deducted from other income?
