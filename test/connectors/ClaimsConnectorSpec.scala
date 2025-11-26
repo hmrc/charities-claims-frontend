@@ -25,11 +25,14 @@ import play.api.test.Helpers.*
 import com.typesafe.config.ConfigFactory
 import play.api.Configuration
 import play.api.libs.json.Json
-
+import play.api.libs.json.JsValue
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.FiniteDuration
 import util.TestClaims
+import models.SaveClaimRequest
+import models.SaveClaimResponse
+import models.RepaymentClaimDetails
 
 class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
@@ -59,10 +62,29 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       actorSystem = actorSystem
     )
 
-  val expectedUrl = "http://foo.bar.com:1234/foo-claims/get-claims"
+  def givenServiceReturns(
+    expectedUrl: String,
+    expectedPayload: JsValue,
+    response: HttpResponse
+  ): CallHandler[Future[HttpResponse]] =
+    mockHttpPostSuccess(expectedUrl, expectedPayload, hasHeaders = false)(response)
 
-  def givenServiceReturns: HttpResponse => CallHandler[Future[HttpResponse]] =
-    mockHttpPostSuccess(expectedUrl, Json.toJson(GetClaimsRequest(claimSubmitted = false)), hasHeaders = false)(_)
+  def givenGetClaimsEndpointReturns(response: HttpResponse): CallHandler[Future[HttpResponse]] =
+    givenServiceReturns(
+      expectedUrl = "http://foo.bar.com:1234/foo-claims/get-claims",
+      expectedPayload = Json.toJson(GetClaimsRequest(claimSubmitted = false)),
+      response = response
+    )
+
+  def givenSaveClaimEndpointReturns(
+    payload: SaveClaimRequest,
+    response: HttpResponse
+  ): CallHandler[Future[HttpResponse]] =
+    givenServiceReturns(
+      expectedUrl = "http://foo.bar.com:1234/foo-claims/claims",
+      expectedPayload = Json.toJson(payload),
+      response = response
+    )
 
   given HeaderCarrier = HeaderCarrier()
 
@@ -73,42 +95,45 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       }
 
       "should return a list of unsubmitted claims" in {
-        givenServiceReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)).once()
+        givenGetClaimsEndpointReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)).once()
+
         await(connector.retrieveUnsubmittedClaims) shouldEqual TestClaims.testGetClaimsResponseUnsubmitted
       }
 
       "throw an exception if the service returs malformed JSON" in {
-        givenServiceReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]")).once()
+        givenGetClaimsEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]"))
+          .once()
         a[Exception] should be thrownBy {
           await(connector.retrieveUnsubmittedClaims)
         }
       }
 
       "throw an exception if the service returs wrong entity format" in {
-        givenServiceReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]}")).once()
+        givenGetClaimsEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]}"))
+          .once()
         a[Exception] should be thrownBy {
           await(connector.retrieveUnsubmittedClaims)
         }
       }
 
       "throw an exception if the service returns 404 status" in {
-        givenServiceReturns(HttpResponse(404, "Bad Request")).once()
+        givenGetClaimsEndpointReturns(HttpResponse(404, "Bad Request")).once()
         a[Exception] should be thrownBy {
           await(connector.retrieveUnsubmittedClaims)
         }
       }
 
       "throw an exception if the service returns 500 status" in {
-        givenServiceReturns(HttpResponse(500, "")).once()
+        givenGetClaimsEndpointReturns(HttpResponse(500, "")).once()
         a[Exception] should be thrownBy {
           await(connector.retrieveUnsubmittedClaims)
         }
       }
 
       "throw exception when 5xx response status in the third attempt" in {
-        givenServiceReturns(HttpResponse(500, "")).once()
-        givenServiceReturns(HttpResponse(499, "")).once()
-        givenServiceReturns(HttpResponse(469, "")).once()
+        givenGetClaimsEndpointReturns(HttpResponse(500, "")).once()
+        givenGetClaimsEndpointReturns(HttpResponse(499, "")).once()
+        givenGetClaimsEndpointReturns(HttpResponse(469, "")).once()
 
         a[Exception] shouldBe thrownBy {
           await(connector.retrieveUnsubmittedClaims)
@@ -116,17 +141,41 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       }
 
       "accept valid response in a second attempt" in {
-        givenServiceReturns(HttpResponse(500, "")).once()
-        givenServiceReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)).once()
+        givenGetClaimsEndpointReturns(HttpResponse(500, "")).once()
+        givenGetClaimsEndpointReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)).once()
         await(connector.retrieveUnsubmittedClaims) shouldEqual TestClaims.testGetClaimsResponseUnsubmitted
       }
 
       "accept valid response in a third attempt" in {
-        givenServiceReturns(HttpResponse(499, "")).once()
-        givenServiceReturns(HttpResponse(500, "")).once()
-        givenServiceReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)).once()
+        givenGetClaimsEndpointReturns(HttpResponse(499, "")).once()
+        givenGetClaimsEndpointReturns(HttpResponse(500, "")).once()
+        givenGetClaimsEndpointReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)).once()
         await(connector.retrieveUnsubmittedClaims) shouldEqual TestClaims.testGetClaimsResponseUnsubmitted
       }
+    }
+  }
+
+  "saveClaim" - {
+    "should save a claim" in {
+      givenSaveClaimEndpointReturns(
+        SaveClaimRequest(
+          claimingGiftAid = true,
+          claimingTaxDeducted = true,
+          claimingUnderGasds = false,
+          claimReferenceNumber = Some("1234567890")
+        ),
+        HttpResponse(200, Json.stringify(Json.toJson(SaveClaimResponse(claimId = "1237"))))
+      ).once()
+      await(
+        connector.saveClaim(
+          RepaymentClaimDetails(
+            claimingGiftAid = true,
+            claimingTaxDeducted = true,
+            claimingUnderGasds = false,
+            claimReferenceNumber = Some("1234567890")
+          )
+        )
+      ) shouldEqual "1237"
     }
   }
 }

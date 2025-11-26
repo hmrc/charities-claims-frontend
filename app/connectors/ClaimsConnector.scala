@@ -34,11 +34,19 @@ import uk.gov.hmrc.http.HttpResponse
 import HttpResponseOps.*
 import org.apache.pekko.actor.ActorSystem
 import uk.gov.hmrc.http.HttpReads.Implicits.*
+import models.SaveClaimResponse
+import models.RepaymentClaimDetails
+import models.SaveClaimRequest
+import play.api.libs.json.Writes
+import play.api.libs.json.Reads
 
 @ImplementedBy(classOf[ClaimsConnectorImpl])
 trait ClaimsConnector {
 
+  type UserId = String
+
   def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse]
+  def saveClaim(repaymentClaimDetails: RepaymentClaimDetails)(using hc: HeaderCarrier): Future[UserId]
 
 }
 
@@ -54,26 +62,54 @@ class ClaimsConnectorImpl @Inject() (
 
   val baseUrl: String = servicesConfig.baseUrl("charities-claims")
 
-  lazy val contextPath: String                 = servicesConfig
-    .getConfString("charities-claims.context-path", "charities-claims")
-  lazy val claimUrl: String                    = s"$baseUrl$contextPath/get-claims"
   lazy val retryIntervals: Seq[FiniteDuration] = Retries.getConfIntervals("charities-claims", configuration)
 
-  def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse] =
+  lazy val contextPath: String = servicesConfig
+    .getConfString("charities-claims.context-path", "charities-claims")
+
+  lazy val retrieveUnsubmittedClaimsUrl: String = s"$baseUrl$contextPath/get-claims"
+  lazy val saveClaimUrl: String                 = s"$baseUrl$contextPath/claims"
+
+  final def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse] =
+    callCharitiesClaimsBackend[GetClaimsRequest, GetClaimsResponse](
+      retrieveUnsubmittedClaimsUrl,
+      GetClaimsRequest(claimSubmitted = false)
+    )
+
+  final def saveClaim(repaymentClaimDetails: RepaymentClaimDetails)(using hc: HeaderCarrier): Future[UserId] =
+    callCharitiesClaimsBackend[SaveClaimRequest, SaveClaimResponse](
+      saveClaimUrl,
+      SaveClaimRequest(
+        claimingGiftAid = repaymentClaimDetails.claimingGiftAid,
+        claimingTaxDeducted = repaymentClaimDetails.claimingTaxDeducted,
+        claimingUnderGasds = repaymentClaimDetails.claimingUnderGasds,
+        claimReferenceNumber = repaymentClaimDetails.claimReferenceNumber,
+        claimingDonationsNotFromCommunityBuilding = repaymentClaimDetails.claimingDonationsNotFromCommunityBuilding,
+        claimingDonationsCollectedInCommunityBuildings =
+          repaymentClaimDetails.claimingDonationsCollectedInCommunityBuildings,
+        connectedToAnyOtherCharities = repaymentClaimDetails.connectedToAnyOtherCharities,
+        makingAdjustmentToPreviousClaim = repaymentClaimDetails.makingAdjustmentToPreviousClaim
+      )
+    ).map(_.claimId)
+
+  private def callCharitiesClaimsBackend[I, O](url: String, payload: I)(using
+    hc: HeaderCarrier,
+    writes: Writes[I],
+    reads: Reads[O]
+  ): Future[O] =
     retry(retryIntervals*)(shouldRetry, retryReason)(
       http
-        .post(URL(claimUrl))
-        .withBody(Json.toJson(GetClaimsRequest(claimSubmitted = false)))
+        .post(URL(url))
+        .withBody(Json.toJson(payload))
         .execute[HttpResponse]
     ).flatMap(response =>
       if response.status == 200 then
         response
-          .parseJSON[GetClaimsResponse]()
+          .parseJSON[O]()
           .fold(error => Future.failed(Exception(error)), Future.successful)
       else
         Future.failed(
-          Exception(s"Request to POST $claimUrl failed because of $response ${response.body}")
+          Exception(s"Request to POST $retrieveUnsubmittedClaimsUrl failed because of $response ${response.body}")
         )
     )
-
 }
