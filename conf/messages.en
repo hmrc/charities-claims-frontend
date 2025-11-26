@@ -53,3 +53,9 @@ claimDeclaration.title = Declaration
 claimDeclaration.heading = Declaration
 claimDeclaration.paragraph =  I declare that:
 claimDeclaration.bullet.one =  I will provide accurate information in this claim
+
+global.error.InternalServerError500.heading = Sorry, there is a problem with this service
+global.error.InternalServerError500.message = Try again later or contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services">HMRC Online Services Helpdesk</a>.
+
+global.error.pageNotFound404.heading = Page not found
+global.error.pageNotFound404.message = If you typed the web address, check it is correct.<br>If you pasted the web address, check you copied the entire address.<br>If the web address is correct or you selected a link or button, contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services">HMRC Online Services Helpdesk</a> if you need to speak to someone.
