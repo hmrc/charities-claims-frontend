@@ -16,29 +16,23 @@
 
 package connectors
 
-import com.google.inject.ImplementedBy
-import uk.gov.hmrc.http.client.HttpClientV2
-import javax.inject.Inject
-import uk.gov.hmrc.http.HeaderCarrier
-import scala.concurrent.Future
-import models.GetClaimsResponse
-import models.GetClaimsRequest
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import play.api.Configuration
-import scala.concurrent.duration.FiniteDuration
-import java.net.URL
-import play.api.libs.json.Json
-import play.api.libs.ws.JsonBodyWritables.*
-import scala.concurrent.ExecutionContext
-import uk.gov.hmrc.http.HttpResponse
-import HttpResponseOps.*
-import org.apache.pekko.actor.ActorSystem
 import uk.gov.hmrc.http.HttpReads.Implicits.*
-import models.SaveClaimResponse
-import models.RepaymentClaimDetails
-import models.SaveClaimRequest
-import play.api.libs.json.Writes
-import play.api.libs.json.Reads
+import com.google.inject.ImplementedBy
+import connectors.HttpResponseOps.*
+import org.apache.pekko.actor.ActorSystem
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import models.*
+import uk.gov.hmrc.http.client.HttpClientV2
+import play.api.Configuration
+import play.api.libs.ws.JsonBodyWritables.*
+import play.api.libs.json.{Json, Reads, Writes}
+
+import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration.FiniteDuration
+
+import javax.inject.Inject
+import java.net.URL
 
 @ImplementedBy(classOf[ClaimsConnectorImpl])
 trait ClaimsConnector {
@@ -46,7 +40,7 @@ trait ClaimsConnector {
   type UserId = String
 
   def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse]
-  def saveClaim(repaymentClaimDetails: RepaymentClaimDetails)(using hc: HeaderCarrier): Future[UserId]
+  def saveClaim(repaymentClaimDetailsAnswers: RepaymentClaimDetailsAnswers)(using hc: HeaderCarrier): Future[UserId]
 
 }
 
@@ -76,21 +70,38 @@ class ClaimsConnectorImpl @Inject() (
       GetClaimsRequest(claimSubmitted = false)
     )
 
-  final def saveClaim(repaymentClaimDetails: RepaymentClaimDetails)(using hc: HeaderCarrier): Future[UserId] =
-    callCharitiesClaimsBackend[SaveClaimRequest, SaveClaimResponse](
-      saveClaimUrl,
-      SaveClaimRequest(
-        claimingGiftAid = repaymentClaimDetails.claimingGiftAid,
-        claimingTaxDeducted = repaymentClaimDetails.claimingTaxDeducted,
-        claimingUnderGasds = repaymentClaimDetails.claimingUnderGasds,
-        claimReferenceNumber = repaymentClaimDetails.claimReferenceNumber,
-        claimingDonationsNotFromCommunityBuilding = repaymentClaimDetails.claimingDonationsNotFromCommunityBuilding,
-        claimingDonationsCollectedInCommunityBuildings =
-          repaymentClaimDetails.claimingDonationsCollectedInCommunityBuildings,
-        connectedToAnyOtherCharities = repaymentClaimDetails.connectedToAnyOtherCharities,
-        makingAdjustmentToPreviousClaim = repaymentClaimDetails.makingAdjustmentToPreviousClaim
-      )
-    ).map(_.claimId)
+  final def saveClaim(repaymentClaimDetailsAnswers: RepaymentClaimDetailsAnswers)(using
+    hc: HeaderCarrier
+  ): Future[UserId] =
+    (for {
+      claimingGiftAid     <- repaymentClaimDetailsAnswers.claimingGiftAid
+      claimingTaxDeducted <- repaymentClaimDetailsAnswers.claimingTaxDeducted
+      claimingUnderGasds  <- repaymentClaimDetailsAnswers.claimingUnderGasds
+    } yield SaveClaimRequest(
+      claimingGiftAid = claimingGiftAid,
+      claimingTaxDeducted = claimingTaxDeducted,
+      claimingUnderGasds = claimingUnderGasds,
+      claimReferenceNumber = repaymentClaimDetailsAnswers.claimReferenceNumber,
+      claimingDonationsNotFromCommunityBuilding =
+        repaymentClaimDetailsAnswers.claimingDonationsNotFromCommunityBuilding,
+      claimingDonationsCollectedInCommunityBuildings =
+        repaymentClaimDetailsAnswers.claimingDonationsCollectedInCommunityBuildings,
+      connectedToAnyOtherCharities = repaymentClaimDetailsAnswers.connectedToAnyOtherCharities,
+      makingAdjustmentToPreviousClaim = repaymentClaimDetailsAnswers.makingAdjustmentToPreviousClaim
+    )) match {
+      case Some(saveClaimRequest) =>
+        callCharitiesClaimsBackend[SaveClaimRequest, SaveClaimResponse](
+          saveClaimUrl,
+          saveClaimRequest
+        ).map(_.claimId)
+
+      case None =>
+        Future.failed(
+          MissingRequiredFieldsException(
+            "repaymentClaimDetailsAnswers is missing some required fields"
+          )
+        )
+    }
 
   private def callCharitiesClaimsBackend[I, O](url: String, payload: I)(using
     hc: HeaderCarrier,
@@ -113,3 +124,5 @@ class ClaimsConnectorImpl @Inject() (
         )
     )
 }
+
+case class MissingRequiredFieldsException(message: String) extends Exception(message)

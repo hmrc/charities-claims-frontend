@@ -16,23 +16,19 @@
 
 package connectors
 
-import util.{BaseSpec, HttpV2Support}
+import util.{BaseSpec, HttpV2Support, TestClaims}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import models.GetClaimsRequest
+import models.*
 import org.scalamock.handlers.CallHandler
 import play.api.test.Helpers.*
 import com.typesafe.config.ConfigFactory
 import play.api.Configuration
-import play.api.libs.json.Json
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsValue, Json}
+
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.FiniteDuration
-import util.TestClaims
-import models.SaveClaimRequest
-import models.SaveClaimResponse
-import models.RepaymentClaimDetails
 
 class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
@@ -156,7 +152,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
   }
 
   "saveClaim" - {
-    "should save a claim" in {
+    "should save a claim when all required fields are present" in {
       givenSaveClaimEndpointReturns(
         SaveClaimRequest(
           claimingGiftAid = true,
@@ -168,14 +164,33 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       ).once()
       await(
         connector.saveClaim(
-          RepaymentClaimDetails(
-            claimingGiftAid = true,
-            claimingTaxDeducted = true,
-            claimingUnderGasds = false,
+          RepaymentClaimDetailsAnswers(
+            claimingGiftAid = Some(true),
+            claimingTaxDeducted = Some(true),
+            claimingUnderGasds = Some(false),
             claimReferenceNumber = Some("1234567890")
           )
         )
       ) shouldEqual "1237"
+    }
+
+    "should throw an exception when some required fields are missing" in {
+      a[MissingRequiredFieldsException] should be thrownBy {
+        await(
+          connector.saveClaim(
+            RepaymentClaimDetailsAnswers(
+              claimingGiftAid = Some(true),
+              claimingTaxDeducted = Some(true),
+              claimingUnderGasds = None,
+              claimReferenceNumber = Some("1234567890"),
+              claimingDonationsNotFromCommunityBuilding = Some(true),
+              claimingDonationsCollectedInCommunityBuildings = Some(true),
+              connectedToAnyOtherCharities = Some(true),
+              makingAdjustmentToPreviousClaim = Some(true)
+            )
+          )
+        )
+      }
     }
   }
 }
