@@ -52,7 +52,7 @@ class ClaimingGiftAidController @Inject() (
         value =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setClaimingGiftAid(value))
-            .map(_ => Redirect(controllers.repaymentclaimdetails.routes.ClaimingTaxReliefController.onPageLoad))
+            .map(_ => Redirect(controllers.repaymentclaimdetails.routes.ClaimingOtherIncomeController.onPageLoad))
       )
   }
 }

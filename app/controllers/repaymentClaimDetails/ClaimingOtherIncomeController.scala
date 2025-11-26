@@ -24,20 +24,20 @@ import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.ClaimingTaxReliefView
+import views.html.ClaimingOtherIncomeView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimingTaxReliefController @Inject() (
+class ClaimingOtherIncomeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimingTaxReliefView,
+  view: ClaimingOtherIncomeView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("claimingTaxRelief.error.required")
+  val form: Form[Boolean] = formProvider("claimingOtherIncome.error.required")
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingTaxDeducted
