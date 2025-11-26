@@ -37,7 +37,7 @@ class ClaimingTaxReliefController @Inject() (
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("claimingOtherIncome.error.required")
+  val form: Form[Boolean] = formProvider("claimingTaxRelief.error.required")
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingTaxDeducted
