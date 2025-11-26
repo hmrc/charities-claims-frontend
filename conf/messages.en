@@ -23,13 +23,13 @@ claimingGiftAid.heading = Are you claiming Gift Aid?
 claimingGiftAid.hint = Select ‘Yes’ if you want to claim tax repayment on donations from a Gift Aid declaration.
 claimingGiftAid.error.required = Select ‘Yes’ if you are claiming Gift Aid.
 
-claimingOtherIncome.title = Claiming other income
-claimingOtherIncome.heading = Are you claiming UK tax deducted from other income?
-claimingOtherIncome.paragraph =  Tax relief can include:
-claimingOtherIncome.bullet.one =  Bank or Building Society interest
-claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate
-claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
-claimingOtherIncome.error.required = Select ‘Yes’ if you are claiming UK tax deducted from other income.
+claimingTaxRelief.title = Claiming other income
+claimingTaxRelief.heading = Are you claiming UK tax deducted from other income?
+claimingTaxRelief.paragraph =  Tax relief can include:
+claimingTaxRelief.bullet.one =  Bank or Building Society interest
+claimingTaxRelief.bullet.two =  Tax shown on a R185E certificate
+claimingTaxRelief.bullet.three =  Tax deducted from a Discretionary Trust payment
+claimingTaxRelief.error.required = Select ‘Yes’ if you are claiming UK tax deducted from other income.
 
 claimingGiftAidSmallDonations.title = Gift Aid Small Donations Scheme
 claimingGiftAidSmallDonations.heading = Gift Aid Small Donations Scheme

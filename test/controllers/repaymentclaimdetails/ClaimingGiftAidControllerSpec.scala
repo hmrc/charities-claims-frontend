@@ -98,7 +98,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.ClaimingOtherIncomeController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(routes.ClaimingTaxReliefController.onPageLoad.url)
         }
       }
 
@@ -113,7 +113,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.ClaimingOtherIncomeController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(routes.ClaimingTaxReliefController.onPageLoad.url)
         }
       }
 
