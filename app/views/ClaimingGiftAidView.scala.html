@@ -39,7 +39,10 @@
 
         @govukRadios(
             RadiosViewModel
-                .yesNo(form("value"))
+                .yesNo(
+                    form("value"), 
+                    LegendViewModel(messages("claimingGiftAid.legend")).visuallyHidden
+                )
                 .withHint(HintViewModel(Text(messages("claimingGiftAid.hint"))))
         )
 
