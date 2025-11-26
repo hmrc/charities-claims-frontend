@@ -14,32 +14,38 @@
  * limitations under the License.
  */
 
-package controllers.sectionone
+package controllers.repaymentclaimdetails
 
-import forms.YesNoFormProvider
-import models.SessionData
-import play.api.Application
-import play.api.data.Form
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
-import views.html.ClaimingGiftAidSmallDonationsView
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import controllers.ControllerSpec
+import views.html.ClaimReferenceNumberInputView
+import play.api.Application
+import forms.TextInputFormProvider
+import models.RepaymentClaimDetailsAnswers
+import play.api.data.Form
 
-class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
+class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
-  private val form: Form[Boolean] = new YesNoFormProvider()()
+  private val form: Form[String] = new TextInputFormProvider()(
+    "claimReferenceNumberInput.error.required",
+    "claimReferenceNumberInput.error.required",
+    20,
+    "claimReferenceNumberInput.error.length",
+    "claimReferenceNumberInput.error.regex.one"
+  )
 
-  "ClaimingGiftAidSmallDonationsController" - {
+  "ClaimReferenceNumberInputController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingGiftAidSmallDonationsController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimingGiftAidSmallDonationsView]
+          val view   = application.injector.instanceOf[ClaimReferenceNumberInputView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form).body
@@ -47,19 +53,19 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
       }
       "should render the page and pre-populate correctly" in {
 
-        val sessionData = SessionData.SectionOne.setClaimingUnderGasds(true)
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimReferenceNumber("123456")
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingGiftAidSmallDonationsController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimingGiftAidSmallDonationsView]
+          val view   = application.injector.instanceOf[ClaimReferenceNumberInputView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(true)).body
+          contentAsString(result) shouldEqual view(form.fill("123456")).body
         }
       }
     }
@@ -70,13 +76,13 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingGiftAidSmallDonationsController.onSubmit.url)
-              .withFormUrlEncodedBody("value" -> "true")
+            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit.url)
+              .withFormUrlEncodedBody("value" -> "123456")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.ClaimingReferenceNumberCheckController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(routes.ClaimDeclarationController.onPageLoad.url)
         }
       }
 
@@ -85,7 +91,7 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingGiftAidSmallDonationsController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit.url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value

@@ -14,37 +14,33 @@
  * limitations under the License.
  */
 
-package controllers.sectionone
+package controllers.repaymentclaimdetails
 
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
-import forms.TextInputFormProvider
-import models.SessionData
+import forms.YesNoFormProvider
+import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.ClaimReferenceNumberInputView
+import views.html.ClaimingTaxReliefView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimReferenceNumberInputController @Inject() (
+class ClaimingTaxReliefController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimReferenceNumberInputView,
+  view: ClaimingTaxReliefView,
   actions: Actions,
-  formProvider: TextInputFormProvider,
+  formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[String] = formProvider(
-    "claimReferenceNumberInput.error.required",
-    (20, "claimReferenceNumberInput.error.length"),
-    "claimReferenceNumberInput.error.regex"
-  )
+  val form: Form[Boolean] = formProvider("claimingTaxRelief.error.required")
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = SessionData.SectionOne.getClaimReferenceNumber
+    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingTaxDeducted
     Ok(view(form.withDefault(previousAnswer)))
   }
 
@@ -55,8 +51,10 @@ class ClaimReferenceNumberInputController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           saveService
-            .save(SessionData.SectionOne.setClaimReferenceNumber(value))
-            .map(_ => Redirect(routes.ClaimDeclarationController.onPageLoad))
+            .save(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(value))
+            .map(_ =>
+              Redirect(controllers.repaymentclaimdetails.routes.ClaimingGiftAidSmallDonationsController.onPageLoad)
+            )
       )
   }
 }

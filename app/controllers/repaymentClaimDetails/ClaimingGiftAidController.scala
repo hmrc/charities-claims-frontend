@@ -14,45 +14,45 @@
  * limitations under the License.
  */
 
-package controllers.sectionone
+package controllers.repaymentclaimdetails
 
+import services.SaveService
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
+import views.html.ClaimingGiftAidView
 import controllers.actions.Actions
 import forms.YesNoFormProvider
-import models.SessionData
+import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.SaveService
-import views.html.ClaimingGiftAidSmallDonationsView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimingGiftAidSmallDonationsController @Inject() (
+class ClaimingGiftAidController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimingGiftAidSmallDonationsView,
   actions: Actions,
+  view: ClaimingGiftAidView,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("claimingGiftAidSmallDonations.error.required")
+  val form: Form[Boolean] = formProvider("claimingGiftAid.error.required")
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = SessionData.SectionOne.getClaimingUnderGasds
+  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+    val previousAnswer = request.sessionData.repaymentClaimDetailsAnswers.flatMap(_.claimingGiftAid)
     Ok(view(form.withDefault(previousAnswer)))
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           saveService
-            .save(SessionData.SectionOne.setClaimingUnderGasds(value))
-            .map(_ => Redirect(routes.ClaimingReferenceNumberCheckController.onPageLoad))
+            .save(RepaymentClaimDetailsAnswers.setClaimingGiftAid(value))
+            .map(_ => Redirect(controllers.repaymentclaimdetails.routes.ClaimingTaxReliefController.onPageLoad))
       )
   }
 }

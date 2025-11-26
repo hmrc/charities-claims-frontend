@@ -14,49 +14,45 @@
  * limitations under the License.
  */
 
-package controllers.sectionone
+package controllers.repaymentclaimdetails
 
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.YesNoFormProvider
-import models.SessionData
-import play.api.data.{Form, FormError}
+import models.RepaymentClaimDetailsAnswers
+import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.ClaimingReferenceNumberCheckView
+import views.html.ClaimingGiftAidSmallDonationsView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimingReferenceNumberCheckController @Inject() (
+class ClaimingGiftAidSmallDonationsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimingReferenceNumberCheckView,
+  view: ClaimingGiftAidSmallDonationsView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("claimReferenceNumberCheck.error.required")
+  val form: Form[Boolean] = formProvider("claimingGiftAidSmallDonations.error.required")
 
-  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = SessionData.SectionOne.getClaimingReferenceNumber
+  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingUnderGasds
     Ok(view(form.withDefault(previousAnswer)))
   }
 
-  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           saveService
-            .save(SessionData.SectionOne.setClaimingReferenceNumber(value))
-            .map { _ =>
-              if value
-              then Redirect(routes.ClaimReferenceNumberInputController.onPageLoad)
-              else Redirect(routes.ClaimDeclarationController.onPageLoad)
-            }
+            .save(RepaymentClaimDetailsAnswers.setClaimingUnderGasds(value))
+            .map(_ => Redirect(routes.ClaimingReferenceNumberCheckController.onPageLoad))
       )
   }
 }

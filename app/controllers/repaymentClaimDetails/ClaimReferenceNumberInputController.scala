@@ -14,33 +14,37 @@
  * limitations under the License.
  */
 
-package controllers.sectionone
+package controllers.repaymentclaimdetails
 
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
-import forms.YesNoFormProvider
-import models.SessionData
+import forms.TextInputFormProvider
+import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.ClaimingOtherIncomeView
+import views.html.ClaimReferenceNumberInputView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimingOtherIncomeController @Inject() (
+class ClaimReferenceNumberInputController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimingOtherIncomeView,
+  view: ClaimReferenceNumberInputView,
   actions: Actions,
-  formProvider: YesNoFormProvider,
+  formProvider: TextInputFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("claimingOtherIncome.error.required")
+  val form: Form[String] = formProvider(
+    "claimReferenceNumberInput.error.required",
+    (20, "claimReferenceNumberInput.error.length"),
+    "claimReferenceNumberInput.error.regex"
+  )
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = SessionData.SectionOne.getClaimingTaxDeducted
+    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimReferenceNumber
     Ok(view(form.withDefault(previousAnswer)))
   }
 
@@ -51,8 +55,8 @@ class ClaimingOtherIncomeController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           saveService
-            .save(SessionData.SectionOne.setClaimingTaxDeducted(value))
-            .map(_ => Redirect(controllers.sectionone.routes.ClaimingGiftAidSmallDonationsController.onPageLoad))
+            .save(RepaymentClaimDetailsAnswers.setClaimReferenceNumber(value))
+            .map(_ => Redirect(routes.ClaimDeclarationController.onPageLoad))
       )
   }
 }

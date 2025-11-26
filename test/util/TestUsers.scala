@@ -14,19 +14,9 @@
  * limitations under the License.
  */
 
-package models
+package util
 
-import play.api.libs.json.Format
-import play.api.libs.json.Json
-
-final case class SectionOneAnswers(
-  claimingGiftAid: Option[Boolean] = None,
-  claimingTaxDeducted: Option[Boolean] = None,
-  claimingUnderGasds: Option[Boolean] = None,
-  claimingReferenceNumber: Option[Boolean] = None,
-  claimReferenceNumber: Option[String] = None
-)
-
-object SectionOneAnswers {
-  given Format[SectionOneAnswers] = Json.format[SectionOneAnswers]
+object TestUsers {
+  val organisation1 = "organisation-1234567890"
+  val agent1        = "agent-1234567890"
 }

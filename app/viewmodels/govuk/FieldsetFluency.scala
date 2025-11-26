@@ -67,5 +67,8 @@ trait FieldsetFluency {
 
     def bold: Legend =
       legend.withCssClass("govuk-fieldset__legend--m")
+
+    def visuallyHidden: Legend =
+      legend.withCssClass("govuk-visually-hidden")
   }
 }

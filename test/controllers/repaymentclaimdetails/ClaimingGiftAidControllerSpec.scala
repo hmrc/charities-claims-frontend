@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package controllers.sectionone
+package controllers.repaymentclaimdetails
 
-import forms.YesNoFormProvider
-import play.api.Application
-import play.api.data.Form
-import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.ClaimingGiftAidView
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import controllers.ControllerSpec
-import models.SessionData
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import views.html.ClaimingGiftAidView
+import play.api.Application
+import forms.YesNoFormProvider
+import models.RepaymentClaimDetailsAnswers
+import play.api.data.Form
 
 class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
@@ -52,7 +51,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with true value" in {
 
-        val sessionData = SessionData.SectionOne.setClaimingGiftAid(true)
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -70,7 +69,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with false value" in {
 
-        val sessionData = SessionData.SectionOne.setClaimingGiftAid(false)
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingGiftAid(false)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -99,7 +98,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.ClaimingOtherIncomeController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(routes.ClaimingTaxReliefController.onPageLoad.url)
         }
       }
 
@@ -114,7 +113,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.ClaimingOtherIncomeController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(routes.ClaimingTaxReliefController.onPageLoad.url)
         }
       }
 

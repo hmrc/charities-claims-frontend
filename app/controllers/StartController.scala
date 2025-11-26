@@ -29,12 +29,12 @@ class StartController @Inject() (
     with I18nSupport {
 
   val start: Action[AnyContent] =
-    Action(_ => Redirect(controllers.sectionone.routes.ClaimingGiftAidController.onPageLoad.url))
+    Action(_ => Redirect(controllers.repaymentclaimdetails.routes.ClaimingGiftAidController.onPageLoad.url))
 
   val keepAlive: Action[AnyContent] =
     authorisedAction(_ => Ok)
 
   val timedOut: Action[AnyContent] =
-    Action(implicit request => Ok(routes.StartController.start.url))
+    Action(implicit request => Redirect(routes.StartController.start.url))
 
 }

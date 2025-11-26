@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package controllers.sectionone
+package controllers.repaymentclaimdetails
 
-import forms.YesNoFormProvider
-import models.SessionData
-import play.api.Application
-import play.api.data.Form
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
-import views.html.ClaimingOtherIncomeView
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import controllers.ControllerSpec
+import views.html.ClaimingReferenceNumberCheckView
+import play.api.Application
+import forms.YesNoFormProvider
+import models.RepaymentClaimDetailsAnswers
+import play.api.data.Form
 
-class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
+class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 
   private val form: Form[Boolean] = new YesNoFormProvider()()
 
-  "ClaimingOtherIncomeController" - {
+  "ClaimingReferenceNumberCheckController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
 
@@ -37,31 +37,31 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingReferenceNumberCheckController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
+          val view   = application.injector.instanceOf[ClaimingReferenceNumberCheckView]
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
+          status(result)          shouldBe OK
+          contentAsString(result) shouldBe view(form).body
         }
       }
 
       "should render the page and pre-populate correctly" in {
 
-        val sessionData = SessionData.SectionOne.setClaimingTaxDeducted(true)
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingReferenceNumberCheckController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
+          val view   = application.injector.instanceOf[ClaimingReferenceNumberCheckView]
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(true)).body
+          status(result)          shouldBe OK
+          contentAsString(result) shouldBe view(form.fill(true)).body
         }
       }
     }
@@ -72,14 +72,14 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingReferenceNumberCheckController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.ClaimingGiftAidSmallDonationsController.onPageLoad.url
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(
+            controllers.repaymentclaimdetails.routes.ClaimReferenceNumberInputController.onPageLoad.url
           )
         }
       }
@@ -89,12 +89,12 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingReferenceNumberCheckController.onSubmit.url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value
 
-          status(result) shouldEqual BAD_REQUEST
+          status(result) shouldBe BAD_REQUEST
         }
       }
     }

@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package controllers.sectionone
+package controllers.repaymentclaimdetails
 
 import play.api.test.FakeRequest
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import controllers.ControllerSpec
-import views.html.ClaimingReferenceNumberCheckView
+import views.html.ClaimingTaxReliefView
 import play.api.Application
 import forms.YesNoFormProvider
-import models.SessionData
+import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
 
-class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
+class ClaimingTaxReliefControllerSpec extends ControllerSpec {
 
   private val form: Form[Boolean] = new YesNoFormProvider()()
 
-  "ClaimingReferenceNumberCheckController" - {
+  "ClaimingTaxReliefController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
 
@@ -37,31 +37,31 @@ class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingReferenceNumberCheckController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingTaxReliefController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimingReferenceNumberCheckView]
+          val view   = application.injector.instanceOf[ClaimingTaxReliefView]
 
-          status(result)          shouldBe OK
-          contentAsString(result) shouldBe view(form).body
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form).body
         }
       }
 
       "should render the page and pre-populate correctly" in {
 
-        val sessionData = SessionData.SectionOne.setClaimingReferenceNumber(true)
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingReferenceNumberCheckController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingTaxReliefController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimingReferenceNumberCheckView]
+          val view   = application.injector.instanceOf[ClaimingTaxReliefView]
 
-          status(result)          shouldBe OK
-          contentAsString(result) shouldBe view(form.fill(true)).body
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(true)).body
         }
       }
     }
@@ -72,14 +72,14 @@ class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingReferenceNumberCheckController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingTaxReliefController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
-          status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(
-            controllers.sectionone.routes.ClaimReferenceNumberInputController.onPageLoad.url
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ClaimingGiftAidSmallDonationsController.onPageLoad.url
           )
         }
       }
@@ -89,12 +89,12 @@ class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingReferenceNumberCheckController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingTaxReliefController.onSubmit.url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value
 
-          status(result) shouldBe BAD_REQUEST
+          status(result) shouldEqual BAD_REQUEST
         }
       }
     }

@@ -14,33 +14,33 @@
  * limitations under the License.
  */
 
-package controllers.sectionone
+package controllers.repaymentclaimdetails
 
-import services.SaveService
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
-import views.html.ClaimingGiftAidView
 import controllers.actions.Actions
 import forms.YesNoFormProvider
-import models.SessionData
+import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.SaveService
+import views.html.ClaimingReferenceNumberCheckView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimingGiftAidController @Inject() (
+class ClaimingReferenceNumberCheckController @Inject() (
   val controllerComponents: MessagesControllerComponents,
+  view: ClaimingReferenceNumberCheckView,
   actions: Actions,
-  view: ClaimingGiftAidView,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("claimingGiftAid.error.required")
+  val form: Form[Boolean] = formProvider("claimReferenceNumberCheck.error.required")
 
   val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = request.sessionData.sectionOneAnswers.flatMap(_.claimingGiftAid)
+    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingReferenceNumber
     Ok(view(form.withDefault(previousAnswer)))
   }
 
@@ -51,8 +51,12 @@ class ClaimingGiftAidController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           saveService
-            .save(SessionData.SectionOne.setClaimingGiftAid(value))
-            .map(_ => Redirect(controllers.sectionone.routes.ClaimingOtherIncomeController.onPageLoad))
+            .save(RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(value))
+            .map { _ =>
+              if value
+              then Redirect(routes.ClaimReferenceNumberInputController.onPageLoad)
+              else Redirect(routes.ClaimDeclarationController.onPageLoad)
+            }
       )
   }
 }

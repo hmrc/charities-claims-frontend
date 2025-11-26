@@ -19,24 +19,21 @@ package models
 import util.BaseSpec
 import play.api.libs.json.Json
 
-class SessionDataSpec extends BaseSpec {
+class GetClaimsRequestSpec extends BaseSpec {
 
-  "SessionData" - {
-    "be serializable and deserializable" in {
-      val sessionData             = SessionData(
-        repaymentClaimDetailsAnswers = Some(
-          RepaymentClaimDetailsAnswers(
-            claimingGiftAid = Some(true),
-            claimingTaxDeducted = Some(true),
-            claimingUnderGasds = Some(true),
-            claimingReferenceNumber = Some(true),
-            claimReferenceNumber = Some("1234567890")
-          )
-        )
-      )
-      val json                    = Json.toJson(sessionData)
-      val deserializedSessionData = json.as[SessionData]
-      deserializedSessionData shouldBe sessionData
+  "GetClaimsRequest" - {
+    "be serializable and deserializable when claimSubmitted is false" in {
+      val request           = GetClaimsRequest(claimSubmitted = false)
+      val json              = Json.toJson(request)
+      val deserializedClaim = json.as[GetClaimsRequest]
+      deserializedClaim shouldBe request
+    }
+
+    "be serializable and deserializable when claimSubmitted is true" in {
+      val claim             = GetClaimsRequest(claimSubmitted = true)
+      val json              = Json.toJson(claim)
+      val deserializedClaim = json.as[GetClaimsRequest]
+      deserializedClaim shouldBe claim
     }
   }
 
