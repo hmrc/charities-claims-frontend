@@ -54,9 +54,6 @@ trait CharacterCountFluency {
     def withCssClass(newClass: String): CharacterCount =
       characterCount.copy(classes = s"${characterCount.classes} $newClass")
 
-    def noResize: CharacterCount =
-      characterCount.withCssClass("no-resize")
-
     def withAttribute(attribute: (String, String)): CharacterCount =
       characterCount.copy(attributes = characterCount.attributes + attribute)
 

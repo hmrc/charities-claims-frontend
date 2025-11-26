@@ -20,8 +20,8 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukButton: GovukButton,
-    govukCharacterCount: GovukCharacterCount
+    govukInput: GovukInput,
+    govukButton: GovukButton
 )
 
 @(form: Form[?])(implicit request: Request[?], messages: Messages)
@@ -29,23 +29,27 @@
 @layout(
     pageTitle    = titleNoForm(messages("claimReferenceNumberInput.title"))
 ) {
+
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
-
     <h1 class="govuk-heading-l">@messages("claimReferenceNumberInput.heading")</h1>
 
     <p class="govuk-body">@messages("claimReferenceNumberInput.paragraph")</p>
 
     @formHelper(action = routes.ClaimReferenceNumberInputController.onSubmit, Symbol("autoComplete") -> "off") {
 
-        @govukCharacterCount(
-            CharacterCountViewModel(
-                form("value"),
-                LabelViewModel(messages("")).withCssClass("govuk-label--m")
-          ).noResize
-        )
+        <div class="govuk-form-group govuk-form-group--error govuk-character-count" data-module="govuk-character-count" data-maxlength="20">
 
+            <p id="exceeding-characters-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span>@messages("claimReferenceNumberInput.error.length")
+            </p>
+            <input class="govuk-input govuk-input--error govuk-js-character-count" id="exceeding-characters"
+                name="exceeding" aria-describedby="exceeding-characters-info exceeding-characters-error" ></input>
+            <div id="exceeding-characters-info" class="govuk-hint govuk-character-count__message">
+                @messages("claimReferenceNumberInput.error.maxlength")
+            </div>
+        </div>
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
     }
 }
