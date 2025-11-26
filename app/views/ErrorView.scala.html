@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import play.twirl.api.Html
+
 @this(
     layout: templates.Layout
 )
@@ -23,5 +25,8 @@
 @layout(pageTitle = titleNoForm(pageTitle)) {
     <h1 class="govuk-heading-xl">@messages(heading)</h1>
 
-    <p class="govuk-body">@messages(message)</p>
+    @messages(message).split("<br>").map { line =>
+        <p class="govuk-body">@Html(line.trim)</p>
+    }
+    
 }

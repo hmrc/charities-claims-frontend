@@ -1,5 +1,5 @@
 service.name = Charities Claims
-service.title = Charities Claims
+service.title = Charities
 
 site.continue = Continue
 site.yes = Yes
@@ -23,13 +23,13 @@ claimingGiftAid.heading = Are you claiming Gift Aid?
 claimingGiftAid.hint = Select ‘Yes’ if you want to claim tax repayment on donations from a Gift Aid declaration.
 claimingGiftAid.error.required = Select ‘Yes’ if you are claiming Gift Aid.
 
-claimingTaxRelief.title = Claiming other income
-claimingTaxRelief.heading = Are you claiming UK tax deducted from other income?
-claimingTaxRelief.paragraph =  Tax relief can include:
-claimingTaxRelief.bullet.one =  Bank or Building Society interest
-claimingTaxRelief.bullet.two =  Tax shown on a R185E certificate
-claimingTaxRelief.bullet.three =  Tax deducted from a Discretionary Trust payment
-claimingTaxRelief.error.required = Select ‘Yes’ if you are claiming UK tax deducted from other income.
+claimingOtherIncome.title = Are you claiming tax deducted from other income?
+claimingOtherIncome.heading = Are you claiming tax deducted from other income?
+claimingOtherIncome.paragraph =  Tax relief can include:
+claimingOtherIncome.bullet.one =  Bank or Building Society interest
+claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate
+claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
+claimingOtherIncome.error.required = Select 'Yes' if you are claiming UK tax deducted from other income.
 
 claimingGiftAidSmallDonations.title = Gift Aid Small Donations Scheme
 claimingGiftAidSmallDonations.heading = Gift Aid Small Donations Scheme
@@ -52,3 +52,9 @@ claimDeclaration.title = Declaration
 claimDeclaration.heading = Declaration
 claimDeclaration.paragraph =  I declare that:
 claimDeclaration.bullet.one =  I will provide accurate information in this claim
+
+global.error.InternalServerError500.heading = Sorry, there is a problem with this service
+global.error.InternalServerError500.message = Try again later or contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services">HMRC Online Services Helpdesk</a>.
+
+global.error.pageNotFound404.heading = Page not found
+global.error.pageNotFound404.message = If you typed the web address, check it is correct.<br>If you pasted the web address, check you copied the entire address.<br>If the web address is correct or you selected a link or button, contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services">HMRC Online Services Helpdesk</a> if you need to speak to someone.
