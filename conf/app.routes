@@ -21,8 +21,8 @@ POST        /claiming-tax-relief                      controllers.repaymentclaim
 GET         /claim-reference-number                   controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onPageLoad
 POST        /claim-reference-number                   controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onSubmit
 
-GET         /check-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad
-POST        /check-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit
+GET         /enter-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad
+POST        /enter-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit
 
 GET         /declaration                              controllers.repaymentclaimdetails.ClaimDeclarationController.onPageLoad
 POST        /declaration                              controllers.repaymentclaimdetails.ClaimDeclarationController.onSubmit
