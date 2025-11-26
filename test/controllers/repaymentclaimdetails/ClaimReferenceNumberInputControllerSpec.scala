@@ -29,10 +29,8 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
   private val form: Form[String] = new TextInputFormProvider()(
     "claimReferenceNumberInput.error.required",
-    "claimReferenceNumberInput.error.required",
-    20,
-    "claimReferenceNumberInput.error.length",
-    "claimReferenceNumberInput.error.regex.one"
+    (20, "claimReferenceNumberInput.error.length"),
+    "claimReferenceNumberInput.error.regex"
   )
 
   "ClaimReferenceNumberInputController" - {

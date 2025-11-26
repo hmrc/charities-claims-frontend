@@ -21,7 +21,8 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    govukInputCharacterCount: GovukInputCharacterCount
 )
 
 @(form: Form[?])(implicit request: Request[?], messages: Messages)
@@ -29,18 +30,21 @@
 @layout(
     pageTitle    = titleNoForm(messages("claimReferenceNumberInput.title"))
 ) {
+
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
-
     <h1 class="govuk-heading-l">@messages("claimReferenceNumberInput.heading")</h1>
 
     <p class="govuk-body">@messages("claimReferenceNumberInput.paragraph")</p>
 
     @formHelper(action = routes.ClaimReferenceNumberInputController.onSubmit, Symbol("autoComplete") -> "off") {
 
-        @govukInput(
-            InputViewModel(field=form("value"),label = LabelViewModel(messages("")).withCssClass("govuk-label--m"))
+        @govukInputCharacterCount(
+          CharacterCountViewModel(
+              form("value"),
+              20
+          ).fullWidth()
         )
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))

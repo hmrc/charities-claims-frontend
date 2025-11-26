@@ -24,10 +24,10 @@ lazy val root = Project(appName, file("."))
       "play.twirl.api.HtmlFormat",
       "play.twirl.api.HtmlFormat.*",
       "uk.gov.hmrc.govukfrontend.views.html.components.*",
-      "uk.gov.hmrc.hmrcfrontend.views.html.components.*",
       "uk.gov.hmrc.hmrcfrontend.views.html.helpers.*",
       "uk.gov.hmrc.hmrcfrontend.views.config.*",
       "views.ViewUtils.*",
+      "views.html.components.*",
       "viewmodels.govuk.all.*"
     ),
     PlayKeys.playDefaultPort := 8030,

@@ -39,10 +39,8 @@ class ClaimReferenceNumberInputController @Inject() (
 
   val form: Form[String] = formProvider(
     "claimReferenceNumberInput.error.required",
-    "claimReferenceNumberInput.error.required",
-    20,
-    "claimReferenceNumberInput.error.length",
-    "claimReferenceNumberInput.error.regex.one"
+    (20, "claimReferenceNumberInput.error.length"),
+    "claimReferenceNumberInput.error.regex"
   )
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
