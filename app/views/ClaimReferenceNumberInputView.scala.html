@@ -42,8 +42,9 @@
 
         @govukInputCharacterCount(
           CharacterCountViewModel(
-              form("value"),
-              20
+            field = form("value"),
+            label = LabelViewModel(messages("claimReferenceNumberInput.heading")),
+            maxLength = 20
           ).fullWidth()
         )
 
