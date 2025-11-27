@@ -81,7 +81,13 @@ object RepaymentClaimDetailsAnswers {
   def getClaimingReferenceNumber(using session: SessionData): Option[Boolean] = get(_.claimingReferenceNumber)
 
   def setClaimingReferenceNumber(value: Boolean)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(claimingReferenceNumber = Some(v)))
+    set(value) { (answers, isClaiming) =>
+      if (isClaiming) {
+        answers.copy(claimingReferenceNumber = Some(true))
+      } else {
+        answers.copy(claimingReferenceNumber = Some(false), claimReferenceNumber = None)
+      }
+    }
 
   def getClaimReferenceNumber(using session: SessionData): Option[String] = get(_.claimReferenceNumber)
 
