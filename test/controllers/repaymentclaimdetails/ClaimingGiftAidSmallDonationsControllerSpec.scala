@@ -24,7 +24,7 @@ import play.api.Application
 import forms.YesNoFormProvider
 import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
-import models.NormalMode
+import models.{CheckMode, NormalMode}
 
 class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
 
@@ -46,7 +46,8 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
           contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
-      "should render the page and pre-populate correctly" in {
+
+      "should render the page and pre-populate correctly with true value" in {
 
         val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGasds(true)
 
@@ -63,10 +64,28 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
           contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
         }
       }
+
+      "should render the page and pre-populate correctly with false value" in {
+
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGasds(false)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ClaimingGiftAidSmallDonationsView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
+        }
+      }
     }
 
     "onSubmit" - {
-      "should redirect to the next page" in {
+      "should redirect to the next page when the value is true" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
@@ -79,6 +98,57 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
             routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to the next page when the value is false" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingGiftAidSmallDonationsController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect back to cya page when the value is true" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingGiftAidSmallDonationsController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.CheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect back to cya page when the value is false" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingGiftAidSmallDonationsController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.CheckYourAnswersController.onPageLoad.url
           )
         }
       }

@@ -24,7 +24,7 @@ import play.api.Application
 import forms.TextInputFormProvider
 import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
-import models.NormalMode
+import models.{CheckMode, Mode, NormalMode, RepaymentClaimDetailsAnswers}
 
 class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
@@ -70,12 +70,28 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
-      "should redirect to the next page" in {
+      "should redirect back to cya page" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "123456")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.CheckYourAnswersController.onPageLoad.url)
+        }
+      }
+
+      // NEED to fix this - not working
+      "should redirect to the next page" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(CheckMode).url)
               .withFormUrlEncodedBody("value" -> "123456")
 
           val result = route(application, request).value
