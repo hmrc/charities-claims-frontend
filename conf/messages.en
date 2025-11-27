@@ -20,7 +20,7 @@ session-expired-message=For your security, we will time you out in
 session-expired.keep-alive-button-text=Continue
 session-expired.sign-out-button-text=Sign-out
 
-claimingGiftAid.title = Claiming Gift Aid
+claimingGiftAid.title = Are you claiming Gift Aid?
 claimingGiftAid.heading = Are you claiming Gift Aid?
 claimingGiftAid.hint = Select ‘Yes’ if you want to claim tax repayment on donations from a Gift Aid declaration.
 claimingGiftAid.error.required = Select ‘Yes’ if you are claiming Gift Aid.
