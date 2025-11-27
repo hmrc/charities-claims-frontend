@@ -53,9 +53,15 @@ class ClaimingReferenceNumberCheckController @Inject() (
           saveService
             .save(RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(value))
             .map { _ =>
-              if value
-              then Redirect(routes.ClaimReferenceNumberInputController.onPageLoad)
-              else Redirect(routes.ClaimDeclarationController.onPageLoad)
+              if (value) {
+                Redirect(routes.ClaimReferenceNumberInputController.onPageLoad(mode))
+              } else {
+                if (mode == CheckMode) {
+                  Redirect(routes.ClaimDeclarationController.onPageLoad)
+                } else {
+                  Redirect(routes.ClaimDeclarationController.onPageLoad)
+                }
+              }
             }
       )
   }

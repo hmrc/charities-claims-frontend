@@ -29,8 +29,10 @@ GET         /change-claim-reference-number                   controllers.repayme
 POST        /claim-reference-number                          controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = NormalMode)
 POST        /change-claim-reference-number                   controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = CheckMode)
 
-GET         /enter-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad
-POST        /enter-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit
+GET         /enter-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = NormalMode)
+GET         /enter-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = CheckMode)
+POST        /enter-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = NormalMode)
+POST        /enter-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = CheckMode)
 
 GET         /declaration                              controllers.repaymentclaimdetails.ClaimDeclarationController.onPageLoad
 POST        /declaration                              controllers.repaymentclaimdetails.ClaimDeclarationController.onSubmit

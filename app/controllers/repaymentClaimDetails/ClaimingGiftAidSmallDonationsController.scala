@@ -53,7 +53,13 @@ class ClaimingGiftAidSmallDonationsController @Inject() (
         value =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setClaimingUnderGasds(value))
-            .map(_ => Redirect(routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode)))
+            .map { _ =>
+              if (mode == CheckMode) {
+                Redirect(routes.CheckYourAnswersController.onPageLoad)
+              } else {
+                Redirect(routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode))
+              }
+            }
       )
   }
 }
