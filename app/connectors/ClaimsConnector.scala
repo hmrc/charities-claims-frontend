@@ -56,13 +56,13 @@ class ClaimsConnectorImpl @Inject() (
 
   val baseUrl: String = servicesConfig.baseUrl("charities-claims")
 
-  lazy val retryIntervals: Seq[FiniteDuration] = Retries.getConfIntervals("charities-claims", configuration)
+  val retryIntervals: Seq[FiniteDuration] = Retries.getConfIntervals("charities-claims", configuration)
 
-  lazy val contextPath: String = servicesConfig
+  val contextPath: String = servicesConfig
     .getConfString("charities-claims.context-path", "charities-claims")
 
-  lazy val retrieveUnsubmittedClaimsUrl: String = s"$baseUrl$contextPath/get-claims"
-  lazy val saveClaimUrl: String                 = s"$baseUrl$contextPath/claims"
+  val retrieveUnsubmittedClaimsUrl: String = s"$baseUrl$contextPath/get-claims"
+  val saveClaimUrl: String                 = s"$baseUrl$contextPath/claims"
 
   final def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse] =
     callCharitiesClaimsBackend[GetClaimsRequest, GetClaimsResponse](
