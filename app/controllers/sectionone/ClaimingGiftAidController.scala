@@ -23,7 +23,7 @@ import controllers.BaseController
 import views.html.ClaimingGiftAidView
 import controllers.actions.Actions
 import forms.YesNoFormProvider
-import models.SessionData
+import models.{CheckMode, Mode, NormalMode, SessionData}
 import play.api.data.Form
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,20 +39,26 @@ class ClaimingGiftAidController @Inject() (
 
   val form: Form[Boolean] = formProvider("claimingGiftAid.error.required")
 
-  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
     val previousAnswer = request.sessionData.sectionOneAnswers.flatMap(_.claimingGiftAid)
-    Ok(view(form.withDefault(previousAnswer)))
+    Ok(view(form.withDefault(previousAnswer), mode))
   }
 
-  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
             .save(SessionData.SectionOne.setClaimingGiftAid(value))
-            .map(_ => Redirect(controllers.sectionone.routes.ClaimingOtherIncomeController.onPageLoad))
+            .map { _ =>
+              if (mode == CheckMode) {
+                Redirect(controllers.routes.CheckYourAnswersController.onPageLoad())
+              } else {
+                Redirect(controllers.sectionone.routes.ClaimingOtherIncomeController.onPageLoad(NormalMode))
+              }
+            }
       )
   }
 }

@@ -22,6 +22,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import models.SectionOneAnswers
 import controllers.sectionone.routes
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
+import models.CheckMode
 
 class CheckYourAnswersHelper {
 
@@ -34,7 +35,7 @@ class CheckYourAnswersHelper {
             summaryRow(
               messages("checkYourAnswers.giftAid.label"),
               if (value) "Yes" else "No",
-              routes.ClaimingGiftAidController.onPageLoad.url,
+              routes.ClaimingGiftAidController.onPageLoad(CheckMode).url, // <--- Added .url
               messages("checkYourAnswers.giftAid.change.hidden")
             )
           )
@@ -42,7 +43,7 @@ class CheckYourAnswersHelper {
           Some(
             missingDataRow(
               messages("checkYourAnswers.giftAid.label"),
-              routes.ClaimingGiftAidController.onPageLoad.url,
+              routes.ClaimingGiftAidController.onPageLoad(CheckMode).url, // <--- Added .url
               messages("checkYourAnswers.giftAid.change.hidden")
             )
           )
@@ -53,7 +54,7 @@ class CheckYourAnswersHelper {
             summaryRow(
               messages("checkYourAnswers.taxDeducted.label"),
               if (value) "Yes" else "No",
-              routes.ClaimingOtherIncomeController.onPageLoad.url,
+              routes.ClaimingOtherIncomeController.onPageLoad(CheckMode).url, // <--- Added .url
               messages("checkYourAnswers.taxDeducted.label")
             )
           )
@@ -61,7 +62,7 @@ class CheckYourAnswersHelper {
           Some(
             missingDataRow(
               messages("checkYourAnswers.taxDeducted.label"),
-              routes.ClaimingOtherIncomeController.onPageLoad.url,
+              routes.ClaimingOtherIncomeController.onPageLoad(CheckMode).url, // <--- Added .url
               messages("checkYourAnswers.taxDeducted.label")
             )
           )
@@ -72,7 +73,7 @@ class CheckYourAnswersHelper {
             summaryRow(
               messages("checkYourAnswers.gasds.label"),
               if (value) "Yes" else "No",
-              routes.ClaimingGiftAidSmallDonationsController.onPageLoad.url,
+              routes.ClaimingGiftAidSmallDonationsController.onPageLoad(CheckMode).url, // <--- Added .url
               messages("checkYourAnswers.gasds.label")
             )
           )
@@ -80,7 +81,7 @@ class CheckYourAnswersHelper {
           Some(
             missingDataRow(
               messages("checkYourAnswers.gasds.label"),
-              routes.ClaimingGiftAidSmallDonationsController.onPageLoad.url,
+              routes.ClaimingGiftAidSmallDonationsController.onPageLoad(CheckMode).url, // <--- Added .url
               messages("checkYourAnswers.gasds.label")
             )
           )
@@ -91,7 +92,7 @@ class CheckYourAnswersHelper {
             summaryRow(
               messages("checkYourAnswers.hasRef.label"),
               if (value) "Yes" else "No",
-              routes.ClaimReferenceNumberCheckController.onPageLoad.url,
+              routes.ClaimReferenceNumberCheckController.onPageLoad(CheckMode).url, // <--- Added .url
               messages("checkYourAnswers.hasRef.label")
             )
           )
@@ -99,7 +100,7 @@ class CheckYourAnswersHelper {
           Some(
             missingDataRow(
               messages("checkYourAnswers.hasRef.label"),
-              routes.ClaimReferenceNumberCheckController.onPageLoad.url,
+              routes.ClaimReferenceNumberCheckController.onPageLoad(CheckMode).url, // <--- Added .url
               messages("checkYourAnswers.hasRef.label")
             )
           )
@@ -112,7 +113,7 @@ class CheckYourAnswersHelper {
                 summaryRow(
                   messages("checkYourAnswers.refNumber.label"),
                   refNum,
-                  routes.ClaimReferenceNumberCheckController.onPageLoad.url,
+                  routes.ClaimReferenceNumberCheckController.onPageLoad(CheckMode).url, // <--- Added .url
                   messages("checkYourAnswers.refNumber.label")
                 )
               )
@@ -120,7 +121,7 @@ class CheckYourAnswersHelper {
               Some(
                 missingDataRow(
                   messages("checkYourAnswers.refNumber.label"),
-                  routes.ClaimReferenceNumberCheckController.onPageLoad.url,
+                  routes.ClaimReferenceNumberCheckController.onPageLoad(CheckMode).url, // <--- Added .url
                   messages("checkYourAnswers.refNumber.label")
                 )
               )

@@ -18,6 +18,7 @@ package controllers.sectionone
 
 import com.google.inject.Inject
 import forms.YesNoFormProvider
+import models.{CheckMode, Mode, NormalMode, SessionData}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -33,16 +34,26 @@ class ClaimReferenceNumberCheckController @Inject() (
 
   val form: Form[Boolean] = formProvider("claimReferenceNumberCheck.error.required")
 
-  val onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(view(form))
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
+    val previousAnswer = request.sessionData.sectionOneAnswers.flatMap(_.hasClaimReferenceNumber)
+    Ok(view(form.withDefault(previousAnswer), mode))
   }
 
-  val onSubmit: Action[AnyContent] = Action { implicit request =>
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => BadRequest(view(formWithErrors)),
-        _ => Ok(view(form))
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+        value =>
+          saveService
+            .save(SessionData.SectionOne.setHasClaimReferenceNumber(value))
+            .map { _ =>
+              if (mode == CheckMode) {
+                Redirect(controllers.routes.CheckYourAnswersController.onPageLoad())
+              } else {
+                Redirect(controllers.routes.ClaimDeclarationController.onPageLoad())
+              }
+            }
       )
   }
 }

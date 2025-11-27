@@ -9,17 +9,17 @@ GET         /keep-alive                               controllers.StartControlle
 GET         /timed-out                                controllers.StartController.timedOut
 
 
-GET         /claiming-gift-aid-small-donations        controllers.sectionone.ClaimingGiftAidSmallDonationsController.onPageLoad
-POST        /claiming-gift-aid-small-donations        controllers.sectionone.ClaimingGiftAidSmallDonationsController.onSubmit
+GET         /claiming-gift-aid-small-donations        controllers.sectionone.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: models.Mode = models.NormalMode)
+POST        /claiming-gift-aid-small-donations        controllers.sectionone.ClaimingGiftAidSmallDonationsController.onSubmit(mode: models.Mode = models.NormalMode)
 
-GET         /claiming-gift-aid                        controllers.sectionone.ClaimingGiftAidController.onPageLoad
-POST        /claiming-gift-aid                        controllers.sectionone.ClaimingGiftAidController.onSubmit
+GET         /claiming-gift-aid                        controllers.sectionone.ClaimingGiftAidController.onPageLoad(mode: models.Mode = models.NormalMode)
+POST        /claiming-gift-aid                        controllers.sectionone.ClaimingGiftAidController.onSubmit(mode: models.Mode = models.NormalMode)
 
-GET         /claiming-tax-relief                      controllers.sectionone.ClaimingOtherIncomeController.onPageLoad
-POST        /claiming-tax-relief                      controllers.sectionone.ClaimingOtherIncomeController.onSubmit
+GET         /claiming-tax-relief                      controllers.sectionone.ClaimingOtherIncomeController.onPageLoad(mode: models.Mode = models.NormalMode)
+POST        /claiming-tax-relief                      controllers.sectionone.ClaimingOtherIncomeController.onSubmit(mode: models.Mode = models.NormalMode)
 
-GET         /claim-reference-number-check             controllers.sectionone.ClaimReferenceNumberCheckController.onPageLoad
-POST        /claim-reference-number-check             controllers.sectionone.ClaimReferenceNumberCheckController.onSubmit
+GET         /claim-reference-number-check             controllers.sectionone.ClaimReferenceNumberCheckController.onPageLoad(mode: models.Mode = models.NormalMode)
+POST        /claim-reference-number-check             controllers.sectionone.ClaimReferenceNumberCheckController.onSubmit(mode: models.Mode = models.NormalMode)
 
 GET         /claim-declaration                        controllers.ClaimDeclarationController.onPageLoad()
 POST        /claim-declaration                        controllers.ClaimDeclarationController.onSubmit()
