@@ -22,6 +22,8 @@ import play.api.i18n.I18nSupport
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import play.api.data.Form
 
+import scala.concurrent.{ExecutionContext, Future}
+
 trait BaseController extends FrontendBaseController with I18nSupport {
 
   given sessionData(using req: DataRequest[?]): SessionData =
@@ -30,5 +32,10 @@ trait BaseController extends FrontendBaseController with I18nSupport {
   extension [A](form: Form[A]) {
     def withDefault(optValue: Option[A]): Form[A] =
       optValue.map(form.fill).getOrElse(form)
+  }
+
+  // cats-like extensions
+  extension [A](future: Future[A])(using ec: ExecutionContext) {
+    def as[B](b: B): Future[B] = future.map(_ => b)
   }
 }

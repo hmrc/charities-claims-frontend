@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.repaymentclaimdetails
 
 import com.google.inject.Inject
 import controllers.actions.{AuthorisedAction, DataRequiredAction, DataRetrievalAction}
+import models.RepaymentClaimDetailsAnswers
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.CheckYourAnswersView
 import viewmodels.govuk.CheckYourAnswersHelper
+import views.html.CheckYourAnswersView
 
 class CheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
@@ -35,14 +36,16 @@ class CheckYourAnswersController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = identify.andThen(getData).andThen(requireData) { implicit request =>
+  def onPageLoad: Action[AnyContent] = identify.andThen(getData).andThen(requireData) { implicit request =>
 
-    val list = helper.buildSummaryList(request.sessionData.sectionOneAnswers.getOrElse(models.SectionOneAnswers()))
+    val list =
+      helper
+        .buildSummaryList(request.sessionData.repaymentClaimDetailsAnswers.getOrElse(RepaymentClaimDetailsAnswers()))
 
     Ok(view(list))
   }
 
-  def onSubmit(): Action[AnyContent] = identify.andThen(getData).andThen(requireData) { implicit request =>
-    Redirect(controllers.routes.ClaimDeclarationController.onPageLoad())
+  def onSubmit: Action[AnyContent] = identify.andThen(getData).andThen(requireData) { implicit request =>
+    Redirect(controllers.repaymentclaimdetails.routes.CheckYourAnswersController.onPageLoad)
   }
 }

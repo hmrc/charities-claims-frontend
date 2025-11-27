@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import controllers.repaymentclaimdetails.routes
+
 @this(
     layout: templates.Layout,
     govukButton: GovukButton
@@ -34,6 +36,10 @@
 
     </ul>
 
-    @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+
+    @govukButton(
+        ButtonViewModel(messages("site.continue"))
+          .asLink(routes.CheckYourAnswersController.onPageLoad.url)
+    )
 
 }
