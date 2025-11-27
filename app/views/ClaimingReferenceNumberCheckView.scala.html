@@ -27,7 +27,7 @@
 @(form: Form[?])(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle    = titleNoForm(messages("claimReferenceNumberCheck.title"))
+    pageTitle    = title(form, messages("claimReferenceNumberCheck.title"))
 ) {
 
     @if(form.errors.nonEmpty) {

@@ -27,7 +27,7 @@
 @(form: Form[?])(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle    = titleNoForm(messages("claimingGiftAid.title"))
+    pageTitle    = title(form, messages("claimingGiftAid.title"))
 ) {
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))

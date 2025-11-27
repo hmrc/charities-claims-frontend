@@ -8,6 +8,8 @@ site.govuk = GOV.UK
 
 back.text = Back
 
+error.browser.title.prefix = Error:
+
 phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in a new tab)</a> will help us to improve it.
 phasebanner.phase=Beta
 

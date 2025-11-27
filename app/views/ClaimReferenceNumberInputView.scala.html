@@ -20,7 +20,6 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
     govukButton: GovukButton,
     govukInputCharacterCount: GovukInputCharacterCount
 )
@@ -28,7 +27,7 @@
 @(form: Form[?])(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle    = titleNoForm(messages("claimReferenceNumberInput.title"))
+    pageTitle    = title(form, messages("claimReferenceNumberInput.title"))
 ) {
 
     @if(form.errors.nonEmpty) {
