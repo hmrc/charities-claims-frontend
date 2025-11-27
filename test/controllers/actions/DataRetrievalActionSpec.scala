@@ -186,7 +186,7 @@ class DataRetrievalActionSpec extends BaseSpec {
         .returning(Future.successful(GetClaimsResponse(claimsCount = 2, claimsList = Seq())))
 
       val result =
-        action.invokeBlock(authorisedRequestAgent, (req: OptionalDataRequest[?]) => ???) // never going to be executed
+        action.invokeBlock(authorisedRequestAgent, (_: OptionalDataRequest[?]) => ???) // never going to be executed
       status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("page-for-agent-to-select-claim")
     }
@@ -207,7 +207,7 @@ class DataRetrievalActionSpec extends BaseSpec {
         .returning(Future.successful(GetClaimsResponse(claimsCount = 3, claimsList = Seq())))
 
       val result =
-        action.invokeBlock(authorisedRequestAgent, (req: OptionalDataRequest[?]) => ???) // never going to be executed
+        action.invokeBlock(authorisedRequestAgent, (_: OptionalDataRequest[?]) => ???) // never going to be executed
       a[AgentOutOfLimitException] shouldBe thrownBy {
         await(result)
       }
