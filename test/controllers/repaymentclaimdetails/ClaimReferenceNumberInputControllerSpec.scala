@@ -24,6 +24,7 @@ import play.api.Application
 import forms.TextInputFormProvider
 import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
+import models.NormalMode
 
 class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
@@ -40,13 +41,13 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimReferenceNumberInputView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
+          contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
       "should render the page and pre-populate correctly" in {
@@ -57,13 +58,13 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimReferenceNumberInputView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill("123456")).body
+          contentAsString(result) shouldEqual view(form.fill("123456"), NormalMode).body
         }
       }
     }
@@ -74,7 +75,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "123456")
 
           val result = route(application, request).value
@@ -89,7 +90,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value

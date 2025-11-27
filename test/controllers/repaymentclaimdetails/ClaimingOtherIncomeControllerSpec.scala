@@ -24,6 +24,7 @@ import play.api.Application
 import forms.YesNoFormProvider
 import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
+import models.*
 
 class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
@@ -37,13 +38,13 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
+          contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
 
@@ -55,13 +56,13 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(true)).body
+          contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
         }
       }
     }
@@ -72,14 +73,14 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ClaimingGiftAidSmallDonationsController.onPageLoad.url
+            routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -89,7 +90,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value

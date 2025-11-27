@@ -21,6 +21,7 @@ import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.ClaimDeclarationView
+import models.NormalMode
 
 class ClaimDeclarationControllerSpec extends ControllerSpec {
   "ClaimDeclarationController" - {
@@ -54,7 +55,7 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.ClaimDeclarationController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(routes.CheckYourAnswersController.onPageLoad.url)
         }
       }
     }
