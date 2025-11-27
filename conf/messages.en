@@ -38,7 +38,7 @@ claimingGiftAidSmallDonations.paragraph =  This is separate to a Gift Aid claim.
 claimingGiftAidSmallDonations.legend =  Are you claiming for the Gift Aid Small Donations Scheme?
 claimingGiftAidSmallDonations.error.required = Select ‘Yes’ if you are claiming for the Gift Aid Small Donations Scheme.
 
-claimReferenceNumberCheck.title = Do you have a claim reference number? - Charities - GOV.UK
+claimReferenceNumberCheck.title = Do you have a claim reference number?
 claimReferenceNumberCheck.heading = Do you have a claim reference number?
 claimReferenceNumberCheck.error.required = Select ‘Yes’ if you have a reference number for this claim.
 
