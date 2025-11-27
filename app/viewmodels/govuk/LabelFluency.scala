@@ -16,7 +16,7 @@
 
 package viewmodels.govuk
 
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
 
 object label extends LabelFluency
@@ -27,6 +27,8 @@ trait LabelFluency {
 
     def apply(content: Content): Label =
       Label(content = content)
+    def apply(content: String): Label  =
+      Label(content = Text(content))
   }
 
   implicit class FluentLabel(label: Label) {

@@ -16,26 +16,27 @@
 
 package models
 
-import play.api.libs.json.Json
 import util.BaseSpec
+import play.api.libs.json.Json
 
 class SessionDataSpec extends BaseSpec {
 
   "SessionData" - {
     "be serializable and deserializable" in {
       val sessionData             = SessionData(
-        sectionOneAnswers = Some(
-          SectionOneAnswers(
+        repaymentClaimDetailsAnswers = Some(
+          RepaymentClaimDetailsAnswers(
             claimingGiftAid = Some(true),
             claimingTaxDeducted = Some(true),
             claimingUnderGasds = Some(true),
+            claimingReferenceNumber = Some(true),
             claimReferenceNumber = Some("1234567890")
           )
         )
       )
       val json                    = Json.toJson(sessionData)
       val deserializedSessionData = json.as[SessionData]
-      deserializedSessionData must be(sessionData)
+      deserializedSessionData shouldBe sessionData
     }
   }
 

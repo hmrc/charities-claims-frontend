@@ -19,14 +19,12 @@ package viewmodels.govuk
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.*
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import models.SectionOneAnswers
-import controllers.sectionone.routes
+import models.{CheckMode, RepaymentClaimDetailsAnswers}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
-import models.CheckMode
 
 class CheckYourAnswersHelper {
 
-  def buildSummaryList(answers: SectionOneAnswers)(implicit messages: Messages): SummaryList = {
+  def buildSummaryList(answers: RepaymentClaimDetailsAnswers)(implicit messages: Messages): SummaryList = {
 
     val rows = Seq(
       answers.claimingGiftAid match {
@@ -34,8 +32,10 @@ class CheckYourAnswersHelper {
           Some(
             summaryRow(
               messages("checkYourAnswers.giftAid.label"),
-              if (value) "Yes" else "No",
-              routes.ClaimingGiftAidController.onPageLoad(CheckMode).url, // <--- Added .url
+              if (value) messages("site.yes") else messages("site.no"),
+              controllers.repaymentclaimdetails.routes.ClaimingGiftAidController
+                .onPageLoad(CheckMode)
+                .url,
               messages("checkYourAnswers.giftAid.change.hidden")
             )
           )
@@ -43,7 +43,9 @@ class CheckYourAnswersHelper {
           Some(
             missingDataRow(
               messages("checkYourAnswers.giftAid.label"),
-              routes.ClaimingGiftAidController.onPageLoad(CheckMode).url, // <--- Added .url
+              controllers.repaymentclaimdetails.routes.ClaimingGiftAidController
+                .onPageLoad(CheckMode)
+                .url,
               messages("checkYourAnswers.giftAid.change.hidden")
             )
           )
@@ -53,8 +55,10 @@ class CheckYourAnswersHelper {
           Some(
             summaryRow(
               messages("checkYourAnswers.taxDeducted.label"),
-              if (value) "Yes" else "No",
-              routes.ClaimingOtherIncomeController.onPageLoad(CheckMode).url, // <--- Added .url
+              if (value) messages("site.yes") else messages("site.no"),
+              controllers.repaymentclaimdetails.routes.ClaimingOtherIncomeController
+                .onPageLoad(CheckMode)
+                .url,
               messages("checkYourAnswers.taxDeducted.label")
             )
           )
@@ -62,7 +66,9 @@ class CheckYourAnswersHelper {
           Some(
             missingDataRow(
               messages("checkYourAnswers.taxDeducted.label"),
-              routes.ClaimingOtherIncomeController.onPageLoad(CheckMode).url, // <--- Added .url
+              controllers.repaymentclaimdetails.routes.ClaimingOtherIncomeController
+                .onPageLoad(CheckMode)
+                .url,
               messages("checkYourAnswers.taxDeducted.label")
             )
           )
@@ -72,8 +78,10 @@ class CheckYourAnswersHelper {
           Some(
             summaryRow(
               messages("checkYourAnswers.gasds.label"),
-              if (value) "Yes" else "No",
-              routes.ClaimingGiftAidSmallDonationsController.onPageLoad(CheckMode).url, // <--- Added .url
+              if (value) messages("site.yes") else messages("site.no"),
+              controllers.repaymentclaimdetails.routes.ClaimingGiftAidSmallDonationsController
+                .onPageLoad(CheckMode)
+                .url,
               messages("checkYourAnswers.gasds.label")
             )
           )
@@ -81,18 +89,22 @@ class CheckYourAnswersHelper {
           Some(
             missingDataRow(
               messages("checkYourAnswers.gasds.label"),
-              routes.ClaimingGiftAidSmallDonationsController.onPageLoad(CheckMode).url, // <--- Added .url
+              controllers.repaymentclaimdetails.routes.ClaimingGiftAidSmallDonationsController
+                .onPageLoad(CheckMode)
+                .url,
               messages("checkYourAnswers.gasds.label")
             )
           )
       },
-      answers.hasClaimReferenceNumber match {
+      answers.claimingReferenceNumber match {
         case Some(value) =>
           Some(
             summaryRow(
               messages("checkYourAnswers.hasRef.label"),
-              if (value) "Yes" else "No",
-              routes.ClaimReferenceNumberCheckController.onPageLoad(CheckMode).url, // <--- Added .url
+              if (value) messages("site.yes") else messages("site.no"),
+              controllers.repaymentclaimdetails.routes.ClaimingReferenceNumberCheckController
+                .onPageLoad(CheckMode)
+                .url,
               messages("checkYourAnswers.hasRef.label")
             )
           )
@@ -100,12 +112,14 @@ class CheckYourAnswersHelper {
           Some(
             missingDataRow(
               messages("checkYourAnswers.hasRef.label"),
-              routes.ClaimReferenceNumberCheckController.onPageLoad(CheckMode).url, // <--- Added .url
+              controllers.repaymentclaimdetails.routes.ClaimingReferenceNumberCheckController
+                .onPageLoad(CheckMode)
+                .url,
               messages("checkYourAnswers.hasRef.label")
             )
           )
       },
-      answers.hasClaimReferenceNumber match {
+      answers.claimingReferenceNumber match {
         case Some(true) =>
           answers.claimReferenceNumber match {
             case Some(refNum) =>
@@ -113,7 +127,9 @@ class CheckYourAnswersHelper {
                 summaryRow(
                   messages("checkYourAnswers.refNumber.label"),
                   refNum,
-                  routes.ClaimReferenceNumberCheckController.onPageLoad(CheckMode).url, // <--- Added .url
+                  controllers.repaymentclaimdetails.routes.ClaimReferenceNumberInputController
+                    .onPageLoad(CheckMode)
+                    .url,
                   messages("checkYourAnswers.refNumber.label")
                 )
               )
@@ -121,7 +137,9 @@ class CheckYourAnswersHelper {
               Some(
                 missingDataRow(
                   messages("checkYourAnswers.refNumber.label"),
-                  routes.ClaimReferenceNumberCheckController.onPageLoad(CheckMode).url, // <--- Added .url
+                  controllers.repaymentclaimdetails.routes.ClaimReferenceNumberInputController
+                    .onPageLoad(CheckMode)
+                    .url,
                   messages("checkYourAnswers.refNumber.label")
                 )
               )

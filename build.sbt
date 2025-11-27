@@ -18,17 +18,19 @@ lazy val root = Project(appName, file("."))
   .settings(
     name := appName,
     RoutesKeys.routesImport ++= Seq(
-      "uk.gov.hmrc.play.bootstrap.binders.RedirectUrl"
+      "uk.gov.hmrc.play.bootstrap.binders.RedirectUrl",
+      "models.*"
     ),
     TwirlKeys.templateImports ++= Seq(
       "play.twirl.api.HtmlFormat",
       "play.twirl.api.HtmlFormat.*",
       "uk.gov.hmrc.govukfrontend.views.html.components.*",
-      "uk.gov.hmrc.hmrcfrontend.views.html.components.*",
       "uk.gov.hmrc.hmrcfrontend.views.html.helpers.*",
       "uk.gov.hmrc.hmrcfrontend.views.config.*",
       "views.ViewUtils.*",
-      "viewmodels.govuk.all.*"
+      "views.html.components.*",
+      "viewmodels.govuk.all.*",
+      "models.Mode"
     ),
     PlayKeys.playDefaultPort := 8030,
     scalacOptions ++= Seq(

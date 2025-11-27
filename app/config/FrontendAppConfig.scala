@@ -23,8 +23,10 @@ import scala.concurrent.duration.Duration
 @Singleton
 class FrontendAppConfig @Inject() (config: Configuration) { self =>
 
-  lazy val appName: String                   = config.get[String]("appName")
-  lazy val mongoDbTTL: Duration              = config.get[Duration]("mongodb.ttl")
+  lazy val appName: String      = config.get[String]("appName")
+  lazy val mongoDbTTL: Duration = config.get[Duration]("mongodb.ttl")
+
+  lazy val baseUrl: String                   = config.get[String]("urls.baseUrl")
   lazy val loginUrl: String                  = config.get[String]("urls.login")
   lazy val loginContinueUrl: String          = config.get[String]("urls.loginContinue")
   lazy val signOutUrl: String                = config.get[String]("urls.signOut")
@@ -32,9 +34,12 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
   lazy val accessibilityStatementUrl: String = config.get[String]("urls.accessibilityStatementUrl")
   lazy val betaFeedbackUrl: String           = config.get[String]("urls.betaFeedbackUrl")
   lazy val researchUrl: String               = config.get[String]("urls.researchUrl")
-  lazy val enableLanguageSwitching: Boolean  = config.get[Boolean]("enableLanguageSwitching")
-  lazy val timeoutInSeconds: Int             = config.get[Int]("timeout-dialog.timeout")
-  lazy val countdownInSeconds: Int           = config.get[Int]("timeout-dialog.countdown")
+  lazy val authLoginStubSignInUrl: String    = config.get[String]("urls.authLoginStubSignInUrl")
+
+  lazy val enableLanguageSwitching: Boolean = config.get[Boolean]("enableLanguageSwitching")
+  lazy val timeoutInSeconds: Int            = config.get[Int]("timeout-dialog.timeout")
+  lazy val countdownInSeconds: Int          = config.get[Int]("timeout-dialog.countdown")
+  lazy val agentUnsubmittedClaimLimit: Int  = config.get[Int]("agentUnsubmittedClaimLimit")
 
   def pageTitleWithServiceName(
     pageTitle: String,

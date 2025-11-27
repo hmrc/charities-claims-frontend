@@ -19,48 +19,31 @@ package models
 import play.api.libs.json.{Format, Json}
 
 final case class SessionData(
-  sectionOneAnswers: Option[SectionOneAnswers] = None
+  // claimId of the unsubmitted claim stored in the backend,
+  // if empty, the user has started a new claim
+  unsubmittedClaimId: Option[String] = None,
+  repaymentClaimDetailsAnswers: Option[RepaymentClaimDetailsAnswers] = None,
+  organisationDetailsAnswers: Option[OrganisationDetailsAnswers] = None,
+  giftAidScheduleDataAnswers: Option[GiftAidScheduleDataAnswers] = None,
+  declarationDetailsAnswers: Option[DeclarationDetailsAnswers] = None,
+  otherIncomeScheduleDataAnswers: Option[OtherIncomeScheduleDataAnswers] = None,
+  gasdsScheduleDataAnswers: Option[GasdsScheduleDataAnswers] = None
 )
 
 object SessionData {
+
   given Format[SessionData] = Json.format[SessionData]
 
-  object SectionOne {
-
-    def getClaimingTaxDeducted(using session: SessionData): Option[Boolean] =
-      session.sectionOneAnswers.flatMap(_.claimingTaxDeducted)
-
-    def setClaimingTaxDeducted(value: Boolean)(using session: SessionData): SessionData =
-      val updated = session.sectionOneAnswers match
-        case Some(s1) => s1.copy(claimingTaxDeducted = Some(value))
-        case None     => SectionOneAnswers(claimingTaxDeducted = Some(value))
-      session.copy(sectionOneAnswers = Some(updated))
-
-    def getClaimingGiftAid(using session: SessionData): Option[Boolean] =
-      session.sectionOneAnswers.flatMap(_.claimingGiftAid)
-
-    def setClaimingGiftAid(value: Boolean)(using session: SessionData): SessionData =
-      val updated = session.sectionOneAnswers match
-        case Some(s1) => s1.copy(claimingGiftAid = Some(value))
-        case None     => SectionOneAnswers(claimingGiftAid = Some(value))
-      session.copy(sectionOneAnswers = Some(updated))
-
-    def getClaimingUnderGasds(using session: SessionData): Option[Boolean] =
-      session.sectionOneAnswers.flatMap(_.claimingUnderGasds)
-
-    def setClaimingUnderGasds(value: Boolean)(using session: SessionData): SessionData =
-      val updated = session.sectionOneAnswers match
-        case Some(s1) => s1.copy(claimingUnderGasds = Some(value))
-        case None     => SectionOneAnswers(claimingUnderGasds = Some(value))
-      session.copy(sectionOneAnswers = Some(updated))
-
-    def getHasClaimReferenceNumber(using session: SessionData): Option[Boolean] =
-      session.sectionOneAnswers.flatMap(_.hasClaimReferenceNumber)
-
-    def setHasClaimReferenceNumber(value: Boolean)(using session: SessionData): SessionData =
-      val updated = session.sectionOneAnswers match
-        case Some(s1) => s1.copy(hasClaimReferenceNumber = Some(value))
-        case None     => SectionOneAnswers(hasClaimReferenceNumber = Some(value))
-      session.copy(sectionOneAnswers = Some(updated))
-  }
+  def from(claim: Claim): SessionData =
+    SessionData(
+      unsubmittedClaimId = Some(claim.claimId),
+      repaymentClaimDetailsAnswers = Some(
+        RepaymentClaimDetailsAnswers.from(claim.claimData.repaymentClaimDetails)
+      ),
+      organisationDetailsAnswers = claim.claimData.organisationDetails.map(OrganisationDetailsAnswers.from),
+      giftAidScheduleDataAnswers = claim.claimData.giftAidScheduleData.map(GiftAidScheduleDataAnswers.from),
+      declarationDetailsAnswers = claim.claimData.declarationDetails.map(DeclarationDetailsAnswers.from),
+      otherIncomeScheduleDataAnswers = claim.claimData.otherIncomeScheduleData.map(OtherIncomeScheduleDataAnswers.from),
+      gasdsScheduleDataAnswers = claim.claimData.gasdsScheduleData.map(GasdsScheduleDataAnswers.from)
+    )
 }

@@ -16,7 +16,7 @@
 
 package models
 
-import play.api.mvc.QueryStringBindable
+import play.api.mvc.{JavascriptLiteral, QueryStringBindable}
 
 sealed trait Mode
 case object CheckMode extends Mode
@@ -33,5 +33,10 @@ object Mode {
 
     override def unbind(key: String, value: Mode): String =
       key + "=" + value.toString
+  }
+
+  implicit val jsLiteral: JavascriptLiteral[Mode] = {
+    case NormalMode => "NormalMode"
+    case CheckMode  => "CheckMode"
   }
 }

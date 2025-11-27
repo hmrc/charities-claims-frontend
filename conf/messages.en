@@ -1,9 +1,10 @@
 service.name = Charities Claims
-service.title = Charities Claims
+service.title = Charities
 
 site.continue = Continue
 site.yes = Yes
 site.no = No
+site.govuk = GOV.UK
 site.change = Change
 site.enter = Enter
 
@@ -15,32 +16,51 @@ phasebanner.phase=Beta
 index.heading = Charities Claims
 index.guidance = Hello
 
-claimingGiftAid.heading = Are you claiming Gift Aid?
-claimingGiftAid.hint = Select 'Yes' if you want to claim tax repayment on donations from a Gift Aid declaration.
-claimingGiftAid.error.required = Please select an option to proceed.
+session-expired-message=For your security, we will time you out in
+session-expired.keep-alive-button-text=Continue
+session-expired.sign-out-button-text=Sign-out
 
-claimingOtherIncome.title = Are you claiming UK tax deducted from other income?
-claimingOtherIncome.heading = Are you claiming UK tax deducted from other income?
+claimingGiftAid.title = Claiming Gift Aid
+claimingGiftAid.heading = Are you claiming Gift Aid?
+claimingGiftAid.hint = Select ‘Yes’ if you want to claim tax repayment on donations from a Gift Aid declaration.
+claimingGiftAid.error.required = Select ‘Yes’ if you are claiming Gift Aid.
+claimingGiftAid.legend = Are you claiming Gift Aid?
+
+claimingOtherIncome.title = Are you claiming tax deducted from other income?
+claimingOtherIncome.heading = Are you claiming tax deducted from other income?
 claimingOtherIncome.paragraph =  Tax relief can include:
 claimingOtherIncome.bullet.one =  Bank or Building Society interest
 claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate
 claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
 claimingOtherIncome.error.required = Select 'Yes' if you are claiming UK tax deducted from other income.
-claimingGiftAidSmallDonations.title = Gift Aid Small Donations Scheme
-claimingGiftAidSmallDonations.heading = Gift Aid Small Donations Scheme
+
+claimingGiftAidSmallDonations.title = Are you claiming a top up payment for small cash donations under GASDS?
+claimingGiftAidSmallDonations.heading = Are you claiming a top up payment for small cash donations under GASDS?
 claimingGiftAidSmallDonations.paragraph =  This is separate to a Gift Aid claim. The Gift Aid Small Donation Scheme (GASDS) is for donations of £20 or less and does not need declaring.
 claimingGiftAidSmallDonations.legend =  Are you claiming for the Gift Aid Small Donations Scheme?
-claimingGiftAidSmallDonations.error.required = Select 'Yes' if you are claiming for the Gift Aid Small Donations Scheme.
+claimingGiftAidSmallDonations.error.required = Select ‘Yes’ if you are claiming for the Gift Aid Small Donations Scheme.
 
-
-claimReferenceNumberCheck.title = Do you have a claim reference number?
+claimReferenceNumberCheck.title = Claim reference number
 claimReferenceNumberCheck.heading = Do you have a claim reference number?
-claimReferenceNumberCheck.error.required = Select 'Yes' if you have a reference number for this claim.
+claimReferenceNumberCheck.error.required = Select ‘Yes’ if you have a reference number for this claim.
+
+claimReferenceNumberInput.title = Check your claim reference number
+claimReferenceNumberInput.heading = Your claim reference number
+claimReferenceNumberInput.paragraph = You do not have to complete this box but you can use it to show your claim reference if you use one. The reference that you quote will appear on the payment advice note you receive from us when we pay the claim.
+claimReferenceNumberInput.error.required = Enter your claim reference number
+claimReferenceNumberInput.error.length = Claim reference number must be 20 characters or less
+claimReferenceNumberInput.error.regex = Include characters from Western European alphabets
 
 claimDeclaration.title = Declaration
 claimDeclaration.heading = Declaration
 claimDeclaration.paragraph =  I declare that:
 claimDeclaration.bullet.one =  I will provide accurate information in this claim
+
+global.error.InternalServerError500.heading = Sorry, there is a problem with this service
+global.error.InternalServerError500.message = Try again later or contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services">HMRC Online Services Helpdesk</a>.
+
+global.error.pageNotFound404.heading = Page not found
+global.error.pageNotFound404.message = If you typed the web address, check it is correct.<br>If you pasted the web address, check you copied the entire address.<br>If the web address is correct or you selected a link or button, contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services">HMRC Online Services Helpdesk</a> if you need to speak to someone.
 
 checkYourAnswers.title = Check your answers
 checkYourAnswers.heading = Check your answers

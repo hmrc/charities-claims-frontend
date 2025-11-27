@@ -17,7 +17,6 @@
 package forms
 
 import play.api.data.Forms.of
-import play.api.data.validation.Constraints
 import play.api.data.FieldMapping
 
 trait Mappings extends Formatters with Constraints {
@@ -28,5 +27,11 @@ trait Mappings extends Formatters with Constraints {
     args: Seq[String] = Seq.empty
   ): FieldMapping[Boolean] =
     of(using booleanFormatter(requiredKey, invalidKey, args))
+
+  protected def text(
+    requiredKey: String,
+    args: Seq[String] = Seq.empty
+  ): FieldMapping[String] =
+    of(using stringFormatter(requiredKey, args))
 
 }

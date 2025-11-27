@@ -88,7 +88,7 @@
     banners = Banners(
         userResearchBanner = Some(UserResearchBanner(url = config.researchUrl))
     ),
-    pageTitle = Some(config.pageTitleWithServiceNameAndError(pageTitle, messages("service.title"), messages("service.title.error"), hasErrors)),
+    pageTitle = Some(pageTitle),
     isWelshTranslationAvailable = !suppressLanguageToggle && config.enableLanguageSwitching,
     backLink = { if(showBackLink) Some(BackLink.mimicsBrowserBackButtonViaJavaScript) else None },
     templateOverrides = TemplateOverrides(

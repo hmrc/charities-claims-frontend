@@ -17,21 +17,26 @@
 package controllers.actions
 
 import com.google.inject.ImplementedBy
+import config.FrontendAppConfig
 import models.SessionData
 import models.requests.{AuthorisedRequest, OptionalDataRequest}
-import play.api.mvc.{ActionRefiner, Result}
+import play.api.mvc.{ActionRefiner, Result, Results}
 import repositories.SessionCache
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import connectors.ClaimsConnector
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 @ImplementedBy(classOf[DefaultDataRetrievalAction])
 trait DataRetrievalAction extends ActionRefiner[AuthorisedRequest, OptionalDataRequest]
 
 class DefaultDataRetrievalAction @Inject() (
-  cache: SessionCache
+  cache: SessionCache,
+  claimsConnector: ClaimsConnector,
+  config: FrontendAppConfig
 )(using val executionContext: ExecutionContext)
     extends DataRetrievalAction {
 
@@ -41,21 +46,63 @@ class DefaultDataRetrievalAction @Inject() (
     given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request.underlying, request.underlying.session)
     cache
       .get()
-      .map {
+      .flatMap {
         case None              =>
-          Right(
-            OptionalDataRequest(
-              request,
-              Some(SessionData(None)) // todo will need changing once we fetch from backend
-            )
-          )
+          claimsConnector.retrieveUnsubmittedClaims
+            .map { getClaimsResponse =>
+              request.affinityGroup match {
+                case AffinityGroup.Organisation =>
+                  if getClaimsResponse.claimsCount > 0
+                  then
+                    Right(
+                      OptionalDataRequest(
+                        request,
+                        Some(
+                          // safe to assume there is at least one claim
+                          SessionData.from(getClaimsResponse.claimsList.head)
+                        )
+                      )
+                    )
+                  else
+                    Right(
+                      OptionalDataRequest(
+                        request,
+                        Some(SessionData())
+                      )
+                    )
+
+                case AffinityGroup.Agent =>
+                  getClaimsResponse.claimsCount match {
+                    case 0                                                   =>
+                      Right(
+                        OptionalDataRequest(
+                          request,
+                          Some(SessionData())
+                        )
+                      )
+                    case x if x > 0 && x < config.agentUnsubmittedClaimLimit =>
+                      Left(
+                        Results.Redirect(
+                          // TODO: replace with correct url when ready
+                          "page-for-agent-to-select-claim"
+                        )
+                      )
+                    case _                                                   =>
+                      throw new AgentOutOfLimitException()
+                  }
+              }
+            }
         case Some(sessionData) =>
-          Right(
-            OptionalDataRequest(
-              request,
-              Some(sessionData)
+          Future.successful(
+            Right(
+              OptionalDataRequest(
+                request,
+                Some(sessionData)
+              )
             )
           )
       }
   }
 }
+
+case class AgentOutOfLimitException() extends Exception()

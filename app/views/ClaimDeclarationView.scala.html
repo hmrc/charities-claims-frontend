@@ -14,17 +14,17 @@
  * limitations under the License.
  *@
 
+@import controllers.repaymentclaimdetails.routes
+
 @this(
     layout: templates.Layout,
-    formHelper: FormWithCSRF,
     govukButton: GovukButton
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle    = titleNoForm(messages("claimDeclaration.title")),
-    showBackLink = false
+    pageTitle    = titleNoForm(messages("claimDeclaration.title"))
 ) {
 
     <h1 class="govuk-heading-l">@messages("claimDeclaration.heading")</h1>
@@ -36,6 +36,10 @@
 
     </ul>
 
-    @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+
+    @govukButton(
+        ButtonViewModel(messages("site.continue"))
+          .asLink(routes.CheckYourAnswersController.onPageLoad.url)
+    )
 
 }

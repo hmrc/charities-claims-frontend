@@ -19,6 +19,7 @@ package controllers
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.actions.AuthorisedAction
+import models.NormalMode
 import play.api.i18n.I18nSupport
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
@@ -29,12 +30,12 @@ class StartController @Inject() (
     with I18nSupport {
 
   val start: Action[AnyContent] =
-    Action(_ => Redirect(controllers.sectionone.routes.ClaimingGiftAidController.onPageLoad().url))
+    Action(_ => Redirect(controllers.repaymentclaimdetails.routes.ClaimingGiftAidController.onPageLoad(NormalMode).url))
 
   val keepAlive: Action[AnyContent] =
     authorisedAction(_ => Ok)
 
   val timedOut: Action[AnyContent] =
-    Action(implicit request => Ok(routes.StartController.start.url))
+    Action(implicit request => Redirect(routes.StartController.start.url))
 
 }

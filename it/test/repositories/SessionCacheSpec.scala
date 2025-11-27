@@ -18,17 +18,14 @@ package repositories
 
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import play.api.inject.guice.GuiceApplicationBuilder
-import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
 import play.api.Application
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.SessionId
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import models.{RepaymentClaimDetailsAnswers, SessionData}
+
 import java.util.UUID
-import models.SessionData
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-import models.SectionOneAnswers
 
 class SessionCacheSpec
     extends AnyWordSpec
@@ -78,29 +75,31 @@ class SessionCacheSpec
       whenReady(
         sessionCache.update(forceSessionCreation = true)(s =>
           s.copy(
-            sectionOneAnswers = Some(
-              SectionOneAnswers(
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
                 claimingGiftAid = Some(true)
               )
             )
           )
         )
       ) { result =>
-        result should be(SessionData(sectionOneAnswers = Some(SectionOneAnswers(claimingGiftAid = Some(true)))))
+        result should be(
+          SessionData(repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true))))
+        )
       }
     }
 
     "update the session data if it exists" in {
       given HeaderCarrier    = HeaderCarrier(sessionId = Some(SessionId(UUID.randomUUID().toString)))
       val initialSessionData = SessionData(
-        sectionOneAnswers = Some(SectionOneAnswers(claimingGiftAid = Some(true)))
+        repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)))
       )
       whenReady(sessionCache.store(initialSessionData)) { _ =>
         whenReady(
           sessionCache.update(forceSessionCreation = false)(s =>
             s.copy(
-              sectionOneAnswers = Some(
-                SectionOneAnswers(
+              repaymentClaimDetailsAnswers = Some(
+                RepaymentClaimDetailsAnswers(
                   claimingGiftAid = Some(true),
                   claimingTaxDeducted = Some(true)
                 )
@@ -110,8 +109,8 @@ class SessionCacheSpec
         ) { result =>
           result should be(
             SessionData(
-              sectionOneAnswers = Some(
-                SectionOneAnswers(
+              repaymentClaimDetailsAnswers = Some(
+                RepaymentClaimDetailsAnswers(
                   claimingGiftAid = Some(true),
                   claimingTaxDeducted = Some(true)
                 )
@@ -125,7 +124,7 @@ class SessionCacheSpec
     "skip updating the session data if it exists and the updated session data is the same" in {
       given HeaderCarrier    = HeaderCarrier(sessionId = Some(SessionId(UUID.randomUUID().toString)))
       val initialSessionData = SessionData(
-        sectionOneAnswers = Some(SectionOneAnswers(claimingGiftAid = Some(true)))
+        repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)))
       )
       whenReady(sessionCache.store(initialSessionData)) { _ =>
         whenReady(

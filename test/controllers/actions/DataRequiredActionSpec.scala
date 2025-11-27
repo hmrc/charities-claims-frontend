@@ -17,6 +17,7 @@
 package controllers.actions
 
 import models.SessionData
+import models.RepaymentClaimDetailsAnswers
 import models.requests.OptionalDataRequest
 import play.api.mvc.Results.*
 import play.api.test.Helpers.*
@@ -36,9 +37,12 @@ class DataRequiredActionSpec extends BaseSpec {
       val action = new DefaultDataRequiredAction()
 
       val dataRequest =
-        OptionalDataRequest(request, sessionData = Some(SessionData.SectionOne.setClaimingTaxDeducted(true)))
+        OptionalDataRequest(
+          request,
+          sessionData = Some(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+        )
       val result      = action.invokeBlock(dataRequest, _ => Future.successful(Ok))
-      status(result) must be(OK)
+      status(result) shouldBe OK
     }
 
     "refines OptionalDataRequest into a DataRequest when session data object exists but is empty" in {
@@ -46,7 +50,7 @@ class DataRequiredActionSpec extends BaseSpec {
 
       val dataRequest = OptionalDataRequest(request, sessionData = Some(SessionData(None)))
       val result      = action.invokeBlock(dataRequest, _ => Future.successful(Ok))
-      status(result) must be(OK)
+      status(result) shouldBe OK
     }
 
     "returns error page when Session data does not exist" in {
@@ -54,7 +58,7 @@ class DataRequiredActionSpec extends BaseSpec {
 
       val dataRequest = OptionalDataRequest(request, sessionData = None)
       val result      = action.invokeBlock(dataRequest, _ => Future.successful(Ok))
-      status(result) must be(INTERNAL_SERVER_ERROR)
+      status(result) shouldBe INTERNAL_SERVER_ERROR
     }
   }
 }
