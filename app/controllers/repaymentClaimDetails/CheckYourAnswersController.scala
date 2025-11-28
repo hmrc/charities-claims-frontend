@@ -17,26 +17,31 @@
 package controllers.repaymentclaimdetails
 
 import com.google.inject.Inject
-import controllers.actions.{AuthorisedAction, DataRequiredAction, DataRetrievalAction}
-import models.RepaymentClaimDetailsAnswers
+import connectors.ClaimsConnector
+import controllers.actions.{Actions, AuthorisedAction, DataRequiredAction, DataRetrievalAction}
+import models.{NormalMode, RepaymentClaimDetailsAnswers}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.SaveService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.govuk.CheckYourAnswersHelper
 import views.html.CheckYourAnswersView
 
+import scala.concurrent.{ExecutionContext, Future}
+
 class CheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
-  identify: AuthorisedAction,
-  getData: DataRetrievalAction,
-  requireData: DataRequiredAction,
+  actions: Actions,
+  claimsConnector: ClaimsConnector,
+  saveService: SaveService,
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersView,
   helper: CheckYourAnswersHelper
-) extends FrontendBaseController
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = identify.andThen(getData).andThen(requireData) { implicit request =>
+  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
 
     val list =
       helper
@@ -45,7 +50,25 @@ class CheckYourAnswersController @Inject() (
     Ok(view(list))
   }
 
-  def onSubmit: Action[AnyContent] = identify.andThen(getData).andThen(requireData) { implicit request =>
-    Redirect(controllers.repaymentclaimdetails.routes.CheckYourAnswersController.onPageLoad)
+  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    request.sessionData.repaymentClaimDetailsAnswers match {
+      case Some(repaymentClaimDetailsAnswers) =>
+        claimsConnector
+          .saveClaim(repaymentClaimDetailsAnswers)
+          .flatMap { claimId =>
+            saveService
+              .save(request.sessionData.copy(unsubmittedClaimId = Some(claimId)))
+              .map { _ =>
+                Redirect(
+                  // TODO: replace with correct url when ready
+                  "next-page-after-check-your-answers"
+                )
+              }
+          }
+
+      case None =>
+        Future.successful(Redirect(routes.ClaimingGiftAidController.onPageLoad(NormalMode)))
+    }
+
   }
 }

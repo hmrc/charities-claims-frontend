@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import models.requests.DataRequest
 import play.api.mvc.{ActionBuilder, AnyContent, DefaultActionBuilder}
 
-class Actions @Inject() (
+case class Actions @Inject() (
   actionBuilder: DefaultActionBuilder,
   identify: AuthorisedAction,
   getData: DataRetrievalAction,
