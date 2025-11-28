@@ -22,9 +22,10 @@ import controllers.ControllerSpec
 import views.html.ClaimReferenceNumberInputView
 import play.api.Application
 import forms.TextInputFormProvider
-import models.RepaymentClaimDetailsAnswers
+import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
-import models.{CheckMode, Mode, NormalMode, RepaymentClaimDetailsAnswers}
+import play.api.test.Helpers.*
+import handlers.ErrorHandler
 
 class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
@@ -37,7 +38,8 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
   "ClaimReferenceNumberInputController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -50,12 +52,55 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
           contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
+
+      "should render page not found if claiming reference number is false" in {
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(false)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        val errorHandler               = application.injector.instanceOf[ErrorHandler]
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual NOT_FOUND
+          contentAsString(result) shouldEqual await(errorHandler.notFoundTemplate(request)).body
+        }
+      }
+
+      "should render page not found if claiming reference number is empty" in {
+
+        val sessionData = SessionData(repaymentClaimDetailsAnswers =
+          Some(RepaymentClaimDetailsAnswers(claimReferenceNumber = Some("123456")))
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        val errorHandler               = application.injector.instanceOf[ErrorHandler]
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual NOT_FOUND
+          contentAsString(result) shouldEqual await(errorHandler.notFoundTemplate(request)).body
+        }
+      }
+
       "should render the page and pre-populate correctly" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimReferenceNumber("123456")
+        val sessionData = SessionData(repaymentClaimDetailsAnswers =
+          Some(
+            RepaymentClaimDetailsAnswers(claimingReferenceNumber = Some(true), claimReferenceNumber = Some("123456"))
+          )
+        )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
+        val errorHandler = application.injector.instanceOf[ErrorHandler]
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
@@ -67,6 +112,29 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
           contentAsString(result) shouldEqual view(form.fill("123456"), NormalMode).body
         }
       }
+
+      "should render the page not found and incorrectly pre-populate data" in {
+
+        val sessionData = SessionData(repaymentClaimDetailsAnswers =
+          Some(
+            RepaymentClaimDetailsAnswers(claimingReferenceNumber = Some(false), claimReferenceNumber = Some("123456"))
+          )
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        val errorHandler               = application.injector.instanceOf[ErrorHandler]
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual NOT_FOUND
+          contentAsString(result) shouldEqual await(errorHandler.notFoundTemplate(request)).body
+        }
+      }
+
     }
 
     "onSubmit" - {

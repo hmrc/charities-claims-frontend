@@ -20,7 +20,8 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.TextInputFormProvider
-import models.{CheckMode, Mode, NormalMode, RepaymentClaimDetailsAnswers}
+import handlers.ErrorHandler
+import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
@@ -33,7 +34,8 @@ class ClaimReferenceNumberInputController @Inject() (
   view: ClaimReferenceNumberInputView,
   actions: Actions,
   formProvider: TextInputFormProvider,
-  saveService: SaveService
+  saveService: SaveService,
+  errorHandler: ErrorHandler
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -43,9 +45,13 @@ class ClaimReferenceNumberInputController @Inject() (
     "claimReferenceNumberInput.error.regex"
   )
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimReferenceNumber
-    Ok(view(form.withDefault(previousAnswer), mode))
+  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val previousPageAnswer = RepaymentClaimDetailsAnswers.getClaimingReferenceNumber
+    if RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true)
+    then {
+      val previousAnswer = RepaymentClaimDetailsAnswers.getClaimReferenceNumber
+      Future.successful(Ok(view(form.withDefault(previousAnswer))))
+    } else errorHandler.notFoundTemplate.map(NotFound(_))
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
