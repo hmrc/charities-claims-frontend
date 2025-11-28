@@ -15,6 +15,8 @@
  *@
 
 @import controllers.repaymentclaimdetails.routes
+@import models.RepaymentClaimDetailsAnswers
+@import viewmodels.CheckYourAnswersHelper
 
 @this(
     layout: templates.Layout,
@@ -23,14 +25,15 @@
     govukButton: GovukButton
 )
 
-@(list: SummaryList)(implicit request: Request[?], messages: Messages)
+@(answers: RepaymentClaimDetailsAnswers)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
     <h1 class="govuk-heading-xl">@messages("checkYourAnswers.heading")</h1>
 
-    @govukSummaryList(list)
+    @govukSummaryList(CheckYourAnswersHelper.buildSummaryList(answers))
+))
 
     @formHelper(action = routes.CheckYourAnswersController.onSubmit) {
 

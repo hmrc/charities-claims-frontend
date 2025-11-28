@@ -24,7 +24,6 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.govuk.CheckYourAnswersHelper
 import views.html.CheckYourAnswersView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,24 +34,23 @@ class CheckYourAnswersController @Inject() (
   claimsConnector: ClaimsConnector,
   saveService: SaveService,
   val controllerComponents: MessagesControllerComponents,
-  view: CheckYourAnswersView,
-  helper: CheckYourAnswersHelper
+  view: CheckYourAnswersView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-
-    val list =
-      helper
-        .buildSummaryList(request.sessionData.repaymentClaimDetailsAnswers.getOrElse(RepaymentClaimDetailsAnswers()))
-
-    Ok(view(list))
-  }
-
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     request.sessionData.repaymentClaimDetailsAnswers match {
-      case Some(repaymentClaimDetailsAnswers) =>
+      case Some(repaymentClaimDetailsAnswers) if repaymentClaimDetailsAnswers.hasCompleteAnswers =>
+        Ok(view(repaymentClaimDetailsAnswers))
+
+      case _ =>
+        Redirect(routes.ClaimingGiftAidController.onPageLoad(NormalMode))
+    }
+  }
+  def onSubmit: Action[AnyContent]   = actions.authAndGetData().async { implicit request =>
+    request.sessionData.repaymentClaimDetailsAnswers match {
+      case Some(repaymentClaimDetailsAnswers) if repaymentClaimDetailsAnswers.hasCompleteAnswers =>
         claimsConnector
           .saveClaim(repaymentClaimDetailsAnswers)
           .flatMap { claimId =>
@@ -66,7 +64,7 @@ class CheckYourAnswersController @Inject() (
               }
           }
 
-      case None =>
+      case _ =>
         Future.successful(Redirect(routes.ClaimingGiftAidController.onPageLoad(NormalMode)))
     }
 

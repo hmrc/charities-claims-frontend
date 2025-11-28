@@ -31,7 +31,18 @@ final case class RepaymentClaimDetailsAnswers(
   claimingDonationsCollectedInCommunityBuildings: Option[Boolean] = None,
   connectedToAnyOtherCharities: Option[Boolean] = None,
   makingAdjustmentToPreviousClaim: Option[Boolean] = None
-)
+) {
+  def hasCompleteAnswers: Boolean =
+    claimingGiftAid.isDefined
+      && claimingTaxDeducted.isDefined
+      && claimingUnderGasds.isDefined
+      && claimingReferenceNumber.match {
+        case Some(true)  => claimReferenceNumber.isDefined
+        case Some(false) => claimReferenceNumber.isEmpty
+        case None        => false
+
+      }
+}
 
 object RepaymentClaimDetailsAnswers {
 

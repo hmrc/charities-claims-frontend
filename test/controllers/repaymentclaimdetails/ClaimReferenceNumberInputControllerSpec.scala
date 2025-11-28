@@ -70,7 +70,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
-      "should redirect back to cya page" in {
+      "should redirect to Declaration page when in NormalMode" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
@@ -81,12 +81,11 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.CheckYourAnswersController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(routes.ClaimDeclarationController.onPageLoad.url)
         }
       }
 
-      // NEED to fix this - not working
-      "should redirect to the next page" in {
+      "should redirect back to CYA page when in CheckMode" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
@@ -107,7 +106,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
-              .withFormUrlEncodedBody("other" -> "field")
+              .withFormUrlEncodedBody("value" -> "") // Empty value triggers error
 
           val result = route(application, request).value
 

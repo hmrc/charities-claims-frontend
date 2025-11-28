@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package viewmodels.govuk
+package viewmodels
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.*
@@ -22,7 +22,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import models.{CheckMode, RepaymentClaimDetailsAnswers}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 
-class CheckYourAnswersHelper {
+object CheckYourAnswersHelper {
 
   def buildSummaryList(answers: RepaymentClaimDetailsAnswers)(implicit messages: Messages): SummaryList = {
 
