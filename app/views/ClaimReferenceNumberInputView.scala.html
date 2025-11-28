@@ -20,7 +20,6 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
     govukButton: GovukButton,
     govukInputCharacterCount: GovukInputCharacterCount
 )
@@ -28,7 +27,7 @@
 @(form: Form[?], mode: Mode)(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle    = titleNoForm(messages("claimReferenceNumberInput.title"))
+    pageTitle    = title(form, messages("claimReferenceNumberInput.title"))
 ) {
 
     @if(form.errors.nonEmpty) {
@@ -42,8 +41,9 @@
 
         @govukInputCharacterCount(
           CharacterCountViewModel(
-              form("value"),
-              20
+            field = form("value"),
+            label = LabelViewModel(messages("claimReferenceNumberInput.heading")),
+            maxLength = 20
           ).fullWidth()
         )
 
