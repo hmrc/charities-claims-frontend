@@ -33,7 +33,6 @@
     <h1 class="govuk-heading-xl">@messages("checkYourAnswers.heading")</h1>
 
     @govukSummaryList(CheckYourAnswersHelper.buildSummaryList(answers))
-))
 
     @formHelper(action = routes.CheckYourAnswersController.onSubmit) {
 

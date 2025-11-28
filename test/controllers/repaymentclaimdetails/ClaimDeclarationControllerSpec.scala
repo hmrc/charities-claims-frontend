@@ -21,7 +21,6 @@ import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.ClaimDeclarationView
-import models.NormalMode
 
 class ClaimDeclarationControllerSpec extends ControllerSpec {
   "ClaimDeclarationController" - {
