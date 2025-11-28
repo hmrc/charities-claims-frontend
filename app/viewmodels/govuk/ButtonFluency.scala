@@ -16,6 +16,7 @@
 
 package viewmodels.govuk
 
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.button.Button
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 
@@ -29,6 +30,12 @@ trait ButtonFluency {
       Button(
         element = Some("button"),
         content = content
+      )
+
+    def apply(text: String): Button =
+      Button(
+        element = Some("button"),
+        content = Text(text)
       )
   }
 

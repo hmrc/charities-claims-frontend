@@ -1,5 +1,5 @@
 @*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,30 +15,31 @@
  *@
 
 @import controllers.repaymentclaimdetails.routes
+@import models.RepaymentClaimDetailsAnswers
+@import viewmodels.CheckYourAnswersHelper
 
 @this(
     layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukSummaryList: GovukSummaryList,
     govukButton: GovukButton
 )
 
-@()(implicit request: Request[?], messages: Messages)
+@(answers: RepaymentClaimDetailsAnswers)(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle    = titleNoForm(messages("claimDeclaration.title"))
-) {
+    pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
-    <h1 class="govuk-heading-l">@messages("claimDeclaration.heading")</h1>
+    <h1 class="govuk-heading-xl">@messages("checkYourAnswers.heading")</h1>
 
-    <p class="govuk-body">@messages("claimDeclaration.paragraph")</p>
+    @govukSummaryList(CheckYourAnswersHelper.buildSummaryList(answers))
 
-    <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("claimDeclaration.bullet.one")</li>
+    @formHelper(action = routes.CheckYourAnswersController.onSubmit) {
 
-    </ul>
-
-    @govukButton(
-        ButtonViewModel(messages("site.continue"))
-          .asLink(routes.CheckYourAnswersController.onPageLoad.url)
-    )
-
+        @govukButton(
+            ButtonViewModel(
+                Text(messages("site.continue"))
+            )
+        )
+    }
 }
