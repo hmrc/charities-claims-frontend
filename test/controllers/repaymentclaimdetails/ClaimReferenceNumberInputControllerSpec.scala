@@ -106,7 +106,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
-              .withFormUrlEncodedBody("value" -> "") // Empty value triggers error
+              .withFormUrlEncodedBody("value" -> "")
 
           val result = route(application, request).value
 
