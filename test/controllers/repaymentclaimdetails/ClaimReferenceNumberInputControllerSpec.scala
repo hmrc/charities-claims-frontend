@@ -25,8 +25,6 @@ import forms.TextInputFormProvider
 import models.Mode.*
 import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
-import play.api.test.Helpers.*
-import handlers.ErrorHandler
 
 class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
@@ -58,7 +56,6 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
         val sessionData = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(false)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
-        val errorHandler               = application.injector.instanceOf[ErrorHandler]
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -66,8 +63,8 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result) shouldEqual NOT_FOUND
-          contentAsString(result) shouldEqual await(errorHandler.notFoundTemplate(request)).body
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
         }
       }
 
@@ -78,7 +75,6 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
-        val errorHandler               = application.injector.instanceOf[ErrorHandler]
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -86,8 +82,8 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result) shouldEqual NOT_FOUND
-          contentAsString(result) shouldEqual await(errorHandler.notFoundTemplate(request)).body
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
         }
       }
 
@@ -101,7 +97,6 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-        val errorHandler = application.injector.instanceOf[ErrorHandler]
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
@@ -123,7 +118,6 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
-        val errorHandler               = application.injector.instanceOf[ErrorHandler]
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -131,8 +125,8 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result) shouldEqual NOT_FOUND
-          contentAsString(result) shouldEqual await(errorHandler.notFoundTemplate(request)).body
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
         }
       }
 
