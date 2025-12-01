@@ -19,7 +19,7 @@ package controllers.repaymentclaimdetails
 import com.google.inject.Inject
 import connectors.ClaimsConnector
 import controllers.actions.Actions
-import models.NormalMode
+import models.Mode.*
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService

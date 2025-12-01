@@ -33,9 +33,4 @@ trait BaseController extends FrontendBaseController with I18nSupport {
     def withDefault(optValue: Option[A]): Form[A] =
       optValue.map(form.fill).getOrElse(form)
   }
-
-  // cats-like extensions
-  extension [A](future: Future[A])(using ec: ExecutionContext) {
-    def as[B](b: B): Future[B] = future.map(_ => b)
-  }
 }

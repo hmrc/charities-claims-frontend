@@ -19,7 +19,8 @@ package viewmodels
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.*
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import models.{CheckMode, RepaymentClaimDetailsAnswers}
+import models.Mode.*
+import models.RepaymentClaimDetailsAnswers
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 
 object CheckYourAnswersHelper {

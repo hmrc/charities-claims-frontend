@@ -23,6 +23,7 @@ import views.html.CheckYourAnswersView
 import play.api.Application
 import models.RepaymentClaimDetailsAnswers
 import models.*
+import models.Mode.*
 
 class CheckYourAnswersControllerSpec extends ControllerSpec {
 

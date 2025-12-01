@@ -19,7 +19,7 @@ package controllers
 import play.api.test.FakeRequest
 import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
-import models.NormalMode
+import models.Mode.*
 import play.api.Application
 
 class StartControllerSpec extends ControllerSpec {

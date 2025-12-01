@@ -19,7 +19,7 @@ package controllers
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.actions.AuthorisedAction
-import models.NormalMode
+import models.Mode.*
 import play.api.i18n.I18nSupport
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 

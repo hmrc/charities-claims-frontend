@@ -18,9 +18,9 @@ package models
 
 import play.api.mvc.{JavascriptLiteral, QueryStringBindable}
 
-sealed trait Mode
-case object CheckMode extends Mode
-case object NormalMode extends Mode
+enum Mode {
+  case CheckMode, NormalMode
+}
 
 object Mode {
   implicit val binder: QueryStringBindable[Mode] = new QueryStringBindable[Mode] {

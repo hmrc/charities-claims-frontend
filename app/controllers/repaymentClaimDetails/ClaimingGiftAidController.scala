@@ -24,7 +24,8 @@ import views.html.ClaimingGiftAidView
 import controllers.actions.Actions
 import forms.YesNoFormProvider
 import models.RepaymentClaimDetailsAnswers
-import models.{CheckMode, Mode, NormalMode}
+import models.Mode
+import models.Mode.*
 import play.api.data.Form
 
 import scala.concurrent.{ExecutionContext, Future}

@@ -21,7 +21,9 @@ import controllers.BaseController
 import controllers.actions.Actions
 import forms.TextInputFormProvider
 import handlers.ErrorHandler
-import models.{CheckMode, Mode, NormalMode, RepaymentClaimDetailsAnswers}
+import models.Mode
+import models.Mode.*
+import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService

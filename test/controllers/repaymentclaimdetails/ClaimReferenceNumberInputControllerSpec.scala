@@ -22,7 +22,8 @@ import controllers.ControllerSpec
 import views.html.ClaimReferenceNumberInputView
 import play.api.Application
 import forms.TextInputFormProvider
-import models.{CheckMode, Mode, NormalMode, RepaymentClaimDetailsAnswers, SessionData}
+import models.Mode.*
+import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
 import play.api.test.Helpers.*
 import handlers.ErrorHandler

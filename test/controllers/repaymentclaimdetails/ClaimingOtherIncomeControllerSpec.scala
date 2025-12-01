@@ -24,7 +24,7 @@ import play.api.Application
 import forms.YesNoFormProvider
 import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
-import models.*
+import models.Mode.*
 
 class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
