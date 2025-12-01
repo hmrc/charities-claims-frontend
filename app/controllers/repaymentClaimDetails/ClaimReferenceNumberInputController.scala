@@ -48,7 +48,6 @@ class ClaimReferenceNumberInputController @Inject() (
   )
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    println("********************   " + RepaymentClaimDetailsAnswers.getClaimingReferenceNumber)
     if RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true)
     then {
       val previousAnswer = RepaymentClaimDetailsAnswers.getClaimReferenceNumber
