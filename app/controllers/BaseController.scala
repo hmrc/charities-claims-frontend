@@ -22,6 +22,8 @@ import play.api.i18n.I18nSupport
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import play.api.data.Form
 
+import scala.concurrent.{ExecutionContext, Future}
+
 trait BaseController extends FrontendBaseController with I18nSupport {
 
   given sessionData(using req: DataRequest[?]): SessionData =

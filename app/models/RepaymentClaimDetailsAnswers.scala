@@ -31,7 +31,18 @@ final case class RepaymentClaimDetailsAnswers(
   claimingDonationsCollectedInCommunityBuildings: Option[Boolean] = None,
   connectedToAnyOtherCharities: Option[Boolean] = None,
   makingAdjustmentToPreviousClaim: Option[Boolean] = None
-)
+) {
+  def hasCompleteAnswers: Boolean =
+    claimingGiftAid.isDefined
+      && claimingTaxDeducted.isDefined
+      && claimingUnderGasds.isDefined
+      && claimingReferenceNumber.match {
+        case Some(true)  => claimReferenceNumber.isDefined
+        case Some(false) => claimReferenceNumber.isEmpty
+        case None        => false
+
+      }
+}
 
 object RepaymentClaimDetailsAnswers {
 
@@ -81,7 +92,13 @@ object RepaymentClaimDetailsAnswers {
   def getClaimingReferenceNumber(using session: SessionData): Option[Boolean] = get(_.claimingReferenceNumber)
 
   def setClaimingReferenceNumber(value: Boolean)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(claimingReferenceNumber = Some(v)))
+    set(value) { (answers, isClaiming) =>
+      if (isClaiming) {
+        answers.copy(claimingReferenceNumber = Some(true))
+      } else {
+        answers.copy(claimingReferenceNumber = Some(false), claimReferenceNumber = None)
+      }
+    }
 
   def getClaimReferenceNumber(using session: SessionData): Option[String] = get(_.claimReferenceNumber)
 

@@ -24,6 +24,7 @@ import play.api.Application
 import forms.YesNoFormProvider
 import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
+import models.Mode.*
 
 class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
@@ -36,7 +37,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingGiftAidController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingGiftAidController.onPageLoad(NormalMode).url)
           val form: Form[Boolean]                            = new YesNoFormProvider()()
 
           val result = route(application, request).value
@@ -45,7 +46,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(form).body
+          contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
 
@@ -57,13 +58,13 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingGiftAidController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingGiftAidController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingGiftAidView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(true)).body
+          contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
         }
       }
 
@@ -75,13 +76,13 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingGiftAidController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingGiftAidController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingGiftAidView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(false)).body
+          contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
         }
       }
     }
@@ -92,13 +93,13 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.ClaimingOtherIncomeController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
         }
       }
 
@@ -107,13 +108,43 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.ClaimingOtherIncomeController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
+        }
+      }
+
+      "should redirect back to cya page when the value is true" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.CheckYourAnswersController.onPageLoad.url)
+        }
+      }
+
+      "should redirect back to cya page when the value is false" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.CheckYourAnswersController.onPageLoad.url)
         }
       }
 
@@ -122,7 +153,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value

@@ -54,7 +54,7 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.ClaimDeclarationController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(routes.CheckYourAnswersController.onPageLoad.url)
         }
       }
     }

@@ -5,6 +5,8 @@ site.continue = Continue
 site.yes = Yes
 site.no = No
 site.govuk = GOV.UK
+site.change = Change
+site.enter = Enter
 
 back.text = Back
 
@@ -32,7 +34,7 @@ claimingOtherIncome.paragraph =  Tax relief can include:
 claimingOtherIncome.bullet.one =  Bank or Building Society interest
 claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate
 claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
-claimingOtherIncome.error.required = Select ‘Yes’ if you are claiming tax deducted from other income.
+claimingOtherIncome.error.required = Select 'Yes' if you are claiming UK tax deducted from other income.
 
 claimingGiftAidSmallDonations.title = Are you claiming a top up payment for small cash donations under GASDS?
 claimingGiftAidSmallDonations.heading = Are you claiming a top up payment for small cash donations under GASDS?
@@ -61,3 +63,12 @@ global.error.InternalServerError500.message = Try again later or contact the <a 
 
 global.error.pageNotFound404.heading = Page not found
 global.error.pageNotFound404.message = If you typed the web address, check it is correct.<br>If you pasted the web address, check you copied the entire address.<br>If the web address is correct or you selected a link or button, contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services">HMRC Online Services Helpdesk</a> if you need to speak to someone.
+
+checkYourAnswers.title = Check your answers
+checkYourAnswers.heading = Check your answers
+checkYourAnswers.giftAid.label = Are you claiming Gift Aid?
+checkYourAnswers.giftAid.change.hidden = if you are claiming Gift Aid
+checkYourAnswers.taxDeducted.label = Are you claiming UK tax deducted from other income?
+checkYourAnswers.gasds.label = Are you claiming for the Gift Aid Small Donations Scheme?
+checkYourAnswers.hasRef.label = Do you have a claim reference number?
+checkYourAnswers.refNumber.label = What is your reference number?
