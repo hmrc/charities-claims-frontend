@@ -17,13 +17,11 @@
 package controllers.repaymentclaimdetails
 
 import play.api.test.FakeRequest
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
+import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
 import views.html.CheckYourAnswersView
 import play.api.Application
-import forms.YesNoFormProvider
 import models.RepaymentClaimDetailsAnswers
-import play.api.data.Form
 import models.*
 
 class CheckYourAnswersControllerSpec extends ControllerSpec {

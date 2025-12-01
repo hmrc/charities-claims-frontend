@@ -22,7 +22,7 @@ import controllers.ControllerSpec
 import views.html.ClaimReferenceNumberInputView
 import play.api.Application
 import forms.TextInputFormProvider
-import models.{RepaymentClaimDetailsAnswers, SessionData}
+import models.{CheckMode, Mode, NormalMode, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
 import play.api.test.Helpers.*
 import handlers.ErrorHandler
@@ -61,7 +61,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -81,7 +81,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -126,7 +126,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -174,7 +174,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
-              .withFormUrlEncodedBody("value" -> "") // Empty value triggers error
+              .withFormUrlEncodedBody("value" -> "")
 
           val result = route(application, request).value
 

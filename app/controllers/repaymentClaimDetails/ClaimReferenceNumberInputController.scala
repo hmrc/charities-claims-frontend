@@ -21,7 +21,7 @@ import controllers.BaseController
 import controllers.actions.Actions
 import forms.TextInputFormProvider
 import handlers.ErrorHandler
-import models.RepaymentClaimDetailsAnswers
+import models.{CheckMode, Mode, NormalMode, RepaymentClaimDetailsAnswers}
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
@@ -45,12 +45,12 @@ class ClaimReferenceNumberInputController @Inject() (
     "claimReferenceNumberInput.error.regex"
   )
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     val previousPageAnswer = RepaymentClaimDetailsAnswers.getClaimingReferenceNumber
     if RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true)
     then {
       val previousAnswer = RepaymentClaimDetailsAnswers.getClaimReferenceNumber
-      Future.successful(Ok(view(form.withDefault(previousAnswer))))
+      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
     } else errorHandler.notFoundTemplate.map(NotFound(_))
   }
 
