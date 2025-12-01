@@ -9,30 +9,30 @@ GET         /keep-alive                               controllers.StartControlle
 GET         /timed-out                                controllers.StartController.timedOut
 
 
-GET         /claiming-for-gift-aid-small-donations-scheme               controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: models.Mode = models.Mode.NormalMode)
-GET         /change-claiming-for-gift-aid-small-donations-scheme        controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: models.Mode = models.Mode.CheckMode)
-POST        /claiming-for-gift-aid-small-donations-scheme               controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onSubmit(mode: models.Mode = models.Mode.NormalMode)
-POST        /change-claiming-for-gift-aid-small-donations-scheme        controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onSubmit(mode: models.Mode = models.Mode.CheckMode)
+GET         /claiming-for-gift-aid-small-donations-scheme               controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-claiming-for-gift-aid-small-donations-scheme        controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /claiming-for-gift-aid-small-donations-scheme               controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-claiming-for-gift-aid-small-donations-scheme        controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /claim-gift-aid                           controllers.repaymentclaimdetails.ClaimingGiftAidController.onPageLoad(mode: models.Mode = models.Mode.NormalMode)
-GET         /change-claim-gift-aid                    controllers.repaymentclaimdetails.ClaimingGiftAidController.onPageLoad(mode: models.Mode = models.Mode.CheckMode)
-POST        /claim-gift-aid                           controllers.repaymentclaimdetails.ClaimingGiftAidController.onSubmit(mode: models.Mode = models.Mode.NormalMode)
-POST        /change-claim-gift-aid                    controllers.repaymentclaimdetails.ClaimingGiftAidController.onSubmit(mode: models.Mode = models.Mode.CheckMode)
+GET         /claim-gift-aid                           controllers.repaymentclaimdetails.ClaimingGiftAidController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-claim-gift-aid                    controllers.repaymentclaimdetails.ClaimingGiftAidController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /claim-gift-aid                           controllers.repaymentclaimdetails.ClaimingGiftAidController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-claim-gift-aid                    controllers.repaymentclaimdetails.ClaimingGiftAidController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /claiming-other-income                           controllers.repaymentclaimdetails.ClaimingOtherIncomeController.onPageLoad(mode: models.Mode = models.Mode.NormalMode)
-GET         /change-claiming-other-income                    controllers.repaymentclaimdetails.ClaimingOtherIncomeController.onPageLoad(mode: models.Mode = models.Mode.CheckMode)
-POST        /claiming-other-income                           controllers.repaymentclaimdetails.ClaimingOtherIncomeController.onSubmit(mode: models.Mode = models.Mode.NormalMode)
-POST        /change-claiming-other-income                    controllers.repaymentclaimdetails.ClaimingOtherIncomeController.onSubmit(mode: models.Mode = models.Mode.CheckMode)
+GET         /claiming-other-income                           controllers.repaymentclaimdetails.ClaimingOtherIncomeController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-claiming-other-income                    controllers.repaymentclaimdetails.ClaimingOtherIncomeController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /claiming-other-income                           controllers.repaymentclaimdetails.ClaimingOtherIncomeController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-claiming-other-income                    controllers.repaymentclaimdetails.ClaimingOtherIncomeController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /claim-reference-number                          controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onPageLoad(mode: models.Mode = models.Mode.NormalMode)
-GET         /change-claim-reference-number                   controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onPageLoad(mode: models.Mode = models.Mode.CheckMode)
-POST        /claim-reference-number                          controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onSubmit(mode: models.Mode = models.Mode.NormalMode)
-POST        /change-claim-reference-number                   controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onSubmit(mode: models.Mode = models.Mode.CheckMode)
+GET         /claim-reference-number                          controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-claim-reference-number                   controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /claim-reference-number                          controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-claim-reference-number                   controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /enter-claim-reference-number                    controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad(mode: models.Mode = models.Mode.NormalMode)
-GET         /change-enter-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad(mode: models.Mode = models.Mode.CheckMode)
-POST        /enter-claim-reference-number                    controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit(mode: models.Mode = models.Mode.NormalMode)
-POST        /change-enter-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit(mode: models.Mode = models.Mode.CheckMode)
+GET         /enter-claim-reference-number                    controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-enter-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /enter-claim-reference-number                    controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-enter-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /declaration                              controllers.repaymentclaimdetails.ClaimDeclarationController.onPageLoad
 POST        /declaration                              controllers.repaymentclaimdetails.ClaimDeclarationController.onSubmit
