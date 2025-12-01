@@ -21,6 +21,8 @@ import controllers.BaseController
 import controllers.actions.Actions
 import forms.YesNoFormProvider
 import models.RepaymentClaimDetailsAnswers
+import models.Mode
+import models.Mode.*
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
@@ -39,20 +41,26 @@ class ClaimingGiftAidSmallDonationsController @Inject() (
 
   val form: Form[Boolean] = formProvider("claimingGiftAidSmallDonations.error.required")
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingUnderGasds
-    Ok(view(form.withDefault(previousAnswer)))
+    Ok(view(form.withDefault(previousAnswer), mode))
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setClaimingUnderGasds(value))
-            .map(_ => Redirect(routes.ClaimingReferenceNumberCheckController.onPageLoad))
+            .map { _ =>
+              if (mode == CheckMode) {
+                Redirect(routes.CheckYourAnswersController.onPageLoad)
+              } else {
+                Redirect(routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode))
+              }
+            }
       )
   }
 }

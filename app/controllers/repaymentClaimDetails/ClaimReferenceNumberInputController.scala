@@ -21,6 +21,8 @@ import controllers.BaseController
 import controllers.actions.Actions
 import forms.TextInputFormProvider
 import handlers.ErrorHandler
+import models.Mode
+import models.Mode.*
 import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -45,24 +47,30 @@ class ClaimReferenceNumberInputController @Inject() (
     "claimReferenceNumberInput.error.regex"
   )
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     val previousPageAnswer = RepaymentClaimDetailsAnswers.getClaimingReferenceNumber
     if RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true)
     then {
       val previousAnswer = RepaymentClaimDetailsAnswers.getClaimReferenceNumber
-      Future.successful(Ok(view(form.withDefault(previousAnswer))))
+      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
     } else errorHandler.notFoundTemplate.map(NotFound(_))
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setClaimReferenceNumber(value))
-            .map(_ => Redirect(routes.ClaimDeclarationController.onPageLoad))
+            .map { _ =>
+              if (mode == CheckMode) {
+                Redirect(routes.CheckYourAnswersController.onPageLoad)
+              } else {
+                Redirect(routes.ClaimDeclarationController.onPageLoad)
+              }
+            }
       )
   }
 }

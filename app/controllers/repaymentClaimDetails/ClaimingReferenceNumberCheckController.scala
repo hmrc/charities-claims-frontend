@@ -20,7 +20,9 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.YesNoFormProvider
-import models.RepaymentClaimDetailsAnswers
+import models.Mode
+import models.Mode.*
+import models.*
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
@@ -39,23 +41,30 @@ class ClaimingReferenceNumberCheckController @Inject() (
 
   val form: Form[Boolean] = formProvider("claimReferenceNumberCheck.error.required")
 
-  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingReferenceNumber
-    Ok(view(form.withDefault(previousAnswer)))
+    Ok(view(form.withDefault(previousAnswer), mode))
   }
 
-  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(value))
             .map { _ =>
-              if value
-              then Redirect(routes.ClaimReferenceNumberInputController.onPageLoad)
-              else Redirect(routes.ClaimDeclarationController.onPageLoad)
+              (value, mode) match {
+                case (true, _) =>
+                  Redirect(routes.ClaimReferenceNumberInputController.onPageLoad(mode))
+
+                case (false, NormalMode) =>
+                  Redirect(routes.ClaimDeclarationController.onPageLoad)
+
+                case (false, CheckMode) =>
+                  Redirect(routes.CheckYourAnswersController.onPageLoad)
+              }
             }
       )
   }

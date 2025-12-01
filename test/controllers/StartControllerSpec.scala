@@ -19,6 +19,7 @@ package controllers
 import play.api.test.FakeRequest
 import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
+import models.Mode.*
 import play.api.Application
 
 class StartControllerSpec extends ControllerSpec {
@@ -37,7 +38,7 @@ class StartControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            repaymentclaimdetails.routes.ClaimingGiftAidController.onPageLoad.url
+            repaymentclaimdetails.routes.ClaimingGiftAidController.onPageLoad(NormalMode).url
           )
         }
       }

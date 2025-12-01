@@ -24,6 +24,7 @@ import play.api.Application
 import forms.YesNoFormProvider
 import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
+import models.Mode.*
 
 class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 
@@ -37,17 +38,17 @@ class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingReferenceNumberCheckController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingReferenceNumberCheckView]
 
           status(result)          shouldBe OK
-          contentAsString(result) shouldBe view(form).body
+          contentAsString(result) shouldBe view(form, NormalMode).body
         }
       }
 
-      "should render the page and pre-populate correctly" in {
+      "should render the page and pre-populate correctly with true value" in {
 
         val sessionData = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(true)
 
@@ -55,31 +56,99 @@ class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingReferenceNumberCheckController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingReferenceNumberCheckView]
 
           status(result)          shouldBe OK
-          contentAsString(result) shouldBe view(form.fill(true)).body
+          contentAsString(result) shouldBe view(form.fill(true), NormalMode).body
+        }
+      }
+      "should render the page and pre-populate correctly with false value" in {
+
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(false)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ClaimingReferenceNumberCheckView]
+
+          status(result)          shouldBe OK
+          contentAsString(result) shouldBe view(form.fill(false), NormalMode).body
         }
       }
     }
 
     "onSubmit" - {
-      "should redirect to the next page" in {
+      "should redirect to the next page when the value is true and NormalMode" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingReferenceNumberCheckController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingReferenceNumberCheckController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(
-            controllers.repaymentclaimdetails.routes.ClaimReferenceNumberInputController.onPageLoad.url
+            controllers.repaymentclaimdetails.routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to the next page when the value is true and CheckMode" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingReferenceNumberCheckController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(
+            controllers.repaymentclaimdetails.routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect back to cya page when the value is false and CheckMode" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingReferenceNumberCheckController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(
+            controllers.repaymentclaimdetails.routes.CheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect back to cya page when the value is false and NormalMode" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingReferenceNumberCheckController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(
+            controllers.repaymentclaimdetails.routes.ClaimDeclarationController.onPageLoad.url
           )
         }
       }
@@ -89,7 +158,7 @@ class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingReferenceNumberCheckController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingReferenceNumberCheckController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value

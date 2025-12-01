@@ -18,7 +18,8 @@ lazy val root = Project(appName, file("."))
   .settings(
     name := appName,
     RoutesKeys.routesImport ++= Seq(
-      "uk.gov.hmrc.play.bootstrap.binders.RedirectUrl"
+      "uk.gov.hmrc.play.bootstrap.binders.RedirectUrl",
+      "models.*"
     ),
     TwirlKeys.templateImports ++= Seq(
       "play.twirl.api.HtmlFormat",
@@ -28,7 +29,8 @@ lazy val root = Project(appName, file("."))
       "uk.gov.hmrc.hmrcfrontend.views.config.*",
       "views.ViewUtils.*",
       "views.html.components.*",
-      "viewmodels.govuk.all.*"
+      "viewmodels.govuk.all.*",
+      "models.Mode"
     ),
     PlayKeys.playDefaultPort := 8030,
     scalacOptions ++= Seq(
@@ -53,3 +55,4 @@ lazy val it = project
   .in(file("it"))
   .enablePlugins(PlayScala)
   .dependsOn(root % "test->test") // the "test->test" allows reusing test code and test dependencies
+

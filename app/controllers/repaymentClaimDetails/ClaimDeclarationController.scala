@@ -28,11 +28,11 @@ class ClaimDeclarationController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
+  val onPageLoad: Action[AnyContent] = Action { implicit request =>
     Ok(view())
   }
 
-  def onSubmit: Action[AnyContent] = Action { implicit request =>
-    Redirect(routes.ClaimDeclarationController.onPageLoad)
+  val onSubmit: Action[AnyContent] = Action { implicit request =>
+    Redirect(routes.CheckYourAnswersController.onPageLoad)
   }
 }

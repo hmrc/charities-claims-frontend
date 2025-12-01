@@ -24,6 +24,7 @@ import play.api.Application
 import forms.YesNoFormProvider
 import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
+import models.Mode.*
 
 class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
@@ -37,17 +38,17 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
+          contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
 
-      "should render the page and pre-populate correctly" in {
+      "should render the page and pre-populate correctly with true value" in {
 
         val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
 
@@ -55,31 +56,98 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(true)).body
+          contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
+        }
+      }
+      "should render the page and pre-populate correctly with false value" in {
+
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
         }
       }
     }
 
     "onSubmit" - {
-      "should redirect to the next page" in {
+      "should redirect to the next page when the value is true" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ClaimingGiftAidSmallDonationsController.onPageLoad.url
+            routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+      "should redirect to the next page when the value is false" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect back to cya page when the value is true" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.CheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect back to cya page when the value is false" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.CheckYourAnswersController.onPageLoad.url
           )
         }
       }
@@ -89,7 +157,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value

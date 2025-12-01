@@ -22,6 +22,7 @@ import controllers.ControllerSpec
 import views.html.ClaimReferenceNumberInputView
 import play.api.Application
 import forms.TextInputFormProvider
+import models.Mode.*
 import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
 import play.api.test.Helpers.*
@@ -43,13 +44,13 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimReferenceNumberInputView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
+          contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
 
@@ -61,7 +62,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -81,7 +82,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -103,13 +104,13 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
         val errorHandler = application.injector.instanceOf[ErrorHandler]
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimReferenceNumberInputView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill("123456")).body
+          contentAsString(result) shouldEqual view(form.fill("123456"), NormalMode).body
         }
       }
 
@@ -126,7 +127,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -138,12 +139,12 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
-      "should redirect to the next page" in {
+      "should redirect to Declaration page when in NormalMode" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "123456")
 
           val result = route(application, request).value
@@ -153,13 +154,28 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
         }
       }
 
+      "should redirect back to CYA page when in CheckMode" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "123456")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.CheckYourAnswersController.onPageLoad.url)
+        }
+      }
+
       "should reload the page with errors when a required field is missing" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit.url)
-              .withFormUrlEncodedBody("other" -> "field")
+            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "")
 
           val result = route(application, request).value
 

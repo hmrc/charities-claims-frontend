@@ -18,7 +18,8 @@ package controllers
 
 import com.softwaremill.diffx.scalatest.DiffShouldMatcher
 import controllers.actions.{AuthorisedAction, DataRetrievalAction}
-import models.SessionData
+import connectors.ClaimsConnector
+import models.{RepaymentClaimDetailsAnswers, SessionData}
 import models.requests.DataRequest
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
@@ -75,7 +76,7 @@ trait ControllerSpec
       )
 
   extension (appBuilder: GuiceApplicationBuilder) {
-    def mockSaveSession: GuiceApplicationBuilder =
+    def mockSaveSession: GuiceApplicationBuilder    = {
       val mockSaveService: SaveService = mock[SaveService]
       (mockSaveService
         .save(_: SessionData)(using _: DataRequest[?], _: HeaderCarrier))
@@ -86,8 +87,23 @@ trait ControllerSpec
           .bind[SaveService]
           .toInstance(mockSaveService)
       )
-  }
+    }
+    def mockClaimConnector: GuiceApplicationBuilder = {
+      val mockClaimConnector: ClaimsConnector = mock[ClaimsConnector]
+      (
+        mockClaimConnector
+          .saveClaim(_: RepaymentClaimDetailsAnswers)(using _: HeaderCarrier)
+        )
+        .expects(*, *)
+        .returning(Future.successful("1234567890"))
 
+      appBuilder.overrides(
+        inject
+          .bind[ClaimsConnector]
+          .toInstance(mockClaimConnector)
+      )
+    }
+  }
   protected val additionalBindings: List[GuiceableModule] = List()
 
   def runningApplication[T](block: Application => T): T =
