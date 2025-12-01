@@ -34,7 +34,7 @@ claimingOtherIncome.paragraph =  Tax relief can include:
 claimingOtherIncome.bullet.one =  Bank or Building Society interest
 claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate
 claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
-claimingOtherIncome.error.required = Select 'Yes' if you are claiming UK tax deducted from other income.
+claimingOtherIncome.error.required = Select ‘Yes’ if you are claiming tax deducted from other income.
 
 claimingGiftAidSmallDonations.title = Are you claiming a top up payment for small cash donations under GASDS?
 claimingGiftAidSmallDonations.heading = Are you claiming a top up payment for small cash donations under GASDS?
