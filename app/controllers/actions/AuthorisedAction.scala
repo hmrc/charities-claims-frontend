@@ -19,7 +19,7 @@ package controllers.actions
 import play.api.mvc.*
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
-import controllers.actions.AuthorisedAction.hasActiveEnrollment
+import controllers.actions.AuthorisedAction.hasActiveEnrolment
 import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import play.api.Logger
@@ -54,22 +54,19 @@ class DefaultAuthorisedAction @Inject() (
 
     authorised()
       .retrieve(Retrievals.affinityGroup.and(Retrievals.allEnrolments)) {
-        case Some(affinityGroup @ AffinityGroup.Agent) ~ enrolments =>
-          if hasActiveEnrollment(enrolments, AuthorisedAction.agentEnrollmentKey, AuthorisedAction.agentIdentifierName)
-          then block(AuthorisedRequest(request, affinityGroup))
-          else throw UnsupportedAffinityGroup("Agent enrollment missing or not activated")
+        case Some(affinityGroup @ AffinityGroup.Agent) ~ AuthorisedAction.HasActiveAgentEnrolment() =>
+          block(AuthorisedRequest(request, affinityGroup))
+        case Some(AffinityGroup.Agent) ~ _                                                          =>
+          Future.failed(UnsupportedAffinityGroup("Agent enrolment missing or not activated"))
 
-        case Some(affinityGroup @ AffinityGroup.Organisation) ~ enrolments =>
-          if hasActiveEnrollment(
-              enrolments,
-              AuthorisedAction.organisationEnrollmentKey,
-              AuthorisedAction.organisationIdentifierName
-            )
-          then block(AuthorisedRequest(request, affinityGroup))
-          else throw UnsupportedAffinityGroup("Organisation enrollment missing or not activated")
+        case Some(affinityGroup @ AffinityGroup.Organisation) ~ AuthorisedAction.HasActiveOrganisationEnrolment() =>
+          block(AuthorisedRequest(request, affinityGroup))
+        case Some(AffinityGroup.Organisation) ~ _                                                                 =>
+          Future.failed(UnsupportedAffinityGroup("Organisation enrolment missing or not activated"))
 
         case _ =>
-          throw UnsupportedAffinityGroup("No affinity group found")
+          Future.failed(UnsupportedAffinityGroup("No affinity group found"))
+
       }
       .recover { case _: AuthorisationException =>
         Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
@@ -78,12 +75,12 @@ class DefaultAuthorisedAction @Inject() (
 }
 
 object AuthorisedAction {
-  val organisationEnrollmentKey  = "HMRC-CHAR-ORG"
+  val organisationEnrolmentKey   = "HMRC-CHAR-ORG"
   val organisationIdentifierName = "CHARID"
-  val agentEnrollmentKey         = "HMRC-CHAR-AGENT"
+  val agentEnrolmentKey          = "HMRC-CHAR-AGENT"
   val agentIdentifierName        = "AGENTCHARID"
 
-  def hasActiveEnrollment(
+  def hasActiveEnrolment(
     enrolments: Enrolments,
     enrolmntKey: String,
     identifierName: String
@@ -95,4 +92,13 @@ object AuthorisedAction {
       case _ => false
     }
 
+  object HasActiveAgentEnrolment {
+    def unapply(enrolments: Enrolments): Boolean =
+      hasActiveEnrolment(enrolments, agentEnrolmentKey, agentIdentifierName)
+  }
+
+  object HasActiveOrganisationEnrolment {
+    def unapply(enrolments: Enrolments): Boolean =
+      hasActiveEnrolment(enrolments, organisationEnrolmentKey, organisationIdentifierName)
+  }
 }

@@ -259,5 +259,69 @@ class AuthorisedActionSpec extends BaseSpec {
       )
 
     }
+
+    "redirect to login page when an Individual affinity group tries to access with incorrect enrolment" in {
+      val mockAuthConnector: AuthConnector = mock[AuthConnector]
+
+      (mockAuthConnector
+        .authorise(_: Predicate, _: Retrieval[Option[AffinityGroup] ~ Enrolments])(using
+          _: HeaderCarrier,
+          _: ExecutionContext
+        ))
+        .expects(*, *, *, *)
+        .returning(
+          Future.successful(
+            `~`(
+              Some(AffinityGroup.Individual),
+              Enrolments(
+                Set(Enrolment("HMRC-CHAR-IND", Seq(EnrolmentIdentifier("INDCHARID", "1234567890")), "Activated"))
+              )
+            )
+          )
+        )
+
+      val authorisedAction =
+        new DefaultAuthorisedAction(mockAuthConnector, testFrontendAppConfig, bodyParser)
+
+      val controller = new Harness(authorisedAction)
+      val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
+      status(result)           shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(
+        s"${testFrontendAppConfig.loginUrl}?continue=${URLEncoder.encode(testFrontendAppConfig.loginContinueUrl, "UTF-8")}"
+      )
+
+    }
+
+    "redirect to login page when an Individual affinity group tries to access with agent enrolment" in {
+      val mockAuthConnector: AuthConnector = mock[AuthConnector]
+
+      (mockAuthConnector
+        .authorise(_: Predicate, _: Retrieval[Option[AffinityGroup] ~ Enrolments])(using
+          _: HeaderCarrier,
+          _: ExecutionContext
+        ))
+        .expects(*, *, *, *)
+        .returning(
+          Future.successful(
+            `~`(
+              Some(AffinityGroup.Individual),
+              Enrolments(
+                Set(Enrolment("HMRC-CHAR-AGENT", Seq(EnrolmentIdentifier("AGENTCHARID", "1234567890")), "Activated"))
+              )
+            )
+          )
+        )
+
+      val authorisedAction =
+        new DefaultAuthorisedAction(mockAuthConnector, testFrontendAppConfig, bodyParser)
+
+      val controller = new Harness(authorisedAction)
+      val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
+      status(result)           shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(
+        s"${testFrontendAppConfig.loginUrl}?continue=${URLEncoder.encode(testFrontendAppConfig.loginContinueUrl, "UTF-8")}"
+      )
+
+    }
   }
 }
