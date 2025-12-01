@@ -18,8 +18,7 @@ package controllers
 
 import com.softwaremill.diffx.scalatest.DiffShouldMatcher
 import controllers.actions.{AuthorisedAction, DataRetrievalAction}
-import connectors.ClaimsConnector
-import models.{RepaymentClaimDetailsAnswers, SessionData}
+import models.SessionData
 import models.requests.DataRequest
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
@@ -29,7 +28,7 @@ import play.api.inject.guice.{GuiceApplicationBuilder, GuiceableModule}
 import play.api.mvc.{Security as _, *}
 import play.api.test.*
 import play.api.{inject, Application}
-import services.SaveService
+import services.{ClaimsService, SaveService}
 import uk.gov.hmrc.http.HeaderCarrier
 import util.{BaseSpec, FakeAuthorisedAction, FakeDataRetrievalAction}
 
@@ -76,7 +75,7 @@ trait ControllerSpec
       )
 
   extension (appBuilder: GuiceApplicationBuilder) {
-    def mockSaveSession: GuiceApplicationBuilder    = {
+    def mockSaveSession: GuiceApplicationBuilder = {
       val mockSaveService: SaveService = mock[SaveService]
       (mockSaveService
         .save(_: SessionData)(using _: DataRequest[?], _: HeaderCarrier))
@@ -88,19 +87,16 @@ trait ControllerSpec
           .toInstance(mockSaveService)
       )
     }
-    def mockClaimConnector: GuiceApplicationBuilder = {
-      val mockClaimConnector: ClaimsConnector = mock[ClaimsConnector]
-      (
-        mockClaimConnector
-          .saveClaim(_: RepaymentClaimDetailsAnswers)(using _: HeaderCarrier)
-        )
+    def mockSaveClaim: GuiceApplicationBuilder   = {
+      val mockClaimsService: ClaimsService = mock[ClaimsService]
+      (mockClaimsService
+        .save(using _: DataRequest[?], _: HeaderCarrier))
         .expects(*, *)
-        .returning(Future.successful("1234567890"))
-
+        .returning(Future.successful(()))
       appBuilder.overrides(
         inject
-          .bind[ClaimsConnector]
-          .toInstance(mockClaimConnector)
+          .bind[ClaimsService]
+          .toInstance(mockClaimsService)
       )
     }
   }

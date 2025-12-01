@@ -58,15 +58,22 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       actorSystem = actorSystem
     )
 
-  def givenServiceReturns(
+  def givenPostReturns(
     expectedUrl: String,
     expectedPayload: JsValue,
     response: HttpResponse
   ): CallHandler[Future[HttpResponse]] =
-    mockHttpPostSuccess(expectedUrl, expectedPayload, hasHeaders = false)(response)
+    mockHttpPostSuccess(expectedUrl, expectedPayload)(response)
+
+  def givenPutReturns(
+    expectedUrl: String,
+    expectedPayload: JsValue,
+    response: HttpResponse
+  ): CallHandler[Future[HttpResponse]] =
+    mockHttpPutSuccess(expectedUrl, expectedPayload)(response)
 
   def givenGetClaimsEndpointReturns(response: HttpResponse): CallHandler[Future[HttpResponse]] =
-    givenServiceReturns(
+    givenPostReturns(
       expectedUrl = "http://foo.bar.com:1234/foo-claims/get-claims",
       expectedPayload = Json.toJson(GetClaimsRequest(claimSubmitted = false)),
       response = response
@@ -76,7 +83,17 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
     payload: SaveClaimRequest,
     response: HttpResponse
   ): CallHandler[Future[HttpResponse]] =
-    givenServiceReturns(
+    givenPostReturns(
+      expectedUrl = "http://foo.bar.com:1234/foo-claims/claims",
+      expectedPayload = Json.toJson(payload),
+      response = response
+    )
+
+  def givenUpdateClaimEndpointReturns(
+    payload: UpdateClaimRequest,
+    response: HttpResponse
+  ): Unit =
+    givenPutReturns(
       expectedUrl = "http://foo.bar.com:1234/foo-claims/claims",
       expectedPayload = Json.toJson(payload),
       response = response
@@ -164,33 +181,37 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       ).once()
       await(
         connector.saveClaim(
-          RepaymentClaimDetailsAnswers(
-            claimingGiftAid = Some(true),
-            claimingTaxDeducted = Some(true),
-            claimingUnderGasds = Some(false),
+          RepaymentClaimDetails(
+            claimingGiftAid = true,
+            claimingTaxDeducted = true,
+            claimingUnderGasds = false,
             claimReferenceNumber = Some("1234567890")
           )
         )
       ) shouldEqual "1237"
     }
+  }
 
-    "should throw an exception when some required fields are missing" in {
-      a[MissingRequiredFieldsException] should be thrownBy {
-        await(
-          connector.saveClaim(
-            RepaymentClaimDetailsAnswers(
-              claimingGiftAid = Some(true),
-              claimingTaxDeducted = Some(true),
-              claimingUnderGasds = None,
-              claimReferenceNumber = Some("1234567890"),
-              claimingDonationsNotFromCommunityBuilding = Some(true),
-              claimingDonationsCollectedInCommunityBuildings = Some(true),
-              connectedToAnyOtherCharities = Some(true),
-              makingAdjustmentToPreviousClaim = Some(true)
-            )
-          )
-        )
-      }
+  "updateClaim" - {
+    "should send an update request and return Unit on success" in {
+      val repaymentDetails = RepaymentClaimDetails(
+        claimingGiftAid = true,
+        claimingTaxDeducted = true,
+        claimingUnderGasds = false,
+        claimReferenceNumber = Some("1234567890")
+      )
+
+      val updateRequest = UpdateClaimRequest(
+        claimId = "123",
+        repaymentClaimDetails = Some(repaymentDetails)
+      )
+
+      givenUpdateClaimEndpointReturns(
+        payload = updateRequest,
+        response = HttpResponse(200, Json.stringify(Json.toJson(UpdateClaimResponse(success = true))))
+      )
+
+      await(connector.updateClaim("123", repaymentDetails)) shouldBe (())
     }
   }
 }

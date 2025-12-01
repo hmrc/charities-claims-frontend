@@ -23,7 +23,7 @@ import views.html.CheckYourAnswersView
 import play.api.Application
 import models.RepaymentClaimDetailsAnswers
 import models.*
-import models.Mode.*
+import models.Mode.NormalMode
 
 class CheckYourAnswersControllerSpec extends ControllerSpec {
 
@@ -130,7 +130,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
       )
 
       given application: Application =
-        applicationBuilder(sessionData = sessionData).mockSaveSession.mockClaimConnector.build()
+        applicationBuilder(sessionData = sessionData).mockSaveClaim.build()
 
       running(application) {
         given request: FakeRequest[AnyContentAsEmpty.type] =

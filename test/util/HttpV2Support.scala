@@ -49,6 +49,13 @@ trait HttpV2Support { this: MockFactory & Matchers =>
     mockRequestBuilderExecuteWithoutException(response).once()
   }
 
+  def mockHttpPutSuccess[A](url: String, requestBody: JsValue, hasHeaders: Boolean = false)(response: A) = {
+    mockHttpPut(URL(url)).once()
+    mockRequestBuilderWithBody(requestBody).once()
+    if hasHeaders then mockRequestBuilderTransform().once()
+    mockRequestBuilderExecuteWithoutException(response).once()
+  }
+
   def mockHttpPostWithException(
     url: String,
     requestBody: JsValue,
@@ -96,6 +103,12 @@ trait HttpV2Support { this: MockFactory & Matchers =>
   def mockHttpPost[A](url: URL) =
     (mockHttp
       .post(_: URL)(using _: HeaderCarrier))
+      .expects(url, *)
+      .returning(mockRequestBuilder)
+
+  def mockHttpPut[A](url: URL) =
+    (mockHttp
+      .put(_: URL)(using _: HeaderCarrier))
       .expects(url, *)
       .returning(mockRequestBuilder)
 

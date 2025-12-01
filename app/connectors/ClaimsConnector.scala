@@ -23,14 +23,13 @@ import org.apache.pekko.actor.ActorSystem
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import models.*
-import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import play.api.Configuration
 import play.api.libs.ws.JsonBodyWritables.*
 import play.api.libs.json.{Json, Reads, Writes}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.FiniteDuration
-
 import javax.inject.Inject
 import java.net.URL
 
@@ -40,8 +39,8 @@ trait ClaimsConnector {
   type UserId = String
 
   def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse]
-  def saveClaim(repaymentClaimDetailsAnswers: RepaymentClaimDetailsAnswers)(using hc: HeaderCarrier): Future[UserId]
-
+  def saveClaim(repaymentClaimDetails: RepaymentClaimDetails)(using hc: HeaderCarrier): Future[UserId]
+  def updateClaim(claimId: String, repaymentClaimDetails: RepaymentClaimDetails)(using hc: HeaderCarrier): Future[Unit]
 }
 
 class ClaimsConnectorImpl @Inject() (
@@ -54,6 +53,8 @@ class ClaimsConnectorImpl @Inject() (
 ) extends ClaimsConnector
     with Retries {
 
+  private type HttpVerb = HttpClientV2 => URL => RequestBuilder
+
   val baseUrl: String = servicesConfig.baseUrl("charities-claims")
 
   val retryIntervals: Seq[FiniteDuration] = Retries.getConfIntervals("charities-claims", configuration)
@@ -63,54 +64,54 @@ class ClaimsConnectorImpl @Inject() (
 
   val retrieveUnsubmittedClaimsUrl: String = s"$baseUrl$contextPath/get-claims"
   val saveClaimUrl: String                 = s"$baseUrl$contextPath/claims"
+  val updateClaimUrl: String               = s"$baseUrl$contextPath/claims"
 
   final def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse] =
-    callCharitiesClaimsBackend[GetClaimsRequest, GetClaimsResponse](
+    callCharitiesClaimsBackend[GetClaimsRequest, GetClaimsResponse](_.post)(
       retrieveUnsubmittedClaimsUrl,
       GetClaimsRequest(claimSubmitted = false)
     )
 
-  final def saveClaim(repaymentClaimDetailsAnswers: RepaymentClaimDetailsAnswers)(using
+  final def saveClaim(repaymentClaimDetails: RepaymentClaimDetails)(using
     hc: HeaderCarrier
-  ): Future[UserId] =
-    (for {
-      claimingGiftAid     <- repaymentClaimDetailsAnswers.claimingGiftAid
-      claimingTaxDeducted <- repaymentClaimDetailsAnswers.claimingTaxDeducted
-      claimingUnderGasds  <- repaymentClaimDetailsAnswers.claimingUnderGasds
-    } yield SaveClaimRequest(
-      claimingGiftAid = claimingGiftAid,
-      claimingTaxDeducted = claimingTaxDeducted,
-      claimingUnderGasds = claimingUnderGasds,
-      claimReferenceNumber = repaymentClaimDetailsAnswers.claimReferenceNumber,
-      claimingDonationsNotFromCommunityBuilding =
-        repaymentClaimDetailsAnswers.claimingDonationsNotFromCommunityBuilding,
+  ): Future[UserId] = {
+    val payload = SaveClaimRequest(
+      claimingGiftAid = repaymentClaimDetails.claimingGiftAid,
+      claimingTaxDeducted = repaymentClaimDetails.claimingTaxDeducted,
+      claimingUnderGasds = repaymentClaimDetails.claimingUnderGasds,
+      claimReferenceNumber = repaymentClaimDetails.claimReferenceNumber,
+      claimingDonationsNotFromCommunityBuilding = repaymentClaimDetails.claimingDonationsNotFromCommunityBuilding,
       claimingDonationsCollectedInCommunityBuildings =
-        repaymentClaimDetailsAnswers.claimingDonationsCollectedInCommunityBuildings,
-      connectedToAnyOtherCharities = repaymentClaimDetailsAnswers.connectedToAnyOtherCharities,
-      makingAdjustmentToPreviousClaim = repaymentClaimDetailsAnswers.makingAdjustmentToPreviousClaim
-    )) match {
-      case Some(saveClaimRequest) =>
-        callCharitiesClaimsBackend[SaveClaimRequest, SaveClaimResponse](
-          saveClaimUrl,
-          saveClaimRequest
-        ).map(_.claimId)
+        repaymentClaimDetails.claimingDonationsCollectedInCommunityBuildings,
+      connectedToAnyOtherCharities = repaymentClaimDetails.connectedToAnyOtherCharities,
+      makingAdjustmentToPreviousClaim = repaymentClaimDetails.makingAdjustmentToPreviousClaim
+    )
 
-      case None =>
-        Future.failed(
-          MissingRequiredFieldsException(
-            "repaymentClaimDetailsAnswers is missing some required fields"
-          )
-        )
-    }
+    callCharitiesClaimsBackend[SaveClaimRequest, SaveClaimResponse](_.post)(
+      saveClaimUrl,
+      payload
+    ).map(_.claimId)
+  }
 
-  private def callCharitiesClaimsBackend[I, O](url: String, payload: I)(using
-    hc: HeaderCarrier,
+  final def updateClaim(claimId: String, repaymentClaimDetails: RepaymentClaimDetails)(using
+    hc: HeaderCarrier
+  ): Future[Unit] = {
+    val payload = UpdateClaimRequest(
+      claimId,
+      repaymentClaimDetails = Some(repaymentClaimDetails)
+    )
+    callCharitiesClaimsBackend[UpdateClaimRequest, UpdateClaimResponse](_.put)(
+      updateClaimUrl,
+      payload
+    ).map(_ => ())
+  }
+
+  private def callCharitiesClaimsBackend[I, O](verb: HttpVerb)(url: String, payload: I)(using
     writes: Writes[I],
     reads: Reads[O]
   ): Future[O] =
     retry(retryIntervals*)(shouldRetry, retryReason)(
-      http
-        .post(URL(url))
+      verb(http)(URL(url))
         .withBody(Json.toJson(payload))
         .execute[HttpResponse]
     ).flatMap(response =>
