@@ -7,6 +7,7 @@ GET         /assets/*file                             controllers.Assets.version
 GET         /                                         controllers.StartController.start
 GET         /keep-alive                               controllers.StartController.keepAlive
 GET         /timed-out                                controllers.StartController.timedOut
+GET         /page-not-found                           controllers.PageNotFoundController.onPageLoad
 
 
 GET         /claiming-for-gift-aid-small-donations-scheme               controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.NormalMode)

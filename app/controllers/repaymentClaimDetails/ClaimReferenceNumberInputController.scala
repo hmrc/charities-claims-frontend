@@ -48,12 +48,11 @@ class ClaimReferenceNumberInputController @Inject() (
   )
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val previousPageAnswer = RepaymentClaimDetailsAnswers.getClaimingReferenceNumber
     if RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true)
     then {
       val previousAnswer = RepaymentClaimDetailsAnswers.getClaimReferenceNumber
       Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
-    } else errorHandler.notFoundTemplate.map(NotFound(_))
+    } else { Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad)) }
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
