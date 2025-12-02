@@ -19,16 +19,17 @@ package controllers.actions
 import play.api.mvc.*
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
+import controllers.actions.AuthorisedAction.hasActiveEnrolment
 import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
 import play.api.mvc.Results.*
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import uk.gov.hmrc.auth.core.retrieve.~
 import models.requests.AuthorisedRequest
 
 import scala.concurrent.{ExecutionContext, Future}
-
 import javax.inject.{Inject, Singleton}
 
 @ImplementedBy(classOf[DefaultAuthorisedAction])
@@ -52,14 +53,52 @@ class DefaultAuthorisedAction @Inject() (
     given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     authorised()
-      .retrieve(Retrievals.affinityGroup) {
-        case Some(affinityGroup) =>
+      .retrieve(Retrievals.affinityGroup.and(Retrievals.allEnrolments)) {
+        case Some(affinityGroup @ AffinityGroup.Agent) ~ AuthorisedAction.HasActiveAgentEnrolment() =>
           block(AuthorisedRequest(request, affinityGroup))
-        case None                =>
-          throw UnsupportedAffinityGroup("No affinity group found")
+        case Some(AffinityGroup.Agent) ~ _                                                          =>
+          Future.failed(UnsupportedAffinityGroup("Agent enrolment missing or not activated"))
+
+        case Some(affinityGroup @ AffinityGroup.Organisation) ~ AuthorisedAction.HasActiveOrganisationEnrolment() =>
+          block(AuthorisedRequest(request, affinityGroup))
+        case Some(AffinityGroup.Organisation) ~ _                                                                 =>
+          Future.failed(UnsupportedAffinityGroup("Organisation enrolment missing or not activated"))
+
+        case _ =>
+          Future.failed(UnsupportedAffinityGroup("No affinity group found"))
+
       }
       .recover { case _: AuthorisationException =>
         Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
       }
+  }
+}
+
+object AuthorisedAction {
+  val organisationEnrolmentKey   = "HMRC-CHAR-ORG"
+  val organisationIdentifierName = "CHARID"
+  val agentEnrolmentKey          = "HMRC-CHAR-AGENT"
+  val agentIdentifierName        = "AGENTCHARID"
+
+  def hasActiveEnrolment(
+    enrolments: Enrolments,
+    enrolmntKey: String,
+    identifierName: String
+  ): Boolean =
+    enrolments.getEnrolment(enrolmntKey) match {
+      case Some(enrolment) if enrolment.isActivated =>
+        enrolment.getIdentifier(identifierName).isDefined
+
+      case _ => false
+    }
+
+  object HasActiveAgentEnrolment {
+    def unapply(enrolments: Enrolments): Boolean =
+      hasActiveEnrolment(enrolments, agentEnrolmentKey, agentIdentifierName)
+  }
+
+  object HasActiveOrganisationEnrolment {
+    def unapply(enrolments: Enrolments): Boolean =
+      hasActiveEnrolment(enrolments, organisationEnrolmentKey, organisationIdentifierName)
   }
 }

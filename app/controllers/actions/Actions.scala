@@ -27,5 +27,8 @@ class Actions @Inject() (
   requireData: DataRequiredAction
 ) {
   def authAndGetData(): ActionBuilder[DataRequest, AnyContent] =
-    actionBuilder.andThen(identify).andThen(getData).andThen(requireData)
+    actionBuilder
+      .andThen(identify)
+      .andThen(getData)
+      .andThen(requireData)
 }
