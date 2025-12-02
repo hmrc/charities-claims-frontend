@@ -16,14 +16,12 @@
 
 package models
 
-import play.api.libs.json.Format
-import play.api.libs.json.Json
+import play.api.libs.json.{Format, Json}
 
-final case class GetClaimsResponse(
-  claimsCount: Int, // number of claims returned
-  claimsList: List[Claim] // list of claims returned
+final case class UpdateClaimResponse(
+  success: Boolean
 )
 
-object GetClaimsResponse {
-  given format: Format[GetClaimsResponse] = Json.format[GetClaimsResponse]
+object UpdateClaimResponse {
+  given Format[UpdateClaimResponse] = Json.format[UpdateClaimResponse]
 }

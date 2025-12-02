@@ -73,7 +73,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       (mockClaimsConnector
         .retrieveUnsubmittedClaims(using _: HeaderCarrier))
         .expects(*)
-        .returning(Future.successful(GetClaimsResponse(claimsCount = 0, claimsList = Seq())))
+        .returning(Future.successful(GetClaimsResponse(claimsCount = 0, claimsList = Nil)))
 
       val result = action.invokeBlock(
         authorisedRequestOrgnisation,
@@ -101,7 +101,7 @@ class DataRetrievalActionSpec extends BaseSpec {
           Future.successful(
             GetClaimsResponse(
               claimsCount = 1,
-              claimsList = Seq(TestClaims.testClaimWithRepaymentClaimDetailsOnly())
+              claimsList = List(TestClaims.testClaimWithRepaymentClaimDetailsOnly())
             )
           )
         )
@@ -161,7 +161,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       (mockClaimsConnector
         .retrieveUnsubmittedClaims(using _: HeaderCarrier))
         .expects(*)
-        .returning(Future.successful(GetClaimsResponse(claimsCount = 0, claimsList = Seq())))
+        .returning(Future.successful(GetClaimsResponse(claimsCount = 0, claimsList = Nil)))
 
       val result = action.invokeBlock(
         authorisedRequestAgent,
@@ -185,7 +185,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       (mockClaimsConnector
         .retrieveUnsubmittedClaims(using _: HeaderCarrier))
         .expects(*)
-        .returning(Future.successful(GetClaimsResponse(claimsCount = 2, claimsList = Seq())))
+        .returning(Future.successful(GetClaimsResponse(claimsCount = 2, claimsList = Nil)))
 
       val result =
         action.invokeBlock(authorisedRequestAgent, (_: DataRequest[?]) => ???) // never going to be executed
@@ -206,7 +206,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       (mockClaimsConnector
         .retrieveUnsubmittedClaims(using _: HeaderCarrier))
         .expects(*)
-        .returning(Future.successful(GetClaimsResponse(claimsCount = 3, claimsList = Seq())))
+        .returning(Future.successful(GetClaimsResponse(claimsCount = 3, claimsList = Nil)))
 
       val result =
         action.invokeBlock(authorisedRequestAgent, (_: DataRequest[?]) => ???) // never going to be executed
