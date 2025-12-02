@@ -18,21 +18,26 @@ package controllers.repaymentclaimdetails
 
 import com.google.inject.Inject
 import play.api.i18n.I18nSupport
+import controllers.actions.Actions
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ClaimDeclarationView
+import models.Mode.*
+
+import scala.concurrent.Future
 
 class ClaimDeclarationController @Inject() (
   val controllerComponents: MessagesControllerComponents,
+  actions: Actions,
   view: ClaimDeclarationView
 ) extends FrontendBaseController
     with I18nSupport {
 
-  val onPageLoad: Action[AnyContent] = Action { implicit request =>
+  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     Ok(view())
   }
 
-  val onSubmit: Action[AnyContent] = Action { implicit request =>
-    Redirect(routes.CheckYourAnswersController.onPageLoad)
+  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    Future.successful(Redirect(routes.CheckYourAnswersController.onPageLoad))
   }
 }
