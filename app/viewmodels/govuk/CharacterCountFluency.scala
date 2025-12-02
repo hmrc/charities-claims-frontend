@@ -72,7 +72,7 @@ trait CharacterCountFluency {
     def fullWidth(): CharacterCount =
       withCssClass("govuk-input--width-50")
 
-    def withCharactersOverLimitText(text: String): CharacterCount =
+    def withCharactersOverLimitText(): CharacterCount =
       characterCount.copy(charactersOverLimitText = Some(Map("test" -> "sdsd")))
   }
 }

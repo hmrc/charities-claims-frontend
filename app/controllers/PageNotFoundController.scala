@@ -16,13 +16,13 @@
 
 package controllers
 
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
-import controllers.actions.Actions
 import handlers.ErrorHandler
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import controllers.actions.Actions
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class PageNotFoundController @Inject() (
   val controllerComponents: MessagesControllerComponents,

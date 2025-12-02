@@ -19,17 +19,17 @@ package controllers.actions
 import play.api.mvc.*
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
-import controllers.actions.AuthorisedAction.hasActiveEnrolment
 import uk.gov.hmrc.auth.core.*
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
 import play.api.mvc.Results.*
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import uk.gov.hmrc.auth.core.retrieve.~
 import models.requests.AuthorisedRequest
 
 import scala.concurrent.{ExecutionContext, Future}
+
 import javax.inject.{Inject, Singleton}
 
 @ImplementedBy(classOf[DefaultAuthorisedAction])

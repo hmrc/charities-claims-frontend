@@ -23,12 +23,10 @@ import play.api.mvc.{ActionBuilder, AnyContent, DefaultActionBuilder}
 class Actions @Inject() (
   actionBuilder: DefaultActionBuilder,
   identify: AuthorisedAction,
-  getData: DataRetrievalAction,
-  requireData: DataRequiredAction
+  getData: DataRetrievalAction
 ) {
   def authAndGetData(): ActionBuilder[DataRequest, AnyContent] =
     actionBuilder
       .andThen(identify)
       .andThen(getData)
-      .andThen(requireData)
 }

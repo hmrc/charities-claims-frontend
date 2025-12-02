@@ -16,18 +16,16 @@
 
 package controllers.repaymentclaimdetails
 
+import models.Mode.*
+import services.SaveService
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
+import views.html.ClaimReferenceNumberInputView
 import controllers.actions.Actions
 import forms.TextInputFormProvider
-import handlers.ErrorHandler
-import models.Mode
-import models.Mode.*
-import models.RepaymentClaimDetailsAnswers
+import models.{Mode, RepaymentClaimDetailsAnswers}
 import play.api.data.Form
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.SaveService
-import views.html.ClaimReferenceNumberInputView
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,8 +34,7 @@ class ClaimReferenceNumberInputController @Inject() (
   view: ClaimReferenceNumberInputView,
   actions: Actions,
   formProvider: TextInputFormProvider,
-  saveService: SaveService,
-  errorHandler: ErrorHandler
+  saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
