@@ -40,33 +40,25 @@ class CheckYourAnswersController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    request.sessionData.repaymentClaimDetailsAnswers match {
-      case Some(repaymentClaimDetailsAnswers) =>
-        Ok(view(repaymentClaimDetailsAnswers))
-
-      case _ =>
-        Redirect(routes.ClaimingGiftAidController.onPageLoad(NormalMode))
-    }
+    Ok(view(request.sessionData.repaymentClaimDetailsAnswers))
   }
-  def onSubmit: Action[AnyContent]   = actions.authAndGetData().async { implicit request =>
-    request.sessionData.repaymentClaimDetailsAnswers match {
-      case Some(repaymentClaimDetailsAnswers) if repaymentClaimDetailsAnswers.hasCompleteAnswers =>
-        claimsConnector
-          .saveClaim(repaymentClaimDetailsAnswers)
-          .flatMap { claimId =>
-            saveService
-              .save(request.sessionData.copy(unsubmittedClaimId = Some(claimId)))
-              .map { _ =>
-                Redirect(
-                  // TODO: replace with correct url when ready
-                  "next-page-after-check-your-answers"
-                )
-              }
-          }
 
-      case _ =>
-        Future.successful(Redirect(routes.ClaimingGiftAidController.onPageLoad(NormalMode)))
-    }
+  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    if request.sessionData.repaymentClaimDetailsAnswers.hasCompleteAnswers
+    then
+      claimsConnector
+        .saveClaim(request.sessionData.repaymentClaimDetailsAnswers)
+        .flatMap { claimId =>
+          saveService
+            .save(request.sessionData.copy(unsubmittedClaimId = Some(claimId)))
+            .map { _ =>
+              Redirect(
+                // TODO: replace with correct url when ready
+                "next-page-after-check-your-answers"
+              )
+            }
+        }
+    else Future.successful(Redirect(routes.ClaimingGiftAidController.onPageLoad(NormalMode)))
 
   }
 }

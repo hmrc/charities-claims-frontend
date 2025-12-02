@@ -61,12 +61,12 @@ class DefaultDataRetrievalAction @Inject() (
                         SessionData.from(getClaimsResponse.claimsList.head)
                       )
                     )
-                  else Right(DataRequest(request, SessionData()))
+                  else Right(DataRequest(request, SessionData.empty))
 
                 case AffinityGroup.Agent =>
                   getClaimsResponse.claimsCount match {
                     case 0 =>
-                      Right(DataRequest(request, SessionData()))
+                      Right(DataRequest(request, SessionData.empty))
 
                     case x if x > 0 && x < config.agentUnsubmittedClaimLimit =>
                       Left(

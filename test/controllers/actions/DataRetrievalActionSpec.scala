@@ -36,7 +36,7 @@ class DataRetrievalActionSpec extends BaseSpec {
   val authorisedRequestOrgnisation = AuthorisedRequest(request, AffinityGroup.Organisation)
   val authorisedRequestAgent       = AuthorisedRequest(request, AffinityGroup.Agent)
 
-  given SessionData = SessionData(None)
+  given SessionData = SessionData.empty
 
   "DataRetrievalAction" - {
     "refines AuthorisedRequest into a DataRequest when session data exists" in {
@@ -78,7 +78,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       val result = action.invokeBlock(
         authorisedRequestOrgnisation,
         (req: DataRequest[?]) =>
-          req.sessionData shouldBe SessionData()
+          req.sessionData shouldBe SessionData.empty
           Future.successful(Ok)
       )
       status(result) shouldBe OK
@@ -112,11 +112,11 @@ class DataRetrievalActionSpec extends BaseSpec {
           req.sessionData shouldBe
             SessionData.from(TestClaims.testClaimWithRepaymentClaimDetailsOnly())
 
-          req.sessionData.repaymentClaimDetailsAnswers   shouldBe Some(
+          req.sessionData.repaymentClaimDetailsAnswers shouldBe
             RepaymentClaimDetailsAnswers.from(
               TestClaims.testClaimWithRepaymentClaimDetailsOnly().claimData.repaymentClaimDetails
             )
-          )
+
           req.sessionData.organisationDetailsAnswers     shouldBe None
           req.sessionData.giftAidScheduleDataAnswers     shouldBe None
           req.sessionData.declarationDetailsAnswers      shouldBe None
@@ -166,7 +166,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       val result = action.invokeBlock(
         authorisedRequestAgent,
         (req: DataRequest[?]) =>
-          req.sessionData shouldBe SessionData()
+          req.sessionData shouldBe SessionData.empty
           Future.successful(Ok)
       )
       status(result) shouldBe OK

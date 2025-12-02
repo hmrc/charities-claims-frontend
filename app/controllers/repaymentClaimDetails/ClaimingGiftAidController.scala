@@ -42,7 +42,7 @@ class ClaimingGiftAidController @Inject() (
   val form: Form[Boolean] = formProvider("claimingGiftAid.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = request.sessionData.repaymentClaimDetailsAnswers.flatMap(_.claimingGiftAid)
+    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingGiftAid
     Ok(view(form.withDefault(previousAnswer), mode))
   }
 

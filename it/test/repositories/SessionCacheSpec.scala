@@ -49,9 +49,9 @@ class SessionCacheSpec
 
     "return some SessionData if found" in {
       given HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(UUID.randomUUID().toString)))
-      whenReady(sessionCache.store(SessionData())) { _ =>
+      whenReady(sessionCache.store(SessionData.empty)) { _ =>
         whenReady(sessionCache.get()) { result =>
-          result should be(Some(SessionData()))
+          result should be(Some(SessionData.empty))
         }
       }
     }
@@ -75,16 +75,14 @@ class SessionCacheSpec
       whenReady(
         sessionCache.update(forceSessionCreation = true)(s =>
           s.copy(
-            repaymentClaimDetailsAnswers = Some(
-              RepaymentClaimDetailsAnswers(
-                claimingGiftAid = Some(true)
-              )
+            repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
+              claimingGiftAid = Some(true)
             )
           )
         )
       ) { result =>
         result should be(
-          SessionData(repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true))))
+          SessionData(repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)))
         )
       }
     }
@@ -92,28 +90,24 @@ class SessionCacheSpec
     "update the session data if it exists" in {
       given HeaderCarrier    = HeaderCarrier(sessionId = Some(SessionId(UUID.randomUUID().toString)))
       val initialSessionData = SessionData(
-        repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)))
+        repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true))
       )
       whenReady(sessionCache.store(initialSessionData)) { _ =>
         whenReady(
           sessionCache.update(forceSessionCreation = false)(s =>
             s.copy(
-              repaymentClaimDetailsAnswers = Some(
-                RepaymentClaimDetailsAnswers(
-                  claimingGiftAid = Some(true),
-                  claimingTaxDeducted = Some(true)
-                )
+              repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(true),
+                claimingTaxDeducted = Some(true)
               )
             )
           )
         ) { result =>
           result should be(
             SessionData(
-              repaymentClaimDetailsAnswers = Some(
-                RepaymentClaimDetailsAnswers(
-                  claimingGiftAid = Some(true),
-                  claimingTaxDeducted = Some(true)
-                )
+              repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(true),
+                claimingTaxDeducted = Some(true)
               )
             )
           )
@@ -124,7 +118,7 @@ class SessionCacheSpec
     "skip updating the session data if it exists and the updated session data is the same" in {
       given HeaderCarrier    = HeaderCarrier(sessionId = Some(SessionId(UUID.randomUUID().toString)))
       val initialSessionData = SessionData(
-        repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)))
+        repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true))
       )
       whenReady(sessionCache.store(initialSessionData)) { _ =>
         whenReady(

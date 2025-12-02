@@ -49,16 +49,14 @@ object RepaymentClaimDetailsAnswers {
   given Format[RepaymentClaimDetailsAnswers] = Json.format[RepaymentClaimDetailsAnswers]
 
   private def get[A](f: RepaymentClaimDetailsAnswers => Option[A])(using session: SessionData): Option[A] =
-    session.repaymentClaimDetailsAnswers.flatMap(f)
+    f(session.repaymentClaimDetailsAnswers)
 
   private def set[A](value: A)(f: (RepaymentClaimDetailsAnswers, A) => RepaymentClaimDetailsAnswers)(using
     session: SessionData
   ): SessionData =
-    val updated = session.repaymentClaimDetailsAnswers match
-      case Some(existing) => f(existing, value)
-      case None           => f(RepaymentClaimDetailsAnswers(), value)
-
-    session.copy(repaymentClaimDetailsAnswers = Some(updated))
+    session.copy(
+      repaymentClaimDetailsAnswers = f(session.repaymentClaimDetailsAnswers, value)
+    )
 
   def from(repaymentClaimDetails: RepaymentClaimDetails): RepaymentClaimDetailsAnswers =
     RepaymentClaimDetailsAnswers(

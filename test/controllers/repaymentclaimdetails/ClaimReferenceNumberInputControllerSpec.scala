@@ -71,7 +71,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
       "should render page not found if claiming reference number is empty" in {
 
         val sessionData = SessionData(repaymentClaimDetailsAnswers =
-          Some(RepaymentClaimDetailsAnswers(claimReferenceNumber = Some("123456")))
+          RepaymentClaimDetailsAnswers(claimReferenceNumber = Some("123456"))
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -90,9 +90,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
       "should render the page and pre-populate correctly" in {
 
         val sessionData = SessionData(repaymentClaimDetailsAnswers =
-          Some(
-            RepaymentClaimDetailsAnswers(claimingReferenceNumber = Some(true), claimReferenceNumber = Some("123456"))
-          )
+          RepaymentClaimDetailsAnswers(claimingReferenceNumber = Some(true), claimReferenceNumber = Some("123456"))
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -112,9 +110,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
       "should render the page not found and incorrectly pre-populate data" in {
 
         val sessionData = SessionData(repaymentClaimDetailsAnswers =
-          Some(
-            RepaymentClaimDetailsAnswers(claimingReferenceNumber = Some(false), claimReferenceNumber = Some("123456"))
-          )
+          RepaymentClaimDetailsAnswers(claimingReferenceNumber = Some(false), claimReferenceNumber = Some("123456"))
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
