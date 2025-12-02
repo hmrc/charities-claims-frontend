@@ -22,7 +22,7 @@ final case class SessionData(
   // claimId of the unsubmitted claim stored in the backend,
   // if empty, the user has started a new claim
   unsubmittedClaimId: Option[String] = None,
-  repaymentClaimDetailsAnswers: Option[RepaymentClaimDetailsAnswers] = None,
+  repaymentClaimDetailsAnswers: RepaymentClaimDetailsAnswers,
   organisationDetailsAnswers: Option[OrganisationDetailsAnswers] = None,
   giftAidScheduleDataAnswers: Option[GiftAidScheduleDataAnswers] = None,
   declarationDetailsAnswers: Option[DeclarationDetailsAnswers] = None,
@@ -34,12 +34,14 @@ object SessionData {
 
   given Format[SessionData] = Json.format[SessionData]
 
+  val empty: SessionData = SessionData(
+    repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers()
+  )
+
   def from(claim: Claim): SessionData =
     SessionData(
       unsubmittedClaimId = Some(claim.claimId),
-      repaymentClaimDetailsAnswers = Some(
-        RepaymentClaimDetailsAnswers.from(claim.claimData.repaymentClaimDetails)
-      ),
+      repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers.from(claim.claimData.repaymentClaimDetails),
       organisationDetailsAnswers = claim.claimData.organisationDetails.map(OrganisationDetailsAnswers.from),
       giftAidScheduleDataAnswers = claim.claimData.giftAidScheduleData.map(GiftAidScheduleDataAnswers.from),
       declarationDetailsAnswers = claim.claimData.declarationDetails.map(DeclarationDetailsAnswers.from),

@@ -64,7 +64,7 @@ class SessionDataControllerSpec extends ControllerSpec {
         application.injector
           .instanceOf[SessionCache]
           .store(
-            SessionData(repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true))))
+            SessionData(repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)))
           )
 
         running(application) {
@@ -116,7 +116,7 @@ class SessionDataControllerSpec extends ControllerSpec {
                 "sessionData" -> Json
                   .toJson(
                     SessionData(repaymentClaimDetailsAnswers =
-                      Some(RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)))
+                      RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true))
                     )
                   )
                   .toString()
@@ -144,7 +144,7 @@ class SessionDataControllerSpec extends ControllerSpec {
                 "sessionData" -> Json
                   .toJson(
                     SessionData(repaymentClaimDetailsAnswers =
-                      Some(RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)))
+                      RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true))
                     )
                   )
                   .toString()

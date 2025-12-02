@@ -24,6 +24,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import models.SessionData
 
 import scala.concurrent.{ExecutionContext, Future}
+import models.RepaymentClaimDetailsAnswers
 
 @ImplementedBy(classOf[DefaultSessionCache])
 trait SessionCache {
@@ -97,7 +98,7 @@ class DefaultSessionCache @Inject() (
 
         case None =>
           if forceSessionCreation then {
-            val updatedSessionData = update(SessionData())
+            val updatedSessionData = update(SessionData.empty)
             store(updatedSessionData)
               .map(_ => updatedSessionData)
           } else Future.failed(new Exception("no session found in mongodb"))
