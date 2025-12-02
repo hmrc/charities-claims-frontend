@@ -50,7 +50,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render the page and pre-populate correctly with true value" in {
+      "should render the page and pre-populate correctly with true value in check mode" in {
 
         val sessionData = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
 
@@ -58,13 +58,13 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingGiftAidController.onPageLoad(NormalMode).url)
+            FakeRequest(GET, routes.ClaimingGiftAidController.onPageLoad(CheckMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingGiftAidView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
+          contentAsString(result) shouldEqual view(form.fill(true), CheckMode).body
         }
       }
 

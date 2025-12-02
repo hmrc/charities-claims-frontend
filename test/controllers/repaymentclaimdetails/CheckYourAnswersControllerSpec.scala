@@ -88,7 +88,8 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
           contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers.get).body
         }
       }
-      "should redirect somewhere" in {
+
+      "should render the page correctly when some answers are missing" in {
 
         val sessionData = SessionData(repaymentClaimDetailsAnswers =
           Some(
@@ -96,7 +97,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
               claimingGiftAid = Some(true),
               claimingTaxDeducted = None,
               claimingUnderGasds = Some(true),
-              claimingReferenceNumber = Some(true),
+              claimingReferenceNumber = None,
               claimReferenceNumber = Some("12345678AB")
             )
           )
@@ -110,8 +111,25 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result) shouldEqual SEE_OTHER
+          val view = application.injector.instanceOf[CheckYourAnswersView]
 
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers.get).body
+
+        }
+      }
+
+      "should redirect to the start of the application if the repaymentClaimDetailsAnswers are missing" in {
+        val sessionData                = SessionData(repaymentClaimDetailsAnswers = None)
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+          status(result) shouldEqual SEE_OTHER
         }
       }
     }
