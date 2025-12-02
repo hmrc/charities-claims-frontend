@@ -18,6 +18,7 @@
 
 @this(
     layout: templates.Layout,
+    formHelper: FormWithCSRF,
     govukButton: GovukButton
 )
 
@@ -36,9 +37,8 @@
 
     </ul>
 
-    @govukButton(
-        ButtonViewModel(messages("site.continue"))
-          .asLink(routes.CheckYourAnswersController.onPageLoad.url)
-    )
+    @formHelper(action = routes.ClaimDeclarationController.onSubmit) {
 
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+    }
 }
