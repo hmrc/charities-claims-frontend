@@ -91,5 +91,3 @@ class DefaultDataRetrievalAction @Inject() (
       }
   }
 }
-
-case class AgentOutOfLimitException() extends Exception()
