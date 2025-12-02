@@ -17,9 +17,9 @@
 package models.requests
 
 import play.api.mvc.{Request, WrappedRequest}
-import models.SessionData
+import uk.gov.hmrc.auth.core.AffinityGroup
 
-final case class DataRequest[A](
-  request: Request[A],
-  sessionData: SessionData
-) extends WrappedRequest[A](request)
+final case class AuthorisedRequest[A](
+  underlying: Request[A],
+  affinityGroup: AffinityGroup
+) extends WrappedRequest[A](underlying)

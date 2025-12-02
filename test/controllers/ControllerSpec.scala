@@ -62,7 +62,7 @@ trait ControllerSpec
         List[GuiceableModule](
           inject
             .bind[DataRetrievalAction]
-            .toInstance(new FakeDataRetrievalAction(Some(sessionData))),
+            .toInstance(new FakeDataRetrievalAction(sessionData)),
           inject
             .bind[AuthorisedAction]
             .toInstance(new FakeAuthorisedAction)

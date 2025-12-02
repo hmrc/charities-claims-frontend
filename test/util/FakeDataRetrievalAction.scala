@@ -18,13 +18,13 @@ package util
 
 import controllers.actions.DataRetrievalAction
 import models.SessionData
-import models.requests.{AuthorisedRequest, OptionalDataRequest}
+import models.requests.{AuthorisedRequest, DataRequest}
 import play.api.mvc.Result
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class FakeDataRetrievalAction(
-  sessionData: Option[SessionData]
+  sessionData: SessionData
 ) extends DataRetrievalAction {
 
   override protected implicit val executionContext: ExecutionContext =
@@ -32,6 +32,6 @@ class FakeDataRetrievalAction(
 
   override protected def refine[A](
     request: AuthorisedRequest[A]
-  ): Future[Either[Result, OptionalDataRequest[A]]] =
-    Future(Right(OptionalDataRequest(request, sessionData)))
+  ): Future[Either[Result, DataRequest[A]]] =
+    Future(Right(DataRequest(request, sessionData)))
 }
