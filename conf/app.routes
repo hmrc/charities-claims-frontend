@@ -10,10 +10,10 @@ GET         /timed-out                                controllers.StartControlle
 GET         /page-not-found                           controllers.PageNotFoundController.onPageLoad
 
 
-GET         /claiming-for-gift-aid-small-donations-scheme               controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /change-claiming-for-gift-aid-small-donations-scheme        controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /claiming-for-gift-aid-small-donations-scheme               controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /change-claiming-for-gift-aid-small-donations-scheme        controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /gift-aid-small-donations-scheme               controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-gift-aid-small-donations-scheme        controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /gift-aid-small-donations-scheme               controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-gift-aid-small-donations-scheme        controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /claim-gift-aid                           controllers.repaymentclaimdetails.ClaimingGiftAidController.onPageLoad(mode: Mode = Mode.NormalMode)
 GET         /change-claim-gift-aid                    controllers.repaymentclaimdetails.ClaimingGiftAidController.onPageLoad(mode: Mode = Mode.CheckMode)
