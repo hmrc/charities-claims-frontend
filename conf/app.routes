@@ -38,5 +38,5 @@ POST        /change-your-claim-reference-number             controllers.repaymen
 GET         /declaration                              controllers.repaymentclaimdetails.ClaimDeclarationController.onPageLoad
 POST        /declaration                              controllers.repaymentclaimdetails.ClaimDeclarationController.onSubmit
 
-GET         /check-your-answers        controllers.repaymentclaimdetails.CheckYourAnswersController.onPageLoad
-POST        /check-your-answers        controllers.repaymentclaimdetails.CheckYourAnswersController.onSubmit
+GET         /check-your-claim-details        controllers.repaymentclaimdetails.CheckYourAnswersController.onPageLoad
+POST        /check-your-claim-details        controllers.repaymentclaimdetails.CheckYourAnswersController.onSubmit

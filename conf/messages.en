@@ -64,8 +64,8 @@ global.error.InternalServerError500.message = Try again later or contact the <a 
 global.error.pageNotFound404.heading = Page not found
 global.error.pageNotFound404.message = If you typed the web address, check it is correct.<br>If you pasted the web address, check you copied the entire address.<br>If the web address is correct or you selected a link or button, contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services">HMRC Online Services Helpdesk</a> if you need to speak to someone.
 
-checkYourAnswers.title = Check your answers
-checkYourAnswers.heading = Check your answers
+checkYourAnswers.title = Check your claim details
+checkYourAnswers.heading = Check your claim details
 checkYourAnswers.giftAid.label = Are you claiming Gift Aid?
 checkYourAnswers.giftAid.change.hidden = if you are claiming Gift Aid
 checkYourAnswers.taxDeducted.label = Are you claiming UK tax deducted from other income?
