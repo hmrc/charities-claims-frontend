@@ -41,7 +41,7 @@ class CheckYourAnswersController @Inject() (
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     request.sessionData.repaymentClaimDetailsAnswers match {
-      case Some(repaymentClaimDetailsAnswers) if repaymentClaimDetailsAnswers.hasCompleteAnswers =>
+      case Some(repaymentClaimDetailsAnswers) =>
         Ok(view(repaymentClaimDetailsAnswers))
 
       case _ =>

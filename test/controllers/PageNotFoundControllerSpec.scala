@@ -39,7 +39,7 @@ class PageNotFoundControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual NOT_FOUND
-          contentAsString(result) shouldEqual await(errorHandler.notFoundTemplate(request)).body
+          contentAsString(result) shouldEqual await(errorHandler.notFoundTemplate(using request)).body
         }
       }
     }
