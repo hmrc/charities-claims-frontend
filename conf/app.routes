@@ -30,10 +30,10 @@ GET         /change-claim-reference-number                   controllers.repayme
 POST        /claim-reference-number                          controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-claim-reference-number                   controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /enter-claim-reference-number                    controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /change-enter-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /enter-claim-reference-number                    controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /change-enter-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /your-claim-reference-numberr                    controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-your-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /your-claim-reference-number                    controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-your-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /declaration                              controllers.repaymentclaimdetails.ClaimDeclarationController.onPageLoad
 POST        /declaration                              controllers.repaymentclaimdetails.ClaimDeclarationController.onSubmit
