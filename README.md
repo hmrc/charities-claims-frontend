@@ -36,6 +36,12 @@ sbt run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes
 SBT_OPTS="-Xmx4g -XX:+UseParallelGC -Xss8m" sbt clean coverage test it/test coverageReport
 ```
 
+### Sorting messages files
+
+```
+./scripts/sortMessages.sc --save
+```
+
 ### License
 
 This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").
