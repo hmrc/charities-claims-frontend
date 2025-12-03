@@ -1,74 +1,73 @@
-service.name = Charities Claims
-service.title = Charities
-
-site.continue = Continue
-site.yes = Yes
-site.no = No
-site.govuk = GOV.UK
-site.change = Change
-site.enter = Enter
-
+authLoginStub.title = Sign in using test credentials
 back.text = Back
 
+checkYourAnswers.gasds.label = Are you claiming for the Gift Aid Small Donations Scheme?
+checkYourAnswers.giftAid.change.hidden = if you are claiming Gift Aid
+checkYourAnswers.giftAid.label = Are you claiming Gift Aid?
+checkYourAnswers.hasRef.label = Do you have a claim reference number?
+checkYourAnswers.heading = Check your claim details
+checkYourAnswers.refNumber.label = What is your reference number?
+checkYourAnswers.taxDeducted.label = Are you claiming tax deducted from other income?
+checkYourAnswers.title = Check your claim details
+
+claimDeclaration.bullet.one =  I will provide accurate information in this claim
+claimDeclaration.heading = Declaration
+claimDeclaration.paragraph =  I declare that:
+claimDeclaration.title = Declaration
+
+claimReferenceNumberCheck.error.required = Select ‘Yes’ if you have a reference number for this claim.
+claimReferenceNumberCheck.heading = Do you have a claim reference number?
+claimReferenceNumberCheck.title = Do you have a claim reference number?
+
+claimReferenceNumberInput.error.length = Claim reference number must be 20 characters or less
+claimReferenceNumberInput.error.regex = Include characters from Western European alphabets
+claimReferenceNumberInput.error.required = Enter your claim reference number
+claimReferenceNumberInput.heading = What is your claim reference number?
+claimReferenceNumberInput.paragraph = You do not have to complete this box but you can use it to show your claim reference if you use one. The reference that you quote will appear on the payment advice note you receive from us when we pay the claim.
+claimReferenceNumberInput.title = What is your claim reference number?
+
+claimingGiftAid.error.required = Select ‘Yes’ if you are claiming Gift Aid.
+claimingGiftAid.heading = Are you claiming Gift Aid?
+claimingGiftAid.hint = Select ‘Yes’ if you want to claim tax repayment on donations from a Gift Aid declaration.
+claimingGiftAid.legend = Are you claiming Gift Aid?
+claimingGiftAid.title = Are you claiming Gift Aid?
+
+claimingGiftAidSmallDonations.error.required = Select ‘Yes’ if you are claiming for the Gift Aid Small Donations Scheme.
+claimingGiftAidSmallDonations.heading = Gift Aid Small Donations Scheme
+claimingGiftAidSmallDonations.legend =  Are you claiming for the Gift Aid Small Donations Scheme?
+claimingGiftAidSmallDonations.paragraph =  This is separate to a Gift Aid claim. The Gift Aid Small Donation Scheme (GASDS) is for donations of £20 or less and does not need declaring.
+claimingGiftAidSmallDonations.title = Gift Aid Small Donations Scheme
+
+claimingOtherIncome.bullet.one =  Bank or Building Society interest
+claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
+claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate
+claimingOtherIncome.error.required = Select ‘Yes’ if you are claiming tax deducted from other income.
+claimingOtherIncome.heading = Are you claiming tax deducted from other income?
+claimingOtherIncome.paragraph =  Tax relief can include:
+claimingOtherIncome.title = Are you claiming tax deducted from other income?
 error.browser.title.prefix = Error:
+
+global.error.InternalServerError500.heading = Sorry, there is a problem with this service
+global.error.InternalServerError500.message = Try again later or contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services">HMRC Online Services Helpdesk</a>.
+global.error.pageNotFound404.heading = Page not found
+global.error.pageNotFound404.message = If you typed the web address, check it is correct.<br>If you pasted the web address, check you copied the entire address.<br>If the web address is correct or you selected a link or button, contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services">HMRC Online Services Helpdesk</a> if you need to speak to someone.
+
+index.guidance = Hello
+index.heading = Charities Claims
 
 phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in a new tab)</a> will help us to improve it.
 phasebanner.phase=Beta
 
-index.heading = Charities Claims
-index.guidance = Hello
-
+service.name = Charities Claims
+service.title = Charities
 session-expired-message=For your security, we will time you out in
+
 session-expired.keep-alive-button-text=Continue
 session-expired.sign-out-button-text=Sign-out
 
-claimingGiftAid.title = Are you claiming Gift Aid?
-claimingGiftAid.heading = Are you claiming Gift Aid?
-claimingGiftAid.hint = Select ‘Yes’ if you want to claim tax repayment on donations from a Gift Aid declaration.
-claimingGiftAid.error.required = Select ‘Yes’ if you are claiming Gift Aid.
-claimingGiftAid.legend = Are you claiming Gift Aid?
-
-claimingOtherIncome.title = Are you claiming tax deducted from other income?
-claimingOtherIncome.heading = Are you claiming tax deducted from other income?
-claimingOtherIncome.paragraph =  Tax relief can include:
-claimingOtherIncome.bullet.one =  Bank or Building Society interest
-claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate
-claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
-claimingOtherIncome.error.required = Select ‘Yes’ if you are claiming tax deducted from other income.
-
-claimingGiftAidSmallDonations.title = Gift Aid Small Donations Scheme
-claimingGiftAidSmallDonations.heading = Gift Aid Small Donations Scheme
-claimingGiftAidSmallDonations.paragraph =  This is separate to a Gift Aid claim. The Gift Aid Small Donation Scheme (GASDS) is for donations of £20 or less and does not need declaring.
-claimingGiftAidSmallDonations.legend =  Are you claiming for the Gift Aid Small Donations Scheme?
-claimingGiftAidSmallDonations.error.required = Select ‘Yes’ if you are claiming for the Gift Aid Small Donations Scheme.
-
-claimReferenceNumberCheck.title = Do you have a claim reference number?
-claimReferenceNumberCheck.heading = Do you have a claim reference number?
-claimReferenceNumberCheck.error.required = Select ‘Yes’ if you have a reference number for this claim.
-
-claimReferenceNumberInput.title = What is your claim reference number?
-claimReferenceNumberInput.heading = What is your claim reference number?
-claimReferenceNumberInput.paragraph = You do not have to complete this box but you can use it to show your claim reference if you use one. The reference that you quote will appear on the payment advice note you receive from us when we pay the claim.
-claimReferenceNumberInput.error.required = Enter your claim reference number
-claimReferenceNumberInput.error.length = Claim reference number must be 20 characters or less
-claimReferenceNumberInput.error.regex = Include characters from Western European alphabets
-
-claimDeclaration.title = Declaration
-claimDeclaration.heading = Declaration
-claimDeclaration.paragraph =  I declare that:
-claimDeclaration.bullet.one =  I will provide accurate information in this claim
-
-global.error.InternalServerError500.heading = Sorry, there is a problem with this service
-global.error.InternalServerError500.message = Try again later or contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services">HMRC Online Services Helpdesk</a>.
-
-global.error.pageNotFound404.heading = Page not found
-global.error.pageNotFound404.message = If you typed the web address, check it is correct.<br>If you pasted the web address, check you copied the entire address.<br>If the web address is correct or you selected a link or button, contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services">HMRC Online Services Helpdesk</a> if you need to speak to someone.
-
-checkYourAnswers.title = Check your claim details
-checkYourAnswers.heading = Check your claim details
-checkYourAnswers.giftAid.label = Are you claiming Gift Aid?
-checkYourAnswers.giftAid.change.hidden = if you are claiming Gift Aid
-checkYourAnswers.taxDeducted.label = Are you claiming tax deducted from other income?
-checkYourAnswers.gasds.label = Are you claiming for the Gift Aid Small Donations Scheme?
-checkYourAnswers.hasRef.label = Do you have a claim reference number?
-checkYourAnswers.refNumber.label = What is your reference number?
+site.change = Change
+site.continue = Continue
+site.enter = Enter
+site.govuk = GOV.UK
+site.no = No
+site.yes = Yes

@@ -42,3 +42,4 @@ bin
 project/.bloop/
 project/metals.sbt
 .cursor
+.scala-build/
