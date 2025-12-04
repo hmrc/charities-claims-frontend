@@ -24,7 +24,7 @@ import org.scalamock.handlers.CallHandler
 import play.api.test.Helpers.*
 import com.typesafe.config.ConfigFactory
 import play.api.Configuration
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -58,20 +58,6 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       actorSystem = actorSystem
     )
 
-  def givenPostReturns(
-    expectedUrl: String,
-    expectedPayload: JsValue,
-    response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
-    mockHttpPostSuccess(expectedUrl, expectedPayload)(response)
-
-  def givenPutReturns(
-    expectedUrl: String,
-    expectedPayload: JsValue,
-    response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
-    mockHttpPutSuccess(expectedUrl, expectedPayload)(response)
-
   def givenGetClaimsEndpointReturns(response: HttpResponse): CallHandler[Future[HttpResponse]] =
     givenPostReturns(
       expectedUrl = "http://foo.bar.com:1234/foo-claims/get-claims",
@@ -92,10 +78,18 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
   def givenUpdateClaimEndpointReturns(
     payload: UpdateClaimRequest,
     response: HttpResponse
-  ): Unit =
+  ): CallHandler[Future[HttpResponse]] =
     givenPutReturns(
       expectedUrl = "http://foo.bar.com:1234/foo-claims/claims",
       expectedPayload = Json.toJson(payload),
+      response = response
+    )
+
+  def givenDeleteClaimEndpointReturns(
+    response: HttpResponse
+  ): CallHandler[Future[HttpResponse]] =
+    givenDeleteReturns(
+      expectedUrl = "http://foo.bar.com:1234/foo-claims/claims",
       response = response
     )
 
@@ -212,6 +206,52 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       )
 
       await(connector.updateClaim("123", repaymentDetails)) shouldBe (())
+    }
+  }
+
+  "deleteClaim" - {
+    "should send a delete request and return true on success" in {
+      givenDeleteClaimEndpointReturns(
+        HttpResponse(200, Json.stringify(Json.toJson(DeleteClaimResponse(success = true))))
+      )
+      await(connector.deleteClaim("123")) shouldBe true
+    }
+
+    "should send a delete request and return false on failure" in {
+      givenDeleteClaimEndpointReturns(
+        HttpResponse(200, Json.stringify(Json.toJson(DeleteClaimResponse(success = false))))
+      )
+      await(connector.deleteClaim("123")) shouldBe false
+    }
+
+    "throw an exception if the service returs malformed JSON" in {
+      givenDeleteClaimEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]"))
+        .once()
+      a[Exception] should be thrownBy {
+        await(connector.deleteClaim("123"))
+      }
+    }
+
+    "throw an exception if the service returs wrong entity format" in {
+      givenDeleteClaimEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]}"))
+        .once()
+      a[Exception] should be thrownBy {
+        await(connector.deleteClaim("123"))
+      }
+    }
+
+    "throw an exception if the service returns 404 status" in {
+      givenDeleteClaimEndpointReturns(HttpResponse(404, "Bad Request")).once()
+      a[Exception] should be thrownBy {
+        await(connector.deleteClaim("123"))
+      }
+    }
+
+    "throw an exception if the service returns 500 status" in {
+      givenDeleteClaimEndpointReturns(HttpResponse(500, ""))
+      a[Exception] should be thrownBy {
+        await(connector.deleteClaim("123"))
+      }
     }
   }
 }
