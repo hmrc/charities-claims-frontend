@@ -30,8 +30,10 @@ import play.api.libs.json.{Json, Reads, Writes}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.FiniteDuration
+
 import javax.inject.Inject
 import java.net.URL
+import play.api.libs.json.JsNull
 
 @ImplementedBy(classOf[ClaimsConnectorImpl])
 trait ClaimsConnector {
@@ -41,6 +43,7 @@ trait ClaimsConnector {
   def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse]
   def saveClaim(repaymentClaimDetails: RepaymentClaimDetails)(using hc: HeaderCarrier): Future[UserId]
   def updateClaim(claimId: String, repaymentClaimDetails: RepaymentClaimDetails)(using hc: HeaderCarrier): Future[Unit]
+  def deleteClaim(claimId: String)(using hc: HeaderCarrier): Future[Boolean]
 }
 
 class ClaimsConnectorImpl @Inject() (
@@ -53,8 +56,6 @@ class ClaimsConnectorImpl @Inject() (
 ) extends ClaimsConnector
     with Retries {
 
-  private type HttpVerb = HttpClientV2 => URL => RequestBuilder
-
   val baseUrl: String = servicesConfig.baseUrl("charities-claims")
 
   val retryIntervals: Seq[FiniteDuration] = Retries.getConfIntervals("charities-claims", configuration)
@@ -65,11 +66,13 @@ class ClaimsConnectorImpl @Inject() (
   val retrieveUnsubmittedClaimsUrl: String = s"$baseUrl$contextPath/get-claims"
   val saveClaimUrl: String                 = s"$baseUrl$contextPath/claims"
   val updateClaimUrl: String               = s"$baseUrl$contextPath/claims"
+  val deleteClaimUrl: String               = s"$baseUrl$contextPath/claims"
 
   final def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse] =
-    callCharitiesClaimsBackend[GetClaimsRequest, GetClaimsResponse](_.post)(
-      retrieveUnsubmittedClaimsUrl,
-      GetClaimsRequest(claimSubmitted = false)
+    callCharitiesClaimsBackend[GetClaimsRequest, GetClaimsResponse](
+      method = "POST",
+      url = retrieveUnsubmittedClaimsUrl,
+      payload = Some(GetClaimsRequest(claimSubmitted = false))
     )
 
   final def saveClaim(repaymentClaimDetails: RepaymentClaimDetails)(using
@@ -87,9 +90,10 @@ class ClaimsConnectorImpl @Inject() (
       makingAdjustmentToPreviousClaim = repaymentClaimDetails.makingAdjustmentToPreviousClaim
     )
 
-    callCharitiesClaimsBackend[SaveClaimRequest, SaveClaimResponse](_.post)(
-      saveClaimUrl,
-      payload
+    callCharitiesClaimsBackend[SaveClaimRequest, SaveClaimResponse](
+      method = "POST",
+      url = saveClaimUrl,
+      payload = Some(payload)
     ).map(_.claimId)
   }
 
@@ -100,30 +104,49 @@ class ClaimsConnectorImpl @Inject() (
       claimId,
       repaymentClaimDetails = Some(repaymentClaimDetails)
     )
-    callCharitiesClaimsBackend[UpdateClaimRequest, UpdateClaimResponse](_.put)(
-      updateClaimUrl,
-      payload
+    callCharitiesClaimsBackend[UpdateClaimRequest, UpdateClaimResponse](
+      method = "PUT",
+      url = updateClaimUrl,
+      payload = Some(payload)
     ).map(_ => ())
   }
 
-  private def callCharitiesClaimsBackend[I, O](verb: HttpVerb)(url: String, payload: I)(using
+  final def deleteClaim(claimId: String)(using
+    hc: HeaderCarrier
+  ): Future[Boolean] =
+    callCharitiesClaimsBackend[Nothing, DeleteClaimResponse](
+      method = "DELETE",
+      url = deleteClaimUrl,
+      payload = None
+    ).map(r => r.success)
+
+  private def callCharitiesClaimsBackend[I, O](method: String, url: String, payload: Option[I])(using
     writes: Writes[I],
-    reads: Reads[O]
+    reads: Reads[O],
+    hc: HeaderCarrier
   ): Future[O] =
-    retry(retryIntervals*)(shouldRetry, retryReason)(
-      verb(http)(URL(url))
-        .withBody(Json.toJson(payload))
+    retry(retryIntervals*)(shouldRetry, retryReason) {
+      val request: RequestBuilder = method match {
+        case "GET"    => http.get(URL(url))
+        case "POST"   => http.post(URL(url))
+        case "PUT"    => http.put(URL(url))
+        case "DELETE" => http.delete(URL(url))
+      }
+      payload
+        .fold(request)(p => request.withBody(Json.toJson(p)))
         .execute[HttpResponse]
-    ).flatMap(response =>
+    }.flatMap(response =>
       if response.status == 200 then
         response
           .parseJSON[O]()
           .fold(error => Future.failed(Exception(error)), Future.successful)
       else
         Future.failed(
-          Exception(s"Request to POST $retrieveUnsubmittedClaimsUrl failed because of $response ${response.body}")
+          Exception(s"Request to $method $url failed because of $response ${response.body}")
         )
     )
+
+  given Writes[Nothing] = Writes.apply(_ => JsNull)
 }
 
 case class MissingRequiredFieldsException(message: String) extends Exception(message)

@@ -33,6 +33,7 @@ import uk.gov.hmrc.http.client.RequestBuilder
 import java.net.URL
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
+import org.scalamock.handlers.CallHandler
 
 trait HttpV2Support { this: MockFactory & Matchers =>
 
@@ -41,6 +42,26 @@ trait HttpV2Support { this: MockFactory & Matchers =>
 
   val mockHttp: HttpClientV2             = mock[HttpClientV2]
   val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
+
+  def givenPostReturns(
+    expectedUrl: String,
+    expectedPayload: JsValue,
+    response: HttpResponse
+  ): CallHandler[Future[HttpResponse]] =
+    mockHttpPostSuccess(expectedUrl, expectedPayload)(response)
+
+  def givenPutReturns(
+    expectedUrl: String,
+    expectedPayload: JsValue,
+    response: HttpResponse
+  ): CallHandler[Future[HttpResponse]] =
+    mockHttpPutSuccess(expectedUrl, expectedPayload)(response)
+
+  def givenDeleteReturns(
+    expectedUrl: String,
+    response: HttpResponse
+  ): CallHandler[Future[HttpResponse]] =
+    mockHttpDeleteSuccess(expectedUrl)(response)
 
   def mockHttpPostSuccess[A](url: String, requestBody: JsValue, hasHeaders: Boolean = false)(response: A) = {
     mockHttpPost(URL(url)).once()
@@ -54,6 +75,12 @@ trait HttpV2Support { this: MockFactory & Matchers =>
     mockRequestBuilderWithBody(requestBody).once()
     if hasHeaders then mockRequestBuilderTransform().once()
     mockRequestBuilderExecuteWithoutException(response).once()
+  }
+
+  def mockHttpDeleteSuccess[A](url: String, hasHeaders: Boolean = false)(response: A) = {
+    mockHttpDelete(URL(url)).atLeastOnce()
+    if hasHeaders then mockRequestBuilderTransform().atLeastOnce()
+    mockRequestBuilderExecuteWithoutException(response).atLeastOnce()
   }
 
   def mockHttpPostWithException(
@@ -109,6 +136,12 @@ trait HttpV2Support { this: MockFactory & Matchers =>
   def mockHttpPut[A](url: URL) =
     (mockHttp
       .put(_: URL)(using _: HeaderCarrier))
+      .expects(url, *)
+      .returning(mockRequestBuilder)
+
+  def mockHttpDelete[A](url: URL) =
+    (mockHttp
+      .delete(_: URL)(using _: HeaderCarrier))
       .expects(url, *)
       .returning(mockRequestBuilder)
 

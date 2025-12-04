@@ -16,13 +16,12 @@
 
 package controllers.repaymentclaimdetails
 
-import com.google.inject.Inject
-import play.api.i18n.I18nSupport
-import controllers.actions.Actions
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import com.google.inject.Inject
 import views.html.ClaimDeclarationView
-import models.Mode.*
+import controllers.actions.Actions
+import play.api.i18n.I18nSupport
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import scala.concurrent.Future
 
