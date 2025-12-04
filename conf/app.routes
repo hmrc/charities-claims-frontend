@@ -40,3 +40,6 @@ POST        /declaration                              controllers.repaymentclaim
 
 GET         /check-your-claim-details        controllers.repaymentclaimdetails.CheckYourAnswersController.onPageLoad
 POST        /check-your-claim-details        controllers.repaymentclaimdetails.CheckYourAnswersController.onSubmit
+
+GET         /about-the-organisation                         controllers.organisationDetails.AboutTheOrganisationController.onPageLoad
+POST        /about-the-organisation                         controllers.organisationDetails.AboutTheOrganisationController.onSubmit
