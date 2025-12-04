@@ -24,7 +24,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import models.SessionData
 
 import scala.concurrent.{ExecutionContext, Future}
-import models.RepaymentClaimDetailsAnswers
 
 @ImplementedBy(classOf[DefaultSessionCache])
 trait SessionCache {
@@ -36,12 +35,6 @@ trait SessionCache {
   def store(sessionData: SessionData)(using
     hc: HeaderCarrier
   ): Future[Unit]
-
-  def update(forceSessionCreation: Boolean)(
-    update: SessionData => SessionData
-  )(using
-    hc: HeaderCarrier
-  ): Future[SessionData]
 }
 
 object HeaderCarrierCacheId extends CacheIdType[HeaderCarrier] {
@@ -84,23 +77,4 @@ class DefaultSessionCache @Inject() (
     super
       .put(hc)(sessionDataKey, sessionData)
       .map(_ => ())
-
-  final def update(forceSessionCreation: Boolean)(
-    update: SessionData => SessionData
-  )(using hc: HeaderCarrier): Future[SessionData] =
-    get()
-      .flatMap {
-        case Some(sessionData) =>
-          val updatedSessionData = update(sessionData)
-          if sessionData == updatedSessionData
-          then Future.successful(updatedSessionData)
-          else store(updatedSessionData).map(_ => updatedSessionData)
-
-        case None =>
-          if forceSessionCreation then {
-            val updatedSessionData = update(SessionData.empty)
-            store(updatedSessionData)
-              .map(_ => updatedSessionData)
-          } else Future.failed(new Exception("no session found in mongodb"))
-      }
 }
