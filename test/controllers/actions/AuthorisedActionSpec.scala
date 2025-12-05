@@ -27,10 +27,10 @@ import uk.gov.hmrc.auth.core.{AffinityGroup, AuthConnector}
 import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.auth.core.EnrolmentIdentifier
+import uk.gov.hmrc.auth.core.NoActiveSession
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
-import java.net.URLEncoder
 
 class AuthorisedActionSpec extends BaseSpec {
 
@@ -101,7 +101,7 @@ class AuthorisedActionSpec extends BaseSpec {
       contentAsString(result) shouldBe "Agent"
     }
 
-    "redirect to login page when user has no affinity group" in {
+    "redirect to access denied page when user has no affinity group" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
       (mockAuthConnector
@@ -128,11 +128,11 @@ class AuthorisedActionSpec extends BaseSpec {
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
       status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(
-        s"${testFrontendAppConfig.loginUrl}?continue=${URLEncoder.encode(testFrontendAppConfig.loginContinueUrl, "UTF-8")}"
+        controllers.routes.AccessDeniedController.onPageLoad.url
       )
     }
 
-    "redirect to login page when an agent has no enrolment" in {
+    "redirect to access denied page when an agent has no enrolment" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
       (mockAuthConnector
@@ -159,12 +159,11 @@ class AuthorisedActionSpec extends BaseSpec {
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
       status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(
-        s"${testFrontendAppConfig.loginUrl}?continue=${URLEncoder.encode(testFrontendAppConfig.loginContinueUrl, "UTF-8")}"
+        controllers.routes.AccessDeniedController.onPageLoad.url
       )
-
     }
 
-    "redirect to login page when an organisation has no enrolment" in {
+    "redirect to access denied page when an organisation has no enrolment" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
       (mockAuthConnector
@@ -191,12 +190,11 @@ class AuthorisedActionSpec extends BaseSpec {
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
       status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(
-        s"${testFrontendAppConfig.loginUrl}?continue=${URLEncoder.encode(testFrontendAppConfig.loginContinueUrl, "UTF-8")}"
+        controllers.routes.AccessDeniedController.onPageLoad.url
       )
-
     }
 
-    "redirect to login page when an agent but has enrolment for organisation" in {
+    "redirect to access denied page when user is agent but has enrolment for organisation" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
       (mockAuthConnector
@@ -223,12 +221,11 @@ class AuthorisedActionSpec extends BaseSpec {
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
       status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(
-        s"${testFrontendAppConfig.loginUrl}?continue=${URLEncoder.encode(testFrontendAppConfig.loginContinueUrl, "UTF-8")}"
+        controllers.routes.AccessDeniedController.onPageLoad.url
       )
-
     }
 
-    "redirect to login page when an organisation but has enrolment for agent" in {
+    "redirect to access denied page when user is an organisation but has enrolment for agent" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
       (mockAuthConnector
@@ -255,12 +252,11 @@ class AuthorisedActionSpec extends BaseSpec {
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
       status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(
-        s"${testFrontendAppConfig.loginUrl}?continue=${URLEncoder.encode(testFrontendAppConfig.loginContinueUrl, "UTF-8")}"
+        controllers.routes.AccessDeniedController.onPageLoad.url
       )
-
     }
 
-    "redirect to login page when an Individual affinity group tries to access with incorrect enrolment" in {
+    "redirect to access denied page when an Individual affinity group tries to access with incorrect enrolment" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
       (mockAuthConnector
@@ -287,12 +283,11 @@ class AuthorisedActionSpec extends BaseSpec {
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
       status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(
-        s"${testFrontendAppConfig.loginUrl}?continue=${URLEncoder.encode(testFrontendAppConfig.loginContinueUrl, "UTF-8")}"
+        controllers.routes.AccessDeniedController.onPageLoad.url
       )
-
     }
 
-    "redirect to login page when an Individual affinity group tries to access with agent enrolment" in {
+    "redirect to access denied page when an Individual affinity group tries to access with agent enrolment" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
       (mockAuthConnector
@@ -319,9 +314,30 @@ class AuthorisedActionSpec extends BaseSpec {
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
       status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(
-        s"${testFrontendAppConfig.loginUrl}?continue=${URLEncoder.encode(testFrontendAppConfig.loginContinueUrl, "UTF-8")}"
+        controllers.routes.AccessDeniedController.onPageLoad.url
       )
-
     }
+
+    "redirect to login when user has no active session" in {
+      val mockAuthConnector: AuthConnector = mock[AuthConnector]
+
+      (mockAuthConnector
+        .authorise(_: Predicate, _: Retrieval[Option[AffinityGroup] ~ Enrolments])(using
+          _: HeaderCarrier,
+          _: ExecutionContext
+        ))
+        .expects(*, *, *, *)
+        .returning(Future.failed(new NoActiveSession("No session") {}))
+
+      val authorisedAction =
+        new DefaultAuthorisedAction(mockAuthConnector, testFrontendAppConfig, bodyParser)
+
+      val controller = new Harness(authorisedAction)
+      val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
+
+      status(result)               shouldBe SEE_OTHER
+      redirectLocation(result).value should startWith(testFrontendAppConfig.loginUrl)
+    }
+
   }
 }

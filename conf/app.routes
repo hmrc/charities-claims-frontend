@@ -8,7 +8,7 @@ GET         /                                         controllers.StartControlle
 GET         /keep-alive                               controllers.StartController.keepAlive
 GET         /timed-out                                controllers.StartController.timedOut
 GET         /page-not-found                           controllers.PageNotFoundController.onPageLoad
-
+GET         /there-is-a-problem-access-denied         controllers.AccessDeniedController.onPageLoad
 
 GET         /gift-aid-small-donations-scheme               controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.NormalMode)
 GET         /change-gift-aid-small-donations-scheme        controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.CheckMode)
