@@ -23,26 +23,15 @@ import scala.annotation.nowarn
 trait Enumerable[A] {
 
   def get(str: String): Option[A]
-
-  def toList: List[(String, A)]
 }
 
 object Enumerable {
 
-  def apply[A](entries: (String, A)*): Enumerable[A] =
-    new Enumerable[A] {
-
-      val entriesMap = entries.toMap
-
-      override def get(str: String): Option[A] =
-        entriesMap.get(str)
-
-      override def toList: List[(String, A)] = entries.toList
-    }
+  def apply[A](f: String => Option[A]): Enumerable[A] = f(_)
 
   trait Implicits {
 
-    implicit def reads[A](implicit ev: Enumerable[A]): Reads[A] =
+    given reads[A](using ev: Enumerable[A]): Reads[A] =
       Reads {
         case JsString(str) =>
           ev.get(str)
@@ -54,8 +43,7 @@ object Enumerable {
           JsError("error.invalid")
       }
 
-    @nowarn implicit def writes[A: Enumerable]: Writes[A] =
+    @nowarn given writes[A: Enumerable]: Writes[A] =
       Writes(value => JsString(value.toString))
   }
-
 }

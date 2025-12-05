@@ -27,6 +27,7 @@ import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
 import views.html.NameOfCharityRegulatorView
+import models.NameOfCharityRegulator
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -39,11 +40,11 @@ class NameOfCharityRegulatorController @Inject() (
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[String] = formProvider("nameOfCharityRegulator.error.required")
-  
-  
+  val form: Form[NameOfCharityRegulator] = formProvider("nameOfCharityRegulator.error.required")
+
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = OrganisationDetailsAnswers.getNameOfCharityRegulator
+    val previousAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
+
     Ok(view(form.withDefault(previousAnswer), mode))
   }
 
@@ -57,9 +58,9 @@ class NameOfCharityRegulatorController @Inject() (
             .save(OrganisationDetailsAnswers.setNameOfCharityRegulator(value))
             .map { _ =>
               if (mode == CheckMode) {
-                Redirect(routes.NameOfCharityRegulatorController.onPageLoad)
+                Redirect(routes.AboutTheOrganisationController.onPageLoad)
               } else {
-                Redirect(routes.NameOfCharityRegulatorController.onPageLoad(NormalMode))
+                Redirect(routes.AboutTheOrganisationController.onPageLoad)
               }
             }
       )

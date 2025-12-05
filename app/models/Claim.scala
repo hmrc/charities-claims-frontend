@@ -61,7 +61,7 @@ object RepaymentClaimDetails {
 }
 
 final case class OrganisationDetails(
-  nameOfCharityRegulator: String,
+  nameOfCharityRegulator: NameOfCharityRegulator,
   charityRegistrationNumber: String,
   areYouACorporateTrustee: Boolean,
   nameOfCorporateTrustee: String,

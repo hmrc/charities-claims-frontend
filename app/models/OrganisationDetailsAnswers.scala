@@ -20,7 +20,7 @@ import play.api.libs.json.Format
 import play.api.libs.json.Json
 
 final case class OrganisationDetailsAnswers(
-  nameOfCharityRegulator: Option[String] = None,
+  nameOfCharityRegulator: Option[NameOfCharityRegulator] = None,
   charityRegistrationNumber: Option[String] = None,
   areYouACorporateTrustee: Option[Boolean] = None,
   nameOfCorporateTrustee: Option[String] = None,
@@ -52,8 +52,10 @@ object OrganisationDetailsAnswers {
       corporateTrusteeDaytimeTelephoneNumber = Some(organisationDetails.corporateTrusteeDaytimeTelephoneNumber)
     )
 
-  def getNameOfCharityRegulator(using session: SessionData): Option[String] = get(_.nameOfCharityRegulator)
+  def getNameOfCharityRegulator(using session: SessionData): Option[NameOfCharityRegulator] = get(
+    _.nameOfCharityRegulator
+  )
 
-  def setNameOfCharityRegulator(value: String)(using session: SessionData): SessionData =
+  def setNameOfCharityRegulator(value: NameOfCharityRegulator)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(nameOfCharityRegulator = Some(v)))
 }

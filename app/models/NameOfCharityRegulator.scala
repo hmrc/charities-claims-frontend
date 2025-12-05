@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package forms
+package models
 
-import models.GenericFormMapper.{ConditionalRadioMapper, StringFieldMapper}
-import forms.Mappings
-import play.api.data.{Form, Mapping}
-import uk.gov.voa.play.form.ConditionalMappings
-import models.Enumerable
+import scala.util.Try
 
-import javax.inject.Inject
+enum NameOfCharityRegulator {
+  case EnglandAndWales, NorthernIreland, Scottish, NotRegistered
+}
 
-class RadioListFormProvider @Inject() extends Mappings {
-
-  def apply[A: Enumerable](
-    requiredKey: String
-  ): Form[A] =
-    Form("value" -> enumerable(requiredKey, requiredKey))
-
+object NameOfCharityRegulator extends Enumerable.Implicits {
+  given Enumerable[NameOfCharityRegulator] =
+    Enumerable[NameOfCharityRegulator](str => Try(NameOfCharityRegulator.valueOf(str)).toOption)
 }

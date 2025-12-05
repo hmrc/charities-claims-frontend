@@ -30,7 +30,7 @@ lazy val root = Project(appName, file("."))
       "views.ViewUtils.*",
       "views.html.components.*",
       "viewmodels.govuk.all.*",
-      "models.Mode"
+      "models.*"
     ),
     PlayKeys.playDefaultPort := 8030,
     scalacOptions ++= Seq(
@@ -42,7 +42,7 @@ lazy val root = Project(appName, file("."))
     pipelineStages := Seq(digest),
     Assets / pipelineStages := Seq(concat),
     addCommandAlias("runLocal", "run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes"),
-    scalafmtOnCompile := true
+    scalafmtOnCompile := true,
   )
   .settings(CodeCoverageSettings.settings*)
 
