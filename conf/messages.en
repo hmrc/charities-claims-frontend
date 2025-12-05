@@ -54,6 +54,7 @@ aboutTheOrganisation.paragraph.two = The person making this claim must be an app
 
 error.browser.title.prefix = Error:
 
+global.error.InternalServerError500.title = Sorry, there is a problem with this service
 global.error.InternalServerError500.heading = Sorry, there is a problem with this service
 global.error.InternalServerError500.message = Try again later or contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services">HMRC Online Services Helpdesk</a>.
 global.error.pageNotFound404.heading = Page not found
