@@ -32,6 +32,16 @@ object OrganisationDetailsAnswers {
 
   given Format[OrganisationDetailsAnswers] = Json.format[OrganisationDetailsAnswers]
 
+  private def get[A](f: OrganisationDetailsAnswers => Option[A])(using session: SessionData): Option[A] =
+    f(session.organisationDetailsAnswers)
+
+  private def set[A](value: A)(f: (OrganisationDetailsAnswers, A) => OrganisationDetailsAnswers)(using
+    session: SessionData
+  ): SessionData =
+    session.copy(
+      organisationDetailsAnswers = f(session.organisationDetailsAnswers, value)
+    )
+
   def from(organisationDetails: OrganisationDetails): OrganisationDetailsAnswers =
     OrganisationDetailsAnswers(
       nameOfCharityRegulator = Some(organisationDetails.nameOfCharityRegulator),
@@ -41,4 +51,9 @@ object OrganisationDetailsAnswers {
       corporateTrusteePostcode = Some(organisationDetails.corporateTrusteePostcode),
       corporateTrusteeDaytimeTelephoneNumber = Some(organisationDetails.corporateTrusteeDaytimeTelephoneNumber)
     )
+
+  def getNameOfCharityRegulator(using session: SessionData): Option[String] = get(_.nameOfCharityRegulator)
+
+  def setNameOfCharityRegulator(value: String)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(nameOfCharityRegulator = Some(v)))
 }

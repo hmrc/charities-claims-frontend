@@ -23,7 +23,7 @@ final case class SessionData(
   // if empty, the user has started a new claim
   unsubmittedClaimId: Option[String] = None,
   repaymentClaimDetailsAnswers: RepaymentClaimDetailsAnswers,
-  organisationDetailsAnswers: Option[OrganisationDetailsAnswers] = None,
+  organisationDetailsAnswers: OrganisationDetailsAnswers,
   giftAidScheduleDataAnswers: Option[GiftAidScheduleDataAnswers] = None,
   declarationDetailsAnswers: Option[DeclarationDetailsAnswers] = None,
   otherIncomeScheduleDataAnswers: Option[OtherIncomeScheduleDataAnswers] = None,
@@ -35,14 +35,15 @@ object SessionData {
   given Format[SessionData] = Json.format[SessionData]
 
   val empty: SessionData = SessionData(
-    repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers()
+    repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(),
+    organisationDetailsAnswers = OrganisationDetailsAnswers()
   )
 
   def from(claim: Claim): SessionData =
     SessionData(
       unsubmittedClaimId = Some(claim.claimId),
       repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers.from(claim.claimData.repaymentClaimDetails),
-      organisationDetailsAnswers = claim.claimData.organisationDetails.map(OrganisationDetailsAnswers.from),
+      organisationDetailsAnswers = OrganisationDetailsAnswers.from(claim.claimData.organisationDetails),
       giftAidScheduleDataAnswers = claim.claimData.giftAidScheduleData.map(GiftAidScheduleDataAnswers.from),
       declarationDetailsAnswers = claim.claimData.declarationDetails.map(DeclarationDetailsAnswers.from),
       otherIncomeScheduleDataAnswers = claim.claimData.otherIncomeScheduleData.map(OtherIncomeScheduleDataAnswers.from),

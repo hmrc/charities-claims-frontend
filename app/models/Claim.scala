@@ -34,7 +34,7 @@ object Claim {
 
 final case class ClaimData(
   repaymentClaimDetails: RepaymentClaimDetails,
-  organisationDetails: Option[OrganisationDetails] = None,
+  organisationDetails: OrganisationDetails,
   giftAidScheduleData: Option[GiftAidScheduleData] = None,
   declarationDetails: Option[DeclarationDetails] = None,
   otherIncomeScheduleData: Option[OtherIncomeScheduleData] = None,

@@ -52,6 +52,15 @@ aboutTheOrganisation.heading = About the organisation
 aboutTheOrganisation.paragraph.one = You need to provide information about the organisation you are claiming for.
 aboutTheOrganisation.paragraph.two = The person making this claim must be an approved official or corporate trustee recognised by HM Revenue Customs.
 
+nameOfCharityRegulator.caption = Provide organisation details
+nameOfCharityRegulator.title = What is the name of the charity regulator?
+nameOfCharityRegulator.heading = What is the name of the charity regulator?
+nameOfCharityRegulator.radio.one = Charity Commission for England and Wales
+nameOfCharityRegulator.radio.two = Charity Commission for Northern Ireland
+nameOfCharityRegulator.radio.three = Charity is not registered with a regulator
+nameOfCharityRegulator.radio.four = Office of the Scottish Charity Regulator
+nameOfCharityRegulator.error.required = Select the name of the charity regulator
+
 error.browser.title.prefix = Error:
 
 global.error.InternalServerError500.title = Sorry, there is a problem with this service
