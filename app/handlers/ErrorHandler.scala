@@ -38,6 +38,6 @@ class ErrorHandler @Inject() (
     rh: RequestHeader
   ): Future[Html] = {
     val request: Request[String] = Request(rh, "")
-    Future.successful(view(pageTitle, heading, message)(using request))
+    Future.successful(view(pageTitle, heading, message, showBackLink = true)(using request))
   }
 }

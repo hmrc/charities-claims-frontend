@@ -57,19 +57,22 @@ class DefaultAuthorisedAction @Inject() (
         case Some(affinityGroup @ AffinityGroup.Agent) ~ AuthorisedAction.HasActiveAgentEnrolment() =>
           block(AuthorisedRequest(request, affinityGroup))
         case Some(AffinityGroup.Agent) ~ _                                                          =>
-          Future.failed(UnsupportedAffinityGroup("Agent enrolment missing or not activated"))
+          Future.failed(InsufficientEnrolments("Agent enrolment missing or not activated"))
 
         case Some(affinityGroup @ AffinityGroup.Organisation) ~ AuthorisedAction.HasActiveOrganisationEnrolment() =>
           block(AuthorisedRequest(request, affinityGroup))
         case Some(AffinityGroup.Organisation) ~ _                                                                 =>
-          Future.failed(UnsupportedAffinityGroup("Organisation enrolment missing or not activated"))
+          Future.failed(InsufficientEnrolments("Organisation enrolment missing or not activated"))
 
         case _ =>
           Future.failed(UnsupportedAffinityGroup("No affinity group found"))
 
       }
-      .recover { case _: AuthorisationException =>
-        Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
+      .recover {
+        case _: InsufficientEnrolments | _: UnsupportedAffinityGroup =>
+          Redirect(controllers.routes.AccessDeniedController.onPageLoad)
+        case _: AuthorisationException                               =>
+          Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
       }
   }
 }
@@ -82,10 +85,10 @@ object AuthorisedAction {
 
   def hasActiveEnrolment(
     enrolments: Enrolments,
-    enrolmntKey: String,
+    enrolmentKey: String,
     identifierName: String
   ): Boolean =
-    enrolments.getEnrolment(enrolmntKey) match {
+    enrolments.getEnrolment(enrolmentKey) match {
       case Some(enrolment) if enrolment.isActivated =>
         enrolment.getIdentifier(identifierName).isDefined
 
