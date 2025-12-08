@@ -1,5 +1,20 @@
+
+aboutTheOrganisation.caption = Provide organisation details
+aboutTheOrganisation.heading = About the organisation
+aboutTheOrganisation.paragraph.one = You need to provide information about the organisation you are claiming for.
+aboutTheOrganisation.paragraph.two = The person making this claim must be an approved official or corporate trustee recognised by HM Revenue Customs.
+aboutTheOrganisation.title = About the organisation
 authLoginStub.title = Sign in using test credentials
 back.text = Back
+
+charityExcepted.bullet.1 = a church or chapel
+charityExcepted.bullet.2 = a charity that provides premises for schools
+charityExcepted.bullet.3 = a scout or guide group
+charityExcepted.bullet.4 = a charitable service of the Armed Forces
+charityExcepted.bullet.5 = a student union
+charityExcepted.heading = Your charity is excepted
+charityExcepted.p1 = Your charity is excepted as the charity's income is £100,000 or less and is classed as one of the following:
+charityExcepted.title = Your charity is excepted
 
 checkYourAnswers.gasds.label = Are you claiming for the Gift Aid Small Donations Scheme?
 checkYourAnswers.giftAid.change.hidden = if you are claiming Gift Aid
@@ -45,39 +60,32 @@ claimingOtherIncome.error.required = Select ‘Yes’ if you are claiming tax de
 claimingOtherIncome.heading = Are you claiming tax deducted from other income?
 claimingOtherIncome.paragraph =  Tax relief can include:
 claimingOtherIncome.title = Are you claiming tax deducted from other income?
-
-aboutTheOrganisation.caption = Provide organisation details
-aboutTheOrganisation.title = About the organisation
-aboutTheOrganisation.heading = About the organisation
-aboutTheOrganisation.paragraph.one = You need to provide information about the organisation you are claiming for.
-aboutTheOrganisation.paragraph.two = The person making this claim must be an approved official or corporate trustee recognised by HM Revenue Customs.
-
-nameOfCharityRegulator.caption = Provide organisation details
-nameOfCharityRegulator.title = What is the name of the charity regulator?
-nameOfCharityRegulator.heading = What is the name of the charity regulator?
-nameOfCharityRegulator.radio.one = Charity Commission for England and Wales
-nameOfCharityRegulator.radio.two = Charity Commission for Northern Ireland
-nameOfCharityRegulator.radio.three = Charity is not registered with a regulator
-nameOfCharityRegulator.radio.four = Office of the Scottish Charity Regulator
-nameOfCharityRegulator.radio.legend.one = Charity Commission for England and Wales
-nameOfCharityRegulator.radio.legend.two = Charity Commission for Northern Ireland
-nameOfCharityRegulator.radio.legend.three = Charity is not registered with a regulator
-nameOfCharityRegulator.radio.legend.four = Office of the Scottish Charity Regulator
-nameOfCharityRegulator.error.required = Select the name of the charity regulator
-
 error.browser.title.prefix = Error:
 
-global.error.InternalServerError500.title = Sorry, there is a problem with this service
 global.error.InternalServerError500.heading = Sorry, there is a problem with this service
 global.error.InternalServerError500.message = Try again later or contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services">HMRC Online Services Helpdesk</a>.
-global.error.pageNotFound404.heading = Page not found
-global.error.pageNotFound404.message = If you typed the web address, check it is correct.<br>If you pasted the web address, check you copied the entire address.<br>If the web address is correct or you selected a link or button, contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services">HMRC Online Services Helpdesk</a> if you need to speak to someone.
-global.error.accessDenied.title = Sorry, there is a problem with the service - Charities - GOV.UK
+global.error.InternalServerError500.title = Sorry, there is a problem with this service
 global.error.accessDenied.heading = Sorry, there is a problem with the service
 global.error.accessDenied.message = You do not have access to this service.<br><a class="govuk-link" rel="noreferrer noopener" href="https://www.tax.service.gov.uk/account">Continue to your account</a>.
+global.error.accessDenied.title = Sorry, there is a problem with the service - Charities - GOV.UK
+global.error.pageNotFound404.heading = Page not found
+global.error.pageNotFound404.message = If you typed the web address, check it is correct.<br>If you pasted the web address, check you copied the entire address.<br>If the web address is correct or you selected a link or button, contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services">HMRC Online Services Helpdesk</a> if you need to speak to someone.
 
 index.guidance = Hello
 index.heading = Charities Claims
+
+nameOfCharityRegulator.caption = Provide organisation details
+nameOfCharityRegulator.error.required = Select the name of the charity regulator
+nameOfCharityRegulator.heading = What is the name of the charity regulator?
+nameOfCharityRegulator.radio.four = Office of the Scottish Charity Regulator
+nameOfCharityRegulator.radio.legend.four = Office of the Scottish Charity Regulator
+nameOfCharityRegulator.radio.legend.one = Charity Commission for England and Wales
+nameOfCharityRegulator.radio.legend.three = Charity is not registered with a regulator
+nameOfCharityRegulator.radio.legend.two = Charity Commission for Northern Ireland
+nameOfCharityRegulator.radio.one = Charity Commission for England and Wales
+nameOfCharityRegulator.radio.three = Charity is not registered with a regulator
+nameOfCharityRegulator.radio.two = Charity Commission for Northern Ireland
+nameOfCharityRegulator.title = What is the name of the charity regulator?
 
 phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in a new tab)</a> will help us to improve it.
 phasebanner.phase=Beta
