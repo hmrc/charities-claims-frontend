@@ -17,9 +17,8 @@
 package forms
 
 import play.api.data.Forms.of
-import play.api.data.format.Formatter
+import models.*
 import play.api.data.FieldMapping
-import models._
 
 trait Mappings extends Formatters with Constraints {
 

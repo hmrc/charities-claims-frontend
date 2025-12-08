@@ -35,4 +35,3 @@ class IncompleteAnswersController @Inject() (
     Ok(view(routes.CheckYourAnswersController.onPageLoad.url))
   }
 }
-
