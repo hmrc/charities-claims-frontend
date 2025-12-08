@@ -17,7 +17,9 @@
 package forms
 
 import play.api.data.Forms.of
+import play.api.data.format.Formatter
 import play.api.data.FieldMapping
+import models._
 
 trait Mappings extends Formatters with Constraints {
 
@@ -27,6 +29,13 @@ trait Mappings extends Formatters with Constraints {
     args: Seq[String] = Seq.empty
   ): FieldMapping[Boolean] =
     of(using booleanFormatter(requiredKey, invalidKey, args))
+
+  def enumerable[A](
+    requiredKey: String = "error.required",
+    invalidKey: String = "error.invalid",
+    args: Seq[String] = Seq.empty
+  )(implicit ev: Enumerable[A]): FieldMapping[A] =
+    of(using enumerableFormatter[A](requiredKey, invalidKey, args))
 
   protected def text(
     requiredKey: String,

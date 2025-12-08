@@ -23,7 +23,7 @@ import views.html.ClaimReferenceNumberInputView
 import play.api.Application
 import forms.TextInputFormProvider
 import models.Mode.*
-import models.{RepaymentClaimDetailsAnswers, SessionData}
+import models.{OrganisationDetailsAnswers, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
 
 class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
@@ -70,8 +70,8 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
       "should render page not found if claiming reference number is empty" in {
 
-        val sessionData = SessionData(repaymentClaimDetailsAnswers =
-          RepaymentClaimDetailsAnswers(claimReferenceNumber = Some("123456"))
+        val sessionData = SessionData(
+          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimReferenceNumber = Some("123456"))
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -89,8 +89,9 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly" in {
 
-        val sessionData = SessionData(repaymentClaimDetailsAnswers =
-          RepaymentClaimDetailsAnswers(claimingReferenceNumber = Some(true), claimReferenceNumber = Some("123456"))
+        val sessionData = SessionData(
+          repaymentClaimDetailsAnswers =
+            RepaymentClaimDetailsAnswers(claimingReferenceNumber = Some(true), claimReferenceNumber = Some("123456"))
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -109,8 +110,9 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
       "should render the page not found and incorrectly pre-populate data" in {
 
-        val sessionData = SessionData(repaymentClaimDetailsAnswers =
-          RepaymentClaimDetailsAnswers(claimingReferenceNumber = Some(false), claimReferenceNumber = Some("123456"))
+        val sessionData = SessionData(
+          repaymentClaimDetailsAnswers =
+            RepaymentClaimDetailsAnswers(claimingReferenceNumber = Some(false), claimReferenceNumber = Some("123456"))
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()

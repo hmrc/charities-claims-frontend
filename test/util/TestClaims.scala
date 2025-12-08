@@ -16,11 +16,8 @@
 
 package util
 
-import models.GetClaimsResponse
+import models.{Claim, ClaimData, GetClaimsResponse, NameOfCharityRegulator, OrganisationDetails, RepaymentClaimDetails}
 import play.api.libs.json.Json
-import models.Claim
-import models.ClaimData
-import models.RepaymentClaimDetails
 
 object TestClaims {
 
@@ -58,4 +55,41 @@ object TestClaims {
       )
     )
 
+  def testClaimWithOrganisationDetailsOnly(
+    claimId: String = "123",
+    claimingTaxDeducted: Boolean = true,
+    claimingGiftAid: Boolean = true,
+    claimingUnderGasds: Boolean = false,
+    claimReferenceNumber: Option[String] = Some("1234567890"),
+    nameOfCharityRegulator: NameOfCharityRegulator = NameOfCharityRegulator.EnglandAndWales,
+    charityRegistrationNumber: String = "1234567890",
+    areYouACorporateTrustee: Boolean = true,
+    nameOfCorporateTrustee: String = "John Doe",
+    corporateTrusteePostcode: String = "AA1 2BB",
+    corporateTrusteeDaytimeTelephoneNumber: String = "07912345678"
+  ): Claim =
+    Claim(
+      claimId = claimId,
+      userId = TestUsers.organisation1,
+      claimSubmitted = false,
+      creationTimestamp = "2025-11-10T13:45:56.016Z",
+      claimData = ClaimData(
+        repaymentClaimDetails = RepaymentClaimDetails(
+          claimingTaxDeducted = claimingTaxDeducted,
+          claimingGiftAid = claimingGiftAid,
+          claimingUnderGasds = claimingUnderGasds,
+          claimReferenceNumber = claimReferenceNumber
+        ),
+        organisationDetails = Some(
+          OrganisationDetails(
+            nameOfCharityRegulator = nameOfCharityRegulator,
+            charityRegistrationNumber = charityRegistrationNumber,
+            areYouACorporateTrustee = areYouACorporateTrustee,
+            nameOfCorporateTrustee = nameOfCorporateTrustee,
+            corporateTrusteePostcode = corporateTrusteePostcode,
+            corporateTrusteeDaytimeTelephoneNumber = corporateTrusteeDaytimeTelephoneNumber
+          )
+        )
+      )
+    )
 }
