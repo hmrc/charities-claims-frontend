@@ -52,6 +52,15 @@ aboutTheOrganisation.heading = About the organisation
 aboutTheOrganisation.paragraph.one = You need to provide information about the organisation you are claiming for.
 aboutTheOrganisation.paragraph.two = The person making this claim must be an approved official or corporate trustee recognised by HM Revenue Customs.
 
+charityExcepted.title = Your charity is excepted
+charityExcepted.heading = Your charity is excepted
+charityExcepted.p1 = Your charity is excepted as the charity's income is £100,000 or less and is classed as one of the following:
+charityExcepted.bullet.1 = a church or chapel
+charityExcepted.bullet.2 = a charity that provides premises for schools
+charityExcepted.bullet.3 = a scout or guide group
+charityExcepted.bullet.4 = a charitable service of the Armed Forces
+charityExcepted.bullet.5 = a student union
+
 error.browser.title.prefix = Error:
 
 global.error.InternalServerError500.title = Sorry, there is a problem with this service

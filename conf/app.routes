@@ -43,3 +43,6 @@ POST        /check-your-claim-details        controllers.repaymentclaimdetails.C
 
 GET         /about-the-organisation                         controllers.organisationDetails.AboutTheOrganisationController.onPageLoad
 POST        /about-the-organisation                         controllers.organisationDetails.AboutTheOrganisationController.onSubmit
+
+GET         /charity-excepted                               controllers.organisationDetails.CharityExceptedController.onPageLoad
+POST        /charity-excepted                               controllers.organisationDetails.CharityExceptedController.onSubmit
