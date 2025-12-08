@@ -25,7 +25,10 @@ final case class OrganisationDetailsAnswers(
   areYouACorporateTrustee: Option[Boolean] = None,
   nameOfCorporateTrustee: Option[String] = None,
   corporateTrusteePostcode: Option[String] = None,
-  corporateTrusteeDaytimeTelephoneNumber: Option[String] = None
+  corporateTrusteeDaytimeTelephoneNumber: Option[String] = None,
+  corporateTrusteeTitle: Option[String] = None,
+  corporateTrusteeFirstName: Option[String] = None,
+  corporateTrusteeLastName: Option[String] = None
 )
 
 object OrganisationDetailsAnswers {
@@ -45,11 +48,14 @@ object OrganisationDetailsAnswers {
   def from(organisationDetails: OrganisationDetails): OrganisationDetailsAnswers =
     OrganisationDetailsAnswers(
       nameOfCharityRegulator = Some(organisationDetails.nameOfCharityRegulator),
-      charityRegistrationNumber = Some(organisationDetails.charityRegistrationNumber),
+      charityRegistrationNumber = organisationDetails.charityRegistrationNumber,
       areYouACorporateTrustee = Some(organisationDetails.areYouACorporateTrustee),
-      nameOfCorporateTrustee = Some(organisationDetails.nameOfCorporateTrustee),
-      corporateTrusteePostcode = Some(organisationDetails.corporateTrusteePostcode),
-      corporateTrusteeDaytimeTelephoneNumber = Some(organisationDetails.corporateTrusteeDaytimeTelephoneNumber)
+      nameOfCorporateTrustee = organisationDetails.nameOfCorporateTrustee,
+      corporateTrusteePostcode = organisationDetails.corporateTrusteePostcode,
+      corporateTrusteeDaytimeTelephoneNumber = organisationDetails.corporateTrusteeDaytimeTelephoneNumber,
+      corporateTrusteeTitle = organisationDetails.corporateTrusteeTitle,
+      corporateTrusteeFirstName = organisationDetails.corporateTrusteeFirstName,
+      corporateTrusteeLastName = organisationDetails.corporateTrusteeLastName
     )
 
   def getNameOfCharityRegulator(using session: SessionData): Option[NameOfCharityRegulator] = get(

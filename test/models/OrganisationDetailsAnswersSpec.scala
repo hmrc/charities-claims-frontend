@@ -40,11 +40,11 @@ class OrganisationDetailsAnswersSpec extends BaseSpec {
     "be created from OrganisationDetails" in {
       val organisationDetails = OrganisationDetails(
         nameOfCharityRegulator = NameOfCharityRegulator.EnglandAndWales,
-        charityRegistrationNumber = "1234567890",
+        charityRegistrationNumber = Some("1234567890"),
         areYouACorporateTrustee = true,
-        nameOfCorporateTrustee = "John Doe",
-        corporateTrusteePostcode = "AA1 2BB",
-        corporateTrusteeDaytimeTelephoneNumber = "07912345678"
+        nameOfCorporateTrustee = Some("John Doe"),
+        corporateTrusteePostcode = Some("AA1 2BB"),
+        corporateTrusteeDaytimeTelephoneNumber = Some("07912345678")
       )
 
       val organisationDetailsAnswers = OrganisationDetailsAnswers.from(organisationDetails)

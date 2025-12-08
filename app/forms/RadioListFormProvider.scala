@@ -16,11 +16,9 @@
 
 package forms
 
-import models.GenericFormMapper.{ConditionalRadioMapper, StringFieldMapper}
 import forms.Mappings
-import play.api.data.{Form, Mapping}
-import uk.gov.voa.play.form.ConditionalMappings
 import models.Enumerable
+import play.api.data.Form
 
 import javax.inject.Inject
 

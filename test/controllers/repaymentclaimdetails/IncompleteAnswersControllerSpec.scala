@@ -45,4 +45,3 @@ class IncompleteAnswersControllerSpec extends ControllerSpec {
     }
   }
 }
-
