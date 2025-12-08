@@ -24,6 +24,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ClaimsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.CheckYourAnswersView
+import views.html.IncompleteAnswersView
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,7 +33,8 @@ class CheckYourAnswersController @Inject() (
   actions: Actions,
   claimsService: ClaimsService,
   val controllerComponents: MessagesControllerComponents,
-  view: CheckYourAnswersView
+  view: CheckYourAnswersView,
+  incompleteAnswersView: IncompleteAnswersView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -50,6 +52,6 @@ class CheckYourAnswersController @Inject() (
           "next-page-after-check-your-answers"
         )
       }
-    else Future.successful(Redirect(routes.ClaimingGiftAidController.onPageLoad(NormalMode)))
+    else Future.successful(BadRequest(incompleteAnswersView(routes.CheckYourAnswersController.onPageLoad.url)))
   }
 }
