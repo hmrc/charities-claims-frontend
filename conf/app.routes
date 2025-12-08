@@ -44,5 +44,7 @@ POST        /check-your-claim-details        controllers.repaymentclaimdetails.C
 GET         /about-the-organisation                         controllers.organisationDetails.AboutTheOrganisationController.onPageLoad
 POST        /about-the-organisation                         controllers.organisationDetails.AboutTheOrganisationController.onSubmit
 
-GET         /charity-excepted                               controllers.organisationDetails.CharityExceptedController.onPageLoad
-POST        /charity-excepted                               controllers.organisationDetails.CharityExceptedController.onSubmit
+GET         /name-of-charity-regulator                      controllers.organisationDetails.NameOfCharityRegulatorController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-name-of-charity-regulator                      controllers.organisationDetails.NameOfCharityRegulatorController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /name-of-charity-regulator                      controllers.organisationDetails.NameOfCharityRegulatorController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-name-of-charity-regulator                      controllers.organisationDetails.NameOfCharityRegulatorController.onSubmit(mode: Mode = Mode.CheckMode)

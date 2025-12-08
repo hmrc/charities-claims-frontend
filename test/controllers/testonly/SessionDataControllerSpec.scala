@@ -22,8 +22,7 @@ import controllers.ControllerSpec
 import play.api.Application
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.libs.json.Json
-import models.SessionData
-import models.RepaymentClaimDetailsAnswers
+import models.{NameOfCharityRegulator, OrganisationDetailsAnswers, RepaymentClaimDetailsAnswers, SessionData}
 import repositories.SessionCache
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.SessionId
@@ -64,7 +63,11 @@ class SessionDataControllerSpec extends ControllerSpec {
         application.injector
           .instanceOf[SessionCache]
           .store(
-            SessionData(repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)))
+            SessionData(
+              repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+              organisationDetailsAnswers =
+                Some(OrganisationDetailsAnswers(nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales)))
+            )
           )
 
         running(application) {
@@ -115,8 +118,13 @@ class SessionDataControllerSpec extends ControllerSpec {
               .withFormUrlEncodedBody(
                 "sessionData" -> Json
                   .toJson(
-                    SessionData(repaymentClaimDetailsAnswers =
-                      RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true))
+                    SessionData(
+                      repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+                      organisationDetailsAnswers = Some(
+                        OrganisationDetailsAnswers(nameOfCharityRegulator =
+                          Some(NameOfCharityRegulator.EnglandAndWales)
+                        )
+                      )
                     )
                   )
                   .toString()
@@ -143,8 +151,13 @@ class SessionDataControllerSpec extends ControllerSpec {
               .withFormUrlEncodedBody(
                 "sessionData" -> Json
                   .toJson(
-                    SessionData(repaymentClaimDetailsAnswers =
-                      RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true))
+                    SessionData(
+                      repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+                      organisationDetailsAnswers = Some(
+                        OrganisationDetailsAnswers(nameOfCharityRegulator =
+                          Some(NameOfCharityRegulator.EnglandAndWales)
+                        )
+                      )
                     )
                   )
                   .toString()

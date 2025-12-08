@@ -19,6 +19,7 @@ package controllers.organisationDetails
 import com.google.inject.Inject
 import play.api.i18n.I18nSupport
 import controllers.actions.Actions
+import models.Mode.*
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.AboutTheOrganisationView
@@ -32,11 +33,11 @@ class AboutTheOrganisationController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     Ok(view())
   }
 
-  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Redirect(routes.AboutTheOrganisationController.onPageLoad))
+  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    Future.successful(Redirect(routes.NameOfCharityRegulatorController.onPageLoad(NormalMode)))
   }
 }

@@ -18,7 +18,13 @@ package services
 
 import connectors.{ClaimsConnector, MissingRequiredFieldsException}
 import models.requests.DataRequest
-import models.{GetClaimsResponse, RepaymentClaimDetails, RepaymentClaimDetailsAnswers, SessionData}
+import models.{
+  GetClaimsResponse,
+  OrganisationDetailsAnswers,
+  RepaymentClaimDetails,
+  RepaymentClaimDetailsAnswers,
+  SessionData
+}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HeaderCarrier

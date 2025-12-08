@@ -30,6 +30,16 @@ class SessionDataSpec extends BaseSpec {
           claimingUnderGasds = Some(true),
           claimingReferenceNumber = Some(true),
           claimReferenceNumber = Some("1234567890")
+        ),
+        organisationDetailsAnswers = Some(
+          OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales),
+            charityRegistrationNumber = Some("1137948"),
+            areYouACorporateTrustee = Some(true),
+            nameOfCorporateTrustee = Some("Joe Bloggs"),
+            corporateTrusteePostcode = Some("AB12 3YZ"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("071234567890")
+          )
         )
       )
       val json                    = Json.toJson(sessionData)

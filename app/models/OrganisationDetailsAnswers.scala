@@ -20,7 +20,7 @@ import play.api.libs.json.Format
 import play.api.libs.json.Json
 
 final case class OrganisationDetailsAnswers(
-  nameOfCharityRegulator: Option[String] = None,
+  nameOfCharityRegulator: Option[NameOfCharityRegulator] = None,
   charityRegistrationNumber: Option[String] = None,
   areYouACorporateTrustee: Option[Boolean] = None,
   nameOfCorporateTrustee: Option[String] = None,
@@ -32,6 +32,16 @@ object OrganisationDetailsAnswers {
 
   given Format[OrganisationDetailsAnswers] = Json.format[OrganisationDetailsAnswers]
 
+  private def get[A](f: OrganisationDetailsAnswers => Option[A])(using session: SessionData): Option[A] =
+    session.organisationDetailsAnswers.flatMap(f)
+
+  private def set[A](value: A)(f: (OrganisationDetailsAnswers, A) => OrganisationDetailsAnswers)(using
+    session: SessionData
+  ): SessionData =
+    session.copy(
+      organisationDetailsAnswers = session.organisationDetailsAnswers.map(answers => f(answers, value))
+    )
+
   def from(organisationDetails: OrganisationDetails): OrganisationDetailsAnswers =
     OrganisationDetailsAnswers(
       nameOfCharityRegulator = Some(organisationDetails.nameOfCharityRegulator),
@@ -41,4 +51,11 @@ object OrganisationDetailsAnswers {
       corporateTrusteePostcode = Some(organisationDetails.corporateTrusteePostcode),
       corporateTrusteeDaytimeTelephoneNumber = Some(organisationDetails.corporateTrusteeDaytimeTelephoneNumber)
     )
+
+  def getNameOfCharityRegulator(using session: SessionData): Option[NameOfCharityRegulator] = get(
+    _.nameOfCharityRegulator
+  )
+
+  def setNameOfCharityRegulator(value: NameOfCharityRegulator)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(nameOfCharityRegulator = Some(v)))
 }

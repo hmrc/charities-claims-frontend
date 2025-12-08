@@ -31,8 +31,8 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
     "onPageLoad" - {
       "should render the page correctly when claiming reference number is true" in {
 
-        val sessionData = SessionData(repaymentClaimDetailsAnswers =
-          RepaymentClaimDetailsAnswers(
+        val sessionData = SessionData(
+          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
             claimingGiftAid = Some(true),
             claimingTaxDeducted = Some(false),
             claimingUnderGasds = Some(true),
@@ -59,8 +59,8 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
 
       "should render the page correctly when claiming reference number is false " in {
 
-        val sessionData = SessionData(repaymentClaimDetailsAnswers =
-          RepaymentClaimDetailsAnswers(
+        val sessionData = SessionData(
+          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
             claimingGiftAid = Some(true),
             claimingTaxDeducted = Some(false),
             claimingUnderGasds = Some(true),
@@ -87,8 +87,8 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
 
       "should render the page correctly when some answers are missing" in {
 
-        val sessionData = SessionData(repaymentClaimDetailsAnswers =
-          RepaymentClaimDetailsAnswers(
+        val sessionData = SessionData(
+          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
             claimingGiftAid = Some(true),
             claimingTaxDeducted = None,
             claimingUnderGasds = Some(true),
@@ -119,8 +119,8 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
   "onSubmit" - {
     "should save the claim and redirect to the next page" in {
 
-      val sessionData = SessionData(repaymentClaimDetailsAnswers =
-        RepaymentClaimDetailsAnswers(
+      val sessionData = SessionData(
+        repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(false),
           claimingUnderGasds = Some(true),
@@ -147,8 +147,8 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
 
     "should redirect to the start of the application if the answers are not complete" in {
 
-      val sessionData = SessionData(repaymentClaimDetailsAnswers =
-        RepaymentClaimDetailsAnswers(
+      val sessionData = SessionData(
+        repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = None,
           claimingUnderGasds = Some(true),

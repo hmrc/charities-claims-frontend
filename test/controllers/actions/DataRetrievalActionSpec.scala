@@ -21,7 +21,7 @@ import play.api.test.Helpers.*
 import util.{BaseSpec, TestClaims}
 import connectors.ClaimsConnector
 import uk.gov.hmrc.auth.core.AffinityGroup
-import models.{GetClaimsResponse, RepaymentClaimDetailsAnswers, SessionData}
+import models.{GetClaimsResponse, OrganisationDetailsAnswers, RepaymentClaimDetailsAnswers, SessionData}
 import models.requests.{AuthorisedRequest, DataRequest}
 import play.api.mvc.Results.*
 import repositories.SessionCache
@@ -112,11 +112,10 @@ class DataRetrievalActionSpec extends BaseSpec {
           req.sessionData shouldBe
             SessionData.from(TestClaims.testClaimWithRepaymentClaimDetailsOnly())
 
-          req.sessionData.repaymentClaimDetailsAnswers shouldBe
+          req.sessionData.repaymentClaimDetailsAnswers   shouldBe
             RepaymentClaimDetailsAnswers.from(
               TestClaims.testClaimWithRepaymentClaimDetailsOnly().claimData.repaymentClaimDetails
             )
-
           req.sessionData.organisationDetailsAnswers     shouldBe None
           req.sessionData.giftAidScheduleDataAnswers     shouldBe None
           req.sessionData.declarationDetailsAnswers      shouldBe None

@@ -17,6 +17,7 @@
 package controllers.organisationDetails
 
 import controllers.ControllerSpec
+import models.Mode.NormalMode
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -54,7 +55,7 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.AboutTheOrganisationController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(routes.NameOfCharityRegulatorController.onPageLoad(NormalMode).url)
         }
       }
     }
