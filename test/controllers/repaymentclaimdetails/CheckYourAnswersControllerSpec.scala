@@ -20,11 +20,9 @@ import play.api.test.FakeRequest
 import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
 import views.html.CheckYourAnswersView
-import views.html.IncompleteAnswersView
 import play.api.Application
 import models.RepaymentClaimDetailsAnswers
 import models.*
-import models.Mode.NormalMode
 
 class CheckYourAnswersControllerSpec extends ControllerSpec {
 
@@ -146,7 +144,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
       }
     }
 
-    "should show the incomplete answers error page if the answers are not complete" in {
+    "should redirect to the incomplete answers page if the answers are not complete" in {
 
       val sessionData = SessionData(
         repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
@@ -167,11 +165,9 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[IncompleteAnswersView]
+        status(result) shouldEqual SEE_OTHER
 
-        status(result) shouldEqual BAD_REQUEST
-
-        contentAsString(result) shouldEqual view(routes.CheckYourAnswersController.onPageLoad.url).body
+        redirectLocation(result) shouldEqual Some(routes.IncompleteAnswersController.onPageLoad.url)
 
       }
     }
