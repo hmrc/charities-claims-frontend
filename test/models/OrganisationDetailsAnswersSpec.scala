@@ -25,6 +25,7 @@ class OrganisationDetailsAnswersSpec extends BaseSpec {
     "be serializable and deserializable" in {
       val organisationDetailsAnswers = OrganisationDetailsAnswers(
         nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales),
+        reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.lowIncome),
         charityRegistrationNumber = Some("1234567890"),
         areYouACorporateTrustee = Some(true),
         nameOfCorporateTrustee = Some("John Doe"),
@@ -40,6 +41,7 @@ class OrganisationDetailsAnswersSpec extends BaseSpec {
     "be created from OrganisationDetails" in {
       val organisationDetails = OrganisationDetails(
         nameOfCharityRegulator = NameOfCharityRegulator.EnglandAndWales,
+        reasonNotRegisteredWithRegulator = ReasonNotRegisteredWithRegulator.lowIncome,
         charityRegistrationNumber = "1234567890",
         areYouACorporateTrustee = true,
         nameOfCorporateTrustee = "John Doe",
@@ -51,6 +53,7 @@ class OrganisationDetailsAnswersSpec extends BaseSpec {
 
       organisationDetailsAnswers shouldBe OrganisationDetailsAnswers(
         nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales),
+        reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.lowIncome),
         charityRegistrationNumber = Some("1234567890"),
         areYouACorporateTrustee = Some(true),
         nameOfCorporateTrustee = Some("John Doe"),

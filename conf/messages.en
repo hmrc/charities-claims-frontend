@@ -87,6 +87,15 @@ nameOfCharityRegulator.radio.three = Charity is not registered with a regulator
 nameOfCharityRegulator.radio.two = Charity Commission for Northern Ireland
 nameOfCharityRegulator.title = What is the name of the charity regulator?
 
+reasonNotRegisteredWithRegulator.caption = Provide organisation details
+reasonNotRegisteredWithRegulator.title = Why is the charity not registered with a regulator?
+reasonNotRegisteredWithRegulator.heading = Why is the charity not registered with a regulator?
+reasonNotRegisteredWithRegulator.radio.lowIncome = Your charity is located in England or Wales and your income is less than £5,000 per year
+reasonNotRegisteredWithRegulator.radio.excepted = Your charity is excepted
+reasonNotRegisteredWithRegulator.radio.exempt = Your charity is exempt
+reasonNotRegisteredWithRegulator.radio.waiting = Your charity is based in Northern Ireland and you are awaiting registration with the CCNI
+reasonNotRegisteredWithRegulator.error.required = Select why the charity is not registered with a regulator
+
 phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in a new tab)</a> will help us to improve it.
 phasebanner.phase=Beta
 
