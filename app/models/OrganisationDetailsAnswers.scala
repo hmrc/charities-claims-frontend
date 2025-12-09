@@ -21,6 +21,7 @@ import play.api.libs.json.Json
 
 final case class OrganisationDetailsAnswers(
   nameOfCharityRegulator: Option[NameOfCharityRegulator] = None,
+  reasonNotRegisteredWithRegulator: Option[ReasonNotRegisteredWithRegulator] = None,
   charityRegistrationNumber: Option[String] = None,
   areYouACorporateTrustee: Option[Boolean] = None,
   nameOfCorporateTrustee: Option[String] = None,
@@ -41,13 +42,15 @@ object OrganisationDetailsAnswers {
   private def set[A](value: A)(f: (OrganisationDetailsAnswers, A) => OrganisationDetailsAnswers)(using
     session: SessionData
   ): SessionData =
-    session.copy(
-      organisationDetailsAnswers = session.organisationDetailsAnswers.map(answers => f(answers, value))
-    )
+    val updated = session.organisationDetailsAnswers match
+      case Some(existing) => f(existing, value)
+      case None           => f(OrganisationDetailsAnswers(), value)
+    session.copy(organisationDetailsAnswers = Some(updated))
 
   def from(organisationDetails: OrganisationDetails): OrganisationDetailsAnswers =
     OrganisationDetailsAnswers(
       nameOfCharityRegulator = Some(organisationDetails.nameOfCharityRegulator),
+      reasonNotRegisteredWithRegulator = organisationDetails.reasonNotRegisteredWithRegulator,
       charityRegistrationNumber = organisationDetails.charityRegistrationNumber,
       areYouACorporateTrustee = Some(organisationDetails.areYouACorporateTrustee),
       nameOfCorporateTrustee = organisationDetails.nameOfCorporateTrustee,
@@ -64,4 +67,13 @@ object OrganisationDetailsAnswers {
 
   def setNameOfCharityRegulator(value: NameOfCharityRegulator)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(nameOfCharityRegulator = Some(v)))
+
+  def getReasonNotRegisteredWithRegulator(using session: SessionData): Option[ReasonNotRegisteredWithRegulator] = get(
+    _.reasonNotRegisteredWithRegulator
+  )
+
+  def setReasonNotRegisteredWithRegulator(value: ReasonNotRegisteredWithRegulator)(using
+    session: SessionData
+  ): SessionData =
+    set(value)((a, v) => a.copy(reasonNotRegisteredWithRegulator = Some(v)))
 }
