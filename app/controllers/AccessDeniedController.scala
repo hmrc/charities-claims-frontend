@@ -31,8 +31,7 @@ class AccessDeniedController @Inject() (
       view(
         pageTitle = "global.error.accessDenied.title",
         heading = "global.error.accessDenied.heading",
-        message = "global.error.accessDenied.message",
-        showBackLink = false
+        message = "global.error.accessDenied.message"
       )
     )
   }
