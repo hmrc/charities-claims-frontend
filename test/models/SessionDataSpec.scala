@@ -34,6 +34,7 @@ class SessionDataSpec extends BaseSpec {
         organisationDetailsAnswers = Some(
           OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
             charityRegistrationNumber = Some("1137948"),
             areYouACorporateTrustee = Some(true),
             nameOfCorporateTrustee = Some("Joe Bloggs"),
