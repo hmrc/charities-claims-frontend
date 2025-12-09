@@ -13,8 +13,15 @@ charityExcepted.bullet.3 = a scout or guide group
 charityExcepted.bullet.4 = a charitable service of the Armed Forces
 charityExcepted.bullet.5 = a student union
 charityExcepted.heading = Your charity is excepted
-charityExcepted.p1 = Your charity is excepted as the charity's income is £100,000 or less and is classed as one of the following:
+charityExcepted.p1 = Your charity is excepted as the charity’s income is £100,000 or less and is classed as one of the following:
 charityExcepted.title = Your charity is excepted
+
+charityExempt.title = Your charity is exempt
+charityExempt.heading = Your charity is exempt
+charityExempt.p1 = Your charity is exempt from registering with a regulator because:
+charityExempt.bullet.1 = it is an educational institution such as a university or school
+charityExempt.bullet.2 = it is a museum or gallery
+charityExempt.bullet.3 = it is a housing association
 
 checkYourAnswers.gasds.label = Are you claiming for the Gift Aid Small Donations Scheme?
 checkYourAnswers.giftAid.change.hidden = if you are claiming Gift Aid
