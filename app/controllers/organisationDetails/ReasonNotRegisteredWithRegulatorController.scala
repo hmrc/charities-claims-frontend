@@ -59,8 +59,8 @@ class ReasonNotRegisteredWithRegulatorController @Inject() (
             .map { _ =>
               value match {
                 case ReasonNotRegisteredWithRegulator.Excepted => Redirect(routes.CharityExceptedController.onPageLoad)
-                case ReasonNotRegisteredWithRegulator.Exempt   => Redirect(routes.CharityExceptedController.onPageLoad)
-                case _                                         => Redirect(routes.CharityExceptedController.onPageLoad)
+                case ReasonNotRegisteredWithRegulator.Exempt   => Redirect(routes.CharityExemptController.onPageLoad)
+                case _                                         => Redirect(routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode))
               }
             }
       )

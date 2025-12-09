@@ -144,6 +144,23 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
+      "should redirect to the next page when the value is Exempt" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "Exempt")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.CharityExemptController.onPageLoad.url
+          )
+        }
+      }
+
       "should reload the page with errors when a required field is missing" in {
         given application: Application = applicationBuilder().build()
 

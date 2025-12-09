@@ -57,10 +57,10 @@ class NameOfCharityRegulatorController @Inject() (
           saveService
             .save(OrganisationDetailsAnswers.setNameOfCharityRegulator(value))
             .map { _ =>
-              if (mode == CheckMode) {
-                Redirect(routes.AboutTheOrganisationController.onPageLoad)
-              } else {
-                Redirect(routes.AboutTheOrganisationController.onPageLoad)
+              value match {
+                case NameOfCharityRegulator.None =>
+                  Redirect(routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode))
+                case _                           => Redirect(routes.NameOfCharityRegulatorController.onPageLoad(NormalMode))
               }
             }
       )
