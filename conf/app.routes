@@ -50,9 +50,12 @@ GET         /name-of-charity-regulator                      controllers.organisa
 GET         /change-name-of-charity-regulator                      controllers.organisationDetails.NameOfCharityRegulatorController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /name-of-charity-regulator                      controllers.organisationDetails.NameOfCharityRegulatorController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-name-of-charity-regulator                      controllers.organisationDetails.NameOfCharityRegulatorController.onSubmit(mode: Mode = Mode.CheckMode)
+
 GET         /charity-excepted                               controllers.organisationDetails.CharityExceptedController.onPageLoad
 POST        /charity-excepted                               controllers.organisationDetails.CharityExceptedController.onSubmit
 
+GET         /charity-exempt                              controllers.organisationDetails.CharityExemptController.onPageLoad
+POST        /charity-exempt                              controllers.organisationDetails.CharityExemptController.onSubmit
 GET         /charity-not-registered                      controllers.organisationDetails.ReasonNotRegisteredWithRegulatorController.onPageLoad(mode: Mode = Mode.NormalMode)
 GET         /change-charity-not-registered               controllers.organisationDetails.ReasonNotRegisteredWithRegulatorController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /charity-not-registered                      controllers.organisationDetails.ReasonNotRegisteredWithRegulatorController.onSubmit(mode: Mode = Mode.NormalMode)
