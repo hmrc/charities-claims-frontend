@@ -90,7 +90,7 @@ object AuthorisedAction {
   ): Boolean =
     enrolments.getEnrolment(enrolmentKey) match {
       case Some(enrolment) if enrolment.isActivated =>
-        enrolment.getIdentifier(identifierName).isDefined
+        enrolment.getIdentifier(identifierName).exists(_.value.nonEmpty)
 
       case _ => false
     }
