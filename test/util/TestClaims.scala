@@ -93,11 +93,11 @@ object TestClaims {
           OrganisationDetails(
             nameOfCharityRegulator = nameOfCharityRegulator,
             reasonNotRegisteredWithRegulator = reasonNotRegisteredWithRegulator,
-            charityRegistrationNumber = charityRegistrationNumber,
+            charityRegistrationNumber = Some(charityRegistrationNumber),
             areYouACorporateTrustee = areYouACorporateTrustee,
-            nameOfCorporateTrustee = nameOfCorporateTrustee,
-            corporateTrusteePostcode = corporateTrusteePostcode,
-            corporateTrusteeDaytimeTelephoneNumber = corporateTrusteeDaytimeTelephoneNumber
+            nameOfCorporateTrustee = Some(nameOfCorporateTrustee),
+            corporateTrusteePostcode = Some(corporateTrusteePostcode),
+            corporateTrusteeDaytimeTelephoneNumber = Some(corporateTrusteeDaytimeTelephoneNumber)
           )
         )
       )

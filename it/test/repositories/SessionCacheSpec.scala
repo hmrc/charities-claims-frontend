@@ -23,7 +23,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
 import play.api.Application
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import models.{RepaymentClaimDetailsAnswers, SessionData}
+import models.SessionData
 
 import java.util.UUID
 

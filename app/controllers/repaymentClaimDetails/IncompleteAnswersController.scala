@@ -20,35 +20,18 @@ import com.google.inject.Inject
 import controllers.actions.Actions
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.ClaimsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.CheckYourAnswersView
+import views.html.IncompleteAnswersView
 
-import scala.concurrent.{ExecutionContext, Future}
-
-class CheckYourAnswersController @Inject() (
+class IncompleteAnswersController @Inject() (
   override val messagesApi: MessagesApi,
   actions: Actions,
-  claimsService: ClaimsService,
   val controllerComponents: MessagesControllerComponents,
-  view: CheckYourAnswersView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController
+  view: IncompleteAnswersView
+) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(request.sessionData.repaymentClaimDetailsAnswers))
-  }
-
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if request.sessionData.repaymentClaimDetailsAnswers.hasCompleteAnswers
-    then
-      claimsService.save.map { _ =>
-        Redirect(
-          // TODO: replace with correct url when ready
-          "next-page-after-check-your-answers"
-        )
-      }
-    else Future.successful(Redirect(routes.IncompleteAnswersController.onPageLoad))
+    Ok(view(routes.CheckYourAnswersController.onPageLoad.url))
   }
 }

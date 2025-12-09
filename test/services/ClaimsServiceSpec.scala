@@ -16,22 +16,16 @@
 
 package services
 
-import connectors.{ClaimsConnector, MissingRequiredFieldsException}
-import models.requests.DataRequest
-import models.{
-  GetClaimsResponse,
-  OrganisationDetailsAnswers,
-  RepaymentClaimDetails,
-  RepaymentClaimDetailsAnswers,
-  SessionData
-}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import uk.gov.hmrc.http.HeaderCarrier
 import util.{BaseSpec, TestClaims}
+import connectors.{ClaimsConnector, MissingRequiredFieldsException}
+import uk.gov.hmrc.http.HeaderCarrier
+import models.*
+import models.requests.DataRequest
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class ClaimsServiceSpec extends BaseSpec {
 

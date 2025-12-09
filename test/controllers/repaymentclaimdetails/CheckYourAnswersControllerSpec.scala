@@ -23,7 +23,6 @@ import views.html.CheckYourAnswersView
 import play.api.Application
 import models.RepaymentClaimDetailsAnswers
 import models.*
-import models.Mode.NormalMode
 
 class CheckYourAnswersControllerSpec extends ControllerSpec {
 
@@ -145,7 +144,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
       }
     }
 
-    "should redirect to the start of the application if the answers are not complete" in {
+    "should redirect to the incomplete answers page if the answers are not complete" in {
 
       val sessionData = SessionData(
         repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
@@ -168,7 +167,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
 
         status(result) shouldEqual SEE_OTHER
 
-        redirectLocation(result) shouldEqual Some(routes.ClaimingGiftAidController.onPageLoad(NormalMode).url)
+        redirectLocation(result) shouldEqual Some(routes.IncompleteAnswersController.onPageLoad.url)
 
       }
     }

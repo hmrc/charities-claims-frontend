@@ -16,15 +16,15 @@
 
 package controllers.repaymentclaimdetails
 
-import play.api.test.FakeRequest
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import controllers.ControllerSpec
 import views.html.ClaimReferenceNumberInputView
 import play.api.Application
 import forms.TextInputFormProvider
-import models.Mode.*
-import models.{OrganisationDetailsAnswers, RepaymentClaimDetailsAnswers, SessionData}
+import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
+import play.api.test.FakeRequest
+import models.Mode.*
 
 class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 

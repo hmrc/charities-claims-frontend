@@ -25,6 +25,11 @@ checkYourAnswers.refNumber.label = What is your reference number?
 checkYourAnswers.taxDeducted.label = Are you claiming tax deducted from other income?
 checkYourAnswers.title = Check your claim details
 
+incompleteAnswers.heading = You have not provided all required details
+incompleteAnswers.message = You have missing data
+incompleteAnswers.returnLink = Return to check your answers
+incompleteAnswers.title = You have not provided all required details
+
 claimDeclaration.bullet.one =  I will provide accurate information in this claim
 claimDeclaration.heading = Declaration
 claimDeclaration.paragraph =  I declare that:
