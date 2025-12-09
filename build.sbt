@@ -35,14 +35,14 @@ lazy val root = Project(appName, file("."))
     PlayKeys.playDefaultPort := 8030,
     scalacOptions ++= Seq(
       "-feature",
-      "-Wconf:cat=deprecation:e,cat=feature:ws,cat=optimizer:ws,src=target/.*:s"
+      "-Wconf:cat=deprecation:e,cat=feature:w,src=target/.*:s"
     ),
     libraryDependencies ++= AppDependencies(),
     retrieveManaged := true,
     pipelineStages := Seq(digest),
     Assets / pipelineStages := Seq(concat),
     addCommandAlias("runLocal", "run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes"),
-    scalafmtOnCompile := true,
+    scalafmtOnCompile := true
   )
   .settings(CodeCoverageSettings.settings*)
 
@@ -55,4 +55,3 @@ lazy val it = project
   .in(file("it"))
   .enablePlugins(PlayScala)
   .dependsOn(root % "test->test") // the "test->test" allows reusing test code and test dependencies
-
