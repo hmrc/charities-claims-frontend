@@ -17,55 +17,55 @@
 @import controllers.organisationDetails.routes
 
 @this(
-layout: templates.Layout,
-formHelper: FormWithCSRF,
-govukErrorSummary: GovukErrorSummary,
-govukRadios: GovukRadios,
-govukButton: GovukButton
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukRadios: GovukRadios,
+    govukButton: GovukButton
 )
 
 @(form: Form[?], mode: Mode)(implicit request: Request[?], messages: Messages)
 
 @layout(
-pageTitle = title(form, messages("reasonNotRegisteredWithRegulator.title"))
-) {
-@if(form.errors.nonEmpty) {
-@govukErrorSummary(ErrorSummaryViewModel(form))
-}
+    pageTitle = title(form, messages("reasonNotRegisteredWithRegulator.title"))
+    ) {
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
 
-<span class="govuk-caption-l">@messages("reasonNotRegisteredWithRegulator.caption")</span>
-<h1 class="govuk-heading-l">@messages("reasonNotRegisteredWithRegulator.heading")</h1>
+        <span class="govuk-caption-l">@messages("reasonNotRegisteredWithRegulator.caption")</span>
+        <h1 class="govuk-heading-l">@messages("reasonNotRegisteredWithRegulator.heading")</h1>
 
-@formHelper(action = routes.ReasonNotRegisteredWithRegulatorController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+        @formHelper(action = routes.ReasonNotRegisteredWithRegulatorController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
-@govukRadios(
-RadiosViewModel(
-form("value"),
-items = List(
-RadioItem(
-id = Some(ReasonNotRegisteredWithRegulator.lowIncome.toString),
-value = Some(ReasonNotRegisteredWithRegulator.lowIncome.toString),
-content = Text(messages("reasonNotRegisteredWithRegulator.radio.lowIncome")),
-),
-RadioItem(
-id = Some(ReasonNotRegisteredWithRegulator.excepted.toString),
-value = Some(ReasonNotRegisteredWithRegulator.excepted.toString),
-content = Text(messages("reasonNotRegisteredWithRegulator.radio.excepted"))
-),
-RadioItem(
-id = Some(ReasonNotRegisteredWithRegulator.exempt.toString),
-value = Some(ReasonNotRegisteredWithRegulator.exempt.toString),
-content = Text(messages("reasonNotRegisteredWithRegulator.radio.exempt"))
-),
-RadioItem(
-id = Some(ReasonNotRegisteredWithRegulator.waiting.toString),
-value = Some(ReasonNotRegisteredWithRegulator.waiting.toString),
-content = Text(messages("reasonNotRegisteredWithRegulator.radio.waiting"))
-)
-),
-LegendViewModel(messages("reasonNotRegisteredWithRegulator.radio.legend.one")).visuallyHidden
-)
-)
-@govukButton(ButtonViewModel(Text(messages("site.continue"))))
-}
+        @govukRadios(
+            RadiosViewModel(
+                form("value"),
+                items = List(
+                    RadioItem(
+                        id = Some(ReasonNotRegisteredWithRegulator.LowIncome.toString),
+                        value = Some(ReasonNotRegisteredWithRegulator.LowIncome.toString),
+                        content = Text(messages("reasonNotRegisteredWithRegulator.radio.LowIncome")),
+                    ),
+                    RadioItem(
+                        id = Some(ReasonNotRegisteredWithRegulator.Excepted.toString),
+                        value = Some(ReasonNotRegisteredWithRegulator.Excepted.toString),
+                        content = Text(messages("reasonNotRegisteredWithRegulator.radio.Excepted"))
+                    ),
+                    RadioItem(
+                        id = Some(ReasonNotRegisteredWithRegulator.Exempt.toString),
+                        value = Some(ReasonNotRegisteredWithRegulator.Exempt.toString),
+                        content = Text(messages("reasonNotRegisteredWithRegulator.radio.Exempt"))
+                    ),
+                    RadioItem(
+                        id = Some(ReasonNotRegisteredWithRegulator.Waiting.toString),
+                        value = Some(ReasonNotRegisteredWithRegulator.Waiting.toString),
+                        content = Text(messages("reasonNotRegisteredWithRegulator.radio.Waiting"))
+                    )
+                ),
+                LegendViewModel(messages("reasonNotRegisteredWithRegulator.legend")).visuallyHidden
+            )
+        )
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+    }
 }

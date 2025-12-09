@@ -19,7 +19,7 @@ package models
 import scala.util.Try
 
 enum ReasonNotRegisteredWithRegulator {
-  case lowIncome, excepted, exempt, waiting
+  case LowIncome, Excepted, Exempt, Waiting
 }
 
 object ReasonNotRegisteredWithRegulator extends Enumerable.Implicits {

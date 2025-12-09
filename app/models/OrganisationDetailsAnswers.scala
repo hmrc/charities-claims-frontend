@@ -42,14 +42,15 @@ object OrganisationDetailsAnswers {
   private def set[A](value: A)(f: (OrganisationDetailsAnswers, A) => OrganisationDetailsAnswers)(using
     session: SessionData
   ): SessionData =
-    session.copy(
-      organisationDetailsAnswers = session.organisationDetailsAnswers.map(answers => f(answers, value))
-    )
+    val updated = session.organisationDetailsAnswers match
+      case Some(existing) => f(existing, value)
+      case None           => f(OrganisationDetailsAnswers(), value)
+    session.copy(organisationDetailsAnswers = Some(updated))
 
   def from(organisationDetails: OrganisationDetails): OrganisationDetailsAnswers =
     OrganisationDetailsAnswers(
       nameOfCharityRegulator = Some(organisationDetails.nameOfCharityRegulator),
-      reasonNotRegisteredWithRegulator = Some(organisationDetails.reasonNotRegisteredWithRegulator),
+      reasonNotRegisteredWithRegulator = organisationDetails.reasonNotRegisteredWithRegulator,
       charityRegistrationNumber = organisationDetails.charityRegistrationNumber,
       areYouACorporateTrustee = Some(organisationDetails.areYouACorporateTrustee),
       nameOfCorporateTrustee = organisationDetails.nameOfCorporateTrustee,

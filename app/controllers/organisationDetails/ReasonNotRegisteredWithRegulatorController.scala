@@ -58,9 +58,9 @@ class ReasonNotRegisteredWithRegulatorController @Inject() (
             .save(OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(value))
             .map { _ =>
               value match {
-                case ReasonNotRegisteredWithRegulator.excepted => Redirect(routes.CharityExceptedController.onPageLoad)
-                case ReasonNotRegisteredWithRegulator.exempt   => Redirect(routes.CharityExceptedController.onPageLoad)
-                case _                                         => Redirect(routes.NameOfCharityRegulatorController.onPageLoad(NormalMode))
+                case ReasonNotRegisteredWithRegulator.Excepted => Redirect(routes.CharityExceptedController.onPageLoad)
+                case ReasonNotRegisteredWithRegulator.Exempt   => Redirect(routes.CharityExceptedController.onPageLoad)
+                case _                                         => Redirect(routes.CharityExceptedController.onPageLoad)
               }
             }
       )

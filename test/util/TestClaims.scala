@@ -70,7 +70,9 @@ object TestClaims {
     claimingUnderGasds: Boolean = false,
     claimReferenceNumber: Option[String] = Some("1234567890"),
     nameOfCharityRegulator: NameOfCharityRegulator = NameOfCharityRegulator.EnglandAndWales,
-    reasonNotRegisteredWithRegulator: ReasonNotRegisteredWithRegulator = ReasonNotRegisteredWithRegulator.lowIncome,
+    reasonNotRegisteredWithRegulator: Option[ReasonNotRegisteredWithRegulator] = Some(
+      ReasonNotRegisteredWithRegulator.LowIncome
+    ),
     charityRegistrationNumber: String = "1234567890",
     areYouACorporateTrustee: Boolean = true,
     nameOfCorporateTrustee: String = "John Doe",
@@ -92,7 +94,7 @@ object TestClaims {
         organisationDetails = Some(
           OrganisationDetails(
             nameOfCharityRegulator = nameOfCharityRegulator,
-            reasonNotRegisteredWithRegulator = reasonNotRegisteredWithRegulator,
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
             charityRegistrationNumber = Some(charityRegistrationNumber),
             areYouACorporateTrustee = areYouACorporateTrustee,
             nameOfCorporateTrustee = Some(nameOfCorporateTrustee),
