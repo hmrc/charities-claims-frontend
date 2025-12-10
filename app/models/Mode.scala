@@ -19,16 +19,30 @@ package models
 import play.api.mvc.{JavascriptLiteral, QueryStringBindable}
 
 enum Mode {
-  case CheckMode, NormalMode
+  case CheckMode, NormalMode, WarningMode, WarningCheckMode
 }
 
 object Mode {
+
+  def isWarning(mode: Mode): Boolean = mode match {
+    case WarningMode | WarningCheckMode => true
+    case _                              => false
+  }
+
+  def toWarningMode(mode: Mode): Mode = mode match {
+    case CheckMode  => WarningCheckMode
+    case NormalMode => WarningMode
+    case _          => mode
+  }
+
   implicit val binder: QueryStringBindable[Mode] = new QueryStringBindable[Mode] {
     override def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, Mode]] =
       params.get(key).flatMap(_.headOption).map {
-        case "CheckMode"  => Right(CheckMode)
-        case "NormalMode" => Right(NormalMode)
-        case _            => Left("Invalid mode")
+        case "CheckMode"        => Right(CheckMode)
+        case "NormalMode"       => Right(NormalMode)
+        case "WarningMode"      => Right(WarningMode)
+        case "WarningCheckMode" => Right(WarningCheckMode)
+        case _                  => Left("Invalid mode")
       }
 
     override def unbind(key: String, value: Mode): String =
@@ -36,7 +50,9 @@ object Mode {
   }
 
   implicit val jsLiteral: JavascriptLiteral[Mode] = {
-    case NormalMode => "NormalMode"
-    case CheckMode  => "CheckMode"
+    case NormalMode       => "NormalMode"
+    case CheckMode        => "CheckMode"
+    case WarningMode      => "WarningMode"
+    case WarningCheckMode => "WarningCheckMode"
   }
 }

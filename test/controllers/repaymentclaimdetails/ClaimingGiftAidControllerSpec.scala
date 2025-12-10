@@ -22,7 +22,7 @@ import controllers.ControllerSpec
 import views.html.ClaimingGiftAidView
 import play.api.Application
 import forms.YesNoFormProvider
-import models.RepaymentClaimDetailsAnswers
+import models.{GiftAidScheduleDataAnswers, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
 import models.Mode.*
 
@@ -161,6 +161,93 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
           status(result) shouldEqual BAD_REQUEST
         }
       }
+
+//      "should redirect to warning page when changing to false with existing Gift Aid data in NormalMode" in {
+//        val sessionData = SessionData.empty.copy(
+//          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+//        )
+//
+//        given application: Application = applicationBuilder(sessionData = sessionData).build()
+//
+//        running(application) {
+//          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+//            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
+//              .withFormUrlEncodedBody("value" -> "false")
+//
+//          val result = route(application, request).value
+//
+//          status(result) shouldEqual SEE_OTHER
+//          redirectLocation(result) shouldEqual Some(routes.ClaimingGiftAidController.onPageLoad(WarningMode).url)
+//        }
+//      }
+
+//      "should redirect to same page with WarningMode when changing to false with existing Gift Aid data in NormalMode" in {
+//        val sessionData = SessionData.empty.copy(
+//          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+//        )
+//
+//        given application: Application = applicationBuilder(sessionData = sessionData).build()
+//
+//        running(application) {
+//          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+//            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
+//              .withFormUrlEncodedBody("value" -> "false")
+//
+//          val result = route(application, request).value
+//
+//          status(result) shouldEqual SEE_OTHER
+//          // check URL contains mode=warning parameter
+//          redirectLocation(result).value should include("mode=warning")
+//        }
+//      }
+
+//      "should redirect with WarningMode parameter when changing to false with existing Gift Aid data" in {
+//        val sessionData = SessionData.empty.copy(
+//          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+//        )
+//
+//        given application: Application = applicationBuilder(sessionData = sessionData).build()
+//
+//        running(application) {
+//          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+//            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
+//              .withFormUrlEncodedBody("value" -> "false")
+//
+//          val result = route(application, request).value
+//
+//          status(result) shouldEqual SEE_OTHER
+//
+//          // Check the redirect URL contains the WarningMode parameter
+//          val redirectUrl = redirectLocation(result).value
+//          redirectUrl should include("mode=WarningMode")
+//          // Or more specifically:
+//          // redirectUrl shouldEqual routes.ClaimingGiftAidController.onPageLoad(WarningMode).url
+//        }
+//      }
+
+    }
+
+    "onSubmit with WarningMode" - {
+      "should render warning when the value is false and warning is expected" in {
+        val sessionData = SessionData.empty.copy(
+          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.ClaimingGiftAidController.onPageLoad(WarningMode).url)
+        }
+      }
+
     }
   }
 }

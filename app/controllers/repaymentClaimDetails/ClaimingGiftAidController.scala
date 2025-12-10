@@ -52,15 +52,21 @@ class ClaimingGiftAidController @Inject() (
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
-          saveService
-            .save(RepaymentClaimDetailsAnswers.setClaimingGiftAid(value))
-            .map { _ =>
-              if (mode == CheckMode) {
-                Redirect(routes.CheckYourAnswersController.onPageLoad)
-              } else {
-                Redirect(routes.ClaimingOtherIncomeController.onPageLoad(NormalMode))
+          if !Mode.isWarning(mode) && RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(value)
+          then
+            Future.successful(
+              Redirect(routes.ClaimingGiftAidController.onPageLoad(Mode.toWarningMode(mode)))
+            )
+          else
+            saveService
+              .save(RepaymentClaimDetailsAnswers.setClaimingGiftAid(value))
+              .map { _ =>
+                if (mode == CheckMode) {
+                  Redirect(routes.CheckYourAnswersController.onPageLoad)
+                } else {
+                  Redirect(routes.ClaimingOtherIncomeController.onPageLoad(NormalMode))
+                }
               }
-            }
       )
   }
 }
