@@ -78,10 +78,9 @@ object OrganisationDetailsAnswers {
     session: SessionData
   ): SessionData =
     set(value)((a, v) => a.copy(reasonNotRegisteredWithRegulator = Some(v)))
-    
-    def getDoYouHaveUKAddress(using session: SessionData): Option[Boolean] = get( _.doYouHaveUKAddress)
 
-  def setDoYouHaveUKAddress(value: ReasonNotRegisteredWithRegulator)(using session: SessionData
-  ): SessionData =
+  def getDoYouHaveUKAddress(using session: SessionData): Option[Boolean] = get(_.doYouHaveUKAddress)
+
+  def setDoYouHaveUKAddress(value: Boolean)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(doYouHaveUKAddress = Some(v)))
 }

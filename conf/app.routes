@@ -60,3 +60,8 @@ GET         /charity-not-registered                      controllers.organisatio
 GET         /change-charity-not-registered               controllers.organisationDetails.ReasonNotRegisteredWithRegulatorController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /charity-not-registered                      controllers.organisationDetails.ReasonNotRegisteredWithRegulatorController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-charity-not-registered               controllers.organisationDetails.ReasonNotRegisteredWithRegulatorController.onSubmit(mode: Mode = Mode.CheckMode)
+
+GET         /corporate-trustee-address                      controllers.organisationDetails.CorporateTrusteeAddressController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-corporate-trustee-address               controllers.organisationDetails.CorporateTrusteeAddressController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /corporate-trustee-address                      controllers.organisationDetails.CorporateTrusteeAddressController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-corporate-trustee-address               controllers.organisationDetails.CorporateTrusteeAddressController.onSubmit(mode: Mode = Mode.CheckMode)
