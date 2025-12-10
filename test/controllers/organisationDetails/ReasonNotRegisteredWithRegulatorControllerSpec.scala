@@ -173,7 +173,24 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode).url
+            routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to the next page when the value is waiting" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "Waiting")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url
           )
         }
       }
