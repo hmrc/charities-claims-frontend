@@ -15,32 +15,28 @@
  *@
 
 @import controllers.repaymentclaimdetails.routes
+@import views.html.components.WarningBanner
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    warningBanner: WarningBanner
 )
 
 @(form: Form[?], mode: Mode, isWarning: Boolean = false)(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle    = title(form, messages("claimingGiftAid.title"))
+    pageTitle = title(form, messages("claimingGiftAid.title"))
 ) {
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
     @if(isWarning) {
-        <div class="govuk-warning-text">
-            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-            <strong class="govuk-warning-text__text">
-                <span class="govuk-warning-text__assistive">Warning</span>
-                You are about to change the claiming gift aid status and some of your previous Gift Aid data will be lost.
-            </strong>
-        </div>
+        @warningBanner("claimingGiftAid.warning")
     }
 
     <h1 class="govuk-heading-l">@messages("claimingGiftAid.heading")</h1>
