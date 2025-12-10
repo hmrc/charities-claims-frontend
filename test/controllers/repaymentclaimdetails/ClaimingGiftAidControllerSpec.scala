@@ -234,7 +234,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
           giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
         )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -244,7 +244,8 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.ClaimingGiftAidController.onPageLoad(WarningMode).url)
+          redirectLocation(result) shouldEqual Some(routes.ClaimingGiftAidController.onPageLoad(NormalMode).url)
+          flash(result).get("warning") shouldEqual Some("true")
         }
       }
 
