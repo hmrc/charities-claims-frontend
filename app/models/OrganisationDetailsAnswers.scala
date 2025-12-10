@@ -24,6 +24,7 @@ final case class OrganisationDetailsAnswers(
   reasonNotRegisteredWithRegulator: Option[ReasonNotRegisteredWithRegulator] = None,
   charityRegistrationNumber: Option[String] = None,
   areYouACorporateTrustee: Option[Boolean] = None,
+  doYouHaveUKAddress: Option[Boolean] = None,
   nameOfCorporateTrustee: Option[String] = None,
   corporateTrusteePostcode: Option[String] = None,
   corporateTrusteeDaytimeTelephoneNumber: Option[String] = None,
@@ -53,6 +54,7 @@ object OrganisationDetailsAnswers {
       reasonNotRegisteredWithRegulator = organisationDetails.reasonNotRegisteredWithRegulator,
       charityRegistrationNumber = organisationDetails.charityRegistrationNumber,
       areYouACorporateTrustee = Some(organisationDetails.areYouACorporateTrustee),
+      doYouHaveUKAddress = Some(organisationDetails.doYouHaveUKAddress),
       nameOfCorporateTrustee = organisationDetails.nameOfCorporateTrustee,
       corporateTrusteePostcode = organisationDetails.corporateTrusteePostcode,
       corporateTrusteeDaytimeTelephoneNumber = organisationDetails.corporateTrusteeDaytimeTelephoneNumber,
@@ -76,4 +78,10 @@ object OrganisationDetailsAnswers {
     session: SessionData
   ): SessionData =
     set(value)((a, v) => a.copy(reasonNotRegisteredWithRegulator = Some(v)))
+    
+    def getDoYouHaveUKAddress(using session: SessionData): Option[Boolean] = get( _.doYouHaveUKAddress)
+
+  def setDoYouHaveUKAddress(value: ReasonNotRegisteredWithRegulator)(using session: SessionData
+  ): SessionData =
+    set(value)((a, v) => a.copy(doYouHaveUKAddress = Some(v)))
 }
