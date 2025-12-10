@@ -106,6 +106,13 @@ reasonNotRegisteredWithRegulator.radio.Exempt = Your charity is exempt
 reasonNotRegisteredWithRegulator.radio.Waiting = Your charity is based in Northern Ireland and you are awaiting registration with the CCNI
 reasonNotRegisteredWithRegulator.error.required = Select why the charity is not registered with a regulator
 
+corporateTrusteeClaim.caption = Provide organisation details
+corporateTrusteeClaim.title = Is a corporate trustee making this claim?
+corporateTrusteeClaim.heading = Is a corporate trustee making this claim?
+corporateTrusteeClaim.paragraph = This can be the trust department of a bank, a trust company or trust corporation.
+corporateTrusteeClaim.error.required = Select Yes if this claim is being made by a corporate trustee
+
+
 corporateTrusteeAddress.caption = Provide organisation details
 corporateTrusteeAddress.error.required = Select the name of the charity regulator
 corporateTrusteeAddress.title = Does the corporate trustee have a UK address?

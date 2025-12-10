@@ -19,32 +19,30 @@ package controllers.organisationDetails
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
-import forms.RadioListFormProvider
+import forms.YesNoFormProvider
 import models.OrganisationDetailsAnswers
 import models.Mode
 import models.Mode.*
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.ReasonNotRegisteredWithRegulatorView
-import models.ReasonNotRegisteredWithRegulator
+import views.html.CorporateTrusteeClaimView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ReasonNotRegisteredWithRegulatorController @Inject() (
+class CorporateTrusteeClaimController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ReasonNotRegisteredWithRegulatorView,
+  view: CorporateTrusteeClaimView,
   actions: Actions,
-  formProvider: RadioListFormProvider,
+  formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[ReasonNotRegisteredWithRegulator] = formProvider("reasonNotRegisteredWithRegulator.error.required")
+  val form: Form[Boolean] = formProvider("corporateTrusteeClaim.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
-      OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
+    val previousAnswer = OrganisationDetailsAnswers.getAreYouACorporateTrustee
     Ok(view(form.withDefault(previousAnswer), mode))
   }
 
@@ -55,13 +53,10 @@ class ReasonNotRegisteredWithRegulatorController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
-            .save(OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(value))
+            .save(OrganisationDetailsAnswers.setAreYouACorporateTrustee(value))
             .map { _ =>
-              value match {
-                case ReasonNotRegisteredWithRegulator.Excepted => Redirect(routes.CharityExceptedController.onPageLoad)
-                case ReasonNotRegisteredWithRegulator.Exempt   => Redirect(routes.CharityExemptController.onPageLoad)
-                case _                                         => Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
-              }
+              // TODO: when screen has been developed
+              Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
             }
       )
   }

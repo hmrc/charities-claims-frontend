@@ -83,4 +83,9 @@ object OrganisationDetailsAnswers {
 
   def setDoYouHaveUKAddress(value: Boolean)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(doYouHaveUKAddress = Some(v)))
+
+  def getAreYouACorporateTrustee(using session: SessionData): Option[Boolean] = get(_.areYouACorporateTrustee)
+
+  def setAreYouACorporateTrustee(value: Boolean)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(areYouACorporateTrustee = Some(v)))
 }
