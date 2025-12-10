@@ -1,0 +1,55 @@
+/*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package controllers.organisationDetails
+
+import com.google.inject.Inject
+import controllers.actions.Actions
+import forms.CharityRegulatorNumberFormProvider
+import play.api.i18n.I18nSupport
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.CharityRegulatorNumberView
+
+import scala.concurrent.Future
+
+class CharityRegulatorNumberController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  actions: Actions,
+  formProvider: CharityRegulatorNumberFormProvider,
+  view: CharityRegulatorNumberView
+) extends FrontendBaseController
+    with I18nSupport {
+
+  val form = formProvider()
+
+  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+    Ok(view(form))
+  }
+
+  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        value =>
+          // TODO: Redirect to A2.6 - Corporate Trustee when that controller exists
+          // Future.successful(Redirect(routes.CorporateTrusteeController.onPageLoad))
+
+          Future.successful(Redirect(routes.CharityRegulatorNumberController.onPageLoad))
+      )
+  }
+}
