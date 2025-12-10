@@ -55,11 +55,8 @@ class CorporateTrusteeClaimController @Inject() (
           saveService
             .save(OrganisationDetailsAnswers.setAreYouACorporateTrustee(value))
             .map { _ =>
-              if (value) {
-                Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
-              } else {
-                Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
-              }
+              // TODO: when screen has been developed
+              Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
             }
       )
   }
