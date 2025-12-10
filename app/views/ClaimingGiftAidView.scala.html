@@ -33,6 +33,16 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
+    @if(isWarning) {
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-warning-text__assistive">Warning</span>
+                You are about to change the claiming gift aid status and some of your previous Gift Aid data will be lost.
+            </strong>
+        </div>
+    }
+
     <h1 class="govuk-heading-l">@messages("claimingGiftAid.heading")</h1>
 
     @formHelper(action = routes.ClaimingGiftAidController.onSubmit(mode), Symbol("autoComplete") -> "off") {
