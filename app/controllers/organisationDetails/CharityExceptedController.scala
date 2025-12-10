@@ -19,6 +19,7 @@ package controllers.organisationDetails
 import com.google.inject.Inject
 import play.api.i18n.I18nSupport
 import controllers.actions.Actions
+import models.Mode.NormalMode
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.CharityExceptedView
@@ -37,7 +38,6 @@ class CharityExceptedController @Inject() (
   }
 
   val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    // TODO: When ticket A2.6 is created, change this to: routes.CorporateTrusteeController.onPageLoad
-    Future.successful(Redirect(routes.CharityExceptedController.onPageLoad))
+    Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
   }
 }
