@@ -43,7 +43,7 @@ class ClaimingGiftAidController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingGiftAid
-    Ok(view(form.withDefault(previousAnswer), mode, isWarning)).retainWarning()
+    Ok(view(form.withDefault(warningAnswerBoolean.orElse(previousAnswer)), mode, isWarning))
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
@@ -53,10 +53,11 @@ class ClaimingGiftAidController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
-            if !isWarning && RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(value)
+            if hadNoWarningShown && RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(value)
             then
               Future.successful(
-                Redirect(routes.ClaimingGiftAidController.onPageLoad(mode)).withWarning()
+                Redirect(routes.ClaimingGiftAidController.onPageLoad(mode))
+                  .withWarning(value.toString)
               )
             else
               saveService

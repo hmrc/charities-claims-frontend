@@ -23,6 +23,7 @@ import models.requests.DataRequest
 import play.api.data.Form
 import play.api.mvc.Request
 import play.api.mvc.Result
+import play.api.mvc.AnyContent
 
 trait BaseController extends FrontendBaseController with I18nSupport {
 
@@ -34,14 +35,20 @@ trait BaseController extends FrontendBaseController with I18nSupport {
       optValue.map(form.fill).getOrElse(form)
   }
 
-  def isWarning(using request: Request[?]): Boolean =
+  def isWarning(using request: Request[AnyContent]): Boolean =
     request.flash.get("warning").contains("true")
 
-  extension (result: Result) {
-    def withWarning(): Result =
-      result.flashing("warning" -> "true")
+  def warningAnswerBoolean(using request: Request[AnyContent]): Option[Boolean] =
+    request.flash.get("warningAnswer").flatMap(_.toBooleanOption)
 
-    def retainWarning()(using request: Request[?]): Result =
-      result.flashing("warning" -> isWarning(using request).toString)
+  def warningAnswerString(using request: Request[AnyContent]): Option[String] =
+    request.flash.get("warningAnswer")
+
+  def hadNoWarningShown(using request: Request[AnyContent]): Boolean =
+    !request.body.asFormUrlEncoded.flatMap(_.get("warningShown").flatMap(_.headOption)).contains("true")
+
+  extension (result: Result) {
+    def withWarning(answer: String): Result =
+      result.flashing("warning" -> "true", "warningAnswer" -> answer)
   }
 }

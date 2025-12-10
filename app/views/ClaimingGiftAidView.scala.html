@@ -16,6 +16,7 @@
 
 @import controllers.repaymentclaimdetails.routes
 @import views.html.components.WarningBanner
+@import views.html.components.WarningParameter
 
 @this(
     layout: templates.Layout,
@@ -23,7 +24,8 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    warningBanner: WarningBanner
+    warningBanner: WarningBanner,
+    warningParameter: WarningParameter
 )
 
 @(form: Form[?], mode: Mode, isWarning: Boolean = false)(implicit request: Request[?], messages: Messages)
@@ -51,6 +53,8 @@
                 )
                 .withHint(HintViewModel(Text(messages("claimingGiftAid.hint"))))
         )
+
+        @warningParameter()
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
     }
