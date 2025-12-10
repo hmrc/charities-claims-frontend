@@ -58,6 +58,7 @@ claimingGiftAid.heading = Are you claiming Gift Aid?
 claimingGiftAid.hint = Select ‘Yes’ if you want to claim tax repayment on donations from a Gift Aid declaration.
 claimingGiftAid.legend = Are you claiming Gift Aid?
 claimingGiftAid.title = Are you claiming Gift Aid?
+claimingGiftAid.warning = TBC
 
 claimingGiftAidSmallDonations.error.required = Select ‘Yes’ if you are claiming for the Gift Aid Small Donations Scheme.
 claimingGiftAidSmallDonations.heading = Gift Aid Small Donations Scheme
@@ -129,3 +130,5 @@ site.enter = Enter
 site.govuk = GOV.UK
 site.no = No
 site.yes = Yes
+
+warning.text = Warning
