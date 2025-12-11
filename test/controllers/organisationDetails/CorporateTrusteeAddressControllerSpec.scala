@@ -30,8 +30,9 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
   private val form: Form[Boolean] = new YesNoFormProvider()()
   "CorporateTrusteeAddressController" - {
     "onPageLoad" - {
-      "should render the page correctly" in {
-        given application: Application = applicationBuilder().build()
+      "should render the page correctly if Corporate trustee is true" in {
+        val sessionData                = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -44,10 +45,8 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
           contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
-
-      "should render the page and pre-populate correctly with true value" in {
-
-        val sessionData = OrganisationDetailsAnswers.setDoYouHaveUKAddress(true)
+      "should render page not found if Corporate trustee is false" in {
+        val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -56,28 +55,9 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
             FakeRequest(GET, routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[CorporateTrusteeAddressView]
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
-        }
-      }
-
-      "should render the page and pre-populate correctly with false value" in {
-
-        val sessionData = OrganisationDetailsAnswers.setDoYouHaveUKAddress(false)
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[CorporateTrusteeAddressView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
         }
       }
     }

@@ -18,6 +18,7 @@ package controllers.organisationDetails
 
 import controllers.ControllerSpec
 import forms.CharityRegulatorNumberFormProvider
+import models.Mode.NormalMode
 import play.api.Application
 import play.api.i18n.MessagesApi
 import models.Mode.*

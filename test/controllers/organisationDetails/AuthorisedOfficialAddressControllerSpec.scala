@@ -22,7 +22,7 @@ import controllers.ControllerSpec
 import views.html.AuthorisedOfficialAddressView
 import play.api.Application
 import forms.YesNoFormProvider
-import models.{OrganisationDetailsAnswers, SessionData}
+import models.OrganisationDetailsAnswers
 import play.api.data.Form
 import models.Mode.*
 

@@ -19,6 +19,7 @@ package controllers.organisationDetails
 import com.google.inject.Inject
 import controllers.actions.Actions
 import forms.CharityRegulatorNumberFormProvider
+import models.Mode.NormalMode
 import play.api.i18n.I18nSupport
 import models.Mode.*
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}

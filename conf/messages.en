@@ -120,7 +120,7 @@ corporateTrusteeClaim.caption = Provide organisation details
 corporateTrusteeClaim.title = Is a corporate trustee making this claim?
 corporateTrusteeClaim.heading = Is a corporate trustee making this claim?
 corporateTrusteeClaim.paragraph = This can be the trust department of a bank, a trust company or trust corporation.
-corporateTrusteeClaim.error.required = Select Yes if this claim is being made by a corporate trustee
+corporateTrusteeClaim.error.required = Select if this claim is being made by a corporate trustee
 
 authorisedOfficialAddress.caption = Provide organisation details
 authorisedOfficialAddress.title = Does the authorised official have a UK address?
