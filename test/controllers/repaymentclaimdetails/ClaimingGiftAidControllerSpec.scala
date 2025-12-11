@@ -196,8 +196,10 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
-              .withFormUrlEncodedBody("value" -> "false")
-              .withFlash("warning" -> "true")
+              .withFormUrlEncodedBody(
+                "value" -> "false",
+                "warningShown" -> "true"
+              )
 
           val result = route(application, request).value
 
@@ -207,6 +209,24 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
         }
       }
 
+      "should not show warning when no previous giftAidScheduleDataAnswers data exists" in {
+        val sessionData = SessionData.empty.copy(
+          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(false))
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          flash(result).get("warning") shouldEqual None
+        }
+      }
     }
   }
 }
