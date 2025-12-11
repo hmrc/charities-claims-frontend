@@ -23,6 +23,7 @@ enum Mode {
 }
 
 object Mode {
+
   implicit val binder: QueryStringBindable[Mode] = new QueryStringBindable[Mode] {
     override def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, Mode]] =
       params.get(key).flatMap(_.headOption).map {

@@ -70,6 +70,53 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
         claimReferenceNumber = None
       )
     }
-  }
 
+    "setClaimingGiftAid" - {
+      "should delete giftAidScheduleDataAnswers when changing to false" in {
+        given session: SessionData = SessionData.empty.copy(
+          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+        )
+
+        val result = RepaymentClaimDetailsAnswers.setClaimingGiftAid(false)
+
+        result.giftAidScheduleDataAnswers                   shouldBe None
+        result.repaymentClaimDetailsAnswers.claimingGiftAid shouldBe Some(false)
+      }
+
+      "should keep giftAidScheduleDataAnswers when changing to true" in {
+        given session: SessionData = SessionData.empty.copy(
+          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+        )
+
+        val result = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
+
+        result.giftAidScheduleDataAnswers                   shouldBe Some(GiftAidScheduleDataAnswers())
+        result.repaymentClaimDetailsAnswers.claimingGiftAid shouldBe Some(true)
+      }
+    }
+
+    "shouldWarnAboutChangingClaimingGiftAid" - {
+      "should return true when value is false when there is Gift Aid data" in {
+        given session: SessionData = SessionData.empty.copy(
+          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+        )
+
+        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(false) shouldBe true
+      }
+
+      "should return false when setting value to true" in {
+        given session: SessionData = SessionData.empty.copy(
+          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+        )
+
+        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(true) shouldBe false
+      }
+
+      "should return false when no Gift Aid data exists" in {
+        given session: SessionData = SessionData.empty
+
+        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(false) shouldBe false
+      }
+    }
+  }
 }
