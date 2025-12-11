@@ -40,6 +40,7 @@ pageTitle = title(form, messages("charityRegulatorNumber.title"))
 
 @formHelper(action = routes.CharityRegulatorNumberController.onSubmit) {
 
+@govukInput(
 InputViewModel(
 field = form("value"),
 label = LabelViewModel(messages("charityRegulatorNumber.heading")).withCssClass("govuk-visually-hidden")
