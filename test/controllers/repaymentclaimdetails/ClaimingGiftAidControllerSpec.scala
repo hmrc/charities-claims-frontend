@@ -197,7 +197,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody(
-                "value" -> "false",
+                "value"        -> "false",
                 "warningShown" -> "true"
               )
 
