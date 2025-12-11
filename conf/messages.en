@@ -13,7 +13,7 @@ charityExcepted.bullet.3 = a scout or guide group
 charityExcepted.bullet.4 = a charitable service of the Armed Forces
 charityExcepted.bullet.5 = a student union
 charityExcepted.heading = Your charity is excepted
-charityExcepted.p1 = Your charity is excepted as the charity’s income is £100,000 or less and is classed as one of the following:
+charityExcepted.p1 = Your charity is excepted as the charity''s income is £100,000 or less and is classed as one of the following:
 charityExcepted.title = Your charity is excepted
 
 charityExempt.title = Your charity is exempt
@@ -22,6 +22,13 @@ charityExempt.p1 = Your charity is exempt from registering with a regulator beca
 charityExempt.bullet.1 = it is an educational institution such as a university or school
 charityExempt.bullet.2 = it is a museum or gallery
 charityExempt.bullet.3 = it is a housing association
+
+charityRegulatorNumber.title = What is the charity regulator number?
+charityRegulatorNumber.heading = What is the charity regulator number?
+charityRegulatorNumber.hint = This can be up to 20 numerical characters like 123456789 and does not include letters.
+charityRegulatorNumber.error.required = Enter a charity regulator number
+charityRegulatorNumber.error.format = Enter a charity regulator number in the correct format
+charityRegulatorNumber.error.length = Enter a charity regulator number in the correct format
 
 checkYourAnswers.gasds.label = Are you claiming for the Gift Aid Small Donations Scheme?
 checkYourAnswers.giftAid.change.hidden = if you are claiming Gift Aid
