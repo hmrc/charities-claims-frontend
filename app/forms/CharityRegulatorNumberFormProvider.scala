@@ -32,7 +32,11 @@ class CharityRegulatorNumberFormProvider @Inject() () {
       .verifying("charityRegulatorNumber.error.required", _.nonEmpty)
       .verifying(
         "charityRegulatorNumber.error.format",
-        value => value.isEmpty || (value.matches(numberRegex) && value.length <= maxLength)
+        value => value.isEmpty || value.matches(numberRegex)
+      )
+      .verifying(
+        "charityRegulatorNumber.error.length",
+        value => value.isEmpty || value.length <= maxLength
       )
   )
 }
