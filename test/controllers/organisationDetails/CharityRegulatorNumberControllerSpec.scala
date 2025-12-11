@@ -1,0 +1,96 @@
+/*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package controllers.organisationDetails
+
+import controllers.ControllerSpec
+import forms.CharityRegulatorNumberFormProvider
+import play.api.Application
+import play.api.i18n.MessagesApi
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
+import views.html.CharityRegulatorNumberView
+
+class CharityRegulatorNumberControllerSpec extends ControllerSpec {
+
+  val formProvider = new CharityRegulatorNumberFormProvider()
+  val form         = formProvider()
+
+  "CharityRegulatorNumberController" - {
+
+    "onPageLoad" - {
+      "should render the page correctly" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CharityRegulatorNumberController.onPageLoad.url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[CharityRegulatorNumberView]
+
+          val messages = application.injector.instanceOf[MessagesApi].preferred(request)
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(form)(request, messages).body
+        }
+      }
+    }
+
+    "onSubmit" - {
+      "should redirect to the next page when valid data is submitted" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          val request = FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit.url)
+            .withFormUrlEncodedBody("value" -> "12345678")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.CharityRegulatorNumberController.onPageLoad.url)
+        }
+      }
+
+      "should return BadRequest when invalid data (letters) is submitted" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          val request = FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit.url)
+            .withFormUrlEncodedBody("value" -> "123ABC")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual BAD_REQUEST
+        }
+      }
+
+      "should return BadRequest when empty data is submitted" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          val request = FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit.url)
+            .withFormUrlEncodedBody("value" -> "")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual BAD_REQUEST
+        }
+      }
+    }
+  }
+}

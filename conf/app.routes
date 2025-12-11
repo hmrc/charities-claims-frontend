@@ -56,6 +56,10 @@ POST        /charity-excepted                               controllers.organisa
 
 GET         /charity-exempt                              controllers.organisationDetails.CharityExemptController.onPageLoad
 POST        /charity-exempt                              controllers.organisationDetails.CharityExemptController.onSubmit
+
+GET         /charity-regulator-number                    controllers.organisationDetails.CharityRegulatorNumberController.onPageLoad
+POST        /charity-regulator-number                    controllers.organisationDetails.CharityRegulatorNumberController.onSubmit
+
 GET         /charity-not-registered                      controllers.organisationDetails.ReasonNotRegisteredWithRegulatorController.onPageLoad(mode: Mode = Mode.NormalMode)
 GET         /change-charity-not-registered               controllers.organisationDetails.ReasonNotRegisteredWithRegulatorController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /charity-not-registered                      controllers.organisationDetails.ReasonNotRegisteredWithRegulatorController.onSubmit(mode: Mode = Mode.NormalMode)
