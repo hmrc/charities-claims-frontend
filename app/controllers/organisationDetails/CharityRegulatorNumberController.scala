@@ -19,6 +19,7 @@ package controllers.organisationDetails
 import com.google.inject.Inject
 import controllers.actions.Actions
 import forms.CharityRegulatorNumberFormProvider
+import models.Mode.NormalMode
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -49,7 +50,7 @@ class CharityRegulatorNumberController @Inject() (
           // TODO: Redirect to A2.6 - Corporate Trustee when that controller exists
           // Future.successful(Redirect(routes.CorporateTrusteeController.onPageLoad))
 
-          Future.successful(Redirect(routes.CharityRegulatorNumberController.onPageLoad))
+          Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
       )
   }
 }
