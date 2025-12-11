@@ -60,7 +60,7 @@ class NameOfCharityRegulatorController @Inject() (
               value match {
                 case NameOfCharityRegulator.None =>
                   Redirect(routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode))
-                case _                           => Redirect(routes.NameOfCharityRegulatorController.onPageLoad(NormalMode))
+                case _                           => Redirect(routes.CharityRegulatorNumberController.onPageLoad)
               }
             }
       )
