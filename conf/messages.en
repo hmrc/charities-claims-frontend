@@ -25,10 +25,12 @@ charityExempt.bullet.3 = it is a housing association
 
 charityRegulatorNumber.title = What is the charity regulator number?
 charityRegulatorNumber.heading = What is the charity regulator number?
+charityRegulatorNumber.caption = Provide organisation details
 charityRegulatorNumber.hint = This can be up to 20 numerical characters like 123456789 and does not include letters.
 charityRegulatorNumber.error.required = Enter a charity regulator number
 charityRegulatorNumber.error.format = Enter a charity regulator number in the correct format
 charityRegulatorNumber.error.length = Enter a charity regulator number in the correct format
+
 
 checkYourAnswers.gasds.label = Are you claiming for the Gift Aid Small Donations Scheme?
 checkYourAnswers.giftAid.change.hidden = if you are claiming Gift Aid

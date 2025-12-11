@@ -21,6 +21,7 @@ import forms.CharityRegulatorNumberFormProvider
 import models.Mode.NormalMode
 import play.api.Application
 import play.api.i18n.MessagesApi
+import models.Mode.*
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.CharityRegulatorNumberView
