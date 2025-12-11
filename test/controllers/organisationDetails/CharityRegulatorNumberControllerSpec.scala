@@ -20,6 +20,7 @@ import controllers.ControllerSpec
 import forms.CharityRegulatorNumberFormProvider
 import play.api.Application
 import play.api.i18n.MessagesApi
+import models.Mode.*
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.CharityRegulatorNumberView
@@ -62,7 +63,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.CharityRegulatorNumberController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
         }
       }
 

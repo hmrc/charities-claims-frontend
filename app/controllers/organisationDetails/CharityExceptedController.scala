@@ -33,11 +33,11 @@ class CharityExceptedController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     Ok(view())
   }
 
-  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
   }
 }

@@ -136,7 +136,7 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.NameOfCharityRegulatorController.onPageLoad(NormalMode).url
+            routes.CharityRegulatorNumberController.onPageLoad.url
           )
         }
       }
@@ -153,7 +153,7 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.NameOfCharityRegulatorController.onPageLoad(NormalMode).url
+            routes.CharityRegulatorNumberController.onPageLoad.url
           )
         }
       }
@@ -170,7 +170,7 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.NameOfCharityRegulatorController.onPageLoad(NormalMode).url
+            routes.CharityRegulatorNumberController.onPageLoad.url
           )
         }
       }

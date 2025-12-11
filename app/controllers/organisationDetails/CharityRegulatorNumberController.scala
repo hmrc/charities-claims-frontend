@@ -20,6 +20,7 @@ import com.google.inject.Inject
 import controllers.actions.Actions
 import forms.CharityRegulatorNumberFormProvider
 import play.api.i18n.I18nSupport
+import models.Mode.*
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.CharityRegulatorNumberView
@@ -36,20 +37,16 @@ class CharityRegulatorNumberController @Inject() (
 
   val form = formProvider()
 
-  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     Ok(view(form))
   }
 
-  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          // TODO: Redirect to A2.6 - Corporate Trustee when that controller exists
-          // Future.successful(Redirect(routes.CorporateTrusteeController.onPageLoad))
-
-          Future.successful(Redirect(routes.CharityRegulatorNumberController.onPageLoad))
+        value => Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
       )
   }
 }
