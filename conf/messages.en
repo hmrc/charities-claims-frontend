@@ -124,7 +124,7 @@ authorisedOfficialAddress.caption = Provide organisation details
 authorisedOfficialAddress.title = Does the authorised official have a UK address?
 authorisedOfficialAddress.heading = Does the authorised official have a UK address?
 authorisedOfficialAddress.legend = Does the authorised official have a UK address?
-authorisedOfficialAddress.error.required = Select if the  authorised official has a UK address
+authorisedOfficialAddress.error.required = Select if the authorised official has a UK address
 
 corporateTrusteeAddress.caption = Provide organisation details
 corporateTrusteeAddress.title = Does the corporate trustee have a UK address?
