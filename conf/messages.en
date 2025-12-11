@@ -114,6 +114,13 @@ corporateTrusteeClaim.paragraph = This can be the trust department of a bank, a 
 corporateTrusteeClaim.error.required = Select Yes if this claim is being made by a corporate trustee
 
 
+corporateTrusteeAddress.caption = Provide organisation details
+corporateTrusteeAddress.error.required = Select the name of the charity regulator
+corporateTrusteeAddress.title = Does the corporate trustee have a UK address?
+corporateTrusteeAddress.heading = Does the corporate trustee have a UK address?
+corporateTrusteeAddress.legend = Does the corporate trustee have a UK address?
+corporateTrusteeAddress.error.required = Select if the corporate trustee has a UK address
+
 phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in a new tab)</a> will help us to improve it.
 phasebanner.phase=Beta
 

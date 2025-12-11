@@ -75,6 +75,7 @@ object TestClaims {
     ),
     charityRegistrationNumber: String = "1234567890",
     areYouACorporateTrustee: Boolean = true,
+    doYouHaveUKAddress: Boolean = true,
     nameOfCorporateTrustee: String = "John Doe",
     corporateTrusteePostcode: String = "AA1 2BB",
     corporateTrusteeDaytimeTelephoneNumber: String = "07912345678"
@@ -97,6 +98,7 @@ object TestClaims {
             reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
             charityRegistrationNumber = Some(charityRegistrationNumber),
             areYouACorporateTrustee = areYouACorporateTrustee,
+            doYouHaveUKAddress = doYouHaveUKAddress,
             nameOfCorporateTrustee = Some(nameOfCorporateTrustee),
             corporateTrusteePostcode = Some(corporateTrusteePostcode),
             corporateTrusteeDaytimeTelephoneNumber = Some(corporateTrusteeDaytimeTelephoneNumber)

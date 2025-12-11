@@ -66,3 +66,8 @@ GET         /change-corporate-trustee-claim              controllers.organisatio
 POST        /corporate-trustee-claim                     controllers.organisationDetails.CorporateTrusteeClaimController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-corporate-trustee-claim              controllers.organisationDetails.CorporateTrusteeClaimController.onSubmit(mode: Mode = Mode.CheckMode)
 
+
+GET         /corporate-trustee-address                      controllers.organisationDetails.CorporateTrusteeAddressController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-corporate-trustee-address               controllers.organisationDetails.CorporateTrusteeAddressController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /corporate-trustee-address                      controllers.organisationDetails.CorporateTrusteeAddressController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-corporate-trustee-address               controllers.organisationDetails.CorporateTrusteeAddressController.onSubmit(mode: Mode = Mode.CheckMode)

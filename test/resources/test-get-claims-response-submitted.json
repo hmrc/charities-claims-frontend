@@ -18,6 +18,7 @@
                     "reasonNotRegisteredWithRegulator": "LowIncome",
                     "charityRegistrationNumber": "1137948",
                     "areYouACorporateTrustee": true,
+                    "doYouHaveUKAddress": true,
                     "nameOfCorporateTrustee": "Joe Bloggs",
                     "corporateTrusteePostcode": "AB12 3YZ",
                     "corporateTrusteeDaytimeTelephoneNumber": "071234567890"

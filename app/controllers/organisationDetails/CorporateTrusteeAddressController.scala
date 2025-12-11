@@ -26,23 +26,23 @@ import models.Mode.*
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.CorporateTrusteeClaimView
+import views.html.CorporateTrusteeAddressView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CorporateTrusteeClaimController @Inject() (
+class CorporateTrusteeAddressController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: CorporateTrusteeClaimView,
+  view: CorporateTrusteeAddressView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("corporateTrusteeClaim.error.required")
+  val form: Form[Boolean] = formProvider("corporateTrusteeAddress.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = OrganisationDetailsAnswers.getAreYouACorporateTrustee
+    val previousAnswer = OrganisationDetailsAnswers.getDoYouHaveUKAddress
     Ok(view(form.withDefault(previousAnswer), mode))
   }
 
@@ -53,7 +53,7 @@ class CorporateTrusteeClaimController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
-            .save(OrganisationDetailsAnswers.setAreYouACorporateTrustee(value))
+            .save(OrganisationDetailsAnswers.setDoYouHaveUKAddress(value))
             .map { _ =>
               Redirect(routes.CorporateTrusteeAddressController.onPageLoad(NormalMode))
             }
