@@ -44,7 +44,6 @@ class SessionDataController @Inject() (
       .get()
       .map(
         _.fold {
-          println(s"sessionId: ${summon[HeaderCarrier].sessionId.map(_.value).getOrElse("<empty>")}")
           Ok(renderPage("", Some("session data not found")))
         } { sessionData =>
           Ok(renderPage(Json.prettyPrint(Json.toJson(sessionData))))
