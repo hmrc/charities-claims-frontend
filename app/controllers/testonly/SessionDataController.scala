@@ -27,6 +27,7 @@ import scala.util.control.NonFatal
 import scala.concurrent.{ExecutionContext, Future}
 
 import javax.inject.{Inject, Singleton}
+import uk.gov.hmrc.http.HeaderCarrier
 
 @Singleton
 class SessionDataController @Inject() (
@@ -42,9 +43,11 @@ class SessionDataController @Inject() (
     sessionCache
       .get()
       .map(
-        _.fold(Ok(renderPage("", Some("session data not found"))))(sessionData =>
+        _.fold {
+          Ok(renderPage("", Some("session data not found")))
+        } { sessionData =>
           Ok(renderPage(Json.prettyPrint(Json.toJson(sessionData))))
-        )
+        }
       )
   }
 

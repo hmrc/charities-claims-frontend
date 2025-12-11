@@ -81,6 +81,10 @@ object RepaymentClaimDetailsAnswers {
 
   def setClaimingGiftAid(value: Boolean)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(claimingGiftAid = Some(v)))
+      .copy(giftAidScheduleDataAnswers = if (value) session.giftAidScheduleDataAnswers else None)
+
+  def shouldWarnAboutChangingClaimingGiftAid(value: Boolean)(using session: SessionData): Boolean =
+    !value && session.giftAidScheduleDataAnswers.isDefined
 
   def getClaimingUnderGasds(using session: SessionData): Option[Boolean] = get(_.claimingUnderGasds)
 

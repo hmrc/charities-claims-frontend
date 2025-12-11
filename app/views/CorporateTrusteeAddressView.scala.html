@@ -27,24 +27,23 @@
 @(form: Form[?], mode: Mode)(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = title(form, messages("authorisedOfficialAddress.title"))
-) {
-    @if(form.errors.nonEmpty) {
-        @govukErrorSummary(ErrorSummaryViewModel(form))
-    }
+    pageTitle = title(form, messages("corporateTrusteeAddress.title"))
+    ) {
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+        <span class="govuk-caption-l">@messages("corporateTrusteeAddress.caption")</span>
+        <h1 class="govuk-heading-l">@messages("corporateTrusteeAddress.heading")</h1>
 
-    <span class="govuk-caption-l">@messages("authorisedOfficialAddress.caption")</span>
-    <h1 class="govuk-heading-l">@messages("authorisedOfficialAddress.heading")</h1>
+        @formHelper(action = routes.CorporateTrusteeAddressController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
-    @formHelper(action = routes.AuthorisedOfficialAddressController.onSubmit(mode), Symbol("autoComplete") -> "off") {
-
-    @govukRadios(
-        RadiosViewModel.yesNo(
-            form("value"),
-            LegendViewModel(messages("authorisedOfficialAddress.heading")).visuallyHidden
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                form("value"),
+                LegendViewModel(messages("corporateTrusteeAddress.heading")).visuallyHidden
+            )
         )
-    )
 
-    @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
     }
 }

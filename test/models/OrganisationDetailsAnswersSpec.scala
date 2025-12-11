@@ -28,6 +28,7 @@ class OrganisationDetailsAnswersSpec extends BaseSpec {
         reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
         charityRegistrationNumber = Some("1234567890"),
         areYouACorporateTrustee = Some(true),
+        doYouHaveUKAddress = Some(true),
         nameOfCorporateTrustee = Some("John Doe"),
         corporateTrusteePostcode = Some("AA1 2BB"),
         corporateTrusteeDaytimeTelephoneNumber = Some("07912345678")
@@ -44,6 +45,7 @@ class OrganisationDetailsAnswersSpec extends BaseSpec {
         reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
         charityRegistrationNumber = Some("1234567890"),
         areYouACorporateTrustee = true,
+        doYouHaveUKAddress = true,
         nameOfCorporateTrustee = Some("John Doe"),
         corporateTrusteePostcode = Some("AA1 2BB"),
         corporateTrusteeDaytimeTelephoneNumber = Some("07912345678")
@@ -56,6 +58,7 @@ class OrganisationDetailsAnswersSpec extends BaseSpec {
         reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
         charityRegistrationNumber = Some("1234567890"),
         areYouACorporateTrustee = Some(true),
+        doYouHaveUKAddress = Some(true),
         nameOfCorporateTrustee = Some("John Doe"),
         corporateTrusteePostcode = Some("AA1 2BB"),
         corporateTrusteeDaytimeTelephoneNumber = Some("07912345678")

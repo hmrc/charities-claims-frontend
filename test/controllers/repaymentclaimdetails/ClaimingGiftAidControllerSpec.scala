@@ -22,7 +22,7 @@ import controllers.ControllerSpec
 import views.html.ClaimingGiftAidView
 import play.api.Application
 import forms.YesNoFormProvider
-import models.RepaymentClaimDetailsAnswers
+import models.{GiftAidScheduleDataAnswers, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
 import models.Mode.*
 
@@ -159,6 +159,72 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual BAD_REQUEST
+        }
+      }
+    }
+
+    "onSubmit with warning" - {
+      "should render warning when the value is false and warning is expected" in {
+        val sessionData = SessionData.empty.copy(
+          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.ClaimingGiftAidController.onPageLoad(NormalMode).url)
+          flash(result).get("warning") shouldEqual Some("true")
+        }
+      }
+
+      "should redirect to the next page when the value is false and warning has been shown" in {
+        val sessionData = SessionData.empty.copy(
+          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody(
+                "value"        -> "false",
+                "warningShown" -> "true"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
+          flash(result).get("warning") shouldEqual None
+        }
+      }
+
+      "should not show warning when no previous giftAidScheduleDataAnswers data exists" in {
+        val sessionData = SessionData.empty.copy(
+          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(false))
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          flash(result).get("warning") shouldEqual None
         }
       }
     }

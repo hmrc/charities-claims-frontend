@@ -26,27 +26,24 @@ import models.Mode.*
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.AuthorisedOfficialAddressView
+import views.html.CorporateTrusteeAddressView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthorisedOfficialAddressController @Inject() (
+class CorporateTrusteeAddressController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: AuthorisedOfficialAddressView,
+  view: CorporateTrusteeAddressView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("authorisedOfficialAddress.error.required")
+  val form: Form[Boolean] = formProvider("corporateTrusteeAddress.error.required")
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if OrganisationDetailsAnswers.getAreYouACorporateTrustee.contains(false)
-    then {
-      val previousAnswer = OrganisationDetailsAnswers.getDoYouHaveUKAddress
-      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
-    } else { Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad)) }
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
+    val previousAnswer = OrganisationDetailsAnswers.getDoYouHaveUKAddress
+    Ok(view(form.withDefault(previousAnswer), mode))
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
@@ -58,7 +55,7 @@ class AuthorisedOfficialAddressController @Inject() (
           saveService
             .save(OrganisationDetailsAnswers.setDoYouHaveUKAddress(value))
             .map { _ =>
-              Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode))
+              Redirect(routes.CorporateTrusteeAddressController.onPageLoad(NormalMode))
             }
       )
   }

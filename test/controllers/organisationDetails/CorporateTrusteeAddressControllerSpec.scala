@@ -19,26 +19,26 @@ package controllers.organisationDetails
 import play.api.test.FakeRequest
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import controllers.ControllerSpec
-import views.html.CorporateTrusteeClaimView
+import views.html.CorporateTrusteeAddressView
 import play.api.Application
 import forms.YesNoFormProvider
 import models.OrganisationDetailsAnswers
 import play.api.data.Form
 import models.Mode.*
 
-class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
+class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
   private val form: Form[Boolean] = new YesNoFormProvider()()
-  "CorporateTrusteeClaimController" - {
+  "CorporateTrusteeAddressController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
+            FakeRequest(GET, routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[CorporateTrusteeClaimView]
+          val view   = application.injector.instanceOf[CorporateTrusteeAddressView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form, NormalMode).body
@@ -47,16 +47,16 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with true value" in {
 
-        val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+        val sessionData = OrganisationDetailsAnswers.setDoYouHaveUKAddress(true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
+            FakeRequest(GET, routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[CorporateTrusteeClaimView]
+          val view   = application.injector.instanceOf[CorporateTrusteeAddressView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
@@ -65,16 +65,16 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with false value" in {
 
-        val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+        val sessionData = OrganisationDetailsAnswers.setDoYouHaveUKAddress(false)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
+            FakeRequest(GET, routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[CorporateTrusteeClaimView]
+          val view   = application.injector.instanceOf[CorporateTrusteeAddressView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
@@ -88,7 +88,7 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.CorporateTrusteeClaimController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
@@ -105,7 +105,7 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.CorporateTrusteeClaimController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
@@ -122,7 +122,7 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.CorporateTrusteeClaimController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value
