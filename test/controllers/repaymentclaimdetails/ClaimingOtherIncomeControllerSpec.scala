@@ -22,7 +22,7 @@ import controllers.ControllerSpec
 import views.html.ClaimingOtherIncomeView
 import play.api.Application
 import forms.YesNoFormProvider
-import models.RepaymentClaimDetailsAnswers
+import models.{OtherIncomeScheduleDataAnswers, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
 import models.Mode.*
 
@@ -163,6 +163,113 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual BAD_REQUEST
+        }
+      }
+
+      "onSubmit with warning" - {
+        "should trigger warning when changing to false when Other Income schedule data present" in {
+          val sessionData = SessionData.empty.copy(
+            repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingTaxDeducted = Some(true)),
+            otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(NormalMode).url)
+                .withFormUrlEncodedBody("value" -> "false")
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
+            flash(result).get("warning") shouldEqual Some("true")
+          }
+        }
+
+        "should redirect to the next page in NormalMode when value is false and warning has been shown" in {
+          val sessionData = SessionData.empty.copy(
+            repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingTaxDeducted = Some(true)),
+            otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(NormalMode).url)
+                .withFormUrlEncodedBody(
+                  "value"        -> "false",
+                  "warningShown" -> "true"
+                )
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode).url
+            )
+            flash(result).get("warning") shouldEqual None
+          }
+        }
+
+        "should not show warning when no previous other income schedule data exists" in {
+          val sessionData = SessionData.empty.copy(
+            repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingTaxDeducted = Some(false))
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(NormalMode).url)
+                .withFormUrlEncodedBody("value" -> "false")
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            flash(result).get("warning") shouldEqual None
+          }
+        }
+
+        "should redirect to CheckYourAnswers in CheckMode after warning confirmation" in {
+          val sessionData = SessionData.empty.copy(
+            repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingTaxDeducted = Some(true)),
+            otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "false", "warningShown" -> "true")
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result).value shouldEqual routes.CheckYourAnswersController.onPageLoad.url
+          }
+        }
+
+        "should render warning parameter hidden field when warning flash present" in {
+          val sessionData = SessionData.empty.copy(
+            repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingTaxDeducted = Some(true)),
+            otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
+                .withFlash("warning" -> "true", "warningAnswer" -> "false")
+
+            val result = route(application, request).value
+
+            contentAsString(result) should include("warningShown")
+          }
         }
       }
     }

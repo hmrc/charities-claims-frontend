@@ -43,24 +43,32 @@ class ClaimingOtherIncomeController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingTaxDeducted
-    Ok(view(form.withDefault(previousAnswer), mode))
+    Ok(view(form.withDefault(warningAnswerBoolean.orElse(previousAnswer)), mode, isWarning))
   }
 
-  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveService
-            .save(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(value))
-            .map { _ =>
-              if (mode == CheckMode) {
-                Redirect(routes.CheckYourAnswersController.onPageLoad)
-              } else {
-                Redirect(routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode))
-              }
-            }
-      )
-  }
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetData().async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            if hadNoWarningShown && RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingTaxDeducted(value)
+            then
+              Future.successful(
+                Redirect(routes.ClaimingOtherIncomeController.onPageLoad(mode))
+                  .withWarning(value.toString)
+              )
+            else
+              saveService
+                .save(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(value))
+                .map { _ =>
+                  if (mode == CheckMode) {
+                    Redirect(routes.CheckYourAnswersController.onPageLoad)
+                  } else {
+                    Redirect(routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode))
+                  }
+                }
+        )
+    }
 }

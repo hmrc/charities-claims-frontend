@@ -76,6 +76,10 @@ object RepaymentClaimDetailsAnswers {
 
   def setClaimingTaxDeducted(value: Boolean)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(claimingTaxDeducted = Some(v)))
+      .copy(otherIncomeScheduleDataAnswers = if (value) session.otherIncomeScheduleDataAnswers else None)
+
+  def shouldWarnAboutChangingClaimingTaxDeducted(value: Boolean)(using session: SessionData): Boolean =
+    !value && session.otherIncomeScheduleDataAnswers.isDefined
 
   def getClaimingGiftAid(using session: SessionData): Option[Boolean] = get(_.claimingGiftAid)
 
@@ -90,6 +94,10 @@ object RepaymentClaimDetailsAnswers {
 
   def setClaimingUnderGasds(value: Boolean)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(claimingUnderGasds = Some(v)))
+      .copy(gasdsScheduleDataAnswers = if (value) session.gasdsScheduleDataAnswers else None)
+
+  def shouldWarnAboutChangingClaimingUnderGasds(value: Boolean)(using session: SessionData): Boolean =
+    !value && session.gasdsScheduleDataAnswers.isDefined
 
   def getClaimingReferenceNumber(using session: SessionData): Option[Boolean] = get(_.claimingReferenceNumber)
 
