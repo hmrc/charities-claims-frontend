@@ -44,12 +44,9 @@ class CharityRegulatorNumberController @Inject() (
     val previousAnswer = OrganisationDetailsAnswers.getCharityRegistrationNumber
 
     val nameOfCharityAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
-    nameOfCharityAnswer match {
-      case Some(NameOfCharityRegulator.EnglandAndWales) => Future.successful(Ok(view(form.withDefault(previousAnswer))))
-      case Some(NameOfCharityRegulator.NorthernIreland) => Future.successful(Ok(view(form.withDefault(previousAnswer))))
-      case Some(NameOfCharityRegulator.Scottish)        => Future.successful(Ok(view(form.withDefault(previousAnswer))))
-      case _                                            => Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
-    }
+    if nameOfCharityAnswer.isEmpty || nameOfCharityAnswer.contains(NameOfCharityRegulator.None)
+    then Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+    else Future.successful(Ok(view(form.withDefault(previousAnswer))))
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
