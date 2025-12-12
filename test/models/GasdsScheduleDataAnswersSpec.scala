@@ -19,11 +19,11 @@ package models
 import util.BaseSpec
 import play.api.libs.json.Json
 
-class GasdsScheduleDataAnswersSpec extends BaseSpec {
+class GiftAidSmallDonationsSchemeScheduleDataAnswersSpec extends BaseSpec {
 
-  "GasdsScheduleDataAnswerss" - {
+  "GiftAidSmallDonationsSchemeScheduleDataAnswerss" - {
     "be serializable and deserializable" in {
-      val gasdsScheduleDataAnswerss = GasdsScheduleDataAnswers(
+      val giftAidSmallDonationsSchemeScheduleDataAnswerss = GiftAidSmallDonationsSchemeScheduleDataAnswers(
         adjustmentForGiftAidOverClaimed = Some(1000.00),
         claims = Some(Seq(GasdsClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00))),
         connectedCharitiesScheduleData =
@@ -46,14 +46,15 @@ class GasdsScheduleDataAnswersSpec extends BaseSpec {
         )
       )
 
-      val json = Json.toJson(gasdsScheduleDataAnswerss)
+      val json = Json.toJson(giftAidSmallDonationsSchemeScheduleDataAnswerss)
 
-      val deserializedGasdsScheduleDataAnswerss = json.as[GasdsScheduleDataAnswers]
-      deserializedGasdsScheduleDataAnswerss shouldBe gasdsScheduleDataAnswerss
+      val deserializedGiftAidSmallDonationsSchemeScheduleDataAnswerss =
+        json.as[GiftAidSmallDonationsSchemeScheduleDataAnswers]
+      deserializedGiftAidSmallDonationsSchemeScheduleDataAnswerss shouldBe giftAidSmallDonationsSchemeScheduleDataAnswerss
     }
 
-    "be created from GasdsScheduleData" in {
-      val gasdsScheduleData = GasdsScheduleData(
+    "be created from GiftAidSmallDonationsSchemeScheduleData" in {
+      val giftAidSmallDonationsSchemeScheduleData = GiftAidSmallDonationsSchemeScheduleData(
         adjustmentForGiftAidOverClaimed = 1000.00,
         claims = Seq(GasdsClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00)),
         connectedCharitiesScheduleData =
@@ -74,9 +75,10 @@ class GasdsScheduleDataAnswersSpec extends BaseSpec {
         )
       )
 
-      val gasdsScheduleDataAnswers = GasdsScheduleDataAnswers.from(gasdsScheduleData)
+      val giftAidSmallDonationsSchemeScheduleDataAnswers =
+        GiftAidSmallDonationsSchemeScheduleDataAnswers.from(giftAidSmallDonationsSchemeScheduleData)
 
-      gasdsScheduleDataAnswers shouldBe GasdsScheduleDataAnswers(
+      giftAidSmallDonationsSchemeScheduleDataAnswers shouldBe GiftAidSmallDonationsSchemeScheduleDataAnswers(
         adjustmentForGiftAidOverClaimed = Some(1000.00),
         claims = Some(Seq(GasdsClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00))),
         connectedCharitiesScheduleData =

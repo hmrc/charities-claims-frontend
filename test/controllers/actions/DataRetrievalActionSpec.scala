@@ -112,15 +112,15 @@ class DataRetrievalActionSpec extends BaseSpec {
           req.sessionData shouldBe
             SessionData.from(TestClaims.testClaimWithRepaymentClaimDetailsOnly())
 
-          req.sessionData.repaymentClaimDetailsAnswers   shouldBe
+          req.sessionData.repaymentClaimDetailsAnswers                   shouldBe
             RepaymentClaimDetailsAnswers.from(
               TestClaims.testClaimWithRepaymentClaimDetailsOnly().claimData.repaymentClaimDetails
             )
-          req.sessionData.organisationDetailsAnswers     shouldBe None
-          req.sessionData.giftAidScheduleDataAnswers     shouldBe None
-          req.sessionData.declarationDetailsAnswers      shouldBe None
-          req.sessionData.otherIncomeScheduleDataAnswers shouldBe None
-          req.sessionData.gasdsScheduleDataAnswers       shouldBe None
+          req.sessionData.organisationDetailsAnswers                     shouldBe None
+          req.sessionData.giftAidScheduleDataAnswers                     shouldBe None
+          req.sessionData.declarationDetailsAnswers                      shouldBe None
+          req.sessionData.otherIncomeScheduleDataAnswers                 shouldBe None
+          req.sessionData.giftAidSmallDonationsSchemeScheduleDataAnswers shouldBe None
           Future.successful(Ok)
       )
       status(result) shouldBe OK

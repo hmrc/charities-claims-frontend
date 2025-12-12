@@ -19,22 +19,25 @@ package models
 import play.api.libs.json.Format
 import play.api.libs.json.Json
 
-final case class GasdsScheduleDataAnswers(
+final case class GiftAidSmallDonationsSchemeScheduleDataAnswers(
   adjustmentForGiftAidOverClaimed: Option[BigDecimal] = None,
   claims: Option[Seq[GasdsClaim]] = None,
   connectedCharitiesScheduleData: Option[Seq[ConnectedCharity]] = None,
   communityBuildingsScheduleData: Option[Seq[CommunityBuilding]] = None
 )
 
-object GasdsScheduleDataAnswers {
+object GiftAidSmallDonationsSchemeScheduleDataAnswers {
 
-  given Format[GasdsScheduleDataAnswers] = Json.format[GasdsScheduleDataAnswers]
+  given Format[GiftAidSmallDonationsSchemeScheduleDataAnswers] =
+    Json.format[GiftAidSmallDonationsSchemeScheduleDataAnswers]
 
-  def from(gasdsScheduleData: GasdsScheduleData): GasdsScheduleDataAnswers =
-    GasdsScheduleDataAnswers(
-      adjustmentForGiftAidOverClaimed = Some(gasdsScheduleData.adjustmentForGiftAidOverClaimed),
-      claims = Some(gasdsScheduleData.claims),
-      connectedCharitiesScheduleData = Some(gasdsScheduleData.connectedCharitiesScheduleData),
-      communityBuildingsScheduleData = Some(gasdsScheduleData.communityBuildingsScheduleData)
+  def from(
+    giftAidSmallDonationsSchemeScheduleData: GiftAidSmallDonationsSchemeScheduleData
+  ): GiftAidSmallDonationsSchemeScheduleDataAnswers =
+    GiftAidSmallDonationsSchemeScheduleDataAnswers(
+      adjustmentForGiftAidOverClaimed = Some(giftAidSmallDonationsSchemeScheduleData.adjustmentForGiftAidOverClaimed),
+      claims = Some(giftAidSmallDonationsSchemeScheduleData.claims),
+      connectedCharitiesScheduleData = Some(giftAidSmallDonationsSchemeScheduleData.connectedCharitiesScheduleData),
+      communityBuildingsScheduleData = Some(giftAidSmallDonationsSchemeScheduleData.communityBuildingsScheduleData)
     )
 }
