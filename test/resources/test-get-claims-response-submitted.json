@@ -84,7 +84,7 @@
                         }
                     ]
                 },
-                "gasdsScheduleData": {
+                "giftAidSmallDonationsSchemeScheduleData": {
                     "adjustmentForGiftAidOverClaimed": 0.00,
                     "claims": [
                         {

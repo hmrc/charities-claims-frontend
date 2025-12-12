@@ -27,7 +27,7 @@ final case class SessionData(
   giftAidScheduleDataAnswers: Option[GiftAidScheduleDataAnswers] = None,
   declarationDetailsAnswers: Option[DeclarationDetailsAnswers] = None,
   otherIncomeScheduleDataAnswers: Option[OtherIncomeScheduleDataAnswers] = None,
-  gasdsScheduleDataAnswers: Option[GasdsScheduleDataAnswers] = None
+  giftAidSmallDonationsSchemeScheduleDataAnswers: Option[GiftAidSmallDonationsSchemeScheduleDataAnswers] = None
 )
 
 object SessionData {
@@ -46,6 +46,7 @@ object SessionData {
       giftAidScheduleDataAnswers = claim.claimData.giftAidScheduleData.map(GiftAidScheduleDataAnswers.from),
       declarationDetailsAnswers = claim.claimData.declarationDetails.map(DeclarationDetailsAnswers.from),
       otherIncomeScheduleDataAnswers = claim.claimData.otherIncomeScheduleData.map(OtherIncomeScheduleDataAnswers.from),
-      gasdsScheduleDataAnswers = claim.claimData.gasdsScheduleData.map(GasdsScheduleDataAnswers.from)
+      giftAidSmallDonationsSchemeScheduleDataAnswers =
+        claim.claimData.giftAidSmallDonationsSchemeScheduleData.map(GiftAidSmallDonationsSchemeScheduleDataAnswers.from)
     )
 }
