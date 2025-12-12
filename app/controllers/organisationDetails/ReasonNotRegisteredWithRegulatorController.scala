@@ -28,6 +28,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
 import views.html.ReasonNotRegisteredWithRegulatorView
 import models.ReasonNotRegisteredWithRegulator
+import models.NameOfCharityRegulator
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -42,10 +43,18 @@ class ReasonNotRegisteredWithRegulatorController @Inject() (
 
   val form: Form[ReasonNotRegisteredWithRegulator] = formProvider("reasonNotRegisteredWithRegulator.error.required")
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
-      OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
-    Ok(view(form.withDefault(previousAnswer), mode))
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val NameOfCharityAnswer: Option[NameOfCharityRegulator] =
+      OrganisationDetailsAnswers.getNameOfCharityRegulator
+    NameOfCharityAnswer match {
+      case Some(NameOfCharityRegulator.None) =>
+        val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
+          OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
+        Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+
+      case _ =>
+        Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+    }
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
