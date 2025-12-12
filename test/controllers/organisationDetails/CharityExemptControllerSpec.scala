@@ -18,6 +18,8 @@ package controllers.organisationDetails
 
 import controllers.ControllerSpec
 import models.Mode.NormalMode
+import models.OrganisationDetailsAnswers
+import models.ReasonNotRegisteredWithRegulator.*
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -27,8 +29,10 @@ class CharityExemptControllerSpec extends ControllerSpec {
 
   "CharityExemptController" - {
     "onPageLoad" - {
-      "should render the page correctly" in {
-        given application: Application = applicationBuilder().build()
+      "should render the page correctly if exempt" in {
+        val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Exempt)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -39,6 +43,53 @@ class CharityExemptControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view().body
+        }
+      }
+      "should render the page not found if ReasonNotRegisteredWithRegulator is excepted" in {
+        val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Excepted)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CharityExemptController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+        }
+      }
+
+      "should render the page not found if ReasonNotRegisteredWithRegulator is LowIncome" in {
+        val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(LowIncome)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CharityExemptController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+        }
+      }
+
+      "should render the page not found if ReasonNotRegisteredWithRegulator is Waiting" in {
+        val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Waiting)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CharityExemptController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
         }
       }
     }
