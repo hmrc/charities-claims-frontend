@@ -24,7 +24,7 @@ class OtherIncomeScheduleDataAnswersSpec extends BaseSpec {
   "OtherIncomeScheduleDataAnswers" - {
     "be serializable and deserializable" in {
       val otherIncomeScheduleDataAnswers = OtherIncomeScheduleDataAnswers(
-        prevOverclaimedOtherIncome = Some(1000.00),
+        previouslyOverclaimedOtherIncome = Some(1000.00),
         totalGrossPayments = Some(1000.00),
         totalTaxDeducted = Some(1000.00),
         payments = Some(
@@ -50,7 +50,7 @@ class OtherIncomeScheduleDataAnswersSpec extends BaseSpec {
 
   "be created from OtherIncomeScheduleData" in {
     val otherIncomeScheduleData = OtherIncomeScheduleData(
-      prevOverclaimedOtherIncome = 1000.00,
+      previouslyOverclaimedOtherIncome = 1000.00,
       totalGrossPayments = 1000.00,
       totalTaxDeducted = 1000.00,
       payments = Seq(
@@ -67,7 +67,7 @@ class OtherIncomeScheduleDataAnswersSpec extends BaseSpec {
     val otherIncomeScheduleDataAnswers = OtherIncomeScheduleDataAnswers.from(otherIncomeScheduleData)
 
     otherIncomeScheduleDataAnswers shouldBe OtherIncomeScheduleDataAnswers(
-      prevOverclaimedOtherIncome = Some(1000.00),
+      previouslyOverclaimedOtherIncome = Some(1000.00),
       totalGrossPayments = Some(1000.00),
       totalTaxDeducted = Some(1000.00),
       payments = Some(
