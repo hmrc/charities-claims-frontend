@@ -20,10 +20,12 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
 import views.html.ErrorView
+import config.FrontendAppConfig
 
 class AccessDeniedController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ErrorView
+  view: ErrorView,
+  appConfig: FrontendAppConfig
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
@@ -31,7 +33,8 @@ class AccessDeniedController @Inject() (
       view(
         pageTitle = "global.error.accessDenied.title",
         heading = "global.error.accessDenied.heading",
-        message = "global.error.accessDenied.message"
+        message = "global.error.accessDenied.message",
+        messageArgs = Seq(appConfig.accountUrl)
       )
     )
   }

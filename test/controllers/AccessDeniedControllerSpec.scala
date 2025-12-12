@@ -21,6 +21,7 @@ import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
 import play.api.Application
 import views.html.ErrorView
+import config.FrontendAppConfig
 
 class AccessDeniedControllerSpec extends ControllerSpec {
 
@@ -30,6 +31,7 @@ class AccessDeniedControllerSpec extends ControllerSpec {
       "should render the page correctly" in {
         given application: Application = applicationBuilder().build()
         val view                       = application.injector.instanceOf[ErrorView]
+        val appConfig                  = application.injector.instanceOf[FrontendAppConfig]
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -41,9 +43,28 @@ class AccessDeniedControllerSpec extends ControllerSpec {
           contentAsString(result) shouldEqual view(
             pageTitle = "global.error.accessDenied.title",
             heading = "global.error.accessDenied.heading",
-            message = "global.error.accessDenied.message"
+            message = "global.error.accessDenied.message",
+            messageArgs = Seq(appConfig.accountUrl)
           ).body
         }
+      }
+    }
+
+    "should use the correct configured account URL in the message" in {
+      val customConfig = Map(
+        "urls.accountUrl" -> "https://test.example.com/account"
+      )
+
+      given application: Application = applicationBuilder()
+        .configure(customConfig)
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.AccessDeniedController.onPageLoad.url)
+        val result  = route(application, request).value
+
+        status(result) shouldEqual FORBIDDEN
+        contentAsString(result) should include("https://test.example.com/account")
       }
     }
   }
