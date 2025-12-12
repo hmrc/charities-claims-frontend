@@ -22,7 +22,7 @@ import models.SessionData
 final case class RepaymentClaimDetailsAnswers(
   claimingGiftAid: Option[Boolean] = None,
   claimingTaxDeducted: Option[Boolean] = None,
-  claimingUnderGasds: Option[Boolean] = None,
+  claimingUnderGiftAidSmallDonationsScheme: Option[Boolean] = None,
   // only when claiming Gift Aid
   claimingReferenceNumber: Option[Boolean] = None,
   claimReferenceNumber: Option[String] = None,
@@ -35,7 +35,7 @@ final case class RepaymentClaimDetailsAnswers(
   def hasCompleteAnswers: Boolean =
     claimingGiftAid.isDefined
       && claimingTaxDeducted.isDefined
-      && claimingUnderGasds.isDefined
+      && claimingUnderGiftAidSmallDonationsScheme.isDefined
       && claimingReferenceNumber.match {
         case Some(true)  => claimReferenceNumber.isDefined
         case Some(false) => claimReferenceNumber.isEmpty
@@ -62,7 +62,7 @@ object RepaymentClaimDetailsAnswers {
     RepaymentClaimDetailsAnswers(
       claimingGiftAid = Some(repaymentClaimDetails.claimingGiftAid),
       claimingTaxDeducted = Some(repaymentClaimDetails.claimingTaxDeducted),
-      claimingUnderGasds = Some(repaymentClaimDetails.claimingUnderGasds),
+      claimingUnderGiftAidSmallDonationsScheme = Some(repaymentClaimDetails.claimingUnderGiftAidSmallDonationsScheme),
       claimingReferenceNumber = Some(repaymentClaimDetails.claimReferenceNumber.isDefined),
       claimReferenceNumber = repaymentClaimDetails.claimReferenceNumber,
       claimingDonationsNotFromCommunityBuilding = repaymentClaimDetails.claimingDonationsNotFromCommunityBuilding,
@@ -86,10 +86,12 @@ object RepaymentClaimDetailsAnswers {
   def shouldWarnAboutChangingClaimingGiftAid(value: Boolean)(using session: SessionData): Boolean =
     !value && session.giftAidScheduleDataAnswers.isDefined
 
-  def getClaimingUnderGasds(using session: SessionData): Option[Boolean] = get(_.claimingUnderGasds)
+  def getClaimingUnderGiftAidSmallDonationsScheme(using session: SessionData): Option[Boolean] = get(
+    _.claimingUnderGiftAidSmallDonationsScheme
+  )
 
-  def setClaimingUnderGasds(value: Boolean)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(claimingUnderGasds = Some(v)))
+  def setClaimingUnderGiftAidSmallDonationsScheme(value: Boolean)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(claimingUnderGiftAidSmallDonationsScheme = Some(v)))
 
   def getClaimingReferenceNumber(using session: SessionData): Option[Boolean] = get(_.claimingReferenceNumber)
 

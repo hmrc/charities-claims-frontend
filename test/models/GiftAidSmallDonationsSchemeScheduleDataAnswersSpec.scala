@@ -25,7 +25,7 @@ class GiftAidSmallDonationsSchemeScheduleDataAnswersSpec extends BaseSpec {
     "be serializable and deserializable" in {
       val giftAidSmallDonationsSchemeScheduleDataAnswerss = GiftAidSmallDonationsSchemeScheduleDataAnswers(
         adjustmentForGiftAidOverClaimed = Some(1000.00),
-        claims = Some(Seq(GasdsClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00))),
+        claims = Some(Seq(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00))),
         connectedCharitiesScheduleData =
           Some(Seq(ConnectedCharity(charityItem = 1, charityName = "foobar", charityReference = "1234567890"))),
         communityBuildingsScheduleData = Some(
@@ -56,7 +56,7 @@ class GiftAidSmallDonationsSchemeScheduleDataAnswersSpec extends BaseSpec {
     "be created from GiftAidSmallDonationsSchemeScheduleData" in {
       val giftAidSmallDonationsSchemeScheduleData = GiftAidSmallDonationsSchemeScheduleData(
         adjustmentForGiftAidOverClaimed = 1000.00,
-        claims = Seq(GasdsClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00)),
+        claims = Seq(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00)),
         connectedCharitiesScheduleData =
           Seq(ConnectedCharity(charityItem = 1, charityName = "foobar", charityReference = "1234567890")),
         communityBuildingsScheduleData = Seq(
@@ -80,7 +80,7 @@ class GiftAidSmallDonationsSchemeScheduleDataAnswersSpec extends BaseSpec {
 
       giftAidSmallDonationsSchemeScheduleDataAnswers shouldBe GiftAidSmallDonationsSchemeScheduleDataAnswers(
         adjustmentForGiftAidOverClaimed = Some(1000.00),
-        claims = Some(Seq(GasdsClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00))),
+        claims = Some(Seq(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00))),
         connectedCharitiesScheduleData =
           Some(Seq(ConnectedCharity(charityItem = 1, charityName = "foobar", charityReference = "1234567890"))),
         communityBuildingsScheduleData = Some(

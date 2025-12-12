@@ -42,7 +42,7 @@ class ClaimingGiftAidSmallDonationsController @Inject() (
   val form: Form[Boolean] = formProvider("claimingGiftAidSmallDonations.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingUnderGasds
+    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme
     Ok(view(form.withDefault(previousAnswer), mode))
   }
 
@@ -53,7 +53,7 @@ class ClaimingGiftAidSmallDonationsController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
-            .save(RepaymentClaimDetailsAnswers.setClaimingUnderGasds(value))
+            .save(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(value))
             .map { _ =>
               if (mode == CheckMode) {
                 Redirect(routes.CheckYourAnswersController.onPageLoad)

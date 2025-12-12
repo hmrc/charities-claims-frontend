@@ -42,7 +42,7 @@ class ClaimsServiceSpec extends BaseSpec {
       val repaymentAnswers = RepaymentClaimDetailsAnswers(
         claimingGiftAid = Some(true),
         claimingTaxDeducted = Some(true),
-        claimingUnderGasds = Some(false),
+        claimingUnderGiftAidSmallDonationsScheme = Some(false),
         claimReferenceNumber = Some("1234567890")
       )
 
@@ -77,7 +77,7 @@ class ClaimsServiceSpec extends BaseSpec {
       val repaymentAnswers = RepaymentClaimDetailsAnswers(
         claimingGiftAid = Some(true),
         claimingTaxDeducted = Some(true),
-        claimingUnderGasds = Some(false),
+        claimingUnderGiftAidSmallDonationsScheme = Some(false),
         claimReferenceNumber = Some("1234567890")
       )
 
@@ -121,7 +121,7 @@ class ClaimsServiceSpec extends BaseSpec {
       val incompleteAnswers = RepaymentClaimDetailsAnswers(
         claimingGiftAid = Some(true),
         claimingTaxDeducted = None, // missing
-        claimingUnderGasds = Some(false)
+        claimingUnderGiftAidSmallDonationsScheme = Some(false)
       )
 
       val initialSessionData = SessionData(

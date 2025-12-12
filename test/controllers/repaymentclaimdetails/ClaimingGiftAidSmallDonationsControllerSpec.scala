@@ -49,7 +49,7 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with true value" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGasds(true)
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -67,7 +67,7 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with false value" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGasds(false)
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
