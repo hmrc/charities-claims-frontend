@@ -45,6 +45,43 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
           contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
+
+      "should render the page and pre-populate correctly with true for UK Address if Corporate trustee is true" in {
+        val sessionDataAreYouCorporateTrustee = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+        val sessionDataAreYouCorporateWithUKAddress = OrganisationDetailsAnswers.setDoYouHaveUKAddress(true) (using sessionDataAreYouCorporateTrustee)
+
+        given application: Application = applicationBuilder(sessionData = sessionDataAreYouCorporateWithUKAddress).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view = application.injector.instanceOf[CorporateTrusteeAddressView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
+        }
+      }
+
+      "should render the page and pre-populate correctly with false for UK Address if Corporate trustee is true" in {
+        val sessionDataAreYouCorporateTrustee = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+        val sessionDataAreYouCorporateWithUKAddress = OrganisationDetailsAnswers.setDoYouHaveUKAddress(false)(using sessionDataAreYouCorporateTrustee)
+
+        given application: Application = applicationBuilder(sessionData = sessionDataAreYouCorporateWithUKAddress).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view = application.injector.instanceOf[CorporateTrusteeAddressView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
+        }
+      }
+
       "should render page not found if Corporate trustee is false" in {
         val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
 
