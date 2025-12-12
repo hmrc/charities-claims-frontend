@@ -37,14 +37,15 @@ pageTitle = title(form, messages("charityRegulatorNumber.title"))
 <span class="govuk-caption-l">@messages("charityRegulatorNumber.caption")</span>
 <h1 class="govuk-heading-l">@messages("charityRegulatorNumber.heading")</h1>
 
-<p class="govuk-hint">@messages("charityRegulatorNumber.hint")</p>
-
 @formHelper(action = routes.CharityRegulatorNumberController.onSubmit) {
 
 @govukInput(
 InputViewModel(
 field = form("value"),
 label = LabelViewModel(messages("charityRegulatorNumber.heading")).withCssClass("govuk-visually-hidden")
+).withHint(
+HintViewModel(Text(messages("charityRegulatorNumber.hint")))
+.withId("value-hint")
 )
 )
 
