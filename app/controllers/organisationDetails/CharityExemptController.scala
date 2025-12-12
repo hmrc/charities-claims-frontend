@@ -17,12 +17,12 @@
 package controllers.organisationDetails
 
 import com.google.inject.Inject
-import play.api.i18n.I18nSupport
+import controllers.BaseController
 import controllers.actions.Actions
 import models.Mode.NormalMode
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.CharityExemptView
+import models.{OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator}
 
 import scala.concurrent.Future
 
@@ -30,11 +30,15 @@ class CharityExemptController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
   view: CharityExemptView
-) extends FrontendBaseController
-    with I18nSupport {
+) extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view())
+  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
+      OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
+    previousAnswer match {
+      case Some(ReasonNotRegisteredWithRegulator.Exempt) => Future.successful(Ok(view()))
+      case _                                             => Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+    }
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
