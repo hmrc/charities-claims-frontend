@@ -34,7 +34,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
             claimingGiftAid = Some(true),
             claimingTaxDeducted = Some(false),
-            claimingUnderGasds = Some(true),
+            claimingUnderGiftAidSmallDonationsScheme = Some(true),
             claimingReferenceNumber = Some(true),
             claimReferenceNumber = Some("12345678AB")
           )
@@ -62,7 +62,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
             claimingGiftAid = Some(true),
             claimingTaxDeducted = Some(false),
-            claimingUnderGasds = Some(true),
+            claimingUnderGiftAidSmallDonationsScheme = Some(true),
             claimingReferenceNumber = Some(false),
             claimReferenceNumber = None
           )
@@ -90,7 +90,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
             claimingGiftAid = Some(true),
             claimingTaxDeducted = None,
-            claimingUnderGasds = Some(true),
+            claimingUnderGiftAidSmallDonationsScheme = Some(true),
             claimingReferenceNumber = None,
             claimReferenceNumber = Some("12345678AB")
           )
@@ -122,7 +122,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
         repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(false),
-          claimingUnderGasds = Some(true),
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
           claimingReferenceNumber = Some(true),
           claimReferenceNumber = Some("12345678AB")
         )
@@ -150,7 +150,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
         repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = None,
-          claimingUnderGasds = Some(true),
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
           claimingReferenceNumber = Some(true),
           claimReferenceNumber = Some("12345678AB")
         )

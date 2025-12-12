@@ -26,7 +26,7 @@ class SaveClaimRequestSpec extends BaseSpec {
       val saveClaimRequest = SaveClaimRequest(
         claimingGiftAid = true,
         claimingTaxDeducted = true,
-        claimingUnderGasds = false,
+        claimingUnderGiftAidSmallDonationsScheme = false,
         claimReferenceNumber = Some("1234567890"),
         claimingDonationsNotFromCommunityBuilding = Some(true),
         claimingDonationsCollectedInCommunityBuildings = Some(true),

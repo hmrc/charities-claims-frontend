@@ -27,7 +27,7 @@ class SessionDataSpec extends BaseSpec {
         repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(true),
-          claimingUnderGasds = Some(true),
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
           claimingReferenceNumber = Some(true),
           claimReferenceNumber = Some("1234567890")
         ),

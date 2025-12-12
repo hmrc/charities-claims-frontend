@@ -81,7 +81,7 @@ class ClaimsConnectorImpl @Inject() (
     val payload = SaveClaimRequest(
       claimingGiftAid = repaymentClaimDetails.claimingGiftAid,
       claimingTaxDeducted = repaymentClaimDetails.claimingTaxDeducted,
-      claimingUnderGasds = repaymentClaimDetails.claimingUnderGasds,
+      claimingUnderGiftAidSmallDonationsScheme = repaymentClaimDetails.claimingUnderGiftAidSmallDonationsScheme,
       claimReferenceNumber = repaymentClaimDetails.claimReferenceNumber,
       claimingDonationsNotFromCommunityBuilding = repaymentClaimDetails.claimingDonationsNotFromCommunityBuilding,
       claimingDonationsCollectedInCommunityBuildings =

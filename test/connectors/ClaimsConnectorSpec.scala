@@ -168,7 +168,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
         SaveClaimRequest(
           claimingGiftAid = true,
           claimingTaxDeducted = true,
-          claimingUnderGasds = false,
+          claimingUnderGiftAidSmallDonationsScheme = false,
           claimReferenceNumber = Some("1234567890")
         ),
         HttpResponse(200, Json.stringify(Json.toJson(SaveClaimResponse(claimId = "1237"))))
@@ -178,7 +178,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
           RepaymentClaimDetails(
             claimingGiftAid = true,
             claimingTaxDeducted = true,
-            claimingUnderGasds = false,
+            claimingUnderGiftAidSmallDonationsScheme = false,
             claimReferenceNumber = Some("1234567890")
           )
         )
@@ -191,7 +191,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       val repaymentDetails = RepaymentClaimDetails(
         claimingGiftAid = true,
         claimingTaxDeducted = true,
-        claimingUnderGasds = false,
+        claimingUnderGiftAidSmallDonationsScheme = false,
         claimReferenceNumber = Some("1234567890")
       )
 

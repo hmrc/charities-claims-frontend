@@ -21,7 +21,7 @@ import play.api.libs.json.Json
 
 final case class GiftAidSmallDonationsSchemeScheduleDataAnswers(
   adjustmentForGiftAidOverClaimed: Option[BigDecimal] = None,
-  claims: Option[Seq[GasdsClaim]] = None,
+  claims: Option[Seq[GiftAidSmallDonationsSchemeClaim]] = None,
   connectedCharitiesScheduleData: Option[Seq[ConnectedCharity]] = None,
   communityBuildingsScheduleData: Option[Seq[CommunityBuilding]] = None
 )
