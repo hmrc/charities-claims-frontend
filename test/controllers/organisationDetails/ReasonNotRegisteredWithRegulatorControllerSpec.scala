@@ -25,6 +25,7 @@ import forms.RadioListFormProvider
 import models.{OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator}
 import play.api.data.Form
 import models.Mode.*
+import models.NameOfCharityRegulator.{EnglandAndWales, None, NorthernIreland, Scottish}
 import models.ReasonNotRegisteredWithRegulator.*
 
 class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
@@ -35,8 +36,9 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
 
   "ReasonNotRegisteredWithRegulatorController" - {
     "onPageLoad" - {
-      "should render the page correctly" in {
-        given application: Application = applicationBuilder().build()
+      "should render the page correctly if name of charity is None" in {
+        val sessionData                = OrganisationDetailsAnswers.setNameOfCharityRegulator(None)
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -50,11 +52,65 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render the page and pre-populate correctly with lowIncome value" in {
-
-        val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(LowIncome)
+      "should render page not found if name of charity is Scottish" in {
+        val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(Scottish)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ReasonNotRegisteredWithRegulatorView]
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+        }
+      }
+
+      "should render page not found if name of charity is NorthernIreland" in {
+        val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(NorthernIreland)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ReasonNotRegisteredWithRegulatorView]
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+        }
+      }
+
+      "should render page not found if name of charity is EnglandAndWales" in {
+        val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ReasonNotRegisteredWithRegulatorView]
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+        }
+      }
+
+      "should render the page and pre-populate correctly with lowIncome value when name of charity is None" in {
+
+        val sessionDataWithLowIncome                        = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(LowIncome)
+        val sessionDataWithLowIncomeAndCharityRegulatorNone =
+          OrganisationDetailsAnswers.setNameOfCharityRegulator(None)(using sessionDataWithLowIncome)
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionDataWithLowIncomeAndCharityRegulatorNone).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -71,11 +127,14 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render the page and pre-populate correctly with excepted value" in {
+      "should render the page and pre-populate correctly with excepted value when name of charity is None" in {
 
-        val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Excepted)
+        val sessionDataWithExcepted                        = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Excepted)
+        val sessionDataWithExceptedAndCharityRegulatorNone =
+          OrganisationDetailsAnswers.setNameOfCharityRegulator(None)(using sessionDataWithExcepted)
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionDataWithExceptedAndCharityRegulatorNone).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -89,11 +148,14 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render the page and pre-populate correctly with exempted value" in {
+      "should render the page and pre-populate correctly with exempted value when name of charity is None" in {
 
-        val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Exempt)
+        val sessionDataWithExempt                        = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Exempt)
+        val sessionDataWithExemptAndCharityRegulatorNone =
+          OrganisationDetailsAnswers.setNameOfCharityRegulator(None)(using sessionDataWithExempt)
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionDataWithExemptAndCharityRegulatorNone).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -107,11 +169,14 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render the page and pre-populate correctly with waiting value" in {
+      "should render the page and pre-populate correctly with waiting value when name of charity is None" in {
 
-        val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Waiting)
+        val sessionDataWithWaiting                        = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Waiting)
+        val sessionDataWithWaitingAndCharityRegulatorNone =
+          OrganisationDetailsAnswers.setNameOfCharityRegulator(None)(using sessionDataWithWaiting)
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionDataWithWaitingAndCharityRegulatorNone).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
