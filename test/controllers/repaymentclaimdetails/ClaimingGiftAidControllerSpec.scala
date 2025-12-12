@@ -164,7 +164,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
     }
 
     "onSubmit with warning" - {
-      "should render warning when the value is false and warning is expected" in {
+      "should trigger warning when changing to false with Gift Aid schedule data present" in {
         val sessionData = SessionData.empty.copy(
           repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
           giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
@@ -185,7 +185,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to the next page when the value is false and warning has been shown" in {
+      "should redirect to the next page in NormalMode when value is false and warning has been shown" in {
         val sessionData = SessionData.empty.copy(
           repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
           giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
@@ -209,7 +209,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
         }
       }
 
-      "should not show warning when no previous giftAidScheduleDataAnswers data exists" in {
+      "should not show warning when no previous gift aid schedule data exists" in {
         val sessionData = SessionData.empty.copy(
           repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(false))
         )
@@ -225,6 +225,45 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           flash(result).get("warning") shouldEqual None
+        }
+      }
+
+      "should redirect to CheckYourAnswers in CheckMode after warning confirmation" in {
+        val sessionData = SessionData.empty.copy(
+          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false", "warningShown" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result).value shouldEqual routes.CheckYourAnswersController.onPageLoad.url
+        }
+      }
+
+      "should render warning parameter hidden field when flash present" in {
+        val sessionData = SessionData.empty.copy(
+          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ClaimingGiftAidController.onPageLoad(NormalMode).url)
+              .withFlash("warning" -> "true", "warningAnswer" -> "false")
+
+          val result = route(application, request).value
+
+          contentAsString(result) should include("warningShown")
         }
       }
     }

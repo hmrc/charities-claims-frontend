@@ -76,6 +76,10 @@ object RepaymentClaimDetailsAnswers {
 
   def setClaimingTaxDeducted(value: Boolean)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(claimingTaxDeducted = Some(v)))
+      .copy(otherIncomeScheduleDataAnswers = if (value) session.otherIncomeScheduleDataAnswers else None)
+
+  def shouldWarnAboutChangingClaimingTaxDeducted(value: Boolean)(using session: SessionData): Boolean =
+    !value && session.otherIncomeScheduleDataAnswers.isDefined
 
   def getClaimingGiftAid(using session: SessionData): Option[Boolean] = get(_.claimingGiftAid)
 
@@ -92,6 +96,10 @@ object RepaymentClaimDetailsAnswers {
 
   def setClaimingUnderGiftAidSmallDonationsScheme(value: Boolean)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(claimingUnderGiftAidSmallDonationsScheme = Some(v)))
+      .copy(giftAidSmallDonationsSchemeScheduleDataAnswers = if (value) session.giftAidSmallDonationsSchemeScheduleDataAnswers else None)
+
+  def shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(value: Boolean)(using session: SessionData): Boolean =
+    !value && session.giftAidSmallDonationsSchemeScheduleDataAnswers.isDefined
 
   def getClaimingReferenceNumber(using session: SessionData): Option[Boolean] = get(_.claimingReferenceNumber)
 
