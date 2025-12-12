@@ -88,4 +88,9 @@ object OrganisationDetailsAnswers {
 
   def setAreYouACorporateTrustee(value: Boolean)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(areYouACorporateTrustee = Some(v)))
+
+  def getCharityRegistrationNumber(using session: SessionData): Option[String] = get(_.charityRegistrationNumber)
+
+  def setCharityRegistrationNumber(value: String)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(charityRegistrationNumber = Some(v)))
 }
