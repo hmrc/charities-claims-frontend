@@ -47,17 +47,19 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
       }
 
       "should render the page and pre-populate correctly with true for UK Address if Corporate trustee is true" in {
-        val sessionDataAreYouCorporateTrustee = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
-        val sessionDataAreYouCorporateWithUKAddress = OrganisationDetailsAnswers.setDoYouHaveUKAddress(true) (using sessionDataAreYouCorporateTrustee)
+        val sessionDataAreYouCorporateTrustee       = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+        val sessionDataAreYouCorporateWithUKAddress =
+          OrganisationDetailsAnswers.setDoYouHaveUKAddress(true)(using sessionDataAreYouCorporateTrustee)
 
-        given application: Application = applicationBuilder(sessionData = sessionDataAreYouCorporateWithUKAddress).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionDataAreYouCorporateWithUKAddress).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view = application.injector.instanceOf[CorporateTrusteeAddressView]
+          val view   = application.injector.instanceOf[CorporateTrusteeAddressView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
@@ -65,17 +67,19 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
       }
 
       "should render the page and pre-populate correctly with false for UK Address if Corporate trustee is true" in {
-        val sessionDataAreYouCorporateTrustee = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
-        val sessionDataAreYouCorporateWithUKAddress = OrganisationDetailsAnswers.setDoYouHaveUKAddress(false)(using sessionDataAreYouCorporateTrustee)
+        val sessionDataAreYouCorporateTrustee       = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+        val sessionDataAreYouCorporateWithUKAddress =
+          OrganisationDetailsAnswers.setDoYouHaveUKAddress(false)(using sessionDataAreYouCorporateTrustee)
 
-        given application: Application = applicationBuilder(sessionData = sessionDataAreYouCorporateWithUKAddress).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionDataAreYouCorporateWithUKAddress).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view = application.injector.instanceOf[CorporateTrusteeAddressView]
+          val view   = application.injector.instanceOf[CorporateTrusteeAddressView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
