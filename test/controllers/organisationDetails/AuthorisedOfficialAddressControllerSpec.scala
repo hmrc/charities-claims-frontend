@@ -19,35 +19,34 @@ package controllers.organisationDetails
 import play.api.test.FakeRequest
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import controllers.ControllerSpec
-import views.html.CorporateTrusteeAddressView
+import views.html.AuthorisedOfficialAddressView
 import play.api.Application
 import forms.YesNoFormProvider
 import models.OrganisationDetailsAnswers
 import play.api.data.Form
 import models.Mode.*
 
-class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
+class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
   private val form: Form[Boolean] = new YesNoFormProvider()()
-  "CorporateTrusteeAddressController" - {
+  "AuthorisedOfficialAddressController" - {
     "onPageLoad" - {
-      "should render the page correctly if Corporate trustee is true" in {
-        val sessionData                = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+      "should render the page correctly if Corporate trustee is false" in {
+        val sessionData                = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[CorporateTrusteeAddressView]
+            FakeRequest(GET, routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode).url)
+          val result                                         = route(application, request).value
+          val view                                           = application.injector.instanceOf[AuthorisedOfficialAddressView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
 
-      "should render the page and pre-populate correctly with true for UK Address if Corporate trustee is true" in {
-        val sessionDataAreYouCorporateTrustee       = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+      "should render the page and pre-populate correctly with true for UK Address if Corporate trustee is false" in {
+        val sessionDataAreYouCorporateTrustee       = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
         val sessionDataAreYouCorporateWithUKAddress =
           OrganisationDetailsAnswers.setDoYouHaveUKAddress(true)(using sessionDataAreYouCorporateTrustee)
 
@@ -56,18 +55,18 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url)
+            FakeRequest(GET, routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[CorporateTrusteeAddressView]
+          val view   = application.injector.instanceOf[AuthorisedOfficialAddressView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
         }
       }
 
-      "should render the page and pre-populate correctly with false for UK Address if Corporate trustee is true" in {
-        val sessionDataAreYouCorporateTrustee       = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+      "should render the page and pre-populate correctly with false for UK Address if Corporate trustee is false" in {
+        val sessionDataAreYouCorporateTrustee       = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
         val sessionDataAreYouCorporateWithUKAddress =
           OrganisationDetailsAnswers.setDoYouHaveUKAddress(false)(using sessionDataAreYouCorporateTrustee)
 
@@ -76,24 +75,23 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url)
+            FakeRequest(GET, routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[CorporateTrusteeAddressView]
+          val view   = application.injector.instanceOf[AuthorisedOfficialAddressView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
         }
       }
-
-      "should render page not found if Corporate trustee is false" in {
-        val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+      "should render page not found if Corporate trustee is true" in {
+        val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url)
+            FakeRequest(GET, routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -109,14 +107,14 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.AuthorisedOfficialAddressController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url
+            routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -126,14 +124,14 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.AuthorisedOfficialAddressController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url
+            routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -143,7 +141,7 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.AuthorisedOfficialAddressController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value

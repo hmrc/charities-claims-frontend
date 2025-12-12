@@ -45,7 +45,7 @@ object TestClaims {
     claimId: String = "123",
     claimingTaxDeducted: Boolean = true,
     claimingGiftAid: Boolean = true,
-    claimingUnderGasds: Boolean = false,
+    claimingUnderGiftAidSmallDonationsScheme: Boolean = false,
     claimReferenceNumber: Option[String] = Some("1234567890")
   ): Claim =
     Claim(
@@ -57,7 +57,7 @@ object TestClaims {
         repaymentClaimDetails = RepaymentClaimDetails(
           claimingTaxDeducted = claimingTaxDeducted,
           claimingGiftAid = claimingGiftAid,
-          claimingUnderGasds = claimingUnderGasds,
+          claimingUnderGiftAidSmallDonationsScheme = claimingUnderGiftAidSmallDonationsScheme,
           claimReferenceNumber = claimReferenceNumber
         )
       )
@@ -67,7 +67,7 @@ object TestClaims {
     claimId: String = "123",
     claimingTaxDeducted: Boolean = true,
     claimingGiftAid: Boolean = true,
-    claimingUnderGasds: Boolean = false,
+    claimingUnderGiftAidSmallDonationsScheme: Boolean = false,
     claimReferenceNumber: Option[String] = Some("1234567890"),
     nameOfCharityRegulator: NameOfCharityRegulator = NameOfCharityRegulator.EnglandAndWales,
     reasonNotRegisteredWithRegulator: Option[ReasonNotRegisteredWithRegulator] = Some(
@@ -89,7 +89,7 @@ object TestClaims {
         repaymentClaimDetails = RepaymentClaimDetails(
           claimingTaxDeducted = claimingTaxDeducted,
           claimingGiftAid = claimingGiftAid,
-          claimingUnderGasds = claimingUnderGasds,
+          claimingUnderGiftAidSmallDonationsScheme = claimingUnderGiftAidSmallDonationsScheme,
           claimReferenceNumber = claimReferenceNumber
         ),
         organisationDetails = Some(

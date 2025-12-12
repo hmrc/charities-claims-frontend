@@ -18,8 +18,11 @@ package controllers.organisationDetails
 
 import controllers.ControllerSpec
 import forms.CharityRegulatorNumberFormProvider
+import models.Mode.NormalMode
+import models.OrganisationDetailsAnswers
 import play.api.Application
 import play.api.i18n.MessagesApi
+import models.NameOfCharityRegulator.*
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.CharityRegulatorNumberView
@@ -32,8 +35,9 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
   "CharityRegulatorNumberController" - {
 
     "onPageLoad" - {
-      "should render the page correctly" in {
-        given application: Application = applicationBuilder().build()
+      "should render the page correctly if name of charity is EnglandAndWales" in {
+        val sessionData                = OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -49,6 +53,62 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
           contentAsString(result) shouldEqual view(form)(request, messages).body
         }
       }
+
+      "should render the page correctly if name of charity is NorthernIreland" in {
+        val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(NorthernIreland)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CharityRegulatorNumberController.onPageLoad.url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[CharityRegulatorNumberView]
+
+          val messages = application.injector.instanceOf[MessagesApi].preferred(request)
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(form)(request, messages).body
+        }
+      }
+
+      "should render the page correctly if name of charity is Scottish" in {
+        val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(Scottish)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CharityRegulatorNumberController.onPageLoad.url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[CharityRegulatorNumberView]
+
+          val messages = application.injector.instanceOf[MessagesApi].preferred(request)
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(form)(request, messages).body
+        }
+      }
+
+      "should render page not found if name of charity is None" in {
+        val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(None)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CharityRegulatorNumberController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+        }
+      }
     }
 
     "onSubmit" - {
@@ -62,7 +122,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.CharityRegulatorNumberController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
         }
       }
 

@@ -74,26 +74,26 @@ object CheckYourAnswersHelper {
             )
           )
       },
-      answers.claimingUnderGasds match {
+      answers.claimingUnderGiftAidSmallDonationsScheme match {
         case Some(value) =>
           Some(
             summaryRow(
-              messages("checkYourAnswers.gasds.label"),
+              messages("checkYourAnswers.giftAidSmallDonationsScheme.label"),
               if (value) messages("site.yes") else messages("site.no"),
               controllers.repaymentclaimdetails.routes.ClaimingGiftAidSmallDonationsController
                 .onPageLoad(CheckMode)
                 .url,
-              messages("checkYourAnswers.gasds.label")
+              messages("checkYourAnswers.giftAidSmallDonationsScheme.label")
             )
           )
         case None        =>
           Some(
             missingDataRow(
-              messages("checkYourAnswers.gasds.label"),
+              messages("checkYourAnswers.giftAidSmallDonationsScheme.label"),
               controllers.repaymentclaimdetails.routes.ClaimingGiftAidSmallDonationsController
                 .onPageLoad(CheckMode)
                 .url,
-              messages("checkYourAnswers.gasds.label")
+              messages("checkYourAnswers.giftAidSmallDonationsScheme.label")
             )
           )
       },

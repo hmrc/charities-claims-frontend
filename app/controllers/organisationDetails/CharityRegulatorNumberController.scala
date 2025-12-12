@@ -19,37 +19,47 @@ package controllers.organisationDetails
 import com.google.inject.Inject
 import controllers.actions.Actions
 import forms.CharityRegulatorNumberFormProvider
-import play.api.i18n.I18nSupport
+import models.Mode.NormalMode
+import controllers.BaseController
+import models.NameOfCharityRegulator
+import models.OrganisationDetailsAnswers
+import services.SaveService
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.CharityRegulatorNumberView
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class CharityRegulatorNumberController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
   formProvider: CharityRegulatorNumberFormProvider,
-  view: CharityRegulatorNumberView
-) extends FrontendBaseController
-    with I18nSupport {
+  view: CharityRegulatorNumberView,
+  saveService: SaveService
+)(using ec: ExecutionContext)
+    extends BaseController {
 
   val form = formProvider()
 
-  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(form))
+  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val previousAnswer = OrganisationDetailsAnswers.getCharityRegistrationNumber
+
+    val nameOfCharityAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
+    if nameOfCharityAnswer.isEmpty || nameOfCharityAnswer.contains(NameOfCharityRegulator.None)
+    then Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+    else Future.successful(Ok(view(form.withDefault(previousAnswer))))
   }
 
-  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
-          // TODO: Redirect to A2.6 - Corporate Trustee when that controller exists
-          // Future.successful(Redirect(routes.CorporateTrusteeController.onPageLoad))
-
-          Future.successful(Redirect(routes.CharityRegulatorNumberController.onPageLoad))
+          saveService
+            .save(OrganisationDetailsAnswers.setCharityRegistrationNumber(value))
+            .map { _ =>
+              Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
+            }
       )
   }
 }

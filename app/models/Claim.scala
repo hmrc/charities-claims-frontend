@@ -38,7 +38,7 @@ final case class ClaimData(
   giftAidScheduleData: Option[GiftAidScheduleData] = None,
   declarationDetails: Option[DeclarationDetails] = None,
   otherIncomeScheduleData: Option[OtherIncomeScheduleData] = None,
-  gasdsScheduleData: Option[GasdsScheduleData] = None
+  giftAidSmallDonationsSchemeScheduleData: Option[GiftAidSmallDonationsSchemeScheduleData] = None
 )
 
 object ClaimData {
@@ -48,7 +48,7 @@ object ClaimData {
 final case class RepaymentClaimDetails(
   claimingGiftAid: Boolean,
   claimingTaxDeducted: Boolean,
-  claimingUnderGasds: Boolean,
+  claimingUnderGiftAidSmallDonationsScheme: Boolean,
   claimReferenceNumber: Option[String] = None,
   claimingDonationsNotFromCommunityBuilding: Option[Boolean] = None,
   claimingDonationsCollectedInCommunityBuildings: Option[Boolean] = None,
@@ -125,7 +125,7 @@ object Donation {
 }
 
 final case class OtherIncomeScheduleData(
-  prevOverclaimedOtherIncome: BigDecimal,
+  previouslyOverclaimedOtherIncome: BigDecimal,
   totalGrossPayments: BigDecimal,
   totalTaxDeducted: BigDecimal,
   payments: Seq[Payment]
@@ -147,24 +147,24 @@ object Payment {
   given Format[Payment] = Json.format[Payment]
 }
 
-final case class GasdsScheduleData(
+final case class GiftAidSmallDonationsSchemeScheduleData(
   adjustmentForGiftAidOverClaimed: BigDecimal,
-  claims: Seq[GasdsClaim],
+  claims: Seq[GiftAidSmallDonationsSchemeClaim],
   connectedCharitiesScheduleData: Seq[ConnectedCharity],
   communityBuildingsScheduleData: Seq[CommunityBuilding]
 )
 
-object GasdsScheduleData {
-  given Format[GasdsScheduleData] = Json.format[GasdsScheduleData]
+object GiftAidSmallDonationsSchemeScheduleData {
+  given Format[GiftAidSmallDonationsSchemeScheduleData] = Json.format[GiftAidSmallDonationsSchemeScheduleData]
 }
 
-final case class GasdsClaim(
+final case class GiftAidSmallDonationsSchemeClaim(
   taxYear: Int,
   amountOfDonationsReceived: BigDecimal
 )
 
-object GasdsClaim {
-  given Format[GasdsClaim] = Json.format[GasdsClaim]
+object GiftAidSmallDonationsSchemeClaim {
+  given Format[GiftAidSmallDonationsSchemeClaim] = Json.format[GiftAidSmallDonationsSchemeClaim]
 }
 
 final case class ConnectedCharity(

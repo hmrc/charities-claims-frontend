@@ -26,7 +26,7 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
       val repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
         claimingGiftAid = Some(true),
         claimingTaxDeducted = Some(true),
-        claimingUnderGasds = Some(true),
+        claimingUnderGiftAidSmallDonationsScheme = Some(true),
         claimingReferenceNumber = Some(true),
         claimReferenceNumber = Some("1234567890")
       )
@@ -40,14 +40,14 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
       val repaymentClaimDetails        = RepaymentClaimDetails(
         claimingGiftAid = true,
         claimingTaxDeducted = false,
-        claimingUnderGasds = true,
+        claimingUnderGiftAidSmallDonationsScheme = true,
         claimReferenceNumber = Some("foobar")
       )
       val repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers.from(repaymentClaimDetails)
       repaymentClaimDetailsAnswers shouldBe RepaymentClaimDetailsAnswers(
         claimingGiftAid = Some(true),
         claimingTaxDeducted = Some(false),
-        claimingUnderGasds = Some(true),
+        claimingUnderGiftAidSmallDonationsScheme = Some(true),
         claimingReferenceNumber = Some(true),
         claimReferenceNumber = Some("foobar")
       )
@@ -57,7 +57,7 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
       val repaymentClaimDetails        = RepaymentClaimDetails(
         claimingGiftAid = false,
         claimingTaxDeducted = false,
-        claimingUnderGasds = true,
+        claimingUnderGiftAidSmallDonationsScheme = true,
         claimReferenceNumber = None
       )
       val repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers.from(repaymentClaimDetails)
@@ -65,7 +65,7 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
       repaymentClaimDetailsAnswers shouldBe RepaymentClaimDetailsAnswers(
         claimingGiftAid = Some(false),
         claimingTaxDeducted = Some(false),
-        claimingUnderGasds = Some(true),
+        claimingUnderGiftAidSmallDonationsScheme = Some(true),
         claimingReferenceNumber = Some(false),
         claimReferenceNumber = None
       )

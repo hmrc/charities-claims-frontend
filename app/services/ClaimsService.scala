@@ -85,13 +85,13 @@ class ClaimsServiceImpl @Inject() (saveService: SaveService, connector: ClaimsCo
   private def transform(answers: RepaymentClaimDetailsAnswers): Try[RepaymentClaimDetails] =
     (
       for
-        claimingGiftAid     <- required(answers)(_.claimingGiftAid)
-        claimingTaxDeducted <- required(answers)(_.claimingTaxDeducted)
-        claimingUnderGasds  <- required(answers)(_.claimingUnderGasds)
+        claimingGiftAid                          <- required(answers)(_.claimingGiftAid)
+        claimingTaxDeducted                      <- required(answers)(_.claimingTaxDeducted)
+        claimingUnderGiftAidSmallDonationsScheme <- required(answers)(_.claimingUnderGiftAidSmallDonationsScheme)
       yield RepaymentClaimDetails(
         claimingGiftAid,
         claimingTaxDeducted,
-        claimingUnderGasds,
+        claimingUnderGiftAidSmallDonationsScheme,
         answers.claimReferenceNumber
       )
     ).recoverWith(err => Failure(MissingRequiredFieldsException(err.getMessage)))

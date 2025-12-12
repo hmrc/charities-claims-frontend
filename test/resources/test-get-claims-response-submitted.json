@@ -10,7 +10,7 @@
                 "repaymentClaimDetails": {
                     "claimingGiftAid": true,
                     "claimingTaxDeducted": true,
-                    "claimingUnderGasds": false,
+                    "claimingUnderGiftAidSmallDonationsScheme": false,
                     "claimReferenceNumber": "New GA Claim"
                 },
                 "organisationDetails": {
@@ -71,7 +71,7 @@
                     ]
                 },
                 "otherIncomeScheduleData": {
-                    "prevOverclaimedOtherIncome": 0.00,
+                    "previouslyOverclaimedOtherIncome": 0.00,
                     "totalGrossPayments": 100.00,
                     "totalTaxDeducted": 10.00,
                     "payments": [
@@ -84,7 +84,7 @@
                         }
                     ]
                 },
-                "gasdsScheduleData": {
+                "giftAidSmallDonationsSchemeScheduleData": {
                     "adjustmentForGiftAidOverClaimed": 0.00,
                     "claims": [
                         {

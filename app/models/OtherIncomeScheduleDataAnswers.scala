@@ -20,7 +20,7 @@ import play.api.libs.json.Format
 import play.api.libs.json.Json
 
 final case class OtherIncomeScheduleDataAnswers(
-  prevOverclaimedOtherIncome: Option[BigDecimal] = None,
+  previouslyOverclaimedOtherIncome: Option[BigDecimal] = None,
   totalGrossPayments: Option[BigDecimal] = None,
   totalTaxDeducted: Option[BigDecimal] = None,
   payments: Option[Seq[Payment]] = None
@@ -32,7 +32,7 @@ object OtherIncomeScheduleDataAnswers {
 
   def from(otherIncomeScheduleData: OtherIncomeScheduleData): OtherIncomeScheduleDataAnswers =
     OtherIncomeScheduleDataAnswers(
-      prevOverclaimedOtherIncome = Some(otherIncomeScheduleData.prevOverclaimedOtherIncome),
+      previouslyOverclaimedOtherIncome = Some(otherIncomeScheduleData.previouslyOverclaimedOtherIncome),
       totalGrossPayments = Some(otherIncomeScheduleData.totalGrossPayments),
       totalTaxDeducted = Some(otherIncomeScheduleData.totalTaxDeducted),
       payments = Some(otherIncomeScheduleData.payments)

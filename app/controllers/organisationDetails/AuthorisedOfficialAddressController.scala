@@ -14,36 +14,39 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.organisationDetails
 
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.YesNoFormProvider
-import models.RepaymentClaimDetailsAnswers
+import models.OrganisationDetailsAnswers
 import models.Mode
 import models.Mode.*
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.ClaimingGiftAidSmallDonationsView
+import views.html.AuthorisedOfficialAddressView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimingGiftAidSmallDonationsController @Inject() (
+class AuthorisedOfficialAddressController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimingGiftAidSmallDonationsView,
+  view: AuthorisedOfficialAddressView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("claimingGiftAidSmallDonations.error.required")
+  val form: Form[Boolean] = formProvider("authorisedOfficialAddress.error.required")
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme
-    Ok(view(form.withDefault(previousAnswer), mode))
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    if OrganisationDetailsAnswers.getAreYouACorporateTrustee.contains(false)
+    then {
+      val previousAnswer = OrganisationDetailsAnswers.getDoYouHaveUKAddress
+      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+    } else { Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad)) }
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
@@ -53,13 +56,9 @@ class ClaimingGiftAidSmallDonationsController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
-            .save(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(value))
+            .save(OrganisationDetailsAnswers.setDoYouHaveUKAddress(value))
             .map { _ =>
-              if (mode == CheckMode) {
-                Redirect(routes.CheckYourAnswersController.onPageLoad)
-              } else {
-                Redirect(routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode))
-              }
+              Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode))
             }
       )
   }
