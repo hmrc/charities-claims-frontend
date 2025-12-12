@@ -27,7 +27,6 @@ import scala.util.control.NonFatal
 import scala.concurrent.{ExecutionContext, Future}
 
 import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
 
 @Singleton
 class SessionDataController @Inject() (

@@ -20,12 +20,12 @@
     layout: templates.Layout
 )
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[?], messages: Messages)
+@(pageTitle: String, heading: String, message: String, messageArgs: Seq[String] = Seq.empty)(implicit request:Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm(pageTitle), showBackLink = false) {
     <h1 class="govuk-heading-xl">@messages(heading)</h1>
 
-    @messages(message).split("<br>").map { line =>
+    @messages(message, messageArgs*).split("<br>").map { line =>
         <p class="govuk-body">@Html(line.trim)</p>
     }
     
