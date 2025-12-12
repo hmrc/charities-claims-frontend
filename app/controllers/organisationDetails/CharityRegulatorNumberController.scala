@@ -20,26 +20,36 @@ import com.google.inject.Inject
 import controllers.actions.Actions
 import forms.CharityRegulatorNumberFormProvider
 import models.Mode.NormalMode
-import play.api.i18n.I18nSupport
-import models.Mode.*
+import controllers.BaseController
+import models.NameOfCharityRegulator
+import models.OrganisationDetailsAnswers
+import services.SaveService
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.CharityRegulatorNumberView
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class CharityRegulatorNumberController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
   formProvider: CharityRegulatorNumberFormProvider,
-  view: CharityRegulatorNumberView
-) extends FrontendBaseController
-    with I18nSupport {
+  view: CharityRegulatorNumberView,
+  saveService: SaveService
+)(using ec: ExecutionContext)
+    extends BaseController {
 
   val form = formProvider()
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(form))
+  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val previousAnswer = OrganisationDetailsAnswers.getCharityRegistrationNumber
+
+    val nameOfCharityAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
+    nameOfCharityAnswer match {
+      case Some(NameOfCharityRegulator.EnglandAndWales) => Future.successful(Ok(view(form.withDefault(previousAnswer))))
+      case Some(NameOfCharityRegulator.NorthernIreland) => Future.successful(Ok(view(form.withDefault(previousAnswer))))
+      case Some(NameOfCharityRegulator.Scottish)        => Future.successful(Ok(view(form.withDefault(previousAnswer))))
+      case _                                            => Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+    }
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
@@ -47,7 +57,12 @@ class CharityRegulatorNumberController @Inject() (
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value => Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
+        value =>
+          saveService
+            .save(OrganisationDetailsAnswers.setCharityRegistrationNumber(value))
+            .map { _ =>
+              Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
+            }
       )
   }
 }
