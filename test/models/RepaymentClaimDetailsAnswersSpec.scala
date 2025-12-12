@@ -197,7 +197,7 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           gasdsScheduleDataAnswers = Some(GasdsScheduleDataAnswers())
         )
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGasds(false) shouldBe true
+        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(false) shouldBe true
       }
 
       "should return false when setting value to true" in {
@@ -205,13 +205,13 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           gasdsScheduleDataAnswers = Some(GasdsScheduleDataAnswers())
         )
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGasds(true) shouldBe false
+        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(true) shouldBe false
       }
 
       "should return false when no GASDS schedule data exists" in {
         given session: SessionData = SessionData.empty
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGasds(false) shouldBe false
+        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(false) shouldBe false
       }
     }
   }
