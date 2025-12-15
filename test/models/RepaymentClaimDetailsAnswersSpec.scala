@@ -118,5 +118,109 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
         RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(false) shouldBe false
       }
     }
+
+    "setClaimingTaxDeducted" - {
+      "should delete otherIncomeScheduleDataAnswers when changing to false" in {
+        given session: SessionData = SessionData.empty.copy(
+          otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+        )
+
+        val result = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false)
+
+        result.otherIncomeScheduleDataAnswers                   shouldBe None
+        result.repaymentClaimDetailsAnswers.claimingTaxDeducted shouldBe Some(false)
+      }
+
+      "should keep otherIncomeScheduleDataAnswers when changing to true" in {
+        given session: SessionData = SessionData.empty.copy(
+          otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+        )
+
+        val result = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+
+        result.otherIncomeScheduleDataAnswers                   shouldBe Some(OtherIncomeScheduleDataAnswers())
+        result.repaymentClaimDetailsAnswers.claimingTaxDeducted shouldBe Some(true)
+      }
+    }
+
+    "shouldWarnAboutChangingClaimingTaxDeducted" - {
+      "should return true when value is false when there is Other Income data" in {
+        given session: SessionData = SessionData.empty.copy(
+          otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+        )
+
+        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingTaxDeducted(false) shouldBe true
+      }
+
+      "should return false when setting value to true" in {
+        given session: SessionData = SessionData.empty.copy(
+          otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+        )
+
+        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingTaxDeducted(true) shouldBe false
+      }
+
+      "should return false when no Other Income data exists" in {
+        given session: SessionData = SessionData.empty
+
+        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingTaxDeducted(false) shouldBe false
+      }
+    }
+
+    "setClaimingUnderGasds" - {
+      "should delete gasdsScheduleDataAnswers when changing to false" in {
+        given session: SessionData = SessionData.empty.copy(
+          giftAidSmallDonationsSchemeScheduleDataAnswers = Some(GiftAidSmallDonationsSchemeScheduleDataAnswers())
+        )
+
+        val result = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
+
+        result.giftAidSmallDonationsSchemeScheduleDataAnswers                        shouldBe None
+        result.repaymentClaimDetailsAnswers.claimingUnderGiftAidSmallDonationsScheme shouldBe Some(false)
+      }
+
+      "should keep gasdsScheduleDataAnswers when changing to true" in {
+        given session: SessionData = SessionData.empty.copy(
+          giftAidSmallDonationsSchemeScheduleDataAnswers = Some(GiftAidSmallDonationsSchemeScheduleDataAnswers())
+        )
+
+        val result = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+
+        result.giftAidSmallDonationsSchemeScheduleDataAnswers                        shouldBe Some(
+          GiftAidSmallDonationsSchemeScheduleDataAnswers()
+        )
+        result.repaymentClaimDetailsAnswers.claimingUnderGiftAidSmallDonationsScheme shouldBe Some(true)
+      }
+    }
+
+    "shouldWarnAboutChangingClaimingUnderGasds" - {
+      "should return true when value is false when there is GASDS data" in {
+        given session: SessionData = SessionData.empty.copy(
+          giftAidSmallDonationsSchemeScheduleDataAnswers = Some(GiftAidSmallDonationsSchemeScheduleDataAnswers())
+        )
+
+        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
+          false
+        ) shouldBe true
+      }
+
+      "should return false when setting value to true" in {
+        given session: SessionData = SessionData.empty.copy(
+          giftAidSmallDonationsSchemeScheduleDataAnswers = Some(GiftAidSmallDonationsSchemeScheduleDataAnswers())
+        )
+
+        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
+          true
+        ) shouldBe false
+      }
+
+      "should return false when no GASDS schedule data exists" in {
+        given session: SessionData = SessionData.empty
+
+        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
+          false
+        ) shouldBe false
+      }
+    }
   }
 }

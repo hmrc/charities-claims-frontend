@@ -43,24 +43,33 @@ class ClaimingGiftAidSmallDonationsController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme
-    Ok(view(form.withDefault(previousAnswer), mode))
+    Ok(view(form.withDefault(warningAnswerBoolean.orElse(previousAnswer)), mode, isWarning))
   }
 
-  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveService
-            .save(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(value))
-            .map { _ =>
-              if (mode == CheckMode) {
-                Redirect(routes.CheckYourAnswersController.onPageLoad)
-              } else {
-                Redirect(routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode))
-              }
-            }
-      )
-  }
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetData().async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            if hadNoWarningShown && RepaymentClaimDetailsAnswers
+                .shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(value)
+            then
+              Future.successful(
+                Redirect(routes.ClaimingGiftAidSmallDonationsController.onPageLoad(mode))
+                  .withWarning(value.toString)
+              )
+            else
+              saveService
+                .save(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(value))
+                .map { _ =>
+                  if (mode == CheckMode) {
+                    Redirect(routes.CheckYourAnswersController.onPageLoad)
+                  } else {
+                    Redirect(routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode))
+                  }
+                }
+        )
+    }
 }
