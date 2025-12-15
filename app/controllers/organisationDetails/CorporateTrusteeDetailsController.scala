@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package controllers.organisationDetails
 
 import models.Mode.*
@@ -20,35 +21,76 @@ import services.SaveService
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
-import views.html.CorporateTrusteeDetailsInputView
+import views.html.CorporateTrusteeDetailsView
 import controllers.actions.Actions
-import forms.TextInputFormProvider
-import models.{Mode, OrganisationDetailsAnswers}
+import forms.CorporateTrusteeDetailsFormProvider
+import models.{CorporateTrusteeDetails, Mode, OrganisationDetailsAnswers}
 import play.api.data.Form
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CorporateTrusteeDetailsController {
+class CorporateTrusteeDetailsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: CorporateTrusteeDetailsInputView,
+  view: CorporateTrusteeDetailsView,
   actions: Actions,
-  formProvider: TextInputFormProvider,
+  formProvider: CorporateTrusteeDetailsFormProvider,
   saveService: SaveService
-} (using ec: ExecutionContext)
-extends BaseController {
+)(using ec: ExecutionContext)
+    extends BaseController {
 
-  val form: Form[String] = formProvider(
-    "claimReferenceNumberInput.error.required",
-    (20, "claimReferenceNumberInput.error.length"),
-    "claimReferenceNumberInput.error.regex"
+  val form = formProvider(
+    "corporateTrusteeDetails.name.error.required",
+    "corporateTrusteeDetails.name.error.length",
+    "corporateTrusteeDetails.name.error.regex",
+    "corporateTrusteeDetails.phone.error.required",
+    "corporateTrusteeDetails.phone.error.length",
+    "corporateTrusteeDetails.phone.error.regex",
+    "corporateTrusteeDetails.postCode.error.required",
+    "corporateTrusteeDetails.postCode.error.length",
+    "corporateTrusteeDetails.postCode.error.regex"
   )
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if OrganisationDetailsAnswers.getAreYouACorporateTrustee.contains(true)
-    then {
-      val previousAnswer = OrganisationDetailsAnswers.getNameOfCorporateTrustee
-      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+    if (
+      OrganisationDetailsAnswers.getAreYouACorporateTrustee
+        .contains(true) && OrganisationDetailsAnswers.getDoYouHaveUKAddress.contains(true)
+    ) {
+      val previousAnswerName     = OrganisationDetailsAnswers.getNameOfCorporateTrustee
+      val previousAnswerPhone    = OrganisationDetailsAnswers.getCorporateTrusteeDaytimeTelephoneNumber
+      val previousAnswerPostCode = OrganisationDetailsAnswers.getCorporateTrusteePostcode
+      val previousAnswer         =
+        CorporateTrusteeDetails(
+          name = previousAnswerName,
+          phoneNumber = previousAnswerPhone,
+          postCode = previousAnswerPostCode
+        )
+      Future.successful(Ok(view(form.withDefault(Some(previousAnswer)))))
+    } else if (
+      OrganisationDetailsAnswers.getAreYouACorporateTrustee
+        .contains(true) && OrganisationDetailsAnswers.getDoYouHaveUKAddress.contains(false)
+    ) {
+      val previousAnswerName  = OrganisationDetailsAnswers.getNameOfCorporateTrustee
+      val previousAnswerPhone = OrganisationDetailsAnswers.getCorporateTrusteeDaytimeTelephoneNumber
+      val previousAnswer      = CorporateTrusteeDetails(name = previousAnswerName, phoneNumber = previousAnswerPhone)
+      Future.successful(Ok(view(form.withDefault(Some(previousAnswer)))))
     } else {
       Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
     }
   }
+
+  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        value =>
+          saveService
+            .save(OrganisationDetailsAnswers.setNameOfCorporateTrustee(value.name))
+            .save(OrganisationDetailsAnswers.setCorporateTrusteeDaytimeTelephoneNumber(value.phoneNumber))
+            .save(OrganisationDetailsAnswers.setCorporateTrusteePostcode(value.postCode))
+            .map { _ =>
+              Redirect(routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode))
+            }
+      )
+  }
+}

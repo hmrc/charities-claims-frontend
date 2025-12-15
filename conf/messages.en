@@ -134,6 +134,22 @@ corporateTrusteeAddress.heading = Does the corporate trustee have a UK address?
 corporateTrusteeAddress.legend = Does the corporate trustee have a UK address?
 corporateTrusteeAddress.error.required = Select if the corporate trustee has a UK address
 
+corporateTrusteeDetails.caption = Provide organisation details
+corporateTrusteeDetails.title = What are the corporate trustee details?
+corporateTrusteeDetails.heading = What are the corporate trustee details?
+corporateTrusteeDetails.name = Trustee name
+corporateTrusteeDetails.phone = Trustee phone number
+corporateTrusteeDetails.postcode = Trustee postcode
+corporateTrusteeDetails.name.error.required = Enter trustee name
+corporateTrusteeDetails.name.error.length = Name must be 160 characters or less
+corporateTrusteeDetails.name.error.regex = Enter correct name
+corporateTrusteeDetails.phone.error.required = Enter phone
+corporateTrusteeDetails.phone.error.length = Phone must be 35 characters or less
+corporateTrusteeDetails.phone.error.regex = Enter a correct phone number format
+corporateTrusteeDetails.postCode.error.required = Enter trustee postcode
+corporateTrusteeDetails.postCode.error.length = Phone must be 35 characters or less
+corporateTrusteeDetails.postCode.error.regex = Enter a correct phone number format
+
 phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in a new tab)</a> will help us to improve it.
 phasebanner.phase=Beta
 

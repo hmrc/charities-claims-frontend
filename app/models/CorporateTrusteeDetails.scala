@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package models
 
 import play.api.libs.json.Format
 import play.api.libs.json.Json
 
-case class CorporateTrusteeDetails (name: String, phoneNumber: String,postCode: String )
-  
+case class CorporateTrusteeDetails(
+  name: Option[String] = None,
+  phoneNumber: Option[String] = None,
+  postCode: Option[String] = None
+)
+
 object CorporateTrusteeDetails {
   implicit val format: Format[CorporateTrusteeDetails] = Json.format[CorporateTrusteeDetails]
 }

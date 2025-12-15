@@ -75,9 +75,13 @@ GET         /change-authorised-official-address          controllers.organisatio
 POST        /authorised-official-address                 controllers.organisationDetails.AuthorisedOfficialAddressController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-authorised-official-address          controllers.organisationDetails.AuthorisedOfficialAddressController.onSubmit(mode: Mode = Mode.CheckMode)
 
-
-
 GET         /corporate-trustee-address                      controllers.organisationDetails.CorporateTrusteeAddressController.onPageLoad(mode: Mode = Mode.NormalMode)
 GET         /change-corporate-trustee-address               controllers.organisationDetails.CorporateTrusteeAddressController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /corporate-trustee-address                      controllers.organisationDetails.CorporateTrusteeAddressController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-corporate-trustee-address               controllers.organisationDetails.CorporateTrusteeAddressController.onSubmit(mode: Mode = Mode.CheckMode)
+
+GET         /corporate-trustee-details                      controllers.organisationDetails.CorporateTrusteeDetailsController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-corporate-trustee-details               controllers.organisationDetails.CorporateTrusteeDetailsController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /corporate-trustee-details                      controllers.organisationDetails.CorporateTrusteeDetailsController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-corporate-trustee-details               controllers.organisationDetails.CorporateTrusteeDetailsController.onSubmit(mode: Mode = Mode.CheckMode)
+

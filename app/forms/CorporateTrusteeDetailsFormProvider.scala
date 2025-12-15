@@ -16,6 +16,7 @@
 
 package forms
 
+import models.CorporateTrusteeDetails
 import play.api.data.Form
 import play.api.data.Forms.*
 
@@ -23,35 +24,50 @@ import javax.inject.Inject
 
 class CorporateTrusteeDetailsFormProvider @Inject() extends Mappings {
 
+  val name          = "name"
   val nameMaxLength = 160
-  val nameRegex = """^[a-zA-Z0-9 \-'".@/]+$"""
+  val nameRegex     = """^([a-zA-Z0-9 ]{1,160})$"""
 
-  val name = "name"
-  val description = "description"
+  val phoneNumber          = "phone"
+  val phoneNumberMaxLength = 35
+  val phoneNumberRegex     = """^[0-9\\(\\)\\-\\s]{1,35}$"""
+
+  val postCode          = "postcode"
+  val postCodeMaxLength = 8
+  val postCodeRegex     =
+    """^\\s*((GIR 0AA)|((([a-zA-Z][0-9][0-9]?)|(([a-zA-Z][a-hj-yA-HJ-Y][0-9][0-9]?)|(([a-zA-Z][0-9][a-zA-Z])|([a-zA-Z][a-hj-yA-HJ-Y][0-9]?[a-zA-Z]))))\\s?[0-9][a-zA-Z]{2})\\s*)$"""
 
   def apply(
-             nameRequired: String,
-             nameInvalid: String,
-             nameLength: String,
-             descriptionRequired: String,
-             descriptionInvalid: String,
-             descriptionLength: String
-           ): Form[CorporateTrusteeDetails] =
+    nameRequired: String,
+    nameInvalid: String,
+    nameLength: String,
+    phoneNumberRequired: String,
+    phoneNumberInvalid: String,
+    phoneNumberLength: String,
+    postCodeRequired: String,
+    postCodeInvalid: String,
+    postCodeLength: String
+  ): Form[CorporateTrusteeDetails] =
     Form(
       mapping(
-        name -> text(nameRequired).verifying(
+        name        -> text(nameRequired).verifying(
           firstError(
             regexp(nameRegex, nameInvalid),
             maxLength(nameMaxLength, nameLength)
           )
         ),
-        description -> text(descriptionRequired).verifying(
+        phoneNumber -> text(phoneNumberRequired).verifying(
           firstError(
-            regexp(textAreaRegex, descriptionInvalid),
-            maxLength(maxOtherDescriptionLength, descriptionLength)
+            regexp(phoneNumberRegex, phoneNumberInvalid),
+            maxLength(phoneNumberMaxLength, phoneNumberLength)
+          )
+        ),
+        postCode    -> text(postCodeRequired).verifying(
+          firstError(
+            regexp(postCodeRegex, postCodeInvalid),
+            maxLength(postCodeMaxLength, postCodeLength)
           )
         )
-      )(RecipientDetails.apply)(x => Some((x.name, x.description)))
+      )(CorporateTrusteeDetails.apply)(x => Some((x.name, x.phoneNumber, x.postCode)))
     )
-
 }
