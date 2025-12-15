@@ -170,48 +170,56 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
     "setClaimingUnderGasds" - {
       "should delete gasdsScheduleDataAnswers when changing to false" in {
         given session: SessionData = SessionData.empty.copy(
-          gasdsScheduleDataAnswers = Some(GasdsScheduleDataAnswers())
+          giftAidSmallDonationsSchemeScheduleDataAnswers = Some(GiftAidSmallDonationsSchemeScheduleDataAnswers())
         )
 
-        val result = RepaymentClaimDetailsAnswers.setClaimingUnderGasds(false)
+        val result = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
 
-        result.gasdsScheduleDataAnswers                        shouldBe None
-        result.repaymentClaimDetailsAnswers.claimingUnderGasds shouldBe Some(false)
+        result.giftAidSmallDonationsSchemeScheduleDataAnswers                        shouldBe None
+        result.repaymentClaimDetailsAnswers.claimingUnderGiftAidSmallDonationsScheme shouldBe Some(false)
       }
 
       "should keep gasdsScheduleDataAnswers when changing to true" in {
         given session: SessionData = SessionData.empty.copy(
-          gasdsScheduleDataAnswers = Some(GasdsScheduleDataAnswers())
+          giftAidSmallDonationsSchemeScheduleDataAnswers = Some(GiftAidSmallDonationsSchemeScheduleDataAnswers())
         )
 
-        val result = RepaymentClaimDetailsAnswers.setClaimingUnderGasds(true)
+        val result = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
 
-        result.gasdsScheduleDataAnswers                        shouldBe Some(GasdsScheduleDataAnswers())
-        result.repaymentClaimDetailsAnswers.claimingUnderGasds shouldBe Some(true)
+        result.giftAidSmallDonationsSchemeScheduleDataAnswers                        shouldBe Some(
+          GiftAidSmallDonationsSchemeScheduleDataAnswers()
+        )
+        result.repaymentClaimDetailsAnswers.claimingUnderGiftAidSmallDonationsScheme shouldBe Some(true)
       }
     }
 
     "shouldWarnAboutChangingClaimingUnderGasds" - {
       "should return true when value is false when there is GASDS data" in {
         given session: SessionData = SessionData.empty.copy(
-          gasdsScheduleDataAnswers = Some(GasdsScheduleDataAnswers())
+          giftAidSmallDonationsSchemeScheduleDataAnswers = Some(GiftAidSmallDonationsSchemeScheduleDataAnswers())
         )
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(false) shouldBe true
+        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
+          false
+        ) shouldBe true
       }
 
       "should return false when setting value to true" in {
         given session: SessionData = SessionData.empty.copy(
-          gasdsScheduleDataAnswers = Some(GasdsScheduleDataAnswers())
+          giftAidSmallDonationsSchemeScheduleDataAnswers = Some(GiftAidSmallDonationsSchemeScheduleDataAnswers())
         )
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(true) shouldBe false
+        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
+          true
+        ) shouldBe false
       }
 
       "should return false when no GASDS schedule data exists" in {
         given session: SessionData = SessionData.empty
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(false) shouldBe false
+        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
+          false
+        ) shouldBe false
       }
     }
   }

@@ -53,7 +53,8 @@ class ClaimingGiftAidSmallDonationsController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
-            if hadNoWarningShown && RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(value)
+            if hadNoWarningShown && RepaymentClaimDetailsAnswers
+                .shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(value)
             then
               Future.successful(
                 Redirect(routes.ClaimingGiftAidSmallDonationsController.onPageLoad(mode))
