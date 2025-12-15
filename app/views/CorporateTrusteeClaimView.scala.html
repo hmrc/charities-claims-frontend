@@ -35,14 +35,16 @@
 
     <h1 class="govuk-heading-l">@messages("corporateTrusteeClaim.heading")</h1>
 
-    <p class="govuk-body">@messages("corporateTrusteeClaim.paragraph")</p>
-
     @formHelper(action = routes.CorporateTrusteeClaimController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
     @govukRadios(
         RadiosViewModel.yesNo(
             form("value"),
             LegendViewModel(messages("corporateTrusteeClaim.heading")).visuallyHidden
+        )
+        .withHint(
+            HintViewModel(Text(messages("corporateTrusteeClaim.hint")))
+            .withId("value-hint")
         )
     )
 
