@@ -41,12 +41,15 @@ class CorporateTrusteeDetailsFormProvider @Inject() extends Mappings {
     nameRequired: String,
     nameInvalid: String,
     nameLength: String,
+    nameHint: String,
     phoneNumberRequired: String,
     phoneNumberInvalid: String,
     phoneNumberLength: String,
+    phoneNumberHint: String,
     postCodeRequired: String,
     postCodeInvalid: String,
-    postCodeLength: String
+    postCodeLength: String,
+    postCodeHint: String
   ): Form[CorporateTrusteeDetails] =
     Form(
       mapping(
@@ -66,7 +69,8 @@ class CorporateTrusteeDetailsFormProvider @Inject() extends Mappings {
           firstError(
             regexp(postCodeRegex, postCodeInvalid),
             maxLength(postCodeMaxLength, postCodeLength)
-          )
+          ).withHint(
+            HintViewModel(Text(messages("charityRegulatorNumber.hint")))
         )
       )(CorporateTrusteeDetails.apply)(x => Some((x.name, x.phoneNumber, x.postCode)))
     )

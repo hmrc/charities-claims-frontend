@@ -42,12 +42,15 @@ class CorporateTrusteeDetailsController @Inject() (
     "corporateTrusteeDetails.name.error.required",
     "corporateTrusteeDetails.name.error.length",
     "corporateTrusteeDetails.name.error.regex",
+    "corporateTrusteeDetails.name.hint",
     "corporateTrusteeDetails.phone.error.required",
     "corporateTrusteeDetails.phone.error.length",
     "corporateTrusteeDetails.phone.error.regex",
+    "corporateTrusteeDetails.phone.hint",
     "corporateTrusteeDetails.postCode.error.required",
     "corporateTrusteeDetails.postCode.error.length",
-    "corporateTrusteeDetails.postCode.error.regex"
+    "corporateTrusteeDetails.postCode.error.regex",
+    "corporateTrusteeDetails.postCode.hint"
   )
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
