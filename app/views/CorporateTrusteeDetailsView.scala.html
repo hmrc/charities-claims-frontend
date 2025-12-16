@@ -41,10 +41,25 @@
 
     @govukInput(
         InputViewModel(
-            field = form("value"),
-                label = LabelViewModel(messages("corporateTrusteeDetails.heading")).withCssClass("govuk-visually-hidden")
-            ).withHint(HintViewModel(Text(messages("corporateTrusteeDetails.hint")))
-            .withId("value-hint")
+            field = form("name"),
+                label = LabelViewModel(messages("corporateTrusteeDetails.name.label")).withCssClass("govuk-visually-hidden")
+            )
+        )
+    )
+
+    @govukInput(
+        InputViewModel(
+            field = form("phoneNumber"),
+                label = LabelViewModel(messages("corporateTrusteeDetails.phone.label")).withCssClass("govuk-visually-hidden")
+            )
+        )
+    )
+
+    @govukInput(
+        InputViewModel(
+            field = form("postCode"),
+                label = LabelViewModel(messages("corporateTrusteeDetails.postcode.label")).withCssClass("govuk-visually-hidden")
+            )
         )
     )
 

@@ -69,8 +69,7 @@ class CorporateTrusteeDetailsFormProvider @Inject() extends Mappings {
           firstError(
             regexp(postCodeRegex, postCodeInvalid),
             maxLength(postCodeMaxLength, postCodeLength)
-          ).withHint(
-            HintViewModel(Text(messages("charityRegulatorNumber.hint")))
+          )
         )
       )(CorporateTrusteeDetails.apply)(x => Some((x.name, x.phoneNumber, x.postCode)))
     )
