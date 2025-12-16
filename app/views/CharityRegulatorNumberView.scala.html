@@ -30,25 +30,26 @@ govukErrorSummary: GovukErrorSummary
 pageTitle = title(form, messages("charityRegulatorNumber.title"))
 ) {
 
-@if(form.hasErrors) {
-@govukErrorSummary(ErrorSummaryViewModel(form))
-}
+    @if(form.hasErrors) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
 
-<span class="govuk-caption-l">@messages("charityRegulatorNumber.caption")</span>
-<h1 class="govuk-heading-l">@messages("charityRegulatorNumber.heading")</h1>
+    <span class="govuk-caption-l">@messages("charityRegulatorNumber.caption")</span>
+    <h1 class="govuk-heading-l">@messages("charityRegulatorNumber.heading")</h1>
 
-@formHelper(action = routes.CharityRegulatorNumberController.onSubmit) {
+    @formHelper(action = routes.CharityRegulatorNumberController.onSubmit) {
 
-@govukInput(
-InputViewModel(
-field = form("value"),
-label = LabelViewModel(messages("charityRegulatorNumber.heading")).withCssClass("govuk-visually-hidden")
-).withHint(
-HintViewModel(Text(messages("charityRegulatorNumber.hint")))
-.withId("value-hint")
-)
-)
+    @govukInput(
+        InputViewModel(
+            field = form("value"),
+            label = LabelViewModel(messages("charityRegulatorNumber.heading")).withCssClass("govuk-visually-hidden")
+        ).withHint(
+            HintViewModel(Text(messages("charityRegulatorNumber.hint")))
+            .withId("value-hint")
+        )
+        .withCssClass("govuk-input--width-20")
+    )
 
-@govukButton(ButtonViewModel(Text(messages("site.continue"))))
-}
+    @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+    }
 }
