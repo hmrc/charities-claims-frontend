@@ -88,9 +88,9 @@ class CorporateTrusteeDetailsController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           saveService
-            .save(OrganisationDetailsAnswers.setNameOfCorporateTrustee(value.name))
-            .save(OrganisationDetailsAnswers.setCorporateTrusteeDaytimeTelephoneNumber(value.phoneNumber))
-            .save(OrganisationDetailsAnswers.setCorporateTrusteePostcode(value.postCode))
+            .save(OrganisationDetailsAnswers.setNameOfCorporateTrustee(value.name)
+                .setCorporateTrusteeDaytimeTelephoneNumber(value.phoneNumber)
+                .setCorporateTrusteePostcode(value.postCode))
             .map { _ =>
               Redirect(routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode))
             }
