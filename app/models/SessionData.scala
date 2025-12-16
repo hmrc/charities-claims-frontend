@@ -43,9 +43,7 @@ object SessionData {
       unsubmittedClaimId = Some(claim.claimId),
       repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers.from(claim.claimData.repaymentClaimDetails),
       organisationDetailsAnswers = claim.claimData.organisationDetails.map(OrganisationDetailsAnswers.from),
-      giftAidScheduleDataAnswers = claim.claimData.giftAidScheduleData.map(GiftAidScheduleDataAnswers.from),
       declarationDetailsAnswers = claim.claimData.declarationDetails.map(DeclarationDetailsAnswers.from),
-      otherIncomeScheduleDataAnswers = claim.claimData.otherIncomeScheduleData.map(OtherIncomeScheduleDataAnswers.from),
       giftAidSmallDonationsSchemeScheduleDataAnswers =
         claim.claimData.giftAidSmallDonationsSchemeScheduleData.map(GiftAidSmallDonationsSchemeScheduleDataAnswers.from)
     )
