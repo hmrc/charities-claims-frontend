@@ -52,18 +52,10 @@ class DefaultDataRetrievalAction @Inject() (
             .map { getClaimsResponse =>
               request.affinityGroup match {
                 case AffinityGroup.Organisation =>
-                  if getClaimsResponse.claimsCount > 0
-                  then
-                    Right(
-                      DataRequest(
-                        request,
-                        // safe to assume there is at least one claim
-                        SessionData.from(getClaimsResponse.claimsList.head)
-                      )
-                    )
-                  else Right(DataRequest(request, SessionData.empty))
-
-                case AffinityGroup.Agent =>
+                  getClaimsResponse.claimsList match
+                    case claim :: _ => Right(DataRequest(request, SessionData.from(claim)))
+                    case _          => Right(DataRequest(request, SessionData.empty))
+                case AffinityGroup.Agent        =>
                   getClaimsResponse.claimsCount match {
                     case 0 =>
                       Right(DataRequest(request, SessionData.empty))

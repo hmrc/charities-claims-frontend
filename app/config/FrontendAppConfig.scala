@@ -35,6 +35,7 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
   lazy val betaFeedbackUrl: String           = config.get[String]("urls.betaFeedbackUrl")
   lazy val researchUrl: String               = config.get[String]("urls.researchUrl")
   lazy val authLoginStubSignInUrl: String    = config.get[String]("urls.authLoginStubSignInUrl")
+  lazy val accountUrl: String                = config.get[String]("urls.accountUrl")
 
   lazy val enableLanguageSwitching: Boolean = config.get[Boolean]("enableLanguageSwitching")
   lazy val timeoutInSeconds: Int            = config.get[Int]("timeout-dialog.timeout")
