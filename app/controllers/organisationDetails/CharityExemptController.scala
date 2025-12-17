@@ -32,7 +32,7 @@ class CharityExemptController @Inject() (
   view: CharityExemptView
 ) extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  val onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
       OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
     previousAnswer match {
@@ -41,7 +41,7 @@ class CharityExemptController @Inject() (
     }
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
   }
 }

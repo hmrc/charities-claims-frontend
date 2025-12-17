@@ -50,7 +50,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(form)(request, messages).body
+          contentAsString(result) shouldEqual view(form)(using request, messages).body
         }
       }
 
@@ -70,7 +70,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(form)(request, messages).body
+          contentAsString(result) shouldEqual view(form)(using request, messages).body
         }
       }
 
@@ -90,7 +90,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(form)(request, messages).body
+          contentAsString(result) shouldEqual view(form)(using request, messages).body
         }
       }
 
