@@ -62,7 +62,6 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
             FakeRequest(GET, routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ReasonNotRegisteredWithRegulatorView]
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
@@ -79,7 +78,6 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
             FakeRequest(GET, routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ReasonNotRegisteredWithRegulatorView]
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
@@ -96,7 +94,6 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
             FakeRequest(GET, routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ReasonNotRegisteredWithRegulatorView]
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)

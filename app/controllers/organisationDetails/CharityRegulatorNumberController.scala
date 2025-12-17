@@ -40,7 +40,7 @@ class CharityRegulatorNumberController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  val onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     val previousAnswer = OrganisationDetailsAnswers.getCharityRegistrationNumber
 
     val nameOfCharityAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
@@ -49,7 +49,7 @@ class CharityRegulatorNumberController @Inject() (
     else Future.successful(Ok(view(form.withDefault(previousAnswer))))
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(

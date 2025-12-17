@@ -56,7 +56,6 @@ class CharityExceptedControllerSpec extends ControllerSpec {
             FakeRequest(GET, routes.CharityExceptedController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[CharityExceptedView]
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
@@ -73,7 +72,6 @@ class CharityExceptedControllerSpec extends ControllerSpec {
             FakeRequest(GET, routes.CharityExceptedController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[CharityExceptedView]
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
@@ -90,7 +88,6 @@ class CharityExceptedControllerSpec extends ControllerSpec {
             FakeRequest(GET, routes.CharityExceptedController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[CharityExceptedView]
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
