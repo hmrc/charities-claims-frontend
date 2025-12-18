@@ -43,6 +43,12 @@ trait HttpV2Support { this: MockFactory & Matchers =>
   val mockHttp: HttpClientV2             = mock[HttpClientV2]
   val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
 
+  def givenGetReturns(
+    expectedUrl: String,
+    response: HttpResponse
+  ): CallHandler[Future[HttpResponse]] =
+    mockHttpGetSuccess(URL(expectedUrl))(response)
+
   def givenPostReturns(
     expectedUrl: String,
     expectedPayload: JsValue,
