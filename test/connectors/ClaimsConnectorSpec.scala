@@ -59,9 +59,8 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
     )
 
   def givenGetClaimsEndpointReturns(response: HttpResponse): CallHandler[Future[HttpResponse]] =
-    givenPostReturns(
-      expectedUrl = "http://foo.bar.com:1234/foo-claims/get-claims",
-      expectedPayload = Json.toJson(GetClaimsRequest(claimSubmitted = false)),
+    givenGetReturns(
+      expectedUrl = "http://foo.bar.com:1234/foo-claims/claims?claimSubmitted=false",
       response = response
     )
 

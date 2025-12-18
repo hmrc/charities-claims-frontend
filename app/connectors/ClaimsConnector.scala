@@ -63,16 +63,16 @@ class ClaimsConnectorImpl @Inject() (
   val contextPath: String = servicesConfig
     .getConfString("charities-claims.context-path", "charities-claims")
 
-  val retrieveUnsubmittedClaimsUrl: String = s"$baseUrl$contextPath/get-claims"
+  val retrieveUnsubmittedClaimsUrl: String = s"$baseUrl$contextPath/claims"
   val saveClaimUrl: String                 = s"$baseUrl$contextPath/claims"
   val updateClaimUrl: String               = s"$baseUrl$contextPath/claims"
   val deleteClaimUrl: String               = s"$baseUrl$contextPath/claims"
 
   final def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse] =
-    callCharitiesClaimsBackend[GetClaimsRequest, GetClaimsResponse](
-      method = "POST",
-      url = retrieveUnsubmittedClaimsUrl,
-      payload = Some(GetClaimsRequest(claimSubmitted = false))
+    callCharitiesClaimsBackend[Nothing, GetClaimsResponse](
+      method = "GET",
+      url = s"$retrieveUnsubmittedClaimsUrl?claimSubmitted=false",
+      payload = None
     )
 
   final def saveClaim(repaymentClaimDetails: RepaymentClaimDetails)(using
