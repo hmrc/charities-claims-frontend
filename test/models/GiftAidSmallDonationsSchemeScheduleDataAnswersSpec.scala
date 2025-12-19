@@ -23,7 +23,7 @@ class GiftAidSmallDonationsSchemeScheduleDataAnswersSpec extends BaseSpec {
 
   "GiftAidSmallDonationsSchemeScheduleDataAnswerss" - {
     "be serializable and deserializable" in {
-      val giftAidSmallDonationsSchemeScheduleDataAnswerss = GiftAidSmallDonationsSchemeScheduleDataAnswers(
+      val giftAidSmallDonationsSchemeScheduleDataAnswerss = GiftAidSmallDonationsSchemeDonationDetailsAnswers(
         adjustmentForGiftAidOverClaimed = Some(1000.00),
         claims = Some(Seq(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00))),
         connectedCharitiesScheduleData =
@@ -49,12 +49,12 @@ class GiftAidSmallDonationsSchemeScheduleDataAnswersSpec extends BaseSpec {
       val json = Json.toJson(giftAidSmallDonationsSchemeScheduleDataAnswerss)
 
       val deserializedGiftAidSmallDonationsSchemeScheduleDataAnswerss =
-        json.as[GiftAidSmallDonationsSchemeScheduleDataAnswers]
+        json.as[GiftAidSmallDonationsSchemeDonationDetailsAnswers]
       deserializedGiftAidSmallDonationsSchemeScheduleDataAnswerss shouldBe giftAidSmallDonationsSchemeScheduleDataAnswerss
     }
 
     "be created from GiftAidSmallDonationsSchemeScheduleData" in {
-      val giftAidSmallDonationsSchemeScheduleData = GiftAidSmallDonationsSchemeScheduleData(
+      val giftAidSmallDonationsSchemeScheduleData = GiftAidSmallDonationsSchemeDonationDetails(
         adjustmentForGiftAidOverClaimed = 1000.00,
         claims = Seq(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00)),
         connectedCharitiesScheduleData =
@@ -76,9 +76,9 @@ class GiftAidSmallDonationsSchemeScheduleDataAnswersSpec extends BaseSpec {
       )
 
       val giftAidSmallDonationsSchemeScheduleDataAnswers =
-        GiftAidSmallDonationsSchemeScheduleDataAnswers.from(giftAidSmallDonationsSchemeScheduleData)
+        GiftAidSmallDonationsSchemeDonationDetailsAnswers.from(giftAidSmallDonationsSchemeScheduleData)
 
-      giftAidSmallDonationsSchemeScheduleDataAnswers shouldBe GiftAidSmallDonationsSchemeScheduleDataAnswers(
+      giftAidSmallDonationsSchemeScheduleDataAnswers shouldBe GiftAidSmallDonationsSchemeDonationDetailsAnswers(
         adjustmentForGiftAidOverClaimed = Some(1000.00),
         claims = Some(Seq(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00))),
         connectedCharitiesScheduleData =

@@ -19,13 +19,10 @@ package models
 import play.api.libs.json.Format
 import play.api.libs.json.Json
 
-/** @param claimSubmitted
-  *   Used to return either unsubmitted or submitted claims.
-  */
-final case class GetClaimsRequest(
-  claimSubmitted: Boolean
+final case class GetTotalUnregulatedDonationsResponse(
+  unregulatedDonationsTotal: BigDecimal
 )
 
-object GetClaimsRequest {
-  given format: Format[GetClaimsRequest] = Json.format[GetClaimsRequest]
+object GetTotalUnregulatedDonationsResponse {
+  given Format[GetTotalUnregulatedDonationsResponse] = Json.format[GetTotalUnregulatedDonationsResponse]
 }

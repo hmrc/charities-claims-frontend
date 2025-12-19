@@ -16,27 +16,24 @@
 
 package forms
 
+import forms.Mappings
 import play.api.data.Form
-import play.api.data.Forms.*
 
 import javax.inject.Inject
 
-class CharityRegulatorNumberFormProvider @Inject() () {
+class CharityRegulatorNumberFormProvider @Inject() extends Mappings {
 
   private val numberRegex = """^\d+$"""
 
   private val maxLength = 20
 
   def apply(): Form[String] = Form(
-    "value" -> text
-      .verifying("charityRegulatorNumber.error.required", _.nonEmpty)
+    "value" -> text("charityRegulatorNumber.error.required")
       .verifying(
-        "charityRegulatorNumber.error.format",
-        value => value.isEmpty || value.matches(numberRegex)
-      )
-      .verifying(
-        "charityRegulatorNumber.error.length",
-        value => value.isEmpty || value.length <= maxLength
+        firstError(
+          regexp(numberRegex, "charityRegulatorNumber.error.format"),
+          maxLength(maxLength, "charityRegulatorNumber.error.length")
+        )
       )
   )
 }

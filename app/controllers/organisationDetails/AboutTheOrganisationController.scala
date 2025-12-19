@@ -33,11 +33,11 @@ class AboutTheOrganisationController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     Ok(view())
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     Future.successful(Redirect(routes.NameOfCharityRegulatorController.onPageLoad(NormalMode)))
   }
 }

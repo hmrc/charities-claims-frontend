@@ -95,7 +95,7 @@ object TestClaims {
         organisationDetails = Some(
           OrganisationDetails(
             nameOfCharityRegulator = nameOfCharityRegulator,
-            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+            reasonNotRegisteredWithRegulator = reasonNotRegisteredWithRegulator,
             charityRegistrationNumber = Some(charityRegistrationNumber),
             areYouACorporateTrustee = areYouACorporateTrustee,
             doYouHaveUKAddress = doYouHaveUKAddress,

@@ -22,7 +22,7 @@ import controllers.ControllerSpec
 import views.html.ClaimingGiftAidSmallDonationsView
 import play.api.Application
 import forms.YesNoFormProvider
-import models.{GiftAidSmallDonationsSchemeScheduleDataAnswers, RepaymentClaimDetailsAnswers, SessionData}
+import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
 import models.Mode.*
 
@@ -172,7 +172,8 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
           val sessionData = SessionData.empty.copy(
             repaymentClaimDetailsAnswers =
               RepaymentClaimDetailsAnswers(claimingUnderGiftAidSmallDonationsScheme = Some(true)),
-            giftAidSmallDonationsSchemeScheduleDataAnswers = Some(GiftAidSmallDonationsSchemeScheduleDataAnswers())
+            giftAidSmallDonationsSchemeDonationDetailsAnswers =
+              Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -196,7 +197,8 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
           val sessionData = SessionData.empty.copy(
             repaymentClaimDetailsAnswers =
               RepaymentClaimDetailsAnswers(claimingUnderGiftAidSmallDonationsScheme = Some(true)),
-            giftAidSmallDonationsSchemeScheduleDataAnswers = Some(GiftAidSmallDonationsSchemeScheduleDataAnswers())
+            giftAidSmallDonationsSchemeDonationDetailsAnswers =
+              Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
@@ -243,7 +245,8 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
           val sessionData = SessionData.empty.copy(
             repaymentClaimDetailsAnswers =
               RepaymentClaimDetailsAnswers(claimingUnderGiftAidSmallDonationsScheme = Some(true)),
-            giftAidSmallDonationsSchemeScheduleDataAnswers = Some(GiftAidSmallDonationsSchemeScheduleDataAnswers())
+            giftAidSmallDonationsSchemeDonationDetailsAnswers =
+              Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
@@ -264,7 +267,8 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
           val sessionData = SessionData.empty.copy(
             repaymentClaimDetailsAnswers =
               RepaymentClaimDetailsAnswers(claimingUnderGiftAidSmallDonationsScheme = Some(true)),
-            giftAidSmallDonationsSchemeScheduleDataAnswers = Some(GiftAidSmallDonationsSchemeScheduleDataAnswers())
+            giftAidSmallDonationsSchemeDonationDetailsAnswers =
+              Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).build()

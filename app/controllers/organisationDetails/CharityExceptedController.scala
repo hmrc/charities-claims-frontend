@@ -16,24 +16,23 @@
 
 package controllers.organisationDetails
 
-import com.google.inject.Inject
-import controllers.BaseController
-import controllers.actions.Actions
 import models.Mode.NormalMode
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import com.google.inject.Inject
+import controllers.BaseController
 import views.html.CharityExceptedView
+import controllers.actions.Actions
 import models.{OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class CharityExceptedController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
   view: CharityExceptedView
-)(using ec: ExecutionContext)
-    extends BaseController {
+) extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  val onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
       OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
     previousAnswer match {
@@ -42,7 +41,7 @@ class CharityExceptedController @Inject() (
     }
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
   }
 }

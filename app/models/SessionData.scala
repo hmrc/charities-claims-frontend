@@ -27,7 +27,7 @@ final case class SessionData(
   giftAidScheduleDataAnswers: Option[GiftAidScheduleDataAnswers] = None,
   declarationDetailsAnswers: Option[DeclarationDetailsAnswers] = None,
   otherIncomeScheduleDataAnswers: Option[OtherIncomeScheduleDataAnswers] = None,
-  giftAidSmallDonationsSchemeScheduleDataAnswers: Option[GiftAidSmallDonationsSchemeScheduleDataAnswers] = None
+  giftAidSmallDonationsSchemeDonationDetailsAnswers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers] = None
 )
 
 object SessionData {
@@ -43,10 +43,10 @@ object SessionData {
       unsubmittedClaimId = Some(claim.claimId),
       repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers.from(claim.claimData.repaymentClaimDetails),
       organisationDetailsAnswers = claim.claimData.organisationDetails.map(OrganisationDetailsAnswers.from),
-      giftAidScheduleDataAnswers = claim.claimData.giftAidScheduleData.map(GiftAidScheduleDataAnswers.from),
       declarationDetailsAnswers = claim.claimData.declarationDetails.map(DeclarationDetailsAnswers.from),
-      otherIncomeScheduleDataAnswers = claim.claimData.otherIncomeScheduleData.map(OtherIncomeScheduleDataAnswers.from),
-      giftAidSmallDonationsSchemeScheduleDataAnswers =
-        claim.claimData.giftAidSmallDonationsSchemeScheduleData.map(GiftAidSmallDonationsSchemeScheduleDataAnswers.from)
+      giftAidSmallDonationsSchemeDonationDetailsAnswers =
+        claim.claimData.giftAidSmallDonationsSchemeDonationDetails.map(
+          GiftAidSmallDonationsSchemeDonationDetailsAnswers.from
+        )
     )
 }
