@@ -96,14 +96,14 @@ object RepaymentClaimDetailsAnswers {
 
   def setClaimingUnderGiftAidSmallDonationsScheme(value: Boolean)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(claimingUnderGiftAidSmallDonationsScheme = Some(v)))
-      .copy(giftAidSmallDonationsSchemeScheduleDataAnswers =
-        if (value) session.giftAidSmallDonationsSchemeScheduleDataAnswers else None
+      .copy(giftAidSmallDonationsSchemeDonationDetailsAnswers =
+        if (value) session.giftAidSmallDonationsSchemeDonationDetailsAnswers else None
       )
 
   def shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(value: Boolean)(using
     session: SessionData
   ): Boolean =
-    !value && session.giftAidSmallDonationsSchemeScheduleDataAnswers.isDefined
+    !value && session.giftAidSmallDonationsSchemeDonationDetailsAnswers.isDefined
 
   def getClaimingReferenceNumber(using session: SessionData): Option[Boolean] = get(_.claimingReferenceNumber)
 

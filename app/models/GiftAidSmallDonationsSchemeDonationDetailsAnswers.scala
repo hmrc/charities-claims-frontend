@@ -19,22 +19,22 @@ package models
 import play.api.libs.json.Format
 import play.api.libs.json.Json
 
-final case class GiftAidSmallDonationsSchemeScheduleDataAnswers(
+final case class GiftAidSmallDonationsSchemeDonationDetailsAnswers(
   adjustmentForGiftAidOverClaimed: Option[BigDecimal] = None,
   claims: Option[Seq[GiftAidSmallDonationsSchemeClaim]] = None,
   connectedCharitiesScheduleData: Option[Seq[ConnectedCharity]] = None,
   communityBuildingsScheduleData: Option[Seq[CommunityBuilding]] = None
 )
 
-object GiftAidSmallDonationsSchemeScheduleDataAnswers {
+object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
 
-  given Format[GiftAidSmallDonationsSchemeScheduleDataAnswers] =
-    Json.format[GiftAidSmallDonationsSchemeScheduleDataAnswers]
+  given Format[GiftAidSmallDonationsSchemeDonationDetailsAnswers] =
+    Json.format[GiftAidSmallDonationsSchemeDonationDetailsAnswers]
 
   def from(
-    giftAidSmallDonationsSchemeScheduleData: GiftAidSmallDonationsSchemeScheduleData
-  ): GiftAidSmallDonationsSchemeScheduleDataAnswers =
-    GiftAidSmallDonationsSchemeScheduleDataAnswers(
+    giftAidSmallDonationsSchemeScheduleData: giftAidSmallDonationsSchemeDonationDetails
+  ): GiftAidSmallDonationsSchemeDonationDetailsAnswers =
+    GiftAidSmallDonationsSchemeDonationDetailsAnswers(
       adjustmentForGiftAidOverClaimed = Some(giftAidSmallDonationsSchemeScheduleData.adjustmentForGiftAidOverClaimed),
       claims = Some(giftAidSmallDonationsSchemeScheduleData.claims),
       connectedCharitiesScheduleData = Some(giftAidSmallDonationsSchemeScheduleData.connectedCharitiesScheduleData),

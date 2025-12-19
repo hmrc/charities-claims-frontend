@@ -36,7 +36,7 @@ final case class ClaimData(
   repaymentClaimDetails: RepaymentClaimDetails,
   organisationDetails: Option[OrganisationDetails] = None,
   declarationDetails: Option[DeclarationDetails] = None,
-  giftAidSmallDonationsSchemeScheduleData: Option[GiftAidSmallDonationsSchemeScheduleData] = None
+  giftAidSmallDonationsSchemeDonationDetails: Option[giftAidSmallDonationsSchemeDonationDetails] = None
 )
 
 object ClaimData {
@@ -145,15 +145,15 @@ object Payment {
   given Format[Payment] = Json.format[Payment]
 }
 
-final case class GiftAidSmallDonationsSchemeScheduleData(
+final case class giftAidSmallDonationsSchemeDonationDetails(
   adjustmentForGiftAidOverClaimed: BigDecimal,
   claims: Seq[GiftAidSmallDonationsSchemeClaim],
   connectedCharitiesScheduleData: Seq[ConnectedCharity],
   communityBuildingsScheduleData: Seq[CommunityBuilding]
 )
 
-object GiftAidSmallDonationsSchemeScheduleData {
-  given Format[GiftAidSmallDonationsSchemeScheduleData] = Json.format[GiftAidSmallDonationsSchemeScheduleData]
+object giftAidSmallDonationsSchemeDonationDetails {
+  given Format[giftAidSmallDonationsSchemeDonationDetails] = Json.format[giftAidSmallDonationsSchemeDonationDetails]
 }
 
 final case class GiftAidSmallDonationsSchemeClaim(
