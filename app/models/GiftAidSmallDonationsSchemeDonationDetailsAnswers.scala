@@ -32,7 +32,7 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
     Json.format[GiftAidSmallDonationsSchemeDonationDetailsAnswers]
 
   def from(
-    giftAidSmallDonationsSchemeScheduleData: giftAidSmallDonationsSchemeDonationDetails
+    giftAidSmallDonationsSchemeScheduleData: GiftAidSmallDonationsSchemeDonationDetails
   ): GiftAidSmallDonationsSchemeDonationDetailsAnswers =
     GiftAidSmallDonationsSchemeDonationDetailsAnswers(
       adjustmentForGiftAidOverClaimed = Some(giftAidSmallDonationsSchemeScheduleData.adjustmentForGiftAidOverClaimed),

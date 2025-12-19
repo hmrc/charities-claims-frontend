@@ -54,7 +54,7 @@ class GiftAidSmallDonationsSchemeScheduleDataAnswersSpec extends BaseSpec {
     }
 
     "be created from GiftAidSmallDonationsSchemeScheduleData" in {
-      val giftAidSmallDonationsSchemeScheduleData = giftAidSmallDonationsSchemeDonationDetails(
+      val giftAidSmallDonationsSchemeScheduleData = GiftAidSmallDonationsSchemeDonationDetails(
         adjustmentForGiftAidOverClaimed = 1000.00,
         claims = Seq(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00)),
         connectedCharitiesScheduleData =
