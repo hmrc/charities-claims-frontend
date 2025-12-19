@@ -21,7 +21,7 @@ import models.AuthorisedOfficialDetails
 import play.api.data.Form
 import play.api.data.Forms._
 
-class AuthorisedOfficialDetailsFormProvider @Inject() {
+class AuthorisedOfficialDetailsFormProvider @Inject() () {
 
   private val titleRegex     = "^([a-zA-Z]{1,4})$"
   private val firstNameRegex = "^([a-zA-Z][a-zA-Z\\- ]*)$"
@@ -30,7 +30,7 @@ class AuthorisedOfficialDetailsFormProvider @Inject() {
   private val postcodeRegex  =
     "^\\s*((GIR 0AA)|((([a-zA-Z][0-9][0-9]?)|(([a-zA-Z][a-zA-Z][0-9][0-9]?)|(([a-zA-Z][0-9][a-zA-Z])|([a-zA-Z][a-zA-Z][0-9][a-zA-Z]))))\\s?[0-9][a-zA-Z]{2}))\\s*$"
 
-  def apply(): Form[AuthorisedOfficialDetails] = Form(
+  def apply(isUkAddress: Boolean): Form[AuthorisedOfficialDetails] = Form(
     mapping(
       "title"       -> optional(
         text
@@ -58,11 +58,18 @@ class AuthorisedOfficialDetailsFormProvider @Inject() {
           phone => phone.isEmpty || phone.matches(phoneRegex)
         )
         .verifying("authorisedOfficialDetails.phoneNumber.error.length", _.length <= 35),
-      "postcode"    -> optional(
-        text
-          .verifying("authorisedOfficialDetails.postcode.error.format", _.toUpperCase.matches(postcodeRegex))
-          .verifying("authorisedOfficialDetails.postcode.error.length", _.length <= 8)
-      )
+      "postcode"    -> (if (isUkAddress) {
+                       text
+                         .verifying("authorisedOfficialDetails.postcode.error.required", _.nonEmpty)
+                         .verifying(
+                           "authorisedOfficialDetails.postcode.error.format",
+                           pc => pc.isEmpty || pc.toUpperCase.matches(postcodeRegex)
+                         )
+                         .verifying("authorisedOfficialDetails.postcode.error.length", _.length <= 8)
+                         .transform[Option[String]](Some(_), _.getOrElse(""))
+                     } else {
+                       optional(text)
+                     })
     )(AuthorisedOfficialDetails.apply)(o => Some((o.title, o.firstName, o.lastName, o.phoneNumber, o.postcode)))
   )
 }

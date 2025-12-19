@@ -26,7 +26,7 @@ govukInput: GovukInput,
 govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[AuthorisedOfficialDetails])(implicit request: Request[?], messages: Messages)
+@(form: Form[AuthorisedOfficialDetails], isUkAddress: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
 pageTitle = title(form, messages("authorisedOfficialDetails.title")),
@@ -78,6 +78,7 @@ label = LabelViewModel(messages("authorisedOfficialDetails.phoneNumber"))
 .withAutocomplete("tel")
 )
 
+@if(isUkAddress) {
 @govukInput(
 InputViewModel(
 field = form("postcode"),
@@ -86,6 +87,7 @@ label = LabelViewModel(messages("authorisedOfficialDetails.postcode"))
 .withCssClass("govuk-input--width-10")
 .withAutocomplete("postal-code")
 )
+}
 
 @govukButton(ButtonViewModel(Text(messages("site.continue"))))
 }

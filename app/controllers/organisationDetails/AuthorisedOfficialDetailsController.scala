@@ -17,37 +17,50 @@
 package controllers.organisationDetails
 
 import com.google.inject.Inject
+import controllers.BaseController
 import controllers.actions.Actions
 import forms.AuthorisedOfficialDetailsFormProvider
-import play.api.i18n.I18nSupport
+import models.OrganisationDetailsAnswers
+import services.SaveService
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.AuthorisedOfficialDetailsView
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class AuthorisedOfficialDetailsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
   formProvider: AuthorisedOfficialDetailsFormProvider,
-  view: AuthorisedOfficialDetailsView
-) extends FrontendBaseController
-    with I18nSupport {
-
-  val form = formProvider()
+  view: AuthorisedOfficialDetailsView,
+  saveService: SaveService
+)(using ec: ExecutionContext)
+    extends BaseController {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(form))
+    val isUkAddress = OrganisationDetailsAnswers.getDoYouHaveUKAddress.getOrElse(false)
+    val form        = formProvider(isUkAddress)
+
+    val previousAnswer = OrganisationDetailsAnswers.getAuthorisedOfficialDetails
+    val preparedForm   = previousAnswer.fold(form)(form.fill)
+
+    Ok(view(preparedForm, isUkAddress))
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val isUkAddress = OrganisationDetailsAnswers.getDoYouHaveUKAddress.getOrElse(false)
+    val form        = formProvider(isUkAddress)
+
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, isUkAddress))),
         value =>
-          // TODO: Redirect to A2.11 - Check your answers
-          Future.successful(Redirect(routes.AuthorisedOfficialDetailsController.onPageLoad))
+          saveService
+            .save(OrganisationDetailsAnswers.setAuthorisedOfficialDetails(value))
+            .map { _ =>
+              // change to CYA page when its created
+              Redirect(routes.AuthorisedOfficialDetailsController.onPageLoad)
+            }
       )
   }
 }
