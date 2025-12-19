@@ -58,7 +58,7 @@ class AuthorisedOfficialDetailsController @Inject() (
           saveService
             .save(OrganisationDetailsAnswers.setAuthorisedOfficialDetails(value))
             .map { _ =>
-              // change to CYA page when its created
+              // TODO: Redirect to A2.11 - Check your answers
               Redirect(routes.AuthorisedOfficialDetailsController.onPageLoad)
             }
       )

@@ -21,7 +21,7 @@ import models.AuthorisedOfficialDetails
 import play.api.data.Form
 import play.api.data.Forms._
 
-class AuthorisedOfficialDetailsFormProvider @Inject() () {
+class AuthorisedOfficialDetailsFormProvider @Inject() {
 
   private val titleRegex     = "^([a-zA-Z]{1,4})$"
   private val firstNameRegex = "^([a-zA-Z][a-zA-Z\\- ]*)$"
