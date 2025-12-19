@@ -16,16 +16,17 @@
 
 package controllers.organisationDetails
 
-import models.Mode.*
-import services.SaveService
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
-import views.html.CorporateTrusteeDetailsView
 import controllers.actions.Actions
 import forms.CorporateTrusteeDetailsFormProvider
-import models.{CorporateTrusteeDetails, Mode, OrganisationDetailsAnswers}
+import models.{CorporateTrusteeDetails, OrganisationDetailsAnswers}
+import models.Mode
+import models.Mode.*
 import play.api.data.Form
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.SaveService
+import views.html.CorporateTrusteeDetailsView
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,65 +39,63 @@ class CorporateTrusteeDetailsController @Inject() (
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form = formProvider(
-    "corporateTrusteeDetails.name.error.required",
-    "corporateTrusteeDetails.name.error.length",
-    "corporateTrusteeDetails.name.error.regex",
-    "corporateTrusteeDetails.name.hint",
-    "corporateTrusteeDetails.phone.error.required",
-    "corporateTrusteeDetails.phone.error.length",
-    "corporateTrusteeDetails.phone.error.regex",
-    "corporateTrusteeDetails.phone.hint",
-    "corporateTrusteeDetails.postCode.error.required",
-    "corporateTrusteeDetails.postCode.error.length",
-    "corporateTrusteeDetails.postCode.error.regex",
-    "corporateTrusteeDetails.postCode.hint"
-  )
-
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if (
       OrganisationDetailsAnswers.getAreYouACorporateTrustee
         .contains(true) && OrganisationDetailsAnswers.getDoYouHaveUKAddress.contains(true)
     ) {
-      val previousAnswerName     = OrganisationDetailsAnswers.getNameOfCorporateTrustee
-      val previousAnswerPhone    = OrganisationDetailsAnswers.getCorporateTrusteeDaytimeTelephoneNumber
-      val previousAnswerPostCode = OrganisationDetailsAnswers.getCorporateTrusteePostcode
-      val previousAnswer         =
-        CorporateTrusteeDetails(
-          name = previousAnswerName,
-          phoneNumber = previousAnswerPhone,
-          postCode = previousAnswerPostCode
-        )
-      Future.successful(Ok(view(form.withDefault(Some(previousAnswer)))))
-    } else if (
-      OrganisationDetailsAnswers.getAreYouACorporateTrustee
-        .contains(true) && OrganisationDetailsAnswers.getDoYouHaveUKAddress.contains(false)
-    ) {
-      val previousAnswerName  = OrganisationDetailsAnswers.getNameOfCorporateTrustee
-      val previousAnswerPhone = OrganisationDetailsAnswers.getCorporateTrusteeDaytimeTelephoneNumber
-      val previousAnswer      = CorporateTrusteeDetails(name = previousAnswerName, phoneNumber = previousAnswerPhone)
-      Future.successful(Ok(view(form.withDefault(Some(previousAnswer)))))
+      val isUKAddress    = OrganisationDetailsAnswers.getDoYouHaveUKAddress.getOrElse(false)
+      val previousAnswer = OrganisationDetailsAnswers.getCorporateTrusteeDetails
+      val form           = formProvider(
+        isUKAddress,
+        "corporateTrusteeDetails.name.error.required",
+        "corporateTrusteeDetails.name.error.length",
+        "corporateTrusteeDetails.name.error.regex",
+        "corporateTrusteeDetails.name.hint",
+        "corporateTrusteeDetails.phone.error.required",
+        "corporateTrusteeDetails.phone.error.length",
+        "corporateTrusteeDetails.phone.error.regex",
+        "corporateTrusteeDetails.phone.hint",
+        "corporateTrusteeDetails.postCode.error.required",
+        "corporateTrusteeDetails.postCode.error.length",
+        "corporateTrusteeDetails.postCode.error.regex",
+        "corporateTrusteeDetails.postCode.hint"
+      )
+      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
     } else {
       Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
     }
   }
 
-//  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-//    form
-//      .bindFromRequest()
-//      .fold(
-//        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-//        value =>
-//          saveService
-//            .save(
-//              OrganisationDetailsAnswers
-//                .setNameOfCorporateTrustee(value.name)
-//                .setCorporateTrusteeDaytimeTelephoneNumber(value.phoneNumber)
-//                .setCorporateTrusteePostcode(value.postCode)
-//            )
-//            .map { _ =>
-//              Redirect(routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode))
-//            }
-//      )
-//  }
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val isUKAddress = OrganisationDetailsAnswers.getDoYouHaveUKAddress.getOrElse(false)
+    val form        = formProvider(
+      isUKAddress,
+      "corporateTrusteeDetails.name.error.required",
+      "corporateTrusteeDetails.name.error.length",
+      "corporateTrusteeDetails.name.error.regex",
+      "corporateTrusteeDetails.name.hint",
+      "corporateTrusteeDetails.phone.error.required",
+      "corporateTrusteeDetails.phone.error.length",
+      "corporateTrusteeDetails.phone.error.regex",
+      "corporateTrusteeDetails.phone.hint",
+      "corporateTrusteeDetails.postCode.error.required",
+      "corporateTrusteeDetails.postCode.error.length",
+      "corporateTrusteeDetails.postCode.error.regex",
+      "corporateTrusteeDetails.postCode.hint"
+    )
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+        value =>
+          saveService
+            .save(OrganisationDetailsAnswers.setCorporateTrusteeDetails(value))
+            .map { _ =>
+              Redirect(
+                routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode)
+              ) // TODO once check your answers has been done
+            }
+      )
+  }
 }

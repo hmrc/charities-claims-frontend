@@ -30,7 +30,8 @@ final case class OrganisationDetailsAnswers(
   corporateTrusteeDaytimeTelephoneNumber: Option[String] = None,
   corporateTrusteeTitle: Option[String] = None,
   corporateTrusteeFirstName: Option[String] = None,
-  corporateTrusteeLastName: Option[String] = None
+  corporateTrusteeLastName: Option[String] = None,
+  corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None
 )
 
 object OrganisationDetailsAnswers {
@@ -94,20 +95,11 @@ object OrganisationDetailsAnswers {
   def setCharityRegistrationNumber(value: String)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(charityRegistrationNumber = Some(v)))
 
-  def getNameOfCorporateTrustee(using session: SessionData): Option[String] = get(_.nameOfCorporateTrustee)
-
-  def setNameOfCorporateTrustee(value: String)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(nameOfCorporateTrustee = Some(v)))
-
-  def getCorporateTrusteePostcode(using session: SessionData): Option[String] = get(_.corporateTrusteePostcode)
-
-  def setCorporateTrusteePostcode(value: String)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(corporateTrusteePostcode = Some(v)))
-
-  def getCorporateTrusteeDaytimeTelephoneNumber(using session: SessionData): Option[String] = get(
-    _.corporateTrusteeDaytimeTelephoneNumber
+  def getCorporateTrusteeDetails(using session: SessionData): Option[CorporateTrusteeDetails] = get(
+    _.corporateTrusteeDetails
   )
 
-  def setCorporateTrusteeDaytimeTelephoneNumber(value: String)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(corporateTrusteeDaytimeTelephoneNumber = Some(v)))
+  def setCorporateTrusteeDetails(value: CorporateTrusteeDetails)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(corporateTrusteeDetails = Some(v)))
+
 }

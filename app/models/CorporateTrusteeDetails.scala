@@ -20,8 +20,8 @@ import play.api.libs.json.Format
 import play.api.libs.json.Json
 
 case class CorporateTrusteeDetails(
-  name: Option[String] = None,
-  phoneNumber: Option[String] = None,
+  name: String,
+  phoneNumber: String,
   postCode: Option[String] = None
 )
 

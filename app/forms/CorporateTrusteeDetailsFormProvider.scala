@@ -38,6 +38,7 @@ class CorporateTrusteeDetailsFormProvider @Inject() extends Mappings {
     """^\\s*((GIR 0AA)|((([a-zA-Z][0-9][0-9]?)|(([a-zA-Z][a-hj-yA-HJ-Y][0-9][0-9]?)|(([a-zA-Z][0-9][a-zA-Z])|([a-zA-Z][a-hj-yA-HJ-Y][0-9]?[a-zA-Z]))))\\s?[0-9][a-zA-Z]{2})\\s*)$"""
 
   def apply(
+    isUKAddress: Boolean,
     nameRequired: String,
     nameInvalid: String,
     nameLength: String,
@@ -65,12 +66,26 @@ class CorporateTrusteeDetailsFormProvider @Inject() extends Mappings {
             maxLength(phoneNumberMaxLength, phoneNumberLength)
           )
         ),
-        postCode    -> text(postCodeRequired).verifying(
-          firstError(
-            regexp(postCodeRegex, postCodeInvalid),
-            maxLength(postCodeMaxLength, postCodeLength)
-          )
-        )
-      )(CorporateTrusteeDetails.apply)(x => Some((x.name, x.phoneNumber, x.postCode)))
+        postCode    -> (if (isUKAddress) {
+                       text(postCodeRequired)
+                         .verifying(
+                           firstError(
+                             regexp(postCodeRegex, postCodeInvalid),
+                             maxLength(postCodeMaxLength, postCodeLength)
+                           )
+                         )
+                         .transform[Option[String]](Some(_), _.getOrElse(""))
+                     } else {
+                       optional(
+                         text(postCodeRequired)
+                           .verifying(
+                             firstError(
+                               regexp(postCodeRegex, postCodeInvalid),
+                               maxLength(postCodeMaxLength, postCodeLength)
+                             )
+                           )
+                       )
+                     })
+      )(CorporateTrusteeDetails.apply)(x => Some(x.name, x.phoneNumber, x.postCode))
     )
 }
