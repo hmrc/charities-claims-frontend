@@ -31,7 +31,8 @@ final case class OrganisationDetailsAnswers(
   corporateTrusteeTitle: Option[String] = None,
   corporateTrusteeFirstName: Option[String] = None,
   corporateTrusteeLastName: Option[String] = None,
-  corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None
+  corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None,
+  corporateTrusteeDetailsWithOutAddress: Option[CorporateTrusteeDetailsWithOutAddress]= None
 )
 
 object OrganisationDetailsAnswers {
@@ -101,5 +102,11 @@ object OrganisationDetailsAnswers {
 
   def setCorporateTrusteeDetails(value: CorporateTrusteeDetails)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(corporateTrusteeDetails = Some(v)))
+    
+  def getCorporateTrusteeDetailsWithOutAddress(using session: SessionData): Option[CorporateTrusteeDetailsWithOutAddress] = get(
+    _.corporateTrusteeDetailsWithOutAddress
+  )
 
+  def setCorporateTrusteeDetailsWithOutAddress(value: CorporateTrusteeDetailsWithOutAddress)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(corporateTrusteeDetailsWithOutAddress = Some(v)))
 }

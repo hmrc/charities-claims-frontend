@@ -51,15 +51,31 @@ class CorporateTrusteeDetailsController @Inject() (
         "corporateTrusteeDetails.name.error.required",
         "corporateTrusteeDetails.name.error.length",
         "corporateTrusteeDetails.name.error.regex",
-        "corporateTrusteeDetails.name.hint",
         "corporateTrusteeDetails.phone.error.required",
         "corporateTrusteeDetails.phone.error.length",
         "corporateTrusteeDetails.phone.error.regex",
-        "corporateTrusteeDetails.phone.hint",
         "corporateTrusteeDetails.postCode.error.required",
         "corporateTrusteeDetails.postCode.error.length",
-        "corporateTrusteeDetails.postCode.error.regex",
-        "corporateTrusteeDetails.postCode.hint"
+        "corporateTrusteeDetails.postCode.error.regex"
+      )
+      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+    } else if (
+      OrganisationDetailsAnswers.getAreYouACorporateTrustee
+        .contains(true) && OrganisationDetailsAnswers.getDoYouHaveUKAddress.contains(false)
+    ) {
+      val isUKAddress    = OrganisationDetailsAnswers.getDoYouHaveUKAddress.getOrElse(false)
+      val previousAnswer = OrganisationDetailsAnswers.getCorporateTrusteeDetailsWithOutAddress
+      val form           = formProvider(
+        isUKAddress,
+        "corporateTrusteeDetails.name.error.required",
+        "corporateTrusteeDetails.name.error.length",
+        "corporateTrusteeDetails.name.error.regex",
+        "corporateTrusteeDetails.phone.error.required",
+        "corporateTrusteeDetails.phone.error.length",
+        "corporateTrusteeDetails.phone.error.regex",
+        "",
+        "",
+        ""
       )
       Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
     } else {
@@ -74,15 +90,12 @@ class CorporateTrusteeDetailsController @Inject() (
       "corporateTrusteeDetails.name.error.required",
       "corporateTrusteeDetails.name.error.length",
       "corporateTrusteeDetails.name.error.regex",
-      "corporateTrusteeDetails.name.hint",
       "corporateTrusteeDetails.phone.error.required",
       "corporateTrusteeDetails.phone.error.length",
       "corporateTrusteeDetails.phone.error.regex",
-      "corporateTrusteeDetails.phone.hint",
       "corporateTrusteeDetails.postCode.error.required",
       "corporateTrusteeDetails.postCode.error.length",
-      "corporateTrusteeDetails.postCode.error.regex",
-      "corporateTrusteeDetails.postCode.hint"
+      "corporateTrusteeDetails.postCode.error.regex"
     )
     form
       .bindFromRequest()

@@ -41,27 +41,27 @@
 
     @govukInput(
         InputViewModel(
-            field = form("name"),
-                label = LabelViewModel(messages("corporateTrusteeDetails.name.label")).withCssClass("govuk-visually-hidden")
-            )
-        )
-    )
+            field = form("trusteeName"),
+            label = LabelViewModel(messages("corporateTrusteeDetails.name.label"))
+        ).withCssClass("govuk-input--width-20")
+            .withId("trustee-name")
+        .withAutocomplete("trustee-name"))
 
     @govukInput(
         InputViewModel(
-            field = form("phoneNumber"),
-                label = LabelViewModel(messages("corporateTrusteeDetails.phone.label")).withCssClass("govuk-visually-hidden")
-            )
-        )
-    )
+            field = form("trusteePhoneNumber"),
+            label = LabelViewModel(messages("corporateTrusteeDetails.phone.label"))
+                ).withCssClass("govuk-input--width-20")
+                .withId("trustee-phone-number")
+                .withAutocomplete("trustee-phone-number"))
 
     @govukInput(
         InputViewModel(
-            field = form("postCode"),
-                label = LabelViewModel(messages("corporateTrusteeDetails.postcode.label")).withCssClass("govuk-visually-hidden")
+            field = form("addressPostCode"),
+                label = LabelViewModel(messages("corporateTrusteeDetails.postcode.label"))
             )
         )
-    )
+
 
     @govukButton(ButtonViewModel(Text(messages("site.continue"))))
     }

@@ -19,12 +19,11 @@ package models
 import play.api.libs.json.Format
 import play.api.libs.json.Json
 
-case class CorporateTrusteeDetails(
-  trusteeName: String,
-  trusteePhoneNumber: String,
-  addressPostCode: Option[String] = None
-)
+case class CorporateTrusteeDetailsWithOutAddress(
+                                    trusteeName: String,
+                                    trusteePhoneNumber: String
+                                  )
 
-object CorporateTrusteeDetails {
-  implicit val format: Format[CorporateTrusteeDetails] = Json.format[CorporateTrusteeDetails]
+object CorporateTrusteeDetailsWithOutAddress {
+  implicit val format: Format[CorporateTrusteeDetailsWithOutAddress] = Json.format[CorporateTrusteeDetailsWithOutAddress]
 }
