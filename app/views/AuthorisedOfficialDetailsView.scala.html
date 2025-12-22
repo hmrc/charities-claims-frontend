@@ -26,7 +26,7 @@ govukInput: GovukInput,
 govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[AuthorisedOfficialDetails], isUkAddress: Boolean)(implicit request: Request[?], messages: Messages)
+@(form: Form[AuthorisedOfficialDetails], isUkAddress: Boolean, mode: Mode)(implicit request: Request[?], messages: Messages)
 
 @layout(
 pageTitle = title(form, messages("authorisedOfficialDetails.title")),
@@ -40,7 +40,7 @@ showBackLink = true
 <span class="govuk-caption-l">@messages("authorisedOfficialDetails.caption")</span>
 <h1 class="govuk-heading-l">@messages("authorisedOfficialDetails.heading")</h1>
 
-@formHelper(action = routes.AuthorisedOfficialDetailsController.onSubmit) {
+@formHelper(action = routes.AuthorisedOfficialDetailsController.onSubmit(mode)) {
 
 @govukInput(
 InputViewModel(

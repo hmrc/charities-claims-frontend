@@ -21,6 +21,8 @@ import controllers.BaseController
 import controllers.actions.Actions
 import forms.AuthorisedOfficialDetailsFormProvider
 import models.OrganisationDetailsAnswers
+import models.Mode
+import models.Mode.*
 import services.SaveService
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.AuthorisedOfficialDetailsView
@@ -36,30 +38,30 @@ class AuthorisedOfficialDetailsController @Inject() (
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
     val isUkAddress = OrganisationDetailsAnswers.getDoYouHaveUKAddress.getOrElse(false)
     val form        = formProvider(isUkAddress)
 
     val previousAnswer = OrganisationDetailsAnswers.getAuthorisedOfficialDetails
     val preparedForm   = previousAnswer.fold(form)(form.fill)
 
-    Ok(view(preparedForm, isUkAddress))
+    Ok(view(preparedForm, isUkAddress, mode))
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     val isUkAddress = OrganisationDetailsAnswers.getDoYouHaveUKAddress.getOrElse(false)
     val form        = formProvider(isUkAddress)
 
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, isUkAddress))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, isUkAddress, mode))),
         value =>
           saveService
             .save(OrganisationDetailsAnswers.setAuthorisedOfficialDetails(value))
             .map { _ =>
               // TODO: Redirect to A2.11 - Check your answers
-              Redirect(routes.AuthorisedOfficialDetailsController.onPageLoad)
+              Redirect(routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode))
             }
       )
   }

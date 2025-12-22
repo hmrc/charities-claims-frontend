@@ -92,3 +92,7 @@ GET         /organisation-details-min-data-placeholder      controllers.organisa
 
 GET         /authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onPageLoad
 POST        /authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onSubmit
+GET         /authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onSubmit(mode: Mode = Mode.CheckMode)

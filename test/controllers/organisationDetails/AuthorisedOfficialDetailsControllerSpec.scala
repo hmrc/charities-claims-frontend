@@ -18,6 +18,7 @@ package controllers.organisationDetails
 
 import controllers.ControllerSpec
 import forms.AuthorisedOfficialDetailsFormProvider
+import models.Mode.NormalMode
 import models.{AuthorisedOfficialDetails, OrganisationDetailsAnswers}
 import play.api.Application
 import play.api.i18n.MessagesApi
@@ -47,14 +48,14 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AuthorisedOfficialDetailsController.onPageLoad.url)
+            FakeRequest(GET, routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode).url)
 
           val result   = route(application, request).value
           val view     = application.injector.instanceOf[AuthorisedOfficialDetailsView]
           val messages = application.injector.instanceOf[MessagesApi].preferred(request)
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form, isUkAddress = false)(using request, messages).body
+          contentAsString(result) shouldEqual view(form, isUkAddress = false, NormalMode)(using request, messages).body
         }
       }
 
@@ -64,7 +65,7 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AuthorisedOfficialDetailsController.onPageLoad.url)
+            FakeRequest(GET, routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode).url)
 
           val result   = route(application, request).value
           val view     = application.injector.instanceOf[AuthorisedOfficialDetailsView]
@@ -73,7 +74,10 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
           val expectedForm = formProvider(isUkAddress = true)
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(expectedForm, isUkAddress = true)(using request, messages).body
+          contentAsString(result) shouldEqual view(expectedForm, isUkAddress = true, NormalMode)(using
+            request,
+            messages
+          ).body
         }
       }
 
@@ -84,14 +88,14 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AuthorisedOfficialDetailsController.onPageLoad.url)
+            FakeRequest(GET, routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode).url)
 
           val result   = route(application, request).value
           val view     = application.injector.instanceOf[AuthorisedOfficialDetailsView]
           val messages = application.injector.instanceOf[MessagesApi].preferred(request)
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(validData), isUkAddress = false)(using
+          contentAsString(result) shouldEqual view(form.fill(validData), isUkAddress = false, NormalMode)(using
             request,
             messages
           ).body
@@ -105,7 +109,7 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.AuthorisedOfficialDetailsController.onSubmit.url)
+            FakeRequest(POST, routes.AuthorisedOfficialDetailsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody(
                 "firstName"   -> "John",
                 "lastName"    -> "Doe",
@@ -115,7 +119,9 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.AuthorisedOfficialDetailsController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(
+            routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode).url
+          )
         }
       }
 
@@ -125,7 +131,7 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.AuthorisedOfficialDetailsController.onSubmit.url)
+            FakeRequest(POST, routes.AuthorisedOfficialDetailsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody(
                 "firstName"   -> "John",
                 "lastName"    -> "Doe",
@@ -136,7 +142,9 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.AuthorisedOfficialDetailsController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(
+            routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode).url
+          )
         }
       }
 
@@ -145,7 +153,7 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.AuthorisedOfficialDetailsController.onSubmit.url)
+            FakeRequest(POST, routes.AuthorisedOfficialDetailsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("firstName" -> "")
 
           val result = route(application, request).value
@@ -160,7 +168,7 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.AuthorisedOfficialDetailsController.onSubmit.url)
+            FakeRequest(POST, routes.AuthorisedOfficialDetailsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody(
                 "firstName"   -> "John",
                 "lastName"    -> "Doe",
