@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import play.twirl.api.Html
+package models
 
-@this(
-    layout: templates.Layout
+import play.api.libs.json.Format
+import play.api.libs.json.Json
+
+case class CorporateTrusteeDetails(
+  trusteeName: String,
+  trusteePhoneNumber: String,
+  addressPostcode: Option[String] = None
 )
 
-@(pageTitle: String, heading: String, message: String, messageArgs: Seq[String] = Seq.empty)(implicit request:Request[?], messages: Messages)
-
-@layout(pageTitle = titleNoForm(pageTitle), showBackLink = false) {
-    <h1 class="govuk-heading-xl">@messages(heading)</h1>
-
-    @messages(message, messageArgs*).split("<br>").map { line =>
-        <p class="govuk-body">@Html(line.trim)</p>
-    }
-    
+object CorporateTrusteeDetails {
+  implicit val format: Format[CorporateTrusteeDetails] = Json.format[CorporateTrusteeDetails]
 }

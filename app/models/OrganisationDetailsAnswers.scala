@@ -30,7 +30,8 @@ final case class OrganisationDetailsAnswers(
   corporateTrusteeDaytimeTelephoneNumber: Option[String] = None,
   corporateTrusteeTitle: Option[String] = None,
   corporateTrusteeFirstName: Option[String] = None,
-  corporateTrusteeLastName: Option[String] = None
+  corporateTrusteeLastName: Option[String] = None,
+  corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None
 )
 
 object OrganisationDetailsAnswers {
@@ -93,4 +94,12 @@ object OrganisationDetailsAnswers {
 
   def setCharityRegistrationNumber(value: String)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(charityRegistrationNumber = Some(v)))
+
+  def getCorporateTrusteeDetails(using session: SessionData): Option[CorporateTrusteeDetails] = get(
+    _.corporateTrusteeDetails
+  )
+
+  def setCorporateTrusteeDetails(value: CorporateTrusteeDetails)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(corporateTrusteeDetails = Some(v)))
+
 }
