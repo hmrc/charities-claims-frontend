@@ -22,7 +22,7 @@ import play.api.libs.json.Json
 case class CorporateTrusteeDetails(
   trusteeName: String,
   trusteePhoneNumber: String,
-  addressPostCode: Option[String] = None
+  addressPostcode: Option[String] = None
 )
 
 object CorporateTrusteeDetails {

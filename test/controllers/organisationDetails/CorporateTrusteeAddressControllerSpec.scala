@@ -116,7 +116,7 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url
+            routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -133,7 +133,7 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url
+            routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode).url
           )
         }
       }

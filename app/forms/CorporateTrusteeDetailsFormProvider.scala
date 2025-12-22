@@ -24,30 +24,30 @@ import javax.inject.Inject
 
 class CorporateTrusteeDetailsFormProvider @Inject() extends Mappings {
 
-  val trusteeName   = "trusteeName"
-  val nameMaxLength = 160
-  val nameRegex     = """^([a-zA-Z0-9 ]{1,160})$"""
+  val trusteeName           = "trusteeName"
+  private val nameMaxLength = 160
+  private val nameRegex     = "^([a-zA-Z0-9 ]{1,160})$"
 
-  val trusteePhoneNumber          = "trusteePhoneNumber"
-  val trusteePhoneNumberMaxLength = 35
-  val trusteePhoneNumberRegex     = """^[0-9\\(\\)\\-\\s]{1,35}$"""
+  val trusteePhoneNumber                  = "trusteePhoneNumber"
+  private val trusteePhoneNumberMaxLength = 35
+  private val trusteePhoneNumberRegex     = "^[0-9\\(\\)\\-\\s]{1,35}$"
 
-  val addressPostCode          = "addressPostcode"
-  val addressPostCodeMaxLength = 8
-  val addressPostCodeRegex     =
-    """^\\s*((GIR 0AA)|((([a-zA-Z][0-9][0-9]?)|(([a-zA-Z][a-hj-yA-HJ-Y][0-9][0-9]?)|(([a-zA-Z][0-9][a-zA-Z])|([a-zA-Z][a-hj-yA-HJ-Y][0-9]?[a-zA-Z]))))\\s?[0-9][a-zA-Z]{2})\\s*)$"""
+  val addressPostcode                  = "addressPostcode"
+  private val addressPostcodeMaxLength = 8
+  private val addressPostcodeRegex     =
+    "^\\s*((GIR 0AA)|((([a-zA-Z][0-9][0-9]?)|(([a-zA-Z][a-hj-yA-HJ-Y][0-9][0-9]?)|(([a-zA-Z][0-9][a-zA-Z])|([a-zA-Z][a-hj-yA-HJ-Y][0-9]?[a-zA-Z]))))\\s?[0-9][a-zA-Z]{2})\\s*)$"
 
   def apply(
     isUKAddress: Boolean,
     trusteeNameRequired: String,
-    trusteeNameInvalid: String,
     trusteeNameLength: String,
+    trusteeNameInvalid: String,
     trusteePhoneNumberRequired: String,
-    trusteePhoneNumberInvalid: String,
     trusteePhoneNumberLength: String,
-    addressPostCodeRequired: String,
-    addressPostCodeInvalid: String,
-    addressPostCodeLength: String
+    trusteePhoneNumberInvalid: String,
+    addressPostcodeRequired: String,
+    addressPostcodeLength: String,
+    addressPostcodeInvalid: String
   ): Form[CorporateTrusteeDetails] =
     Form(
       mapping(
@@ -59,30 +59,24 @@ class CorporateTrusteeDetailsFormProvider @Inject() extends Mappings {
         ),
         trusteePhoneNumber -> text(trusteePhoneNumberRequired).verifying(
           firstError(
-            regexp(trusteePhoneNumberRegex, trusteePhoneNumberInvalid),
-            maxLength(trusteePhoneNumberMaxLength, trusteePhoneNumberLength)
+            maxLength(trusteePhoneNumberMaxLength, trusteePhoneNumberLength),
+            regexp(trusteePhoneNumberRegex, trusteePhoneNumberInvalid)
           )
         ),
-        addressPostCode    -> (if (isUKAddress) {
-                              text(addressPostCodeRequired)
+        addressPostcode    -> (if (isUKAddress) {
+                              text(addressPostcodeRequired)
                                 .verifying(
                                   firstError(
-                                    regexp(addressPostCodeRegex, addressPostCodeInvalid),
-                                    maxLength(addressPostCodeMaxLength, addressPostCodeLength)
+                                    regexp(addressPostcodeRegex, addressPostcodeInvalid),
+                                    maxLength(addressPostcodeMaxLength, addressPostcodeLength)
                                   )
                                 )
                                 .transform[Option[String]](Some(_), _.getOrElse(""))
                             } else {
                               optional(
-                                text(addressPostCodeRequired)
-                                  .verifying(
-                                    firstError(
-                                      regexp(addressPostCodeRegex, addressPostCodeInvalid),
-                                      maxLength(addressPostCodeMaxLength, addressPostCodeLength)
-                                    )
-                                  )
+                                text("")
                               )
                             })
-      )(CorporateTrusteeDetails.apply)(x => Some(x.trusteeName, x.trusteePhoneNumber, x.addressPostCode))
+      )(CorporateTrusteeDetails.apply)(x => Some(x.trusteeName, x.trusteePhoneNumber, x.addressPostcode))
     )
 }

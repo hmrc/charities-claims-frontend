@@ -22,18 +22,15 @@ import controllers.actions.Actions
 import forms.CorporateTrusteeDetailsFormProvider
 import models.{Mode, OrganisationDetailsAnswers}
 import models.Mode.*
-import play.api.Logger
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
 import views.html.CorporateTrusteeDetailsView
-import views.html.CorporateTrusteeDetailsWithOutAddessView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class CorporateTrusteeDetailsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: CorporateTrusteeDetailsView,
-  viewWithOutAddress: CorporateTrusteeDetailsWithOutAddessView,
   actions: Actions,
   formProvider: CorporateTrusteeDetailsFormProvider,
   saveService: SaveService
@@ -56,9 +53,7 @@ class CorporateTrusteeDetailsController @Inject() (
         "corporateTrusteeDetails.postCode.error.length",
         "corporateTrusteeDetails.postCode.error.regex"
       )
-      if OrganisationDetailsAnswers.getDoYouHaveUKAddress.contains(true) then
-        Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
-      else Future.successful(Ok(viewWithOutAddress(form.withDefault(previousAnswer), mode)))
+      Future.successful(Ok(view(form.withDefault(previousAnswer), isUKAddress, mode)))
     } else {
       Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
     }
@@ -79,36 +74,18 @@ class CorporateTrusteeDetailsController @Inject() (
       "corporateTrusteeDetails.postCode.error.length",
       "corporateTrusteeDetails.postCode.error.regex"
     )
-    if isUKAddress then {
-      Logger(getClass).error(s"**** first: $isUKAddress...")
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            saveService
-              .save(OrganisationDetailsAnswers.setCorporateTrusteeDetails(value))
-              .map { _ =>
-                Redirect(
-                  routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode)
-                ) // TODO once check your answers has been done
-              }
-        )
-    } else {
-      Logger(getClass).error(s"**** second: $isUKAddress...")
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(viewWithOutAddress(formWithErrors, mode))),
-          value =>
-            saveService
-              .save(OrganisationDetailsAnswers.setCorporateTrusteeDetails(value))
-              .map { _ =>
-                Redirect(
-                  routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode)
-                ) // TODO once check your answers has been done
-              }
-        )
-    }
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, isUKAddress, mode))),
+        value =>
+          saveService
+            .save(OrganisationDetailsAnswers.setCorporateTrusteeDetails(value))
+            .map { _ =>
+              Redirect(
+                routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode)
+              ) // TODO once check your answers has been done
+            }
+      )
   }
 }
