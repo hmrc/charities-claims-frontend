@@ -89,19 +89,11 @@ class ClaimsServiceSpec extends BaseSpec {
 
       given DataRequest[?] = DataRequest(FakeRequest(), initialSessionData)
 
-      val existingClaim =
-        TestClaims.testClaimWithRepaymentClaimDetailsOnly(claimId = existingClaimId)
-
       (mockConnector
-        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
-        .expects(*)
+        .getClaim(_: String)(using _: HeaderCarrier))
+        .expects(*, *)
         .returning(
-          Future.successful(
-            GetClaimsResponse(
-              claimsCount = 1,
-              claimsList = List(existingClaim)
-            )
-          )
+          Future.successful(Some(TestClaims.testClaimWithRepaymentClaimDetailsOnly(claimId = existingClaimId)))
         )
 
       (mockConnector

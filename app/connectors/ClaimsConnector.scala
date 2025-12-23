@@ -42,6 +42,8 @@ trait ClaimsConnector {
 
   def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse]
   def saveClaim(repaymentClaimDetails: RepaymentClaimDetails)(using hc: HeaderCarrier): Future[UserId]
+
+  def getClaim(claimId: String)(using hc: HeaderCarrier): Future[Option[Claim]]
   def updateClaim(claimId: String, repaymentClaimDetails: RepaymentClaimDetails)(using hc: HeaderCarrier): Future[Unit]
   def deleteClaim(claimId: String)(using hc: HeaderCarrier): Future[Boolean]
 }
@@ -63,15 +65,12 @@ class ClaimsConnectorImpl @Inject() (
   val contextPath: String = servicesConfig
     .getConfString("charities-claims.context-path", "charities-claims")
 
-  val retrieveUnsubmittedClaimsUrl: String = s"$baseUrl$contextPath/claims"
-  val saveClaimUrl: String                 = s"$baseUrl$contextPath/claims"
-  val updateClaimUrl: String               = s"$baseUrl$contextPath/claims"
-  val deleteClaimUrl: String               = s"$baseUrl$contextPath/claims"
+  val claimsApiUrl: String = s"$baseUrl$contextPath/claims"
 
   final def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse] =
     callCharitiesClaimsBackend[Nothing, GetClaimsResponse](
       method = "GET",
-      url = s"$retrieveUnsubmittedClaimsUrl?claimSubmitted=false",
+      url = s"$claimsApiUrl?claimSubmitted=false",
       payload = None
     )
 
@@ -92,21 +91,31 @@ class ClaimsConnectorImpl @Inject() (
 
     callCharitiesClaimsBackend[SaveClaimRequest, SaveClaimResponse](
       method = "POST",
-      url = saveClaimUrl,
+      url = claimsApiUrl,
       payload = Some(payload)
     ).map(_.claimId)
   }
+
+  final def getClaim(claimId: String)(using
+    hc: HeaderCarrier
+  ): Future[Option[Claim]] =
+    given Reads[Option[Claim]] = Reads.optionWithNull[Claim]
+    callCharitiesClaimsBackend[Nothing, Option[Claim]](
+      method = "GET",
+      url = s"$claimsApiUrl/$claimId",
+      noneOnNotFound = true,
+      noneValue = None
+    )
 
   final def updateClaim(claimId: String, repaymentClaimDetails: RepaymentClaimDetails)(using
     hc: HeaderCarrier
   ): Future[Unit] = {
     val payload = UpdateClaimRequest(
-      claimId,
-      repaymentClaimDetails = Some(repaymentClaimDetails)
+      repaymentClaimDetails = repaymentClaimDetails
     )
     callCharitiesClaimsBackend[UpdateClaimRequest, UpdateClaimResponse](
       method = "PUT",
-      url = updateClaimUrl,
+      url = s"$claimsApiUrl/$claimId",
       payload = Some(payload)
     ).map(_ => ())
   }
@@ -116,11 +125,16 @@ class ClaimsConnectorImpl @Inject() (
   ): Future[Boolean] =
     callCharitiesClaimsBackend[Nothing, DeleteClaimResponse](
       method = "DELETE",
-      url = deleteClaimUrl,
-      payload = None
+      url = s"$claimsApiUrl/$claimId"
     ).map(r => r.success)
 
-  private def callCharitiesClaimsBackend[I, O](method: String, url: String, payload: Option[I])(using
+  private def callCharitiesClaimsBackend[I, O](
+    method: String,
+    url: String,
+    payload: Option[I] = None,
+    noneOnNotFound: Boolean = false,
+    noneValue: O = null
+  )(using
     writes: Writes[I],
     reads: Reads[O],
     hc: HeaderCarrier
@@ -140,6 +154,7 @@ class ClaimsConnectorImpl @Inject() (
         response
           .parseJSON[O]()
           .fold(error => Future.failed(Exception(error)), Future.successful)
+      else if noneOnNotFound && response.status == 404 then Future.successful(noneValue)
       else
         Future.failed(
           Exception(s"Request to $method $url failed because of $response ${response.body}")
