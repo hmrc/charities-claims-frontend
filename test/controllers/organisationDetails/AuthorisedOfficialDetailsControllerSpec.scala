@@ -120,7 +120,7 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode).url
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
           )
         }
       }
@@ -143,7 +143,7 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode).url
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
           )
         }
       }

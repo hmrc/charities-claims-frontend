@@ -60,8 +60,7 @@ class AuthorisedOfficialDetailsController @Inject() (
           saveService
             .save(OrganisationDetailsAnswers.setAuthorisedOfficialDetails(value))
             .map { _ =>
-              // TODO: Redirect to A2.11 - Check your answers
-              Redirect(routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode))
+              Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
             }
       )
   }
