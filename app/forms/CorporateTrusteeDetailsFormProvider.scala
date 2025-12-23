@@ -64,14 +64,7 @@ class CorporateTrusteeDetailsFormProvider @Inject() extends Mappings {
           )
         ),
         addressPostcode    -> (if (isUKAddress) {
-                              text(addressPostcodeRequired)
-                                .verifying(
-                                  firstError(
-                                    regexp(addressPostcodeRegex, addressPostcodeInvalid),
-                                    maxLength(addressPostcodeMaxLength, addressPostcodeLength)
-                                  )
-                                )
-                                .transform[Option[String]](Some(_), _.getOrElse(""))
+                              UKPostcodeMapping(addressPostcodeRequired, addressPostcodeLength, addressPostcodeInvalid)
                             } else {
                               optional(
                                 text("")

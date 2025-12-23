@@ -59,14 +59,11 @@ class AuthorisedOfficialDetailsFormProvider @Inject() {
         )
         .verifying("authorisedOfficialDetails.phoneNumber.error.length", _.length <= 35),
       "postcode"    -> (if (isUkAddress) {
-                       text
-                         .verifying("authorisedOfficialDetails.postcode.error.required", _.nonEmpty)
-                         .verifying(
-                           "authorisedOfficialDetails.postcode.error.format",
-                           pc => pc.isEmpty || pc.toUpperCase.matches(postcodeRegex)
-                         )
-                         .verifying("authorisedOfficialDetails.postcode.error.length", _.length <= 8)
-                         .transform[Option[String]](Some(_), _.getOrElse(""))
+                       UKPostcodeMapping(
+                         addressPostcodeRequired = "authorisedOfficialDetails.postcode.error.required",
+                         addressPostcodeLength = "authorisedOfficialDetails.postcode.error.length",
+                         addressPostcodeInvalid = "authorisedOfficialDetails.postcode.error.format"
+                       )
                      } else {
                        optional(text)
                      })
