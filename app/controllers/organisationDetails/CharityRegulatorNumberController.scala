@@ -57,7 +57,10 @@ class CharityRegulatorNumberController @Inject() (
           saveService
             .save(OrganisationDetailsAnswers.setCharityRegistrationNumber(value))
             .map { _ =>
-              Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
+              (value, mode) match {
+                case (_, CheckMode)  => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
+                case (_, NormalMode) => Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
+              }
             }
       )
   }

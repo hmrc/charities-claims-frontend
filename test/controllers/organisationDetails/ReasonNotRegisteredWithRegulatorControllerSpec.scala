@@ -257,6 +257,74 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
+      "should redirect back to CYA when the value is excepted" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "Excepted")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect back to CYA when the value is Exempt" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "Exempt")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect back to CYA when the value is lowIncome" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "LowIncome")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect back to CYA when the value is waiting" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "Waiting")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
       "should reload the page with errors when a required field is missing" in {
         given application: Application = applicationBuilder().build()
 

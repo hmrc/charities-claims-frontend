@@ -58,7 +58,12 @@ class AuthorisedOfficialAddressController @Inject() (
           saveService
             .save(OrganisationDetailsAnswers.setDoYouHaveUKAddress(value))
             .map { _ =>
-              Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode))
+              (value, mode) match {
+                case (_, CheckMode)  =>
+                  Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
+                case (_, NormalMode) =>
+                  Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode))
+              }
             }
       )
   }
