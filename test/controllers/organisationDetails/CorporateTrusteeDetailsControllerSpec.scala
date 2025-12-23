@@ -201,7 +201,7 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode).url)
+          redirectLocation(result) shouldEqual Some(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
         }
       }
 
@@ -221,7 +221,7 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode).url)
+          redirectLocation(result) shouldEqual Some(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
         }
       }
 

@@ -19,10 +19,9 @@ package controllers.organisationDetails
 import com.google.inject.Inject
 import controllers.actions.Actions
 import forms.CharityRegulatorNumberFormProvider
-import models.Mode.NormalMode
+import models.Mode.*
 import controllers.BaseController
-import models.NameOfCharityRegulator
-import models.OrganisationDetailsAnswers
+import models.{Mode, NameOfCharityRegulator, OrganisationDetailsAnswers}
 import services.SaveService
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.CharityRegulatorNumberView
@@ -40,20 +39,20 @@ class CharityRegulatorNumberController @Inject() (
 
   val form = formProvider()
 
-  val onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     val previousAnswer = OrganisationDetailsAnswers.getCharityRegistrationNumber
 
     val nameOfCharityAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
     if nameOfCharityAnswer.isEmpty || nameOfCharityAnswer.contains(NameOfCharityRegulator.None)
     then Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
-    else Future.successful(Ok(view(form.withDefault(previousAnswer))))
+    else Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
   }
 
-  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
             .save(OrganisationDetailsAnswers.setCharityRegistrationNumber(value))

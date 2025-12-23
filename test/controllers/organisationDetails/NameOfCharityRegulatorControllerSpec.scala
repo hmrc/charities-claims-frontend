@@ -136,7 +136,7 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.CharityRegulatorNumberController.onPageLoad.url
+            routes.CharityRegulatorNumberController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -153,7 +153,7 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.CharityRegulatorNumberController.onPageLoad.url
+            routes.CharityRegulatorNumberController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -170,7 +170,7 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.CharityRegulatorNumberController.onPageLoad.url
+            routes.CharityRegulatorNumberController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -188,6 +188,74 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
             routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to the CYA when the value is None" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.NameOfCharityRegulatorController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "None")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect to the CYA when the value is Scottish" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.NameOfCharityRegulatorController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "Scottish")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect to the CYA when the value is NorthernIreland" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.NameOfCharityRegulatorController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "NorthernIreland")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect to the CYA when the value is EnglandAndWales" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.NameOfCharityRegulatorController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "EnglandAndWales")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
           )
         }
       }

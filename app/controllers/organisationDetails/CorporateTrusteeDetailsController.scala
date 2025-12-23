@@ -83,7 +83,7 @@ class CorporateTrusteeDetailsController @Inject() (
             .save(OrganisationDetailsAnswers.setCorporateTrusteeDetails(value))
             .map { _ =>
               Redirect(
-                routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode)
+                routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
               ) // TODO once check your answers has been done
             }
       )

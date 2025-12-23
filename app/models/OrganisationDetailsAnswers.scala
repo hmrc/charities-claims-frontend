@@ -33,6 +33,26 @@ final case class OrganisationDetailsAnswers(
   corporateTrusteeLastName: Option[String] = None,
   corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None
 )
+// {
+//  def hasCompleteAnswers: Boolean =
+//    return nameOfCharityRegulator.isDefined
+//      && reasonNotRegisteredWithRegulator.isDefined
+//      && charityRegistrationNumber.isDefined
+//      && areYouACorporateTrustee.isDefined
+//      && doYouHaveUKAddress.isDefined
+//      && if(areYouACorporateTrustee && doYouHaveUKAddress) then return nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined
+//      && if(areYouACorporateTrustee && !doYouHaveUKAddress) then return nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined && corporateTrusteePostcode.isDefined
+//      && if(!areYouACorporateTrustee && doYouHaveUKAddress) then return
+//        corporateTrusteeFirstName.isDefined
+//        && corporateTrusteeLastName.isDefined
+//        && corporateTrusteeDaytimeTelephoneNumber.isDefined
+//        && corporateTrusteePostcode.isDefined
+//    && if (!areYouACorporateTrustee && !doYouHaveUKAddress) then return
+//    corporateTrusteeFirstName.isDefined
+//      && corporateTrusteeLastName.isDefined
+//      && corporateTrusteeDaytimeTelephoneNumber.isDefined
+//      && charityRegistrationNumber.isDefined
+//}
 
 object OrganisationDetailsAnswers {
 

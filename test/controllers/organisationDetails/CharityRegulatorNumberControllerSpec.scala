@@ -41,7 +41,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CharityRegulatorNumberController.onPageLoad.url)
+            FakeRequest(GET, routes.CharityRegulatorNumberController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[CharityRegulatorNumberView]
@@ -50,7 +50,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(form)(using request, messages).body
+          contentAsString(result) shouldEqual view(form, NormalMode)(using request, messages).body
         }
       }
 
@@ -61,7 +61,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CharityRegulatorNumberController.onPageLoad.url)
+            FakeRequest(GET, routes.CharityRegulatorNumberController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[CharityRegulatorNumberView]
@@ -70,7 +70,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(form)(using request, messages).body
+          contentAsString(result) shouldEqual view(form, NormalMode)(using request, messages).body
         }
       }
 
@@ -81,7 +81,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CharityRegulatorNumberController.onPageLoad.url)
+            FakeRequest(GET, routes.CharityRegulatorNumberController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[CharityRegulatorNumberView]
@@ -90,7 +90,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(form)(using request, messages).body
+          contentAsString(result) shouldEqual view(form, NormalMode)(using request, messages).body
         }
       }
 
@@ -101,7 +101,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CharityRegulatorNumberController.onPageLoad.url)
+            FakeRequest(GET, routes.CharityRegulatorNumberController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -116,7 +116,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
         given application: Application = applicationBuilder().build()
 
         running(application) {
-          val request = FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit.url)
+          val request = FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit(NormalMode).url)
             .withFormUrlEncodedBody("value" -> "12345678")
 
           val result = route(application, request).value
@@ -130,7 +130,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
         given application: Application = applicationBuilder().build()
 
         running(application) {
-          val request = FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit.url)
+          val request = FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit(NormalMode).url)
             .withFormUrlEncodedBody("value" -> "123ABC")
 
           val result = route(application, request).value
@@ -143,7 +143,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
         given application: Application = applicationBuilder().build()
 
         running(application) {
-          val request = FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit.url)
+          val request = FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit(NormalMode).url)
             .withFormUrlEncodedBody("value" -> "")
 
           val result = route(application, request).value
