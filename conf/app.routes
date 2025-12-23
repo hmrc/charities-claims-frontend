@@ -57,8 +57,10 @@ POST        /charity-excepted                               controllers.organisa
 GET         /charity-exempt                              controllers.organisationDetails.CharityExemptController.onPageLoad
 POST        /charity-exempt                              controllers.organisationDetails.CharityExemptController.onSubmit
 
-GET         /charity-regulator-number                    controllers.organisationDetails.CharityRegulatorNumberController.onPageLoad
-POST        /charity-regulator-number                    controllers.organisationDetails.CharityRegulatorNumberController.onSubmit
+GET         /charity-regulator-number                    controllers.organisationDetails.CharityRegulatorNumberController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-charity-regulator-number             controllers.organisationDetails.CharityRegulatorNumberController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /charity-regulator-number                    controllers.organisationDetails.CharityRegulatorNumberController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-charity-regulator-number             controllers.organisationDetails.CharityRegulatorNumberController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /charity-not-registered                      controllers.organisationDetails.ReasonNotRegisteredWithRegulatorController.onPageLoad(mode: Mode = Mode.NormalMode)
 GET         /change-charity-not-registered               controllers.organisationDetails.ReasonNotRegisteredWithRegulatorController.onPageLoad(mode: Mode = Mode.CheckMode)
@@ -85,3 +87,5 @@ GET         /change-corporate-trustee-details               controllers.organisa
 POST        /corporate-trustee-details                      controllers.organisationDetails.CorporateTrusteeDetailsController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-corporate-trustee-details               controllers.organisationDetails.CorporateTrusteeDetailsController.onSubmit(mode: Mode = Mode.CheckMode)
 
+GET         /check-your-answers                             controllers.organisationDetails.OrganisationDetailsCheckYourAnswersController.onPageLoad
+GET         /organisation-details-min-data-placeholder      controllers.organisationDetails.OrganisationDetailsIncompleteAnswersController.onPageLoad

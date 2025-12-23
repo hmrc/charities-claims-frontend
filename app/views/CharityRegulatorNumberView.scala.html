@@ -24,10 +24,10 @@ govukInput: GovukInput,
 govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[?])(implicit request: Request[?], messages: Messages)
+@(form: Form[?], mode: Mode)(implicit request: Request[?], messages: Messages)
 
 @layout(
-pageTitle = title(form, messages("charityRegulatorNumber.title"))
+    pageTitle = title(form, messages("charityRegulatorNumber.title"))
 ) {
 
     @if(form.hasErrors) {
@@ -37,7 +37,7 @@ pageTitle = title(form, messages("charityRegulatorNumber.title"))
     <span class="govuk-caption-l">@messages("charityRegulatorNumber.caption")</span>
     <h1 class="govuk-heading-l">@messages("charityRegulatorNumber.heading")</h1>
 
-    @formHelper(action = routes.CharityRegulatorNumberController.onSubmit, Symbol("autoComplete") -> "on") {
+    @formHelper(action = routes.CharityRegulatorNumberController.onSubmit(mode), Symbol("autoComplete") -> "on") {
 
     @govukInput(
         InputViewModel(
