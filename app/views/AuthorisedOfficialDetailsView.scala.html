@@ -19,76 +19,66 @@
 @import models.Mode.*
 
 @this(
-layout: templates.Layout,
-formHelper: FormWithCSRF,
-govukButton: GovukButton,
-govukInput: GovukInput,
-govukErrorSummary: GovukErrorSummary
+     layout: templates.Layout,
+     formHelper: FormWithCSRF,
+     govukButton: GovukButton,
+     govukInput: GovukInput,
+     govukErrorSummary: GovukErrorSummary
 )
 
 @(form: Form[AuthorisedOfficialDetails], isUkAddress: Boolean, mode: Mode)(implicit request: Request[?], messages: Messages)
 
 @layout(
-pageTitle = title(form, messages("authorisedOfficialDetails.title")),
-showBackLink = true
+    pageTitle = title(form, messages("authorisedOfficialDetails.title")),
+       showBackLink = true
 ) {
 
-@if(form.hasErrors) {
-@govukErrorSummary(ErrorSummaryViewModel(form))
-}
+    @if(form.hasErrors) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
 
-<span class="govuk-caption-l">@messages("authorisedOfficialDetails.caption")</span>
-<h1 class="govuk-heading-l">@messages("authorisedOfficialDetails.heading")</h1>
+    <span class="govuk-caption-l">@messages("authorisedOfficialDetails.caption")</span>
+    <h1 class="govuk-heading-l">@messages("authorisedOfficialDetails.heading")</h1>
 
-@formHelper(action = routes.AuthorisedOfficialDetailsController.onSubmit(mode)) {
+    @formHelper(action = routes.AuthorisedOfficialDetailsController.onSubmit(mode)) {
 
-@govukInput(
-InputViewModel(
-field = form("title"),
-label = LabelViewModel(messages("authorisedOfficialDetails.titleField"))
-)
-.withCssClass("govuk-input--width-10")
-.withAutocomplete("honorific-prefix")
-)
+    @govukInput(
+        InputViewModel(
+            field = form("title"),
+            label = LabelViewModel(messages("authorisedOfficialDetails.titleField"))
+        ).withCssClass("govuk-input--width-10")
+             .withAutocomplete("honorific-prefix"))
 
-@govukInput(
-InputViewModel(
-field = form("firstName"),
-label = LabelViewModel(messages("authorisedOfficialDetails.firstName"))
-)
-.withCssClass("govuk-input--width-20")
-.withAutocomplete("given-name")
-)
+    @govukInput(
+        InputViewModel(
+             field = form("firstName"),
+             label = LabelViewModel(messages("authorisedOfficialDetails.firstName"))
+        ).withCssClass("govuk-input--width-20")
+              .withAutocomplete("given-name"))
 
-@govukInput(
-InputViewModel(
-field = form("lastName"),
-label = LabelViewModel(messages("authorisedOfficialDetails.lastName"))
-)
-.withCssClass("govuk-input--width-20")
-.withAutocomplete("family-name")
-)
+    @govukInput(
+        InputViewModel(
+             field = form("lastName"),
+             label = LabelViewModel(messages("authorisedOfficialDetails.lastName"))
+         ).withCssClass("govuk-input--width-20")
+               .withAutocomplete("family-name"))
 
-@govukInput(
-InputViewModel(
-field = form("phoneNumber"),
-label = LabelViewModel(messages("authorisedOfficialDetails.phoneNumber"))
-)
-.withCssClass("govuk-input--width-20")
-.withAutocomplete("tel")
-)
+    @govukInput(
+         InputViewModel(
+              field = form("phoneNumber"),
+              label = LabelViewModel(messages("authorisedOfficialDetails.phoneNumber"))
+         ).withCssClass("govuk-input--width-20")
+              .withAutocomplete("tel"))
 
-@if(isUkAddress) {
-@govukInput(
-InputViewModel(
-field = form("postcode"),
-label = LabelViewModel(messages("authorisedOfficialDetails.postcode"))
-)
-.withCssClass("govuk-input--width-10")
-.withAutocomplete("postal-code")
-)
-}
+    @if(isUkAddress) {
+        @govukInput(
+            InputViewModel(
+                 field = form("postcode"),
+                 label = LabelViewModel(messages("authorisedOfficialDetails.postcode"))
+            ).withCssClass("govuk-input--width-10")
+            .withAutocomplete("postal-code"))
+    }
 
-@govukButton(ButtonViewModel(Text(messages("site.continue"))))
-}
+   @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+   }
 }
