@@ -32,27 +32,22 @@ final case class OrganisationDetailsAnswers(
   corporateTrusteeFirstName: Option[String] = None,
   corporateTrusteeLastName: Option[String] = None,
   corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None
-)
-// {
-//  def hasCompleteAnswers: Boolean =
-//    return nameOfCharityRegulator.isDefined
-//      && reasonNotRegisteredWithRegulator.isDefined
-//      && charityRegistrationNumber.isDefined
-//      && areYouACorporateTrustee.isDefined
-//      && doYouHaveUKAddress.isDefined
-//      && if(areYouACorporateTrustee && doYouHaveUKAddress) then return nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined
-//      && if(areYouACorporateTrustee && !doYouHaveUKAddress) then return nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined && corporateTrusteePostcode.isDefined
-//      && if(!areYouACorporateTrustee && doYouHaveUKAddress) then return
-//        corporateTrusteeFirstName.isDefined
-//        && corporateTrusteeLastName.isDefined
-//        && corporateTrusteeDaytimeTelephoneNumber.isDefined
-//        && corporateTrusteePostcode.isDefined
-//    && if (!areYouACorporateTrustee && !doYouHaveUKAddress) then return
-//    corporateTrusteeFirstName.isDefined
-//      && corporateTrusteeLastName.isDefined
-//      && corporateTrusteeDaytimeTelephoneNumber.isDefined
-//      && charityRegistrationNumber.isDefined
-//}
+) {
+  def hasOrganisationDetailsCompleteAnswers: Boolean =
+    nameOfCharityRegulator.isDefined && reasonNotRegisteredWithRegulator.isDefined
+      && charityRegistrationNumber.isDefined
+      && (areYouACorporateTrustee, doYouHaveUKAddress).match {
+        case (Some(true), Some(false))  =>
+          nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined && corporateTrusteePostcode.isEmpty
+        case (Some(true), Some(true))   =>
+          nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined && corporateTrusteePostcode.isDefined
+        case (Some(false), Some(false)) =>
+          corporateTrusteeFirstName.isDefined && corporateTrusteeLastName.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined && corporateTrusteePostcode.isEmpty
+        case (Some(false), Some(true))  =>
+          corporateTrusteeFirstName.isDefined && corporateTrusteeLastName.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined && corporateTrusteePostcode.isDefined
+        case (_, _)                     => false
+      }
+}
 
 object OrganisationDetailsAnswers {
 

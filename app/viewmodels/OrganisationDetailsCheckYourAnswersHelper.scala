@@ -14,148 +14,182 @@
  * limitations under the License.
  */
 
-//package viewmodels
-//
-//import play.api.i18n.Messages
-//import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.*
-//import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-//import models.Mode.*
-//import models.OrganisationDetailsAnswers
-//import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
+package viewmodels
 
-//object OrganisationDetailsCheckYourAnswersHelper {
-//
-//  def buildSummaryList(answers: OrganisationDetailsAnswers)(implicit messages: Messages): SummaryList = {
-//
-//    val rows = Seq(
-//      answers.nameOfCharityRegulator match {
-//        case Some(value) =>
-//          Some(
-//            summaryRow(
-//              messages("organisationDetailsCheckYourAnswers.nameOfCharityRegulator.label"),
-//              if (value) messages("site.yes") else messages("site.no"),
-//              controllers.organisationDetails.routes.NameOfCharityRegulatorController
-//                .onPageLoad(CheckMode)
-//                .url,
-//              messages("organisationDetailsCheckYourAnswers.nameOfCharityRegulator.change.hidden")
-//            )
-//          )
-//        case None        =>
-//          Some(
-//            missingDataRow(
-//              messages("organisationDetailsCheckYourAnswers.giftAid.label"),
-//              controllers.organisationDetails.routes.NameOfCharityRegulatorController
-//                .onPageLoad(CheckMode)
-//                .url,
-//              messages("organisationDetailsCheckYourAnswers.giftAid.change.hidden")
-//            )
-//          )
-//      },
-//      answers.reasonNotRegisteredWithRegulator match {
-//        case Some(value) =>
-//          Some(
-//            summaryRow(
-//              messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
-//              if (value) messages("site.yes") else messages("site.no"),
-//              controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
-//                .onPageLoad(CheckMode)
-//                .url,
-//              messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
-//            )
-//          )
-//        case None        =>
-//          Some(
-//            missingDataRow(
-//              messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
-//              controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
-//                .onPageLoad(CheckMode)
-//                .url,
-//              messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
-//            )
-//          )
-//      },
-//      answers.charityRegistrationNumber match {
-//        case Some(value) =>
-//          Some(
-//            summaryRow(
-//              messages("organisationDetailsCheckYourAnswers.charityRegistrationNumber.label"),
-//              if (value) messages("site.yes") else messages("site.no"),
-//              controllers.organisationDetails.routes.CharityRegulatorNumberController
-//                .onPageLoad(CheckMode)
-//                .url,
-//              messages("organisationDetailsCheckYourAnswers.charityRegistrationNumber.label")
-//            )
-//          )
-//        case None        =>
-//          Some(
-//            missingDataRow(
-//              messages("organisationDetailsCheckYourAnswers.charityRegistrationNumber.label"),
-//              controllers.organisationDetails.routes.CharityRegulatorNumberController
-//                .onPageLoad(CheckMode)
-//                .url,
-//              messages("organisationDetailsCheckYourAnswers.charityRegistrationNumber.label")
-//            )
-//          )
-//      },
-//      answers.areYouACorporateTrustee match {
-//        case Some(value) =>
-//          Some(
-//            summaryRow(
-//              messages("organisationDetailsCheckYourAnswers.corporateTrusteeDetails.label"),
-//              if (value) messages("site.yes") else messages("site.no"),
-//              controllers.organisationDetails.routes.CorporateTrusteeClaimController
-//                .onPageLoad(CheckMode)
-//                .url,
-//              messages("organisationDetailsCheckYourAnswers.corporateTrusteeDetails.label")
-//            )
-//          )
-//        case None        =>
-//          Some(
-//            missingDataRow(
-//              messages("organisationDetailsCheckYourAnswers.corporateTrusteeDetails.label"),
-//              controllers.organisationDetails.routes.CorporateTrusteeClaimController
-//                .onPageLoad(CheckMode)
-//                .url,
-//              messages("organisationDetailsCheckYourAnswers.corporateTrusteeDetails.label")
-//            )
-//          )
-//      }
-//    ).flatten
-//
-//    SummaryList(rows)
-//  }
-//
-//  private def summaryRow(label: String, value: String, href: String, hiddenText: String)(implicit
-//    messages: Messages
-//  ): SummaryListRow =
-//    SummaryListRow(
-//      key = Key(content = Text(label)),
-//      value = Value(content = Text(value)),
-//      actions = Some(
-//        Actions(items =
-//          Seq(
-//            ActionItem(
-//              href = href,
-//              content = Text(messages("site.change")),
-//              visuallyHiddenText = Some(hiddenText)
-//            )
-//          )
-//        )
-//      )
-//    )
-//
-//  private def missingDataRow(label: String, href: String, hiddenText: String)(implicit
-//    messages: Messages
-//  ): SummaryListRow =
-//    SummaryListRow(
-//      key = Key(content = Text(label)),
-//      value = Value(
-//        content = HtmlContent(
-//          s"""<a class="govuk-link" href="$href">
-//             |${messages("site.enter")} <span class="govuk-visually-hidden">$hiddenText</span>
-//             |</a>""".stripMargin
-//        )
-//      ),
-//      actions = None
-//    )
-//}
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.*
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import models.Mode.*
+import models.OrganisationDetailsAnswers
+import models.{NameOfCharityRegulator, ReasonNotRegisteredWithRegulator}
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
+
+object OrganisationDetailsCheckYourAnswersHelper {
+
+  def buildSummaryList(answers: OrganisationDetailsAnswers)(implicit messages: Messages): SummaryList = {
+
+    val rows = Seq(
+      answers.nameOfCharityRegulator match {
+        case Some(value) =>
+          Some(
+            summaryRow(
+              messages("organisationDetailsCheckYourAnswers.nameOfCharityRegulator.label"),
+              if {
+                (value == Some(NameOfCharityRegulator.EnglandAndWales))
+                || (value == Some(NameOfCharityRegulator.Scottish))
+                || (value == Some(NameOfCharityRegulator.NorthernIreland))
+                || (value == Some(NameOfCharityRegulator.None))
+              } then messages("site.yes") else messages("site.no"),
+              controllers.organisationDetails.routes.NameOfCharityRegulatorController
+                .onPageLoad(CheckMode)
+                .url,
+              messages("organisationDetailsCheckYourAnswers.nameOfCharityRegulator.change.hidden")
+            )
+          )
+        case None        =>
+          Some(
+            missingDataRow(
+              messages("organisationDetailsCheckYourAnswers.giftAid.label"),
+              controllers.organisationDetails.routes.NameOfCharityRegulatorController
+                .onPageLoad(CheckMode)
+                .url,
+              messages("organisationDetailsCheckYourAnswers.giftAid.change.hidden")
+            )
+          )
+      },
+      answers.reasonNotRegisteredWithRegulator match {
+        case Some(value) =>
+          Some(
+            summaryRow(
+              messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
+              if {
+                (value == Some(ReasonNotRegisteredWithRegulator.Excepted))
+                || (value == Some(ReasonNotRegisteredWithRegulator.Exempt))
+                || (value == Some(ReasonNotRegisteredWithRegulator.LowIncome))
+                || (value == Some(ReasonNotRegisteredWithRegulator.Waiting))
+              } then messages("site.yes") else messages("site.no"),
+              controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
+                .onPageLoad(CheckMode)
+                .url,
+              messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
+            )
+          )
+        case None        =>
+          Some(
+            missingDataRow(
+              messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
+              controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
+                .onPageLoad(CheckMode)
+                .url,
+              messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
+            )
+          )
+      },
+      answers.charityRegistrationNumber match {
+        case Some(value) =>
+          Some(
+            summaryRow(
+              messages("organisationDetailsCheckYourAnswers.charityRegistrationNumber.label"),
+              value,
+              controllers.organisationDetails.routes.CharityRegulatorNumberController
+                .onPageLoad(CheckMode)
+                .url,
+              messages("organisationDetailsCheckYourAnswers.charityRegistrationNumber.label")
+            )
+          )
+        case None        =>
+          Some(
+            missingDataRow(
+              messages("organisationDetailsCheckYourAnswers.charityRegistrationNumber.label"),
+              controllers.organisationDetails.routes.CharityRegulatorNumberController
+                .onPageLoad(CheckMode)
+                .url,
+              messages("organisationDetailsCheckYourAnswers.charityRegistrationNumber.label")
+            )
+          )
+      },
+      answers.areYouACorporateTrustee match {
+        case Some(value) =>
+          Some(
+            summaryRow(
+              messages("organisationDetailsCheckYourAnswers.areYouACorporateTrustee.label"),
+              if (value) messages("site.yes") else messages("site.no"),
+              controllers.organisationDetails.routes.CorporateTrusteeClaimController
+                .onPageLoad(CheckMode)
+                .url,
+              messages("organisationDetailsCheckYourAnswers.areYouACorporateTrustee.label")
+            )
+          )
+        case None        =>
+          Some(
+            missingDataRow(
+              messages("organisationDetailsCheckYourAnswers.areYouACorporateTrustee.label"),
+              controllers.organisationDetails.routes.CorporateTrusteeClaimController
+                .onPageLoad(CheckMode)
+                .url,
+              messages("organisationDetailsCheckYourAnswers.areYouACorporateTrustee.label")
+            )
+          )
+      },
+      answers.doYouHaveUKAddress match {
+        case Some(value) =>
+          Some(
+            summaryRow(
+              messages("organisationDetailsCheckYourAnswers.doYouHaveUKAddress.label"),
+              if (value) messages("site.yes") else messages("site.no"),
+              controllers.organisationDetails.routes.CorporateTrusteeAddressController
+                .onPageLoad(CheckMode)
+                .url,
+              messages("organisationDetailsCheckYourAnswers.doYouHaveUKAddress.label")
+            )
+          )
+        case None        =>
+          Some(
+            missingDataRow(
+              messages("organisationDetailsCheckYourAnswers.doYouHaveUKAddress.label"),
+              controllers.organisationDetails.routes.CorporateTrusteeAddressController
+                .onPageLoad(CheckMode)
+                .url,
+              messages("organisationDetailsCheckYourAnswers.doYouHaveUKAddress.label")
+            )
+          )
+      }
+    ).flatten
+
+    SummaryList(rows)
+  }
+
+  private def summaryRow(label: String, value: String, href: String, hiddenText: String)(implicit
+    messages: Messages
+  ): SummaryListRow =
+    SummaryListRow(
+      key = Key(content = Text(label)),
+      value = Value(content = Text(value)),
+      actions = Some(
+        Actions(items =
+          Seq(
+            ActionItem(
+              href = href,
+              content = Text(messages("site.change")),
+              visuallyHiddenText = Some(hiddenText)
+            )
+          )
+        )
+      )
+    )
+
+  private def missingDataRow(label: String, href: String, hiddenText: String)(implicit
+    messages: Messages
+  ): SummaryListRow =
+    SummaryListRow(
+      key = Key(content = Text(label)),
+      value = Value(
+        content = HtmlContent(
+          s"""<a class="govuk-link" href="$href">
+             |${messages("site.enter")} <span class="govuk-visually-hidden">$hiddenText</span>
+             |</a>""".stripMargin
+        )
+      ),
+      actions = None
+    )
+}
