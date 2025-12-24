@@ -17,11 +17,16 @@
 package models
 
 import play.api.libs.json.{Format, Json}
+import scala.util.Try
+import utils.Required.*
 
 final case class SessionData(
   // claimId of the unsubmitted claim stored in the backend,
   // if empty, the user has started a new claim
   unsubmittedClaimId: Option[String] = None,
+  // lastUpdatedReference of the claim stored in the backend,
+  // if empty, the user has started a new claim
+  lastUpdatedReference: Option[String] = None,
   repaymentClaimDetailsAnswers: RepaymentClaimDetailsAnswers,
   organisationDetailsAnswers: Option[OrganisationDetailsAnswers] = None,
   giftAidScheduleDataAnswers: Option[GiftAidScheduleDataAnswers] = None,
@@ -41,6 +46,7 @@ object SessionData {
   def from(claim: Claim): SessionData =
     SessionData(
       unsubmittedClaimId = Some(claim.claimId),
+      lastUpdatedReference = Some(claim.lastUpdatedReference),
       repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers.from(claim.claimData.repaymentClaimDetails),
       organisationDetailsAnswers = claim.claimData.organisationDetails.map(OrganisationDetailsAnswers.from),
       declarationDetailsAnswers = claim.claimData.declarationDetails.map(DeclarationDetailsAnswers.from),
@@ -48,5 +54,27 @@ object SessionData {
         claim.claimData.giftAidSmallDonationsSchemeDonationDetails.map(
           GiftAidSmallDonationsSchemeDonationDetailsAnswers.from
         )
+    )
+
+  def toUpdateClaimRequest(sessionData: SessionData): Try[UpdateClaimRequest] =
+    for {
+      lastUpdatedReference                       <- required(sessionData)(_.lastUpdatedReference)
+      repaymentClaimDetails                      <- RepaymentClaimDetailsAnswers
+                                                      .toRepaymentClaimDetails(sessionData.repaymentClaimDetailsAnswers)
+      organisationDetails                        <- sessionData.organisationDetailsAnswers
+                                                      .flatMapTry(OrganisationDetailsAnswers.toOrganisationDetails)
+      giftAidSmallDonationsSchemeDonationDetails <-
+        sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
+          .flatMapTry(
+            GiftAidSmallDonationsSchemeDonationDetailsAnswers.toGiftAidSmallDonationsSchemeDonationDetails
+          )
+      declarationDetails                         <- sessionData.declarationDetailsAnswers
+                                                      .flatMapTry(DeclarationDetailsAnswers.toDeclarationDetails)
+    } yield UpdateClaimRequest(
+      lastUpdatedReference = lastUpdatedReference,
+      repaymentClaimDetails = repaymentClaimDetails,
+      organisationDetails = organisationDetails,
+      giftAidSmallDonationsSchemeDonationDetails = giftAidSmallDonationsSchemeDonationDetails,
+      declarationDetails = declarationDetails
     )
 }

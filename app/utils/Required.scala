@@ -19,8 +19,10 @@ package utils
 import scala.deriving.Mirror
 import scala.compiletime.{constValue, erasedValue}
 import scala.util.{Failure, Success, Try}
+import models.MissingRequiredFieldsException
 
 object Required {
+
   inline def required[A, T](obj: T)(field: T => Option[A])(using m: Mirror.ProductOf[T]): Try[A] =
     val labels = summonLabels[m.MirroredElemLabels]
     val values = obj.asInstanceOf[Product].productIterator.toList
@@ -28,15 +30,23 @@ object Required {
     val extracted = field(obj) // Option[A]
     val idx       = values.indexWhere(_ == extracted) // compare whole field value
 
-    if idx == -1 then Failure(new RuntimeException("Field not found"))
+    if idx == -1 then Failure(new MissingRequiredFieldsException("Field not found"))
     else
       val name = labels(idx)
       extracted match
         case Some(v) => Success(v)
-        case None    => Failure(new RuntimeException(s"Missing required field: $name"))
+        case None    => Failure(new MissingRequiredFieldsException(s"Missing required field: $name"))
 
   inline def summonLabels[T <: Tuple]: List[String] =
     inline erasedValue[T] match
       case _: EmptyTuple => Nil
       case _: (h *: t)   => constValue[h].toString :: summonLabels[t]
+
+  extension [A](opt: Option[A]) {
+    def flatMapTry[B](f: A => Try[B]): Try[Option[B]] =
+      opt match {
+        case None    => Success(None)
+        case Some(a) => f(a).map(Some(_))
+      }
+  }
 }
