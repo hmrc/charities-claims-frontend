@@ -217,15 +217,22 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       )
 
       val updateRequest = UpdateClaimRequest(
+        lastUpdatedReference = "1234567890",
         repaymentClaimDetails = repaymentDetails
       )
 
       givenUpdateClaimEndpointReturns(
         payload = updateRequest,
-        response = HttpResponse(200, Json.stringify(Json.toJson(UpdateClaimResponse(success = true))))
+        response = HttpResponse(
+          200,
+          Json.stringify(Json.toJson(UpdateClaimResponse(success = true, lastUpdatedReference = "1234567891")))
+        )
       )
 
-      await(connector.updateClaim("123", repaymentDetails)) shouldBe (())
+      await(connector.updateClaim("123", updateRequest)) shouldBe (UpdateClaimResponse(
+        success = true,
+        lastUpdatedReference = "1234567891"
+      ))
     }
   }
 

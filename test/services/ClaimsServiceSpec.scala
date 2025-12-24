@@ -18,8 +18,8 @@ package services
 
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import util.{BaseSpec, TestClaims}
-import connectors.{ClaimsConnector, MissingRequiredFieldsException}
+import util.BaseSpec
+import connectors.ClaimsConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import models.*
 import models.requests.DataRequest
@@ -48,6 +48,7 @@ class ClaimsServiceSpec extends BaseSpec {
 
       val initialSessionData = SessionData(
         unsubmittedClaimId = None,
+        lastUpdatedReference = None,
         repaymentClaimDetailsAnswers = repaymentAnswers
       )
 
@@ -84,21 +85,20 @@ class ClaimsServiceSpec extends BaseSpec {
       val existingClaimId    = "existing-claim-id"
       val initialSessionData = SessionData(
         unsubmittedClaimId = Some(existingClaimId),
+        lastUpdatedReference = Some("1234567890"),
         repaymentClaimDetailsAnswers = repaymentAnswers
       )
 
       given DataRequest[?] = DataRequest(FakeRequest(), initialSessionData)
 
       (mockConnector
-        .getClaim(_: String)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(
-          Future.successful(Some(TestClaims.testClaimWithRepaymentClaimDetailsOnly(claimId = existingClaimId)))
-        )
-
-      (mockConnector
-        .updateClaim(_: String, _: RepaymentClaimDetails)(using _: HeaderCarrier))
+        .updateClaim(_: String, _: UpdateClaimRequest)(using _: HeaderCarrier))
         .expects(existingClaimId, *, *)
+        .returning(Future.successful(UpdateClaimResponse(success = true, lastUpdatedReference = "1234567891")))
+
+      (mockSaveService
+        .save(_: SessionData)(using _: DataRequest[?], _: HeaderCarrier))
+        .expects(initialSessionData.copy(lastUpdatedReference = Some("1234567891")), *, *)
         .returning(Future.successful(()))
 
       await(service.save)
@@ -118,6 +118,7 @@ class ClaimsServiceSpec extends BaseSpec {
 
       val initialSessionData = SessionData(
         unsubmittedClaimId = None,
+        lastUpdatedReference = None,
         repaymentClaimDetailsAnswers = incompleteAnswers
       )
 
