@@ -18,10 +18,10 @@ package services
 
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.{ClaimsConnector, MissingRequiredFieldsException}
-import models.requests.DataRequest
-import models.{Claim, GetClaimsResponse, RepaymentClaimDetails, RepaymentClaimDetailsAnswers}
 import uk.gov.hmrc.http.HeaderCarrier
+import models.{RepaymentClaimDetails, RepaymentClaimDetailsAnswers}
 import utils.Required.required
+import models.requests.DataRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Try}
@@ -43,44 +43,37 @@ class ClaimsServiceImpl @Inject() (saveService: SaveService, connector: ClaimsCo
   ): Future[Unit] = {
     val session = dataRequest.sessionData
     session.unsubmittedClaimId match {
-      case None          =>
+      case None =>
         for
           repaymentClaimDetails <- Future.fromTry(transform(session.repaymentClaimDetailsAnswers))
           claimId               <- connector.saveClaim(repaymentClaimDetails)
           _                     <- saveService.save(dataRequest.sessionData.copy(unsubmittedClaimId = Some(claimId)))
         yield ()
+
       case Some(claimId) =>
-        updateClaim(claimId, repaymentClaimDetailsAnswers = Some(session.repaymentClaimDetailsAnswers)).map(_ => ())
+        updateClaim(claimId, session.repaymentClaimDetailsAnswers)
     }
   }
 
   private def updateClaim(
     claimId: String,
-    repaymentClaimDetailsAnswers: Option[RepaymentClaimDetailsAnswers]
+    repaymentClaimDetailsAnswers: RepaymentClaimDetailsAnswers
   )(using
     hc: HeaderCarrier
   ): Future[Unit] =
-    getUnsubmittedClaim(claimId).flatMap {
-      (_, repaymentClaimDetailsAnswers) match {
-        case (Some(existingClaim), Some(repaymentClaimDetailsAnswers)) =>
-          for
+    connector
+      .getClaim(claimId)
+      .flatMap {
+        case Some(existingClaim) =>
+          for {
             repaymentClaimDetails <- Future.fromTry(transform(repaymentClaimDetailsAnswers))
             _                     <- connector.updateClaim(existingClaim.claimId, repaymentClaimDetails)
-          yield ()
-        case (Some(_), _)                                              => Future.successful(())
-        case (None, _)                                                 =>
+          } yield ()
+
+        case None =>
           Future.failed(new RuntimeException("claimId exists in session but failed to fetch existing claim"))
+
       }
-    }
-
-  private def getUnsubmittedClaims(using hc: HeaderCarrier): Future[List[Claim]] =
-    connector.retrieveUnsubmittedClaims.map {
-      case GetClaimsResponse(0, _)    => Nil
-      case GetClaimsResponse(_, list) => list
-    }
-
-  private def getUnsubmittedClaim(claimId: String)(using hc: HeaderCarrier): Future[Option[Claim]] =
-    getUnsubmittedClaims.map(_.find(_.claimId == claimId))
 
   private def transform(answers: RepaymentClaimDetailsAnswers): Try[RepaymentClaimDetails] =
     (

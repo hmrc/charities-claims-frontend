@@ -16,26 +16,19 @@
 
 package models
 
-import util.BaseSpec
+import play.api.libs.json.Format
 import play.api.libs.json.Json
-import util.TestClaims
 
-class ClaimSpec extends BaseSpec {
+final case class ClaimInfo(
+  claimId: String,
+  userId: String,
+  claimSubmitted: Boolean,
+  lastUpdatedReference: String,
+  creationTimestamp: String,
+  hmrcCharitiesReference: Option[String] = None,
+  nameOfCharity: Option[String] = None
+)
 
-  "Claim" - {
-    "be serializable and deserializable when claim is unsubmitted" in {
-      val claim             = TestClaims.testClaimUnsubmitted
-      val json              = Json.toJson(claim)
-      val deserializedClaim = json.as[Claim]
-      deserializedClaim shouldBe claim
-    }
-
-    "be serializable and deserializable when claim is submitted" in {
-      val claim             = TestClaims.testClaimSubmitted
-      val json              = Json.toJson(claim)
-      val deserializedClaim = json.as[Claim]
-      deserializedClaim shouldBe claim
-    }
-  }
-
+object ClaimInfo {
+  given format: Format[ClaimInfo] = Json.format[ClaimInfo]
 }

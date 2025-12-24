@@ -26,6 +26,9 @@ import models.{
   RepaymentClaimDetails
 }
 import play.api.libs.json.Json
+import models.ClaimInfo
+import play.api.libs.json.JsObject
+import play.api.libs.json.JsArray
 
 object TestClaims {
 
@@ -35,11 +38,29 @@ object TestClaims {
   lazy val testGetClaimsResponseUnsubmitted: GetClaimsResponse =
     Json.parse(testGetClaimsResponseUnsubmittedJsonString).as[GetClaimsResponse]
 
+  lazy val testClaimUnsubmitted: Claim =
+    Json
+      .parse(testGetClaimsResponseUnsubmittedJsonString)
+      .as[JsObject]
+      .value("claimsList")
+      .as[JsArray]
+      .head
+      .as[Claim]
+
   lazy val testGetClaimsResponseSubmittedJsonString: String =
     TestResources.readTestResource("/test-get-claims-response-submitted.json")
 
   lazy val testGetClaimsResponseSubmitted: GetClaimsResponse =
     Json.parse(testGetClaimsResponseSubmittedJsonString).as[GetClaimsResponse]
+
+  lazy val testClaimSubmitted: Claim =
+    Json
+      .parse(testGetClaimsResponseSubmittedJsonString)
+      .as[JsObject]
+      .value("claimsList")
+      .as[JsArray]
+      .head
+      .as[Claim]
 
   def testClaimWithRepaymentClaimDetailsOnly(
     claimId: String = "123",
@@ -52,6 +73,7 @@ object TestClaims {
       claimId = claimId,
       userId = TestUsers.organisation1,
       claimSubmitted = false,
+      lastUpdatedReference = "1234567890",
       creationTimestamp = "2025-11-10T13:45:56.016Z",
       claimData = ClaimData(
         repaymentClaimDetails = RepaymentClaimDetails(
@@ -84,6 +106,7 @@ object TestClaims {
       claimId = claimId,
       userId = TestUsers.organisation1,
       claimSubmitted = false,
+      lastUpdatedReference = "1234567890",
       creationTimestamp = "2025-11-10T13:45:56.016Z",
       claimData = ClaimData(
         repaymentClaimDetails = RepaymentClaimDetails(
@@ -106,4 +129,14 @@ object TestClaims {
         )
       )
     )
+
+  def testClaimInfo(
+    claimId: String = "123"
+  ) = ClaimInfo(
+    claimId = claimId,
+    userId = TestUsers.organisation1,
+    claimSubmitted = false,
+    lastUpdatedReference = "1234567890",
+    creationTimestamp = "2025-11-10T13:45:56.016Z"
+  )
 }

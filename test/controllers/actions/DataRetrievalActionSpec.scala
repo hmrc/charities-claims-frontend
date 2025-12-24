@@ -101,20 +101,27 @@ class DataRetrievalActionSpec extends BaseSpec {
           Future.successful(
             GetClaimsResponse(
               claimsCount = 1,
-              claimsList = List(TestClaims.testClaimWithRepaymentClaimDetailsOnly())
+              claimsList = List(TestClaims.testClaimInfo())
             )
           )
         )
+
+      val claim = TestClaims.testClaimWithRepaymentClaimDetailsOnly()
+
+      (mockClaimsConnector
+        .getClaim(_: String)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(Future.successful(Some(claim)))
 
       val result = action.invokeBlock(
         authorisedRequestOrgnisation,
         (req: DataRequest[?]) =>
           req.sessionData shouldBe
-            SessionData.from(TestClaims.testClaimWithRepaymentClaimDetailsOnly())
+            SessionData.from(claim)
 
           req.sessionData.repaymentClaimDetailsAnswers                      shouldBe
             RepaymentClaimDetailsAnswers.from(
-              TestClaims.testClaimWithRepaymentClaimDetailsOnly().claimData.repaymentClaimDetails
+              claim.claimData.repaymentClaimDetails
             )
           req.sessionData.organisationDetailsAnswers                        shouldBe None
           req.sessionData.giftAidScheduleDataAnswers                        shouldBe None

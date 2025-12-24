@@ -74,12 +74,20 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       response = response
     )
 
+  def givenGetClaimEndpointReturns(
+    response: HttpResponse
+  ): CallHandler[Future[HttpResponse]] =
+    givenGetReturns(
+      expectedUrl = "http://foo.bar.com:1234/foo-claims/claims/123",
+      response = response
+    )
+
   def givenUpdateClaimEndpointReturns(
     payload: UpdateClaimRequest,
     response: HttpResponse
   ): CallHandler[Future[HttpResponse]] =
     givenPutReturns(
-      expectedUrl = "http://foo.bar.com:1234/foo-claims/claims",
+      expectedUrl = "http://foo.bar.com:1234/foo-claims/claims/123",
       expectedPayload = Json.toJson(payload),
       response = response
     )
@@ -88,7 +96,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
     response: HttpResponse
   ): CallHandler[Future[HttpResponse]] =
     givenDeleteReturns(
-      expectedUrl = "http://foo.bar.com:1234/foo-claims/claims",
+      expectedUrl = "http://foo.bar.com:1234/foo-claims/claims/123",
       response = response
     )
 
@@ -185,6 +193,20 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
     }
   }
 
+  "getClaim" - {
+    "should send a get request and return a claim on success" in {
+      givenGetClaimEndpointReturns(
+        HttpResponse(200, Json.stringify(Json.toJson(TestClaims.testClaimUnsubmitted)))
+      )
+      await(connector.getClaim("123")) shouldEqual Some(TestClaims.testClaimUnsubmitted)
+    }
+
+    "should send a get request and return None on not found" in {
+      givenGetClaimEndpointReturns(HttpResponse(404, "Not Found"))
+      await(connector.getClaim("123")) shouldEqual None
+    }
+  }
+
   "updateClaim" - {
     "should send an update request and return Unit on success" in {
       val repaymentDetails = RepaymentClaimDetails(
@@ -195,8 +217,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       )
 
       val updateRequest = UpdateClaimRequest(
-        claimId = "123",
-        repaymentClaimDetails = Some(repaymentDetails)
+        repaymentClaimDetails = repaymentDetails
       )
 
       givenUpdateClaimEndpointReturns(
