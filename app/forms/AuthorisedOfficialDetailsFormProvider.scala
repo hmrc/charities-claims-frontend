@@ -27,8 +27,6 @@ class AuthorisedOfficialDetailsFormProvider @Inject() {
   private val firstNameRegex = "^([a-zA-Z][a-zA-Z\\- ]*)$"
   private val lastNameRegex  = "^[A-Za-z0-9 ,\\.\\(\\)/&\\!\\-']+$"
   private val phoneRegex     = "^[0-9\\(\\)\\/\\-\\s]{1,35}$"
-  private val postcodeRegex  =
-    "^\\s*((GIR 0AA)|((([a-zA-Z][0-9][0-9]?)|(([a-zA-Z][a-zA-Z][0-9][0-9]?)|(([a-zA-Z][0-9][a-zA-Z])|([a-zA-Z][a-zA-Z][0-9][a-zA-Z]))))\\s?[0-9][a-zA-Z]{2}))\\s*$"
 
   def apply(isUkAddress: Boolean): Form[AuthorisedOfficialDetails] = Form(
     mapping(
