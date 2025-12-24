@@ -31,7 +31,8 @@ final case class OrganisationDetailsAnswers(
   corporateTrusteeTitle: Option[String] = None,
   corporateTrusteeFirstName: Option[String] = None,
   corporateTrusteeLastName: Option[String] = None,
-  corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None
+  corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None,
+  authorisedOfficialDetails: Option[AuthorisedOfficialDetails] = None
 )
 // {
 //  def hasCompleteAnswers: Boolean =
@@ -115,11 +116,17 @@ object OrganisationDetailsAnswers {
   def setCharityRegistrationNumber(value: String)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(charityRegistrationNumber = Some(v)))
 
+  def getAuthorisedOfficialDetails(using session: SessionData): Option[AuthorisedOfficialDetails] = get(
+    _.authorisedOfficialDetails
+  )
+
+  def setAuthorisedOfficialDetails(value: AuthorisedOfficialDetails)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(authorisedOfficialDetails = Some(v)))
+
   def getCorporateTrusteeDetails(using session: SessionData): Option[CorporateTrusteeDetails] = get(
     _.corporateTrusteeDetails
   )
 
   def setCorporateTrusteeDetails(value: CorporateTrusteeDetails)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(corporateTrusteeDetails = Some(v)))
-
 }
