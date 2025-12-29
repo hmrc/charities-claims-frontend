@@ -18,6 +18,8 @@ package models
 
 import play.api.libs.json.Format
 import play.api.libs.json.Json
+import scala.util.Try
+import utils.Required.required
 
 final case class DeclarationDetailsAnswers(
   understandFalseStatements: Option[Boolean] = None,
@@ -32,5 +34,14 @@ object DeclarationDetailsAnswers {
     DeclarationDetailsAnswers(
       understandFalseStatements = Some(declarationDetails.understandFalseStatements),
       includedAnyAdjustmentsInClaimPrompt = Some(declarationDetails.includedAnyAdjustmentsInClaimPrompt)
+    )
+
+  def toDeclarationDetails(answers: DeclarationDetailsAnswers): Try[DeclarationDetails] =
+    for {
+      understandFalseStatements           <- required(answers)(_.understandFalseStatements)
+      includedAnyAdjustmentsInClaimPrompt <- required(answers)(_.includedAnyAdjustmentsInClaimPrompt)
+    } yield DeclarationDetails(
+      understandFalseStatements = understandFalseStatements,
+      includedAnyAdjustmentsInClaimPrompt = includedAnyAdjustmentsInClaimPrompt
     )
 }

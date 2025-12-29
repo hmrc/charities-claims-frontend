@@ -18,6 +18,8 @@ package models
 
 import play.api.libs.json.Format
 import play.api.libs.json.Json
+import scala.util.Try
+import utils.Required.required
 
 final case class GiftAidSmallDonationsSchemeDonationDetailsAnswers(
   adjustmentForGiftAidOverClaimed: Option[BigDecimal] = None,
@@ -39,5 +41,20 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
       claims = Some(giftAidSmallDonationsSchemeScheduleData.claims),
       connectedCharitiesScheduleData = Some(giftAidSmallDonationsSchemeScheduleData.connectedCharitiesScheduleData),
       communityBuildingsScheduleData = Some(giftAidSmallDonationsSchemeScheduleData.communityBuildingsScheduleData)
+    )
+
+  def toGiftAidSmallDonationsSchemeDonationDetails(
+    answers: GiftAidSmallDonationsSchemeDonationDetailsAnswers
+  ): Try[GiftAidSmallDonationsSchemeDonationDetails] =
+    for {
+      adjustmentForGiftAidOverClaimed <- required(answers)(_.adjustmentForGiftAidOverClaimed)
+      claims                          <- required(answers)(_.claims)
+      connectedCharitiesScheduleData  <- required(answers)(_.connectedCharitiesScheduleData)
+      communityBuildingsScheduleData  <- required(answers)(_.communityBuildingsScheduleData)
+    } yield GiftAidSmallDonationsSchemeDonationDetails(
+      adjustmentForGiftAidOverClaimed = adjustmentForGiftAidOverClaimed,
+      claims = claims,
+      connectedCharitiesScheduleData = connectedCharitiesScheduleData,
+      communityBuildingsScheduleData = communityBuildingsScheduleData
     )
 }

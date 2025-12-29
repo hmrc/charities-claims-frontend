@@ -17,75 +17,47 @@
 package services
 
 import com.google.inject.{ImplementedBy, Inject}
-import connectors.{ClaimsConnector, MissingRequiredFieldsException}
+import connectors.ClaimsConnector
 import uk.gov.hmrc.http.HeaderCarrier
-import models.{RepaymentClaimDetails, RepaymentClaimDetailsAnswers}
-import utils.Required.required
+import models.{RepaymentClaimDetailsAnswers, SessionData}
 import models.requests.DataRequest
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Try}
 
 @ImplementedBy(classOf[ClaimsServiceImpl])
 trait ClaimsService {
-  def save(using
-    dataRequest: DataRequest[?],
-    hc: HeaderCarrier
-  ): Future[Unit]
+
+  /** Create new or update an existing claim and update the session data */
+  def save(using dataRequest: DataRequest[?], hc: HeaderCarrier): Future[Unit]
 }
 
 class ClaimsServiceImpl @Inject() (saveService: SaveService, connector: ClaimsConnector)(using ec: ExecutionContext)
     extends ClaimsService {
 
-  def save(using
+  final def save(using
     dataRequest: DataRequest[?],
     hc: HeaderCarrier
   ): Future[Unit] = {
-    val session = dataRequest.sessionData
-    session.unsubmittedClaimId match {
+    val sessionData = dataRequest.sessionData
+    sessionData.unsubmittedClaimId match {
       case None =>
         for
-          repaymentClaimDetails <- Future.fromTry(transform(session.repaymentClaimDetailsAnswers))
+          repaymentClaimDetails <- Future.fromTry(
+                                     RepaymentClaimDetailsAnswers
+                                       .toRepaymentClaimDetails(sessionData.repaymentClaimDetailsAnswers)
+                                   )
           claimId               <- connector.saveClaim(repaymentClaimDetails)
-          _                     <- saveService.save(dataRequest.sessionData.copy(unsubmittedClaimId = Some(claimId)))
+          _                     <- saveService
+                                     .save(dataRequest.sessionData.copy(unsubmittedClaimId = Some(claimId)))
         yield ()
 
       case Some(claimId) =>
-        updateClaim(claimId, session.repaymentClaimDetailsAnswers)
+        for
+          updateClaimRequest <- Future.fromTry(SessionData.toUpdateClaimRequest(sessionData))
+          response           <- connector.updateClaim(claimId, updateClaimRequest)
+          _                  <- saveService
+                                  .save(dataRequest.sessionData.copy(lastUpdatedReference = Some(response.lastUpdatedReference)))
+        yield ()
     }
   }
-
-  private def updateClaim(
-    claimId: String,
-    repaymentClaimDetailsAnswers: RepaymentClaimDetailsAnswers
-  )(using
-    hc: HeaderCarrier
-  ): Future[Unit] =
-    connector
-      .getClaim(claimId)
-      .flatMap {
-        case Some(existingClaim) =>
-          for {
-            repaymentClaimDetails <- Future.fromTry(transform(repaymentClaimDetailsAnswers))
-            _                     <- connector.updateClaim(existingClaim.claimId, repaymentClaimDetails)
-          } yield ()
-
-        case None =>
-          Future.failed(new RuntimeException("claimId exists in session but failed to fetch existing claim"))
-
-      }
-
-  private def transform(answers: RepaymentClaimDetailsAnswers): Try[RepaymentClaimDetails] =
-    (
-      for
-        claimingGiftAid                          <- required(answers)(_.claimingGiftAid)
-        claimingTaxDeducted                      <- required(answers)(_.claimingTaxDeducted)
-        claimingUnderGiftAidSmallDonationsScheme <- required(answers)(_.claimingUnderGiftAidSmallDonationsScheme)
-      yield RepaymentClaimDetails(
-        claimingGiftAid,
-        claimingTaxDeducted,
-        claimingUnderGiftAidSmallDonationsScheme,
-        answers.claimReferenceNumber
-      )
-    ).recoverWith(err => Failure(MissingRequiredFieldsException(err.getMessage)))
 }
