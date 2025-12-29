@@ -19,46 +19,48 @@ package controllers.organisationDetails
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
-import forms.YesNoFormProvider
+import forms.AuthorisedOfficialDetailsFormProvider
 import models.OrganisationDetailsAnswers
 import models.Mode
 import models.Mode.*
-import play.api.data.Form
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.AuthorisedOfficialAddressView
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import views.html.AuthorisedOfficialDetailsView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthorisedOfficialAddressController @Inject() (
+class AuthorisedOfficialDetailsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: AuthorisedOfficialAddressView,
   actions: Actions,
-  formProvider: YesNoFormProvider,
+  formProvider: AuthorisedOfficialDetailsFormProvider,
+  view: AuthorisedOfficialDetailsView,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("authorisedOfficialAddress.error.required")
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
+    val isUkAddress = OrganisationDetailsAnswers.getDoYouHaveUKAddress.getOrElse(false)
+    val form        = formProvider(isUkAddress)
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if OrganisationDetailsAnswers.getAreYouACorporateTrustee.contains(false)
-    then {
-      val previousAnswer = OrganisationDetailsAnswers.getDoYouHaveUKAddress
-      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
-    } else { Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad)) }
+    val previousAnswer = OrganisationDetailsAnswers.getAuthorisedOfficialDetails
+    val preparedForm   = previousAnswer.fold(form)(form.fill)
+
+    Ok(view(preparedForm, isUkAddress, mode))
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val isUkAddress = OrganisationDetailsAnswers.getDoYouHaveUKAddress.getOrElse(false)
+    val form        = formProvider(isUkAddress)
+
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, isUkAddress, mode))),
         value =>
           saveService
-            .save(OrganisationDetailsAnswers.setDoYouHaveUKAddress(value))
+            .save(OrganisationDetailsAnswers.setAuthorisedOfficialDetails(value))
             .map { _ =>
-              Redirect(routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode))
+              Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
             }
       )
   }
