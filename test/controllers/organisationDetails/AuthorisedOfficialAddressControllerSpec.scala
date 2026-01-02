@@ -114,7 +114,7 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode).url
+            routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -131,7 +131,7 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode).url
+            routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode).url
           )
         }
       }

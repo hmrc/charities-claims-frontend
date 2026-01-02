@@ -16,15 +16,16 @@
 
 package models
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json.*
 
-final case class UpdateClaimRequest(
-  repaymentClaimDetails: RepaymentClaimDetails,
-  organisationDetails: Option[OrganisationDetails] = None,
-  giftAidSmallDonationsSchemeDonationDetails: Option[GiftAidSmallDonationsSchemeDonationDetails] = None,
-  declarationDetails: Option[DeclarationDetails] = None
+case class AuthorisedOfficialDetails(
+  title: Option[String],
+  firstName: String,
+  lastName: String,
+  phoneNumber: String,
+  postcode: Option[String]
 )
 
-object UpdateClaimRequest {
-  given Format[UpdateClaimRequest] = Json.format[UpdateClaimRequest]
+object AuthorisedOfficialDetails {
+  implicit val format: OFormat[AuthorisedOfficialDetails] = Json.format[AuthorisedOfficialDetails]
 }

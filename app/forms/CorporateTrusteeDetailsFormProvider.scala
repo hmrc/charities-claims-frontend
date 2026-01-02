@@ -32,10 +32,7 @@ class CorporateTrusteeDetailsFormProvider @Inject() extends Mappings {
   private val trusteePhoneNumberMaxLength = 35
   private val trusteePhoneNumberRegex     = "^[0-9\\(\\)\\-\\s]{1,35}$"
 
-  val addressPostcode                  = "addressPostcode"
-  private val addressPostcodeMaxLength = 8
-  private val addressPostcodeRegex     =
-    "^\\s*((GIR 0AA)|((([a-zA-Z][0-9][0-9]?)|(([a-zA-Z][a-hj-yA-HJ-Y][0-9][0-9]?)|(([a-zA-Z][0-9][a-zA-Z])|([a-zA-Z][a-hj-yA-HJ-Y][0-9]?[a-zA-Z]))))\\s?[0-9][a-zA-Z]{2})\\s*)$"
+  val addressPostcode = "addressPostcode"
 
   def apply(
     isUKAddress: Boolean,
@@ -64,14 +61,7 @@ class CorporateTrusteeDetailsFormProvider @Inject() extends Mappings {
           )
         ),
         addressPostcode    -> (if (isUKAddress) {
-                              text(addressPostcodeRequired)
-                                .verifying(
-                                  firstError(
-                                    regexp(addressPostcodeRegex, addressPostcodeInvalid),
-                                    maxLength(addressPostcodeMaxLength, addressPostcodeLength)
-                                  )
-                                )
-                                .transform[Option[String]](Some(_), _.getOrElse(""))
+                              UKPostcodeMapping(addressPostcodeRequired, addressPostcodeLength, addressPostcodeInvalid)
                             } else {
                               optional(
                                 text("")

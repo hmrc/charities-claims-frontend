@@ -49,29 +49,43 @@ class DefaultDataRetrievalAction @Inject() (
       .flatMap {
         case None              =>
           claimsConnector.retrieveUnsubmittedClaims
-            .map { getClaimsResponse =>
+            .flatMap { getClaimsResponse =>
               request.affinityGroup match {
                 case AffinityGroup.Organisation =>
                   getClaimsResponse.claimsList match
-                    case claim :: _ => Right(DataRequest(request, SessionData.from(claim)))
-                    case _          => Right(DataRequest(request, SessionData.empty))
-                case AffinityGroup.Agent        =>
+                    case claimInfo :: _ =>
+                      claimsConnector.getClaim(claimInfo.claimId).flatMap {
+                        case Some(claim) =>
+                          Future.successful(Right(DataRequest(request, SessionData.from(claim))))
+                        case None        =>
+                          Future
+                            .failed(new RuntimeException(s"claimId $claimInfo.claimId could not be found in backend"))
+                      }
+                    case _              =>
+                      Future.successful(Right(DataRequest(request, SessionData.empty)))
+
+                case AffinityGroup.Agent =>
                   getClaimsResponse.claimsCount match {
                     case 0 =>
-                      Right(DataRequest(request, SessionData.empty))
+                      Future.successful(Right(DataRequest(request, SessionData.empty)))
 
                     case x if x > 0 && x < config.agentUnsubmittedClaimLimit =>
-                      Left(
-                        Results.Redirect(
-                          // TODO: replace with correct url when ready
-                          "page-for-agent-to-select-claim"
+                      Future.successful(
+                        Left(
+                          Results.Redirect(
+                            // TODO: replace with correct url when ready
+                            "page-for-agent-to-select-claim"
+                          )
                         )
                       )
-                    case _                                                   =>
-                      Left(
-                        Results.Redirect(
-                          // TODO: replace with correct url when ready
-                          "error-agent-unsubmitted-claim-limit-exceeded"
+
+                    case _ =>
+                      Future.successful(
+                        Left(
+                          Results.Redirect(
+                            // TODO: replace with correct url when ready
+                            "error-agent-unsubmitted-claim-limit-exceeded"
+                          )
                         )
                       )
                   }

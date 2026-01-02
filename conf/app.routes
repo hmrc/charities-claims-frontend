@@ -89,3 +89,8 @@ POST        /change-corporate-trustee-details               controllers.organisa
 
 GET         /check-your-answers                             controllers.organisationDetails.OrganisationDetailsCheckYourAnswersController.onPageLoad
 GET         /organisation-details-min-data-placeholder      controllers.organisationDetails.OrganisationDetailsIncompleteAnswersController.onPageLoad
+
+GET         /authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onSubmit(mode: Mode = Mode.CheckMode)
