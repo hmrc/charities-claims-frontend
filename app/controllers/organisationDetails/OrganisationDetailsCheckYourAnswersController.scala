@@ -38,8 +38,8 @@ class OrganisationDetailsCheckYourAnswersController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val previousAnswers: Option[OrganisationDetailsAnswers] = request.sessionData.organisationDetailsAnswers
-    Future.successful(Ok(view(previousAnswers)))
+    // val previousAnswers: OrganisationDetailsAnswers = request.sessionData.organisationDetailsAnswers
+    Future.successful(Ok(view(request.sessionData.organisationDetailsAnswers)))
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>

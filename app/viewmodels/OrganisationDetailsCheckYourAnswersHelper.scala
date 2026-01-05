@@ -26,19 +26,19 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 
 object OrganisationDetailsCheckYourAnswersHelper {
 
-  def buildSummaryList(answers: OrganisationDetailsAnswers)(implicit messages: Messages): SummaryList = {
+  def buildSummaryList(answers: Option[OrganisationDetailsAnswers])(implicit messages: Messages): SummaryList = {
 
     val rows = Seq(
       answers.nameOfCharityRegulator match {
-        case Some(value) =>
+        case value =>
           Some(
             summaryRow(
               messages("organisationDetailsCheckYourAnswers.nameOfCharityRegulator.label"),
               if {
-                (value == Some(NameOfCharityRegulator.EnglandAndWales))
-                || (value == Some(NameOfCharityRegulator.Scottish))
-                || (value == Some(NameOfCharityRegulator.NorthernIreland))
-                || (value == Some(NameOfCharityRegulator.None))
+                value.contains(NameOfCharityRegulator.EnglandAndWales)
+                || value.contains(NameOfCharityRegulator.Scottish)
+                || value.contains(NameOfCharityRegulator.NorthernIreland)
+                || value.contains(NameOfCharityRegulator.None)
               } then messages("site.yes") else messages("site.no"),
               controllers.organisationDetails.routes.NameOfCharityRegulatorController
                 .onPageLoad(CheckMode)
@@ -46,7 +46,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
               messages("organisationDetailsCheckYourAnswers.nameOfCharityRegulator.change.hidden")
             )
           )
-        case None        =>
+        case _     =>
           Some(
             missingDataRow(
               messages("organisationDetailsCheckYourAnswers.giftAid.label"),
@@ -58,15 +58,15 @@ object OrganisationDetailsCheckYourAnswersHelper {
           )
       },
       answers.reasonNotRegisteredWithRegulator match {
-        case Some(value) =>
+        case value =>
           Some(
             summaryRow(
               messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
               if {
-                (value == Some(ReasonNotRegisteredWithRegulator.Excepted))
-                || (value == Some(ReasonNotRegisteredWithRegulator.Exempt))
-                || (value == Some(ReasonNotRegisteredWithRegulator.LowIncome))
-                || (value == Some(ReasonNotRegisteredWithRegulator.Waiting))
+                value.contains(ReasonNotRegisteredWithRegulator.Excepted)
+                || value.contains(ReasonNotRegisteredWithRegulator.Exempt)
+                || value.contains(ReasonNotRegisteredWithRegulator.LowIncome)
+                || value.contains(ReasonNotRegisteredWithRegulator.Waiting)
               } then messages("site.yes") else messages("site.no"),
               controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
                 .onPageLoad(CheckMode)
@@ -74,7 +74,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
               messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
             )
           )
-        case None        =>
+        case None  =>
           Some(
             missingDataRow(
               messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
@@ -86,18 +86,18 @@ object OrganisationDetailsCheckYourAnswersHelper {
           )
       },
       answers.charityRegistrationNumber match {
-        case Some(value) =>
+        case Some(regNum) =>
           Some(
             summaryRow(
               messages("organisationDetailsCheckYourAnswers.charityRegistrationNumber.label"),
-              value,
+              regNum,
               controllers.organisationDetails.routes.CharityRegulatorNumberController
                 .onPageLoad(CheckMode)
                 .url,
               messages("organisationDetailsCheckYourAnswers.charityRegistrationNumber.label")
             )
           )
-        case None        =>
+        case None         =>
           Some(
             missingDataRow(
               messages("organisationDetailsCheckYourAnswers.charityRegistrationNumber.label"),

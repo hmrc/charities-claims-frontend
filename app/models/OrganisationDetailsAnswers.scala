@@ -31,7 +31,8 @@ final case class OrganisationDetailsAnswers(
   corporateTrusteeTitle: Option[String] = None,
   corporateTrusteeFirstName: Option[String] = None,
   corporateTrusteeLastName: Option[String] = None,
-  corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None
+  corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None,
+  authorisedOfficialDetails: Option[AuthorisedOfficialDetails] = None
 ) {
   def hasOrganisationDetailsCompleteAnswers: Boolean =
     nameOfCharityRegulator.isDefined && reasonNotRegisteredWithRegulator.isDefined
