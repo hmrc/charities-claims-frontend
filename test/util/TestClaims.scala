@@ -131,12 +131,12 @@ object TestClaims {
     )
 
   def testClaimInfo(
-    claimId: String = "123"
+    claimId: String = "123",
+    hmrcCharitiesReference: Option[String] = None,
+    nameOfCharity: Option[String] = None
   ) = ClaimInfo(
     claimId = claimId,
-    userId = TestUsers.organisation1,
-    claimSubmitted = false,
-    lastUpdatedReference = "1234567890",
-    creationTimestamp = "2025-11-10T13:45:56.016Z"
+    hmrcCharitiesReference = hmrcCharitiesReference,
+    nameOfCharity = nameOfCharity
   )
 }
