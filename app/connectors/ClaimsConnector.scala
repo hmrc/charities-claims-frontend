@@ -44,7 +44,9 @@ trait ClaimsConnector {
   def saveClaim(repaymentClaimDetails: RepaymentClaimDetails)(using hc: HeaderCarrier): Future[UserId]
 
   def getClaim(claimId: String)(using hc: HeaderCarrier): Future[Option[Claim]]
-  def updateClaim(claimId: String, repaymentClaimDetails: RepaymentClaimDetails)(using hc: HeaderCarrier): Future[Unit]
+  def updateClaim(claimId: String, updateClaimRequest: UpdateClaimRequest)(using
+    hc: HeaderCarrier
+  ): Future[UpdateClaimResponse]
   def deleteClaim(claimId: String)(using hc: HeaderCarrier): Future[Boolean]
 }
 
@@ -107,18 +109,14 @@ class ClaimsConnectorImpl @Inject() (
       noneValue = None
     )
 
-  final def updateClaim(claimId: String, repaymentClaimDetails: RepaymentClaimDetails)(using
+  final def updateClaim(claimId: String, updateClaimRequest: UpdateClaimRequest)(using
     hc: HeaderCarrier
-  ): Future[Unit] = {
-    val payload = UpdateClaimRequest(
-      repaymentClaimDetails = repaymentClaimDetails
-    )
+  ): Future[UpdateClaimResponse] =
     callCharitiesClaimsBackend[UpdateClaimRequest, UpdateClaimResponse](
       method = "PUT",
       url = s"$claimsApiUrl/$claimId",
-      payload = Some(payload)
-    ).map(_ => ())
-  }
+      payload = Some(updateClaimRequest)
+    )
 
   final def deleteClaim(claimId: String)(using
     hc: HeaderCarrier
@@ -163,5 +161,3 @@ class ClaimsConnectorImpl @Inject() (
 
   given Writes[Nothing] = Writes.apply(_ => JsNull)
 }
-
-case class MissingRequiredFieldsException(message: String) extends Exception(message)

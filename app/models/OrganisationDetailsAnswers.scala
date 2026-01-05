@@ -18,6 +18,8 @@ package models
 
 import play.api.libs.json.Format
 import play.api.libs.json.Json
+import scala.util.Try
+import utils.Required.required
 
 final case class OrganisationDetailsAnswers(
   nameOfCharityRegulator: Option[NameOfCharityRegulator] = None,
@@ -129,4 +131,24 @@ object OrganisationDetailsAnswers {
 
   def setCorporateTrusteeDetails(value: CorporateTrusteeDetails)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(corporateTrusteeDetails = Some(v)))
+
+  def toOrganisationDetails(answers: OrganisationDetailsAnswers): Try[OrganisationDetails] =
+    for {
+      nameOfCharityRegulator  <- required(answers)(_.nameOfCharityRegulator)
+      areYouACorporateTrustee <- required(answers)(_.areYouACorporateTrustee)
+      doYouHaveUKAddress      <- required(answers)(_.doYouHaveUKAddress)
+    } yield OrganisationDetails(
+      nameOfCharityRegulator = nameOfCharityRegulator,
+      reasonNotRegisteredWithRegulator = answers.reasonNotRegisteredWithRegulator,
+      charityRegistrationNumber = answers.charityRegistrationNumber,
+      areYouACorporateTrustee = areYouACorporateTrustee,
+      doYouHaveUKAddress = doYouHaveUKAddress,
+      nameOfCorporateTrustee = answers.nameOfCorporateTrustee,
+      corporateTrusteePostcode = answers.corporateTrusteePostcode,
+      corporateTrusteeDaytimeTelephoneNumber = answers.corporateTrusteeDaytimeTelephoneNumber,
+      corporateTrusteeTitle = answers.corporateTrusteeTitle,
+      corporateTrusteeFirstName = answers.corporateTrusteeFirstName,
+      corporateTrusteeLastName = answers.corporateTrusteeLastName
+    )
+
 }
