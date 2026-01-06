@@ -31,37 +31,45 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AuthorisedOfficialDetailsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
+  view: AuthorisedOfficialDetailsView,
   actions: Actions,
   formProvider: AuthorisedOfficialDetailsFormProvider,
-  view: AuthorisedOfficialDetailsView,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val isUkAddress = OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress.getOrElse(false)
-    val form        = formProvider(isUkAddress)
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    OrganisationDetailsAnswers.getDoYouHaveUKAddress match {
+      case Some(isUkAddress) =>
+        val form           = formProvider(isUkAddress)
+        val previousAnswer = OrganisationDetailsAnswers.getAuthorisedOfficialDetails
+        val preparedForm   = previousAnswer.fold(form)(form.fill)
 
-    val previousAnswer = OrganisationDetailsAnswers.getAuthorisedOfficialDetails
-    val preparedForm   = previousAnswer.fold(form)(form.fill)
+        Future.successful(Ok(view(preparedForm, isUkAddress, mode)))
 
-    Ok(view(preparedForm, isUkAddress, mode))
+      case None =>
+        Future.successful(Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(mode)))
+    }
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val isUkAddress = OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress.getOrElse(false)
-    val form        = formProvider(isUkAddress)
+    OrganisationDetailsAnswers.getDoYouHaveUKAddress match {
+      case Some(isUkAddress) =>
+        val form = formProvider(isUkAddress)
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, isUkAddress, mode))),
+            value =>
+              saveService
+                .save(OrganisationDetailsAnswers.setAuthorisedOfficialDetails(value))
+                .map { _ =>
+                  Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
+                }
+          )
 
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, isUkAddress, mode))),
-        value =>
-          saveService
-            .save(OrganisationDetailsAnswers.setAuthorisedOfficialDetails(value))
-            .map { _ =>
-              Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
-            }
-      )
+      case None =>
+        Future.successful(Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(mode)))
+    }
   }
 }
