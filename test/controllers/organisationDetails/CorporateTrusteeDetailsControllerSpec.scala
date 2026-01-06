@@ -45,14 +45,14 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
   )
 
   val validDataWithOutPostcode = CorporateTrusteeDetails(
-    trusteeName = "Corporate Trustee1",
-    trusteePhoneNumber = "01234567890"
+    nameOfCorporateTrustee = "Corporate Trustee1",
+    corporateTrusteeDaytimeTelephoneNumber = "01234567890"
   )
 
   val validDataWithPostcode = CorporateTrusteeDetails(
-    trusteeName = "Corporate Trustee1",
-    trusteePhoneNumber = "01234567890",
-    addressPostcode = Some("SW1A 1AA")
+    nameOfCorporateTrustee = "Corporate Trustee1",
+    corporateTrusteeDaytimeTelephoneNumber = "01234567890",
+    corporateTrusteePostcode = Some("SW1A 1AA")
   )
 
   "CorporateTrusteeDetailsController" - {
@@ -194,8 +194,8 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.CorporateTrusteeDetailsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody(
-                "trusteeName"        -> "Corporate Trustee1",
-                "trusteePhoneNumber" -> "01234567890"
+                "nameOfCorporateTrustee"                 -> "Corporate Trustee1",
+                "corporateTrusteeDaytimeTelephoneNumber" -> "01234567890"
               )
 
           val result = route(application, request).value
@@ -213,9 +213,9 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.CorporateTrusteeDetailsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody(
-                "trusteeName"        -> "Corporate Trustee1",
-                "trusteePhoneNumber" -> "01234567890",
-                "addressPostcode"    -> "SW1A 1AA"
+                "nameOfCorporateTrustee"                 -> "Corporate Trustee1",
+                "corporateTrusteeDaytimeTelephoneNumber" -> "01234567890",
+                "corporateTrusteePostcode"               -> "SW1A 1AA"
               )
 
           val result = route(application, request).value
@@ -231,7 +231,7 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.CorporateTrusteeDetailsController.onSubmit(NormalMode).url)
-              .withFormUrlEncodedBody("trusteeName" -> "")
+              .withFormUrlEncodedBody("nameOfCorporateTrustee" -> "")
 
           val result = route(application, request).value
 
@@ -261,8 +261,8 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.CorporateTrusteeDetailsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody(
-                "trusteeName" -> "Corporate Trustee1",
-                "phoneNumber" -> "01234567890"
+                "nameOfCorporateTrustee"                 -> "Corporate Trustee1",
+                "corporateTrusteeDaytimeTelephoneNumber" -> "01234567890"
               )
 
           val result = route(application, request).value

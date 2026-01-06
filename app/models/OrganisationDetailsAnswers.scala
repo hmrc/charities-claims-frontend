@@ -32,9 +32,9 @@ final case class OrganisationDetailsAnswers(
   corporateTrusteeDaytimeTelephoneNumber: Option[String] = None,
   corporateTrusteeTitle: Option[String] = None,
   corporateTrusteeFirstName: Option[String] = None,
-  corporateTrusteeLastName: Option[String] = None,
-  corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None,
-  authorisedOfficialDetails: Option[AuthorisedOfficialDetails] = None
+  corporateTrusteeLastName: Option[String] = None
+//  corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None,
+//  authorisedOfficialDetails: Option[AuthorisedOfficialDetails] = None
 )
 // {
 //  def hasCompleteAnswers: Boolean =
@@ -118,19 +118,43 @@ object OrganisationDetailsAnswers {
   def setCharityRegistrationNumber(value: String)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(charityRegistrationNumber = Some(v)))
 
-  def getAuthorisedOfficialDetails(using session: SessionData): Option[AuthorisedOfficialDetails] = get(
-    _.authorisedOfficialDetails
+  def getAuthorisedOfficialDetails(using session: SessionData): Option[AuthorisedOfficialDetails] = get(answers =>
+    for
+      title       <- answers.corporateTrusteeTitle
+      firstName   <- answers.corporateTrusteeFirstName
+      lastName    <- answers.corporateTrusteeLastName
+      phoneNumber <- answers.corporateTrusteeDaytimeTelephoneNumber
+      postcode     = answers.corporateTrusteePostcode
+    yield AuthorisedOfficialDetails(Some(title), firstName, lastName, phoneNumber, postcode)
   )
 
   def setAuthorisedOfficialDetails(value: AuthorisedOfficialDetails)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(authorisedOfficialDetails = Some(v)))
+    set(value)((a, v) =>
+      a.copy(
+        corporateTrusteeTitle = v.title,
+        corporateTrusteeFirstName = Some(v.firstName),
+        corporateTrusteeLastName = Some(v.lastName),
+        corporateTrusteeDaytimeTelephoneNumber = Some(v.phoneNumber),
+        corporateTrusteePostcode = v.postcode
+      )
+    )
 
-  def getCorporateTrusteeDetails(using session: SessionData): Option[CorporateTrusteeDetails] = get(
-    _.corporateTrusteeDetails
+  def getCorporateTrusteeDetails(using session: SessionData): Option[CorporateTrusteeDetails] = get(answers =>
+    for
+      nameOfCorporateTrustee <- answers.nameOfCorporateTrustee
+      phoneNumber            <- answers.corporateTrusteeDaytimeTelephoneNumber
+      postCode                = answers.corporateTrusteePostcode
+    yield CorporateTrusteeDetails(nameOfCorporateTrustee, phoneNumber, postCode)
   )
 
   def setCorporateTrusteeDetails(value: CorporateTrusteeDetails)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(corporateTrusteeDetails = Some(v)))
+    set(value)((a, v) =>
+      a.copy(
+        nameOfCorporateTrustee = Some(v.nameOfCorporateTrustee),
+        corporateTrusteeDaytimeTelephoneNumber = Some(v.corporateTrusteeDaytimeTelephoneNumber),
+        corporateTrusteePostcode = v.corporateTrusteePostcode
+      )
+    )
 
   def toOrganisationDetails(answers: OrganisationDetailsAnswers): Try[OrganisationDetails] =
     for {

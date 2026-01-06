@@ -24,9 +24,9 @@ class CorporateTrusteeDetailsSpec extends BaseSpec {
   "CorporateTrusteeDetails" - {
     "be serializable and deserializable with Postcode" in {
       val corporateTrusteeDetails = CorporateTrusteeDetails(
-        trusteeName = "Trustee ABC",
-        trusteePhoneNumber = "07123456786",
-        addressPostcode = Some("SW1A 1AA")
+        nameOfCorporateTrustee = "Trustee ABC",
+        corporateTrusteeDaytimeTelephoneNumber = "07123456786",
+        corporateTrusteePostcode = Some("SW1A 1AA")
       )
 
       val json                                = Json.toJson(corporateTrusteeDetails)
@@ -37,9 +37,9 @@ class CorporateTrusteeDetailsSpec extends BaseSpec {
 
     "be serializable and deserializable with without Postcode" in {
       val corporateTrusteeDetails = CorporateTrusteeDetails(
-        trusteeName = "Trustee ABC",
-        trusteePhoneNumber = "07123456786",
-        addressPostcode = None
+        nameOfCorporateTrustee = "Trustee ABC",
+        corporateTrusteeDaytimeTelephoneNumber = "07123456786",
+        corporateTrusteePostcode = None
       )
 
       val json                                = Json.toJson(corporateTrusteeDetails)
