@@ -20,9 +20,9 @@ import play.api.libs.json.Format
 import play.api.libs.json.Json
 
 case class CorporateTrusteeDetails(
-  trusteeName: String,
-  trusteePhoneNumber: String,
-  addressPostcode: Option[String] = None
+  nameOfCorporateTrustee: String,
+  corporateTrusteeDaytimeTelephoneNumber: String,
+  corporateTrusteePostcode: Option[String] = None
 )
 
 object CorporateTrusteeDetails {

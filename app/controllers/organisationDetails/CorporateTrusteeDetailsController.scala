@@ -22,6 +22,7 @@ import controllers.actions.Actions
 import forms.CorporateTrusteeDetailsFormProvider
 import models.{Mode, OrganisationDetailsAnswers}
 import models.Mode.*
+import play.api.Logger
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
 import views.html.CorporateTrusteeDetailsView
@@ -41,6 +42,7 @@ class CorporateTrusteeDetailsController @Inject() (
     if (OrganisationDetailsAnswers.getAreYouACorporateTrustee.contains(true)) {
       val isUKAddress    = OrganisationDetailsAnswers.getDoYouHaveUKAddress.getOrElse(false)
       val previousAnswer = OrganisationDetailsAnswers.getCorporateTrusteeDetails
+      Logger(getClass).warn(s"*** previous Answer: $previousAnswer , ukaddress: $isUKAddress")
       val form           = formProvider(
         isUKAddress,
         "corporateTrusteeDetails.name.error.required",

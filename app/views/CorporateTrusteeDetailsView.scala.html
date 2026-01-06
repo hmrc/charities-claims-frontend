@@ -41,23 +41,21 @@
 
     @govukInput(
         InputViewModel(
-            field = form("trusteeName"),
+            field = form("nameOfCorporateTrustee"),
             label = LabelViewModel(messages("corporateTrusteeDetails.name.label"))
         ).withCssClass("govuk-input--width-20")
-            .withId("trustee-name")
-        .withAutocomplete("trustee-name"))
+        .withAutocomplete("name"))
 
     @govukInput(
         InputViewModel(
-            field = form("trusteePhoneNumber"),
+            field = form("corporateTrusteeDaytimeTelephoneNumber"),
             label = LabelViewModel(messages("corporateTrusteeDetails.phone.label"))
                 ).withCssClass("govuk-input--width-20")
-                .withId("trustee-phone-number")
-                .withAutocomplete("trustee-phone-number"))
+                .withAutocomplete("tel"))
     @if(isUKAddress){
         @govukInput(
             InputViewModel(
-                field = form("addressPostcode"),
+                field = form("corporateTrusteePostcode"),
                 label = LabelViewModel(messages("corporateTrusteeDetails.postcode.label"))
            ).withCssClass("govuk-input--width-10")
         )

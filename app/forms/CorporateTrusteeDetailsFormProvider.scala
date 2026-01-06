@@ -24,15 +24,15 @@ import javax.inject.Inject
 
 class CorporateTrusteeDetailsFormProvider @Inject() extends Mappings {
 
-  val trusteeName           = "trusteeName"
-  private val nameMaxLength = 160
-  private val nameRegex     = "^([a-zA-Z0-9 ]{1,160})$"
+  val nameOfCorporateTrustee = "nameOfCorporateTrustee"
+  private val nameMaxLength  = 160
+  private val nameRegex      = "^([a-zA-Z0-9 ]{1,160})$"
 
-  val trusteePhoneNumber                  = "trusteePhoneNumber"
-  private val trusteePhoneNumberMaxLength = 35
-  private val trusteePhoneNumberRegex     = "^[0-9\\(\\)\\-\\s]{1,35}$"
+  val corporateTrusteeDaytimeTelephoneNumber = "corporateTrusteeDaytimeTelephoneNumber"
+  private val trusteePhoneNumberMaxLength    = 35
+  private val trusteePhoneNumberRegex        = "^[0-9\\(\\)\\-\\s]{1,35}$"
 
-  val addressPostcode = "addressPostcode"
+  val corporateTrusteePostcode = "corporateTrusteePostcode"
 
   def apply(
     isUKAddress: Boolean,
@@ -48,25 +48,31 @@ class CorporateTrusteeDetailsFormProvider @Inject() extends Mappings {
   ): Form[CorporateTrusteeDetails] =
     Form(
       mapping(
-        trusteeName        -> text(trusteeNameRequired).verifying(
+        nameOfCorporateTrustee                 -> text(trusteeNameRequired).verifying(
           firstError(
-            regexp(nameRegex, trusteeNameInvalid),
-            maxLength(nameMaxLength, trusteeNameLength)
+            maxLength(nameMaxLength, trusteeNameLength),
+            regexp(nameRegex, trusteeNameInvalid)
           )
         ),
-        trusteePhoneNumber -> text(trusteePhoneNumberRequired).verifying(
+        corporateTrusteeDaytimeTelephoneNumber -> text(trusteePhoneNumberRequired).verifying(
           firstError(
             maxLength(trusteePhoneNumberMaxLength, trusteePhoneNumberLength),
             regexp(trusteePhoneNumberRegex, trusteePhoneNumberInvalid)
           )
         ),
-        addressPostcode    -> (if (isUKAddress) {
-                              UKPostcodeMapping(addressPostcodeRequired, addressPostcodeLength, addressPostcodeInvalid)
-                            } else {
-                              optional(
-                                text("")
-                              )
-                            })
-      )(CorporateTrusteeDetails.apply)(x => Some(x.trusteeName, x.trusteePhoneNumber, x.addressPostcode))
+        corporateTrusteePostcode               -> (if (isUKAddress) {
+                                       UKPostcodeMapping(
+                                         addressPostcodeRequired,
+                                         addressPostcodeLength,
+                                         addressPostcodeInvalid
+                                       )
+                                     } else {
+                                       optional(
+                                         text("")
+                                       )
+                                     })
+      )(CorporateTrusteeDetails.apply)(x =>
+        Some(x.nameOfCorporateTrustee, x.corporateTrusteeDaytimeTelephoneNumber, x.corporateTrusteePostcode)
+      )
     )
 }
