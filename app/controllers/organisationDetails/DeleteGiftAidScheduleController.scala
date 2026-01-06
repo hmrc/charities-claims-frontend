@@ -51,13 +51,13 @@ class DeleteGiftAidScheduleController @Inject() (
             // Will need to use ExecutionContext when making actual backend call
             // Expected backend response: { "success": true }
             // On success, redirect to R2 screen
-            // On error, handle error response appropriately
+            // If error, handle error response
 
-            // TODO: Replace with actual R2 route when screen is implemented
+            // TODO: Replace with actual R2 route when screen is completed
             // For now, redirecting to page not found as placeholder
             Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
           } else {
-            // TODO: Replace with actual G2 route when screen is implemented
+            // TODO: Replace with actual G2 route when screen is completed
             // User selected "No" - don't delete, go back to G2 screen
             // For now, redirecting to page not found as placeholder
             Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
