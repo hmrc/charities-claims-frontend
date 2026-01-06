@@ -61,7 +61,9 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       "should render the page correctly when UK address is false (default)" in {
         val sessionDataAreYouCorporateTrustee = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
         val sessionData                       =
-          OrganisationDetailsAnswers.setDoYouHaveUKAddress(uKAddressFalse)(using sessionDataAreYouCorporateTrustee)
+          OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(uKAddressFalse)(using
+            sessionDataAreYouCorporateTrustee
+          )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -82,7 +84,9 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       "should render the page correctly when UK address is true" in {
         val sessionDataAreYouCorporateTrustee = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
         val sessionData                       =
-          OrganisationDetailsAnswers.setDoYouHaveUKAddress(uKAddressTrue)(using sessionDataAreYouCorporateTrustee)
+          OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(uKAddressTrue)(using
+            sessionDataAreYouCorporateTrustee
+          )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -118,7 +122,9 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       "should render the page and pre-populate correctly when data exists for Corporate Trustee and NOT UK address" in {
         val sessionDataAreYouCorporateTrustee        = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
         val sessionDataCorporateTrusteeWithUKAddress =
-          OrganisationDetailsAnswers.setDoYouHaveUKAddress(uKAddressFalse)(using sessionDataAreYouCorporateTrustee)
+          OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(uKAddressFalse)(using
+            sessionDataAreYouCorporateTrustee
+          )
         val sessionData                              = OrganisationDetailsAnswers.setCorporateTrusteeDetails(validDataWithOutPostcode)(using
           sessionDataCorporateTrusteeWithUKAddress
         )
@@ -145,7 +151,9 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       "should render the page and pre-populate correctly when data exists for Corporate Trustee and UK address" in {
         val sessionDataAreYouCorporateTrustee        = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
         val sessionDataCorporateTrusteeWithUKAddress =
-          OrganisationDetailsAnswers.setDoYouHaveUKAddress(uKAddressTrue)(using sessionDataAreYouCorporateTrustee)
+          OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(uKAddressTrue)(using
+            sessionDataAreYouCorporateTrustee
+          )
         val sessionData                              = OrganisationDetailsAnswers.setCorporateTrusteeDetails(validDataWithPostcode)(using
           sessionDataCorporateTrusteeWithUKAddress
         )
@@ -206,7 +214,7 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       }
 
       "should redirect to the next page when valid data is submitted (with UK Address)" in {
-        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveUKAddress(true)
+        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(true)
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
@@ -254,7 +262,7 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       }
 
       "should return BadRequest when postcode is missing but required (isUkAddress = true)" in {
-        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveUKAddress(uKAddressTrue)
+        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(uKAddressTrue)
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {

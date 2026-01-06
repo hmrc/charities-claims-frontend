@@ -49,7 +49,9 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
       "should render the page and pre-populate correctly with true for UK Address if Corporate trustee is true" in {
         val sessionDataAreYouCorporateTrustee       = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
         val sessionDataAreYouCorporateWithUKAddress =
-          OrganisationDetailsAnswers.setDoYouHaveUKAddress(true)(using sessionDataAreYouCorporateTrustee)
+          OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(true)(using
+            sessionDataAreYouCorporateTrustee
+          )
 
         given application: Application =
           applicationBuilder(sessionData = sessionDataAreYouCorporateWithUKAddress).build()
@@ -69,7 +71,9 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
       "should render the page and pre-populate correctly with false for UK Address if Corporate trustee is true" in {
         val sessionDataAreYouCorporateTrustee       = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
         val sessionDataAreYouCorporateWithUKAddress =
-          OrganisationDetailsAnswers.setDoYouHaveUKAddress(false)(using sessionDataAreYouCorporateTrustee)
+          OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(false)(using
+            sessionDataAreYouCorporateTrustee
+          )
 
         given application: Application =
           applicationBuilder(sessionData = sessionDataAreYouCorporateWithUKAddress).build()
