@@ -39,7 +39,7 @@ class AuthorisedOfficialDetailsController @Inject() (
     extends BaseController {
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    OrganisationDetailsAnswers.getDoYouHaveUKAddress match {
+    OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress match {
       case Some(isUkAddress) =>
         val form           = formProvider(isUkAddress)
         val previousAnswer = OrganisationDetailsAnswers.getAuthorisedOfficialDetails
@@ -53,7 +53,7 @@ class AuthorisedOfficialDetailsController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    OrganisationDetailsAnswers.getDoYouHaveUKAddress match {
+    OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress match {
       case Some(isUkAddress) =>
         val form = formProvider(isUkAddress)
         form
