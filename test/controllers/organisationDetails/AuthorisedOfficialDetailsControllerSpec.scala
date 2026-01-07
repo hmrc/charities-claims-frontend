@@ -39,12 +39,13 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
     postcode = None
   )
 
+  val baseSession = OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(false)
+
   "AuthorisedOfficialDetailsController" - {
 
     "onPageLoad" - {
       "should render the page correctly when UK address is false (default)" in {
-        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(false)
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        given application: Application = applicationBuilder(sessionData = baseSession).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -82,7 +83,7 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
       }
 
       "should render the page and pre-populate correctly when data exists" in {
-        val sessionData = OrganisationDetailsAnswers.setAuthorisedOfficialDetails(validData)
+        val sessionData = OrganisationDetailsAnswers.setAuthorisedOfficialDetails(validData)(using baseSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -101,11 +102,27 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
           ).body
         }
       }
+
+      "should redirect to AuthorisedOfficialAddress if UK address answer is missing" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode).url
+          )
+        }
+      }
     }
 
     "onSubmit" - {
       "should redirect to the next page when valid data is submitted (No UK Address)" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        given application: Application = applicationBuilder(sessionData = baseSession).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -149,7 +166,7 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
       }
 
       "should return BadRequest when invalid data (empty fields) is submitted" in {
-        given application: Application = applicationBuilder().build()
+        given application: Application = applicationBuilder(sessionData = baseSession).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
