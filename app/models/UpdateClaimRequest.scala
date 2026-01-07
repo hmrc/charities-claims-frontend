@@ -19,6 +19,7 @@ package models
 import play.api.libs.json.{Format, Json}
 
 final case class UpdateClaimRequest(
+  lastUpdatedReference: String,
   repaymentClaimDetails: RepaymentClaimDetails,
   organisationDetails: Option[OrganisationDetails] = None,
   giftAidSmallDonationsSchemeDonationDetails: Option[GiftAidSmallDonationsSchemeDonationDetails] = None,

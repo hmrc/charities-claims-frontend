@@ -46,12 +46,14 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
       }
 
       "should render the page and pre-populate correctly with true for UK Address if Corporate trustee is false" in {
-        val sessionDataAreYouCorporateTrustee       = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
-        val sessionDataAreYouCorporateWithUKAddress =
-          OrganisationDetailsAnswers.setDoYouHaveUKAddress(true)(using sessionDataAreYouCorporateTrustee)
+        val sessionDataAreYouCorporateTrustee                = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+        val sessionDataAreYouAuthorisedOfficialWithUKAddress =
+          OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(true)(using
+            sessionDataAreYouCorporateTrustee
+          )
 
         given application: Application =
-          applicationBuilder(sessionData = sessionDataAreYouCorporateWithUKAddress).build()
+          applicationBuilder(sessionData = sessionDataAreYouAuthorisedOfficialWithUKAddress).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -66,12 +68,14 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
       }
 
       "should render the page and pre-populate correctly with false for UK Address if Corporate trustee is false" in {
-        val sessionDataAreYouCorporateTrustee       = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
-        val sessionDataAreYouCorporateWithUKAddress =
-          OrganisationDetailsAnswers.setDoYouHaveUKAddress(false)(using sessionDataAreYouCorporateTrustee)
+        val sessionDataAreYouCorporateTrustee                = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+        val sessionDataAreYouAuthorisedOfficialWithUKAddress =
+          OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(false)(using
+            sessionDataAreYouCorporateTrustee
+          )
 
         given application: Application =
-          applicationBuilder(sessionData = sessionDataAreYouCorporateWithUKAddress).build()
+          applicationBuilder(sessionData = sessionDataAreYouAuthorisedOfficialWithUKAddress).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =

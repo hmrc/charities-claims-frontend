@@ -18,6 +18,9 @@ package models
 
 import play.api.libs.json.{Format, Json}
 import models.SessionData
+import utils.Required.required
+
+import scala.util.Try
 
 final case class RepaymentClaimDetailsAnswers(
   claimingGiftAid: Option[Boolean] = None,
@@ -120,4 +123,16 @@ object RepaymentClaimDetailsAnswers {
 
   def setClaimReferenceNumber(value: String)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(claimReferenceNumber = Some(v)))
+
+  def toRepaymentClaimDetails(answers: RepaymentClaimDetailsAnswers): Try[RepaymentClaimDetails] =
+    for
+      claimingGiftAid                          <- required(answers)(_.claimingGiftAid)
+      claimingTaxDeducted                      <- required(answers)(_.claimingTaxDeducted)
+      claimingUnderGiftAidSmallDonationsScheme <- required(answers)(_.claimingUnderGiftAidSmallDonationsScheme)
+    yield RepaymentClaimDetails(
+      claimingGiftAid,
+      claimingTaxDeducted,
+      claimingUnderGiftAidSmallDonationsScheme,
+      answers.claimReferenceNumber
+    )
 }

@@ -28,7 +28,8 @@ class OrganisationDetailsAnswersSpec extends BaseSpec {
         reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
         charityRegistrationNumber = Some("1234567890"),
         areYouACorporateTrustee = Some(true),
-        doYouHaveUKAddress = Some(true),
+        doYouHaveCorporateTrusteeUKAddress = Some(true),
+        doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
         nameOfCorporateTrustee = Some("John Doe"),
         corporateTrusteePostcode = Some("AA1 2BB"),
         corporateTrusteeDaytimeTelephoneNumber = Some("07912345678")
@@ -45,7 +46,8 @@ class OrganisationDetailsAnswersSpec extends BaseSpec {
         reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
         charityRegistrationNumber = Some("1234567890"),
         areYouACorporateTrustee = true,
-        doYouHaveUKAddress = true,
+        doYouHaveCorporateTrusteeUKAddress = true,
+        doYouHaveAuthorisedOfficialTrusteeUKAddress = false,
         nameOfCorporateTrustee = Some("John Doe"),
         corporateTrusteePostcode = Some("AA1 2BB"),
         corporateTrusteeDaytimeTelephoneNumber = Some("07912345678")
@@ -58,7 +60,8 @@ class OrganisationDetailsAnswersSpec extends BaseSpec {
         reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
         charityRegistrationNumber = Some("1234567890"),
         areYouACorporateTrustee = Some(true),
-        doYouHaveUKAddress = Some(true),
+        doYouHaveCorporateTrusteeUKAddress = Some(true),
+        doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
         nameOfCorporateTrustee = Some("John Doe"),
         corporateTrusteePostcode = Some("AA1 2BB"),
         corporateTrusteeDaytimeTelephoneNumber = Some("07912345678")

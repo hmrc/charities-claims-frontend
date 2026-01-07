@@ -16,15 +16,4 @@
 
 package models
 
-import play.api.libs.json.Format
-import play.api.libs.json.Json
-
-case class CorporateTrusteeDetails(
-  nameOfCorporateTrustee: String,
-  corporateTrusteeDaytimeTelephoneNumber: String,
-  corporateTrusteePostcode: Option[String] = None
-)
-
-object CorporateTrusteeDetails {
-  implicit val format: Format[CorporateTrusteeDetails] = Json.format[CorporateTrusteeDetails]
-}
+case class MissingRequiredFieldsException(message: String) extends Exception(message)

@@ -97,7 +97,8 @@ object TestClaims {
     ),
     charityRegistrationNumber: String = "1234567890",
     areYouACorporateTrustee: Boolean = true,
-    doYouHaveUKAddress: Boolean = true,
+    doYouHaveCorporateTrusteeUKAddress: Boolean = true,
+    doYouHaveAuthorisedOfficialTrusteeUKAddress: Boolean = false,
     nameOfCorporateTrustee: String = "John Doe",
     corporateTrusteePostcode: String = "AA1 2BB",
     corporateTrusteeDaytimeTelephoneNumber: String = "07912345678"
@@ -121,7 +122,8 @@ object TestClaims {
             reasonNotRegisteredWithRegulator = reasonNotRegisteredWithRegulator,
             charityRegistrationNumber = Some(charityRegistrationNumber),
             areYouACorporateTrustee = areYouACorporateTrustee,
-            doYouHaveUKAddress = doYouHaveUKAddress,
+            doYouHaveCorporateTrusteeUKAddress = doYouHaveCorporateTrusteeUKAddress,
+            doYouHaveAuthorisedOfficialTrusteeUKAddress = doYouHaveAuthorisedOfficialTrusteeUKAddress,
             nameOfCorporateTrustee = Some(nameOfCorporateTrustee),
             corporateTrusteePostcode = Some(corporateTrusteePostcode),
             corporateTrusteeDaytimeTelephoneNumber = Some(corporateTrusteeDaytimeTelephoneNumber)
@@ -131,12 +133,12 @@ object TestClaims {
     )
 
   def testClaimInfo(
-    claimId: String = "123"
+    claimId: String = "123",
+    hmrcCharitiesReference: Option[String] = None,
+    nameOfCharity: Option[String] = None
   ) = ClaimInfo(
     claimId = claimId,
-    userId = TestUsers.organisation1,
-    claimSubmitted = false,
-    lastUpdatedReference = "1234567890",
-    creationTimestamp = "2025-11-10T13:45:56.016Z"
+    hmrcCharitiesReference = hmrcCharitiesReference,
+    nameOfCharity = nameOfCharity
   )
 }

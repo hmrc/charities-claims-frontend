@@ -45,14 +45,14 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
   )
 
   val validDataWithOutPostcode = CorporateTrusteeDetails(
-    trusteeName = "Corporate Trustee1",
-    trusteePhoneNumber = "01234567890"
+    nameOfCorporateTrustee = "Corporate Trustee1",
+    corporateTrusteeDaytimeTelephoneNumber = "01234567890"
   )
 
   val validDataWithPostcode = CorporateTrusteeDetails(
-    trusteeName = "Corporate Trustee1",
-    trusteePhoneNumber = "01234567890",
-    addressPostcode = Some("SW1A 1AA")
+    nameOfCorporateTrustee = "Corporate Trustee1",
+    corporateTrusteeDaytimeTelephoneNumber = "01234567890",
+    corporateTrusteePostcode = Some("SW1A 1AA")
   )
 
   "CorporateTrusteeDetailsController" - {
@@ -61,7 +61,9 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       "should render the page correctly when UK address is false (default)" in {
         val sessionDataAreYouCorporateTrustee = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
         val sessionData                       =
-          OrganisationDetailsAnswers.setDoYouHaveUKAddress(uKAddressFalse)(using sessionDataAreYouCorporateTrustee)
+          OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(uKAddressFalse)(using
+            sessionDataAreYouCorporateTrustee
+          )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -82,7 +84,9 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       "should render the page correctly when UK address is true" in {
         val sessionDataAreYouCorporateTrustee = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
         val sessionData                       =
-          OrganisationDetailsAnswers.setDoYouHaveUKAddress(uKAddressTrue)(using sessionDataAreYouCorporateTrustee)
+          OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(uKAddressTrue)(using
+            sessionDataAreYouCorporateTrustee
+          )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -118,7 +122,9 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       "should render the page and pre-populate correctly when data exists for Corporate Trustee and NOT UK address" in {
         val sessionDataAreYouCorporateTrustee        = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
         val sessionDataCorporateTrusteeWithUKAddress =
-          OrganisationDetailsAnswers.setDoYouHaveUKAddress(uKAddressFalse)(using sessionDataAreYouCorporateTrustee)
+          OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(uKAddressFalse)(using
+            sessionDataAreYouCorporateTrustee
+          )
         val sessionData                              = OrganisationDetailsAnswers.setCorporateTrusteeDetails(validDataWithOutPostcode)(using
           sessionDataCorporateTrusteeWithUKAddress
         )
@@ -145,7 +151,9 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       "should render the page and pre-populate correctly when data exists for Corporate Trustee and UK address" in {
         val sessionDataAreYouCorporateTrustee        = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
         val sessionDataCorporateTrusteeWithUKAddress =
-          OrganisationDetailsAnswers.setDoYouHaveUKAddress(uKAddressTrue)(using sessionDataAreYouCorporateTrustee)
+          OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(uKAddressTrue)(using
+            sessionDataAreYouCorporateTrustee
+          )
         val sessionData                              = OrganisationDetailsAnswers.setCorporateTrusteeDetails(validDataWithPostcode)(using
           sessionDataCorporateTrusteeWithUKAddress
         )
@@ -194,8 +202,8 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.CorporateTrusteeDetailsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody(
-                "trusteeName"        -> "Corporate Trustee1",
-                "trusteePhoneNumber" -> "01234567890"
+                "nameOfCorporateTrustee"                 -> "Corporate Trustee1",
+                "corporateTrusteeDaytimeTelephoneNumber" -> "01234567890"
               )
 
           val result = route(application, request).value
@@ -206,16 +214,16 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       }
 
       "should redirect to the next page when valid data is submitted (with UK Address)" in {
-        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveUKAddress(true)
+        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(true)
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.CorporateTrusteeDetailsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody(
-                "trusteeName"        -> "Corporate Trustee1",
-                "trusteePhoneNumber" -> "01234567890",
-                "addressPostcode"    -> "SW1A 1AA"
+                "nameOfCorporateTrustee"                 -> "Corporate Trustee1",
+                "corporateTrusteeDaytimeTelephoneNumber" -> "01234567890",
+                "corporateTrusteePostcode"               -> "SW1A 1AA"
               )
 
           val result = route(application, request).value
@@ -231,7 +239,7 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.CorporateTrusteeDetailsController.onSubmit(NormalMode).url)
-              .withFormUrlEncodedBody("trusteeName" -> "")
+              .withFormUrlEncodedBody("nameOfCorporateTrustee" -> "")
 
           val result = route(application, request).value
 
@@ -254,15 +262,15 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       }
 
       "should return BadRequest when postcode is missing but required (isUkAddress = true)" in {
-        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveUKAddress(uKAddressTrue)
+        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(uKAddressTrue)
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.CorporateTrusteeDetailsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody(
-                "trusteeName" -> "Corporate Trustee1",
-                "phoneNumber" -> "01234567890"
+                "nameOfCorporateTrustee"                 -> "Corporate Trustee1",
+                "corporateTrusteeDaytimeTelephoneNumber" -> "01234567890"
               )
 
           val result = route(application, request).value

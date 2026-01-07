@@ -43,7 +43,7 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
 
     "onPageLoad" - {
       "should render the page correctly when UK address is false (default)" in {
-        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveUKAddress(false)
+        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(false)
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
@@ -60,7 +60,7 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
       }
 
       "should render the page correctly when UK address is true" in {
-        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveUKAddress(true)
+        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(true)
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
@@ -126,7 +126,7 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
       }
 
       "should redirect to the next page when valid data is submitted (With UK Address)" in {
-        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveUKAddress(true)
+        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(true)
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
@@ -163,7 +163,7 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
       }
 
       "should return BadRequest when postcode is missing but required (isUkAddress = true)" in {
-        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveUKAddress(true)
+        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(true)
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {

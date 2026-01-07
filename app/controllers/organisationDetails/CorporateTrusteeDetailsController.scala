@@ -22,6 +22,7 @@ import controllers.actions.Actions
 import forms.CorporateTrusteeDetailsFormProvider
 import models.{Mode, OrganisationDetailsAnswers}
 import models.Mode.*
+import play.api.Logger
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
 import views.html.CorporateTrusteeDetailsView
@@ -39,8 +40,9 @@ class CorporateTrusteeDetailsController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if (OrganisationDetailsAnswers.getAreYouACorporateTrustee.contains(true)) {
-      val isUKAddress    = OrganisationDetailsAnswers.getDoYouHaveUKAddress.getOrElse(false)
+      val isUKAddress    = OrganisationDetailsAnswers.getDoYouHaveCorporateTrusteeUKAddress.getOrElse(false)
       val previousAnswer = OrganisationDetailsAnswers.getCorporateTrusteeDetails
+      Logger(getClass).warn(s"*** previous Answer: $previousAnswer , ukaddress: $isUKAddress")
       val form           = formProvider(
         isUKAddress,
         "corporateTrusteeDetails.name.error.required",
@@ -61,7 +63,7 @@ class CorporateTrusteeDetailsController @Inject() (
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
 
-    val isUKAddress = OrganisationDetailsAnswers.getDoYouHaveUKAddress.getOrElse(false)
+    val isUKAddress = OrganisationDetailsAnswers.getDoYouHaveCorporateTrusteeUKAddress.getOrElse(false)
     val form        = formProvider(
       isUKAddress,
       "corporateTrusteeDetails.name.error.required",
