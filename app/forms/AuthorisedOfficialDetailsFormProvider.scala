@@ -23,10 +23,10 @@ import play.api.data.Forms._
 
 class AuthorisedOfficialDetailsFormProvider @Inject() {
 
-  private val titleRegex     = "^([a-zA-Z]{1,4})$"
-  private val firstNameRegex = "^([a-zA-Z][a-zA-Z\\- ]*)$"
-  private val lastNameRegex  = "^[A-Za-z0-9 ,\\.\\(\\)/&\\!\\-']+$"
-  private val phoneRegex     = "^[0-9\\(\\)\\/\\-\\s]{1,35}$"
+  private val titleRegex     = "^( *[a-zA-Z]{1,4} *)$"
+  private val firstNameRegex = "^( *[A-Za-z][A-Za-z'\\-]* *)$"
+  private val lastNameRegex  = "^( *[A-Za-z][A-Za-z'\\-]* *)$"
+  private val phoneRegex     = "^[0-9\\(\\)\\-\\s]{1,35}$"
 
   def apply(isUkAddress: Boolean): Form[AuthorisedOfficialDetails] = Form(
     mapping(
