@@ -44,7 +44,7 @@ class CorporateTrusteeAddressController @Inject() (
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if OrganisationDetailsAnswers.getAreYouACorporateTrustee.contains(true)
     then {
-      val previousAnswer = OrganisationDetailsAnswers.getDoYouHaveUKAddress
+      val previousAnswer = OrganisationDetailsAnswers.getDoYouHaveCorporateTrusteeUKAddress
       Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
     } else { Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad)) }
   }
@@ -56,7 +56,7 @@ class CorporateTrusteeAddressController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
-            .save(OrganisationDetailsAnswers.setDoYouHaveUKAddress(value))
+            .save(OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(value))
             .map { _ =>
               Redirect(routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode))
             }

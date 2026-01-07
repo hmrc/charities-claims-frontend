@@ -26,13 +26,16 @@ final case class OrganisationDetailsAnswers(
   reasonNotRegisteredWithRegulator: Option[ReasonNotRegisteredWithRegulator] = None,
   charityRegistrationNumber: Option[String] = None,
   areYouACorporateTrustee: Option[Boolean] = None,
-  doYouHaveUKAddress: Option[Boolean] = None,
+  doYouHaveCorporateTrusteeUKAddress: Option[Boolean] = None,
+  doYouHaveAuthorisedOfficialTrusteeUKAddress: Option[Boolean] = None,
   nameOfCorporateTrustee: Option[String] = None,
   corporateTrusteePostcode: Option[String] = None,
   corporateTrusteeDaytimeTelephoneNumber: Option[String] = None,
-  corporateTrusteeTitle: Option[String] = None,
-  corporateTrusteeFirstName: Option[String] = None,
-  corporateTrusteeLastName: Option[String] = None
+  authorisedOfficialTrusteePostcode: Option[String] = None,
+  authorisedOfficialTrusteeDaytimeTelephoneNumber: Option[String] = None,
+  authorisedOfficialTrusteeTitle: Option[String] = None,
+  authorisedOfficialTrusteeFirstName: Option[String] = None,
+  authorisedOfficialTrusteeLastName: Option[String] = None
 //  corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None,
 //  authorisedOfficialDetails: Option[AuthorisedOfficialDetails] = None
 )
@@ -78,13 +81,18 @@ object OrganisationDetailsAnswers {
       reasonNotRegisteredWithRegulator = organisationDetails.reasonNotRegisteredWithRegulator,
       charityRegistrationNumber = organisationDetails.charityRegistrationNumber,
       areYouACorporateTrustee = Some(organisationDetails.areYouACorporateTrustee),
-      doYouHaveUKAddress = Some(organisationDetails.doYouHaveUKAddress),
+      doYouHaveCorporateTrusteeUKAddress = Some(organisationDetails.doYouHaveCorporateTrusteeUKAddress),
+      doYouHaveAuthorisedOfficialTrusteeUKAddress =
+        Some(organisationDetails.doYouHaveAuthorisedOfficialTrusteeUKAddress),
       nameOfCorporateTrustee = organisationDetails.nameOfCorporateTrustee,
       corporateTrusteePostcode = organisationDetails.corporateTrusteePostcode,
       corporateTrusteeDaytimeTelephoneNumber = organisationDetails.corporateTrusteeDaytimeTelephoneNumber,
-      corporateTrusteeTitle = organisationDetails.corporateTrusteeTitle,
-      corporateTrusteeFirstName = organisationDetails.corporateTrusteeFirstName,
-      corporateTrusteeLastName = organisationDetails.corporateTrusteeLastName
+      authorisedOfficialTrusteePostcode = organisationDetails.authorisedOfficialTrusteePostcode,
+      authorisedOfficialTrusteeDaytimeTelephoneNumber =
+        organisationDetails.authorisedOfficialTrusteeDaytimeTelephoneNumber,
+      authorisedOfficialTrusteeTitle = organisationDetails.authorisedOfficialTrusteeTitle,
+      authorisedOfficialTrusteeFirstName = organisationDetails.authorisedOfficialTrusteeFirstName,
+      authorisedOfficialTrusteeLastName = organisationDetails.authorisedOfficialTrusteeLastName
     )
 
   def getNameOfCharityRegulator(using session: SessionData): Option[NameOfCharityRegulator] = get(
@@ -103,10 +111,19 @@ object OrganisationDetailsAnswers {
   ): SessionData =
     set(value)((a, v) => a.copy(reasonNotRegisteredWithRegulator = Some(v)))
 
-  def getDoYouHaveUKAddress(using session: SessionData): Option[Boolean] = get(_.doYouHaveUKAddress)
+  def getDoYouHaveCorporateTrusteeUKAddress(using session: SessionData): Option[Boolean] = get(
+    _.doYouHaveCorporateTrusteeUKAddress
+  )
 
-  def setDoYouHaveUKAddress(value: Boolean)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(doYouHaveUKAddress = Some(v)))
+  def setDoYouHaveCorporateTrusteeUKAddress(value: Boolean)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(doYouHaveCorporateTrusteeUKAddress = Some(v)))
+
+  def getDoYouHaveAuthorisedOfficialTrusteeUKAddress(using session: SessionData): Option[Boolean] = get(
+    _.doYouHaveAuthorisedOfficialTrusteeUKAddress
+  )
+
+  def setDoYouHaveAuthorisedOfficialTrusteeUKAddress(value: Boolean)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(v)))
 
   def getAreYouACorporateTrustee(using session: SessionData): Option[Boolean] = get(_.areYouACorporateTrustee)
 
@@ -120,22 +137,22 @@ object OrganisationDetailsAnswers {
 
   def getAuthorisedOfficialDetails(using session: SessionData): Option[AuthorisedOfficialDetails] = get(answers =>
     for
-      title       <- answers.corporateTrusteeTitle
-      firstName   <- answers.corporateTrusteeFirstName
-      lastName    <- answers.corporateTrusteeLastName
-      phoneNumber <- answers.corporateTrusteeDaytimeTelephoneNumber
-      postcode     = answers.corporateTrusteePostcode
+      title       <- answers.authorisedOfficialTrusteeTitle
+      firstName   <- answers.authorisedOfficialTrusteeFirstName
+      lastName    <- answers.authorisedOfficialTrusteeLastName
+      phoneNumber <- answers.authorisedOfficialTrusteeDaytimeTelephoneNumber
+      postcode     = answers.authorisedOfficialTrusteePostcode
     yield AuthorisedOfficialDetails(Some(title), firstName, lastName, phoneNumber, postcode)
   )
 
   def setAuthorisedOfficialDetails(value: AuthorisedOfficialDetails)(using session: SessionData): SessionData =
     set(value)((a, v) =>
       a.copy(
-        corporateTrusteeTitle = v.title,
-        corporateTrusteeFirstName = Some(v.firstName),
-        corporateTrusteeLastName = Some(v.lastName),
-        corporateTrusteeDaytimeTelephoneNumber = Some(v.phoneNumber),
-        corporateTrusteePostcode = v.postcode
+        authorisedOfficialTrusteeTitle = v.title,
+        authorisedOfficialTrusteeFirstName = Some(v.firstName),
+        authorisedOfficialTrusteeLastName = Some(v.lastName),
+        authorisedOfficialTrusteeDaytimeTelephoneNumber = Some(v.phoneNumber),
+        authorisedOfficialTrusteePostcode = v.postcode
       )
     )
 
@@ -158,21 +175,25 @@ object OrganisationDetailsAnswers {
 
   def toOrganisationDetails(answers: OrganisationDetailsAnswers): Try[OrganisationDetails] =
     for {
-      nameOfCharityRegulator  <- required(answers)(_.nameOfCharityRegulator)
-      areYouACorporateTrustee <- required(answers)(_.areYouACorporateTrustee)
-      doYouHaveUKAddress      <- required(answers)(_.doYouHaveUKAddress)
+      nameOfCharityRegulator                      <- required(answers)(_.nameOfCharityRegulator)
+      areYouACorporateTrustee                     <- required(answers)(_.areYouACorporateTrustee)
+      doYouHaveAuthorisedOfficialTrusteeUKAddress <- required(answers)(_.doYouHaveAuthorisedOfficialTrusteeUKAddress)
+      doYouHaveCorporateTrusteeUKAddress          <- required(answers)(_.doYouHaveCorporateTrusteeUKAddress)
     } yield OrganisationDetails(
       nameOfCharityRegulator = nameOfCharityRegulator,
       reasonNotRegisteredWithRegulator = answers.reasonNotRegisteredWithRegulator,
       charityRegistrationNumber = answers.charityRegistrationNumber,
       areYouACorporateTrustee = areYouACorporateTrustee,
-      doYouHaveUKAddress = doYouHaveUKAddress,
+      doYouHaveCorporateTrusteeUKAddress = doYouHaveCorporateTrusteeUKAddress,
+      doYouHaveAuthorisedOfficialTrusteeUKAddress = doYouHaveAuthorisedOfficialTrusteeUKAddress,
       nameOfCorporateTrustee = answers.nameOfCorporateTrustee,
       corporateTrusteePostcode = answers.corporateTrusteePostcode,
       corporateTrusteeDaytimeTelephoneNumber = answers.corporateTrusteeDaytimeTelephoneNumber,
-      corporateTrusteeTitle = answers.corporateTrusteeTitle,
-      corporateTrusteeFirstName = answers.corporateTrusteeFirstName,
-      corporateTrusteeLastName = answers.corporateTrusteeLastName
+      authorisedOfficialTrusteePostcode = answers.authorisedOfficialTrusteePostcode,
+      authorisedOfficialTrusteeDaytimeTelephoneNumber = answers.authorisedOfficialTrusteeDaytimeTelephoneNumber,
+      authorisedOfficialTrusteeTitle = answers.authorisedOfficialTrusteeTitle,
+      authorisedOfficialTrusteeFirstName = answers.authorisedOfficialTrusteeFirstName,
+      authorisedOfficialTrusteeLastName = answers.authorisedOfficialTrusteeLastName
     )
 
 }

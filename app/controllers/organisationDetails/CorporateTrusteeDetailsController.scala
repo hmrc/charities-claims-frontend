@@ -40,7 +40,7 @@ class CorporateTrusteeDetailsController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if (OrganisationDetailsAnswers.getAreYouACorporateTrustee.contains(true)) {
-      val isUKAddress    = OrganisationDetailsAnswers.getDoYouHaveUKAddress.getOrElse(false)
+      val isUKAddress    = OrganisationDetailsAnswers.getDoYouHaveCorporateTrusteeUKAddress.getOrElse(false)
       val previousAnswer = OrganisationDetailsAnswers.getCorporateTrusteeDetails
       Logger(getClass).warn(s"*** previous Answer: $previousAnswer , ukaddress: $isUKAddress")
       val form           = formProvider(
@@ -63,7 +63,7 @@ class CorporateTrusteeDetailsController @Inject() (
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
 
-    val isUKAddress = OrganisationDetailsAnswers.getDoYouHaveUKAddress.getOrElse(false)
+    val isUKAddress = OrganisationDetailsAnswers.getDoYouHaveCorporateTrusteeUKAddress.getOrElse(false)
     val form        = formProvider(
       isUKAddress,
       "corporateTrusteeDetails.name.error.required",
