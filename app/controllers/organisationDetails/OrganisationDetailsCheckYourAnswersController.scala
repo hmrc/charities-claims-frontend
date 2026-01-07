@@ -23,7 +23,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ClaimsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.OrganisationDetailsCheckYourAnswersView
-import models.OrganisationDetailsAnswers
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,13 +37,13 @@ class OrganisationDetailsCheckYourAnswersController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    // val previousAnswers: OrganisationDetailsAnswers = request.sessionData.organisationDetailsAnswers
-    Future.successful(Ok(view(request.sessionData.organisationDetailsAnswers)))
+    val previousAnswers = request.sessionData.organisationDetailsAnswers
+    Future.successful(Ok(view(previousAnswers)))
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-//    val checkAnswers: Boolean = request.sessionData.organisationDetailsAnswers.hasOrganisationDetailsCompleteAnswers
-    val checkAnswers: Boolean = false
+//    val checkAnswers = Some(request.sessionData.organisationDetailsAnswers.hasOrganisationDetailsCompleteAnswers)
+    val checkAnswers = false
     if checkAnswers
     then
       claimsService.save.map { _ =>

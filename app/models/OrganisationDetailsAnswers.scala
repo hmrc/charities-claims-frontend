@@ -35,49 +35,27 @@ final case class OrganisationDetailsAnswers(
   authorisedOfficialTrusteeDaytimeTelephoneNumber: Option[String] = None,
   authorisedOfficialTrusteeTitle: Option[String] = None,
   authorisedOfficialTrusteeFirstName: Option[String] = None,
-  authorisedOfficialTrusteeLastName: Option[String] = None
-//  corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None,
-//  authorisedOfficialDetails: Option[AuthorisedOfficialDetails] = None
-)
-// {
-//  def hasCompleteAnswers: Boolean =
-//    return nameOfCharityRegulator.isDefined
-//      && reasonNotRegisteredWithRegulator.isDefined
-//      && charityRegistrationNumber.isDefined
-//      && areYouACorporateTrustee.isDefined
-//      && doYouHaveUKAddress.isDefined
-//      && if(areYouACorporateTrustee && doYouHaveUKAddress) then return nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined
-//      && if(areYouACorporateTrustee && !doYouHaveUKAddress) then return nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined && corporateTrusteePostcode.isDefined
-//      && if(!areYouACorporateTrustee && doYouHaveUKAddress) then return
-//        corporateTrusteeFirstName.isDefined
-//        && corporateTrusteeLastName.isDefined
-//        && corporateTrusteeDaytimeTelephoneNumber.isDefined
-//        && corporateTrusteePostcode.isDefined
-//    && if (!areYouACorporateTrustee && !doYouHaveUKAddress) then return
-//    corporateTrusteeFirstName.isDefined
-//      && corporateTrusteeLastName.isDefined
-//      && corporateTrusteeDaytimeTelephoneNumber.isDefined
-//      && charityRegistrationNumber.isDefined
-//}
-  corporateTrusteeTitle: Option[String] = None,
-  corporateTrusteeFirstName: Option[String] = None,
-  corporateTrusteeLastName: Option[String] = None,
+  authorisedOfficialTrusteeLastName: Option[String] = None,
   corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None,
   authorisedOfficialDetails: Option[AuthorisedOfficialDetails] = None
 ) {
   def hasOrganisationDetailsCompleteAnswers: Boolean =
     nameOfCharityRegulator.isDefined && reasonNotRegisteredWithRegulator.isDefined
       && charityRegistrationNumber.isDefined
-      && (areYouACorporateTrustee, doYouHaveUKAddress).match {
-        case (Some(true), Some(false))  =>
+      && (
+        areYouACorporateTrustee,
+        doYouHaveCorporateTrusteeUKAddress,
+        doYouHaveAuthorisedOfficialTrusteeUKAddress
+      ).match {
+        case (Some(true), Some(false), _)  =>
           nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined && corporateTrusteePostcode.isEmpty
-        case (Some(true), Some(true))   =>
+        case (Some(true), Some(true), _)   =>
           nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined && corporateTrusteePostcode.isDefined
-        case (Some(false), Some(false)) =>
-          corporateTrusteeFirstName.isDefined && corporateTrusteeLastName.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined && corporateTrusteePostcode.isEmpty
-        case (Some(false), Some(true))  =>
-          corporateTrusteeFirstName.isDefined && corporateTrusteeLastName.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined && corporateTrusteePostcode.isDefined
-        case (_, _)                     => false
+        case (Some(false), _, Some(false)) =>
+          authorisedOfficialTrusteeFirstName.isDefined && authorisedOfficialTrusteeLastName.isDefined && authorisedOfficialTrusteeDaytimeTelephoneNumber.isDefined && authorisedOfficialTrusteePostcode.isEmpty
+        case (Some(false), _, Some(true))  =>
+          authorisedOfficialTrusteeFirstName.isDefined && authorisedOfficialTrusteeLastName.isDefined && authorisedOfficialTrusteeDaytimeTelephoneNumber.isDefined && authorisedOfficialTrusteePostcode.isDefined
+        case (_, _, _)                     => false
       }
 }
 
