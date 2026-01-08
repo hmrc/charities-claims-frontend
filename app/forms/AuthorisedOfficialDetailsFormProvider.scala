@@ -19,9 +19,9 @@ package forms
 import javax.inject.Inject
 import models.AuthorisedOfficialDetails
 import play.api.data.Form
-import play.api.data.Forms._
+import play.api.data.Forms.{mapping, optional}
 
-class AuthorisedOfficialDetailsFormProvider @Inject() {
+class AuthorisedOfficialDetailsFormProvider @Inject() extends Mappings {
 
   private val titleRegex     = "^( *[a-zA-Z]{1,4} *)$"
   private val firstNameRegex = "^( *[A-Za-z][A-Za-z'\\-]* *)$"
@@ -31,31 +31,35 @@ class AuthorisedOfficialDetailsFormProvider @Inject() {
   def apply(isUkAddress: Boolean): Form[AuthorisedOfficialDetails] = Form(
     mapping(
       "title"       -> optional(
-        text
-          .verifying("authorisedOfficialDetails.title.error.format", _.matches(titleRegex))
-          .verifying("authorisedOfficialDetails.title.error.length", _.length <= 4)
+        play.api.data.Forms.text
+          .verifying(
+            firstError(
+              maxLength(4, "authorisedOfficialDetails.title.error.length"),
+              regexp(titleRegex, "authorisedOfficialDetails.title.error.format")
+            )
+          )
       ),
-      "firstName"   -> text
-        .verifying("authorisedOfficialDetails.firstName.error.required", _.nonEmpty)
+      "firstName"   -> text("authorisedOfficialDetails.firstName.error.required")
         .verifying(
-          "authorisedOfficialDetails.firstName.error.format",
-          name => name.isEmpty || name.matches(firstNameRegex)
-        )
-        .verifying("authorisedOfficialDetails.firstName.error.length", _.length <= 35),
-      "lastName"    -> text
-        .verifying("authorisedOfficialDetails.lastName.error.required", _.nonEmpty)
+          firstError(
+            maxLength(35, "authorisedOfficialDetails.firstName.error.length"),
+            regexp(firstNameRegex, "authorisedOfficialDetails.firstName.error.format")
+          )
+        ),
+      "lastName"    -> text("authorisedOfficialDetails.lastName.error.required")
         .verifying(
-          "authorisedOfficialDetails.lastName.error.format",
-          name => name.isEmpty || name.matches(lastNameRegex)
-        )
-        .verifying("authorisedOfficialDetails.lastName.error.length", _.length <= 35),
-      "phoneNumber" -> text
-        .verifying("authorisedOfficialDetails.phoneNumber.error.required", _.nonEmpty)
+          firstError(
+            maxLength(35, "authorisedOfficialDetails.lastName.error.length"),
+            regexp(lastNameRegex, "authorisedOfficialDetails.lastName.error.format")
+          )
+        ),
+      "phoneNumber" -> text("authorisedOfficialDetails.phoneNumber.error.required")
         .verifying(
-          "authorisedOfficialDetails.phoneNumber.error.format",
-          phone => phone.isEmpty || phone.matches(phoneRegex)
-        )
-        .verifying("authorisedOfficialDetails.phoneNumber.error.length", _.length <= 35),
+          firstError(
+            maxLength(35, "authorisedOfficialDetails.phoneNumber.error.length"),
+            regexp(phoneRegex, "authorisedOfficialDetails.phoneNumber.error.format")
+          )
+        ),
       "postcode"    -> (if (isUkAddress) {
                        UKPostcodeMapping(
                          addressPostcodeRequired = "authorisedOfficialDetails.postcode.error.required",
@@ -63,7 +67,7 @@ class AuthorisedOfficialDetailsFormProvider @Inject() {
                          addressPostcodeInvalid = "authorisedOfficialDetails.postcode.error.format"
                        )
                      } else {
-                       optional(text)
+                       optional(play.api.data.Forms.text)
                      })
     )(AuthorisedOfficialDetails.apply)(o => Some((o.title, o.firstName, o.lastName, o.phoneNumber, o.postcode)))
   )
