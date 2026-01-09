@@ -33,7 +33,10 @@ final case class RepaymentClaimDetailsAnswers(
   claimingDonationsNotFromCommunityBuilding: Option[Boolean] = None,
   claimingDonationsCollectedInCommunityBuildings: Option[Boolean] = None,
   connectedToAnyOtherCharities: Option[Boolean] = None,
-  makingAdjustmentToPreviousClaim: Option[Boolean] = None
+  makingAdjustmentToPreviousClaim: Option[Boolean] = None,
+  // only for agents
+  hmrcCharitiesReference: Option[String] = None,
+  nameOfCharity: Option[String] = None
 ) {
   def hasCompleteAnswers: Boolean =
     claimingGiftAid.isDefined
@@ -72,7 +75,9 @@ object RepaymentClaimDetailsAnswers {
       claimingDonationsCollectedInCommunityBuildings =
         repaymentClaimDetails.claimingDonationsCollectedInCommunityBuildings,
       connectedToAnyOtherCharities = repaymentClaimDetails.connectedToAnyOtherCharities,
-      makingAdjustmentToPreviousClaim = repaymentClaimDetails.makingAdjustmentToPreviousClaim
+      makingAdjustmentToPreviousClaim = repaymentClaimDetails.makingAdjustmentToPreviousClaim,
+      hmrcCharitiesReference = repaymentClaimDetails.hmrcCharitiesReference,
+      nameOfCharity = repaymentClaimDetails.nameOfCharity
     )
 
   def getClaimingTaxDeducted(using session: SessionData): Option[Boolean] = get(_.claimingTaxDeducted)
@@ -103,6 +108,18 @@ object RepaymentClaimDetailsAnswers {
         if (value) session.giftAidSmallDonationsSchemeDonationDetailsAnswers else None
       )
 
+  def getHmrcCharitiesReference(using session: SessionData): Option[String] =
+    get(_.hmrcCharitiesReference)
+
+  def setHmrcCharitiesReference(value: String)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(hmrcCharitiesReference = Some(v)))
+
+  def getNameOfCharity(using session: SessionData): Option[String] =
+    get(_.nameOfCharity)
+
+  def setNameOfCharity(value: String)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(nameOfCharity = Some(v)))
+
   def shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(value: Boolean)(using
     session: SessionData
   ): Boolean =
@@ -130,9 +147,15 @@ object RepaymentClaimDetailsAnswers {
       claimingTaxDeducted                      <- required(answers)(_.claimingTaxDeducted)
       claimingUnderGiftAidSmallDonationsScheme <- required(answers)(_.claimingUnderGiftAidSmallDonationsScheme)
     yield RepaymentClaimDetails(
-      claimingGiftAid,
-      claimingTaxDeducted,
-      claimingUnderGiftAidSmallDonationsScheme,
-      answers.claimReferenceNumber
+      claimingGiftAid = claimingGiftAid,
+      claimingTaxDeducted = claimingTaxDeducted,
+      claimingUnderGiftAidSmallDonationsScheme = claimingUnderGiftAidSmallDonationsScheme,
+      claimReferenceNumber = answers.claimReferenceNumber,
+      claimingDonationsNotFromCommunityBuilding = answers.claimingDonationsNotFromCommunityBuilding,
+      claimingDonationsCollectedInCommunityBuildings = answers.claimingDonationsCollectedInCommunityBuildings,
+      connectedToAnyOtherCharities = answers.connectedToAnyOtherCharities,
+      makingAdjustmentToPreviousClaim = answers.makingAdjustmentToPreviousClaim,
+      hmrcCharitiesReference = answers.hmrcCharitiesReference,
+      nameOfCharity = answers.nameOfCharity
     )
 }
