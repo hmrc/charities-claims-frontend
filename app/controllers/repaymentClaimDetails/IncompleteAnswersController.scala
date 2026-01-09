@@ -32,6 +32,7 @@ class IncompleteAnswersController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(routes.CheckYourAnswersController.onPageLoad.url))
+    val missingFields = request.sessionData.repaymentClaimDetailsAnswers.missingFields
+    Ok(view(routes.CheckYourAnswersController.onPageLoad.url, missingFields))
   }
 }

@@ -35,16 +35,21 @@ final case class RepaymentClaimDetailsAnswers(
   connectedToAnyOtherCharities: Option[Boolean] = None,
   makingAdjustmentToPreviousClaim: Option[Boolean] = None
 ) {
-  def hasCompleteAnswers: Boolean =
-    claimingGiftAid.isDefined
-      && claimingTaxDeducted.isDefined
-      && claimingUnderGiftAidSmallDonationsScheme.isDefined
-      && claimingReferenceNumber.match {
-        case Some(true)  => claimReferenceNumber.isDefined
-        case Some(false) => claimReferenceNumber.isEmpty
-        case None        => false
 
-      }
+  def missingFields: List[String] =
+    List(
+      claimingGiftAid.isEmpty                                                  -> "claimingGiftAid.heading",
+      claimingTaxDeducted.isEmpty                                              -> "claimingOtherIncome.heading",
+      claimingUnderGiftAidSmallDonationsScheme.isEmpty                         -> "claimingGiftAidSmallDonations.heading",
+      claimingReferenceNumber.isEmpty                                          -> "claimReferenceNumberCheck.heading",
+      (claimingReferenceNumber.contains(true) && claimReferenceNumber.isEmpty) -> "claimReferenceNumberInput.heading"
+      // TODO: add GASDS fields once pages are implemented
+      // claimingUnderGiftAidSmallDonationsScheme.contains(true) && claimingDonationsNotFromCommunityBuilding.isEmpty -> "claimingDonationsNotFromCommunityBuilding.heading",
+      // claimingUnderGiftAidSmallDonationsScheme.contains(true) && claimingDonationsCollectedInCommunityBuildings.isEmpty -> "claimingDonationsCollectedInCommunityBuildings.heading",
+      // claimingUnderGiftAidSmallDonationsScheme.contains(true) && connectedToAnyOtherCharities.isEmpty -> "connectedToAnyOtherCharities.heading"
+    ).collect { case (true, key) => key }
+
+  def hasCompleteAnswers: Boolean = missingFields.isEmpty
 }
 
 object RepaymentClaimDetailsAnswers {

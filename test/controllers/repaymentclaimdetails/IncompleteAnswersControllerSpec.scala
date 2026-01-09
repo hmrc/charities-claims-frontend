@@ -21,13 +21,46 @@ import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
 import views.html.IncompleteAnswersView
 import play.api.Application
+import models.{RepaymentClaimDetailsAnswers, SessionData}
 
 class IncompleteAnswersControllerSpec extends ControllerSpec {
 
   "IncompleteAnswersController" - {
     "onPageLoad" - {
-      "should render the page correctly" in {
-        given application: Application = applicationBuilder().build()
+      "should render the page with missing fields when answers are incomplete" in {
+        val incompleteAnswers = RepaymentClaimDetailsAnswers()
+        val sessionData       = SessionData(repaymentClaimDetailsAnswers = incompleteAnswers)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.IncompleteAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view                  = application.injector.instanceOf[IncompleteAnswersView]
+          val expectedMissingFields = incompleteAnswers.missingFields
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            routes.CheckYourAnswersController.onPageLoad.url,
+            expectedMissingFields
+          ).body
+        }
+      }
+
+      "should render the page with no missing fields when answers are complete" in {
+        val completeAnswers = RepaymentClaimDetailsAnswers(
+          claimingGiftAid = Some(true),
+          claimingTaxDeducted = Some(false),
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingReferenceNumber = Some(false)
+        )
+        val sessionData     = SessionData(repaymentClaimDetailsAnswers = completeAnswers)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -39,7 +72,10 @@ class IncompleteAnswersControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(routes.CheckYourAnswersController.onPageLoad.url).body
+          contentAsString(result) shouldEqual view(
+            routes.CheckYourAnswersController.onPageLoad.url,
+            Seq.empty
+          ).body
         }
       }
     }

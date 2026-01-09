@@ -122,7 +122,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
         repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(false),
-          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
           claimingReferenceNumber = Some(true),
           claimReferenceNumber = Some("12345678AB")
         )
