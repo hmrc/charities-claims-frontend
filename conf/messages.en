@@ -182,7 +182,17 @@ authorisedOfficialDetails.postcode.error.format = Enter a correct authorised off
 
 deleteGiftAidSchedule.title = Do you want to delete this Gift Aid schedule?
 deleteGiftAidSchedule.heading = Do you want to delete this Gift Aid schedule?
-deleteGiftAidSchedule.error.required = Select ‘Yes’ if you want to delete this Gift Aid schedule
+deleteGiftAidSchedule.error.required = Select 'Yes' if you want to delete this Gift Aid schedule
+
+# TODO: Placeholder screen messages for G2 - content will be updated in future
+addSchedule.title = Add Schedule
+addSchedule.heading = Add Schedule
+addSchedule.placeholder = Content TBC
+
+# TODO: Placeholder screen messages for R2 - content will be updated in future
+makeCharityRepaymentClaim.title = Make Charity Repayment Claim
+makeCharityRepaymentClaim.heading = Make Charity Repayment Claim
+makeCharityRepaymentClaim.placeholder = Content TBC
 
 phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in a new tab)</a> will help us to improve it.
 phasebanner.phase=Beta

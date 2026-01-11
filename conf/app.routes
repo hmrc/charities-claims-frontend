@@ -97,3 +97,9 @@ POST        /change-authorised-official-details             controllers.organisa
 
 GET         /delete-gift-aid-schedule                       controllers.organisationDetails.DeleteGiftAidScheduleController.onPageLoad
 POST        /delete-gift-aid-schedule                       controllers.organisationDetails.DeleteGiftAidScheduleController.onSubmit
+
+# TODO: Placeholder screen for G2 - route will be updated in future
+GET         /add-schedule                                   controllers.organisationDetails.AddScheduleController.onPageLoad
+
+# TODO: Placeholder screen for R2 - route will be updated in future
+GET         /make-charity-repayment-claim                   controllers.organisationDetails.MakeCharityRepaymentClaimController.onPageLoad

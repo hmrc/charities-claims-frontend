@@ -114,7 +114,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
         await(connector.retrieveUnsubmittedClaims) shouldEqual TestClaims.testGetClaimsResponseUnsubmitted
       }
 
-      "throw an exception if the service returs malformed JSON" in {
+      "throw an exception if the service returns malformed JSON" in {
         givenGetClaimsEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]"))
           .once()
         a[Exception] should be thrownBy {
@@ -122,7 +122,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
         }
       }
 
-      "throw an exception if the service returs wrong entity format" in {
+      "throw an exception if the service returns wrong entity format" in {
         givenGetClaimsEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]}"))
           .once()
         a[Exception] should be thrownBy {
@@ -251,7 +251,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       await(connector.deleteClaim("123")) shouldBe false
     }
 
-    "throw an exception if the service returs malformed JSON" in {
+    "throw an exception if the service returns malformed JSON" in {
       givenDeleteClaimEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]"))
         .once()
       a[Exception] should be thrownBy {
@@ -259,7 +259,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       }
     }
 
-    "throw an exception if the service returs wrong entity format" in {
+    "throw an exception if the service returns wrong entity format" in {
       givenDeleteClaimEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]}"))
         .once()
       a[Exception] should be thrownBy {

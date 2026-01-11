@@ -19,9 +19,12 @@ package controllers.organisationDetails
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
+import connectors.ClaimsValidationConnector
 import forms.YesNoFormProvider
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import views.html.DeleteGiftAidScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,7 +33,8 @@ class DeleteGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: DeleteGiftAidScheduleView,
   actions: Actions,
-  formProvider: YesNoFormProvider
+  formProvider: YesNoFormProvider,
+  claimsValidationConnector: ClaimsValidationConnector
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -41,26 +45,50 @@ class DeleteGiftAidScheduleController @Inject() (
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           if value then {
-            // TODO: Call backend deletion endpoint when available
-            // Will need to use ExecutionContext when making actual backend call
-            // Expected backend response: { "success": true }
-            // On success, redirect to R2 screen
-            // If error, handle error response
+            request.sessionData.unsubmittedClaimId match {
+              case Some(claimId) =>
+                claimsValidationConnector
+                  .getUploadSummary(claimId)
+                  .flatMap { summaryResponse =>
+                    summaryResponse.uploads.find(_.validationType == "GiftAid") match {
+                      case Some(giftAidUpload) =>
+                        claimsValidationConnector
+                          .deleteSchedule(claimId, giftAidUpload.reference)
+                          .map { _ =>
+                            // TODO: This redirects to placeholder R2 screen - route to be updated in the future
+                            Redirect(
+                              controllers.organisationDetails.routes.MakeCharityRepaymentClaimController.onPageLoad
+                            )
+                          }
 
-            // TODO: Replace with actual R2 route when screen is completed
-            // For now, redirecting to page not found as placeholder
-            Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+                      case None =>
+                        Future.failed(
+                          new RuntimeException(
+                            s"No GiftAid schedule upload found for claimId: $claimId"
+                          )
+                        )
+                    }
+                  }
+
+              case None =>
+                Future.failed(
+                  new RuntimeException(
+                    "No unsubmittedClaimId found in session when attempting to delete Gift Aid schedule"
+                  )
+                )
+            }
           } else {
-            // TODO: Replace with actual G2 route when screen is completed
-            // User selected "No" - don't delete, go back to G2 screen
-            // For now, redirecting to page not found as placeholder
-            Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+            // no deletion, redirect to Add Schedule screen G2
+            // TODO: This redirects to placeholder G2 screen - route to be updated in the future
+            Future.successful(Redirect(controllers.organisationDetails.routes.AddScheduleController.onPageLoad))
           }
       )
   }
