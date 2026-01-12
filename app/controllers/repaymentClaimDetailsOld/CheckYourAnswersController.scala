@@ -43,12 +43,13 @@ class CheckYourAnswersController @Inject() (
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if request.sessionData.repaymentClaimDetailsAnswersOld.hasCompleteAnswers
     then
-      claimsService.save.map { _ =>
-        Redirect(
-          // TODO: replace with correct url when ready
-          "next-page-after-check-your-answers"
-        )
-      }
+      claimsService.save
+        .map { _ =>
+          Redirect(
+            // TODO: replace with correct url when ready
+            "next-page-after-check-your-answers"
+          )
+        }
     else Future.successful(Redirect(routes.IncompleteAnswersController.onPageLoad))
   }
 }
