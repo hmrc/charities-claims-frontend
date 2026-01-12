@@ -34,7 +34,7 @@ class ErrorHandlerSpec extends ControllerSpec {
       running(application) {
         given request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/foo")
 
-        val exception = UpdatedByAnotherUserException("test")
+        val exception = UpdatedByAnotherUserException()
         val result    = errorHandler.resolveError(request, exception)
 
         status(result) shouldEqual SEE_OTHER

@@ -238,7 +238,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       ))
     }
 
-    "throw an exception if the service returns 400 status with UPDATED_BY_ANOTHER_USER error" in {
+    "should throw UpdatedByAnotherUserException when backend returns 400 with UPDATED_BY_ANOTHER_USER error" in {
       val repaymentDetails = RepaymentClaimDetails(
         claimingGiftAid = true,
         claimingTaxDeducted = true,
@@ -253,10 +253,56 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
       givenUpdateClaimEndpointReturns(
         payload = updateRequest,
-        response = HttpResponse(400, "{\"errorCode\": \"UPDATED_BY_ANOTHER_USER\"}")
+        response = HttpResponse(400, """{"errorCode": "UPDATED_BY_ANOTHER_USER"}""")
       )
 
       a[UpdatedByAnotherUserException] should be thrownBy {
+        await(connector.updateClaim("123", updateRequest))
+      }
+    }
+
+    "should throw MaxClaimsExceededException when backend returns 400 with MAX_CLAIMS_EXCEEDED error" in {
+      val repaymentDetails = RepaymentClaimDetails(
+        claimingGiftAid = true,
+        claimingTaxDeducted = true,
+        claimingUnderGiftAidSmallDonationsScheme = false,
+        claimReferenceNumber = Some("1234567890")
+      )
+
+      val updateRequest = UpdateClaimRequest(
+        lastUpdatedReference = "1234567890",
+        repaymentClaimDetails = repaymentDetails
+      )
+
+      givenUpdateClaimEndpointReturns(
+        payload = updateRequest,
+        response = HttpResponse(400, """{"errorCode": "MAX_CLAIMS_EXCEEDED"}""")
+      )
+
+      a[MaxClaimsExceededException] should be thrownBy {
+        await(connector.updateClaim("123", updateRequest))
+      }
+    }
+
+    "should throw UnknownClaimError when backend returns 400 with unknown error code" in {
+      val repaymentDetails = RepaymentClaimDetails(
+        claimingGiftAid = true,
+        claimingTaxDeducted = true,
+        claimingUnderGiftAidSmallDonationsScheme = false,
+        claimReferenceNumber = Some("1234567890")
+      )
+
+      val updateRequest = UpdateClaimRequest(
+        lastUpdatedReference = "1234567890",
+        repaymentClaimDetails = repaymentDetails
+      )
+
+      givenUpdateClaimEndpointReturns(
+        payload = updateRequest,
+        response = HttpResponse(400, """{"errorCode": "SOME_UNKNOWN_ERROR"}""")
+      )
+
+      a[UnknownClaimError] should be thrownBy {
         await(connector.updateClaim("123", updateRequest))
       }
     }

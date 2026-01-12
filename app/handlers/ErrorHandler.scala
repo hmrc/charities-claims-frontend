@@ -42,12 +42,12 @@ class ErrorHandler @Inject() (
 
   override def resolveError(rh: RequestHeader, ex: Throwable): Future[Result] =
     ex match {
-      case UpdatedByAnotherUserException(message) =>
-        logger.error(message)
+      case _: UpdatedByAnotherUserException =>
+        logger.error(ex.getMessage)
         Future.successful(
           Redirect(controllers.organisationDetails.routes.CannotViewOrManageClaimController.onPageLoad)
         )
-      case _                                      =>
+      case _                                =>
         super.resolveError(rh, ex)
     }
 
