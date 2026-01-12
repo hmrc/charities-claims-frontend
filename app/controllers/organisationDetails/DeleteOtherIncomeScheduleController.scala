@@ -25,22 +25,20 @@ import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import views.html.DeleteGiftAidScheduleView
+import views.html.DeleteOtherIncomeScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-// TODO: Change this file and update to new screen
-
 class DeleteOtherIncomeScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: DeleteGiftAidScheduleView,
+  view: DeleteOtherIncomeScheduleView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   claimsValidationConnector: ClaimsValidationConnector
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("deleteGiftAidSchedule.error.required")
+  val form: Form[Boolean] = formProvider("deleteOtherIncomeSchedule.error.required")
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     Ok(view(form))
@@ -60,10 +58,10 @@ class DeleteOtherIncomeScheduleController @Inject() (
                 claimsValidationConnector
                   .getUploadSummary(claimId)
                   .flatMap { summaryResponse =>
-                    summaryResponse.uploads.find(_.validationType == "GiftAid") match {
-                      case Some(giftAidUpload) =>
+                    summaryResponse.uploads.find(_.validationType == "OtherIncome") match {
+                      case Some(otherIncomeUpload) =>
                         claimsValidationConnector
-                          .deleteSchedule(claimId, giftAidUpload.reference)
+                          .deleteSchedule(claimId, otherIncomeUpload.reference)
                           .map { _ =>
                             // TODO: This redirects to placeholder R2 screen - route to be updated in the future
                             Redirect(
@@ -74,7 +72,7 @@ class DeleteOtherIncomeScheduleController @Inject() (
                       case None =>
                         Future.failed(
                           new RuntimeException(
-                            s"No GiftAid schedule upload found for claimId: $claimId"
+                            s"No OtherIncome schedule upload found for claimId: $claimId"
                           )
                         )
                     }
@@ -83,7 +81,7 @@ class DeleteOtherIncomeScheduleController @Inject() (
               case None =>
                 Future.failed(
                   new RuntimeException(
-                    "No unsubmittedClaimId found in session when attempting to delete Gift Aid schedule"
+                    "No unsubmittedClaimId found in session when attempting to delete OtherIncome schedule"
                   )
                 )
             }
