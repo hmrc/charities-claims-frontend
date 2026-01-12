@@ -20,6 +20,7 @@ import play.api.libs.json.Format
 import play.api.libs.json.Json
 import scala.util.Try
 import utils.Required.required
+import models.SessionData
 
 final case class OrganisationDetailsAnswers(
   nameOfCharityRegulator: Option[NameOfCharityRegulator] = None,
@@ -40,19 +41,25 @@ final case class OrganisationDetailsAnswers(
   authorisedOfficialDetails: Option[AuthorisedOfficialDetails] = None
 ) {
   def hasOrganisationDetailsCompleteAnswers: Boolean =
-    nameOfCharityRegulator.isDefined && reasonNotRegisteredWithRegulator.isDefined
-      && charityRegistrationNumber.isDefined
+    nameOfCharityRegulator.isDefined &&
+      nameOfCorporateTrustee.match {
+        case Some("None")                                                         => reasonNotRegisteredWithRegulator.isDefined
+        case Some("EnglandAndWales") | Some("Scottish") | Some("NorthernIreland") => charityRegistrationNumber.isDefined
+        case _                                                                    => false
+      }
       && (
         areYouACorporateTrustee,
         doYouHaveCorporateTrusteeUKAddress,
         doYouHaveAuthorisedOfficialTrusteeUKAddress
       ).match {
         case (Some(true), Some(false), _)  =>
-          nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined && corporateTrusteePostcode.isEmpty
+          nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined
+        // && corporateTrusteePostcode.isEmpty
         case (Some(true), Some(true), _)   =>
           nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined && corporateTrusteePostcode.isDefined
         case (Some(false), _, Some(false)) =>
-          authorisedOfficialTrusteeFirstName.isDefined && authorisedOfficialTrusteeLastName.isDefined && authorisedOfficialTrusteeDaytimeTelephoneNumber.isDefined && authorisedOfficialTrusteePostcode.isEmpty
+          authorisedOfficialTrusteeFirstName.isDefined && authorisedOfficialTrusteeLastName.isDefined && authorisedOfficialTrusteeDaytimeTelephoneNumber.isDefined
+        // && authorisedOfficialTrusteePostcode.isEmpty
         case (Some(false), _, Some(true))  =>
           authorisedOfficialTrusteeFirstName.isDefined && authorisedOfficialTrusteeLastName.isDefined && authorisedOfficialTrusteeDaytimeTelephoneNumber.isDefined && authorisedOfficialTrusteePostcode.isDefined
         case (_, _, _)                     => false

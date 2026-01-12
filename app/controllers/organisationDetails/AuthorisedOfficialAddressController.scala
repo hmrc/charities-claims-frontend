@@ -62,7 +62,7 @@ class AuthorisedOfficialAddressController @Inject() (
                 case (_, CheckMode)  =>
                   Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
                 case (_, NormalMode) =>
-                  Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode))
+                  Redirect(routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode))
               }
             }
       )

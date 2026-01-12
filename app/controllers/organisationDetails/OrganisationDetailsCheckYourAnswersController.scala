@@ -42,8 +42,7 @@ class OrganisationDetailsCheckYourAnswersController @Inject() (
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-//    val checkAnswers = Some(request.sessionData.organisationDetailsAnswers.hasOrganisationDetailsCompleteAnswers)
-    val checkAnswers = false
+    val checkAnswers = request.sessionData.organisationDetailsAnswers.exists(_.hasOrganisationDetailsCompleteAnswers)
     if checkAnswers
     then
       claimsService.save.map { _ =>
