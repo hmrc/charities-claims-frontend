@@ -143,12 +143,12 @@ object OrganisationDetailsAnswers {
 
   def getAuthorisedOfficialDetails(using session: SessionData): Option[AuthorisedOfficialDetails] = get(answers =>
     for
-      title       <- answers.authorisedOfficialTrusteeTitle
       firstName   <- answers.authorisedOfficialTrusteeFirstName
       lastName    <- answers.authorisedOfficialTrusteeLastName
       phoneNumber <- answers.authorisedOfficialTrusteeDaytimeTelephoneNumber
+      title        = answers.authorisedOfficialTrusteeTitle
       postcode     = answers.authorisedOfficialTrusteePostcode
-    yield AuthorisedOfficialDetails(Some(title), firstName, lastName, phoneNumber, postcode)
+    yield AuthorisedOfficialDetails(title, firstName, lastName, phoneNumber, postcode)
   )
 
   def setAuthorisedOfficialDetails(value: AuthorisedOfficialDetails)(using session: SessionData): SessionData =

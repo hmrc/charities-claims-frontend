@@ -35,21 +35,21 @@ GET         /change-your-claim-reference-number             controllers.repaymen
 POST        /your-claim-reference-number                    controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-your-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /declaration                              controllers.repaymentclaimdetails.ClaimDeclarationController.onPageLoad
-POST        /declaration                              controllers.repaymentclaimdetails.ClaimDeclarationController.onSubmit
+GET         /declaration                                    controllers.repaymentclaimdetails.ClaimDeclarationController.onPageLoad
+POST        /declaration                                    controllers.repaymentclaimdetails.ClaimDeclarationController.onSubmit
 
-GET         /check-your-claim-details        controllers.repaymentclaimdetails.CheckYourAnswersController.onPageLoad
-POST        /check-your-claim-details        controllers.repaymentclaimdetails.CheckYourAnswersController.onSubmit
+GET         /check-your-claim-details                       controllers.repaymentclaimdetails.CheckYourAnswersController.onPageLoad
+POST        /check-your-claim-details                       controllers.repaymentclaimdetails.CheckYourAnswersController.onSubmit
 
-GET         /min-data-placeholder            controllers.repaymentclaimdetails.IncompleteAnswersController.onPageLoad
+GET         /min-data-placeholder                           controllers.repaymentclaimdetails.IncompleteAnswersController.onPageLoad
 
 GET         /about-the-organisation                         controllers.organisationDetails.AboutTheOrganisationController.onPageLoad
 POST        /about-the-organisation                         controllers.organisationDetails.AboutTheOrganisationController.onSubmit
 
 GET         /name-of-charity-regulator                      controllers.organisationDetails.NameOfCharityRegulatorController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /change-name-of-charity-regulator                      controllers.organisationDetails.NameOfCharityRegulatorController.onPageLoad(mode: Mode = Mode.CheckMode)
+GET         /change-name-of-charity-regulator               controllers.organisationDetails.NameOfCharityRegulatorController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /name-of-charity-regulator                      controllers.organisationDetails.NameOfCharityRegulatorController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /change-name-of-charity-regulator                      controllers.organisationDetails.NameOfCharityRegulatorController.onSubmit(mode: Mode = Mode.CheckMode)
+POST        /change-name-of-charity-regulator               controllers.organisationDetails.NameOfCharityRegulatorController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /charity-excepted                               controllers.organisationDetails.CharityExceptedController.onPageLoad
 POST        /charity-excepted                               controllers.organisationDetails.CharityExceptedController.onSubmit
@@ -92,6 +92,15 @@ POST        /check-your-answers                             controllers.organisa
 GET         /organisation-details-min-data-placeholder      controllers.organisationDetails.OrganisationDetailsIncompleteAnswersController.onPageLoad
 
 GET         /authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /change-authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onPageLoad(mode: Mode = Mode.CheckMode)
+GET         /change-authorised-official-details             controllers.organisationDetails.AuthorisedOfficialDetailsController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /change-authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onSubmit(mode: Mode = Mode.CheckMode)
+POST        /change-authorised-official-details             controllers.organisationDetails.AuthorisedOfficialDetailsController.onSubmit(mode: Mode = Mode.CheckMode)
+
+GET         /delete-gift-aid-schedule                       controllers.organisationDetails.DeleteGiftAidScheduleController.onPageLoad
+POST        /delete-gift-aid-schedule                       controllers.organisationDetails.DeleteGiftAidScheduleController.onSubmit
+
+# TODO: Placeholder screen for G2 - route will be updated in future
+GET         /add-schedule                                   controllers.organisationDetails.AddScheduleController.onPageLoad
+
+# TODO: Placeholder screen for R2 - route will be updated in future
+GET         /make-charity-repayment-claim                   controllers.organisationDetails.MakeCharityRepaymentClaimController.onPageLoad

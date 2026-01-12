@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.organisationDetails
 
 import com.google.inject.Inject
+import controllers.BaseController
 import controllers.actions.Actions
-import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.IncompleteAnswersView
+import views.html.MakeCharityRepaymentClaimView
 
-class IncompleteAnswersController @Inject() (
-  override val messagesApi: MessagesApi,
-  actions: Actions,
+// TODO: This is a placeholder controller for screen (R2) used on redirect on screens WRN1.0 to WRN1.3
+// TODO: This controller and route /charities-claims/make-charity-repayment-claim will be updated in the future
+class MakeCharityRepaymentClaimController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: IncompleteAnswersView
-) extends FrontendBaseController
-    with I18nSupport {
+  view: MakeCharityRepaymentClaimView,
+  actions: Actions
+) extends BaseController {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val missingFields = request.sessionData.repaymentClaimDetailsAnswers.missingFields
-    Ok(view(routes.CheckYourAnswersController.onPageLoad.url, missingFields))
+    Ok(view())
   }
 }
