@@ -49,7 +49,7 @@ class OrganisationDetailsCheckYourAnswersController @Inject() (
       claimsService.save.map { _ =>
         Redirect(
           // TODO: replace with correct url when ready
-          "next-page-after-check-your-answers"
+          "next-page-after-organisation-details-check-your-answers"
         )
       }
     else Future.successful(Redirect(routes.OrganisationDetailsIncompleteAnswersController.onPageLoad))

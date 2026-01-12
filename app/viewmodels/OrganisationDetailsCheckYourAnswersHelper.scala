@@ -20,8 +20,8 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.*
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import models.Mode.*
-import models.OrganisationDetailsAnswers
-import models.{NameOfCharityRegulator, ReasonNotRegisteredWithRegulator}
+import models.NameOfCharityRegulator.{EnglandAndWales, NorthernIreland, Scottish}
+import models.{NameOfCharityRegulator, OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 
 object OrganisationDetailsCheckYourAnswersHelper {
@@ -34,126 +34,135 @@ object OrganisationDetailsCheckYourAnswersHelper {
             case value =>
               Some(
                 summaryRow(
-                  messages("organisationDetailsCheckYourAnswers.nameOfCharityRegulator.label"),
-                  if {
-                    value.contains(NameOfCharityRegulator.EnglandAndWales)
-                    || value.contains(NameOfCharityRegulator.Scottish)
-                    || value.contains(NameOfCharityRegulator.NorthernIreland)
-                    || value.contains(NameOfCharityRegulator.None)
-                  } then messages("site.yes") else messages("site.no"),
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
+                  if value.contains(EnglandAndWales) then "Charity Commission for England and Wales"
+                  else if value.contains(NorthernIreland) then "Charity Commission for Northern Ireland"
+                  else if value.contains(Scottish) then "Office of the Scottish Charity Regulator"
+                  else if value.contains(NameOfCharityRegulator.None) then "Charity is not registered with a regulator"
+                  else "missing value",
                   controllers.organisationDetails.routes.NameOfCharityRegulatorController
                     .onPageLoad(CheckMode)
                     .url,
-                  messages("organisationDetailsCheckYourAnswers.nameOfCharityRegulator.change.hidden")
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.change.hidden")
                 )
               )
             case _     =>
               Some(
                 missingDataRow(
-                  messages("organisationDetailsCheckYourAnswers.giftAid.label"),
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
                   controllers.organisationDetails.routes.NameOfCharityRegulatorController
                     .onPageLoad(CheckMode)
                     .url,
-                  messages("organisationDetailsCheckYourAnswers.giftAid.change.hidden")
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.change.hidden")
                 )
               )
           },
-          buildList.reasonNotRegisteredWithRegulator match {
-            case value =>
-              Some(
-                summaryRow(
-                  messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
-                  if {
-                    value.contains(ReasonNotRegisteredWithRegulator.Excepted)
-                    || value.contains(ReasonNotRegisteredWithRegulator.Exempt)
-                    || value.contains(ReasonNotRegisteredWithRegulator.LowIncome)
-                    || value.contains(ReasonNotRegisteredWithRegulator.Waiting)
-                  } then messages("site.yes") else messages("site.no"),
-                  controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
-                    .onPageLoad(CheckMode)
-                    .url,
-                  messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
-                )
-              )
-            case None  =>
-              Some(
-                missingDataRow(
-                  messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
-                  controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
-                    .onPageLoad(CheckMode)
-                    .url,
-                  messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
-                )
-              )
-          },
-          buildList.charityRegistrationNumber match {
-            case Some(regNum) =>
-              Some(
-                summaryRow(
-                  messages("organisationDetailsCheckYourAnswers.charityRegistrationNumber.label"),
-                  regNum,
-                  controllers.organisationDetails.routes.CharityRegulatorNumberController
-                    .onPageLoad(CheckMode)
-                    .url,
-                  messages("organisationDetailsCheckYourAnswers.charityRegistrationNumber.label")
-                )
-              )
-            case None         =>
-              Some(
-                missingDataRow(
-                  messages("organisationDetailsCheckYourAnswers.charityRegistrationNumber.label"),
-                  controllers.organisationDetails.routes.CharityRegulatorNumberController
-                    .onPageLoad(CheckMode)
-                    .url,
-                  messages("organisationDetailsCheckYourAnswers.charityRegistrationNumber.label")
-                )
-              )
+          buildList.nameOfCharityRegulator match {
+            case Some(NameOfCharityRegulator.None) =>
+              buildList.reasonNotRegisteredWithRegulator match {
+                case value =>
+                  Some(
+                    summaryRow(
+                      messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
+                      if value.contains(ReasonNotRegisteredWithRegulator.Excepted) then "Your charity is excepted"
+                      else if value.contains(ReasonNotRegisteredWithRegulator.Exempt) then "Your charity is exempt"
+                      else if value.contains(ReasonNotRegisteredWithRegulator.LowIncome) then
+                        "Your charity is located in England or Wales and your income is less than £5,000 per year"
+                      else "Your charity is based in Northern Ireland and you are awaiting registration with the CCNI",
+                      controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
+                        .onPageLoad(CheckMode)
+                        .url,
+                      messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
+                    )
+                  )
+              }
+            case _                                 =>
+              buildList.charityRegistrationNumber match {
+                case Some(regNum) =>
+                  Some(
+                    summaryRow(
+                      messages("organisationDetailsCheckYourAnswers.charityRegulatorNumber.label"),
+                      regNum,
+                      controllers.organisationDetails.routes.CharityRegulatorNumberController
+                        .onPageLoad(CheckMode)
+                        .url,
+                      messages("organisationDetailsCheckYourAnswers.charityRegulatorNumber.change.hidden")
+                    )
+                  )
+                case None         =>
+                  Some(
+                    missingDataRow(
+                      messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
+                      controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
+                        .onPageLoad(CheckMode)
+                        .url,
+                      messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
+                    )
+                  )
+              }
           },
           buildList.areYouACorporateTrustee match {
             case Some(value) =>
               Some(
                 summaryRow(
-                  messages("organisationDetailsCheckYourAnswers.areYouACorporateTrustee.label"),
+                  messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label"),
                   if (value) messages("site.yes") else messages("site.no"),
                   controllers.organisationDetails.routes.CorporateTrusteeClaimController
                     .onPageLoad(CheckMode)
                     .url,
-                  messages("organisationDetailsCheckYourAnswers.areYouACorporateTrustee.label")
+                  messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.change.hidden")
                 )
               )
             case None        =>
               Some(
                 missingDataRow(
-                  messages("organisationDetailsCheckYourAnswers.areYouACorporateTrustee.label"),
+                  messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label"),
                   controllers.organisationDetails.routes.CorporateTrusteeClaimController
                     .onPageLoad(CheckMode)
                     .url,
-                  messages("organisationDetailsCheckYourAnswers.areYouACorporateTrustee.label")
+                  messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.change.hidden")
                 )
               )
           },
-          buildList.doYouHaveCorporateTrusteeUKAddress match {
-            case Some(value) =>
-              Some(
-                summaryRow(
-                  messages("organisationDetailsCheckYourAnswers.doYouHaveUKAddress.label"),
-                  if (value) messages("site.yes") else messages("site.no"),
-                  controllers.organisationDetails.routes.CorporateTrusteeAddressController
-                    .onPageLoad(CheckMode)
-                    .url,
-                  messages("organisationDetailsCheckYourAnswers.doYouHaveUKAddress.label")
-                )
-              )
-            case None        =>
-              Some(
-                missingDataRow(
-                  messages("organisationDetailsCheckYourAnswers.doYouHaveUKAddress.label"),
-                  controllers.organisationDetails.routes.CorporateTrusteeAddressController
-                    .onPageLoad(CheckMode)
-                    .url,
-                  messages("organisationDetailsCheckYourAnswers.doYouHaveUKAddress.label")
-                )
-              )
+          buildList.areYouACorporateTrustee match {
+            case Some(true)  =>
+              buildList.doYouHaveCorporateTrusteeUKAddress match {
+                case Some(value) =>
+                  Some(
+                    summaryRow(
+                      messages("organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label"),
+                      if value then messages("site.yes") else messages("site.no"),
+                      controllers.organisationDetails.routes.CorporateTrusteeAddressController
+                        .onPageLoad(CheckMode)
+                        .url,
+                      messages("organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label")
+                    )
+                  )
+                case None        =>
+                  Some(
+                    missingDataRow(
+                      messages("organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label"),
+                      controllers.organisationDetails.routes.CorporateTrusteeAddressController
+                        .onPageLoad(CheckMode)
+                        .url,
+                      messages("organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label")
+                    )
+                  )
+              }
+            case Some(false) =>
+              buildList.doYouHaveAuthorisedOfficialTrusteeUKAddress match {
+                case Some(true) =>
+                  Some(
+                    summaryRow(
+                      messages("organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.label"),
+                      if true then messages("site.yes") else messages("site.no"),
+                      controllers.organisationDetails.routes.AuthorisedOfficialAddressController
+                        .onPageLoad(CheckMode)
+                        .url,
+                      messages("organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.label")
+                    )
+                  )
+              }
           }
         ).flatten
 
