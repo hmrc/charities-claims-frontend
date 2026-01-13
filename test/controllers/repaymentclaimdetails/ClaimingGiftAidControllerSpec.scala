@@ -16,19 +16,27 @@
 
 package controllers.repaymentclaimdetails
 
-import play.api.test.FakeRequest
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import controllers.ControllerSpec
-import views.html.ClaimingGiftAidView
-import play.api.Application
 import forms.YesNoFormProvider
 import models.{GiftAidScheduleDataAnswers, RepaymentClaimDetailsAnswers, SessionData}
-import play.api.data.Form
 import models.Mode.*
+import models.requests.DataRequest
+import play.api.Application
+import play.api.data.Form
+import play.api.inject.bind
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
+import play.api.test.FakeRequest
+import services.ClaimsValidationService
+import uk.gov.hmrc.http.HeaderCarrier
+import views.html.ClaimingGiftAidView
+
+import scala.concurrent.Future
 
 class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
   private val form: Form[Boolean] = new YesNoFormProvider()()
+
+  val mockClaimsValidationService: ClaimsValidationService = mock[ClaimsValidationService]
 
   "ClaimingGiftAidController" - {
     "onPageLoad" - {
@@ -185,30 +193,6 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to the next page in NormalMode when value is false and warning has been shown" in {
-        val sessionData = SessionData.empty.copy(
-          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
-          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
-              .withFormUrlEncodedBody(
-                "value"        -> "false",
-                "warningShown" -> "true"
-              )
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
-          flash(result).get("warning") shouldEqual None
-        }
-      }
-
       "should not show warning when no previous gift aid schedule data exists" in {
         val sessionData = SessionData.empty.copy(
           repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(false))
@@ -228,13 +212,49 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to CheckYourAnswers in CheckMode after warning confirmation" in {
+      "should delete schedule and redirect to ClaimingOtherIncomeController when changing to No after warning in NormalMode" in {
         val sessionData = SessionData.empty.copy(
+          unsubmittedClaimId = Some("test-claim-123"),
           repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
           giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
         )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+        (mockClaimsValidationService
+          .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(()))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession
+          .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
+          .build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "false", "warningShown" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result).value shouldEqual routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url
+        }
+      }
+
+      "should delete schedule and redirect to CheckYourAnswersController when changing to No after warning in CheckMode" in {
+        val sessionData = SessionData.empty.copy(
+          unsubmittedClaimId = Some("test-claim-456"),
+          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+        )
+
+        (mockClaimsValidationService
+          .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(()))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession
+          .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
+          .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -245,6 +265,46 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result).value shouldEqual routes.CheckYourAnswersController.onPageLoad.url
+        }
+      }
+
+      "should redirect to ClaimingOtherIncomeController when selecting Yes (not trigger delete)" in {
+        val sessionData = SessionData.empty.copy(
+          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result).value shouldEqual routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url
+        }
+      }
+
+      "should redirect to ClaimingOtherIncomeController when selecting No with no existing schedule data" in {
+        val sessionData = SessionData.empty.copy(
+          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(false)),
+          giftAidScheduleDataAnswers = None
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingGiftAidController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result).value shouldEqual routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url
         }
       }
 

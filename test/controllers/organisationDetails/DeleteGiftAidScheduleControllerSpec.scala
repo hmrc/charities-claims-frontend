@@ -16,15 +16,16 @@
 
 package controllers.organisationDetails
 
-import connectors.ClaimsValidationConnector
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
-import models.{DeleteScheduleResponse, GetUploadSummaryResponse, UploadSummary}
+import models.SessionData
+import models.requests.DataRequest
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
+import services.ClaimsValidationService
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.DeleteGiftAidScheduleView
 
@@ -34,36 +35,14 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
 
   val form: Form[Boolean] = new YesNoFormProvider()()
 
-  val mockClaimsValidationConnector: ClaimsValidationConnector = mock[ClaimsValidationConnector]
-
-  val testUploadSummaryWithGiftAid = GetUploadSummaryResponse(
-    uploads = Seq(
-      UploadSummary(
-        reference = "gift-aid-ref-456",
-        validationType = "GiftAid",
-        fileStatus = "VALIDATED",
-        uploadUrl = None
-      )
-    )
-  )
-
-  val testUploadSummaryWithoutGiftAid = GetUploadSummaryResponse(
-    uploads = Seq(
-      UploadSummary(
-        reference = "other-income-ref-789",
-        validationType = "OtherIncome",
-        fileStatus = "VALIDATED",
-        uploadUrl = None
-      )
-    )
-  )
+  val mockClaimsValidationService: ClaimsValidationService = mock[ClaimsValidationService]
 
   "DeleteGiftAidScheduleController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
 
         given application: Application = applicationBuilder()
-          .overrides(bind[ClaimsValidationConnector].toInstance(mockClaimsValidationConnector))
+          .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
         running(application) {
@@ -84,7 +63,7 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
     "onSubmit" - {
       "should reload the page with errors when a required field is missing" in {
         given application: Application = applicationBuilder()
-          .overrides(bind[ClaimsValidationConnector].toInstance(mockClaimsValidationConnector))
+          .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
         running(application) {
@@ -101,7 +80,7 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
       // TODO: Update test when G2 screen route is completed (currently redirects to placeholder /add-schedule)
       "should redirect to G2 screen when no is selected" in {
         given application: Application = applicationBuilder()
-          .overrides(bind[ClaimsValidationConnector].toInstance(mockClaimsValidationConnector))
+          .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
         running(application) {
@@ -118,20 +97,15 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
 
       // TODO: Update test when R2 screen route is completed (currently redirects to placeholder /make-charity-repayment-claim)
       "should call backend deletion endpoint and redirect to R2 when yes is selected" in {
-        val sessionData = models.SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-123"))
+        val sessionData = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-123"))
 
-        (mockClaimsValidationConnector
-          .getUploadSummary(_: String)(using _: HeaderCarrier))
-          .expects("test-claim-123", *)
-          .returning(Future.successful(testUploadSummaryWithGiftAid))
-
-        (mockClaimsValidationConnector
-          .deleteSchedule(_: String, _: String)(using _: HeaderCarrier))
-          .expects("test-claim-123", "gift-aid-ref-456", *)
-          .returning(Future.successful(DeleteScheduleResponse(success = true)))
+        (mockClaimsValidationService
+          .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(()))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
-          .overrides(bind[ClaimsValidationConnector].toInstance(mockClaimsValidationConnector))
+          .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
         running(application) {
@@ -147,15 +121,15 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should handle case when no GiftAid upload data is found" in {
-        val sessionData = models.SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-123"))
+        val sessionData = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-123"))
 
-        (mockClaimsValidationConnector
-          .getUploadSummary(_: String)(using _: HeaderCarrier))
-          .expects("test-claim-123", *)
-          .returning(Future.successful(testUploadSummaryWithoutGiftAid))
+        (mockClaimsValidationService
+          .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.failed(new RuntimeException("No GiftAid schedule upload found")))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
-          .overrides(bind[ClaimsValidationConnector].toInstance(mockClaimsValidationConnector))
+          .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
         running(application) {
@@ -170,10 +144,15 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should handle case when no claimId is in session data" in {
-        val sessionData = models.SessionData.empty.copy(unsubmittedClaimId = None)
+        val sessionData = SessionData.empty.copy(unsubmittedClaimId = None)
+
+        (mockClaimsValidationService
+          .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.failed(new RuntimeException("No claimId found")))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
-          .overrides(bind[ClaimsValidationConnector].toInstance(mockClaimsValidationConnector))
+          .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
         running(application) {
