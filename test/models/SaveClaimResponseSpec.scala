@@ -23,7 +23,7 @@ class SaveClaimResponseSpec extends BaseSpec {
 
   "SaveClaimResponse" - {
     "be serialised and deserialised correctly" in {
-      val saveClaimResponse = SaveClaimResponse(claimId = "123")
+      val saveClaimResponse = SaveClaimResponse(claimId = "123", lastUpdatedReference = "0123456789")
       Json.parse(Json.prettyPrint(Json.toJson(saveClaimResponse))).as[SaveClaimResponse] shouldBe saveClaimResponse
     }
   }

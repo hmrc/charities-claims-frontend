@@ -20,7 +20,8 @@ import play.api.libs.json.Format
 import play.api.libs.json.Json
 
 final case class SaveClaimResponse(
-  claimId: String
+  claimId: String,
+  lastUpdatedReference: String
 )
 
 object SaveClaimResponse {

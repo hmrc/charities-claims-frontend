@@ -178,7 +178,10 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
           claimingUnderGiftAidSmallDonationsScheme = false,
           claimReferenceNumber = Some("1234567890")
         ),
-        HttpResponse(200, Json.stringify(Json.toJson(SaveClaimResponse(claimId = "1237"))))
+        HttpResponse(
+          200,
+          Json.stringify(Json.toJson(SaveClaimResponse(claimId = "1237", lastUpdatedReference = "0123456789")))
+        )
       ).once()
       await(
         connector.saveClaim(
@@ -189,7 +192,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
             claimReferenceNumber = Some("1234567890")
           )
         )
-      ) shouldEqual "1237"
+      ).claimId shouldEqual "1237"
     }
   }
 
