@@ -40,30 +40,56 @@ final case class OrganisationDetailsAnswers(
   corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None,
   authorisedOfficialDetails: Option[AuthorisedOfficialDetails] = None
 ) {
-  def hasOrganisationDetailsCompleteAnswers: Boolean =
-    nameOfCharityRegulator.isDefined &&
-      nameOfCorporateTrustee.match {
-        case Some("None")                                                         => reasonNotRegisteredWithRegulator.isDefined
-        case Some("EnglandAndWales") | Some("Scottish") | Some("NorthernIreland") => charityRegistrationNumber.isDefined
-        case _                                                                    => false
-      }
-      && (
-        areYouACorporateTrustee,
-        doYouHaveCorporateTrusteeUKAddress,
-        doYouHaveAuthorisedOfficialTrusteeUKAddress
-      ).match {
-        case (Some(true), Some(false), _)  =>
-          nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined
-        // && corporateTrusteePostcode.isEmpty
-        case (Some(true), Some(true), _)   =>
-          nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined && corporateTrusteePostcode.isDefined
-        case (Some(false), _, Some(false)) =>
-          authorisedOfficialTrusteeFirstName.isDefined && authorisedOfficialTrusteeLastName.isDefined && authorisedOfficialTrusteeDaytimeTelephoneNumber.isDefined
-        // && authorisedOfficialTrusteePostcode.isEmpty
-        case (Some(false), _, Some(true))  =>
-          authorisedOfficialTrusteeFirstName.isDefined && authorisedOfficialTrusteeLastName.isDefined && authorisedOfficialTrusteeDaytimeTelephoneNumber.isDefined && authorisedOfficialTrusteePostcode.isDefined
-        case (_, _, _)                     => false
-      }
+  def missingFields: List[String] =
+    List(
+      nameOfCharityRegulator.isEmpty                                              -> "nameOfCharityRegulator.heading",
+      (nameOfCharityRegulator.isDefined && nameOfCharityRegulator.contains(
+        NameOfCharityRegulator.None
+      ) && reasonNotRegisteredWithRegulator.isEmpty)                              -> "reasonNotRegisteredWithRegulator.heading",
+      (nameOfCharityRegulator.isDefined &&
+        (nameOfCharityRegulator.contains(NameOfCharityRegulator.EnglandAndWales)
+          | nameOfCharityRegulator.contains(NameOfCharityRegulator.Scottish)
+          | nameOfCharityRegulator.contains(
+            NameOfCharityRegulator.NorthernIreland
+          )) && charityRegistrationNumber.isEmpty)                                -> "charityRegulatorNumber.heading",
+      areYouACorporateTrustee.isEmpty                                             -> "corporateTrusteeClaim.heading",
+      (areYouACorporateTrustee.contains(
+        true
+      ) && doYouHaveCorporateTrusteeUKAddress.isEmpty)                            -> "corporateTrusteeAddress.heading",
+      (areYouACorporateTrustee.contains(true) && corporateTrusteeDetails.isEmpty) -> "corporateTrusteeDetails.heading",
+      (areYouACorporateTrustee.contains(
+        false
+      ) && doYouHaveAuthorisedOfficialTrusteeUKAddress.isEmpty)                   -> "authorisedOfficialAddress.heading",
+      (areYouACorporateTrustee.contains(
+        false
+      ) && authorisedOfficialDetails.isEmpty)                                     -> "authorisedOfficialDetails.heading"
+    ).collect { case (true, key) => key }
+
+  def hasOrganisationDetailsCompleteAnswers: Boolean = missingFields.isEmpty
+//  Boolean =
+//    nameOfCharityRegulator.isDefined &&
+//      nameOfCorporateTrustee.match {
+//        case Some("None")                                                         => reasonNotRegisteredWithRegulator.isDefined
+//        case Some("EnglandAndWales") | Some("Scottish") | Some("NorthernIreland") => charityRegistrationNumber.isDefined
+//        case _                                                                    => false
+//      }
+//      && (
+//        areYouACorporateTrustee,
+//        doYouHaveCorporateTrusteeUKAddress,
+//        doYouHaveAuthorisedOfficialTrusteeUKAddress
+//      ).match {
+//        case (Some(true), Some(false), _)  =>
+//          nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined
+//        // && corporateTrusteePostcode.isEmpty
+//        case (Some(true), Some(true), _)   =>
+//          nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined && corporateTrusteePostcode.isDefined
+//        case (Some(false), _, Some(false)) =>
+//          authorisedOfficialTrusteeFirstName.isDefined && authorisedOfficialTrusteeLastName.isDefined && authorisedOfficialTrusteeDaytimeTelephoneNumber.isDefined
+//        // && authorisedOfficialTrusteePostcode.isEmpty
+//        case (Some(false), _, Some(true))  =>
+//          authorisedOfficialTrusteeFirstName.isDefined && authorisedOfficialTrusteeLastName.isDefined && authorisedOfficialTrusteeDaytimeTelephoneNumber.isDefined && authorisedOfficialTrusteePostcode.isDefined
+//        case (_, _, _)                     => false
+//      }
 }
 
 object OrganisationDetailsAnswers {

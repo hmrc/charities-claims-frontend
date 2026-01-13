@@ -32,6 +32,7 @@ class OrganisationDetailsIncompleteAnswersController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url))
+    val missingFields = request.sessionData.organisationDetailsAnswers.toList.flatMap(_.missingFields)
+    Ok(view(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url, missingFields))
   }
 }

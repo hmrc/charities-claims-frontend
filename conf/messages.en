@@ -180,6 +180,11 @@ organisationDetailsCheckYourAnswers.caption = Provide organisation details
 organisationDetailsCheckYourAnswers.title = Check your organisation details
 organisationDetailsCheckYourAnswers.heading = Check your organisation details
 
+organisationDetailsIncompleteAnswers.heading = You have not provided all required details
+organisationDetailsIncompleteAnswers.message = You have missing data
+organisationDetailsIncompleteAnswers.returnLink = Return to check your answers
+organisationDetailsIncompleteAnswers.title = You have not provided all required details
+
 authorisedOfficialDetails.title = What are the authorised official details?
 authorisedOfficialDetails.heading = What are the authorised official details?
 authorisedOfficialDetails.caption = Provide organisation details
