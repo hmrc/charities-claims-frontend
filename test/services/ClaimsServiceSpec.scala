@@ -57,9 +57,14 @@ class ClaimsServiceSpec extends BaseSpec {
       (mockConnector
         .saveClaim(_: RepaymentClaimDetails)(using _: HeaderCarrier))
         .expects(*, *)
-        .returning(Future.successful("generated-claim-id"))
+        .returning(
+          Future.successful(SaveClaimResponse(claimId = "generated-claim-id", lastUpdatedReference = "0123456789"))
+        )
 
-      val expectedSessionData = initialSessionData.copy(unsubmittedClaimId = Some("generated-claim-id"))
+      val expectedSessionData = initialSessionData.copy(
+        unsubmittedClaimId = Some("generated-claim-id"),
+        lastUpdatedReference = Some("0123456789")
+      )
 
       (mockSaveService
         .save(_: SessionData)(using _: DataRequest[?], _: HeaderCarrier))

@@ -46,9 +46,16 @@ class ClaimsServiceImpl @Inject() (saveService: SaveService, connector: ClaimsCo
                                      RepaymentClaimDetailsAnswers
                                        .toRepaymentClaimDetails(sessionData.repaymentClaimDetailsAnswers)
                                    )
-          claimId               <- connector.saveClaim(repaymentClaimDetails)
-          _                     <- saveService
-                                     .save(dataRequest.sessionData.copy(unsubmittedClaimId = Some(claimId)))
+          response              <- connector.saveClaim(repaymentClaimDetails)
+          _                     <-
+            saveService
+              .save(
+                dataRequest.sessionData
+                  .copy(
+                    unsubmittedClaimId = Some(response.claimId),
+                    lastUpdatedReference = Some(response.lastUpdatedReference)
+                  )
+              )
         yield ()
 
       case Some(claimId) =>

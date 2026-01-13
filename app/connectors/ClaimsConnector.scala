@@ -41,7 +41,7 @@ trait ClaimsConnector {
   type UserId = String
 
   def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse]
-  def saveClaim(repaymentClaimDetails: RepaymentClaimDetails)(using hc: HeaderCarrier): Future[UserId]
+  def saveClaim(repaymentClaimDetails: RepaymentClaimDetails)(using hc: HeaderCarrier): Future[SaveClaimResponse]
 
   def getClaim(claimId: String)(using hc: HeaderCarrier): Future[Option[Claim]]
   def updateClaim(claimId: String, updateClaimRequest: UpdateClaimRequest)(using
@@ -78,7 +78,7 @@ class ClaimsConnectorImpl @Inject() (
 
   final def saveClaim(repaymentClaimDetails: RepaymentClaimDetails)(using
     hc: HeaderCarrier
-  ): Future[UserId] = {
+  ): Future[SaveClaimResponse] = {
     val payload = SaveClaimRequest(
       claimingGiftAid = repaymentClaimDetails.claimingGiftAid,
       claimingTaxDeducted = repaymentClaimDetails.claimingTaxDeducted,
@@ -95,7 +95,7 @@ class ClaimsConnectorImpl @Inject() (
       method = "POST",
       url = claimsApiUrl,
       payload = Some(payload)
-    ).map(_.claimId)
+    )
   }
 
   final def getClaim(claimId: String)(using
