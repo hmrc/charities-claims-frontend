@@ -101,8 +101,11 @@ POST        /delete-gift-aid-schedule                       controllers.organisa
 GET         /delete-other-income-schedule                   controllers.organisationDetails.DeleteOtherIncomeScheduleController.onPageLoad
 POST        /delete-other-income-schedule                   controllers.organisationDetails.DeleteOtherIncomeScheduleController.onSubmit
 
-GET         /delete-GASDS-community-buildings-schedule      controllers.organisationDetails.DeleteCommunityBuildingsScheduleController.onPageLoad
-POST        /delete-GASDS-community-buildings-schedule      controllers.organisationDetails.DeleteCommunityBuildingsScheduleController.onSubmit
+GET         /delete-gasds-community-buildings-schedule      controllers.organisationDetails.DeleteCommunityBuildingsScheduleController.onPageLoad
+POST        /delete-gasds-community-buildings-schedule      controllers.organisationDetails.DeleteCommunityBuildingsScheduleController.onSubmit
+
+GET         /delete-gasds-connected-charities-schedule      controllers.organisationDetails.DeleteConnectedCharitiesScheduleController.onPageLoad
+POST        /delete-gasds-connected-charities-schedule      controllers.organisationDetails.DeleteConnectedCharitiesScheduleController.onSubmit
 
 # TODO: Placeholder screen for G2 - route will be updated in future
 GET         /add-schedule                                   controllers.organisationDetails.AddScheduleController.onPageLoad
