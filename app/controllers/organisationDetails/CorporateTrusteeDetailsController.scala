@@ -86,7 +86,7 @@ class CorporateTrusteeDetailsController @Inject() (
             .map { _ =>
               Redirect(
                 routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
-              ) // TODO once check your answers has been done
+              )
             }
       )
   }

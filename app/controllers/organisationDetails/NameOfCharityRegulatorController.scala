@@ -57,7 +57,7 @@ class NameOfCharityRegulatorController @Inject() (
           saveService
             .save(OrganisationDetailsAnswers.setNameOfCharityRegulator(value))
             .map { _ =>
-              (value, mode) match {
+              (value, mode) match { // TODO - need to get confirmation on what page should be redirected if going from None to EnglandAndWales, NorthernIreland,Scottish ... or vise-versa
                 case (_, CheckMode)                   =>
                   Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
                 case (NameOfCharityRegulator.None, _) =>

@@ -18,8 +18,10 @@ package models
 
 import play.api.libs.json.Format
 import play.api.libs.json.Json
+
 import scala.util.Try
 import utils.Required.required
+import models.SessionData
 
 final case class OrganisationDetailsAnswers(
   nameOfCharityRegulator: Option[NameOfCharityRegulator] = None,
@@ -35,30 +37,39 @@ final case class OrganisationDetailsAnswers(
   authorisedOfficialTrusteeDaytimeTelephoneNumber: Option[String] = None,
   authorisedOfficialTrusteeTitle: Option[String] = None,
   authorisedOfficialTrusteeFirstName: Option[String] = None,
-  authorisedOfficialTrusteeLastName: Option[String] = None
-//  corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None,
-//  authorisedOfficialDetails: Option[AuthorisedOfficialDetails] = None
-)
-// {
-//  def hasCompleteAnswers: Boolean =
-//    return nameOfCharityRegulator.isDefined
-//      && reasonNotRegisteredWithRegulator.isDefined
-//      && charityRegistrationNumber.isDefined
-//      && areYouACorporateTrustee.isDefined
-//      && doYouHaveUKAddress.isDefined
-//      && if(areYouACorporateTrustee && doYouHaveUKAddress) then return nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined
-//      && if(areYouACorporateTrustee && !doYouHaveUKAddress) then return nameOfCorporateTrustee.isDefined && corporateTrusteeDaytimeTelephoneNumber.isDefined && corporateTrusteePostcode.isDefined
-//      && if(!areYouACorporateTrustee && doYouHaveUKAddress) then return
-//        corporateTrusteeFirstName.isDefined
-//        && corporateTrusteeLastName.isDefined
-//        && corporateTrusteeDaytimeTelephoneNumber.isDefined
-//        && corporateTrusteePostcode.isDefined
-//    && if (!areYouACorporateTrustee && !doYouHaveUKAddress) then return
-//    corporateTrusteeFirstName.isDefined
-//      && corporateTrusteeLastName.isDefined
-//      && corporateTrusteeDaytimeTelephoneNumber.isDefined
-//      && charityRegistrationNumber.isDefined
-//}
+  authorisedOfficialTrusteeLastName: Option[String] = None,
+  corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None,
+  authorisedOfficialDetails: Option[AuthorisedOfficialDetails] = None
+) {
+  def missingFields: List[String] =
+    List(
+      nameOfCharityRegulator.isEmpty                                              -> "nameOfCharityRegulator.heading",
+      (nameOfCharityRegulator.isDefined && nameOfCharityRegulator.contains(
+        NameOfCharityRegulator.None
+      ) && reasonNotRegisteredWithRegulator.isEmpty)                              -> "reasonNotRegisteredWithRegulator.heading",
+
+      (nameOfCharityRegulator.isDefined &&
+        (nameOfCharityRegulator.contains(NameOfCharityRegulator.EnglandAndWales)
+          || nameOfCharityRegulator.contains(NameOfCharityRegulator.Scottish)
+          || nameOfCharityRegulator.contains(
+            NameOfCharityRegulator.NorthernIreland
+          )) && charityRegistrationNumber.isEmpty)                                -> "charityRegulatorNumber.heading",
+
+      areYouACorporateTrustee.isEmpty                                             -> "corporateTrusteeClaim.heading",
+      (areYouACorporateTrustee.contains(
+        true
+      ) && doYouHaveCorporateTrusteeUKAddress.isEmpty)                            -> "corporateTrusteeAddress.heading",
+      (areYouACorporateTrustee.contains(true) && corporateTrusteeDetails.isEmpty) -> "corporateTrusteeDetails.heading",
+      (areYouACorporateTrustee.contains(
+        false
+      ) && doYouHaveAuthorisedOfficialTrusteeUKAddress.isEmpty)                   -> "authorisedOfficialAddress.heading",
+      (areYouACorporateTrustee.contains(
+        false
+      ) && authorisedOfficialDetails.isEmpty)                                     -> "authorisedOfficialDetails.heading"
+    ).collect { case (true, key) => key }
+
+  def hasOrganisationDetailsCompleteAnswers: Boolean = missingFields.isEmpty
+}
 
 object OrganisationDetailsAnswers {
 

@@ -14,34 +14,32 @@
  * limitations under the License.
  *@
 
-@*
-* @import controllers.organisationDetails.routes
-* @import models.OrganisationDetailsAnswers
-* @import viewmodels.OrganisationDetailsCheckYourAnswersHelper
-*
-* @this(
-*    layout: templates.Layout,
-*    formHelper: FormWithCSRF,
-*    govukSummaryList: GovukSummaryList,
-*    govukButton: GovukButton
-*)
-*
-* @(answers: OrganisationDetailsAnswers)(implicit request: Request[?], messages: Messages)
-*
-* @layout(
-*    pageTitle = titleNoForm(messages("OrganisationDetailsCheckYourAnswers.title"))) {
-*
-*    <h1 class="govuk-heading-l">@messages("OrganisationDetailsCheckYourAnswers.heading")</h1>
-*
-*    @govukSummaryList(OrganisationDetailsCheckYourAnswersHelper.buildSummaryList(answers))
-*
-*    @formHelper(action = routes.OrganisationDetailsCheckYourAnswersController.onSubmit) {
-*
-*        @govukButton(
-*            ButtonViewModel(
-*                Text(messages("site.continue"))
-*            )
-*        )
-*    }
-* }
-*@
+@import controllers.organisationDetails.routes
+@import models.OrganisationDetailsAnswers
+@import viewmodels.OrganisationDetailsCheckYourAnswersHelper
+
+@this(
+   layout: templates.Layout,
+   formHelper: FormWithCSRF,
+   govukSummaryList: GovukSummaryList,
+   govukButton: GovukButton
+)
+
+@(answers: Option[OrganisationDetailsAnswers])(implicit request: Request[?], messages: Messages)
+
+@layout(
+   pageTitle = titleNoForm(messages("organisationDetailsCheckYourAnswers.title"))) {
+
+   <h1 class="govuk-heading-l">@messages("organisationDetailsCheckYourAnswers.heading")</h1>
+
+   @govukSummaryList(OrganisationDetailsCheckYourAnswersHelper.buildSummaryList(answers))
+
+   @formHelper(action = routes.OrganisationDetailsCheckYourAnswersController.onSubmit) {
+
+       @govukButton(
+           ButtonViewModel(
+               Text(messages("site.continue"))
+           )
+       )
+   }
+}

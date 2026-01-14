@@ -88,6 +88,7 @@ POST        /corporate-trustee-details                      controllers.organisa
 POST        /change-corporate-trustee-details               controllers.organisationDetails.CorporateTrusteeDetailsController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /check-your-answers                             controllers.organisationDetails.OrganisationDetailsCheckYourAnswersController.onPageLoad
+POST        /check-your-answers                             controllers.organisationDetails.OrganisationDetailsCheckYourAnswersController.onSubmit
 GET         /organisation-details-min-data-placeholder      controllers.organisationDetails.OrganisationDetailsIncompleteAnswersController.onPageLoad
 
 GET         /authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onPageLoad(mode: Mode = Mode.NormalMode)

@@ -18,7 +18,7 @@ package controllers.organisationDetails
 
 import controllers.ControllerSpec
 import forms.CharityRegulatorNumberFormProvider
-import models.Mode.NormalMode
+import models.Mode.*
 import models.OrganisationDetailsAnswers
 import play.api.Application
 import play.api.i18n.MessagesApi
@@ -123,6 +123,20 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
+        }
+      }
+
+      "should redirect to CYA when valid data is submitted" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          val request = FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit(CheckMode).url)
+            .withFormUrlEncodedBody("value" -> "12345678")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
         }
       }
 

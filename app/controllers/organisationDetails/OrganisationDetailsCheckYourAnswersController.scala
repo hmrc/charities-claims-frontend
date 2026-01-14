@@ -20,38 +20,37 @@ import com.google.inject.Inject
 import controllers.actions.Actions
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-// import services.ClaimsService
+import services.ClaimsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-// import views.html.OrganisationDetailsCheckYourAnswersView
+import views.html.OrganisationDetailsCheckYourAnswersView
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class OrganisationDetailsCheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
   actions: Actions,
-  // claimsService: ClaimsService,
-  val controllerComponents: MessagesControllerComponents
-//  ,
-//  view: OrganisationDetailsCheckYourAnswersView
-)
-// (implicit ec: ExecutionContext)
+  claimsService: ClaimsService,
+  val controllerComponents: MessagesControllerComponents,
+  view: OrganisationDetailsCheckYourAnswersView
+)(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    // Ok(view(request.sessionData.organisationDetailsAnswers))
-    Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+    val previousAnswers = request.sessionData.organisationDetailsAnswers
+    Future.successful(Ok(view(previousAnswers)))
   }
 
-//  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-//    if request.sessionData.organisationDetailsAnswers.hasCompleteAnswers
-//    then
-//      claimsService.save.map { _ =>
-//        Redirect(
-//          // TODO: replace with correct url when ready
-//          "next-page-after-check-your-answers"
-//        )
-//      }
-//    else Future.successful(Redirect(routes.OrganisationDetailsIncompleteAnswersController.onPageLoad))
-//  }
+  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val checkAnswers = request.sessionData.organisationDetailsAnswers.exists(_.hasOrganisationDetailsCompleteAnswers)
+    if checkAnswers
+    then
+      claimsService.save.map { _ =>
+        Redirect(
+          // TODO: replace with correct url when ready
+          "next-page-after-organisation-details-check-your-answers"
+        )
+      }
+    else Future.successful(Redirect(routes.OrganisationDetailsIncompleteAnswersController.onPageLoad))
+  }
 }

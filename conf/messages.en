@@ -151,6 +151,40 @@ corporateTrusteeDetails.postCode.error.required = Enter a corporate trustee post
 corporateTrusteeDetails.postCode.error.length = Corporate trustee postcode must be 8 characters or less
 corporateTrusteeDetails.postCode.error.regex = Enter a corporate trustee postcode in the correct format
 
+organisationDetailsCheckYourAnswers.charityRegulatorName.label = Charity regulator name
+organisationDetailsCheckYourAnswers.charityRegulatorName.none.label = Charity is not registered with a regulator
+organisationDetailsCheckYourAnswers.charityRegulatorName.EnglandAndWales.label = Charity Commission for England and Wales
+organisationDetailsCheckYourAnswers.charityRegulatorName.NorthernIreland.label = Charity Commission for Northern Ireland
+organisationDetailsCheckYourAnswers.charityRegulatorName.Scottish.label = Office of the Scottish Charity Regulator
+organisationDetailsCheckYourAnswers.charityRegulatorName.missing.label = missing value
+organisationDetailsCheckYourAnswers.charityRegulatorName.change.hidden = regulator name
+organisationDetailsCheckYourAnswers.reasonNotRegistered.label = Registered with regulator
+organisationDetailsCheckYourAnswers.reasonNotRegistered.excepted.label = Your charity is excepted
+organisationDetailsCheckYourAnswers.reasonNotRegistered.exempt.label = Your charity is exempt
+organisationDetailsCheckYourAnswers.reasonNotRegistered.waiting.label = Your charity is based in Northern Ireland and you are awaiting registration with the CCNI
+organisationDetailsCheckYourAnswers.reasonNotRegistered.lowIncome.label = Your charity is located in England or Wales and your income is less than £5,000 per year
+organisationDetailsCheckYourAnswers.reasonNotRegistered.missing.label = missing value
+organisationDetailsCheckYourAnswers.charityRegulatorNumber.label = Charity regulator number
+organisationDetailsCheckYourAnswers.charityRegulatorNumber.change.hidden = change charity regulator number
+organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label = Corporate trustee claim
+organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.change.hidden = change corporate trustee claim
+organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label = Corporate trustee UK address
+organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.change.hidden = change corporate trustee UK address
+organisationDetailsCheckYourAnswers.CorporateTrusteeDetails.label = Corporate trustee details
+organisationDetailsCheckYourAnswers.CorporateTrusteeDetails.change.hidden = change corporate trustee details
+organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.label = Authorised official UK address
+organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.change.hidden = change authorised official’s UK address
+organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.label = Authorised official details
+organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.change.hidden = change authorised official details
+organisationDetailsCheckYourAnswers.caption = Provide organisation details
+organisationDetailsCheckYourAnswers.title = Check your organisation details
+organisationDetailsCheckYourAnswers.heading = Check your organisation details
+
+organisationDetailsIncompleteAnswers.heading = You have not provided all required details
+organisationDetailsIncompleteAnswers.message = You have missing data
+organisationDetailsIncompleteAnswers.returnLink = Return to check your answers
+organisationDetailsIncompleteAnswers.title = You have not provided all required details
+
 authorisedOfficialDetails.title = What are the authorised official details?
 authorisedOfficialDetails.heading = What are the authorised official details?
 authorisedOfficialDetails.caption = Provide organisation details
@@ -166,11 +200,11 @@ authorisedOfficialDetails.title.error.format = Enter a correct authorised offici
 
 authorisedOfficialDetails.firstName.error.required = Enter an authorised official first name
 authorisedOfficialDetails.firstName.error.length = Authorised official first name must be 35 characters or less
-authorisedOfficialDetails.firstName.error.format = Enter a correct authorised official name format
+authorisedOfficialDetails.firstName.error.format = Enter a correct authorised official first name format
 
 authorisedOfficialDetails.lastName.error.required = Enter an authorised official last name
 authorisedOfficialDetails.lastName.error.length = Authorised official last name must be 35 characters or less
-authorisedOfficialDetails.lastName.error.format = Enter a correct authorised official name format
+authorisedOfficialDetails.lastName.error.format = Enter a correct authorised official last name format
 
 authorisedOfficialDetails.phoneNumber.error.required = Enter an authorised official phone number
 authorisedOfficialDetails.phoneNumber.error.length = Authorised official phone number must be 35 characters or less

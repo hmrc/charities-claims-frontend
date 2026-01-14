@@ -55,9 +55,11 @@ class CorporateTrusteeClaimController @Inject() (
           saveService
             .save(OrganisationDetailsAnswers.setAreYouACorporateTrustee(value))
             .map { _ =>
-              if value
-              then Redirect(routes.CorporateTrusteeAddressController.onPageLoad(NormalMode))
-              else Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode))
+              (value, mode) match { // TODO - need to check what action to be taken if value changed from true to false or vise-versa
+                case (true, NormalMode)  => Redirect(routes.CorporateTrusteeAddressController.onPageLoad(NormalMode))
+                case (false, NormalMode) => Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode))
+                case (_, CheckMode)      => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
+              }
             }
       )
   }

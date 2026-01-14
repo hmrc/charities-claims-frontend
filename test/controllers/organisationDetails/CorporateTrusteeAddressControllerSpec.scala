@@ -142,6 +142,40 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
         }
       }
 
+      "should redirect back to CYA when the value is true" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.CorporateTrusteeDetailsController.onPageLoad(CheckMode).url
+          )
+        }
+      }
+
+      "should redirect back to CYA when the value is false" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
       "should reload the page with errors when a required field is missing" in {
         given application: Application = applicationBuilder().build()
 

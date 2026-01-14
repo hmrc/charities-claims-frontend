@@ -66,10 +66,12 @@ class ReasonNotRegisteredWithRegulatorController @Inject() (
           saveService
             .save(OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(value))
             .map { _ =>
-              value match {
-                case ReasonNotRegisteredWithRegulator.Excepted => Redirect(routes.CharityExceptedController.onPageLoad)
-                case ReasonNotRegisteredWithRegulator.Exempt   => Redirect(routes.CharityExemptController.onPageLoad)
-                case _                                         => Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
+              (value, mode) match { // TODO - need to get confirmation on what page should be redirected if going from Excepted/Exempt to LowIncome/Waiting ... or vise-versa
+                case (_, CheckMode)                                 => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
+                case (ReasonNotRegisteredWithRegulator.Excepted, _) =>
+                  Redirect(routes.CharityExceptedController.onPageLoad)
+                case (ReasonNotRegisteredWithRegulator.Exempt, _)   => Redirect(routes.CharityExemptController.onPageLoad)
+                case (_, NormalMode)                                => Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
               }
             }
       )
