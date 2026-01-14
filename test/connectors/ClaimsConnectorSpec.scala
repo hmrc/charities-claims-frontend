@@ -237,6 +237,29 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
         lastUpdatedReference = "1234567891"
       ))
     }
+
+    "throw an exception if the service returns 400 status with UPDATED_BY_ANOTHER_USER error" in {
+      val repaymentDetails = RepaymentClaimDetails(
+        claimingGiftAid = true,
+        claimingTaxDeducted = true,
+        claimingUnderGiftAidSmallDonationsScheme = false,
+        claimReferenceNumber = Some("1234567890")
+      )
+
+      val updateRequest = UpdateClaimRequest(
+        lastUpdatedReference = "1234567890",
+        repaymentClaimDetails = repaymentDetails
+      )
+
+      givenUpdateClaimEndpointReturns(
+        payload = updateRequest,
+        response = HttpResponse(400, "{\"errorCode\": \"UPDATED_BY_ANOTHER_USER\"}")
+      )
+
+      a[UpdatedByAnotherUserException] should be thrownBy {
+        await(connector.updateClaim("123", updateRequest))
+      }
+    }
   }
 
   "deleteClaim" - {
