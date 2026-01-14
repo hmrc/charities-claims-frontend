@@ -665,48 +665,48 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
 
-//      "should save the organisation details answers and redirect to next page" in {
-//        val sessionData = SessionData(
-//          unsubmittedClaimId = Some("123"),
-//          lastUpdatedReference = Some("123"),
-//          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
-//          organisationDetailsAnswers = Some(
-//            OrganisationDetailsAnswers(
-//              nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
-//              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-//              charityRegistrationNumber = None,
-//              areYouACorporateTrustee = Some(false),
-//              doYouHaveCorporateTrusteeUKAddress = Some(true),
-//              nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-//              corporateTrusteePostcode = Some("SW1 5TY"),
-//              corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-//              doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
-//              authorisedOfficialTrusteePostcode = Some("SW1 5TY"),
-//              authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-//              authorisedOfficialTrusteeTitle = Some("MR"),
-//              authorisedOfficialTrusteeFirstName = Some("Jack"),
-//              authorisedOfficialTrusteeLastName = Some("Smith"),
-//              authorisedOfficialDetails =
-//                Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("SW1 5TY")))
-//            )
-//          )
-//        )
-//
-//        given application: Application =
-//          applicationBuilder(sessionData = sessionData).mockSaveClaim.build()
-//
-//        running(application) {
-//          given request: FakeRequest[AnyContentAsEmpty.type] =
-//            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onSubmit.url)
-//
-//          val result = route(application, request).value
-//
-//          println("------------------" + result)
-//          status(result) shouldEqual SEE_OTHER
-//          redirectLocation(result) shouldEqual Some("next-page-after-organisation-details-check-your-answers")
-//
-//        }
-//      }
+      "should save the organisation details answers and redirect to next page" in {
+        val sessionData = SessionData(
+          unsubmittedClaimId = Some("123"),
+          lastUpdatedReference = Some("123"),
+          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          organisationDetailsAnswers = Some(
+            OrganisationDetailsAnswers(
+              nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+              charityRegistrationNumber = None,
+              areYouACorporateTrustee = Some(false),
+              doYouHaveCorporateTrusteeUKAddress = Some(true),
+              nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+              corporateTrusteePostcode = Some("SW1 5TY"),
+              corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+              doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
+              authorisedOfficialTrusteePostcode = Some("SW1 5TY"),
+              authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+              authorisedOfficialTrusteeTitle = Some("MR"),
+              authorisedOfficialTrusteeFirstName = Some("Jack"),
+              authorisedOfficialTrusteeLastName = Some("Smith"),
+              authorisedOfficialDetails =
+                Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("SW1 5TY")))
+            )
+          )
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData).mockSaveClaim.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.OrganisationDetailsCheckYourAnswersController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          println("------------------" + result.futureValue)
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some("next-page-after-organisation-details-check-your-answers")
+
+        }
+      }
 
       "should redirect to the incomplete answers page if the answers are not complete" in {
 
