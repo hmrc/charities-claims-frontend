@@ -87,7 +87,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
               )
           },
           buildList.nameOfCharityRegulator match {
-            case Some(NameOfCharityRegulator.None) =>
+            case Some(NameOfCharityRegulator.None)                              =>
               buildList.reasonNotRegisteredWithRegulator match {
                 case Some(ReasonNotRegisteredWithRegulator.Excepted)  =>
                   Some(
@@ -144,7 +144,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
                     )
                   )
               }
-            case _                                 =>
+            case Some(NorthernIreland) | Some(Scottish) | Some(EnglandAndWales) =>
               buildList.charityRegistrationNumber match {
                 case Some(regNum) =>
                   Some(
@@ -168,9 +168,12 @@ object OrganisationDetailsCheckYourAnswersHelper {
                     )
                   )
               }
+            case _                                                              =>
+              None
           },
           buildList.areYouACorporateTrustee match {
             case Some(value) =>
+              // change screen for are you corporate trustee
               Some(
                 summaryRow(
                   messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label"),
@@ -182,6 +185,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
                 )
               )
             case _           =>
+              // missing are you a corporate trustee
               Some(
                 missingDataRow(
                   messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label"),
@@ -192,21 +196,24 @@ object OrganisationDetailsCheckYourAnswersHelper {
                 )
               )
           },
-          buildList.areYouACorporateTrustee match {
-            case Some(true)  =>
+          (buildList.areYouACorporateTrustee, buildList.doYouHaveCorporateTrusteeUKAddress) match {
+            case (Some(true), _)  =>
+              // is corporate trustee
               buildList.doYouHaveCorporateTrusteeUKAddress match {
                 case Some(value) =>
+                  // display change - do you have corporate trustee UK address
                   Some(
                     summaryRow(
                       messages("organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label"),
-                      if value then messages("site.yes") else messages("site.no"),
+                      if (value) messages("site.yes") else messages("site.no"),
                       controllers.organisationDetails.routes.CorporateTrusteeAddressController
                         .onPageLoad(CheckMode)
                         .url,
                       messages("organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label")
                     )
                   )
-                case None        =>
+                case _           =>
+                  // missing -  you have corporate trustee UK address
                   Some(
                     missingDataRow(
                       messages("organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label"),
@@ -217,9 +224,10 @@ object OrganisationDetailsCheckYourAnswersHelper {
                     )
                   )
               }
-            case Some(false) =>
+            case (Some(false), _) =>
               buildList.doYouHaveAuthorisedOfficialTrusteeUKAddress match {
                 case Some(value) =>
+                  // display change - do you have authorised official UK address
                   Some(
                     summaryRow(
                       messages("organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.label"),
@@ -231,6 +239,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
                     )
                   )
                 case _           =>
+                  // missing -  you have authorised official UK address
                   Some(
                     missingDataRow(
                       messages("organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.label"),
@@ -241,16 +250,17 @@ object OrganisationDetailsCheckYourAnswersHelper {
                     )
                   )
               }
-            case _           =>
-              Some(
-                missingDataRow(
-                  messages("organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label"),
-                  controllers.organisationDetails.routes.CorporateTrusteeAddressController
-                    .onPageLoad(CheckMode)
-                    .url,
-                  messages("organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label")
-                )
-              )
+            case (_, _)           =>
+              None
+//              Some(
+//                missingDataRow(
+//                  messages("organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label"),
+//                  controllers.organisationDetails.routes.CorporateTrusteeAddressController
+//                    .onPageLoad(CheckMode)
+//                    .url,
+//                  messages("organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label")
+//                )
+//              )
           },
           (
             buildList.areYouACorporateTrustee,
@@ -396,15 +406,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
                 )
               )
             case (_, _, _)                     =>
-              Some(
-                missingDataRow(
-                  messages("organisationDetailsCheckYourAnswers.CorporateTrusteeDetails.label"),
-                  controllers.organisationDetails.routes.CorporateTrusteeDetailsController
-                    .onPageLoad(CheckMode)
-                    .url,
-                  messages("organisationDetailsCheckYourAnswers.CorporateTrusteeDetails.change.hidden")
-                )
-              )
+              None
           }
         ).flatten
 

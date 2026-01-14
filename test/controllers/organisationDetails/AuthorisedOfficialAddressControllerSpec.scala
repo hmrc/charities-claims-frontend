@@ -140,7 +140,7 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to back to CYA when the value is true" in {
+      "should redirect to back to authorised official details when the value is true" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
@@ -152,7 +152,7 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+            routes.AuthorisedOfficialDetailsController.onPageLoad(CheckMode).url
           )
         }
       }

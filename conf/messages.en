@@ -200,11 +200,11 @@ authorisedOfficialDetails.title.error.format = Enter a correct authorised offici
 
 authorisedOfficialDetails.firstName.error.required = Enter an authorised official first name
 authorisedOfficialDetails.firstName.error.length = Authorised official first name must be 35 characters or less
-authorisedOfficialDetails.firstName.error.format = Enter a correct authorised official name format
+authorisedOfficialDetails.firstName.error.format = Enter a correct authorised official first name format
 
 authorisedOfficialDetails.lastName.error.required = Enter an authorised official last name
 authorisedOfficialDetails.lastName.error.length = Authorised official last name must be 35 characters or less
-authorisedOfficialDetails.lastName.error.format = Enter a correct authorised official name format
+authorisedOfficialDetails.lastName.error.format = Enter a correct authorised official last name format
 
 authorisedOfficialDetails.phoneNumber.error.required = Enter an authorised official phone number
 authorisedOfficialDetails.phoneNumber.error.length = Authorised official phone number must be 35 characters or less

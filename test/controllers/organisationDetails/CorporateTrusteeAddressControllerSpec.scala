@@ -154,7 +154,7 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+            routes.CorporateTrusteeDetailsController.onPageLoad(CheckMode).url
           )
         }
       }

@@ -20,7 +20,14 @@ package controllers.organisationDetails
 //import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
 //import views.html.OrganisationDetailsIncompleteAnswersView
-//import models.OrganisationDetailsAnswers
+//import models.{
+//  AuthorisedOfficialDetails,
+//  NameOfCharityRegulator,
+//  OrganisationDetailsAnswers,
+//  ReasonNotRegisteredWithRegulator,
+//  RepaymentClaimDetailsAnswers,
+//  SessionData
+//}
 //import play.api.Application
 
 class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec {
@@ -44,6 +51,58 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 //          contentAsString(result) shouldEqual view(
 //            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
 //            missingFields
+//          ).body
+//        }
+//      }
+//
+//      "should render the page with no missing fields when answers are complete" in {
+//        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
+//          claimingGiftAid = Some(true),
+//          claimingTaxDeducted = Some(false),
+//          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+//          claimingReferenceNumber = Some(false)
+//        )
+//        val sessionData                         = SessionData(
+//          unsubmittedClaimId = Some("123"),
+//          lastUpdatedReference = Some("123"),
+//          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+//          organisationDetailsAnswers = Some(
+//            OrganisationDetailsAnswers(
+//              nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+//              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+//              charityRegistrationNumber = None,
+//              areYouACorporateTrustee = Some(false),
+//              doYouHaveCorporateTrusteeUKAddress = Some(true),
+//              nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+//              corporateTrusteePostcode = Some("SW1 5TY"),
+//              corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+//              doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
+//              authorisedOfficialTrusteePostcode = Some("SW1 5TY"),
+//              authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+//              authorisedOfficialTrusteeTitle = Some("MR"),
+//              authorisedOfficialTrusteeFirstName = Some("Jack"),
+//              authorisedOfficialTrusteeLastName = Some("Smith"),
+//              authorisedOfficialDetails =
+//                Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("SW1 5TY")))
+//            )
+//          )
+//        )
+//
+//        given application: Application = applicationBuilder(sessionData = sessionData).build()
+//
+//        running(application) {
+//          given request: FakeRequest[AnyContentAsEmpty.type] =
+//            FakeRequest(GET, routes.OrganisationDetailsIncompleteAnswersController.onPageLoad.url)
+//
+//          val result = route(application, request).value
+//
+//          val view = application.injector.instanceOf[OrganisationDetailsIncompleteAnswersView]
+//
+//          status(result) shouldEqual OK
+//
+//          contentAsString(result) shouldEqual view(
+//            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
+//            Seq.empty
 //          ).body
 //        }
 //      }
