@@ -18,15 +18,12 @@
     layout: templates.Layout
 )
 
-@()(implicit request: Request[?], messages: Messages)
+@(makeCharityRepaymentClaimUrl: String)(implicit request: Request[?], messages: Messages)
 
-@* TODO: This is a placeholder screen (AA1) *@
-@* TODO: Content and functionality will be implemented in the future *@
+@layout(pageTitle = titleNoForm(messages("cannotViewOrManageClaim.title")), showBackLink = true) {
 
-@layout(pageTitle = titleNoForm(messages("charityRepaymentDashboard.title")), showBackLink = true) {
+    <h1 class="govuk-heading-l">@messages("cannotViewOrManageClaim.heading")</h1>
 
-    <h1 class="govuk-heading-xl">@messages("charityRepaymentDashboard.heading")</h1>
-
-    <p class="govuk-body">@messages("charityRepaymentDashboard.placeholder")</p>
+    <p class="govuk-body">@Html(messages("cannotViewOrManageClaim.paragraph", makeCharityRepaymentClaimUrl))</p>
 
 }

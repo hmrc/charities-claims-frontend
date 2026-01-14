@@ -46,7 +46,8 @@ class ErrorHandler @Inject() (
         logger.error(message)
         Future.successful(
           BadRequest("Screen WRN4-You can not manage this claim")
-        ) // TODO: Replace with the correct page as per DTR-2047
+          // Redirect(controllers.organisationDetails.routes.CannotViewOrManageClaimController.onPageLoad)
+        ) // TODO: Replace with the correct path to CannotViewOrManageClaim page
       case _                                      =>
         super.resolveError(rh, ex)
     }

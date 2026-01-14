@@ -234,6 +234,10 @@ deleteRepaymentClaim.title = Are you sure you want to delete this repayment clai
 deleteRepaymentClaim.heading = Are you sure you want to delete this repayment claim?
 deleteRepaymentClaim.error.required = Select ‘Yes’ if you want to delete this repayment claim
 
+cannotViewOrManageClaim.title = You cannot manage this claim
+cannotViewOrManageClaim.heading = You cannot manage this claim
+cannotViewOrManageClaim.paragraph = This claim is being updated by someone else. You can manage this claim by returning to <a class="govuk-link" href="{0}">repayment claim summary</a>.
+
 # TODO: Placeholder screen messages for G2 - content will be updated in future
 addSchedule.title = Add Schedule
 addSchedule.heading = Add Schedule
