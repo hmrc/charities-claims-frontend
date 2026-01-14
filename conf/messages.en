@@ -230,6 +230,10 @@ deleteConnectedCharitiesSchedule.title = Do you want to delete this Gift Aid Sma
 deleteConnectedCharitiesSchedule.heading = Do you want to delete this Gift Aid Small Donations Scheme connected charities schedule?
 deleteConnectedCharitiesSchedule.error.required = Select ‘Yes’ if you want to delete this Gift Aid Small Donations Scheme connected charities schedule
 
+deleteRepaymentClaim.title = Are you sure you want to delete this repayment claim?
+deleteRepaymentClaim.heading = Are you sure you want to delete this repayment claim?
+deleteRepaymentClaim.error.required = Select ‘Yes’ if you want to delete this repayment claim
+
 # TODO: Placeholder screen messages for G2 - content will be updated in future
 addSchedule.title = Add Schedule
 addSchedule.heading = Add Schedule
@@ -239,6 +243,11 @@ addSchedule.placeholder = Content TBC
 makeCharityRepaymentClaim.title = Make Charity Repayment Claim
 makeCharityRepaymentClaim.heading = Make Charity Repayment Claim
 makeCharityRepaymentClaim.placeholder = Content TBC
+
+# TODO: Placeholder screen messages for AA1 - content will be updated in future
+charityRepaymentDashboard.title = Charity Repayment Dashboard
+charityRepaymentDashboard.heading = Charity Repayment Dashboard
+charityRepaymentDashboard.placeholder = Content TBC
 
 phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in a new tab)</a> will help us to improve it.
 phasebanner.phase=Beta
