@@ -47,14 +47,12 @@ final case class OrganisationDetailsAnswers(
       (nameOfCharityRegulator.isDefined && nameOfCharityRegulator.contains(
         NameOfCharityRegulator.None
       ) && reasonNotRegisteredWithRegulator.isEmpty)                              -> "reasonNotRegisteredWithRegulator.heading",
-
       (nameOfCharityRegulator.isDefined &&
         (nameOfCharityRegulator.contains(NameOfCharityRegulator.EnglandAndWales)
           || nameOfCharityRegulator.contains(NameOfCharityRegulator.Scottish)
           || nameOfCharityRegulator.contains(
             NameOfCharityRegulator.NorthernIreland
           )) && charityRegistrationNumber.isEmpty)                                -> "charityRegulatorNumber.heading",
-
       areYouACorporateTrustee.isEmpty                                             -> "corporateTrusteeClaim.heading",
       (areYouACorporateTrustee.contains(
         true

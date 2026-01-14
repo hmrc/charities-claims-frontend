@@ -36,23 +36,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
     "onPageLoad" - {
       "should render the page with No missing fields when answers are missing" in {
 
-        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
-          claimingGiftAid = Some(true),
-          claimingTaxDeducted = Some(false),
-          claimingUnderGiftAidSmallDonationsScheme = Some(true),
-          claimingReferenceNumber = Some(true),
-          claimReferenceNumber = Some("12345678AB")
-        )
-
-        val sessionData = SessionData(
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
-          organisationDetailsAnswers = None
-          )
-
         given application: Application = applicationBuilder().build()
-        val missingFields              = OrganisationDetailsAnswers().missingFields
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =

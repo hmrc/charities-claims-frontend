@@ -701,7 +701,6 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          println("------------------" + result.futureValue)
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some("next-page-after-organisation-details-check-your-answers")
 
