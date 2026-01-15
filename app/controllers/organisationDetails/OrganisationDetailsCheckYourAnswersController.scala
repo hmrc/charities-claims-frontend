@@ -20,6 +20,7 @@ import com.google.inject.Inject
 import controllers.actions.Actions
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.ClaimsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.OrganisationDetailsCheckYourAnswersView
 
@@ -28,6 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class OrganisationDetailsCheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
   actions: Actions,
+  claimsService: ClaimsService,
   val controllerComponents: MessagesControllerComponents,
   view: OrganisationDetailsCheckYourAnswersView
 )(implicit ec: ExecutionContext)
@@ -43,12 +45,12 @@ class OrganisationDetailsCheckYourAnswersController @Inject() (
     val checkAnswers = request.sessionData.organisationDetailsAnswers.exists(_.hasOrganisationDetailsCompleteAnswers)
     if checkAnswers
     then
-      Future.successful(
+      claimsService.save.map { _ =>
         Redirect(
           // TODO: replace with correct url when ready
           "next-page-after-organisation-details-check-your-answers"
         )
-      )
+      }
     else Future.successful(Redirect(routes.OrganisationDetailsIncompleteAnswersController.onPageLoad))
   }
 }

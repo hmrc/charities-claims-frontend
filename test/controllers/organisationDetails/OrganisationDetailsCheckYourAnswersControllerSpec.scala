@@ -693,7 +693,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         )
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData).build()
+          applicationBuilder(sessionData = sessionData).mockSaveClaim.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =

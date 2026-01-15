@@ -118,9 +118,8 @@ object OrganisationDetailsAnswers {
       reasonNotRegisteredWithRegulator = organisationDetails.reasonNotRegisteredWithRegulator,
       charityRegistrationNumber = organisationDetails.charityRegistrationNumber,
       areYouACorporateTrustee = Some(organisationDetails.areYouACorporateTrustee),
-      doYouHaveCorporateTrusteeUKAddress = Some(organisationDetails.doYouHaveCorporateTrusteeUKAddress),
-      doYouHaveAuthorisedOfficialTrusteeUKAddress =
-        Some(organisationDetails.doYouHaveAuthorisedOfficialTrusteeUKAddress),
+      doYouHaveCorporateTrusteeUKAddress = organisationDetails.doYouHaveCorporateTrusteeUKAddress,
+      doYouHaveAuthorisedOfficialTrusteeUKAddress = organisationDetails.doYouHaveAuthorisedOfficialTrusteeUKAddress,
       nameOfCorporateTrustee = organisationDetails.nameOfCorporateTrustee,
       corporateTrusteePostcode = organisationDetails.corporateTrusteePostcode,
       corporateTrusteeDaytimeTelephoneNumber = organisationDetails.corporateTrusteeDaytimeTelephoneNumber,
@@ -212,25 +211,43 @@ object OrganisationDetailsAnswers {
 
   def toOrganisationDetails(answers: OrganisationDetailsAnswers): Try[OrganisationDetails] =
     for {
-      nameOfCharityRegulator                      <- required(answers)(_.nameOfCharityRegulator)
-      areYouACorporateTrustee                     <- required(answers)(_.areYouACorporateTrustee)
-      doYouHaveAuthorisedOfficialTrusteeUKAddress <- required(answers)(_.doYouHaveAuthorisedOfficialTrusteeUKAddress)
-      doYouHaveCorporateTrusteeUKAddress          <- required(answers)(_.doYouHaveCorporateTrusteeUKAddress)
+      nameOfCharityRegulator  <- required(answers)(_.nameOfCharityRegulator)
+      areYouACorporateTrustee <- required(answers)(_.areYouACorporateTrustee)
     } yield OrganisationDetails(
       nameOfCharityRegulator = nameOfCharityRegulator,
-      reasonNotRegisteredWithRegulator = answers.reasonNotRegisteredWithRegulator,
-      charityRegistrationNumber = answers.charityRegistrationNumber,
+      reasonNotRegisteredWithRegulator =
+        if nameOfCharityRegulator == NameOfCharityRegulator.None then answers.reasonNotRegisteredWithRegulator
+        else None,
+      charityRegistrationNumber =
+        if nameOfCharityRegulator != NameOfCharityRegulator.None then answers.charityRegistrationNumber else None,
       areYouACorporateTrustee = areYouACorporateTrustee,
-      doYouHaveCorporateTrusteeUKAddress = doYouHaveCorporateTrusteeUKAddress,
-      doYouHaveAuthorisedOfficialTrusteeUKAddress = doYouHaveAuthorisedOfficialTrusteeUKAddress,
-      nameOfCorporateTrustee = answers.nameOfCorporateTrustee,
-      corporateTrusteePostcode = answers.corporateTrusteePostcode,
-      corporateTrusteeDaytimeTelephoneNumber = answers.corporateTrusteeDaytimeTelephoneNumber,
-      authorisedOfficialTrusteePostcode = answers.authorisedOfficialTrusteePostcode,
-      authorisedOfficialTrusteeDaytimeTelephoneNumber = answers.authorisedOfficialTrusteeDaytimeTelephoneNumber,
-      authorisedOfficialTrusteeTitle = answers.authorisedOfficialTrusteeTitle,
-      authorisedOfficialTrusteeFirstName = answers.authorisedOfficialTrusteeFirstName,
-      authorisedOfficialTrusteeLastName = answers.authorisedOfficialTrusteeLastName
+      doYouHaveCorporateTrusteeUKAddress =
+        if areYouACorporateTrustee && answers.doYouHaveCorporateTrusteeUKAddress.isDefined then
+          answers.doYouHaveCorporateTrusteeUKAddress
+        else None,
+      nameOfCorporateTrustee = if areYouACorporateTrustee then answers.nameOfCorporateTrustee else None,
+      corporateTrusteePostcode =
+        if areYouACorporateTrustee && answers.doYouHaveCorporateTrusteeUKAddress.contains(true) then
+          answers.corporateTrusteePostcode
+        else None,
+      corporateTrusteeDaytimeTelephoneNumber =
+        if areYouACorporateTrustee then answers.corporateTrusteeDaytimeTelephoneNumber else None,
+      doYouHaveAuthorisedOfficialTrusteeUKAddress =
+        if !areYouACorporateTrustee && answers.doYouHaveAuthorisedOfficialTrusteeUKAddress.isDefined then
+          answers.doYouHaveAuthorisedOfficialTrusteeUKAddress
+        else None,
+      authorisedOfficialTrusteePostcode =
+        if !areYouACorporateTrustee && answers.doYouHaveAuthorisedOfficialTrusteeUKAddress.contains(true) then
+          answers.authorisedOfficialTrusteePostcode
+        else None,
+      authorisedOfficialTrusteeDaytimeTelephoneNumber =
+        if !areYouACorporateTrustee then answers.authorisedOfficialTrusteeDaytimeTelephoneNumber else None,
+      authorisedOfficialTrusteeTitle =
+        if !areYouACorporateTrustee then answers.authorisedOfficialTrusteeTitle else None,
+      authorisedOfficialTrusteeFirstName =
+        if !areYouACorporateTrustee then answers.authorisedOfficialTrusteeFirstName else None,
+      authorisedOfficialTrusteeLastName =
+        if !areYouACorporateTrustee then answers.authorisedOfficialTrusteeLastName else None
     )
 
 }

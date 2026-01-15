@@ -122,8 +122,8 @@ object TestClaims {
             reasonNotRegisteredWithRegulator = reasonNotRegisteredWithRegulator,
             charityRegistrationNumber = Some(charityRegistrationNumber),
             areYouACorporateTrustee = areYouACorporateTrustee,
-            doYouHaveCorporateTrusteeUKAddress = doYouHaveCorporateTrusteeUKAddress,
-            doYouHaveAuthorisedOfficialTrusteeUKAddress = doYouHaveAuthorisedOfficialTrusteeUKAddress,
+            doYouHaveCorporateTrusteeUKAddress = Some(doYouHaveCorporateTrusteeUKAddress),
+            doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(doYouHaveAuthorisedOfficialTrusteeUKAddress),
             nameOfCorporateTrustee = Some(nameOfCorporateTrustee),
             corporateTrusteePostcode = Some(corporateTrusteePostcode),
             corporateTrusteeDaytimeTelephoneNumber = Some(corporateTrusteeDaytimeTelephoneNumber)
