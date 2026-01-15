@@ -30,6 +30,7 @@
 @layout(
    pageTitle = titleNoForm(messages("organisationDetailsCheckYourAnswers.title"))) {
 
+   <span class="govuk-caption-l">@messages("organisationDetailsCheckYourAnswers.caption")</span>
    <h1 class="govuk-heading-l">@messages("organisationDetailsCheckYourAnswers.heading")</h1>
 
    @govukSummaryList(OrganisationDetailsCheckYourAnswersHelper.buildSummaryList(answers))

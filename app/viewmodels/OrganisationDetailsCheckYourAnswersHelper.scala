@@ -39,7 +39,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
                   controllers.organisationDetails.routes.NameOfCharityRegulatorController
                     .onPageLoad(CheckMode)
                     .url,
-                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.change.hidden")
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
                 )
               )
             case Some(NorthernIreland)             =>
@@ -50,7 +50,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
                   controllers.organisationDetails.routes.NameOfCharityRegulatorController
                     .onPageLoad(CheckMode)
                     .url,
-                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.change.hidden")
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
                 )
               )
             case Some(Scottish)                    =>
@@ -61,7 +61,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
                   controllers.organisationDetails.routes.NameOfCharityRegulatorController
                     .onPageLoad(CheckMode)
                     .url,
-                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.change.hidden")
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
                 )
               )
             case Some(NameOfCharityRegulator.None) =>
@@ -72,7 +72,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
                   controllers.organisationDetails.routes.NameOfCharityRegulatorController
                     .onPageLoad(CheckMode)
                     .url,
-                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.change.hidden")
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
                 )
               )
             case _                                 =>
@@ -154,7 +154,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
                       controllers.organisationDetails.routes.CharityRegulatorNumberController
                         .onPageLoad(CheckMode)
                         .url,
-                      messages("organisationDetailsCheckYourAnswers.charityRegulatorNumber.change.hidden")
+                      messages("organisationDetailsCheckYourAnswers.charityRegulatorNumber.label")
                     )
                   )
                 case _            =>
@@ -181,7 +181,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
                   controllers.organisationDetails.routes.CorporateTrusteeClaimController
                     .onPageLoad(CheckMode)
                     .url,
-                  messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.change.hidden")
+                  messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label")
                 )
               )
             case _           =>
@@ -252,15 +252,6 @@ object OrganisationDetailsCheckYourAnswersHelper {
               }
             case (_, _)           =>
               None
-//              Some(
-//                missingDataRow(
-//                  messages("organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label"),
-//                  controllers.organisationDetails.routes.CorporateTrusteeAddressController
-//                    .onPageLoad(CheckMode)
-//                    .url,
-//                  messages("organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label")
-//                )
-//              )
           },
           (
             buildList.areYouACorporateTrustee,
