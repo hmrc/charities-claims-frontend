@@ -46,8 +46,8 @@ class OrganisationDetailsAnswersSpec extends BaseSpec {
         reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
         charityRegistrationNumber = Some("1234567890"),
         areYouACorporateTrustee = true,
-        doYouHaveCorporateTrusteeUKAddress = true,
-        doYouHaveAuthorisedOfficialTrusteeUKAddress = false,
+        doYouHaveCorporateTrusteeUKAddress = Some(true),
+        doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
         nameOfCorporateTrustee = Some("John Doe"),
         corporateTrusteePostcode = Some("AA1 2BB"),
         corporateTrusteeDaytimeTelephoneNumber = Some("07912345678")
