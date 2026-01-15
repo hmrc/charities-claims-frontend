@@ -20,8 +20,6 @@ import controllers.ControllerSpec
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.CannotViewOrManageClaimView
-import config.FrontendAppConfig
 
 class CannotViewOrManageClaimControllerSpec extends ControllerSpec {
 
@@ -29,8 +27,6 @@ class CannotViewOrManageClaimControllerSpec extends ControllerSpec {
     "onPageLoad" - {
       "should render the page correctly" in {
         given application: Application = applicationBuilder().build()
-        val view                       = application.injector.instanceOf[CannotViewOrManageClaimView]
-        val appConfig                  = application.injector.instanceOf[FrontendAppConfig]
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =

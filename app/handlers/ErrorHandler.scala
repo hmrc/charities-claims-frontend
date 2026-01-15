@@ -27,7 +27,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Result
 import models.UpdatedByAnotherUserException
-import play.api.mvc.Results.BadRequest
+import play.api.mvc.Results.Redirect
 import play.api.Logger
 
 @Singleton
@@ -45,9 +45,8 @@ class ErrorHandler @Inject() (
       case UpdatedByAnotherUserException(message) =>
         logger.error(message)
         Future.successful(
-          BadRequest("Screen WRN4-You can not manage this claim")
-          // Redirect(controllers.organisationDetails.routes.CannotViewOrManageClaimController.onPageLoad)
-        ) // TODO: Replace with the correct path to CannotViewOrManageClaim page
+          Redirect(controllers.organisationDetails.routes.CannotViewOrManageClaimController.onPageLoad)
+        )
       case _                                      =>
         super.resolveError(rh, ex)
     }

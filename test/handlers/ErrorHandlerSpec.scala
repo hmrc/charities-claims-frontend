@@ -26,7 +26,7 @@ import models.UpdatedByAnotherUserException
 class ErrorHandlerSpec extends ControllerSpec {
 
   "ErrorHandler" - {
-    "should return a BadRequest if the exception is UpdatedByAnotherUserException" in {
+    "should redirect if the exception is UpdatedByAnotherUserException" in {
 
       given application: Application = applicationBuilder().build()
       val errorHandler               = application.injector.instanceOf[ErrorHandler]
@@ -37,7 +37,7 @@ class ErrorHandlerSpec extends ControllerSpec {
         val exception = UpdatedByAnotherUserException("test")
         val result    = errorHandler.resolveError(request, exception)
 
-        status(result) shouldEqual BAD_REQUEST
+        status(result) shouldEqual SEE_OTHER
       }
 
     }
@@ -52,7 +52,6 @@ class ErrorHandlerSpec extends ControllerSpec {
         val result                                         = errorHandler.resolveError(request, exception)
 
         status(result) shouldEqual INTERNAL_SERVER_ERROR
-
       }
     }
   }
