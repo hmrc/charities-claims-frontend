@@ -43,27 +43,55 @@ final case class OrganisationDetailsAnswers(
 ) {
   def missingFields: List[String] =
     List(
-      nameOfCharityRegulator.isEmpty                                              -> "nameOfCharityRegulator.heading",
+      nameOfCharityRegulator.isEmpty                            -> "nameOfCharityRegulator.heading",
       (nameOfCharityRegulator.isDefined && nameOfCharityRegulator.contains(
         NameOfCharityRegulator.None
-      ) && reasonNotRegisteredWithRegulator.isEmpty)                              -> "reasonNotRegisteredWithRegulator.heading",
+      ) && reasonNotRegisteredWithRegulator.isEmpty)            -> "reasonNotRegisteredWithRegulator.heading",
       (nameOfCharityRegulator.isDefined &&
         (nameOfCharityRegulator.contains(NameOfCharityRegulator.EnglandAndWales)
           || nameOfCharityRegulator.contains(NameOfCharityRegulator.Scottish)
           || nameOfCharityRegulator.contains(
             NameOfCharityRegulator.NorthernIreland
-          )) && charityRegistrationNumber.isEmpty)                                -> "charityRegulatorNumber.heading",
-      areYouACorporateTrustee.isEmpty                                             -> "corporateTrusteeClaim.heading",
+          )) && charityRegistrationNumber.isEmpty)              -> "charityRegulatorNumber.heading",
+      areYouACorporateTrustee.isEmpty                           -> "corporateTrusteeClaim.heading",
       (areYouACorporateTrustee.contains(
         true
-      ) && doYouHaveCorporateTrusteeUKAddress.isEmpty)                            -> "corporateTrusteeAddress.heading",
-      (areYouACorporateTrustee.contains(true) && corporateTrusteeDetails.isEmpty) -> "corporateTrusteeDetails.heading",
+      ) && doYouHaveCorporateTrusteeUKAddress.isEmpty)          -> "corporateTrusteeAddress.heading",
+      (
+        areYouACorporateTrustee.contains(true)
+          && doYouHaveCorporateTrusteeUKAddress.contains(true)
+          && (
+            corporateTrusteePostcode.isEmpty
+              || nameOfCorporateTrustee.isEmpty
+              || corporateTrusteeDaytimeTelephoneNumber.isEmpty
+          )
+      )                                                         -> "corporateTrusteeDetails.heading",
+      (
+        areYouACorporateTrustee.contains(true)
+          && doYouHaveCorporateTrusteeUKAddress.contains(false)
+          && (
+            corporateTrusteePostcode.isEmpty
+              || nameOfCorporateTrustee.isEmpty
+          )
+      )                                                         -> "corporateTrusteeDetails.heading",
       (areYouACorporateTrustee.contains(
         false
-      ) && doYouHaveAuthorisedOfficialTrusteeUKAddress.isEmpty)                   -> "authorisedOfficialAddress.heading",
-      (areYouACorporateTrustee.contains(
-        false
-      ) && authorisedOfficialDetails.isEmpty)                                     -> "authorisedOfficialDetails.heading"
+      ) && doYouHaveAuthorisedOfficialTrusteeUKAddress.isEmpty) -> "authorisedOfficialAddress.heading",
+      (areYouACorporateTrustee.contains(false)
+        && doYouHaveAuthorisedOfficialTrusteeUKAddress.contains(true)
+        && (authorisedOfficialTrusteeFirstName.isEmpty
+          || authorisedOfficialTrusteeFirstName.isEmpty
+          || authorisedOfficialTrusteeDaytimeTelephoneNumber.isEmpty
+          || authorisedOfficialTrusteePostcode.isEmpty))        -> "authorisedOfficialDetails.heading",
+      (
+        areYouACorporateTrustee.contains(false)
+          && doYouHaveAuthorisedOfficialTrusteeUKAddress.contains(false)
+          && (
+            authorisedOfficialTrusteeFirstName.isEmpty
+              || authorisedOfficialTrusteeLastName.isEmpty
+              || authorisedOfficialTrusteeDaytimeTelephoneNumber.isEmpty
+          )
+      )                                                         -> "authorisedOfficialDetails.heading"
     ).collect { case (true, key) => key }
 
   def hasOrganisationDetailsCompleteAnswers: Boolean = missingFields.isEmpty
