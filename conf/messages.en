@@ -196,19 +196,19 @@ authorisedOfficialDetails.phoneNumber = Phone number
 authorisedOfficialDetails.postcode = Postcode
 
 authorisedOfficialDetails.title.error.length = Authorised official title must be 4 characters or less
-authorisedOfficialDetails.title.error.format = Enter a correct authorised official title format
+authorisedOfficialDetails.title.error.format = Enter an authorised official title in the correct format
 
 authorisedOfficialDetails.firstName.error.required = Enter an authorised official first name
 authorisedOfficialDetails.firstName.error.length = Authorised official first name must be 35 characters or less
-authorisedOfficialDetails.firstName.error.format = Enter a correct authorised official first name format
+authorisedOfficialDetails.firstName.error.format = Enter an authorised official first name in the correct format
 
 authorisedOfficialDetails.lastName.error.required = Enter an authorised official last name
 authorisedOfficialDetails.lastName.error.length = Authorised official last name must be 35 characters or less
-authorisedOfficialDetails.lastName.error.format = Enter a correct authorised official last name format
+authorisedOfficialDetails.lastName.error.format = Enter an authorised official last name in the correct format
 
 authorisedOfficialDetails.phoneNumber.error.required = Enter an authorised official phone number
 authorisedOfficialDetails.phoneNumber.error.length = Authorised official phone number must be 35 characters or less
-authorisedOfficialDetails.phoneNumber.error.format = Enter a correct authorised official phone number format
+authorisedOfficialDetails.phoneNumber.error.format = Enter a correct authorised official phone number
 
 authorisedOfficialDetails.postcode.error.required = Enter an authorised official postcode
 authorisedOfficialDetails.postcode.error.length = Authorised official postcode must be 8 characters or less
