@@ -25,6 +25,10 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import scala.concurrent.{ExecutionContext, Future}
 
 import javax.inject.{Inject, Singleton}
+import play.api.mvc.Result
+import models.UpdatedByAnotherUserException
+import play.api.mvc.Results.Redirect
+import play.api.Logger
 
 @Singleton
 class ErrorHandler @Inject() (
@@ -33,6 +37,19 @@ class ErrorHandler @Inject() (
 )(implicit override protected val ec: ExecutionContext)
     extends FrontendErrorHandler
     with I18nSupport {
+
+  private val logger = Logger(getClass)
+
+  override def resolveError(rh: RequestHeader, ex: Throwable): Future[Result] =
+    ex match {
+      case UpdatedByAnotherUserException(message) =>
+        logger.error(message)
+        Future.successful(
+          Redirect(controllers.organisationDetails.routes.CannotViewOrManageClaimController.onPageLoad)
+        )
+      case _                                      =>
+        super.resolveError(rh, ex)
+    }
 
   def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit
     rh: RequestHeader

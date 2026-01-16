@@ -111,6 +111,8 @@ POST        /delete-gasds-connected-charities-schedule      controllers.organisa
 GET         /delete-repayment-claim                         controllers.organisationDetails.DeleteRepaymentClaimController.onPageLoad
 POST        /delete-repayment-claim                         controllers.organisationDetails.DeleteRepaymentClaimController.onSubmit
 
+GET         /cannot-view-or-manage-claim                    controllers.organisationDetails.CannotViewOrManageClaimController.onPageLoad
+
 # TODO: Placeholder screen for G2 - route will be updated in future
 GET         /add-schedule                                   controllers.organisationDetails.AddScheduleController.onPageLoad
 

@@ -21,6 +21,7 @@ import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
 import views.html.CheckYourAnswersView
 import play.api.Application
+import play.api.test.Helpers.*
 import models.RepaymentClaimDetailsAnswers
 import models.*
 
@@ -168,6 +169,42 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
         status(result) shouldEqual SEE_OTHER
 
         redirectLocation(result) shouldEqual Some(routes.IncompleteAnswersController.onPageLoad.url)
+
+      }
+    }
+
+    "should redirect to CannotViewOrManageClaim page when UpdatedByAnotherUserException is thrown" in {
+
+      val sessionData = SessionData(
+        repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
+          claimingGiftAid = Some(true),
+          claimingTaxDeducted = Some(false),
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingReferenceNumber = Some(true),
+          claimReferenceNumber = Some("12345678AB")
+        )
+      )
+
+      val mockClaimsService = mock[services.ClaimsService]
+      (mockClaimsService
+        .save(using _: models.requests.DataRequest[?], _: uk.gov.hmrc.http.HeaderCarrier))
+        .expects(*, *)
+        .returning(scala.concurrent.Future.failed(UpdatedByAnotherUserException("UPDATED_BY_ANOTHER_USER")))
+
+      given application: Application =
+        applicationBuilder(sessionData = sessionData)
+          .overrides(play.api.inject.bind[services.ClaimsService].toInstance(mockClaimsService))
+          .build()
+
+      running(application) {
+        val request     = FakeRequest(POST, routes.CheckYourAnswersController.onSubmit.url)
+        val caught      = intercept[UpdatedByAnotherUserException](await(route(application, request).value))
+        val errorResult = application.injector.instanceOf[handlers.ErrorHandler].resolveError(request, caught)
+
+        status(errorResult) shouldEqual SEE_OTHER
+        redirectLocation(errorResult) shouldEqual Some(
+          controllers.organisationDetails.routes.CannotViewOrManageClaimController.onPageLoad.url
+        )
 
       }
     }
