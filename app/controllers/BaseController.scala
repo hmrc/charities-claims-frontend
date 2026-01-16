@@ -47,6 +47,9 @@ trait BaseController extends FrontendBaseController with I18nSupport {
   def hadNoWarningShown(using request: Request[AnyContent]): Boolean =
     !request.body.asFormUrlEncoded.flatMap(_.get("warningShown").flatMap(_.headOption)).contains("true")
 
+  def warningWasShown(using request: Request[AnyContent]): Boolean =
+    !hadNoWarningShown
+
   extension (result: Result) {
     def withWarning(answer: String): Result =
       result.flashing("warning" -> "true", "warningAnswer" -> answer)

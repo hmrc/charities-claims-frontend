@@ -16,17 +16,18 @@
 
 package controllers.repaymentclaimdetails
 
-import services.SaveService
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
-import views.html.ClaimingGiftAidView
 import controllers.actions.Actions
 import forms.YesNoFormProvider
-import models.RepaymentClaimDetailsAnswers
-import models.Mode
+import models.{Mode, RepaymentClaimDetailsAnswers}
 import models.Mode.*
 import play.api.data.Form
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.{ClaimsValidationService, SaveService}
+import views.html.ClaimingGiftAidView
+
+import cats.implicits.*
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,7 +36,8 @@ class ClaimingGiftAidController @Inject() (
   actions: Actions,
   view: ClaimingGiftAidView,
   formProvider: YesNoFormProvider,
-  saveService: SaveService
+  saveService: SaveService,
+  claimsValidationService: ClaimsValidationService
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -52,22 +54,26 @@ class ClaimingGiftAidController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            if hadNoWarningShown && RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(value)
+          claimingGiftAid =>
+            if hadNoWarningShown && RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(claimingGiftAid)
             then
               Future.successful(
                 Redirect(routes.ClaimingGiftAidController.onPageLoad(mode))
-                  .withWarning(value.toString)
+                  .withWarning(claimingGiftAid.toString)
               )
             else
-              saveService
-                .save(RepaymentClaimDetailsAnswers.setClaimingGiftAid(value))
-                .map { _ =>
-                  if (mode == CheckMode) {
-                    Redirect(routes.CheckYourAnswersController.onPageLoad)
-                  } else {
-                    Redirect(routes.ClaimingOtherIncomeController.onPageLoad(NormalMode))
-                  }
+              claimsValidationService.deleteGiftAidSchedule
+                .whenA(warningWasShown && !claimingGiftAid)
+                .flatMap { _ =>
+                  saveService
+                    .save(RepaymentClaimDetailsAnswers.setClaimingGiftAid(claimingGiftAid))
+                    .map { _ =>
+                      if (mode == CheckMode) {
+                        Redirect(routes.CheckYourAnswersController.onPageLoad)
+                      } else {
+                        Redirect(routes.ClaimingOtherIncomeController.onPageLoad(NormalMode))
+                      }
+                    }
                 }
         )
     }

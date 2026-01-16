@@ -113,6 +113,42 @@ class BaseControllerSpec extends ControllerSpec {
       }
     }
 
+    "warningWasShown" - {
+      "should return false when warningShown is not present" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, "/test")
+              .withFormUrlEncodedBody("someField" -> "value")
+
+          val controller = new BaseController {
+            val controllerComponents: MessagesControllerComponents =
+              application.injector.instanceOf[MessagesControllerComponents]
+          }
+
+          controller.warningWasShown shouldBe false
+        }
+      }
+
+      "should return true when warningShown is true in body" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, "/test")
+              .withFormUrlEncodedBody("warningShown" -> "true")
+
+          val controller = new BaseController {
+            val controllerComponents: MessagesControllerComponents =
+              application.injector.instanceOf[MessagesControllerComponents]
+          }
+
+          controller.warningWasShown shouldBe true
+        }
+      }
+    }
+
     "warningAnswerString" - {
       "should return None when no warning answer exists" in {
         given application: Application = applicationBuilder().build()
