@@ -39,16 +39,20 @@ class AuthorisedOfficialDetailsController @Inject() (
     extends BaseController {
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress match {
-      case Some(isUkAddress) =>
-        val form           = formProvider(isUkAddress)
-        val previousAnswer = OrganisationDetailsAnswers.getAuthorisedOfficialDetails
-        val preparedForm   = previousAnswer.fold(form)(form.fill)
+    if (OrganisationDetailsAnswers.getAreYouACorporateTrustee.contains(false)) {
+      OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress match {
+        case Some(isUkAddress) =>
+          val form           = formProvider(isUkAddress)
+          val previousAnswer = OrganisationDetailsAnswers.getAuthorisedOfficialDetails
+          val preparedForm   = previousAnswer.fold(form)(form.fill)
 
-        Future.successful(Ok(view(preparedForm, isUkAddress, mode)))
+          Future.successful(Ok(view(preparedForm, isUkAddress, mode)))
 
-      case None =>
-        Future.successful(Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(mode)))
+        case None =>
+          Future.successful(Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(mode)))
+      }
+    } else {
+      Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
     }
   }
 
