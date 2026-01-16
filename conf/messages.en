@@ -85,6 +85,11 @@ claimingOtherIncome.title = Are you claiming tax deducted from other income?
 claimingOtherIncome.warning = TBC Your data for this section will be lost if you change your answer.
 error.browser.title.prefix = Error:
 
+updateRepaymentClaim.title = Do you want to update this repayment claim?
+updateRepaymentClaim.heading = Do you want to update this repayment claim?
+updateRepaymentClaim.hint = If you change this claim, you’ll lose any data you’ve already given or attached.
+updateRepaymentClaim.error.required = Select ‘Yes’ if you want to update this repayment claim
+
 global.error.InternalServerError500.heading = Sorry, there is a problem with this service
 global.error.InternalServerError500.message = Try again later or contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services" target="_blank">HMRC Online Services Helpdesk (opens in new tab)</a>.
 global.error.InternalServerError500.title = Sorry, there is a problem with this service

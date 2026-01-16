@@ -43,6 +43,9 @@ POST        /check-your-claim-details                       controllers.repaymen
 
 GET         /min-data-placeholder                           controllers.repaymentclaimdetails.IncompleteAnswersController.onPageLoad
 
+GET         /update-repayment-claim                         controllers.repaymentClaimDetails.UpdateRepaymentClaimController.onPageLoad
+POST        /update-repayment-claim                         controllers.repaymentClaimDetails.UpdateRepaymentClaimController.onSubmit
+
 GET         /about-the-organisation                         controllers.organisationDetails.AboutTheOrganisationController.onPageLoad
 POST        /about-the-organisation                         controllers.organisationDetails.AboutTheOrganisationController.onSubmit
 
