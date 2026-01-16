@@ -19,7 +19,7 @@ package forms
 import javax.inject.Inject
 import models.AuthorisedOfficialDetails
 import play.api.data.Form
-import play.api.data.Forms.{mapping, optional}
+import play.api.data.Forms.mapping
 
 class AuthorisedOfficialDetailsFormProvider @Inject() extends Mappings {
 
@@ -31,7 +31,7 @@ class AuthorisedOfficialDetailsFormProvider @Inject() extends Mappings {
   def apply(isUkAddress: Boolean): Form[AuthorisedOfficialDetails] = Form(
     mapping(
       "title"       -> optional(
-        play.api.data.Forms.text
+        text("")
           .verifying(
             firstError(
               maxLength(4, "authorisedOfficialDetails.title.error.length"),

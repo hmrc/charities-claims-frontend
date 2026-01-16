@@ -18,7 +18,7 @@ package forms
 
 import play.api.data.Forms.of
 import models.*
-import play.api.data.FieldMapping
+import play.api.data.{FieldMapping, Mapping}
 
 trait Mappings extends Formatters with Constraints {
 
@@ -42,4 +42,5 @@ trait Mappings extends Formatters with Constraints {
   ): FieldMapping[String] =
     of(using stringFormatter(requiredKey, args))
 
+  def optional[A](mapping: Mapping[A]): Mapping[Option[A]] = OptionalMapping(mapping)
 }
