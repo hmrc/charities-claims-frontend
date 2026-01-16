@@ -25,7 +25,6 @@ import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import views.html.CorporateTrusteeDetailsView
 import models.Mode.*
-import play.api.Logger
 
 class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
   val uKAddressTrue: Boolean  = true
@@ -66,8 +65,6 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
           )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        Logger(getClass).warn(s"*** checking test: result corporate trustee Details controller test }")
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =

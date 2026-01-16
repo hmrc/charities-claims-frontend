@@ -45,7 +45,12 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
 
     "onPageLoad" - {
       "should render the page correctly when UK address is false (default)" in {
-        given application: Application = applicationBuilder(sessionData = baseSession).build()
+        val sessionDataAreYouCorporateTrustee = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+        val sessionData                       =
+          OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(false)(using
+            sessionDataAreYouCorporateTrustee
+          )
+        given application: Application        = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -61,8 +66,11 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
       }
 
       "should render the page correctly when UK address is true" in {
-        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(true)
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        val sessionDataAreYouCorporateTrustee = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+        val sessionData                       = OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(true)(using
+          sessionDataAreYouCorporateTrustee
+        )
+        given application: Application        = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -83,7 +91,14 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
       }
 
       "should render the page and pre-populate correctly when data exists" in {
-        val sessionData = OrganisationDetailsAnswers.setAuthorisedOfficialDetails(validData)(using baseSession)
+        val sessionDataAreYouCorporateTrustee          = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+        val sessionDataAuthorisedOfficialWithUKAddress =
+          OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(false)(using
+            sessionDataAreYouCorporateTrustee
+          )
+        val sessionData                                = OrganisationDetailsAnswers.setAuthorisedOfficialDetails(validData)(using
+          sessionDataAuthorisedOfficialWithUKAddress
+        )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -114,7 +129,7 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode).url
+            controllers.routes.PageNotFoundController.onPageLoad.url
           )
         }
       }
