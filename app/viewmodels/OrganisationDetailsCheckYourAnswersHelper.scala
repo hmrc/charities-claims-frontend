@@ -317,15 +317,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
                   )
                 )
             case (Some(true), _, _)            =>
-              Some(
-                missingDataRow(
-                  messages("organisationDetailsCheckYourAnswers.CorporateTrusteeDetails.label"),
-                  controllers.organisationDetails.routes.CorporateTrusteeDetailsController
-                    .onPageLoad(CheckMode)
-                    .url,
-                  messages("organisationDetailsCheckYourAnswers.CorporateTrusteeDetails.change.hidden")
-                )
-              )
+              None
             case (Some(false), _, Some(false)) =>
               if buildList.authorisedOfficialTrusteeFirstName.isDefined | buildList.authorisedOfficialTrusteeLastName.isDefined | buildList.authorisedOfficialTrusteeDaytimeTelephoneNumber.isDefined
               then
@@ -387,15 +379,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
                   )
                 )
             case (Some(false), _, _)           =>
-              Some(
-                missingDataRow(
-                  messages("organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.label"),
-                  controllers.organisationDetails.routes.AuthorisedOfficialDetailsController
-                    .onPageLoad(CheckMode)
-                    .url,
-                  messages("organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.change.hidden")
-                )
-              )
+              None
             case (_, _, _)                     =>
               None
           }
