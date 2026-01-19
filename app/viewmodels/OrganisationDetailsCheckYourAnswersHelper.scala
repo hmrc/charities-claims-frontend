@@ -324,13 +324,21 @@ object OrganisationDetailsCheckYourAnswersHelper {
                 Some(
                   summaryRowHTML(
                     messages("organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.label"),
-                    messages(buildList.authorisedOfficialTrusteeTitle.getOrElse("")) +
-                      "<br>" +
+                    if buildList.authorisedOfficialTrusteeTitle.isEmpty then
                       messages(buildList.authorisedOfficialTrusteeFirstName.getOrElse(""))
-                      + "<br>" +
-                      messages(buildList.authorisedOfficialTrusteeLastName.getOrElse(""))
-                      + "<br>" +
-                      messages(buildList.authorisedOfficialTrusteeDaytimeTelephoneNumber.getOrElse("")),
+                        + "<br>" +
+                        messages(buildList.authorisedOfficialTrusteeLastName.getOrElse(""))
+                        + "<br>" +
+                        messages(buildList.authorisedOfficialTrusteeDaytimeTelephoneNumber.getOrElse(""))
+                    else
+                      messages(buildList.authorisedOfficialTrusteeTitle.getOrElse("")) +
+                        "<br>" +
+                        messages(buildList.authorisedOfficialTrusteeFirstName.getOrElse(""))
+                        + "<br>" +
+                        messages(buildList.authorisedOfficialTrusteeLastName.getOrElse(""))
+                        + "<br>" +
+                        messages(buildList.authorisedOfficialTrusteeDaytimeTelephoneNumber.getOrElse(""))
+                    ,
                     controllers.organisationDetails.routes.AuthorisedOfficialDetailsController
                       .onPageLoad(CheckMode)
                       .url,
@@ -353,15 +361,25 @@ object OrganisationDetailsCheckYourAnswersHelper {
                 Some(
                   summaryRowHTML(
                     messages("organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.label"),
-                    messages(buildList.authorisedOfficialTrusteeTitle.getOrElse("")) +
-                      "<br>" +
+                    if buildList.authorisedOfficialTrusteeTitle.isEmpty then
                       messages(buildList.authorisedOfficialTrusteeFirstName.getOrElse(""))
-                      + "<br>" +
-                      messages(buildList.authorisedOfficialTrusteeLastName.getOrElse(""))
-                      + "<br>" +
-                      messages(buildList.authorisedOfficialTrusteeDaytimeTelephoneNumber.getOrElse(""))
-                      + "<br>" +
-                      messages(buildList.authorisedOfficialTrusteePostcode.getOrElse("")),
+                        + "<br>" +
+                        messages(buildList.authorisedOfficialTrusteeLastName.getOrElse(""))
+                        + "<br>" +
+                        messages(buildList.authorisedOfficialTrusteeDaytimeTelephoneNumber.getOrElse(""))
+                        + "<br>" +
+                        messages(buildList.authorisedOfficialTrusteePostcode.getOrElse(""))
+                    else
+                      messages(buildList.authorisedOfficialTrusteeTitle.getOrElse("")) +
+                        "<br>" +
+                        messages(buildList.authorisedOfficialTrusteeFirstName.getOrElse(""))
+                        + "<br>" +
+                        messages(buildList.authorisedOfficialTrusteeLastName.getOrElse(""))
+                        + "<br>" +
+                        messages(buildList.authorisedOfficialTrusteeDaytimeTelephoneNumber.getOrElse(""))
+                        + "<br>" +
+                        messages(buildList.authorisedOfficialTrusteePostcode.getOrElse(""))
+                    ,
                     controllers.organisationDetails.routes.AuthorisedOfficialDetailsController
                       .onPageLoad(CheckMode)
                       .url,
