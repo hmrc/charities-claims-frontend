@@ -50,8 +50,22 @@ trait BaseController extends FrontendBaseController with I18nSupport {
   def warningWasShown(using request: Request[AnyContent]): Boolean =
     !hadNoWarningShown
 
+  // TODO: remove unused flash methods if they are not needed now
+  def updateSource(using request: Request[AnyContent]): Option[String] =
+    request.flash.get("updateSource")
+
+  def updateMode(using request: Request[AnyContent]): Option[String] =
+    request.flash.get("updateMode")
+
   extension (result: Result) {
     def withWarning(answer: String): Result =
       result.flashing("warning" -> "true", "warningAnswer" -> answer)
+
+    def withUpdateConfirmation(source: String, mode: String): Result =
+      result.flashing(
+        "warning"      -> "true",
+        "updateSource" -> source,
+        "updateMode"   -> mode
+      )
   }
 }

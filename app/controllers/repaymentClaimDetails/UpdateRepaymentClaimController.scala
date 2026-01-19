@@ -19,12 +19,12 @@ package controllers.repaymentClaimDetails
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
-import connectors.ClaimsConnector
 import forms.YesNoFormProvider
+import models.RepaymentClaimDetailsAnswers
+import play.api.Logging
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import services.{ClaimsValidationService, SaveService}
 import views.html.UpdateRepaymentClaimView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,57 +34,111 @@ class UpdateRepaymentClaimController @Inject() (
   view: UpdateRepaymentClaimView,
   actions: Actions,
   formProvider: YesNoFormProvider,
-  claimsConnector: ClaimsConnector
+  saveService: SaveService,
+  claimsValidationService: ClaimsValidationService
 )(using ec: ExecutionContext)
-    extends BaseController {
+    extends BaseController
+    with Logging {
 
   val form: Form[Boolean] = formProvider("updateRepaymentClaim.error.required")
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(form))
+    // confirm and validate play flash parameters are present
+    (updateSource, updateMode) match {
+      case (Some(source), Some(mode)) =>
+        // confirm flash mode is CheckMode - possibly not needed
+        if (mode != "CheckMode") {
+          logger.warn(s"Incorrect mode used with mode=$mode, expected CheckMode")
+        }
+        // otherwise render view - flash data in hidden fields
+        Ok(view(form))
+
+      case _ =>
+        // if missing flash parameters then we redirect to CYA
+        logger.error(
+          "Missing required Flash parameters (updateSource/updateMode)"
+        )
+        Redirect(controllers.repaymentclaimdetails.routes.CheckYourAnswersController.onPageLoad)
+    }
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          (value, request.sessionData.unsubmittedClaimId) match {
-            case (false, _) =>
-              // TODO: NO - This redirects to R1.6 CYA - no action taken
-              Future.successful(
-                Redirect(controllers.repaymentclaimdetails.routes.CheckYourAnswersController.onPageLoad)
-              )
+        wantsToUpdate => {
+          // check hidden fields from form submission
+          val source = request.body.asFormUrlEncoded.flatMap(_.get("updateSource").flatMap(_.headOption))
+          val mode   = request.body.asFormUrlEncoded.flatMap(_.get("updateMode").flatMap(_.headOption))
 
-            case (true, None)          =>
-              Future.failed(
-                new RuntimeException(
-                  "No unsubmittedClaimId found in session when attempting to update repayment claim"
-                )
-              )
-            // TODO: make update here, if success we redirect to R2, if not then we handle exception
-            case (true, Some(claimId)) =>
-              claimsConnector
-                .deleteClaim(claimId)
-                .flatMap {
-                  case true  =>
-                    // TODO: YES - This redirects to placeholder R2 screen - route to be updated in the future
-                    Future.successful(
-                      Redirect(
-                        controllers.organisationDetails.routes.MakeCharityRepaymentClaimController.onPageLoad
-                      )
-                    )
-                  case false =>
-                    Future.failed(
-                      new RuntimeException(
-                        s"Failed to update claim with claimId: $claimId - backend returned success: false"
-                      )
-                    )
-                }
+          if (!wantsToUpdate) {
+            // user selected NO - no update, redirect to CYA
+            Future.successful(Redirect(controllers.repaymentclaimdetails.routes.CheckYourAnswersController.onPageLoad))
+          } else {
+            // user selected YES - continue with deletion and save, checking source
+            source match {
+              case Some("claimingGiftAid") =>
+                // delete Gift Aid schedule and save the new value to false
+                claimsValidationService.deleteGiftAidSchedule
+                  .flatMap { _ =>
+                    saveService
+                      .save(RepaymentClaimDetailsAnswers.setClaimingGiftAid(false))
+                      .map { _ =>
+                        // TODO: redirect to R2 screen - this route will be updated in the future
+                        Redirect(controllers.organisationDetails.routes.MakeCharityRepaymentClaimController.onPageLoad)
+                      }
+                  }
+                  .recover { case exception =>
+                    logger
+                      .error(s"Failed to delete Gift Aid schedule or update data: ${exception.getMessage}", exception)
+                    Redirect(controllers.repaymentclaimdetails.routes.CheckYourAnswersController.onPageLoad)
+                  }
+
+              case Some("claimingOtherIncome") =>
+                // TODO: uncomment when ClaimsValidationService.deleteOtherIncomeSchedule is implemented
+                // claimsValidationService.deleteOtherIncomeSchedule
+                //   .flatMap { _ =>
+                saveService
+                  .save(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false))
+                  .map { _ =>
+                    // TODO: redirect to R2 screen - this route will be updated in the future
+                    Redirect(controllers.organisationDetails.routes.MakeCharityRepaymentClaimController.onPageLoad)
+                  }
+                  .recover { case exception =>
+                    logger.error(s"Failed to update OtherIncome data: ${exception.getMessage}", exception)
+                    Redirect(controllers.repaymentclaimdetails.routes.CheckYourAnswersController.onPageLoad)
+                  }
+              // TODO: close the flatMap block once deletion is implemented
+              //   }
+              // }
+
+              case Some("claimingGiftAidSmallDonations") =>
+                // TODO: uncomment when ClaimsValidationService.deleteSmallDonationsSchedule is implemented
+                // claimsValidationService.deleteSmallDonationsSchedule
+                //   .flatMap { _ =>
+                saveService
+                  .save(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false))
+                  .map { _ =>
+                    // TODO: redirect to R2 screen - this route will be updated in the future
+                    Redirect(controllers.organisationDetails.routes.MakeCharityRepaymentClaimController.onPageLoad)
+                  }
+                  .recover { case exception =>
+                    logger.error(s"Failed to update SmallDonations data: ${exception.getMessage}", exception)
+                    Redirect(controllers.repaymentclaimdetails.routes.CheckYourAnswersController.onPageLoad)
+                  }
+              // TODO: Close the flatMap block once deletion is implemented
+              //   }
+              // }
+
+              case _ =>
+                // if missing source - redirect to CYA
+                logger.error(s"Update attempted with invalid/missing source: $source")
+                Future
+                  .successful(Redirect(controllers.repaymentclaimdetails.routes.CheckYourAnswersController.onPageLoad))
+            }
           }
+        }
       )
   }
 }

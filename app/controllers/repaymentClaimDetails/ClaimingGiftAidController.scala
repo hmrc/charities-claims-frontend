@@ -57,11 +57,14 @@ class ClaimingGiftAidController @Inject() (
           claimingGiftAid =>
             if hadNoWarningShown && RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(claimingGiftAid)
             then
+              // redirect to update confirmation screen
               Future.successful(
-                Redirect(routes.ClaimingGiftAidController.onPageLoad(mode))
-                  .withWarning(claimingGiftAid.toString)
+                Redirect(controllers.repaymentClaimDetails.routes.UpdateRepaymentClaimController.onPageLoad)
+                  .withUpdateConfirmation("claimingGiftAid", mode.toString)
               )
             else
+              // TODO: This deletion logic may not be needed that UpdateRepaymentClaimController handles deletion.
+              // check before removing
               claimsValidationService.deleteGiftAidSchedule
                 .whenA(warningWasShown && !claimingGiftAid)
                 .flatMap { _ =>

@@ -38,6 +38,9 @@
 
     @formHelper(action = routes.UpdateRepaymentClaimController.onSubmit, Symbol("autoComplete") -> "off") {
 
+        <input type="hidden" name="updateSource" value="@request.flash.get("updateSource").getOrElse("")">
+        <input type="hidden" name="updateMode" value="@request.flash.get("updateMode").getOrElse("")">
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 form("value"),

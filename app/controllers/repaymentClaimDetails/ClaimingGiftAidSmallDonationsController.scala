@@ -25,7 +25,7 @@ import models.Mode
 import models.Mode.*
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.SaveService
+import services.{ClaimsValidationService, SaveService}
 import views.html.ClaimingGiftAidSmallDonationsView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,7 +35,8 @@ class ClaimingGiftAidSmallDonationsController @Inject() (
   view: ClaimingGiftAidSmallDonationsView,
   actions: Actions,
   formProvider: YesNoFormProvider,
-  saveService: SaveService
+  saveService: SaveService,
+  claimsValidationService: ClaimsValidationService
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -56,11 +57,17 @@ class ClaimingGiftAidSmallDonationsController @Inject() (
             if hadNoWarningShown && RepaymentClaimDetailsAnswers
                 .shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(value)
             then
+              // redirect to update confirmation screen
               Future.successful(
-                Redirect(routes.ClaimingGiftAidSmallDonationsController.onPageLoad(mode))
-                  .withWarning(value.toString)
+                Redirect(controllers.repaymentClaimDetails.routes.UpdateRepaymentClaimController.onPageLoad)
+                  .withUpdateConfirmation("claimingGiftAidSmallDonations", mode.toString)
               )
             else
+              // TODO: uncomment this section when ClaimsValidationService.deleteSmallDonationsSchedule is ready
+              // TODO: this deletion logic may not be needed once UpdateRepaymentClaimController handles deletion.
+              // claimsValidationService.deleteSmallDonationsSchedule
+              //   .whenA(warningWasShown && !value)
+              //   .flatMap { _ =>
               saveService
                 .save(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(value))
                 .map { _ =>
@@ -70,6 +77,9 @@ class ClaimingGiftAidSmallDonationsController @Inject() (
                     Redirect(routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode))
                   }
                 }
+              // TODO: close the flatMap block once deletion is implemented
+              //   }
+              // }
         )
     }
 }

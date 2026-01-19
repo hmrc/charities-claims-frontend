@@ -25,7 +25,7 @@ import models.Mode
 import models.Mode.*
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.SaveService
+import services.{ClaimsValidationService, SaveService}
 import views.html.ClaimingOtherIncomeView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,7 +35,8 @@ class ClaimingOtherIncomeController @Inject() (
   view: ClaimingOtherIncomeView,
   actions: Actions,
   formProvider: YesNoFormProvider,
-  saveService: SaveService
+  saveService: SaveService,
+  claimsValidationService: ClaimsValidationService
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -55,11 +56,17 @@ class ClaimingOtherIncomeController @Inject() (
           value =>
             if hadNoWarningShown && RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingTaxDeducted(value)
             then
+              // redirect to update confirmation screen
               Future.successful(
-                Redirect(routes.ClaimingOtherIncomeController.onPageLoad(mode))
-                  .withWarning(value.toString)
+                Redirect(controllers.repaymentClaimDetails.routes.UpdateRepaymentClaimController.onPageLoad)
+                  .withUpdateConfirmation("claimingOtherIncome", mode.toString)
               )
             else
+              // TODO: uncomment this section when ClaimsValidationService.deleteOtherIncomeSchedule is implemented
+              // TODO: This deletion logic may not be needed once UpdateRepaymentClaimController handles deletion.
+              // claimsValidationService.deleteOtherIncomeSchedule
+              //   .whenA(warningWasShown && !value)
+              //   .flatMap { _ =>
               saveService
                 .save(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(value))
                 .map { _ =>
@@ -69,6 +76,9 @@ class ClaimingOtherIncomeController @Inject() (
                     Redirect(routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode))
                   }
                 }
+              // TODO: close the flatMap block once deletion is ready
+              //   }
+              // }
         )
     }
 }
