@@ -39,7 +39,10 @@ class AuthorisedOfficialDetailsController @Inject() (
     extends BaseController {
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if (OrganisationDetailsAnswers.getAreYouACorporateTrustee.contains(false)) {
+    if (
+      OrganisationDetailsAnswers.getAreYouACorporateTrustee
+        .contains(false) && OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress.isDefined
+    ) {
       OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress match {
         case Some(isUkAddress) =>
           val form           = formProvider(isUkAddress)
