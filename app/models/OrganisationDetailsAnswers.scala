@@ -70,7 +70,7 @@ final case class OrganisationDetailsAnswers(
         areYouACorporateTrustee.contains(true)
           && doYouHaveCorporateTrusteeUKAddress.contains(false)
           && (
-            corporateTrusteePostcode.isEmpty
+            corporateTrusteeDaytimeTelephoneNumber.isEmpty
               || nameOfCorporateTrustee.isEmpty
           )
       )                                                         -> "corporateTrusteeDetails.heading",
