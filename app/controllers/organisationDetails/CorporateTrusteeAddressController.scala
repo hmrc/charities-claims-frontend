@@ -59,10 +59,9 @@ class CorporateTrusteeAddressController @Inject() (
             .save(OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(value))
             .map { _ =>
               (value, mode) match {
-                case (true, CheckMode) => Redirect(routes.CorporateTrusteeDetailsController.onPageLoad(CheckMode))
-                case (_, CheckMode)    =>
+                case (_, CheckMode)  =>
                   Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
-                case (_, NormalMode)   => Redirect(routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode))
+                case (_, NormalMode) => Redirect(routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode))
               }
             }
       )
