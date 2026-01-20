@@ -133,6 +133,42 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
           )
         }
       }
+
+      "should redirect to PageNotFound if 'Are you a corporate trustee' is true" in {
+        val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.PageNotFoundController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect to PageNotFound if 'Do you have UK address' answer is missing" in {
+        val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.PageNotFoundController.onPageLoad.url
+          )
+        }
+      }
     }
 
     "onSubmit" - {
@@ -210,6 +246,29 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual BAD_REQUEST
+        }
+      }
+
+      "should redirect to AuthorisedOfficialAddress if UK address answer is missing from session" in {
+        val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.AuthorisedOfficialDetailsController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody(
+                "firstName"   -> "John",
+                "lastName"    -> "Doe",
+                "phoneNumber" -> "01234567890"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode).url
+          )
         }
       }
     }
