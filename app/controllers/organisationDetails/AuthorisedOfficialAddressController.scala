@@ -59,10 +59,9 @@ class AuthorisedOfficialAddressController @Inject() (
             .save(OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(value))
             .map { _ =>
               (value, mode) match {
-                case (true, CheckMode) => Redirect(routes.AuthorisedOfficialDetailsController.onPageLoad(CheckMode))
-                case (_, CheckMode)    =>
+                case (_, CheckMode)  =>
                   Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
-                case (_, NormalMode)   =>
+                case (_, NormalMode) =>
                   Redirect(routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode))
               }
             }
