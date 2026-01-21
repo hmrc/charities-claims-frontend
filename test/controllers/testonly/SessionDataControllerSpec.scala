@@ -22,7 +22,7 @@ import controllers.ControllerSpec
 import play.api.Application
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.libs.json.Json
-import models.{NameOfCharityRegulator, OrganisationDetailsAnswers, RepaymentClaimDetailsAnswers, SessionData}
+import models.{NameOfCharityRegulator, OrganisationDetailsAnswers, RepaymentClaimDetailsAnswersOld, SessionData}
 import repositories.SessionCache
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.SessionId
@@ -64,7 +64,7 @@ class SessionDataControllerSpec extends ControllerSpec {
           .instanceOf[SessionCache]
           .store(
             SessionData(
-              repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+              repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
               organisationDetailsAnswers =
                 Some(OrganisationDetailsAnswers(nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales)))
             )
@@ -119,7 +119,7 @@ class SessionDataControllerSpec extends ControllerSpec {
                 "sessionData" -> Json
                   .toJson(
                     SessionData(
-                      repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+                      repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
                       organisationDetailsAnswers = Some(
                         OrganisationDetailsAnswers(nameOfCharityRegulator =
                           Some(NameOfCharityRegulator.EnglandAndWales)
@@ -152,7 +152,7 @@ class SessionDataControllerSpec extends ControllerSpec {
                 "sessionData" -> Json
                   .toJson(
                     SessionData(
-                      repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+                      repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
                       organisationDetailsAnswers = Some(
                         OrganisationDetailsAnswers(nameOfCharityRegulator =
                           Some(NameOfCharityRegulator.EnglandAndWales)

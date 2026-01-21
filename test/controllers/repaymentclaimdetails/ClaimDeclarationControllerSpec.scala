@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.repaymentclaimdetailsold
 
 import controllers.ControllerSpec
 import play.api.Application

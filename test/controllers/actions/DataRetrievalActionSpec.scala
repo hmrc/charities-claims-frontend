@@ -21,7 +21,7 @@ import play.api.test.Helpers.*
 import util.{BaseSpec, TestClaims}
 import connectors.ClaimsConnector
 import uk.gov.hmrc.auth.core.AffinityGroup
-import models.{GetClaimsResponse, OrganisationDetailsAnswers, RepaymentClaimDetailsAnswers, SessionData}
+import models.{GetClaimsResponse, OrganisationDetailsAnswers, RepaymentClaimDetailsAnswersOld, SessionData}
 import models.requests.{AuthorisedRequest, DataRequest}
 import play.api.mvc.Results.*
 import repositories.SessionCache
@@ -44,7 +44,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       val mockClaimsConnector = mock[ClaimsConnector]
       val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
 
-      val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+      val sessionData = RepaymentClaimDetailsAnswersOld.setClaimingTaxDeducted(true)
 
       (mockSessionCache
         .get()(using _: HeaderCarrier))
@@ -119,8 +119,8 @@ class DataRetrievalActionSpec extends BaseSpec {
           req.sessionData shouldBe
             SessionData.from(claim)
 
-          req.sessionData.repaymentClaimDetailsAnswers                      shouldBe
-            RepaymentClaimDetailsAnswers.from(
+          req.sessionData.repaymentClaimDetailsAnswersOld                   shouldBe
+            RepaymentClaimDetailsAnswersOld.from(
               claim.claimData.repaymentClaimDetails
             )
           req.sessionData.organisationDetailsAnswers                        shouldBe None
@@ -138,7 +138,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       val mockClaimsConnector = mock[ClaimsConnector]
       val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
 
-      val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+      val sessionData = RepaymentClaimDetailsAnswersOld.setClaimingTaxDeducted(true)
 
       (mockSessionCache
         .get()(using _: HeaderCarrier))

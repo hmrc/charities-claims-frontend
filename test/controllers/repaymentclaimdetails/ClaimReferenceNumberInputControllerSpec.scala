@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.repaymentclaimdetailsold
 
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import controllers.ControllerSpec
 import views.html.ClaimReferenceNumberInputView
 import play.api.Application
 import forms.TextInputFormProvider
-import models.{RepaymentClaimDetailsAnswers, SessionData}
+import models.{RepaymentClaimDetailsAnswersOld, SessionData}
 import play.api.data.Form
 import play.api.test.FakeRequest
 import models.Mode.*
@@ -37,7 +37,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
   "ClaimReferenceNumberInputController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(true)
+        val sessionData                = RepaymentClaimDetailsAnswersOld.setClaimingReferenceNumber(true)
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
@@ -53,7 +53,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
       }
 
       "should render page not found if claiming reference number is false" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(false)
+        val sessionData = RepaymentClaimDetailsAnswersOld.setClaimingReferenceNumber(false)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -71,7 +71,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
       "should render page not found if claiming reference number is empty" in {
 
         val sessionData = SessionData(
-          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimReferenceNumber = Some("123456"))
+          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimReferenceNumber = Some("123456"))
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -90,8 +90,8 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
       "should render the page and pre-populate correctly" in {
 
         val sessionData = SessionData(
-          repaymentClaimDetailsAnswers =
-            RepaymentClaimDetailsAnswers(claimingReferenceNumber = Some(true), claimReferenceNumber = Some("123456"))
+          repaymentClaimDetailsAnswersOld =
+            RepaymentClaimDetailsAnswersOld(claimingReferenceNumber = Some(true), claimReferenceNumber = Some("123456"))
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -111,8 +111,10 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
       "should render the page not found and incorrectly pre-populate data" in {
 
         val sessionData = SessionData(
-          repaymentClaimDetailsAnswers =
-            RepaymentClaimDetailsAnswers(claimingReferenceNumber = Some(false), claimReferenceNumber = Some("123456"))
+          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(
+            claimingReferenceNumber = Some(false),
+            claimReferenceNumber = Some("123456")
+          )
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()

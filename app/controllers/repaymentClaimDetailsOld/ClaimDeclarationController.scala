@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.repaymentclaimdetailsold
 
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject

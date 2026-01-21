@@ -14,8 +14,8 @@
  * limitations under the License.
  *@
 
-@import controllers.repaymentclaimdetails.routes
-@import models.RepaymentClaimDetailsAnswers
+@import controllers.repaymentclaimdetailsold.routes
+@import models.RepaymentClaimDetailsAnswersOld
 @import viewmodels.CheckYourAnswersHelper
 
 @this(
@@ -25,7 +25,7 @@
     govukButton: GovukButton
 )
 
-@(answers: RepaymentClaimDetailsAnswers)(implicit request: Request[?], messages: Messages)
+@(answers: RepaymentClaimDetailsAnswersOld)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
