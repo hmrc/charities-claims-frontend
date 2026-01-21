@@ -19,12 +19,10 @@ package controllers.organisationDetails
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
-import connectors.ClaimsValidationConnector
 import forms.YesNoFormProvider
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import services.ClaimsValidationService
 import views.html.DeleteCommunityBuildingsScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,7 +32,7 @@ class DeleteCommunityBuildingsScheduleController @Inject() (
   view: DeleteCommunityBuildingsScheduleView,
   actions: Actions,
   formProvider: YesNoFormProvider,
-  claimsValidationConnector: ClaimsValidationConnector
+  claimsValidationService: ClaimsValidationService
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -45,45 +43,15 @@ class DeleteCommunityBuildingsScheduleController @Inject() (
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           if value then {
-            request.sessionData.unsubmittedClaimId match {
-              case Some(claimId) =>
-                claimsValidationConnector
-                  .getUploadSummary(claimId)
-                  .flatMap { summaryResponse =>
-                    summaryResponse.uploads.find(_.validationType == "CommunityBuildings") match {
-                      case Some(communityBuildingsUpload) =>
-                        claimsValidationConnector
-                          .deleteSchedule(claimId, communityBuildingsUpload.reference)
-                          .map { _ =>
-                            // TODO: This redirects to placeholder R2 screen - route to be updated in the future
-                            Redirect(
-                              controllers.organisationDetails.routes.MakeCharityRepaymentClaimController.onPageLoad
-                            )
-                          }
-
-                      case None =>
-                        Future.failed(
-                          new RuntimeException(
-                            s"No CommunityBuildings schedule upload found for claimId: $claimId"
-                          )
-                        )
-                    }
-                  }
-
-              case None =>
-                Future.failed(
-                  new RuntimeException(
-                    "No unsubmittedClaimId found in session when attempting to delete CommunityBuildings schedule"
-                  )
-                )
+            claimsValidationService.deleteCommunityBuildingsSchedule.map { _ =>
+              // TODO: This redirects to placeholder R2 screen - route to be updated in the future
+              Redirect(controllers.organisationDetails.routes.MakeCharityRepaymentClaimController.onPageLoad)
             }
           } else {
             // no deletion, redirect to Add Schedule screen G2

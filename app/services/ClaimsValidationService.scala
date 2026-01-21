@@ -27,6 +27,7 @@ import scala.concurrent.{ExecutionContext, Future}
 trait ClaimsValidationService {
   def deleteGiftAidSchedule(using DataRequest[?], HeaderCarrier): Future[Unit]
   def deleteOtherIncomeSchedule(using DataRequest[?], HeaderCarrier): Future[Unit]
+  def deleteCommunityBuildingsSchedule(using DataRequest[?], HeaderCarrier): Future[Unit]
 }
 
 @Singleton
@@ -40,6 +41,9 @@ class ClaimsValidationServiceImpl @Inject() (
 
   def deleteOtherIncomeSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
     deleteSchedule("OtherIncome", request.sessionData.unsubmittedClaimId)
+
+  def deleteCommunityBuildingsSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
+    deleteSchedule("CommunityBuildings", request.sessionData.unsubmittedClaimId)
 
   private def deleteSchedule(validationType: String, claimIdOpt: Option[String])(using HeaderCarrier): Future[Unit] =
     claimIdOpt match {
