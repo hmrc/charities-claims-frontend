@@ -10,41 +10,41 @@ GET         /timed-out                                controllers.StartControlle
 GET         /page-not-found                           controllers.PageNotFoundController.onPageLoad
 GET         /there-is-a-problem-access-denied         controllers.AccessDeniedController.onPageLoad
 
-GET         /gift-aid-small-donations-scheme               controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /change-gift-aid-small-donations-scheme        controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /gift-aid-small-donations-scheme               controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /change-gift-aid-small-donations-scheme        controllers.repaymentclaimdetails.ClaimingGiftAidSmallDonationsController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /old/gift-aid-small-donations-scheme               controllers.repaymentclaimdetailsold.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /old/change-gift-aid-small-donations-scheme        controllers.repaymentclaimdetailsold.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /old/gift-aid-small-donations-scheme               controllers.repaymentclaimdetailsold.ClaimingGiftAidSmallDonationsController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /old/change-gift-aid-small-donations-scheme        controllers.repaymentclaimdetailsold.ClaimingGiftAidSmallDonationsController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /claim-gift-aid                           controllers.repaymentclaimdetails.ClaimingGiftAidController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /change-claim-gift-aid                    controllers.repaymentclaimdetails.ClaimingGiftAidController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /claim-gift-aid                           controllers.repaymentclaimdetails.ClaimingGiftAidController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /change-claim-gift-aid                    controllers.repaymentclaimdetails.ClaimingGiftAidController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /old/claim-gift-aid                           controllers.repaymentclaimdetailsold.ClaimingGiftAidController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /old/change-claim-gift-aid                    controllers.repaymentclaimdetailsold.ClaimingGiftAidController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /old/claim-gift-aid                           controllers.repaymentclaimdetailsold.ClaimingGiftAidController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /old/change-claim-gift-aid                    controllers.repaymentclaimdetailsold.ClaimingGiftAidController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /claiming-other-income                           controllers.repaymentclaimdetails.ClaimingOtherIncomeController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /change-claiming-other-income                    controllers.repaymentclaimdetails.ClaimingOtherIncomeController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /claiming-other-income                           controllers.repaymentclaimdetails.ClaimingOtherIncomeController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /change-claiming-other-income                    controllers.repaymentclaimdetails.ClaimingOtherIncomeController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /old/claiming-other-income                           controllers.repaymentclaimdetailsold.ClaimingOtherIncomeController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /old/change-claiming-other-income                    controllers.repaymentclaimdetailsold.ClaimingOtherIncomeController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /old/claiming-other-income                           controllers.repaymentclaimdetailsold.ClaimingOtherIncomeController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /old/change-claiming-other-income                    controllers.repaymentclaimdetailsold.ClaimingOtherIncomeController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /claim-reference-number                          controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /change-claim-reference-number                   controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /claim-reference-number                          controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /change-claim-reference-number                   controllers.repaymentclaimdetails.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /old/claim-reference-number                          controllers.repaymentclaimdetailsold.ClaimingReferenceNumberCheckController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /old/change-claim-reference-number                   controllers.repaymentclaimdetailsold.ClaimingReferenceNumberCheckController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /old/claim-reference-number                          controllers.repaymentclaimdetailsold.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /old/change-claim-reference-number                   controllers.repaymentclaimdetailsold.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /your-claim-reference-number                    controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /change-your-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /your-claim-reference-number                    controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /change-your-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /old/your-claim-reference-number                    controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /old/change-your-claim-reference-number             controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /old/your-claim-reference-number                    controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /old/change-your-claim-reference-number             controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /change-previous-gasds-claim                     controllers.repaymentclaimdetails.ChangePreviousGASDSClaimController.onPageLoad
-POST        /change-previous-gasds-claim                     controllers.repaymentclaimdetails.ChangePreviousGASDSClaimController.onSubmit
+GET         /old/declaration                                    controllers.repaymentclaimdetailsold.ClaimDeclarationController.onPageLoad
+POST        /old/declaration                                    controllers.repaymentclaimdetailsold.ClaimDeclarationController.onSubmit
 
-GET         /declaration                                    controllers.repaymentclaimdetails.ClaimDeclarationController.onPageLoad
-POST        /declaration                                    controllers.repaymentclaimdetails.ClaimDeclarationController.onSubmit
+GET         /change-previous-gasds-claim                        controllers.repaymentclaimdetails.ChangePreviousGASDSClaimController.onPageLoad
+POST        /change-previous-gasds-claim                        controllers.repaymentclaimdetails.ChangePreviousGASDSClaimController.onSubmit
 
-GET         /check-your-claim-details                       controllers.repaymentclaimdetails.CheckYourAnswersController.onPageLoad
-POST        /check-your-claim-details                       controllers.repaymentclaimdetails.CheckYourAnswersController.onSubmit
+GET         /old/check-your-claim-details                       controllers.repaymentclaimdetailsold.CheckYourAnswersController.onPageLoad
+POST        /old/check-your-claim-details                       controllers.repaymentclaimdetailsold.CheckYourAnswersController.onSubmit
 
-GET         /min-data-placeholder                           controllers.repaymentclaimdetails.IncompleteAnswersController.onPageLoad
+GET         /old/min-data-placeholder                           controllers.repaymentclaimdetailsold.IncompleteAnswersController.onPageLoad
 
 GET         /about-the-organisation                         controllers.organisationDetails.AboutTheOrganisationController.onPageLoad
 POST        /about-the-organisation                         controllers.organisationDetails.AboutTheOrganisationController.onSubmit

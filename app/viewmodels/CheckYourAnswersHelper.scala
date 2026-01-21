@@ -20,12 +20,12 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.*
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import models.Mode.*
-import models.RepaymentClaimDetailsAnswers
+import models.RepaymentClaimDetailsAnswersOld
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 
 object CheckYourAnswersHelper {
 
-  def buildSummaryList(answers: RepaymentClaimDetailsAnswers)(implicit messages: Messages): SummaryList = {
+  def buildSummaryList(answers: RepaymentClaimDetailsAnswersOld)(implicit messages: Messages): SummaryList = {
 
     val rows = Seq(
       answers.claimingGiftAid match {
@@ -34,7 +34,7 @@ object CheckYourAnswersHelper {
             summaryRow(
               messages("checkYourAnswers.giftAid.label"),
               if (value) messages("site.yes") else messages("site.no"),
-              controllers.repaymentclaimdetails.routes.ClaimingGiftAidController
+              controllers.repaymentclaimdetailsold.routes.ClaimingGiftAidController
                 .onPageLoad(CheckMode)
                 .url,
               messages("checkYourAnswers.giftAid.change.hidden")
@@ -44,7 +44,7 @@ object CheckYourAnswersHelper {
           Some(
             missingDataRow(
               messages("checkYourAnswers.giftAid.label"),
-              controllers.repaymentclaimdetails.routes.ClaimingGiftAidController
+              controllers.repaymentclaimdetailsold.routes.ClaimingGiftAidController
                 .onPageLoad(CheckMode)
                 .url,
               messages("checkYourAnswers.giftAid.change.hidden")
@@ -57,7 +57,7 @@ object CheckYourAnswersHelper {
             summaryRow(
               messages("checkYourAnswers.taxDeducted.label"),
               if (value) messages("site.yes") else messages("site.no"),
-              controllers.repaymentclaimdetails.routes.ClaimingOtherIncomeController
+              controllers.repaymentclaimdetailsold.routes.ClaimingOtherIncomeController
                 .onPageLoad(CheckMode)
                 .url,
               messages("checkYourAnswers.taxDeducted.label")
@@ -67,7 +67,7 @@ object CheckYourAnswersHelper {
           Some(
             missingDataRow(
               messages("checkYourAnswers.taxDeducted.label"),
-              controllers.repaymentclaimdetails.routes.ClaimingOtherIncomeController
+              controllers.repaymentclaimdetailsold.routes.ClaimingOtherIncomeController
                 .onPageLoad(CheckMode)
                 .url,
               messages("checkYourAnswers.taxDeducted.label")
@@ -80,7 +80,7 @@ object CheckYourAnswersHelper {
             summaryRow(
               messages("checkYourAnswers.giftAidSmallDonationsScheme.label"),
               if (value) messages("site.yes") else messages("site.no"),
-              controllers.repaymentclaimdetails.routes.ClaimingGiftAidSmallDonationsController
+              controllers.repaymentclaimdetailsold.routes.ClaimingGiftAidSmallDonationsController
                 .onPageLoad(CheckMode)
                 .url,
               messages("checkYourAnswers.giftAidSmallDonationsScheme.label")
@@ -90,7 +90,7 @@ object CheckYourAnswersHelper {
           Some(
             missingDataRow(
               messages("checkYourAnswers.giftAidSmallDonationsScheme.label"),
-              controllers.repaymentclaimdetails.routes.ClaimingGiftAidSmallDonationsController
+              controllers.repaymentclaimdetailsold.routes.ClaimingGiftAidSmallDonationsController
                 .onPageLoad(CheckMode)
                 .url,
               messages("checkYourAnswers.giftAidSmallDonationsScheme.label")
@@ -103,7 +103,7 @@ object CheckYourAnswersHelper {
             summaryRow(
               messages("checkYourAnswers.hasRef.label"),
               if (value) messages("site.yes") else messages("site.no"),
-              controllers.repaymentclaimdetails.routes.ClaimingReferenceNumberCheckController
+              controllers.repaymentclaimdetailsold.routes.ClaimingReferenceNumberCheckController
                 .onPageLoad(CheckMode)
                 .url,
               messages("checkYourAnswers.hasRef.label")
@@ -113,7 +113,7 @@ object CheckYourAnswersHelper {
           Some(
             missingDataRow(
               messages("checkYourAnswers.hasRef.label"),
-              controllers.repaymentclaimdetails.routes.ClaimingReferenceNumberCheckController
+              controllers.repaymentclaimdetailsold.routes.ClaimingReferenceNumberCheckController
                 .onPageLoad(CheckMode)
                 .url,
               messages("checkYourAnswers.hasRef.label")
@@ -128,7 +128,7 @@ object CheckYourAnswersHelper {
                 summaryRow(
                   messages("checkYourAnswers.refNumber.label"),
                   refNum,
-                  controllers.repaymentclaimdetails.routes.ClaimReferenceNumberInputController
+                  controllers.repaymentclaimdetailsold.routes.ClaimReferenceNumberInputController
                     .onPageLoad(CheckMode)
                     .url,
                   messages("checkYourAnswers.refNumber.label")
@@ -138,7 +138,7 @@ object CheckYourAnswersHelper {
               Some(
                 missingDataRow(
                   messages("checkYourAnswers.refNumber.label"),
-                  controllers.repaymentclaimdetails.routes.ClaimReferenceNumberInputController
+                  controllers.repaymentclaimdetailsold.routes.ClaimReferenceNumberInputController
                     .onPageLoad(CheckMode)
                     .url,
                   messages("checkYourAnswers.refNumber.label")

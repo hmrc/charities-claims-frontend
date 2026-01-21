@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.repaymentclaimdetailsold
 
 import play.api.test.FakeRequest
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
@@ -22,7 +22,7 @@ import controllers.ControllerSpec
 import views.html.ClaimingGiftAidSmallDonationsView
 import play.api.Application
 import forms.YesNoFormProvider
-import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, RepaymentClaimDetailsAnswers, SessionData}
+import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, RepaymentClaimDetailsAnswersOld, SessionData}
 import play.api.data.Form
 import models.Mode.*
 
@@ -49,7 +49,7 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with true value" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData = RepaymentClaimDetailsAnswersOld.setClaimingUnderGiftAidSmallDonationsScheme(true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -67,7 +67,7 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with false value" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
+        val sessionData = RepaymentClaimDetailsAnswersOld.setClaimingUnderGiftAidSmallDonationsScheme(false)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -170,8 +170,8 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
       "onSubmit with warning" - {
         "should trigger warning when changing to false when GASDS schedule data present" in {
           val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswers =
-              RepaymentClaimDetailsAnswers(claimingUnderGiftAidSmallDonationsScheme = Some(true)),
+            repaymentClaimDetailsAnswersOld =
+              RepaymentClaimDetailsAnswersOld(claimingUnderGiftAidSmallDonationsScheme = Some(true)),
             giftAidSmallDonationsSchemeDonationDetailsAnswers =
               Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
           )
@@ -195,8 +195,8 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
 
         "should redirect to the next page in NormalMode when value is false and warning has been shown" in {
           val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswers =
-              RepaymentClaimDetailsAnswers(claimingUnderGiftAidSmallDonationsScheme = Some(true)),
+            repaymentClaimDetailsAnswersOld =
+              RepaymentClaimDetailsAnswersOld(claimingUnderGiftAidSmallDonationsScheme = Some(true)),
             giftAidSmallDonationsSchemeDonationDetailsAnswers =
               Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
           )
@@ -223,8 +223,8 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
 
         "should not show warning when no previous GASDS schedule data exists" in {
           val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswers =
-              RepaymentClaimDetailsAnswers(claimingUnderGiftAidSmallDonationsScheme = Some(false))
+            repaymentClaimDetailsAnswersOld =
+              RepaymentClaimDetailsAnswersOld(claimingUnderGiftAidSmallDonationsScheme = Some(false))
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
@@ -243,8 +243,8 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
 
         "should redirect to CheckYourAnswers in CheckMode after warning confirmation" in {
           val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswers =
-              RepaymentClaimDetailsAnswers(claimingUnderGiftAidSmallDonationsScheme = Some(true)),
+            repaymentClaimDetailsAnswersOld =
+              RepaymentClaimDetailsAnswersOld(claimingUnderGiftAidSmallDonationsScheme = Some(true)),
             giftAidSmallDonationsSchemeDonationDetailsAnswers =
               Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
           )
@@ -265,8 +265,8 @@ class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
 
         "should render warning parameter hidden field when warning flash present" in {
           val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswers =
-              RepaymentClaimDetailsAnswers(claimingUnderGiftAidSmallDonationsScheme = Some(true)),
+            repaymentClaimDetailsAnswersOld =
+              RepaymentClaimDetailsAnswersOld(claimingUnderGiftAidSmallDonationsScheme = Some(true)),
             giftAidSmallDonationsSchemeDonationDetailsAnswers =
               Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
           )

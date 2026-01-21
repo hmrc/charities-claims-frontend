@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.repaymentclaimdetailsold
 
 import play.api.test.FakeRequest
 import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
 import views.html.IncompleteAnswersView
 import play.api.Application
-import models.{RepaymentClaimDetailsAnswers, SessionData}
+import models.{RepaymentClaimDetailsAnswersOld, SessionData}
 
 class IncompleteAnswersControllerSpec extends ControllerSpec {
 
   "IncompleteAnswersController" - {
     "onPageLoad" - {
       "should render the page with missing fields when answers are incomplete" in {
-        val incompleteAnswers = RepaymentClaimDetailsAnswers()
-        val sessionData       = SessionData(repaymentClaimDetailsAnswers = incompleteAnswers)
+        val incompleteAnswers = RepaymentClaimDetailsAnswersOld()
+        val sessionData       = SessionData(repaymentClaimDetailsAnswersOld = incompleteAnswers)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -52,13 +52,13 @@ class IncompleteAnswersControllerSpec extends ControllerSpec {
       }
 
       "should render the page with no missing fields when answers are complete" in {
-        val completeAnswers = RepaymentClaimDetailsAnswers(
+        val completeAnswers = RepaymentClaimDetailsAnswersOld(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(false),
           claimingUnderGiftAidSmallDonationsScheme = Some(false),
           claimingReferenceNumber = Some(false)
         )
-        val sessionData     = SessionData(repaymentClaimDetailsAnswers = completeAnswers)
+        val sessionData     = SessionData(repaymentClaimDetailsAnswersOld = completeAnswers)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 

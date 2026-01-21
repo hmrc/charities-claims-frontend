@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.repaymentclaimdetailsold
 
 import play.api.test.FakeRequest
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
@@ -22,7 +22,7 @@ import controllers.ControllerSpec
 import views.html.ClaimingReferenceNumberCheckView
 import play.api.Application
 import forms.YesNoFormProvider
-import models.RepaymentClaimDetailsAnswers
+import models.RepaymentClaimDetailsAnswersOld
 import play.api.data.Form
 import models.Mode.*
 
@@ -50,7 +50,7 @@ class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with true value" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(true)
+        val sessionData = RepaymentClaimDetailsAnswersOld.setClaimingReferenceNumber(true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -67,7 +67,7 @@ class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
       }
       "should render the page and pre-populate correctly with false value" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(false)
+        val sessionData = RepaymentClaimDetailsAnswersOld.setClaimingReferenceNumber(false)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -97,7 +97,7 @@ class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(
-            controllers.repaymentclaimdetails.routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url
+            controllers.repaymentclaimdetailsold.routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -114,7 +114,7 @@ class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(
-            controllers.repaymentclaimdetails.routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url
+            controllers.repaymentclaimdetailsold.routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -131,7 +131,7 @@ class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(
-            controllers.repaymentclaimdetails.routes.CheckYourAnswersController.onPageLoad.url
+            controllers.repaymentclaimdetailsold.routes.CheckYourAnswersController.onPageLoad.url
           )
         }
       }
@@ -148,7 +148,7 @@ class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(
-            controllers.repaymentclaimdetails.routes.ClaimDeclarationController.onPageLoad.url
+            controllers.repaymentclaimdetailsold.routes.ClaimDeclarationController.onPageLoad.url
           )
         }
       }

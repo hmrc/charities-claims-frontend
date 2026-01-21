@@ -14,35 +14,37 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.repaymentclaimdetailsold
 
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.YesNoFormProvider
-import models.RepaymentClaimDetailsAnswers
-import models.Mode
+import models.{Mode, RepaymentClaimDetailsAnswersOld}
 import models.Mode.*
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.SaveService
-import views.html.ClaimingOtherIncomeView
+import services.{ClaimsValidationService, SaveService}
+import views.html.ClaimingGiftAidView
+
+import cats.implicits.*
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimingOtherIncomeController @Inject() (
+class ClaimingGiftAidController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimingOtherIncomeView,
   actions: Actions,
+  view: ClaimingGiftAidView,
   formProvider: YesNoFormProvider,
-  saveService: SaveService
+  saveService: SaveService,
+  claimsValidationService: ClaimsValidationService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("claimingOtherIncome.error.required")
+  val form: Form[Boolean] = formProvider("claimingGiftAid.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingTaxDeducted
+    val previousAnswer = RepaymentClaimDetailsAnswersOld.getClaimingGiftAid
     Ok(view(form.withDefault(warningAnswerBoolean.orElse(previousAnswer)), mode, isWarning))
   }
 
@@ -52,22 +54,27 @@ class ClaimingOtherIncomeController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            if hadNoWarningShown && RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingTaxDeducted(value)
+          claimingGiftAid =>
+            if hadNoWarningShown && RepaymentClaimDetailsAnswersOld
+                .shouldWarnAboutChangingClaimingGiftAid(claimingGiftAid)
             then
               Future.successful(
-                Redirect(routes.ClaimingOtherIncomeController.onPageLoad(mode))
-                  .withWarning(value.toString)
+                Redirect(routes.ClaimingGiftAidController.onPageLoad(mode))
+                  .withWarning(claimingGiftAid.toString)
               )
             else
-              saveService
-                .save(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(value))
-                .map { _ =>
-                  if (mode == CheckMode) {
-                    Redirect(routes.CheckYourAnswersController.onPageLoad)
-                  } else {
-                    Redirect(routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode))
-                  }
+              claimsValidationService.deleteGiftAidSchedule
+                .whenA(warningWasShown && !claimingGiftAid)
+                .flatMap { _ =>
+                  saveService
+                    .save(RepaymentClaimDetailsAnswersOld.setClaimingGiftAid(claimingGiftAid))
+                    .map { _ =>
+                      if (mode == CheckMode) {
+                        Redirect(routes.CheckYourAnswersController.onPageLoad)
+                      } else {
+                        Redirect(routes.ClaimingOtherIncomeController.onPageLoad(NormalMode))
+                      }
+                    }
                 }
         )
     }

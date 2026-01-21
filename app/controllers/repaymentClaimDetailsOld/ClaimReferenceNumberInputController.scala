@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.repaymentclaimdetailsold
 
 import models.Mode.*
 import services.SaveService
@@ -24,7 +24,7 @@ import controllers.BaseController
 import views.html.ClaimReferenceNumberInputView
 import controllers.actions.Actions
 import forms.TextInputFormProvider
-import models.{Mode, RepaymentClaimDetailsAnswers}
+import models.{Mode, RepaymentClaimDetailsAnswersOld}
 import play.api.data.Form
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -45,9 +45,9 @@ class ClaimReferenceNumberInputController @Inject() (
   )
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true)
+    if RepaymentClaimDetailsAnswersOld.getClaimingReferenceNumber.contains(true)
     then {
-      val previousAnswer = RepaymentClaimDetailsAnswers.getClaimReferenceNumber
+      val previousAnswer = RepaymentClaimDetailsAnswersOld.getClaimReferenceNumber
       Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
     } else { Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad)) }
   }
@@ -59,7 +59,7 @@ class ClaimReferenceNumberInputController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
-            .save(RepaymentClaimDetailsAnswers.setClaimReferenceNumber(value))
+            .save(RepaymentClaimDetailsAnswersOld.setClaimReferenceNumber(value))
             .map { _ =>
               if (mode == CheckMode) {
                 Redirect(routes.CheckYourAnswersController.onPageLoad)

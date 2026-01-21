@@ -39,7 +39,7 @@ class ClaimsServiceSpec extends BaseSpec {
 
       val service = new ClaimsServiceImpl(mockSaveService, mockConnector)
 
-      val repaymentAnswers = RepaymentClaimDetailsAnswers(
+      val repaymentAnswers = RepaymentClaimDetailsAnswersOld(
         claimingGiftAid = Some(true),
         claimingTaxDeducted = Some(true),
         claimingUnderGiftAidSmallDonationsScheme = Some(false),
@@ -49,7 +49,7 @@ class ClaimsServiceSpec extends BaseSpec {
       val initialSessionData = SessionData(
         unsubmittedClaimId = None,
         lastUpdatedReference = None,
-        repaymentClaimDetailsAnswers = repaymentAnswers
+        repaymentClaimDetailsAnswersOld = repaymentAnswers
       )
 
       given DataRequest[?] = DataRequest(FakeRequest(), initialSessionData)
@@ -80,7 +80,7 @@ class ClaimsServiceSpec extends BaseSpec {
 
       val service = new ClaimsServiceImpl(mockSaveService, mockConnector)
 
-      val repaymentAnswers = RepaymentClaimDetailsAnswers(
+      val repaymentAnswers = RepaymentClaimDetailsAnswersOld(
         claimingGiftAid = Some(true),
         claimingTaxDeducted = Some(true),
         claimingUnderGiftAidSmallDonationsScheme = Some(false),
@@ -91,7 +91,7 @@ class ClaimsServiceSpec extends BaseSpec {
       val initialSessionData = SessionData(
         unsubmittedClaimId = Some(existingClaimId),
         lastUpdatedReference = Some("1234567890"),
-        repaymentClaimDetailsAnswers = repaymentAnswers
+        repaymentClaimDetailsAnswersOld = repaymentAnswers
       )
 
       given DataRequest[?] = DataRequest(FakeRequest(), initialSessionData)
@@ -115,7 +115,7 @@ class ClaimsServiceSpec extends BaseSpec {
 
       val service = new ClaimsServiceImpl(mockSaveService, mockConnector)
 
-      val incompleteAnswers = RepaymentClaimDetailsAnswers(
+      val incompleteAnswers = RepaymentClaimDetailsAnswersOld(
         claimingGiftAid = Some(true),
         claimingTaxDeducted = None, // missing
         claimingUnderGiftAidSmallDonationsScheme = Some(false)
@@ -124,7 +124,7 @@ class ClaimsServiceSpec extends BaseSpec {
       val initialSessionData = SessionData(
         unsubmittedClaimId = None,
         lastUpdatedReference = None,
-        repaymentClaimDetailsAnswers = incompleteAnswers
+        repaymentClaimDetailsAnswersOld = incompleteAnswers
       )
 
       given DataRequest[?] = DataRequest(FakeRequest(), initialSessionData)

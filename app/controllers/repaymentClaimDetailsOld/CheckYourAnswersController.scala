@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.repaymentclaimdetailsold
 
 import com.google.inject.Inject
 import controllers.actions.Actions
@@ -37,11 +37,11 @@ class CheckYourAnswersController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(request.sessionData.repaymentClaimDetailsAnswers))
+    Ok(view(request.sessionData.repaymentClaimDetailsAnswersOld))
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if request.sessionData.repaymentClaimDetailsAnswers.hasCompleteAnswers
+    if request.sessionData.repaymentClaimDetailsAnswersOld.hasCompleteAnswers
     then
       claimsService.save.map { _ =>
         Redirect(
