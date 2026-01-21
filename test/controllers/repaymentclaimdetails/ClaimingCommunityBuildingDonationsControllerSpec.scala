@@ -121,7 +121,19 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
         }
       }
 
-    }
+      "should reload the page with errors when a required field is missing" in {
+        given application: Application = applicationBuilder().build()
 
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("other" -> "field")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual BAD_REQUEST
+        }
+      }
+    }
   }
 }

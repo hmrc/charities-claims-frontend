@@ -56,11 +56,11 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
             saveService
               .save(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(value))
               .map { _ =>
-                if (mode == CheckMode) {
-                  Redirect(routes.CheckYourAnswersController.onPageLoad) // TODO check details of CYA
-                } else {
-                  Redirect(routes.ClaimingCommunityBuildingDonationsController.onPageLoad(NormalMode)) // TODO
-                }
+//                if (mode == CheckMode) {
+//                  Redirect(routes.CheckYourAnswersController.onPageLoad) // TODO check details of CYA
+//                } else {
+                Redirect(routes.ClaimingCommunityBuildingDonationsController.onPageLoad(NormalMode)) // TODO
+//
               }
         )
     }
