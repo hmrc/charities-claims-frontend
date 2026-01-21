@@ -25,7 +25,7 @@ import models.{
   NameOfCharityRegulator,
   OrganisationDetailsAnswers,
   ReasonNotRegisteredWithRegulator,
-  RepaymentClaimDetailsAnswers,
+  RepaymentClaimDetailsAnswersOld,
   SessionData
 }
 import play.api.Application
@@ -57,7 +57,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
       "should render the page with missing fields when answers are incomplete" in {
 
-        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
+        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswersOld(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(false),
           claimingUnderGiftAidSmallDonationsScheme = Some(true),
@@ -68,7 +68,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(OrganisationDetailsAnswers())
         )
 
@@ -94,7 +94,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
       }
 
       "should render the page with no missing fields when answers are complete" in {
-        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
+        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswersOld(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(false),
           claimingUnderGiftAidSmallDonationsScheme = Some(false),
@@ -103,7 +103,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
         val sessionData                         = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),

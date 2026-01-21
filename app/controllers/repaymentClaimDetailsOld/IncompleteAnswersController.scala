@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.repaymentclaimdetailsold
 
 import com.google.inject.Inject
 import controllers.actions.Actions
@@ -32,7 +32,7 @@ class IncompleteAnswersController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val missingFields = request.sessionData.repaymentClaimDetailsAnswers.missingFields
+    val missingFields = request.sessionData.repaymentClaimDetailsAnswersOld.missingFields
     Ok(view(routes.CheckYourAnswersController.onPageLoad.url, missingFields))
   }
 }

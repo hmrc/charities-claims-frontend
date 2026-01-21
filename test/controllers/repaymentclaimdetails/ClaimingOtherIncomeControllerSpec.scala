@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.repaymentclaimdetailsold
 
 import play.api.test.FakeRequest
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
@@ -22,7 +22,7 @@ import controllers.ControllerSpec
 import views.html.ClaimingOtherIncomeView
 import play.api.Application
 import forms.YesNoFormProvider
-import models.{OtherIncomeScheduleDataAnswers, RepaymentClaimDetailsAnswers, SessionData}
+import models.{OtherIncomeScheduleDataAnswers, RepaymentClaimDetailsAnswersOld, SessionData}
 import play.api.data.Form
 import models.Mode.*
 
@@ -50,7 +50,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with true value" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        val sessionData = RepaymentClaimDetailsAnswersOld.setClaimingTaxDeducted(true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -67,7 +67,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
       }
       "should render the page and pre-populate correctly with false value" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false)
+        val sessionData = RepaymentClaimDetailsAnswersOld.setClaimingTaxDeducted(false)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -169,7 +169,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
       "onSubmit with warning" - {
         "should trigger warning when changing to false when Other Income schedule data present" in {
           val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingTaxDeducted = Some(true)),
+            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
             otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
           )
 
@@ -190,7 +190,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         "should redirect to the next page in NormalMode when value is false and warning has been shown" in {
           val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingTaxDeducted = Some(true)),
+            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
             otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
           )
 
@@ -216,7 +216,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         "should not show warning when no previous other income schedule data exists" in {
           val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingTaxDeducted = Some(false))
+            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(false))
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
@@ -235,7 +235,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         "should redirect to CheckYourAnswers in CheckMode after warning confirmation" in {
           val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingTaxDeducted = Some(true)),
+            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
             otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
           )
 
@@ -255,7 +255,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         "should render warning parameter hidden field when warning flash present" in {
           val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingTaxDeducted = Some(true)),
+            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
             otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
           )
 

@@ -14,35 +14,35 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.repaymentclaimdetailsold
 
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.YesNoFormProvider
-import models.RepaymentClaimDetailsAnswers
+import models.RepaymentClaimDetailsAnswersOld
 import models.Mode
 import models.Mode.*
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.ClaimingGiftAidSmallDonationsView
+import views.html.ClaimingOtherIncomeView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimingGiftAidSmallDonationsController @Inject() (
+class ClaimingOtherIncomeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimingGiftAidSmallDonationsView,
+  view: ClaimingOtherIncomeView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("claimingGiftAidSmallDonations.error.required")
+  val form: Form[Boolean] = formProvider("claimingOtherIncome.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme
+    val previousAnswer = RepaymentClaimDetailsAnswersOld.getClaimingTaxDeducted
     Ok(view(form.withDefault(warningAnswerBoolean.orElse(previousAnswer)), mode, isWarning))
   }
 
@@ -53,21 +53,20 @@ class ClaimingGiftAidSmallDonationsController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
-            if hadNoWarningShown && RepaymentClaimDetailsAnswers
-                .shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(value)
+            if hadNoWarningShown && RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingTaxDeducted(value)
             then
               Future.successful(
-                Redirect(routes.ClaimingGiftAidSmallDonationsController.onPageLoad(mode))
+                Redirect(routes.ClaimingOtherIncomeController.onPageLoad(mode))
                   .withWarning(value.toString)
               )
             else
               saveService
-                .save(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(value))
+                .save(RepaymentClaimDetailsAnswersOld.setClaimingTaxDeducted(value))
                 .map { _ =>
                   if (mode == CheckMode) {
                     Redirect(routes.CheckYourAnswersController.onPageLoad)
                   } else {
-                    Redirect(routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode))
+                    Redirect(routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode))
                   }
                 }
         )

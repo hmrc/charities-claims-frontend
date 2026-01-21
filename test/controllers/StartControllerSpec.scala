@@ -38,7 +38,7 @@ class StartControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            repaymentclaimdetails.routes.ClaimingGiftAidController.onPageLoad(NormalMode).url
+            repaymentclaimdetailsold.routes.ClaimingGiftAidController.onPageLoad(NormalMode).url
           )
         }
       }
