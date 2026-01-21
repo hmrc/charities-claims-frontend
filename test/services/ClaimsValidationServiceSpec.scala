@@ -61,6 +61,17 @@ class ClaimsValidationServiceSpec extends BaseSpec {
     )
   )
 
+  val testUploadSummaryWithoutOtherIncome: GetUploadSummaryResponse = GetUploadSummaryResponse(
+    uploads = Seq(
+      UploadSummary(
+        reference = "gift-aid-ref-123",
+        validationType = "GiftAid",
+        fileStatus = "VALIDATED",
+        uploadUrl = None
+      )
+    )
+  )
+
   "ClaimsValidationService" - {
 
     "deleteGiftAidSchedule" - {
@@ -109,6 +120,57 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
         whenReady(result.failed) { (exception: Throwable) =>
           exception.getMessage should include("GiftAid")
+          exception.getMessage should include("schedule upload")
+        }
+      }
+    }
+
+    "deleteOtherIncomeSchedule" - {
+
+      "should delete the OtherIncome schedule when claimId is present" in {
+        val service          = new ClaimsValidationServiceImpl(mockConnector)
+        val sessionData      = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-456"))
+        given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
+
+        (mockConnector
+          .getUploadSummary(_: String)(using _: HeaderCarrier))
+          .expects("test-claim-456", *)
+          .returning(Future.successful(testUploadSummaryWithGiftAid))
+
+        (mockConnector
+          .deleteSchedule(_: String, _: String)(using _: HeaderCarrier))
+          .expects("test-claim-456", "other-income-ref-456", *)
+          .returning(Future.successful(DeleteScheduleResponse(success = true)))
+
+        await(service.deleteOtherIncomeSchedule)
+      }
+
+      "should fail when claimId is None" in {
+        val service          = new ClaimsValidationServiceImpl(mockConnector)
+        val sessionData      = SessionData.empty.copy(unsubmittedClaimId = None)
+        given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
+
+        val result = service.deleteOtherIncomeSchedule
+
+        whenReady(result.failed) { (exception: Throwable) =>
+          exception.getMessage should include("No claimId")
+        }
+      }
+
+      "should fail when no OtherIncome upload found" in {
+        val service          = new ClaimsValidationServiceImpl(mockConnector)
+        val sessionData      = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-999"))
+        given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
+
+        (mockConnector
+          .getUploadSummary(_: String)(using _: HeaderCarrier))
+          .expects("test-claim-999", *)
+          .returning(Future.successful(testUploadSummaryWithoutOtherIncome))
+
+        val result = service.deleteOtherIncomeSchedule
+
+        whenReady(result.failed) { (exception: Throwable) =>
+          exception.getMessage should include("OtherIncome")
           exception.getMessage should include("schedule upload")
         }
       }
