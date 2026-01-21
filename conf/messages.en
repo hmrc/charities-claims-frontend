@@ -75,6 +75,12 @@ claimingGiftAidSmallDonations.paragraph =  This is separate to a Gift Aid claim.
 claimingGiftAidSmallDonations.title = Gift Aid Small Donations Scheme
 claimingGiftAidSmallDonations.warning = TBC Your data for this section will be lost if you change your answer.
 
+claimingCommunityBuildingDonations.caption = Provide repayment claim details
+claimingCommunityBuildingDonations.error.required = Select 'Yes' if you are claiming for donations collected in community buildings
+claimingCommunityBuildingDonations.heading = Do you want to claim for donations collected in community buildings?
+claimingCommunityBuildingDonations.hint =  For donations of £20 or less that were collected in a community building during charitable activities.
+claimingCommunityBuildingDonations.title = Do you want to claim for donations collected in community buildings?
+
 claimingOtherIncome.bullet.one =  Bank or Building Society interest
 claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
 claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate
