@@ -35,6 +35,9 @@ GET         /change-your-claim-reference-number             controllers.repaymen
 POST        /your-claim-reference-number                    controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-your-claim-reference-number             controllers.repaymentclaimdetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
 
+GET         /change-previous-gasds-claim                     controllers.repaymentclaimdetails.ChangePreviousGASDSClaimController.onPageLoad
+POST        /change-previous-gasds-claim                     controllers.repaymentclaimdetails.ChangePreviousGASDSClaimController.onSubmit
+
 GET         /declaration                                    controllers.repaymentclaimdetails.ClaimDeclarationController.onPageLoad
 POST        /declaration                                    controllers.repaymentclaimdetails.ClaimDeclarationController.onSubmit
 
