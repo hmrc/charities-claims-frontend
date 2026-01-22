@@ -33,7 +33,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
   val mockConnector: ClaimsValidationConnector = mock[ClaimsValidationConnector]
 
-  val testUploadSummaryWithGiftAid: GetUploadSummaryResponse = GetUploadSummaryResponse(
+  val testUploadSummaryWithAll: GetUploadSummaryResponse = GetUploadSummaryResponse(
     uploads = Seq(
       UploadSummary(
         reference = "gift-aid-ref-123",
@@ -44,6 +44,18 @@ class ClaimsValidationServiceSpec extends BaseSpec {
       UploadSummary(
         reference = "other-income-ref-456",
         validationType = "OtherIncome",
+        fileStatus = "VALIDATED",
+        uploadUrl = None
+      ),
+      UploadSummary(
+        reference = "community-buildings-ref-222",
+        validationType = "CommunityBuildings",
+        fileStatus = "VALIDATED",
+        uploadUrl = None
+      ),
+      UploadSummary(
+        reference = "connected-charities-ref-333",
+        validationType = "ConnectedCharities",
         fileStatus = "VALIDATED",
         uploadUrl = None
       )
@@ -72,6 +84,17 @@ class ClaimsValidationServiceSpec extends BaseSpec {
     )
   )
 
+  val testUploadSummaryWithoutCommunityBuildings: GetUploadSummaryResponse = GetUploadSummaryResponse(
+    uploads = Seq(
+      UploadSummary(
+        reference = "gift-aid-ref-123",
+        validationType = "GiftAid",
+        fileStatus = "VALIDATED",
+        uploadUrl = None
+      )
+    )
+  )
+
   "ClaimsValidationService" - {
 
     "deleteGiftAidSchedule" - {
@@ -84,7 +107,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
         (mockConnector
           .getUploadSummary(_: String)(using _: HeaderCarrier))
           .expects("test-claim-123", *)
-          .returning(Future.successful(testUploadSummaryWithGiftAid))
+          .returning(Future.successful(testUploadSummaryWithAll))
 
         (mockConnector
           .deleteSchedule(_: String, _: String)(using _: HeaderCarrier))
@@ -135,7 +158,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
         (mockConnector
           .getUploadSummary(_: String)(using _: HeaderCarrier))
           .expects("test-claim-456", *)
-          .returning(Future.successful(testUploadSummaryWithGiftAid))
+          .returning(Future.successful(testUploadSummaryWithAll))
 
         (mockConnector
           .deleteSchedule(_: String, _: String)(using _: HeaderCarrier))
@@ -171,6 +194,60 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
         whenReady(result.failed) { (exception: Throwable) =>
           exception.getMessage should include("OtherIncome")
+          exception.getMessage should include("schedule upload")
+        }
+      }
+    }
+
+    "deleteCommunityBuildingsSchedule" - {
+
+      "should delete the CommunityBuildings schedule when claimId is present" in {
+        val service     = new ClaimsValidationServiceImpl(mockConnector)
+        val sessionData = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-456"))
+
+        given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
+
+        (mockConnector
+          .getUploadSummary(_: String)(using _: HeaderCarrier))
+          .expects("test-claim-456", *)
+          .returning(Future.successful(testUploadSummaryWithAll))
+
+        (mockConnector
+          .deleteSchedule(_: String, _: String)(using _: HeaderCarrier))
+          .expects("test-claim-456", "community-buildings-ref-222", *)
+          .returning(Future.successful(DeleteScheduleResponse(success = true)))
+
+        await(service.deleteCommunityBuildingsSchedule)
+      }
+
+      "should fail when claimId is None" in {
+        val service     = new ClaimsValidationServiceImpl(mockConnector)
+        val sessionData = SessionData.empty.copy(unsubmittedClaimId = None)
+
+        given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
+
+        val result = service.deleteCommunityBuildingsSchedule
+
+        whenReady(result.failed) { (exception: Throwable) =>
+          exception.getMessage should include("No claimId")
+        }
+      }
+
+      "should fail when no CommunityBuildings upload found" in {
+        val service     = new ClaimsValidationServiceImpl(mockConnector)
+        val sessionData = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-999"))
+
+        given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
+
+        (mockConnector
+          .getUploadSummary(_: String)(using _: HeaderCarrier))
+          .expects("test-claim-999", *)
+          .returning(Future.successful(testUploadSummaryWithoutCommunityBuildings))
+
+        val result = service.deleteCommunityBuildingsSchedule
+
+        whenReady(result.failed) { (exception: Throwable) =>
+          exception.getMessage should include("CommunityBuildings")
           exception.getMessage should include("schedule upload")
         }
       }
