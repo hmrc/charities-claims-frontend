@@ -28,6 +28,7 @@ trait ClaimsValidationService {
   def deleteGiftAidSchedule(using DataRequest[?], HeaderCarrier): Future[Unit]
   def deleteOtherIncomeSchedule(using DataRequest[?], HeaderCarrier): Future[Unit]
   def deleteCommunityBuildingsSchedule(using DataRequest[?], HeaderCarrier): Future[Unit]
+  def deleteConnectedCharitiesSchedule(using DataRequest[?], HeaderCarrier): Future[Unit]
 }
 
 @Singleton
@@ -44,6 +45,9 @@ class ClaimsValidationServiceImpl @Inject() (
 
   def deleteCommunityBuildingsSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
     deleteSchedule("CommunityBuildings", request.sessionData.unsubmittedClaimId)
+
+  def deleteConnectedCharitiesSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
+    deleteSchedule("ConnectedCharities", request.sessionData.unsubmittedClaimId)
 
   private def deleteSchedule(validationType: String, claimIdOpt: Option[String])(using HeaderCarrier): Future[Unit] =
     claimIdOpt match {
