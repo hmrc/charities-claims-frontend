@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.repaymentClaimDetails
 
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
+import controllers.repaymentClaimDetails.routes
 import forms.YesNoFormProvider
 import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form

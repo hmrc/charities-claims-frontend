@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package controllers.repaymentclaimdetails
 
-import play.api.test.FakeRequest
-import play.api.mvc.AnyContentAsEmpty
-import play.api.Application
+package controllers.repaymentClaimDetails
+
 import controllers.ControllerSpec
+import play.api.mvc.AnyContentAsFormUrlEncoded
+import play.api.Application
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
 import models.RepaymentClaimDetailsAnswers
-import models.*
+import forms.YesNoFormProvider
+import play.api.data.Form
 import views.html.ChangePreviousGASDSClaimView
 
 class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
@@ -38,7 +41,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form, NormalMode).body
+          contentAsString(result) shouldEqual view(form).body
         }
       }
 
@@ -56,7 +59,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
+          contentAsString(result) shouldEqual view(form.fill(true)).body
         }
       }
 
@@ -74,7 +77,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
+          contentAsString(result) shouldEqual view(form.fill(false)).body
         }
       }
     }
@@ -109,7 +112,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url
+            routes.ChangePreviousGASDSClaimController.onPageLoad.url
           )
         }
       }
