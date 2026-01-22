@@ -127,3 +127,7 @@ GET         /charity-repayment-dashboard                   controllers.organisat
 
 GET         /claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onPageLoad
 POST        /claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onSubmit
+
+GET         /check-your-repayment-claim                       controllers.repaymentClaimDetails.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+POST        /check-your-repayment-claim                       controllers.repaymentClaimDetails.RepaymentClaimDetailsCheckYourAnswersController.onSubmit
+GET         /repayment-claim-details-min-data-placeholder      controllers.repaymentClaimDetails.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad

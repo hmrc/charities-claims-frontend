@@ -52,7 +52,7 @@ final case class RepaymentClaimDetailsAnswers(
       // claimingUnderGiftAidSmallDonationsScheme.contains(true) && connectedToAnyOtherCharities.isEmpty -> "connectedToAnyOtherCharities.heading"
     ).collect { case (true, key) => key }
 
-  def hasCompleteAnswers: Boolean = missingFields.isEmpty
+  def hasRepaymentClaimDetailsCompleteAnswers: Boolean = missingFields.isEmpty
 }
 
 object RepaymentClaimDetailsAnswers {
