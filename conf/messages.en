@@ -88,6 +88,14 @@ changePreviousGASDSClaim.title = Gift Aid Small Donations Scheme claim
 changePreviousGASDSClaim.caption = Provide repayment claim details
 changePreviousGASDSClaim.paragraph = If a Community Amateur Sports Club has received an over-payment, we will deduct the over-payment from this claim.
 
+repaymentClaimDetailsCheckYourAnswers.caption = Provide repayment claim details
+repaymentClaimDetailsCheckYourAnswers.title = Check your repayment claim
+repaymentClaimDetailsCheckYourAnswers.heading = Check your repayment claim
+repaymentClaimDetailsCheckYourAnswers.claimingDonationsCollectedInCommunityBuildings.label = Donations from community buildings
+repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label = Change Gift Aid Small Donations Scheme claim
+repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label = Claim reference number
+repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label = Reference number
+
 claimingOtherIncome.bullet.one =  Bank or Building Society interest
 claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
 claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate

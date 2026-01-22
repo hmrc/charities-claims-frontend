@@ -51,6 +51,29 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   messages("repaymentClaimDetailsCheckYourAnswers.claimingDonationsCollectedInCommunityBuildings.label")
                 )
               )
+          },
+          buildList.makingAdjustmentToPreviousClaim match {
+            case Some(value) =>
+              Some(
+                summaryRow(
+                  messages(
+                    "repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label"
+                  ),
+                  if (value) messages("site.yes") else messages("site.no"),
+                  controllers.repaymentClaimDetails.routes.ChangePreviousGASDSClaimController.onPageLoad.url,
+                  messages("repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label")
+                )
+              )
+            case _           =>
+              Some(
+                missingDataRow(
+                  messages(
+                    "repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label"
+                  ),
+                  controllers.repaymentClaimDetails.routes.ChangePreviousGASDSClaimController.onPageLoad.url,
+                  messages("repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label")
+                )
+              )
           }
         ).flatten
       case _               =>
