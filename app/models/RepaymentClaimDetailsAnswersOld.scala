@@ -22,7 +22,7 @@ import utils.Required.required
 
 import scala.util.Try
 
-final case class RepaymentClaimDetailsAnswers(
+final case class RepaymentClaimDetailsAnswersOld(
   claimingGiftAid: Option[Boolean] = None,
   claimingTaxDeducted: Option[Boolean] = None,
   claimingUnderGiftAidSmallDonationsScheme: Option[Boolean] = None,
@@ -55,23 +55,22 @@ final case class RepaymentClaimDetailsAnswers(
   def hasCompleteAnswers: Boolean = missingFields.isEmpty
 }
 
-object RepaymentClaimDetailsAnswers {
+object RepaymentClaimDetailsAnswersOld {
 
-  given Format[RepaymentClaimDetailsAnswers] = Json.format[RepaymentClaimDetailsAnswers]
+  given Format[RepaymentClaimDetailsAnswersOld] = Json.format[RepaymentClaimDetailsAnswersOld]
 
-  private def get[A](f: RepaymentClaimDetailsAnswers => Option[A])(using session: SessionData): Option[A] =
-    session.repaymentClaimDetailsAnswers.flatMap(f)
+  private def get[A](f: RepaymentClaimDetailsAnswersOld => Option[A])(using session: SessionData): Option[A] =
+    f(session.repaymentClaimDetailsAnswersOld)
 
-  private def set[A](value: A)(f: (RepaymentClaimDetailsAnswers, A) => RepaymentClaimDetailsAnswers)(using
+  private def set[A](value: A)(f: (RepaymentClaimDetailsAnswersOld, A) => RepaymentClaimDetailsAnswersOld)(using
     session: SessionData
   ): SessionData =
-    val updated = session.repaymentClaimDetailsAnswers match
-      case Some(existing) => f(existing, value)
-      case None           => f(RepaymentClaimDetailsAnswers(), value)
-    session.copy(repaymentClaimDetailsAnswers = Some(updated))
+    session.copy(
+      repaymentClaimDetailsAnswersOld = f(session.repaymentClaimDetailsAnswersOld, value)
+    )
 
-  def from(repaymentClaimDetails: RepaymentClaimDetails): RepaymentClaimDetailsAnswers =
-    RepaymentClaimDetailsAnswers(
+  def from(repaymentClaimDetails: RepaymentClaimDetails): RepaymentClaimDetailsAnswersOld =
+    RepaymentClaimDetailsAnswersOld(
       claimingGiftAid = Some(repaymentClaimDetails.claimingGiftAid),
       claimingTaxDeducted = Some(repaymentClaimDetails.claimingTaxDeducted),
       claimingUnderGiftAidSmallDonationsScheme = Some(repaymentClaimDetails.claimingUnderGiftAidSmallDonationsScheme),
@@ -95,13 +94,6 @@ object RepaymentClaimDetailsAnswers {
   def shouldWarnAboutChangingClaimingTaxDeducted(value: Boolean)(using session: SessionData): Boolean =
     !value && session.otherIncomeScheduleDataAnswers.isDefined
 
-  def getMakingAdjustmentToPreviousClaim(using session: SessionData): Option[Boolean] = get(
-    _.makingAdjustmentToPreviousClaim
-  )
-
-  def setMakingAdjustmentToPreviousClaim(value: Boolean)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(makingAdjustmentToPreviousClaim = Some(v)))
-
   def getClaimingGiftAid(using session: SessionData): Option[Boolean] = get(_.claimingGiftAid)
 
   def setClaimingGiftAid(value: Boolean)(using session: SessionData): SessionData =
@@ -110,13 +102,6 @@ object RepaymentClaimDetailsAnswers {
 
   def shouldWarnAboutChangingClaimingGiftAid(claimingGiftAid: Boolean)(using session: SessionData): Boolean =
     !claimingGiftAid && session.giftAidScheduleDataAnswers.isDefined
-
-  def getClaimingDonationsCollectedInCommunityBuildings(using session: SessionData): Option[Boolean] = get(
-    _.claimingDonationsCollectedInCommunityBuildings
-  )
-
-  def setClaimingDonationsCollectedInCommunityBuildings(value: Boolean)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(claimingDonationsCollectedInCommunityBuildings = Some(v)))
 
   def getClaimingUnderGiftAidSmallDonationsScheme(using session: SessionData): Option[Boolean] = get(
     _.claimingUnderGiftAidSmallDonationsScheme
@@ -161,7 +146,7 @@ object RepaymentClaimDetailsAnswers {
   def setClaimReferenceNumber(value: String)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(claimReferenceNumber = Some(v)))
 
-  def toRepaymentClaimDetails(answers: RepaymentClaimDetailsAnswers): Try[RepaymentClaimDetails] =
+  def toRepaymentClaimDetails(answers: RepaymentClaimDetailsAnswersOld): Try[RepaymentClaimDetails] =
     for
       claimingGiftAid                          <- required(answers)(_.claimingGiftAid)
       claimingTaxDeducted                      <- required(answers)(_.claimingTaxDeducted)

@@ -25,26 +25,24 @@ import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.ClaimingCommunityBuildingDonationsView
+import views.html.ChangePreviousGASDSClaimView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimingCommunityBuildingDonationsController @Inject() (
+class ChangePreviousGASDSClaimController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimingCommunityBuildingDonationsView,
+  view: ChangePreviousGASDSClaimView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("claimingCommunityBuildingDonations.error.required")
+  val form: Form[Boolean] = formProvider("changePreviousGASDSClaim.error.required")
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) then {
-      val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
-      Future.successful(Ok(view(form.withDefault(previousAnswer))))
-    } else { Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad)) }
+  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+    val previousAnswer = RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim
+    Ok(view(form.withDefault(previousAnswer)))
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
@@ -54,16 +52,8 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           saveService
-            .save(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(value))
-            .map(_ =>
-              if (value) {
-                Redirect(routes.ChangePreviousGASDSClaimController.onPageLoad)
-              } else {
-                Redirect(
-                  routes.ClaimingCommunityBuildingDonationsController.onPageLoad
-                ) // TODO - redirect to connected charities when available
-              }
-            )
+            .save(RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(value))
+            .map(_ => Redirect(routes.ChangePreviousGASDSClaimController.onPageLoad))
       )
   }
 }

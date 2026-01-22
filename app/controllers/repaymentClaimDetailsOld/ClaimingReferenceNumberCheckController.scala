@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.repaymentclaimdetailsold
 
 import com.google.inject.Inject
 import controllers.BaseController
@@ -42,7 +42,7 @@ class ClaimingReferenceNumberCheckController @Inject() (
   val form: Form[Boolean] = formProvider("claimReferenceNumberCheck.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingReferenceNumber
+    val previousAnswer = RepaymentClaimDetailsAnswersOld.getClaimingReferenceNumber
     Ok(view(form.withDefault(previousAnswer), mode))
   }
 
@@ -53,7 +53,7 @@ class ClaimingReferenceNumberCheckController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
-            .save(RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(value))
+            .save(RepaymentClaimDetailsAnswersOld.setClaimingReferenceNumber(value))
             .map { _ =>
               (value, mode) match {
                 case (true, _) =>

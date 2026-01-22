@@ -19,7 +19,7 @@ package services
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.ClaimsConnector
 import uk.gov.hmrc.http.HeaderCarrier
-import models.{RepaymentClaimDetailsAnswers, SessionData}
+import models.{RepaymentClaimDetailsAnswersOld, SessionData}
 import models.requests.DataRequest
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -43,8 +43,8 @@ class ClaimsServiceImpl @Inject() (saveService: SaveService, connector: ClaimsCo
       case None =>
         for
           repaymentClaimDetails <- Future.fromTry(
-                                     RepaymentClaimDetailsAnswers
-                                       .toRepaymentClaimDetails(sessionData.repaymentClaimDetailsAnswers)
+                                     RepaymentClaimDetailsAnswersOld
+                                       .toRepaymentClaimDetails(sessionData.repaymentClaimDetailsAnswersOld)
                                    )
           response              <- connector.saveClaim(repaymentClaimDetails)
           _                     <-

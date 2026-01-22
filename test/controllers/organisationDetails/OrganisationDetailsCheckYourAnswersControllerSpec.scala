@@ -26,7 +26,7 @@ import views.html.OrganisationDetailsCheckYourAnswersView
 
 class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
   "OrganisationDetailsCheckYourAnswersController" - {
-    val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
+    val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswersOld(
       claimingGiftAid = Some(true),
       claimingTaxDeducted = Some(false),
       claimingUnderGiftAidSmallDonationsScheme = Some(true),
@@ -40,7 +40,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -64,7 +64,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales),
@@ -100,7 +100,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               charityRegistrationNumber = Some("123"),
@@ -135,7 +135,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.NorthernIreland),
@@ -170,7 +170,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -205,7 +205,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -240,7 +240,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -275,7 +275,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -310,7 +310,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -344,7 +344,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -378,7 +378,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -412,7 +412,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -444,7 +444,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -476,7 +476,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -515,7 +515,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -560,7 +560,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -594,7 +594,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -628,7 +628,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -669,7 +669,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -712,7 +712,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = repaymentClaimDetailsDefaultAnswers
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers
         )
 
         given application: Application =

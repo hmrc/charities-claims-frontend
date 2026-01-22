@@ -27,7 +27,8 @@ final case class SessionData(
   // lastUpdatedReference of the claim stored in the backend,
   // if empty, the user has started a new claim
   lastUpdatedReference: Option[String] = None,
-  repaymentClaimDetailsAnswers: RepaymentClaimDetailsAnswers,
+  repaymentClaimDetailsAnswersOld: RepaymentClaimDetailsAnswersOld,
+  repaymentClaimDetailsAnswers: Option[RepaymentClaimDetailsAnswers] = None,
   organisationDetailsAnswers: Option[OrganisationDetailsAnswers] = None,
   giftAidScheduleDataAnswers: Option[GiftAidScheduleDataAnswers] = None,
   declarationDetailsAnswers: Option[DeclarationDetailsAnswers] = None,
@@ -40,14 +41,15 @@ object SessionData {
   given Format[SessionData] = Json.format[SessionData]
 
   val empty: SessionData = SessionData(
-    repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers()
+    repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld()
   )
 
   def from(claim: Claim): SessionData =
     SessionData(
       unsubmittedClaimId = Some(claim.claimId),
       lastUpdatedReference = Some(claim.lastUpdatedReference),
-      repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers.from(claim.claimData.repaymentClaimDetails),
+      repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld.from(claim.claimData.repaymentClaimDetails),
+      repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers.from(claim.claimData.repaymentClaimDetails)),
       organisationDetailsAnswers = claim.claimData.organisationDetails.map(OrganisationDetailsAnswers.from),
       declarationDetailsAnswers = claim.claimData.declarationDetails.map(DeclarationDetailsAnswers.from),
       giftAidSmallDonationsSchemeDonationDetailsAnswers =
@@ -59,8 +61,8 @@ object SessionData {
   def toUpdateClaimRequest(sessionData: SessionData): Try[UpdateClaimRequest] =
     for {
       lastUpdatedReference                       <- required(sessionData)(_.lastUpdatedReference)
-      repaymentClaimDetails                      <- RepaymentClaimDetailsAnswers
-                                                      .toRepaymentClaimDetails(sessionData.repaymentClaimDetailsAnswers)
+      repaymentClaimDetails                      <- RepaymentClaimDetailsAnswersOld
+                                                      .toRepaymentClaimDetails(sessionData.repaymentClaimDetailsAnswersOld)
       organisationDetails                        <- sessionData.organisationDetailsAnswers
                                                       .flatMapTry(OrganisationDetailsAnswers.toOrganisationDetails)
       giftAidSmallDonationsSchemeDonationDetails <-

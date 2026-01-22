@@ -14,34 +14,33 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.repaymentclaimdetailsold
 
 import play.api.test.FakeRequest
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import controllers.ControllerSpec
-import views.html.ClaimingOtherIncomeView
+import views.html.ClaimingGiftAidSmallDonationsView
 import play.api.Application
 import forms.YesNoFormProvider
-import models.{OtherIncomeScheduleDataAnswers, RepaymentClaimDetailsAnswers, SessionData}
+import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, RepaymentClaimDetailsAnswersOld, SessionData}
 import play.api.data.Form
 import models.Mode.*
 
-class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
+class ClaimingGiftAidSmallDonationsControllerSpec extends ControllerSpec {
 
   private val form: Form[Boolean] = new YesNoFormProvider()()
 
-  "ClaimingOtherIncomeController" - {
+  "ClaimingGiftAidSmallDonationsController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-
         given application: Application = applicationBuilder().build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
+            FakeRequest(GET, routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
+          val view   = application.injector.instanceOf[ClaimingGiftAidSmallDonationsView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form, NormalMode).body
@@ -50,33 +49,34 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with true value" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        val sessionData = RepaymentClaimDetailsAnswersOld.setClaimingUnderGiftAidSmallDonationsScheme(true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
+            FakeRequest(GET, routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
+          val view   = application.injector.instanceOf[ClaimingGiftAidSmallDonationsView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
         }
       }
+
       "should render the page and pre-populate correctly with false value" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false)
+        val sessionData = RepaymentClaimDetailsAnswersOld.setClaimingUnderGiftAidSmallDonationsScheme(false)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
+            FakeRequest(GET, routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimingOtherIncomeView]
+          val view   = application.injector.instanceOf[ClaimingGiftAidSmallDonationsView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
@@ -90,30 +90,31 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.ClaimingGiftAidSmallDonationsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode).url
+            routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode).url
           )
         }
       }
+
       "should redirect to the next page when the value is false" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.ClaimingGiftAidSmallDonationsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode).url
+            routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -123,7 +124,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(CheckMode).url)
+            FakeRequest(POST, routes.ClaimingGiftAidSmallDonationsController.onSubmit(CheckMode).url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
@@ -140,7 +141,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(CheckMode).url)
+            FakeRequest(POST, routes.ClaimingGiftAidSmallDonationsController.onSubmit(CheckMode).url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
@@ -157,7 +158,7 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.ClaimingGiftAidSmallDonationsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value
@@ -167,38 +168,44 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
       }
 
       "onSubmit with warning" - {
-        "should trigger warning when changing to false when Other Income schedule data present" in {
+        "should trigger warning when changing to false when GASDS schedule data present" in {
           val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingTaxDeducted = Some(true)),
-            otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+            repaymentClaimDetailsAnswersOld =
+              RepaymentClaimDetailsAnswersOld(claimingUnderGiftAidSmallDonationsScheme = Some(true)),
+            giftAidSmallDonationsSchemeDonationDetailsAnswers =
+              Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-              FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(NormalMode).url)
+              FakeRequest(POST, routes.ClaimingGiftAidSmallDonationsController.onSubmit(NormalMode).url)
                 .withFormUrlEncodedBody("value" -> "false")
 
             val result = route(application, request).value
 
             status(result) shouldEqual SEE_OTHER
-            redirectLocation(result) shouldEqual Some(routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
+            redirectLocation(result) shouldEqual Some(
+              routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode).url
+            )
             flash(result).get("warning") shouldEqual Some("true")
           }
         }
 
         "should redirect to the next page in NormalMode when value is false and warning has been shown" in {
           val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingTaxDeducted = Some(true)),
-            otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+            repaymentClaimDetailsAnswersOld =
+              RepaymentClaimDetailsAnswersOld(claimingUnderGiftAidSmallDonationsScheme = Some(true)),
+            giftAidSmallDonationsSchemeDonationDetailsAnswers =
+              Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-              FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(NormalMode).url)
+              FakeRequest(POST, routes.ClaimingGiftAidSmallDonationsController.onSubmit(NormalMode).url)
                 .withFormUrlEncodedBody(
                   "value"        -> "false",
                   "warningShown" -> "true"
@@ -208,22 +215,23 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
             status(result) shouldEqual SEE_OTHER
             redirectLocation(result) shouldEqual Some(
-              routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode).url
+              routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode).url
             )
             flash(result).get("warning") shouldEqual None
           }
         }
 
-        "should not show warning when no previous other income schedule data exists" in {
+        "should not show warning when no previous GASDS schedule data exists" in {
           val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingTaxDeducted = Some(false))
+            repaymentClaimDetailsAnswersOld =
+              RepaymentClaimDetailsAnswersOld(claimingUnderGiftAidSmallDonationsScheme = Some(false))
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-              FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(NormalMode).url)
+              FakeRequest(POST, routes.ClaimingGiftAidSmallDonationsController.onSubmit(NormalMode).url)
                 .withFormUrlEncodedBody("value" -> "false")
 
             val result = route(application, request).value
@@ -235,15 +243,17 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         "should redirect to CheckYourAnswers in CheckMode after warning confirmation" in {
           val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingTaxDeducted = Some(true)),
-            otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+            repaymentClaimDetailsAnswersOld =
+              RepaymentClaimDetailsAnswersOld(claimingUnderGiftAidSmallDonationsScheme = Some(true)),
+            giftAidSmallDonationsSchemeDonationDetailsAnswers =
+              Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-              FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(CheckMode).url)
+              FakeRequest(POST, routes.ClaimingGiftAidSmallDonationsController.onSubmit(CheckMode).url)
                 .withFormUrlEncodedBody("value" -> "false", "warningShown" -> "true")
 
             val result = route(application, request).value
@@ -255,15 +265,17 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
         "should render warning parameter hidden field when warning flash present" in {
           val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingTaxDeducted = Some(true)),
-            otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+            repaymentClaimDetailsAnswersOld =
+              RepaymentClaimDetailsAnswersOld(claimingUnderGiftAidSmallDonationsScheme = Some(true)),
+            giftAidSmallDonationsSchemeDonationDetailsAnswers =
+              Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsEmpty.type] =
-              FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
+              FakeRequest(GET, routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode).url)
                 .withFlash("warning" -> "true", "warningAnswer" -> "false")
 
             val result = route(application, request).value

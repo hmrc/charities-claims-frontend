@@ -14,9 +14,7 @@
  * limitations under the License.
  *@
 
-@import controllers.repaymentclaimdetailsold.routes
-@import views.html.components.WarningBanner
-@import views.html.components.WarningParameter
+@import controllers.repaymentClaimDetails.routes
 
 @this(
     layout: templates.Layout,
@@ -24,37 +22,30 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    warningBanner: WarningBanner,
-    warningParameter: WarningParameter
 )
 
-@(form: Form[?], mode: Mode, isWarning: Boolean = false)(implicit request: Request[?], messages: Messages)
+@(form: Form[?])(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = title(form, messages("claimingGiftAidSmallDonations.title"))
+    pageTitle = title(form, messages("changePreviousGASDSClaim.title"))
 ) {
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    @if(isWarning) {
-        @warningBanner("claimingGiftAidSmallDonations.warning")
-    }
+    <span class="govuk-caption-l">@messages("corporateTrusteeClaim.caption")</span>
+    <h1 class="govuk-heading-l">@messages("changePreviousGASDSClaim.heading")</h1>
 
-    <h1 class="govuk-heading-l">@messages("claimingGiftAidSmallDonations.heading")</h1>
+    <p class="govuk-body">@messages("changePreviousGASDSClaim.paragraph")</p>
 
-    <p class="govuk-body">@messages("claimingGiftAidSmallDonations.paragraph")</p>
-
-    @formHelper(action = routes.ClaimingGiftAidSmallDonationsController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.ChangePreviousGASDSClaimController.onSubmit, Symbol("autoComplete") -> "off") {
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 form("value"),
-                LegendViewModel(messages("claimingGiftAidSmallDonations.legend")).bold
+                LegendViewModel(messages("changePreviousGASDSClaim.legend")).bold
             )
         )
-
-        @warningParameter()
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
     }

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package controllers.repaymentclaimdetails
+package controllers.repaymentclaimdetailsold
 
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
-import models.{GiftAidScheduleDataAnswers, RepaymentClaimDetailsAnswers, SessionData}
+import models.{GiftAidScheduleDataAnswers, RepaymentClaimDetailsAnswersOld, SessionData}
 import models.Mode.*
 import models.requests.DataRequest
 import play.api.Application
@@ -60,7 +60,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with true value in check mode" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
+        val sessionData = RepaymentClaimDetailsAnswersOld.setClaimingGiftAid(true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -78,7 +78,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with false value" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingGiftAid(false)
+        val sessionData = RepaymentClaimDetailsAnswersOld.setClaimingGiftAid(false)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -174,7 +174,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
     "onSubmit with warning" - {
       "should trigger warning when changing to false with Gift Aid schedule data present" in {
         val sessionData = SessionData.empty.copy(
-          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
           giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
         )
 
@@ -195,7 +195,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
       "should not show warning when no previous gift aid schedule data exists" in {
         val sessionData = SessionData.empty.copy(
-          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(false))
+          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(false))
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
@@ -215,7 +215,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
       "should delete schedule and redirect to ClaimingOtherIncomeController when changing to No after warning in NormalMode" in {
         val sessionData = SessionData.empty.copy(
           unsubmittedClaimId = Some("test-claim-123"),
-          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
           giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
         )
 
@@ -243,7 +243,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
       "should delete schedule and redirect to CheckYourAnswersController when changing to No after warning in CheckMode" in {
         val sessionData = SessionData.empty.copy(
           unsubmittedClaimId = Some("test-claim-456"),
-          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
           giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
         )
 
@@ -270,7 +270,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
       "should redirect to ClaimingOtherIncomeController when selecting Yes (not trigger delete)" in {
         val sessionData = SessionData.empty.copy(
-          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
           giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
         )
 
@@ -290,7 +290,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
       "should redirect to ClaimingOtherIncomeController when selecting No with no existing schedule data" in {
         val sessionData = SessionData.empty.copy(
-          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(false)),
+          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(false)),
           giftAidScheduleDataAnswers = None
         )
 
@@ -310,7 +310,7 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
       "should render warning parameter hidden field when flash present" in {
         val sessionData = SessionData.empty.copy(
-          repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true)),
+          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
           giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
         )
 
