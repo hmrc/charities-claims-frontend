@@ -95,6 +95,17 @@ class ClaimsValidationServiceSpec extends BaseSpec {
     )
   )
 
+  val testUploadSummaryWithoutConnectedCharities: GetUploadSummaryResponse = GetUploadSummaryResponse(
+    uploads = Seq(
+      UploadSummary(
+        reference = "gift-aid-ref-123",
+        validationType = "GiftAid",
+        fileStatus = "VALIDATED",
+        uploadUrl = None
+      )
+    )
+  )
+
   "ClaimsValidationService" - {
 
     "deleteGiftAidSchedule" - {
@@ -248,6 +259,60 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
         whenReady(result.failed) { (exception: Throwable) =>
           exception.getMessage should include("CommunityBuildings")
+          exception.getMessage should include("schedule upload")
+        }
+      }
+    }
+
+    "deleteConnectedCharitiesSchedule" - {
+
+      "should delete the ConnectedCharities schedule when claimId is present" in {
+        val service     = new ClaimsValidationServiceImpl(mockConnector)
+        val sessionData = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-456"))
+
+        given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
+
+        (mockConnector
+          .getUploadSummary(_: String)(using _: HeaderCarrier))
+          .expects("test-claim-456", *)
+          .returning(Future.successful(testUploadSummaryWithAll))
+
+        (mockConnector
+          .deleteSchedule(_: String, _: String)(using _: HeaderCarrier))
+          .expects("test-claim-456", "connected-charities-ref-333", *)
+          .returning(Future.successful(DeleteScheduleResponse(success = true)))
+
+        await(service.deleteConnectedCharitiesSchedule)
+      }
+
+      "should fail when claimId is None" in {
+        val service     = new ClaimsValidationServiceImpl(mockConnector)
+        val sessionData = SessionData.empty.copy(unsubmittedClaimId = None)
+
+        given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
+
+        val result = service.deleteConnectedCharitiesSchedule
+
+        whenReady(result.failed) { (exception: Throwable) =>
+          exception.getMessage should include("No claimId")
+        }
+      }
+
+      "should fail when no ConnectedCharities upload found" in {
+        val service     = new ClaimsValidationServiceImpl(mockConnector)
+        val sessionData = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-999"))
+
+        given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
+
+        (mockConnector
+          .getUploadSummary(_: String)(using _: HeaderCarrier))
+          .expects("test-claim-999", *)
+          .returning(Future.successful(testUploadSummaryWithoutConnectedCharities))
+
+        val result = service.deleteConnectedCharitiesSchedule
+
+        whenReady(result.failed) { (exception: Throwable) =>
+          exception.getMessage should include("ConnectedCharities")
           exception.getMessage should include("schedule upload")
         }
       }
