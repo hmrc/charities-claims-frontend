@@ -38,6 +38,9 @@ POST        /old/change-your-claim-reference-number             controllers.repa
 GET         /old/declaration                                    controllers.repaymentclaimdetailsold.ClaimDeclarationController.onPageLoad
 POST        /old/declaration                                    controllers.repaymentclaimdetailsold.ClaimDeclarationController.onSubmit
 
+GET         /change-previous-gasds-claim                        controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onPageLoad
+POST        /change-previous-gasds-claim                        controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onSubmit
+
 GET         /old/check-your-claim-details                       controllers.repaymentclaimdetailsold.CheckYourAnswersController.onPageLoad
 POST        /old/check-your-claim-details                       controllers.repaymentclaimdetailsold.CheckYourAnswersController.onSubmit
 

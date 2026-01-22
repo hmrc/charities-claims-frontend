@@ -75,6 +75,13 @@ claimingGiftAidSmallDonations.paragraph =  This is separate to a Gift Aid claim.
 claimingGiftAidSmallDonations.title = Gift Aid Small Donations Scheme
 claimingGiftAidSmallDonations.warning = TBC Your data for this section will be lost if you change your answer.
 
+changePreviousGASDSClaim.error.required = Select ‘Yes’ if you want to modify a previous Gift Aid Small Donations Scheme claim
+changePreviousGASDSClaim.heading = Gift Aid Small Donations Scheme claim
+changePreviousGASDSClaim.legend = Do you want to change a previous Gift Aid Small Donations Scheme claim?
+changePreviousGASDSClaim.title = Gift Aid Small Donations Scheme claim
+changePreviousGASDSClaim.caption = Provide repayment claim details
+changePreviousGASDSClaim.paragraph = If a Community Amateur Sports Club has received an over-payment, we will deduct the over-payment from this claim.
+
 claimingOtherIncome.bullet.one =  Bank or Building Society interest
 claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
 claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate

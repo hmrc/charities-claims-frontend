@@ -95,6 +95,13 @@ object RepaymentClaimDetailsAnswers {
   def shouldWarnAboutChangingClaimingTaxDeducted(value: Boolean)(using session: SessionData): Boolean =
     !value && session.otherIncomeScheduleDataAnswers.isDefined
 
+  def getMakingAdjustmentToPreviousClaim(using session: SessionData): Option[Boolean] = get(
+    _.makingAdjustmentToPreviousClaim
+  )
+
+  def setMakingAdjustmentToPreviousClaim(value: Boolean)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(makingAdjustmentToPreviousClaim = Some(v)))
+
   def getClaimingGiftAid(using session: SessionData): Option[Boolean] = get(_.claimingGiftAid)
 
   def setClaimingGiftAid(value: Boolean)(using session: SessionData): SessionData =
