@@ -124,3 +124,6 @@ GET         /make-charity-repayment-claim                   controllers.organisa
 
 # TODO: Placeholder screen for AA1 - route will be updated in future
 GET         /charity-repayment-dashboard                   controllers.organisationDetails.CharityRepaymentDashboardController.onPageLoad
+
+GET         /claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onPageLoad
+POST        /claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onSubmit

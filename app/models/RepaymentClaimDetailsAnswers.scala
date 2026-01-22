@@ -111,6 +111,13 @@ object RepaymentClaimDetailsAnswers {
   def shouldWarnAboutChangingClaimingGiftAid(claimingGiftAid: Boolean)(using session: SessionData): Boolean =
     !claimingGiftAid && session.giftAidScheduleDataAnswers.isDefined
 
+  def getClaimingDonationsCollectedInCommunityBuildings(using session: SessionData): Option[Boolean] = get(
+    _.claimingDonationsCollectedInCommunityBuildings
+  )
+
+  def setClaimingDonationsCollectedInCommunityBuildings(value: Boolean)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(claimingDonationsCollectedInCommunityBuildings = Some(v)))
+
   def getClaimingUnderGiftAidSmallDonationsScheme(using session: SessionData): Option[Boolean] = get(
     _.claimingUnderGiftAidSmallDonationsScheme
   )
