@@ -243,8 +243,8 @@ repaymentClaimDetails.heading = Repayment claim details
 repaymentClaimDetails.subheading = Provide repayment claim details
 repaymentClaimDetails.p1 = Use this service to claim:
 repaymentClaimDetails.bullet1 = tax repayments on Gift Aid donations
-repaymentClaimDetails.bullet2 = top-up payments under the Gift Aid Small Donations Scheme (GASDS)
-repaymentClaimDetails.bullet3 = UK tax deducted from other income
+repaymentClaimDetails.bullet2 = top-up payments under the Gift Aid Small Donations Scheme
+repaymentClaimDetails.bullet3 = UK tax deducted from Other Income
 
 # TODO: Placeholder screen messages for G2 - content will be updated in future
 addSchedule.title = Add Schedule
