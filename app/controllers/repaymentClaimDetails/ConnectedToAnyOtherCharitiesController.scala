@@ -59,7 +59,7 @@ class ConnectedToAnyOtherCharitiesController @Inject() (
             .map(_ =>
               Redirect(
                 routes.ConnectedToAnyOtherCharitiesController.onPageLoad
-              ) // TODO - redirect to claiming reference when available
+              )
             )
       )
   }

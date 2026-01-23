@@ -81,7 +81,7 @@ claimingCommunityBuildingDonations.heading = Do you want to claim for donations 
 claimingCommunityBuildingDonations.hint =  For donations of £20 or less that were collected in a community building during charitable activities.
 claimingCommunityBuildingDonations.title = Do you want to claim for donations collected in community buildings?
 
-changePreviousGASDSClaim.error.required = Select ‘Yes’ if you want to modify a previous Gift Aid Small Donations Scheme claim
+changePreviousGASDSClaim.error.required = Select ‘Yes’ if you want to change a previous Gift Aid Small Donations Scheme claim
 changePreviousGASDSClaim.heading = Gift Aid Small Donations Scheme claim
 changePreviousGASDSClaim.legend = Do you want to change a previous Gift Aid Small Donations Scheme claim?
 changePreviousGASDSClaim.title = Gift Aid Small Donations Scheme claim
