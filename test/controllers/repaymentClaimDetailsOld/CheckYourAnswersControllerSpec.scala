@@ -24,6 +24,7 @@ import play.api.Application
 import play.api.test.Helpers.*
 import models.RepaymentClaimDetailsAnswersOld
 import models.*
+import controllers.routes as rootRoutes
 
 class CheckYourAnswersControllerSpec extends ControllerSpec {
 
@@ -189,7 +190,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
       (mockClaimsService
         .save(using _: models.requests.DataRequest[?], _: uk.gov.hmrc.http.HeaderCarrier))
         .expects(*, *)
-        .returning(scala.concurrent.Future.failed(UpdatedByAnotherUserException("UPDATED_BY_ANOTHER_USER")))
+        .returning(scala.concurrent.Future.failed(UpdatedByAnotherUserException()))
 
       given application: Application =
         applicationBuilder(sessionData = sessionData)
@@ -205,7 +206,6 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
         redirectLocation(errorResult) shouldEqual Some(
           controllers.organisationDetails.routes.CannotViewOrManageClaimController.onPageLoad.url
         )
-
       }
     }
   }
