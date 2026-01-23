@@ -88,6 +88,13 @@ changePreviousGASDSClaim.title = Gift Aid Small Donations Scheme claim
 changePreviousGASDSClaim.caption = Provide repayment claim details
 changePreviousGASDSClaim.paragraph = If a Community Amateur Sports Club has received an over-payment, we will deduct the over-payment from this claim.
 
+connectedToAnyOtherCharities.error.required = Select ‘Yes’ if you are connected to other charities or a Community Amateur Sports Club
+connectedToAnyOtherCharities.heading = Connected charities and Community Amateur Sports Clubs
+connectedToAnyOtherCharities.legend = Are you connected to other charities or a Community Amateur Sports Club?
+connectedToAnyOtherCharities.paragraph = If connected charities and Community Amateur Sports Clubs claim a top-up payment, they will share the maximum £1,250 payment limit for the tax year.
+connectedToAnyOtherCharities.title = Connected charities and Community Amateur Sports Clubs
+connectedToAnyOtherCharities.caption = Provide repayment claim details
+
 claimingOtherIncome.bullet.one =  Bank or Building Society interest
 claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
 claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate
