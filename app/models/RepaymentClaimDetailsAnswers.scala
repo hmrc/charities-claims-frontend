@@ -122,6 +122,13 @@ object RepaymentClaimDetailsAnswers {
     _.claimingUnderGiftAidSmallDonationsScheme
   )
 
+  def setConnectedToAnyOtherCharities(value: Boolean)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(connectedToAnyOtherCharities = Some(v)))
+
+  def getConnectedToAnyOtherCharities(using session: SessionData): Option[Boolean] = get(
+    _.connectedToAnyOtherCharities
+  )
+
   def setClaimingUnderGiftAidSmallDonationsScheme(value: Boolean)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(claimingUnderGiftAidSmallDonationsScheme = Some(v)))
       .copy(giftAidSmallDonationsSchemeDonationDetailsAnswers =

@@ -41,6 +41,9 @@ POST        /old/declaration                                    controllers.repa
 GET         /change-previous-gasds-claim                        controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onPageLoad
 POST        /change-previous-gasds-claim                        controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onSubmit
 
+GET         /connected-to-charities                             controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onPageLoad
+POST        /connected-to-charities                             controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onSubmit
+
 GET         /old/check-your-claim-details                       controllers.repaymentclaimdetailsold.CheckYourAnswersController.onPageLoad
 POST        /old/check-your-claim-details                       controllers.repaymentclaimdetailsold.CheckYourAnswersController.onSubmit
 
