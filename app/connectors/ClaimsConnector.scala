@@ -152,13 +152,11 @@ class ClaimsConnectorImpl @Inject() (
         response
           .parseJSON[O]()
           .fold(error => Future.failed(Exception(error)), Future.successful)
-      else if noneOnNotFound && response.status == 404
-      then Future.successful(noneValue)
-      else if response.status == 400 && response.body.contains("UPDATED_BY_ANOTHER_USER")
-      then
-        Future.failed(
-          UpdatedByAnotherUserException(s"Request to $method $url failed because of $response ${response.body}")
-        )
+      else if noneOnNotFound && response.status == 404 then Future.successful(noneValue)
+      else if response.status == 400 then
+        response
+          .parseJSON[ClaimError]()
+          .fold(error => Future.failed(Exception(error)), Future.failed(_))
       else
         Future.failed(
           Exception(s"Request to $method $url failed because of $response ${response.body}")
