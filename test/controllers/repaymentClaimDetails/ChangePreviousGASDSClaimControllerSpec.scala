@@ -95,7 +95,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ChangePreviousGASDSClaimController.onPageLoad.url
+            routes.ConnectedToAnyOtherCharitiesController.onPageLoad.url
           )
         }
       }
@@ -112,7 +112,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ChangePreviousGASDSClaimController.onPageLoad.url
+            routes.ConnectedToAnyOtherCharitiesController.onPageLoad.url
           )
         }
       }
