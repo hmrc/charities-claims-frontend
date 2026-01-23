@@ -91,8 +91,14 @@ changePreviousGASDSClaim.paragraph = If a Community Amateur Sports Club has rece
 repaymentClaimDetailsCheckYourAnswers.caption = Provide repayment claim details
 repaymentClaimDetailsCheckYourAnswers.title = Check your repayment claim
 repaymentClaimDetailsCheckYourAnswers.heading = Check your repayment claim
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label = Repayment claim type
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid.label = Gift Aid
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS.label = Top up payments for small cash donations under Gift Aid Small Donations Scheme
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome.label = UK tax deducted from Other Income
+repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label = Gift Aid Small Donations Scheme Payment
 repaymentClaimDetailsCheckYourAnswers.claimingDonationsCollectedInCommunityBuildings.label = Donations from community buildings
 repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label = Change Gift Aid Small Donations Scheme claim
+repaymentClaimDetailsCheckYourAnswers.connectToAnyOtherCharity.label = Connected to charities or Community Amateur Sports Clubs
 repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label = Claim reference number
 repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label = Reference number
 
