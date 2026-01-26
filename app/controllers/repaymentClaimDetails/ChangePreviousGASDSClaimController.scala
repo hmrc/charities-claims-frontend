@@ -53,7 +53,7 @@ class ChangePreviousGASDSClaimController @Inject() (
         value =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(value))
-            .map(_ => Redirect(routes.ChangePreviousGASDSClaimController.onPageLoad))
+            .map(_ => Redirect(routes.ConnectedToAnyOtherCharitiesController.onPageLoad))
       )
   }
 }
