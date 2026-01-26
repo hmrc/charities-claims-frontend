@@ -26,7 +26,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Result
-import models.UpdatedByAnotherUserException
+import models.{MaxClaimsExceededException, UpdatedByAnotherUserException}
 import play.api.mvc.Results.Redirect
 import play.api.Logger
 
@@ -46,6 +46,11 @@ class ErrorHandler @Inject() (
         logger.error(ex.getMessage)
         Future.successful(
           Redirect(controllers.organisationDetails.routes.CannotViewOrManageClaimController.onPageLoad)
+        )
+      case _: MaxClaimsExceededException    =>
+        logger.error(ex.getMessage)
+        Future.successful(
+          Redirect(controllers.routes.MaxClaimsExceededController.onPageLoad)
         )
       case _                                =>
         super.resolveError(rh, ex)

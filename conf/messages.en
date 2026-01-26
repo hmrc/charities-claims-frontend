@@ -45,6 +45,10 @@ incompleteAnswers.message = You have missing data
 incompleteAnswers.returnLink = Return to check your answers
 incompleteAnswers.title = You have not provided all required details
 
+maxClaimsExceeded.heading = You cannot create any more claims
+maxClaimsExceeded.paragraph = You have reached the maximum number of claims. You must submit or delete existing claims before creating a new one. Return to <a class="govuk-link" href="{0}">repayment claim summary</a>.
+maxClaimsExceeded.title = You cannot create any more claims
+
 claimDeclaration.bullet.one =  I will provide accurate information in this claim
 claimDeclaration.heading = Declaration
 claimDeclaration.paragraph =  I declare that:

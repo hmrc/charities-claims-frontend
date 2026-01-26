@@ -21,7 +21,7 @@ import play.api.Application
 import play.api.test.FakeRequest
 import play.api.mvc.AnyContentAsEmpty
 import handlers.ErrorHandler
-import models.UpdatedByAnotherUserException
+import models.{MaxClaimsExceededException, UpdatedByAnotherUserException}
 
 class ErrorHandlerSpec extends ControllerSpec {
 
@@ -38,6 +38,26 @@ class ErrorHandlerSpec extends ControllerSpec {
         val result    = errorHandler.resolveError(request, exception)
 
         status(result) shouldEqual SEE_OTHER
+        redirectLocation(
+          result
+        ).value shouldEqual controllers.organisationDetails.routes.CannotViewOrManageClaimController.onPageLoad.url
+      }
+
+    }
+
+    "should redirect if the exception is MaxClaimsExceededException" in {
+
+      given application: Application = applicationBuilder().build()
+      val errorHandler               = application.injector.instanceOf[ErrorHandler]
+
+      running(application) {
+        given request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/foo")
+
+        val exception = MaxClaimsExceededException()
+        val result    = errorHandler.resolveError(request, exception)
+
+        status(result) shouldEqual SEE_OTHER
+        redirectLocation(result).value shouldEqual controllers.routes.MaxClaimsExceededController.onPageLoad.url
       }
 
     }

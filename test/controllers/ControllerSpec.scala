@@ -30,7 +30,8 @@ import play.api.test.*
 import play.api.{inject, Application}
 import services.{ClaimsService, SaveService}
 import uk.gov.hmrc.http.HeaderCarrier
-import util.{BaseSpec, FakeAuthorisedAction, FakeDataRetrievalAction}
+import util.{BaseSpec, FakeAuthorisedAction, FakeDataRetrievalAction, FakeSessionCache}
+import repositories.SessionCache
 
 import scala.concurrent.Future
 
@@ -64,7 +65,10 @@ trait ControllerSpec
             .toInstance(new FakeDataRetrievalAction(sessionData)),
           inject
             .bind[AuthorisedAction]
-            .toInstance(new FakeAuthorisedAction)
+            .toInstance(new FakeAuthorisedAction),
+          inject
+            .bind[SessionCache]
+            .toInstance(new FakeSessionCache)
         ) ++
           additionalBindings*
       )
