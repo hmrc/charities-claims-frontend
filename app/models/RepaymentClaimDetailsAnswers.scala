@@ -36,7 +36,9 @@ final case class RepaymentClaimDetailsAnswers(
   makingAdjustmentToPreviousClaim: Option[Boolean] = None,
   // only for agents
   hmrcCharitiesReference: Option[String] = None,
-  nameOfCharity: Option[String] = None
+  nameOfCharity: Option[String] = None,
+  // repayment claim type - claimingGiftAid,claimingTaxDeducted,claimingUnderGiftAidSmallDonationsScheme
+  repaymentClaimType: Option[RepaymentClaimType] = None
 ) {
 
   def missingFields: List[String] =
@@ -110,6 +112,27 @@ object RepaymentClaimDetailsAnswers {
 
   def shouldWarnAboutChangingClaimingGiftAid(claimingGiftAid: Boolean)(using session: SessionData): Boolean =
     !claimingGiftAid && session.giftAidScheduleDataAnswers.isDefined
+
+  def getRepaymentClaimType(using session: SessionData): Option[RepaymentClaimType] = get(answers =>
+    for
+      claimingGiftAid                          <- Some(answers.claimingGiftAid)
+      claimingTaxDeducted                      <- Some(answers.claimingTaxDeducted)
+      claimingUnderGiftAidSmallDonationsScheme <- Some(answers.claimingUnderGiftAidSmallDonationsScheme)
+    yield RepaymentClaimType(
+      claimingGiftAid,
+      claimingTaxDeducted,
+      claimingUnderGiftAidSmallDonationsScheme
+    )
+  )
+
+  def setRepaymentClaimType(value: RepaymentClaimType)(using session: SessionData): SessionData =
+    set(value)((a, v) =>
+      a.copy(
+        claimingGiftAid = v.claimingGiftAid,
+        claimingTaxDeducted = v.claimingTaxDeducted,
+        claimingUnderGiftAidSmallDonationsScheme = v.claimingUnderGiftAidSmallDonationsScheme
+      )
+    )
 
   def getClaimingDonationsCollectedInCommunityBuildings(using session: SessionData): Option[Boolean] = get(
     _.claimingDonationsCollectedInCommunityBuildings
