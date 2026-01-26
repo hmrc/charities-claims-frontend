@@ -15,6 +15,7 @@
  *@
 
 @import controllers.repaymentClaimDetails.routes
+@import forms.CheckBoxListForm
 
 @this(
     layout: templates.Layout,
@@ -39,14 +40,34 @@
 
     @formHelper(action = routes.RepaymentClaimTypeController.onSubmit,Symbol("autoComplete") -> "on") {
 
+    <p class="govuk-hint">@messages("repaymentClaimType.hint")</p>
     @govukCheckBoxes(
-        CheckboxItemViewMode(
-            content = Text(messages("RepaymentClaimType.claimingGiftAid")),
-            fieldId = Some("claimingGiftAid"),
-            index = 1,
-            value = Some("claimingGiftAid")
+        CheckboxesViewModel(
+            form,
+            name="",
+            items = Seq(
+                CheckboxItemViewModel(
+                    content = Text(messages("repaymentClaimType.label.claimingGiftAid")),
+                    fieldId = CheckBoxListForm.claimingGiftAid,
+                    index = 1,
+                    value = CheckBoxListForm.claimingGiftAid
+                ),
+                CheckboxItemViewModel(
+                    content = Text(messages("repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme")),
+                    fieldId = CheckBoxListForm.claimingUnderGiftAidSmallDonationsScheme,
+                    index = 2,
+                    value = CheckBoxListForm.claimingUnderGiftAidSmallDonationsScheme
+                ).withHint(HintViewModel(Text(messages("repaymentClaimType.hint.claimingUnderGiftAidSmallDonationsScheme")))),
+                CheckboxItemViewModel(
+                    content = Text(messages("repaymentClaimType.label.claimingTaxDeducted")),
+                    fieldId = CheckBoxListForm.claimingTaxDeducted,
+                    index = 3,
+                    value = CheckBoxListForm.claimingTaxDeducted
+                )
+            ),
+            fieldset = FieldsetViewModel( LegendViewModel(messages("repaymentClaimType.hint")).visuallyHidden)
         )
-    ).withHint(HintViewModel(Text(message("repaymentClaimType.hint"))))
+    )
 
     @govukButton(ButtonViewModel(Text(messages("site.continue"))))
     }

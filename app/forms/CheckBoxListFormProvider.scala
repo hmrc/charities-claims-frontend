@@ -20,27 +20,31 @@ import forms.Mappings
 import play.api.data.Form
 import play.api.data.Forms.*
 import models.RepaymentClaimType
+import CheckBoxListForm.*
 
 import javax.inject.Inject
 
 class CheckBoxListFormProvider @Inject() extends Mappings {
 
-  val claimingGiftAid                          = "claimingGiftAid"
-  val claimingTaxDeducted                      = "claimingTaxDeducted"
-  val claimingUnderGiftAidSmallDonationsScheme = "claimingUnderGiftAidSmallDonationsScheme"
   def apply(
   ): Form[RepaymentClaimType] =
     Form(
       mapping(
-        claimingGiftAid                          -> text("repaymentClaimType.label.claimingGiftAid"),
-        claimingTaxDeducted                      -> text("repaymentClaimType.label.claimingTaxDeducted"),
-        claimingUnderGiftAidSmallDonationsScheme -> text(
+        claimingGiftAid                          -> boolean("repaymentClaimType.label.claimingGiftAid"),
+        claimingTaxDeducted                      -> boolean("repaymentClaimType.label.claimingTaxDeducted"),
+        claimingUnderGiftAidSmallDonationsScheme -> boolean(
           "repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme"
         )
-        // .hint("repaymentClaimType.hint.claimingUnderGiftAidSmallDonationsScheme")
+      )(RepaymentClaimType.apply)(x =>
+        Some(x.claimingGiftAid, x.claimingTaxDeducted, x.claimingUnderGiftAidSmallDonationsScheme)
       )
-    )(RepaymentClaimType.apply)(x =>
-      Some(x.claimingGiftAid, x.claimingTaxDeducted, x.claimingUnderGiftAidSmallDonationsScheme)
     )
+}
+
+object CheckBoxListForm {
+
+  val claimingGiftAid                          = "claimingGiftAid"
+  val claimingUnderGiftAidSmallDonationsScheme = "claimingUnderGiftAidSmallDonationsScheme"
+  val claimingTaxDeducted                      = "claimingTaxDeducted"
 
 }

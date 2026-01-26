@@ -20,9 +20,9 @@ import play.api.libs.json.Format
 import play.api.libs.json.Json
 
 case class RepaymentClaimType(
-  claimingGiftAid: Option[Boolean] = None,
-  claimingTaxDeducted: Option[Boolean] = None,
-  claimingUnderGiftAidSmallDonationsScheme: Option[Boolean] = None
+  claimingGiftAid: Boolean,
+  claimingTaxDeducted: Boolean,
+  claimingUnderGiftAidSmallDonationsScheme: Boolean
 )
 
 object RepaymentClaimType {
