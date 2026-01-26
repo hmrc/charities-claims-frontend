@@ -16,11 +16,11 @@
 
 package controllers.repaymentClaimDetails
 
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
-import views.html.RepaymentClaimDetailsView
 import controllers.actions.Actions
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import views.html.RepaymentClaimDetailsView
 
 import scala.concurrent.Future
 
