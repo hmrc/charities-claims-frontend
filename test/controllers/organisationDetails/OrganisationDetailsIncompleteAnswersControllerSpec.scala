@@ -32,9 +32,9 @@ import play.api.Application
 
 class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec {
 
-  "IncompleteAnswersController" - {
+  "OrganisationDetailsIncompleteAnswersController" - {
     "onPageLoad" - {
-      "should render the page with No missing fields when answers are missing" in {
+      "should render the page with no missing fields when no current session data present" in {
 
         given application: Application = applicationBuilder().build()
 
@@ -144,7 +144,217 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
           ).body
         }
       }
+
+      "should render the page with charity regulator number missing when regulator is EnglandAndWales" in {
+        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswersOld(
+          claimingGiftAid = Some(true),
+          claimingTaxDeducted = Some(false),
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingReferenceNumber = Some(true),
+          claimReferenceNumber = Some("12345678AB")
+        )
+
+        val sessionData = SessionData(
+          unsubmittedClaimId = Some("123"),
+          lastUpdatedReference = Some("123"),
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          organisationDetailsAnswers = Some(
+            OrganisationDetailsAnswers(
+              nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales)
+            )
+          )
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        val missingFields = sessionData.organisationDetailsAnswers.get.missingFields
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.OrganisationDetailsIncompleteAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[OrganisationDetailsIncompleteAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
+            missingFields
+          ).body
+        }
+      }
+
+      "should render the page with reason not registered missing when regulator is None" in {
+        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswersOld(
+          claimingGiftAid = Some(true),
+          claimingTaxDeducted = Some(false),
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingReferenceNumber = Some(true),
+          claimReferenceNumber = Some("12345678AB")
+        )
+
+        val sessionData = SessionData(
+          unsubmittedClaimId = Some("123"),
+          lastUpdatedReference = Some("123"),
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          organisationDetailsAnswers = Some(
+            OrganisationDetailsAnswers(
+              nameOfCharityRegulator = Some(NameOfCharityRegulator.None)
+            )
+          )
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        val missingFields = sessionData.organisationDetailsAnswers.get.missingFields
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.OrganisationDetailsIncompleteAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[OrganisationDetailsIncompleteAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
+            missingFields
+          ).body
+        }
+      }
+
+      "should render the page with corporate trustee details missing when corporate trustee selected" in {
+        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswersOld(
+          claimingGiftAid = Some(true),
+          claimingTaxDeducted = Some(false),
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingReferenceNumber = Some(true),
+          claimReferenceNumber = Some("12345678AB")
+        )
+
+        val sessionData = SessionData(
+          unsubmittedClaimId = Some("123"),
+          lastUpdatedReference = Some("123"),
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          organisationDetailsAnswers = Some(
+            OrganisationDetailsAnswers(
+              nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+              areYouACorporateTrustee = Some(true),
+              doYouHaveCorporateTrusteeUKAddress = Some(true)
+            )
+          )
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        val missingFields = sessionData.organisationDetailsAnswers.get.missingFields
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.OrganisationDetailsIncompleteAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[OrganisationDetailsIncompleteAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
+            missingFields
+          ).body
+        }
+      }
+
+      "should render the page with authorised official details missing when not corporate trustee" in {
+        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswersOld(
+          claimingGiftAid = Some(true),
+          claimingTaxDeducted = Some(false),
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingReferenceNumber = Some(true),
+          claimReferenceNumber = Some("12345678AB")
+        )
+
+        val sessionData = SessionData(
+          unsubmittedClaimId = Some("123"),
+          lastUpdatedReference = Some("123"),
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          organisationDetailsAnswers = Some(
+            OrganisationDetailsAnswers(
+              nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+              areYouACorporateTrustee = Some(false),
+              doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true)
+            )
+          )
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        val missingFields = sessionData.organisationDetailsAnswers.get.missingFields
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.OrganisationDetailsIncompleteAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[OrganisationDetailsIncompleteAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
+            missingFields
+          ).body
+        }
+      }
+
+      "should render the page with multiple missing fields when only regulator name provided" in {
+        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswersOld(
+          claimingGiftAid = Some(true),
+          claimingTaxDeducted = Some(false),
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingReferenceNumber = Some(true),
+          claimReferenceNumber = Some("12345678AB")
+        )
+
+        val sessionData = SessionData(
+          unsubmittedClaimId = Some("123"),
+          lastUpdatedReference = Some("123"),
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          organisationDetailsAnswers = Some(
+            OrganisationDetailsAnswers(
+              nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales)
+            )
+          )
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        val missingFields = sessionData.organisationDetailsAnswers.get.missingFields
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.OrganisationDetailsIncompleteAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[OrganisationDetailsIncompleteAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
+            missingFields
+          ).body
+        }
+      }
     }
   }
-
 }

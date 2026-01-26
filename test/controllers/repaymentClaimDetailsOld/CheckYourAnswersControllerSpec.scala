@@ -24,7 +24,6 @@ import play.api.Application
 import play.api.test.Helpers.*
 import models.RepaymentClaimDetailsAnswersOld
 import models.*
-import controllers.routes as rootRoutes
 
 class CheckYourAnswersControllerSpec extends ControllerSpec {
 

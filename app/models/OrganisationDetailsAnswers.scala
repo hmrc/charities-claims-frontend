@@ -43,20 +43,20 @@ final case class OrganisationDetailsAnswers(
 ) {
   def missingFields: List[String] =
     List(
-      nameOfCharityRegulator.isEmpty                            -> "nameOfCharityRegulator.heading",
+      nameOfCharityRegulator.isEmpty                            -> "nameOfCharityRegulator.missingDetails",
       (nameOfCharityRegulator.isDefined && nameOfCharityRegulator.contains(
         NameOfCharityRegulator.None
-      ) && reasonNotRegisteredWithRegulator.isEmpty)            -> "reasonNotRegisteredWithRegulator.heading",
+      ) && reasonNotRegisteredWithRegulator.isEmpty)            -> "reasonNotRegisteredWithRegulator.missingDetails",
       (nameOfCharityRegulator.isDefined &&
         (nameOfCharityRegulator.contains(NameOfCharityRegulator.EnglandAndWales)
           || nameOfCharityRegulator.contains(NameOfCharityRegulator.Scottish)
           || nameOfCharityRegulator.contains(
             NameOfCharityRegulator.NorthernIreland
-          )) && charityRegistrationNumber.isEmpty)              -> "charityRegulatorNumber.heading",
-      areYouACorporateTrustee.isEmpty                           -> "corporateTrusteeClaim.heading",
+          )) && charityRegistrationNumber.isEmpty)              -> "charityRegulatorNumber.missingDetails",
+      areYouACorporateTrustee.isEmpty                           -> "corporateTrusteeClaim.missingDetails",
       (areYouACorporateTrustee.contains(
         true
-      ) && doYouHaveCorporateTrusteeUKAddress.isEmpty)          -> "corporateTrusteeAddress.heading",
+      ) && doYouHaveCorporateTrusteeUKAddress.isEmpty)          -> "corporateTrusteeAddress.missingDetails",
       (
         areYouACorporateTrustee.contains(true)
           && doYouHaveCorporateTrusteeUKAddress.contains(true)
@@ -65,7 +65,7 @@ final case class OrganisationDetailsAnswers(
               || nameOfCorporateTrustee.isEmpty
               || corporateTrusteeDaytimeTelephoneNumber.isEmpty
           )
-      )                                                         -> "corporateTrusteeDetails.heading",
+      )                                                         -> "corporateTrusteeDetails.missingDetails",
       (
         areYouACorporateTrustee.contains(true)
           && doYouHaveCorporateTrusteeUKAddress.contains(false)
@@ -73,16 +73,16 @@ final case class OrganisationDetailsAnswers(
             corporateTrusteeDaytimeTelephoneNumber.isEmpty
               || nameOfCorporateTrustee.isEmpty
           )
-      )                                                         -> "corporateTrusteeDetails.heading",
+      )                                                         -> "corporateTrusteeDetails.missingDetails",
       (areYouACorporateTrustee.contains(
         false
-      ) && doYouHaveAuthorisedOfficialTrusteeUKAddress.isEmpty) -> "authorisedOfficialAddress.heading",
+      ) && doYouHaveAuthorisedOfficialTrusteeUKAddress.isEmpty) -> "authorisedOfficialAddress.missingDetails",
       (areYouACorporateTrustee.contains(false)
         && doYouHaveAuthorisedOfficialTrusteeUKAddress.contains(true)
         && (authorisedOfficialTrusteeFirstName.isEmpty
           || authorisedOfficialTrusteeFirstName.isEmpty
           || authorisedOfficialTrusteeDaytimeTelephoneNumber.isEmpty
-          || authorisedOfficialTrusteePostcode.isEmpty))        -> "authorisedOfficialDetails.heading",
+          || authorisedOfficialTrusteePostcode.isEmpty))        -> "authorisedOfficialDetails.missingDetails",
       (
         areYouACorporateTrustee.contains(false)
           && doYouHaveAuthorisedOfficialTrusteeUKAddress.contains(false)
@@ -91,7 +91,7 @@ final case class OrganisationDetailsAnswers(
               || authorisedOfficialTrusteeLastName.isEmpty
               || authorisedOfficialTrusteeDaytimeTelephoneNumber.isEmpty
           )
-      )                                                         -> "authorisedOfficialDetails.heading"
+      )                                                         -> "authorisedOfficialDetails.missingDetails"
     ).collect { case (true, key) => key }
 
   def hasOrganisationDetailsCompleteAnswers: Boolean = missingFields.isEmpty
