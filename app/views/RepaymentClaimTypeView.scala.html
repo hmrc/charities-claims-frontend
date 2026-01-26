@@ -20,7 +20,7 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukButton: GovukButton,
-    govukCheckBoxes: GovukCheckBoxes,
+    govukCheckBoxes: GovukCheckboxes,
     govukErrorSummary: GovukErrorSummary
 )
 
@@ -40,17 +40,13 @@
     @formHelper(action = routes.RepaymentClaimTypeController.onSubmit,Symbol("autoComplete") -> "on") {
 
     @govukCheckBoxes(
-        Checkboxes(
-            name="repayment claim type",
-            items = Seq(
-                CheckBoxItem(
-                    value = Some(repaymentClaimType.giftAid),
-                    content = Text(messages("repaymentClaimType.giftAid"))
-                )
-            ),
-            LegendViewModel(messages("repaymentClaimType.legend")).visuallyHidden
+        CheckboxItemViewMode(
+            content = Text(messages("RepaymentClaimType.claimingGiftAid")),
+            fieldId = Some("claimingGiftAid"),
+            index = 1,
+            value = Some("claimingGiftAid")
         )
-    )
+    ).withHint(HintViewModel(Text(message("repaymentClaimType.hint"))))
 
     @govukButton(ButtonViewModel(Text(messages("site.continue"))))
     }

@@ -25,11 +25,19 @@ import javax.inject.Inject
 
 class CheckBoxListFormProvider @Inject() extends Mappings {
 
+  val claimingGiftAid                          = "claimingGiftAid"
+  val claimingTaxDeducted                      = "claimingTaxDeducted"
+  val claimingUnderGiftAidSmallDonationsScheme = "claimingUnderGiftAidSmallDonationsScheme"
   def apply(
   ): Form[RepaymentClaimType] =
     Form(
       mapping(
-        claimingGiftAid -> value(claimingGiftAid)
+        claimingGiftAid                          -> text("repaymentClaimType.label.claimingGiftAid"),
+        claimingTaxDeducted                      -> text("repaymentClaimType.label.claimingTaxDeducted"),
+        claimingUnderGiftAidSmallDonationsScheme -> text(
+          "repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme"
+        )
+        // .hint("repaymentClaimType.hint.claimingUnderGiftAidSmallDonationsScheme")
       )
     )(RepaymentClaimType.apply)(x =>
       Some(x.claimingGiftAid, x.claimingTaxDeducted, x.claimingUnderGiftAidSmallDonationsScheme)

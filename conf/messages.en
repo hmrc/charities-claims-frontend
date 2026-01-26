@@ -75,6 +75,16 @@ claimingGiftAidSmallDonations.paragraph =  This is separate to a Gift Aid claim.
 claimingGiftAidSmallDonations.title = Gift Aid Small Donations Scheme
 claimingGiftAidSmallDonations.warning = TBC Your data for this section will be lost if you change your answer.
 
+repaymentClaimType.caption = Provide repayment claim details
+repaymentClaimType.label.claimingGiftAid = Tax repayments on Gift Aid donations
+repaymentClaimType.label.claimingTaxDeducted = Top up payments for donations under the Gift Aid Small Donations Scheme
+repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme = UK tax deducted from Other Income
+repaymentClaimType.title = Which type of repayment claim do you want to make?
+repaymentClaimType.heading = Which type of repayment claim do you want to make?
+repaymentClaimType.hint = Select all that apply
+repaymentClaimType.hint.claimingUnderGiftAidSmallDonationsScheme = These are not your Gift Aid donations
+
+
 claimingCommunityBuildingDonations.caption = Provide repayment claim details
 claimingCommunityBuildingDonations.error.required = Select 'Yes' if you are claiming for donations collected in community buildings
 claimingCommunityBuildingDonations.heading = Do you want to claim for donations collected in community buildings?
