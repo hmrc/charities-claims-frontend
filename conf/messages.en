@@ -272,6 +272,14 @@ cannotViewOrManageClaim.title = You cannot manage this claim
 cannotViewOrManageClaim.heading = You cannot manage this claim
 cannotViewOrManageClaim.paragraph = This claim is being updated by someone else. You can manage this claim by returning to <a class="govuk-link" href="{0}">repayment claim summary</a>.
 
+repaymentClaimDetails.title = Repayment claim details
+repaymentClaimDetails.heading = Repayment claim details
+repaymentClaimDetails.subheading = Provide repayment claim details
+repaymentClaimDetails.p1 = Use this service to claim:
+repaymentClaimDetails.bullet1 = tax repayments on Gift Aid donations
+repaymentClaimDetails.bullet2 = top-up payments under the Gift Aid Small Donations Scheme
+repaymentClaimDetails.bullet3 = UK tax deducted from Other Income
+
 # TODO: Placeholder screen messages for G2 - content will be updated in future
 addSchedule.title = Add Schedule
 addSchedule.heading = Add Schedule
