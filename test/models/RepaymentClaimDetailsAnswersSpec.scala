@@ -92,7 +92,7 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
         val result = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
 
         result.giftAidScheduleDataAnswers                   shouldBe Some(GiftAidScheduleDataAnswers())
-        result.repaymentClaimDetailsAnswers.claimingGiftAid shouldBe Some(true)
+        result.repaymentClaimDetailsAnswers.value.claimingGiftAid shouldBe Some(true)
       }
     }
 
