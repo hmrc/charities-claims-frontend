@@ -20,7 +20,8 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.YesNoFormProvider
-import models.RepaymentClaimDetailsAnswers
+import models.{Mode, RepaymentClaimDetailsAnswers}
+import models.Mode.*
 import controllers.repaymentClaimDetails.routes
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.data.Form
@@ -39,27 +40,34 @@ class ConnectedToAnyOtherCharitiesController @Inject() (
     extends BaseController {
   val form: Form[Boolean] = formProvider("connectedToAnyOtherCharities.error.required")
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) then {
       val previousAnswer = RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities
-      Future.successful(Ok(view(form.withDefault(previousAnswer))))
+      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
     } else {
       Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
     }
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(value))
             .map(_ =>
-              Redirect(
-                routes.ConnectedToAnyOtherCharitiesController.onPageLoad
-              )
+              (value, mode) match {
+                case (_, CheckMode)  =>
+                  Redirect(
+                    routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+                  )
+                case (_, NormalMode) =>
+                  Redirect(
+                    routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode)
+                  )
+              }
             )
       )
   }

@@ -38,11 +38,16 @@ POST        /old/change-your-claim-reference-number             controllers.repa
 GET         /old/declaration                                    controllers.repaymentclaimdetailsold.ClaimDeclarationController.onPageLoad
 POST        /old/declaration                                    controllers.repaymentclaimdetailsold.ClaimDeclarationController.onSubmit
 
-GET         /change-previous-gasds-claim                        controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onPageLoad
-POST        /change-previous-gasds-claim                        controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onSubmit
+GET         /change-previous-gasds-claim                        controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onPageLoad(mode: Mode = Mode.NormalMode)
+POST        /change-previous-gasds-claim                        controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onSubmit(mode: Mode = Mode.NormalMode)
+GET         /change-change-previous-gasds-claim                 controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /change-change-previous-gasds-claim                 controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /connected-to-charities                             controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onPageLoad
-POST        /connected-to-charities                             controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onSubmit
+GET         /connected-to-charities                             controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onPageLoad(mode: Mode = Mode.NormalMode)
+POST        /connected-to-charities                             controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onSubmit(mode: Mode = Mode.NormalMode)
+GET         /change-connected-to-charities                      controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /change-connected-to-charities                      controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onSubmit(mode: Mode = Mode.CheckMode)
+
 
 GET         /old/check-your-claim-details                       controllers.repaymentclaimdetailsold.CheckYourAnswersController.onPageLoad
 POST        /old/check-your-claim-details                       controllers.repaymentclaimdetailsold.CheckYourAnswersController.onSubmit
@@ -131,8 +136,11 @@ GET         /make-charity-repayment-claim                   controllers.organisa
 # TODO: Placeholder screen for AA1 - route will be updated in future
 GET         /charity-repayment-dashboard                   controllers.organisationDetails.CharityRepaymentDashboardController.onPageLoad
 
-GET         /claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onPageLoad
-POST        /claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onSubmit
+GET         /claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onPageLoad(mode: Mode = Mode.NormalMode)
+POST        /claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onSubmit(mode: Mode = Mode.NormalMode)
+GET         /change-claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /change-claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onSubmit(mode: Mode = Mode.CheckMode)
+
 
 GET         /check-your-repayment-claim                       controllers.repaymentClaimDetails.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 POST        /check-your-repayment-claim                       controllers.repaymentClaimDetails.RepaymentClaimDetailsCheckYourAnswersController.onSubmit

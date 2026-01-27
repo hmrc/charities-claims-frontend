@@ -23,6 +23,7 @@ import play.api.Application
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
+import models.Mode.*
 import views.html.ConnectedToAnyOtherCharitiesView
 
 class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
@@ -35,13 +36,13 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ConnectedToAnyOtherCharitiesController.onPageLoad.url)
+            FakeRequest(GET, routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ConnectedToAnyOtherCharitiesView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
+          contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
 
@@ -52,7 +53,7 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ConnectedToAnyOtherCharitiesController.onPageLoad.url)
+            FakeRequest(GET, routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -72,13 +73,13 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ConnectedToAnyOtherCharitiesController.onPageLoad.url)
+            FakeRequest(GET, routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ConnectedToAnyOtherCharitiesView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(true)).body
+          contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
         }
       }
 
@@ -93,13 +94,13 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ConnectedToAnyOtherCharitiesController.onPageLoad.url)
+            FakeRequest(GET, routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ConnectedToAnyOtherCharitiesView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(false)).body
+          contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
         }
       }
     }
@@ -110,14 +111,48 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit.url)
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad.url
+            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to the cya when the value is true if coming from CYA" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect to the cya when the value is false if coming from CYA" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
           )
         }
       }
@@ -127,14 +162,14 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit.url)
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad.url
+            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -144,7 +179,7 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit.url)
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value

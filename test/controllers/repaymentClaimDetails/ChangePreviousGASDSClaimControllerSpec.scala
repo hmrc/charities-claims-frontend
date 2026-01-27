@@ -23,6 +23,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import models.RepaymentClaimDetailsAnswers
 import forms.YesNoFormProvider
+import models.Mode.*
 import play.api.data.Form
 import views.html.ChangePreviousGASDSClaimView
 
@@ -35,13 +36,13 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad.url)
+            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
+          contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
 
@@ -53,13 +54,13 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad.url)
+            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(true)).body
+          contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
         }
       }
 
@@ -71,13 +72,13 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad.url)
+            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(false)).body
+          contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
         }
       }
     }
@@ -88,14 +89,14 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ChangePreviousGASDSClaimController.onSubmit.url)
+            FakeRequest(POST, routes.ChangePreviousGASDSClaimController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad.url
+            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -105,14 +106,14 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ChangePreviousGASDSClaimController.onSubmit.url)
+            FakeRequest(POST, routes.ChangePreviousGASDSClaimController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad.url
+            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -122,7 +123,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ChangePreviousGASDSClaimController.onSubmit.url)
+            FakeRequest(POST, routes.ChangePreviousGASDSClaimController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value
