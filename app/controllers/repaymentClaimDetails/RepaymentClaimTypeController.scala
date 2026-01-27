@@ -55,8 +55,8 @@ class RepaymentClaimTypeController @Inject() (
             .save(RepaymentClaimDetailsAnswers.setRepaymentClaimType(value))
             .map(_ =>
               Redirect(
-                routes.RepaymentClaimTypeController.onPageLoad
-              ) // TODO - redirect to claim GASDS when available
+                routes.ChangePreviousGASDSClaimController.onPageLoad
+              )
             )
       )
   }

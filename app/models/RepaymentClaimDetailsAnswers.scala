@@ -132,7 +132,7 @@ object RepaymentClaimDetailsAnswers {
 //        claimingGiftAid = v.claimingGiftAid,
 //        claimingTaxDeducted = v.claimingTaxDeducted,
 //        claimingUnderGiftAidSmallDonationsScheme = v.claimingUnderGiftAidSmallDonationsScheme
-        repaymentClaimType = Some(value)
+        repaymentClaimType = Some(v)
       )
     )
 
