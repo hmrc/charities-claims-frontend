@@ -38,26 +38,26 @@ class RepaymentClaimTypeController @Inject() (
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
-  val form: Form[RepaymentClaimType] = formProvider()
+  val form: Form[Set[String]] = formProvider()
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswers.getRepaymentClaimType
-    Future.successful(Ok(view(form.withDefault(previousAnswer))))
+    Future.successful(Ok(view(form.withDefault(Some(Set("test"))))))
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        formWithErrors => BadRequest(view(formWithErrors)),
         value =>
-          saveService
-            .save(RepaymentClaimDetailsAnswers.setRepaymentClaimType(value))
-            .map(_ =>
-              Redirect(
-                routes.ChangePreviousGASDSClaimController.onPageLoad
-              )
-            )
+//          saveService
+//            .save(RepaymentClaimDetailsAnswers.setRepaymentClaimType(value))
+//            .map(_ =>
+          Redirect(
+            routes.ChangePreviousGASDSClaimController.onPageLoad
+//              )
+          )
       )
   }
 

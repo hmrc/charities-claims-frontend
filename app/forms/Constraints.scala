@@ -45,4 +45,20 @@ trait Constraints extends validation.Constraints {
 //        Invalid(errorKey, maximum)
 //    }
 
+  protected def nonEmptySet(errorKey: String): Constraint[Set[?]] =
+    Constraint {
+      case set if set.nonEmpty =>
+        Valid
+      case _                   =>
+        Invalid(errorKey)
+    }
+
+  protected def nonEmptySeq(errorKey: String, args: Any*): Constraint[Seq[?]] =
+    Constraint {
+      case seq if seq.nonEmpty =>
+        Valid
+      case _                   =>
+        Invalid(errorKey, args: _*)
+    }
+
 }

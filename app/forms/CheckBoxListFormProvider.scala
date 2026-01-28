@@ -27,19 +27,20 @@ import javax.inject.Inject
 class CheckBoxListFormProvider @Inject() extends Mappings {
 
   def apply(
-  ): Form[RepaymentClaimType] =
+  ): Form[Set[String]] =
     Form(
-      mapping(
-        claimingGiftAid                          -> (boolean("repaymentClaimType.label.claimingGiftAid")),
-        claimingTaxDeducted                      -> (boolean("repaymentClaimType.label.claimingTaxDeducted")),
-        claimingUnderGiftAidSmallDonationsScheme -> (
-          boolean(
-            "repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme"
-          )
-        )
-      )(RepaymentClaimType.apply)(x =>
-        Some(x.claimingGiftAid, x.claimingTaxDeducted, x.claimingUnderGiftAidSmallDonationsScheme)
-      )
+      "value" -> set(text("alcoholType.error.required")).verifying(nonEmptySet("alcoholType.error.required"))
+//      mapping(
+//        claimingGiftAid                          -> (boolean("repaymentClaimType.label.claimingGiftAid")),
+//        claimingTaxDeducted                      -> (boolean("repaymentClaimType.label.claimingTaxDeducted")),
+//        claimingUnderGiftAidSmallDonationsScheme -> (
+//          boolean(
+//            "repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme"
+//          )
+//        )
+//      )(RepaymentClaimType.apply)(x =>
+//        Some(x.claimingGiftAid, x.claimingTaxDeducted, x.claimingUnderGiftAidSmallDonationsScheme)
+//      )
     )
 }
 

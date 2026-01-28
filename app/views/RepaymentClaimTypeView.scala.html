@@ -16,6 +16,7 @@
 
 @import controllers.repaymentClaimDetails.routes
 @import forms.CheckBoxListForm
+@import models.RepaymentClaimTypeCheckBox
 
 @this(
     layout: templates.Layout,
@@ -25,7 +26,7 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[RepaymentClaimType])(implicit request: Request[?], messages: Messages)
+@(form: Form[Set[String]])(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = title(form, messages("repaymentClaimType.title"))
@@ -45,24 +46,7 @@
         CheckboxesViewModel(
             form,
             name="testing",
-            items = Seq(
-                CheckboxItemViewModel(
-                    content = Text(messages("repaymentClaimType.label.claimingGiftAid")),
-                    name = CheckBoxListForm.claimingGiftAid,
-                    value = "true"
-                ),
-                CheckboxItemViewModel(
-                    content = Text(messages("repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme")),
-                    name = CheckBoxListForm.claimingUnderGiftAidSmallDonationsScheme,
-                    value = CheckBoxListForm.claimingUnderGiftAidSmallDonationsScheme
-                ).withHint(HintViewModel(Text(messages("repaymentClaimType.hint.claimingUnderGiftAidSmallDonationsScheme")))),
-                CheckboxItemViewModel(
-                    content = Text(messages("repaymentClaimType.label.claimingTaxDeducted")),
-                    name = CheckBoxListForm.claimingTaxDeducted,
-                    value = CheckBoxListForm.claimingTaxDeducted
-                )
-            ),
-            fieldset = FieldsetViewModel( LegendViewModel(messages("repaymentClaimType.hint")).visuallyHidden)
+            items = RepaymentClaimTypeCheckBox.checkboxItems
         )
     )
 
