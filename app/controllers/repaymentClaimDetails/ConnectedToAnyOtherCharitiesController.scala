@@ -65,7 +65,7 @@ class ConnectedToAnyOtherCharitiesController @Inject() (
                   )
                 case (_, NormalMode) =>
                   Redirect(
-                    routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode)
+                    routes.ClaimingReferenceNumberController.onPageLoad(NormalMode)
                   )
               }
             )

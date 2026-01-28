@@ -161,9 +161,9 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                     "repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label"
                   ),
                   if (value) messages("site.yes") else messages("site.no"),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
+                  controllers.repaymentClaimDetails.routes.ClaimingReferenceNumberController
                     .onPageLoad(CheckMode)
-                    .url, // TODO
+                    .url,
                   messages("repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label")
                 )
               )
@@ -173,9 +173,9 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   messages(
                     "repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label"
                   ),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
+                  controllers.repaymentClaimDetails.routes.ClaimingReferenceNumberController
                     .onPageLoad(CheckMode)
-                    .url, // TODO
+                    .url,
                   messages("repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label")
                 )
               )
@@ -217,7 +217,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                     "repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label"
                   ),
                   if (value) messages("site.yes") else messages("site.no"),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
+                  controllers.repaymentClaimDetails.routes.ChangePreviousGASDSClaimController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label")
@@ -229,7 +229,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   messages(
                     "repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label"
                   ),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
+                  controllers.repaymentClaimDetails.routes.ChangePreviousGASDSClaimController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label")
@@ -294,7 +294,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                     "repaymentClaimDetailsCheckYourAnswers.connectToAnyOtherCharity.label"
                   ),
                   if (value) messages("site.yes") else messages("site.no"),
-                  controllers.repaymentClaimDetails.routes.ChangePreviousGASDSClaimController
+                  controllers.repaymentClaimDetails.routes.ConnectedToAnyOtherCharitiesController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.connectToAnyOtherCharity.label")
@@ -306,7 +306,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   messages(
                     "repaymentClaimDetailsCheckYourAnswers.connectToAnyOtherCharity.label"
                   ),
-                  controllers.repaymentClaimDetails.routes.ChangePreviousGASDSClaimController
+                  controllers.repaymentClaimDetails.routes.ConnectedToAnyOtherCharitiesController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.connectToAnyOtherCharity.label")

@@ -118,7 +118,24 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
+            routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to the next page when the value is false" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -153,23 +170,6 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
             routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
-          )
-        }
-      }
-
-      "should redirect to the next page when the value is false" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(NormalMode).url)
-              .withFormUrlEncodedBody("value" -> "false")
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
           )
         }
       }
