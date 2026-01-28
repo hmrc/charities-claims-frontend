@@ -34,9 +34,11 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
   "OrganisationDetailsIncompleteAnswersController" - {
     "onPageLoad" - {
-      "should render the page with no missing fields when no current session data present" in {
+      "should render the page with default missing fields when no session data present" in {
 
         given application: Application = applicationBuilder().build()
+
+        val defaultMissingFields = OrganisationDetailsAnswers.getMissingFields(None)
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -50,7 +52,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
           contentAsString(result) shouldEqual view(
             routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
-            Nil
+            defaultMissingFields
           ).body
         }
       }
