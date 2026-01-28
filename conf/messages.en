@@ -272,6 +272,15 @@ cannotViewOrManageClaim.title = You cannot manage this claim
 cannotViewOrManageClaim.heading = You cannot manage this claim
 cannotViewOrManageClaim.paragraph = This claim is being updated by someone else. You can manage this claim by returning to <a class="govuk-link" href="{0}">repayment claim summary</a>.
 
+registerCharityWithARegulator.title = Registering your charity with a regulator
+registerCharityWithARegulator.heading = Registering your charity with a regulator
+registerCharityWithARegulator.warning = You have made claims for Gift Aid repayments on donations over [£value] in the last 12 months.
+registerCharityWithARegulator.paragraph = If your annual income is more than [£value], you need to <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">register your charity with a regulator (opens in new tab)</a>.
+registerCharityWithARegulator.legend = Do you need to register your charity with a regulator?
+registerCharityWithARegulator.error.required = Select ‘Yes’ if you need to register with a regulator
+registerCharityWithARegulator.radio.yes.label = Yes
+registerCharityWithARegulator.radio.no.label = No, continue with claim
+
 repaymentClaimDetails.title = Repayment claim details
 repaymentClaimDetails.heading = Repayment claim details
 repaymentClaimDetails.subheading = Provide repayment claim details
