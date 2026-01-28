@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,16 @@
 package controllers.organisationDetails
 
 import com.google.inject.Inject
+import controllers.BaseController
 import controllers.actions.Actions
-import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.OrganisationDetailsIncompleteAnswersView
 
 class OrganisationDetailsIncompleteAnswersController @Inject() (
-  override val messagesApi: MessagesApi,
-  actions: Actions,
   val controllerComponents: MessagesControllerComponents,
-  view: OrganisationDetailsIncompleteAnswersView
-) extends FrontendBaseController
-    with I18nSupport {
+  view: OrganisationDetailsIncompleteAnswersView,
+  actions: Actions
+) extends BaseController {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     val missingFields = request.sessionData.organisationDetailsAnswers.toList.flatMap(_.missingFields)

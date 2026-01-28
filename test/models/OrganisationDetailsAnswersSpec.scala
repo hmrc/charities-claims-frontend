@@ -68,6 +68,89 @@ class OrganisationDetailsAnswersSpec extends BaseSpec {
       )
     }
 
-  }
+    "missingFields" - {
+      "should return missing fields when OrganisationDetailsAnswers is empty" in {
+        val organisationDetailsAnswers = OrganisationDetailsAnswers()
 
+        val missingFields = organisationDetailsAnswers.missingFields
+
+        missingFields should contain("nameOfCharityRegulator.missingDetails")
+        missingFields should contain("corporateTrusteeClaim.missingDetails")
+      }
+
+      "should return charityRegulatorNumber is missing when regulator requires registration number" in {
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales)
+        )
+
+        val missingFields = organisationDetailsAnswers.missingFields
+
+        missingFields should contain("charityRegulatorNumber.missingDetails")
+      }
+
+      "should return corporateTrusteeDetails is missing when corporate trustee selected but details missing" in {
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+          areYouACorporateTrustee = Some(true),
+          doYouHaveCorporateTrusteeUKAddress = Some(true)
+        )
+
+        val missingFields = organisationDetailsAnswers.missingFields
+
+        missingFields should contain("corporateTrusteeDetails.missingDetails")
+      }
+
+      "should return authorisedOfficialDetails is missing when not corporate trustee but details missing" in {
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+          areYouACorporateTrustee = Some(false),
+          doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true)
+        )
+
+        val missingFields = organisationDetailsAnswers.missingFields
+
+        missingFields should contain("authorisedOfficialDetails.missingDetails")
+      }
+
+      "should return empty missing fields list when all required fields are complete" in {
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+          areYouACorporateTrustee = Some(false),
+          doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
+          authorisedOfficialTrusteeFirstName = Some("John"),
+          authorisedOfficialTrusteeLastName = Some("Doe"),
+          authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("07912345678")
+        )
+
+        val missingFields = organisationDetailsAnswers.missingFields
+
+        missingFields shouldBe empty
+      }
+    }
+
+    "hasOrganisationDetailsCompleteAnswers" - {
+      "should return false when there are missing fields" in {
+        val organisationDetailsAnswers = OrganisationDetailsAnswers()
+
+        organisationDetailsAnswers.hasOrganisationDetailsCompleteAnswers shouldBe false
+      }
+
+      "should return true when there are no missing fields" in {
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+          areYouACorporateTrustee = Some(false),
+          doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
+          authorisedOfficialTrusteeFirstName = Some("John"),
+          authorisedOfficialTrusteeLastName = Some("Doe"),
+          authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("07912345678")
+        )
+
+        organisationDetailsAnswers.hasOrganisationDetailsCompleteAnswers shouldBe true
+      }
+    }
+  }
 }
