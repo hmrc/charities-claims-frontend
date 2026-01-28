@@ -122,6 +122,9 @@ POST        /repayment-claim-details                        controllers.repaymen
 
 GET         /cannot-view-or-manage-claim                    controllers.organisationDetails.CannotViewOrManageClaimController.onPageLoad
 
+GET         /registering-your-charity-with-a-regulator      controllers.RegisterCharityWithARegulatorController.onPageLoad
+POST        /registering-your-charity-with-a-regulator      controllers.RegisterCharityWithARegulatorController.onSubmit
+
 # TODO: Placeholder screen for G2 - route will be updated in future
 GET         /add-schedule                                   controllers.organisationDetails.AddScheduleController.onPageLoad
 

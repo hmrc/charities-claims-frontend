@@ -1,0 +1,75 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.routes
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukRadios: GovukRadios,
+    govukButton: GovukButton
+)
+
+@(registerCharityWithARegulatorUrl: String)(form: Form[Boolean])(implicit request: Request[?], messages: Messages)
+
+@layout(
+    pageTitle = title(form, messages("registerCharityWithARegulator.title"))
+) {
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+
+    <h1 class="govuk-heading-l">@messages("registerCharityWithARegulator.heading")</h1>
+
+    <div class="govuk-warning-text">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-visually-hidden">@messages("warning.text")</span>
+            @messages("registerCharityWithARegulator.warning")
+        </strong>
+    </div>
+
+    <p class="govuk-body govuk-!-margin-bottom-8">@Html(messages("registerCharityWithARegulator.paragraph", registerCharityWithARegulatorUrl))</p>
+
+    @formHelper(action = routes.RegisterCharityWithARegulatorController.onSubmit, Symbol("autoComplete") -> "off") {
+
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            @messages("registerCharityWithARegulator.legend")
+        </legend>
+
+        @govukRadios(
+            RadiosViewModel(
+                form("value"),
+                items = List(
+                    RadioItem(
+                        id = Some(form("value").id),
+                        value = Some("true"),
+                        content = Text(messages("registerCharityWithARegulator.radio.yes.label"))
+                    ),
+                    RadioItem(
+                        id = Some(s"${form("value").id}-no"),
+                        value = Some("false"),
+                        content = Text(messages("registerCharityWithARegulator.radio.no.label"))
+                    )
+                ),
+                LegendViewModel(messages("registerCharityWithARegulator.heading")).visuallyHidden
+            )
+        )
+
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+    }
+}
