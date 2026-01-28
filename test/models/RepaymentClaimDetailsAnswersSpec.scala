@@ -80,8 +80,8 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
 
         val result = RepaymentClaimDetailsAnswers.setClaimingGiftAid(false)
 
-        result.giftAidScheduleDataAnswers                   shouldBe None
-        result.repaymentClaimDetailsAnswers.claimingGiftAid shouldBe Some(false)
+        result.giftAidScheduleDataAnswers                         shouldBe None
+        result.repaymentClaimDetailsAnswers.value.claimingGiftAid shouldBe Some(false)
       }
 
       "should keep giftAidScheduleDataAnswers when changing to true" in {
@@ -91,7 +91,7 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
 
         val result = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
 
-        result.giftAidScheduleDataAnswers                   shouldBe Some(GiftAidScheduleDataAnswers())
+        result.giftAidScheduleDataAnswers                         shouldBe Some(GiftAidScheduleDataAnswers())
         result.repaymentClaimDetailsAnswers.value.claimingGiftAid shouldBe Some(true)
       }
     }
@@ -128,8 +128,8 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
 
         val result = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false)
 
-        result.otherIncomeScheduleDataAnswers                   shouldBe None
-        result.repaymentClaimDetailsAnswers.claimingTaxDeducted shouldBe Some(false)
+        result.otherIncomeScheduleDataAnswers                         shouldBe None
+        result.repaymentClaimDetailsAnswers.value.claimingTaxDeducted shouldBe Some(false)
       }
 
       "should keep otherIncomeScheduleDataAnswers when changing to true" in {
@@ -139,8 +139,8 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
 
         val result = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
 
-        result.otherIncomeScheduleDataAnswers                   shouldBe Some(OtherIncomeScheduleDataAnswers())
-        result.repaymentClaimDetailsAnswers.claimingTaxDeducted shouldBe Some(true)
+        result.otherIncomeScheduleDataAnswers                         shouldBe Some(OtherIncomeScheduleDataAnswers())
+        result.repaymentClaimDetailsAnswers.value.claimingTaxDeducted shouldBe Some(true)
       }
     }
 
@@ -176,8 +176,8 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
 
         val result = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
 
-        result.giftAidSmallDonationsSchemeDonationDetailsAnswers                     shouldBe None
-        result.repaymentClaimDetailsAnswers.claimingUnderGiftAidSmallDonationsScheme shouldBe Some(false)
+        result.giftAidSmallDonationsSchemeDonationDetailsAnswers                           shouldBe None
+        result.repaymentClaimDetailsAnswers.value.claimingUnderGiftAidSmallDonationsScheme shouldBe Some(false)
       }
 
       "should keep gasdsScheduleDataAnswers when changing to true" in {
@@ -187,10 +187,10 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
 
         val result = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
 
-        result.giftAidSmallDonationsSchemeDonationDetailsAnswers                     shouldBe Some(
+        result.giftAidSmallDonationsSchemeDonationDetailsAnswers                           shouldBe Some(
           GiftAidSmallDonationsSchemeDonationDetailsAnswers()
         )
-        result.repaymentClaimDetailsAnswers.claimingUnderGiftAidSmallDonationsScheme shouldBe Some(true)
+        result.repaymentClaimDetailsAnswers.value.claimingUnderGiftAidSmallDonationsScheme shouldBe Some(true)
       }
     }
 
