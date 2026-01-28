@@ -1,5 +1,5 @@
 @*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,20 @@
     layout: templates.Layout
 )
 
-@(href: String, missingFields: Seq[String])(implicit request: Request[?], messages: Messages)
+@(organisationDetailsCheckYourAnswersUrl: String, missingFields: Seq[String])(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("organisationDetailsIncompleteAnswers.title"))) {
 
     <h1 class="govuk-heading-l">@messages("organisationDetailsIncompleteAnswers.heading")</h1>
+
+    <div class="govuk-warning-text">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-visually-hidden">@messages("warning.text")</span>
+            @messages("organisationDetailsIncompleteAnswers.warning")
+        </strong>
+    </div>
 
     <p class="govuk-body">@messages("organisationDetailsIncompleteAnswers.message")</p>
 
@@ -38,6 +46,6 @@
     }
 
     <p class="govuk-body">
-        <a class="govuk-link" href="@href">@messages("organisationDetailsIncompleteAnswers.returnLink")</a>
+        <a class="govuk-link" href="@organisationDetailsCheckYourAnswersUrl">@messages("organisationDetailsIncompleteAnswers.returnLink")</a>
     </p>
 }

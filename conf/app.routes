@@ -98,7 +98,8 @@ POST        /change-corporate-trustee-details               controllers.organisa
 
 GET         /check-your-organisation-details                controllers.organisationDetails.OrganisationDetailsCheckYourAnswersController.onPageLoad
 POST        /check-your-organisation-details                controllers.organisationDetails.OrganisationDetailsCheckYourAnswersController.onSubmit
-GET         /organisation-details-min-data-placeholder      controllers.organisationDetails.OrganisationDetailsIncompleteAnswersController.onPageLoad
+
+GET         /cannot-set-up-organisation-details             controllers.organisationDetails.OrganisationDetailsIncompleteAnswersController.onPageLoad
 
 GET         /authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onPageLoad(mode: Mode = Mode.NormalMode)
 GET         /change-authorised-official-details             controllers.organisationDetails.AuthorisedOfficialDetailsController.onPageLoad(mode: Mode = Mode.CheckMode)
