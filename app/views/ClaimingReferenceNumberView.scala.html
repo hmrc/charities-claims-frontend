@@ -27,7 +27,7 @@
 @(form: Form[?])(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle    = title(form, messages("claimingReferenceNumberCheck.title"))
+    pageTitle    = title(form, messages("claimingReferenceNumber.title"))
 ) {
 
     @if(form.errors.nonEmpty) {
@@ -40,8 +40,7 @@
 
         @govukRadios(
             RadiosViewModel.yesNo(
-                form("value"),
-                LegendViewModel(messages("claimingReferenceNumberCheck.heading")).visuallyHidden
+                form("value")
             )
         )
 
