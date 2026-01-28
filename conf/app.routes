@@ -43,6 +43,11 @@ POST        /change-previous-gasds-claim                        controllers.repa
 GET         /change-change-previous-gasds-claim                 controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /change-change-previous-gasds-claim                 controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onSubmit(mode: Mode = Mode.CheckMode)
 
+GET         /claim-reference-number                             controllers.repaymentClaimDetails.ClaimingReferenceNumberController.onPageLoad(mode: Mode = Mode.NormalMode)
+POST        /claim-reference-number                             controllers.repaymentClaimDetails.ClaimingReferenceNumberController.onSubmit(mode: Mode = Mode.NormalMode)
+GET         /change-claim-reference-number                      controllers.repaymentClaimDetails.ClaimingReferenceNumberController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /change-claim-reference-number                      controllers.repaymentClaimDetails.ClaimingReferenceNumberController.onSubmit(mode: Mode = Mode.CheckMode)
+
 GET         /connected-to-charities                             controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onPageLoad(mode: Mode = Mode.NormalMode)
 POST        /connected-to-charities                             controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onSubmit(mode: Mode = Mode.NormalMode)
 GET         /change-connected-to-charities                      controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onPageLoad(mode: Mode = Mode.CheckMode)

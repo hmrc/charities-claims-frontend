@@ -51,6 +51,11 @@ claimDeclaration.heading = Declaration
 claimDeclaration.paragraph =  I declare that:
 claimDeclaration.title = Declaration
 
+claimingReferenceNumber.caption = Provide repayment claim details
+claimingReferenceNumber.error.required = Select ‘Yes’ if you have a claim reference number
+claimingReferenceNumber.heading = Do you have a claim reference number?
+claimingReferenceNumber.title = Do you have a claim reference number?
+
 claimReferenceNumberCheck.error.required = Select ‘Yes’ if you have a reference number for this claim.
 claimReferenceNumberCheck.heading = Do you have a claim reference number?
 claimReferenceNumberCheck.title = Do you have a claim reference number?

@@ -131,6 +131,16 @@ object OrganisationDetailsAnswers {
       authorisedOfficialTrusteeLastName = organisationDetails.authorisedOfficialTrusteeLastName
     )
 
+  def getMissingFields(answers: Option[OrganisationDetailsAnswers]): List[String] =
+    answers match
+      case Some(a) => a.missingFields
+      case None    => defaultMissingFields
+
+  private val defaultMissingFields: List[String] = List(
+    "nameOfCharityRegulator.missingDetails",
+    "corporateTrusteeClaim.missingDetails"
+  )
+
   def getNameOfCharityRegulator(using session: SessionData): Option[NameOfCharityRegulator] = get(
     _.nameOfCharityRegulator
   )
