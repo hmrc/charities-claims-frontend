@@ -30,14 +30,16 @@ class CheckBoxListFormProvider @Inject() extends Mappings {
   ): Form[RepaymentClaimType] =
     Form(
       mapping(
-        claimingGiftAid                          -> boolean("repaymentClaimType.label.claimingGiftAid"),
-        claimingTaxDeducted                      -> boolean("repaymentClaimType.label.claimingTaxDeducted"),
-        claimingUnderGiftAidSmallDonationsScheme -> boolean(
-          "repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme"
+        claimingGiftAid                          -> optional(boolean("repaymentClaimType.label.claimingGiftAid")),
+        claimingTaxDeducted                      -> optional(boolean("repaymentClaimType.label.claimingTaxDeducted")),
+        claimingUnderGiftAidSmallDonationsScheme -> optional(
+          boolean(
+            "repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme"
+          )
         )
       )(RepaymentClaimType.apply)(x =>
         Some(x.claimingGiftAid, x.claimingTaxDeducted, x.claimingUnderGiftAidSmallDonationsScheme)
-      )
+      ).verifying(x => "true")
     )
 }
 

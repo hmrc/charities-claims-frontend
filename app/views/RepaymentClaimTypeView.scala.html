@@ -44,24 +44,21 @@
     @govukCheckBoxes(
         CheckboxesViewModel(
             form,
-            name="",
+            name="testing",
             items = Seq(
                 CheckboxItemViewModel(
                     content = Text(messages("repaymentClaimType.label.claimingGiftAid")),
-                    fieldId = CheckBoxListForm.claimingGiftAid,
-                    index = 1,
-                    value = CheckBoxListForm.claimingGiftAid
+                    name = CheckBoxListForm.claimingGiftAid,
+                    value = "true"
                 ),
                 CheckboxItemViewModel(
                     content = Text(messages("repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme")),
-                    fieldId = CheckBoxListForm.claimingUnderGiftAidSmallDonationsScheme,
-                    index = 2,
+                    name = CheckBoxListForm.claimingUnderGiftAidSmallDonationsScheme,
                     value = CheckBoxListForm.claimingUnderGiftAidSmallDonationsScheme
                 ).withHint(HintViewModel(Text(messages("repaymentClaimType.hint.claimingUnderGiftAidSmallDonationsScheme")))),
                 CheckboxItemViewModel(
                     content = Text(messages("repaymentClaimType.label.claimingTaxDeducted")),
-                    fieldId = CheckBoxListForm.claimingTaxDeducted,
-                    index = 3,
+                    name = CheckBoxListForm.claimingTaxDeducted,
                     value = CheckBoxListForm.claimingTaxDeducted
                 )
             ),
