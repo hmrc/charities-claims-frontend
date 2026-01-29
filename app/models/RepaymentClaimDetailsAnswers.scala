@@ -129,9 +129,9 @@ object RepaymentClaimDetailsAnswers {
   def setRepaymentClaimType(value: RepaymentClaimType)(using session: SessionData): SessionData =
     set(value)((a, v) =>
       a.copy(
-//        claimingGiftAid = v.claimingGiftAid,
-//        claimingTaxDeducted = v.claimingTaxDeducted,
-//        claimingUnderGiftAidSmallDonationsScheme = v.claimingUnderGiftAidSmallDonationsScheme
+//        claimingGiftAid = Some(v.claimingGiftAid),
+//        claimingTaxDeducted = Some(v.claimingTaxDeducted),
+//        claimingUnderGiftAidSmallDonationsScheme = Some(v.claimingUnderGiftAidSmallDonationsScheme)
         repaymentClaimType = Some(v)
       )
     )

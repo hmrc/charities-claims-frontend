@@ -89,6 +89,7 @@ repaymentClaimType.title = Which type of repayment claim do you want to make?
 repaymentClaimType.heading = Which type of repayment claim do you want to make?
 repaymentClaimType.hint = Select all that apply
 repaymentClaimType.hint.claimingUnderGiftAidSmallDonationsScheme = These are not your Gift Aid donations
+repaymentClaimType.error.required = Select repayment claim type
 
 
 claimingCommunityBuildingDonations.caption = Provide repayment claim details

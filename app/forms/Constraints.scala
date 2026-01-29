@@ -58,7 +58,7 @@ trait Constraints extends validation.Constraints {
       case seq if seq.nonEmpty =>
         Valid
       case _                   =>
-        Invalid(errorKey, args: _*)
+        Invalid(errorKey, args*)
     }
 
 }

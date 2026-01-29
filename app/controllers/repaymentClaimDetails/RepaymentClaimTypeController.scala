@@ -29,6 +29,7 @@ import services.SaveService
 import views.html.RepaymentClaimTypeView
 
 import scala.concurrent.{ExecutionContext, Future}
+import models.RepaymentClaimTypeCheckBox
 
 class RepaymentClaimTypeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -42,7 +43,13 @@ class RepaymentClaimTypeController @Inject() (
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswers.getRepaymentClaimType
-    Future.successful(Ok(view(form.withDefault(Some(Set("test"))))))
+    Future.successful(Ok(view(form.withDefault(Some(previousAnswer.toSet.fold(Set.empty[String]) { (acc, x) =>
+      if x.claimingGiftAid then acc + "claimingGiftAid"
+      else if x.claimingUnderGiftAidSmallDonationsScheme then acc + "claimingUnderGiftAidSmallDonationsScheme"
+      else if x.claimingTaxDeducted then "claimingTaxDeducted"
+      else None
+
+    })))))
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData() { implicit request =>
@@ -51,13 +58,13 @@ class RepaymentClaimTypeController @Inject() (
       .fold(
         formWithErrors => BadRequest(view(formWithErrors)),
         value =>
-//          saveService
-//            .save(RepaymentClaimDetailsAnswers.setRepaymentClaimType(value))
-//            .map(_ =>
-          Redirect(
-            routes.ChangePreviousGASDSClaimController.onPageLoad
-//              )
-          )
+          saveService
+            .save(RepaymentClaimDetailsAnswers.setRepaymentClaimType(value.flatMap(RepaymentClaimType.fromString)))
+            .map(_ =>
+              Redirect(
+                routes.ChangePreviousGASDSClaimController.onPageLoad
+              )
+            )
       )
   }
 

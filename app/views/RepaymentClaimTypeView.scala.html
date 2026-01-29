@@ -17,6 +17,7 @@
 @import controllers.repaymentClaimDetails.routes
 @import forms.CheckBoxListForm
 @import models.RepaymentClaimTypeCheckBox
+@import models.RepaymentClaimType
 
 @this(
     layout: templates.Layout,
@@ -46,7 +47,8 @@
         CheckboxesViewModel(
             form,
             name="testing",
-            items = RepaymentClaimTypeCheckBox.checkboxItems
+            items = RepaymentClaimTypeCheckBox.checkboxItems,
+            legend =LegendViewModel(messages("repaymentClaimType.heading")).visuallyHidden
         )
     )
 

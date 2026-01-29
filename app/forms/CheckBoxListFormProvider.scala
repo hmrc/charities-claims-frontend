@@ -29,18 +29,9 @@ class CheckBoxListFormProvider @Inject() extends Mappings {
   def apply(
   ): Form[Set[String]] =
     Form(
-      "value" -> set(text("alcoholType.error.required")).verifying(nonEmptySet("alcoholType.error.required"))
-//      mapping(
-//        claimingGiftAid                          -> (boolean("repaymentClaimType.label.claimingGiftAid")),
-//        claimingTaxDeducted                      -> (boolean("repaymentClaimType.label.claimingTaxDeducted")),
-//        claimingUnderGiftAidSmallDonationsScheme -> (
-//          boolean(
-//            "repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme"
-//          )
-//        )
-//      )(RepaymentClaimType.apply)(x =>
-//        Some(x.claimingGiftAid, x.claimingTaxDeducted, x.claimingUnderGiftAidSmallDonationsScheme)
-//      )
+      "value" -> set(text("repaymentClaimType.error.required")).verifying(
+        nonEmptySet("repaymentClaimType.error.required")
+      )
     )
 }
 

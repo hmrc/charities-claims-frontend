@@ -31,21 +31,22 @@ enum RepaymentClaimTypeCheckBox {
 object RepaymentClaimTypeCheckBox extends Enumerable.Implicits {
   given Enumerable[RepaymentClaimTypeCheckBox] =
     Enumerable[RepaymentClaimTypeCheckBox](str => Try(RepaymentClaimTypeCheckBox.valueOf(str)).toOption)
+
+  def checkboxItems(implicit messages: Messages): Seq[CheckboxItem] =
+    RepaymentClaimTypeCheckBox.values.toSeq.zipWithIndex.map { case (value, index) =>
+      CheckboxItemViewModel(
+        content = Text(messages(s"repaymentClaimType.label.${value.toString}")),
+        fieldId = "value",
+        index = index,
+        value = value.toString
+      )
+    }
+
+    def fromString(str: String): Option[RepaymentClaimTypeCheckBox] =
+      str match {
+        case "claimingGiftAid"                          => Some(claimingGiftAid)
+        case "claimingUnderGiftAidSmallDonationsScheme" => Some(claimingUnderGiftAidSmallDonationsScheme)
+        case "claimingTaxDeducted"                      => Some(claimingTaxDeducted)
+        case _                                          => None
+      }
 }
-
-//val values: Seq[RepaymentClaimTypeCheckBox] =
-//  Seq(RepaymentClaimTypeCheckBox)
-
-def checkboxItems(implicit messages: Messages): Seq[CheckboxItem] =
-  values.zipWithIndex.map { case (value, index) =>
-    CheckboxItemViewModel(
-      content = Text(messages(s"claimType.${value.toString}")),
-      fieldId = "value",
-      index = index,
-      value = value.toString
-    )
-  }
-//
-//  implicit val enumerable: Enumerable[RepaymentClaimTypeCheckBox] =
-//    Enumerable(values.map(v => v.toString -> v)*)
-//}
