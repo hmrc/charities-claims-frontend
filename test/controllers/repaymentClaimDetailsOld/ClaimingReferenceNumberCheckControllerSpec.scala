@@ -97,7 +97,9 @@ class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(
-            controllers.repaymentclaimdetailsold.routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url
+            controllers.repaymentclaimdetailsold.routes.ClaimReferenceNumberInputControllerOLD
+              .onPageLoad(NormalMode)
+              .url
           )
         }
       }
@@ -114,7 +116,9 @@ class ClaimingReferenceNumberCheckControllerSpec extends ControllerSpec {
 
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(
-            controllers.repaymentclaimdetailsold.routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url
+            controllers.repaymentclaimdetailsold.routes.ClaimReferenceNumberInputControllerOLD
+              .onPageLoad(NormalMode)
+              .url
           )
         }
       }

@@ -128,7 +128,7 @@ object CheckYourAnswersHelper {
                 summaryRow(
                   messages("checkYourAnswers.refNumber.label"),
                   refNum,
-                  controllers.repaymentclaimdetailsold.routes.ClaimReferenceNumberInputController
+                  controllers.repaymentclaimdetailsold.routes.ClaimReferenceNumberInputControllerOLD
                     .onPageLoad(CheckMode)
                     .url,
                   messages("checkYourAnswers.refNumber.label")
@@ -138,7 +138,7 @@ object CheckYourAnswersHelper {
               Some(
                 missingDataRow(
                   messages("checkYourAnswers.refNumber.label"),
-                  controllers.repaymentclaimdetailsold.routes.ClaimReferenceNumberInputController
+                  controllers.repaymentclaimdetailsold.routes.ClaimReferenceNumberInputControllerOLD
                     .onPageLoad(CheckMode)
                     .url,
                   messages("checkYourAnswers.refNumber.label")

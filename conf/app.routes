@@ -30,10 +30,10 @@ GET         /old/change-claim-reference-number                   controllers.rep
 POST        /old/claim-reference-number                          controllers.repaymentclaimdetailsold.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /old/change-claim-reference-number                   controllers.repaymentclaimdetailsold.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /old/your-claim-reference-number                    controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /old/change-your-claim-reference-number             controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /old/your-claim-reference-number                    controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /old/change-your-claim-reference-number             controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /old/your-claim-reference-number                    controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputControllerOLD.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /old/change-your-claim-reference-number             controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputControllerOLD.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /old/your-claim-reference-number                    controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputControllerOLD.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /old/change-your-claim-reference-number             controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputControllerOLD.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /old/declaration                                    controllers.repaymentclaimdetailsold.ClaimDeclarationController.onPageLoad
 POST        /old/declaration                                    controllers.repaymentclaimdetailsold.ClaimDeclarationController.onSubmit
@@ -120,6 +120,11 @@ POST        /delete-repayment-claim                         controllers.organisa
 
 GET         /repayment-claim-details                        controllers.repaymentClaimDetails.RepaymentClaimDetailsController.onPageLoad
 POST        /repayment-claim-details                        controllers.repaymentClaimDetails.RepaymentClaimDetailsController.onSubmit
+
+GET         /enter-claim-reference-number               controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = models.Mode.NormalMode)
+GET         /change-enter-claim-reference-number        controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /enter-claim-reference-number               controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = models.Mode.NormalMode)
+POST        /change-enter-claim-reference-number        controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /cannot-view-or-manage-claim                    controllers.organisationDetails.CannotViewOrManageClaimController.onPageLoad
 
