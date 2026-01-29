@@ -124,9 +124,15 @@ class DataRetrievalActionSpec extends BaseSpec {
               claim.claimData.repaymentClaimDetails
             )
           req.sessionData.organisationDetailsAnswers                        shouldBe None
-          req.sessionData.giftAidScheduleDataAnswers                        shouldBe None
+          req.sessionData.giftAidScheduleData                               shouldBe None
+          req.sessionData.giftAidScheduleFileUploadReference                shouldBe None
           req.sessionData.declarationDetailsAnswers                         shouldBe None
-          req.sessionData.otherIncomeScheduleDataAnswers                    shouldBe None
+          req.sessionData.otherIncomeScheduleData                           shouldBe None
+          req.sessionData.otherIncomeScheduleFileUploadReference            shouldBe None
+          req.sessionData.communityBuildingsScheduleData                    shouldBe None
+          req.sessionData.communityBuildingsScheduleFileUploadReference     shouldBe None
+          req.sessionData.connectedCharitiesScheduleData                    shouldBe None
+          req.sessionData.connectedCharitiesScheduleFileUploadReference     shouldBe None
           req.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers shouldBe None
           Future.successful(Ok)
       )

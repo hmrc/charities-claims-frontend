@@ -40,6 +40,10 @@ trait ClaimsValidationConnector {
 
   def getUploadSummary(claimId: String)(using hc: HeaderCarrier): Future[GetUploadSummaryResponse]
 
+  def getUploadResult(claimId: String, reference: FileUploadReference)(using
+    hc: HeaderCarrier
+  ): Future[GetUploadResultResponse]
+
   def deleteSchedule(claimId: String, reference: FileUploadReference)(using
     hc: HeaderCarrier
   ): Future[DeleteScheduleResponse]
@@ -67,6 +71,14 @@ class ClaimsValidationConnectorImpl @Inject() (
     callValidationBackend[Nothing, GetUploadSummaryResponse](
       method = "GET",
       url = s"$baseUrl$contextPath/$claimId/upload-results"
+    )
+
+  final def getUploadResult(claimId: String, reference: FileUploadReference)(using
+    hc: HeaderCarrier
+  ): Future[GetUploadResultResponse] =
+    callValidationBackend[Nothing, GetUploadResultResponse](
+      method = "GET",
+      url = s"$baseUrl$contextPath/$claimId/upload-results/$reference"
     )
 
   final def deleteSchedule(claimId: String, reference: FileUploadReference)(using

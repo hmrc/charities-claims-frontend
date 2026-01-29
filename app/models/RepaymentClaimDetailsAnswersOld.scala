@@ -89,19 +89,25 @@ object RepaymentClaimDetailsAnswersOld {
 
   def setClaimingTaxDeducted(value: Boolean)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(claimingTaxDeducted = Some(v)))
-      .copy(otherIncomeScheduleDataAnswers = if (value) session.otherIncomeScheduleDataAnswers else None)
+      .copy(
+        otherIncomeScheduleData = if (value) session.otherIncomeScheduleData else None,
+        otherIncomeScheduleFileUploadReference = if (value) session.otherIncomeScheduleFileUploadReference else None
+      )
 
   def shouldWarnAboutChangingClaimingTaxDeducted(value: Boolean)(using session: SessionData): Boolean =
-    !value && session.otherIncomeScheduleDataAnswers.isDefined
+    !value && session.otherIncomeScheduleFileUploadReference.isDefined
 
   def getClaimingGiftAid(using session: SessionData): Option[Boolean] = get(_.claimingGiftAid)
 
   def setClaimingGiftAid(value: Boolean)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(claimingGiftAid = Some(v)))
-      .copy(giftAidScheduleDataAnswers = if (value) session.giftAidScheduleDataAnswers else None)
+      .copy(
+        giftAidScheduleData = if (value) session.giftAidScheduleData else None,
+        giftAidScheduleFileUploadReference = if (value) session.giftAidScheduleFileUploadReference else None
+      )
 
   def shouldWarnAboutChangingClaimingGiftAid(claimingGiftAid: Boolean)(using session: SessionData): Boolean =
-    !claimingGiftAid && session.giftAidScheduleDataAnswers.isDefined
+    !claimingGiftAid && session.giftAidScheduleFileUploadReference.isDefined
 
   def getClaimingUnderGiftAidSmallDonationsScheme(using session: SessionData): Option[Boolean] = get(
     _.claimingUnderGiftAidSmallDonationsScheme
