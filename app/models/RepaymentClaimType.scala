@@ -21,8 +21,8 @@ import play.api.libs.json.Json
 
 case class RepaymentClaimType(
   claimingGiftAid: Boolean,
-  claimingTaxDeducted: Boolean,
-  claimingUnderGiftAidSmallDonationsScheme: Boolean
+  claimingUnderGiftAidSmallDonationsScheme: Boolean,
+  claimingTaxDeducted: Boolean
 )
 
 object RepaymentClaimType {

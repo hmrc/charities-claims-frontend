@@ -18,7 +18,7 @@ package forms
 
 import play.api.data.Form
 import play.api.data.Forms.*
-import models.{RepaymentClaimType, RepaymentClaimTypeCheckBox}
+import models.RepaymentClaimType
 import models.RepaymentClaimTypeCheckBox.*
 
 import javax.inject.Inject
@@ -35,16 +35,16 @@ class CheckBoxListFormProvider @Inject() extends Mappings {
   private def fromSet(values: Set[String]): RepaymentClaimType =
     RepaymentClaimType(
       claimingGiftAid = values.contains(claimingGiftAid.toString),
-      claimingTaxDeducted = values.contains(claimingTaxDeducted.toString),
-      claimingUnderGiftAidSmallDonationsScheme = values.contains(claimingUnderGiftAidSmallDonationsScheme.toString)
+      claimingUnderGiftAidSmallDonationsScheme = values.contains(claimingUnderGiftAidSmallDonationsScheme.toString),
+      claimingTaxDeducted = values.contains(claimingTaxDeducted.toString)
     )
 
   private def toSet(repaymentClaimType: RepaymentClaimType): Set[String] =
     Set(
       Option.when(repaymentClaimType.claimingGiftAid)(claimingGiftAid.toString),
-      Option.when(repaymentClaimType.claimingTaxDeducted)(claimingTaxDeducted.toString),
       Option.when(repaymentClaimType.claimingUnderGiftAidSmallDonationsScheme)(
         claimingUnderGiftAidSmallDonationsScheme.toString
-      )
+      ),
+      Option.when(repaymentClaimType.claimingTaxDeducted)(claimingTaxDeducted.toString)
     ).flatten
 }

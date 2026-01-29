@@ -53,7 +53,15 @@ class RepaymentClaimTypeController @Inject() (
         repaymentClaimType =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setRepaymentClaimType(repaymentClaimType))
-            .map(_ => Redirect(routes.ChangePreviousGASDSClaimController.onPageLoad))
+            .map(_ =>
+              if (repaymentClaimType.claimingUnderGiftAidSmallDonationsScheme) {
+                Redirect(routes.ChangePreviousGASDSClaimController.onPageLoad)
+              } else {
+                Redirect(
+                  routes.ClaimingReferenceNumberController.onPageLoad
+                ) // TODO - redirect to connected charities when available
+              }
+            )
       )
   }
 
