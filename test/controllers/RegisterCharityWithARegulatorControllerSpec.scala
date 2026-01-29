@@ -43,8 +43,10 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
           val view      = application.injector.instanceOf[RegisterCharityWithARegulatorView]
           val appConfig = application.injector.instanceOf[FrontendAppConfig]
 
+          val formattedLimit = java.text.DecimalFormat("#,###").format(appConfig.exceptedLimit)
+
           status(result)          shouldBe OK
-          contentAsString(result) shouldBe view(appConfig.registerCharityWithARegulatorUrl)(form).body
+          contentAsString(result) shouldBe view(appConfig.registerCharityWithARegulatorUrl, formattedLimit)(form).body
         }
       }
     }
@@ -64,7 +66,7 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      // TODO: Update test when D3 screen route is completed (currently redirects to placeholder /page-not-found)
+      // TODO: Update test when D3 screen route is completed (currently redirects to placeholder /declaration-details-confirmation)
       "should redirect to D3 screen when no is selected" in {
         given application: Application = applicationBuilder().build()
 
@@ -76,7 +78,7 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(routes.DeclarationDetailsConfirmationController.onPageLoad.url)
         }
       }
 
@@ -98,13 +100,17 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
         }
       }
 
+      // TODO: Add more tests when F9 is implemented:
+
       // TODO: add test to check if under limit
 
-      // TODO: add test to check if over limit
+      // TODO: add test to check if over high limit and is 'excepted and over £100k'
+
+      // TODO: add test to check if over lower limit and is 'England & Wales regulated and over £5k'
 
       // TODO: add test to check if exactly at limit
 
-      // TODO: check if no response from backend when checking limit
+      // TODO: check if no response from backend when checking F9
 
     }
   }

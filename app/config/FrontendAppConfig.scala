@@ -43,6 +43,8 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
   lazy val timeoutInSeconds: Int            = config.get[Int]("timeout-dialog.timeout")
   lazy val countdownInSeconds: Int          = config.get[Int]("timeout-dialog.countdown")
   lazy val agentUnsubmittedClaimLimit: Int  = config.get[Int]("agentUnsubmittedClaimLimit")
+  lazy val exceptedLimit: Int               = config.get[Int]("unregulated-limits.exceptedLimit")
+  lazy val lowIncomeLimit: Int              = config.get[Int]("unregulated-limits.lowIncomeLimit")
 
   def pageTitleWithServiceName(
     pageTitle: String,

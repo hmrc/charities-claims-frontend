@@ -141,7 +141,10 @@ GET         /add-schedule                                   controllers.organisa
 GET         /make-charity-repayment-claim                   controllers.organisationDetails.MakeCharityRepaymentClaimController.onPageLoad
 
 # TODO: Placeholder screen for AA1 - route will be updated in future
-GET         /charity-repayment-dashboard                   controllers.organisationDetails.CharityRepaymentDashboardController.onPageLoad
+GET         /charity-repayment-dashboard                    controllers.organisationDetails.CharityRepaymentDashboardController.onPageLoad
 
-GET         /claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onPageLoad
-POST        /claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onSubmit
+# TODO: Placeholder screen for D3 - route will be updated in future
+GET         /declaration-details-confirmation               controllers.DeclarationDetailsConfirmationController.onPageLoad
+
+GET         /claim-community-building-donations             controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onPageLoad
+POST        /claim-community-building-donations             controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onSubmit

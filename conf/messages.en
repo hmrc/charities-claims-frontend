@@ -274,8 +274,8 @@ cannotViewOrManageClaim.paragraph = This claim is being updated by someone else.
 
 registerCharityWithARegulator.title = Registering your charity with a regulator
 registerCharityWithARegulator.heading = Registering your charity with a regulator
-registerCharityWithARegulator.warning = You have made claims for Gift Aid repayments on donations over [£value] in the last 12 months.
-registerCharityWithARegulator.paragraph = If your annual income is more than [£value], you need to <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">register your charity with a regulator (opens in new tab)</a>.
+registerCharityWithARegulator.warning = You have made claims for Gift Aid repayments on donations over £{1} in the last 12 months.
+registerCharityWithARegulator.paragraph = If your annual income is more than £{1}, you need to <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">register your charity with a regulator (opens in new tab)</a>.
 registerCharityWithARegulator.legend = Do you need to register your charity with a regulator?
 registerCharityWithARegulator.error.required = Select ‘Yes’ if you need to register with a regulator
 registerCharityWithARegulator.radio.yes.label = Yes
@@ -310,6 +310,11 @@ makeCharityRepaymentClaim.placeholder = Content TBC
 charityRepaymentDashboard.title = Charity Repayment Dashboard
 charityRepaymentDashboard.heading = Charity Repayment Dashboard
 charityRepaymentDashboard.placeholder = Content TBC
+
+# TODO: Placeholder screen messages for D3 - content will be updated in future
+declarationDetailsConfirmation.title = Declaration Confirmation
+declarationDetailsConfirmation.heading = Declaration Confirmation
+declarationDetailsConfirmation.placeholder = Content TBC
 
 phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in a new tab)</a> will help us to improve it.
 phasebanner.phase=Beta

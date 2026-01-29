@@ -24,7 +24,7 @@
     govukButton: GovukButton
 )
 
-@(registerCharityWithARegulatorUrl: String)(form: Form[Boolean])(implicit request: Request[?], messages: Messages)
+@(registerCharityWithARegulatorUrl: String, formattedLimit: String)(form: Form[Boolean])(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = title(form, messages("registerCharityWithARegulator.title"))
@@ -39,11 +39,11 @@
         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
         <strong class="govuk-warning-text__text">
             <span class="govuk-visually-hidden">@messages("warning.text")</span>
-            @messages("registerCharityWithARegulator.warning")
+            @Html(messages("registerCharityWithARegulator.warning", registerCharityWithARegulatorUrl, formattedLimit))
         </strong>
     </div>
 
-    <p class="govuk-body govuk-!-margin-bottom-8">@Html(messages("registerCharityWithARegulator.paragraph", registerCharityWithARegulatorUrl))</p>
+    <p class="govuk-body govuk-!-margin-bottom-8">@Html(messages("registerCharityWithARegulator.paragraph", registerCharityWithARegulatorUrl, formattedLimit))</p>
 
     @formHelper(action = routes.RegisterCharityWithARegulatorController.onSubmit, Symbol("autoComplete") -> "off") {
 

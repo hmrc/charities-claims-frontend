@@ -24,6 +24,7 @@ import forms.YesNoFormProvider
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.RegisterCharityWithARegulatorView
+import java.text.DecimalFormat
 
 class RegisterCharityWithARegulatorController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -35,23 +36,27 @@ class RegisterCharityWithARegulatorController @Inject() (
 
   val form: Form[Boolean] = formProvider("registerCharityWithARegulator.error.required")
 
+  // TODO: After F9 is implemented this will be dynamic
+  // Currently hardcoded to display exceptedLimit (£100,000)
+  lazy val formattedLimit: String = new DecimalFormat("#,###").format(appConfig.exceptedLimit)
+
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(appConfig.registerCharityWithARegulatorUrl)(form))
+    Ok(view(appConfig.registerCharityWithARegulatorUrl, formattedLimit)(form))
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => BadRequest(view(appConfig.registerCharityWithARegulatorUrl)(formWithErrors)),
+        formWithErrors => BadRequest(view(appConfig.registerCharityWithARegulatorUrl, formattedLimit)(formWithErrors)),
         {
           case true =>
             // TODO: User selected 'Yes' - redirect to placeholder R2 screen, route to be updated in the future
             Redirect(controllers.organisationDetails.routes.MakeCharityRepaymentClaimController.onPageLoad)
 
           case false =>
-            // TODO: User selected 'No' - will redirect to D3 placeholder screen when available
-            Redirect(controllers.routes.PageNotFoundController.onPageLoad)
+            // TODO: User selected 'No' - redirect to D3 placeholder screen, route to be updated in the future
+            Redirect(controllers.routes.DeclarationDetailsConfirmationController.onPageLoad)
         }
       )
   }
