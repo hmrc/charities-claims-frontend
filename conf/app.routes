@@ -30,10 +30,10 @@ GET         /old/change-claim-reference-number                   controllers.rep
 POST        /old/claim-reference-number                          controllers.repaymentclaimdetailsold.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /old/change-claim-reference-number                   controllers.repaymentclaimdetailsold.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /old/your-claim-reference-number                    controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /old/change-your-claim-reference-number             controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /old/your-claim-reference-number                    controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /old/change-your-claim-reference-number             controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /old/your-claim-reference-number                    controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputControllerOLD.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /old/change-your-claim-reference-number             controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputControllerOLD.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /old/your-claim-reference-number                    controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputControllerOLD.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /old/change-your-claim-reference-number             controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputControllerOLD.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /old/declaration                                    controllers.repaymentclaimdetailsold.ClaimDeclarationController.onPageLoad
 POST        /old/declaration                                    controllers.repaymentclaimdetailsold.ClaimDeclarationController.onSubmit
@@ -131,7 +131,15 @@ POST        /delete-repayment-claim                         controllers.organisa
 GET         /repayment-claim-details                        controllers.repaymentClaimDetails.RepaymentClaimDetailsController.onPageLoad
 POST        /repayment-claim-details                        controllers.repaymentClaimDetails.RepaymentClaimDetailsController.onSubmit
 
+GET         /enter-claim-reference-number               controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = models.Mode.NormalMode)
+GET         /change-enter-claim-reference-number        controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /enter-claim-reference-number               controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = models.Mode.NormalMode)
+POST        /change-enter-claim-reference-number        controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
+
 GET         /cannot-view-or-manage-claim                    controllers.organisationDetails.CannotViewOrManageClaimController.onPageLoad
+
+GET         /registering-your-charity-with-a-regulator      controllers.RegisterCharityWithARegulatorController.onPageLoad
+POST        /registering-your-charity-with-a-regulator      controllers.RegisterCharityWithARegulatorController.onSubmit
 
 # TODO: Placeholder screen for G2 - route will be updated in future
 GET         /add-schedule                                   controllers.organisationDetails.AddScheduleController.onPageLoad
@@ -140,7 +148,7 @@ GET         /add-schedule                                   controllers.organisa
 GET         /make-charity-repayment-claim                   controllers.organisationDetails.MakeCharityRepaymentClaimController.onPageLoad
 
 # TODO: Placeholder screen for AA1 - route will be updated in future
-GET         /charity-repayment-dashboard                   controllers.organisationDetails.CharityRepaymentDashboardController.onPageLoad
+GET         /charity-repayment-dashboard                    controllers.organisationDetails.CharityRepaymentDashboardController.onPageLoad
 
 GET         /claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onPageLoad(mode: Mode = Mode.NormalMode)
 POST        /claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onSubmit(mode: Mode = Mode.NormalMode)
@@ -151,3 +159,5 @@ POST        /change-claim-community-building-donations                    contro
 GET         /check-your-repayment-claim                       controllers.repaymentClaimDetails.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 POST        /check-your-repayment-claim                       controllers.repaymentClaimDetails.RepaymentClaimDetailsCheckYourAnswersController.onSubmit
 GET         /repayment-claim-details-min-data-placeholder      controllers.repaymentClaimDetails.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad
+# TODO: Placeholder screen for D3 - route will be updated in future
+GET         /declaration-details-confirmation               controllers.DeclarationDetailsConfirmationController.onPageLoad

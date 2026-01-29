@@ -1,5 +1,5 @@
 @*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,36 +14,36 @@
  * limitations under the License.
  *@
 
-@import controllers.repaymentclaimdetailsold.routes
+@import controllers.repaymentClaimDetails.routes
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukButton: GovukButton,
-    govukInputCharacterCount: GovukInputCharacterCount
+     layout: templates.Layout,
+     formHelper: FormWithCSRF,
+     govukErrorSummary: GovukErrorSummary,
+     govukButton: GovukButton,
+     govukInputCharacterCount: GovukInputCharacterCount
 )
 
 @(form: Form[?], mode: Mode)(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle    = title(form, messages("claimReferenceNumberInput.title"))
+   pageTitle = title(form, messages("claimReferenceNumber.title"))
 ) {
 
-    @if(form.errors.nonEmpty) {
-        @govukErrorSummary(ErrorSummaryViewModel(form))
-    }
-    <h1 class="govuk-heading-l">@messages("claimReferenceNumberInput.heading")</h1>
+   @if(form.errors.nonEmpty) {
+       @govukErrorSummary(ErrorSummaryViewModel(form))
+   }
+   <h1 class="govuk-heading-l">@messages("claimReferenceNumber.heading")</h1>
 
-    <p class="govuk-body">@messages("claimReferenceNumberInput.paragraph")</p>
+   <p class="govuk-body">@messages("claimReferenceNumber.paragraph")</p>
 
-    @formHelper(action = routes.ClaimReferenceNumberInputController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+   @formHelper(action = routes.ClaimReferenceNumberInputController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @govukInputCharacterCount(
           CharacterCountViewModel(
-            field = form("value"),
-            label = LabelViewModel(messages("claimReferenceNumberInput.heading")),
-            maxLength = 20
+           field = form("value"),
+           label = LabelViewModel(messages("claimReferenceNumber.heading")),
+           maxLength = 20
           ).fullWidth()
         )
 

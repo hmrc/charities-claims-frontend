@@ -16,7 +16,7 @@
 
 package models
 
-import util.BaseSpec
+import util.{BaseSpec, TestScheduleData}
 import play.api.libs.json.Json
 
 class RepaymentClaimDetailsAnswersOldSpec extends BaseSpec {
@@ -74,23 +74,27 @@ class RepaymentClaimDetailsAnswersOldSpec extends BaseSpec {
     "setClaimingGiftAid" - {
       "should delete giftAidScheduleDataAnswers when changing to false" in {
         given session: SessionData = SessionData.empty.copy(
-          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+          giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+          giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
         )
 
         val result = RepaymentClaimDetailsAnswersOld.setClaimingGiftAid(false)
 
-        result.giftAidScheduleDataAnswers                      shouldBe None
-        result.repaymentClaimDetailsAnswersOld.claimingGiftAid shouldBe Some(false)
+        result.giftAidScheduleFileUploadReference                 shouldBe None
+        result.giftAidScheduleData                                shouldBe None
+        result.repaymentClaimDetailsAnswers.value.claimingGiftAid shouldBe Some(false)
       }
 
       "should keep giftAidScheduleDataAnswers when changing to true" in {
         given session: SessionData = SessionData.empty.copy(
-          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+          giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+          giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
         )
 
         val result = RepaymentClaimDetailsAnswersOld.setClaimingGiftAid(true)
 
-        result.giftAidScheduleDataAnswers                      shouldBe Some(GiftAidScheduleDataAnswers())
+        result.giftAidScheduleFileUploadReference              shouldBe Some(FileUploadReference("test-file-upload-reference"))
+        result.giftAidScheduleData                             shouldBe Some(TestScheduleData.exampleGiftAidScheduleData)
         result.repaymentClaimDetailsAnswersOld.claimingGiftAid shouldBe Some(true)
       }
     }
@@ -98,7 +102,8 @@ class RepaymentClaimDetailsAnswersOldSpec extends BaseSpec {
     "shouldWarnAboutChangingClaimingGiftAid" - {
       "should return true when value is false when there is Gift Aid data" in {
         given session: SessionData = SessionData.empty.copy(
-          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+          giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+          giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
         )
 
         RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingGiftAid(false) shouldBe true
@@ -106,7 +111,8 @@ class RepaymentClaimDetailsAnswersOldSpec extends BaseSpec {
 
       "should return false when setting value to true" in {
         given session: SessionData = SessionData.empty.copy(
-          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+          giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+          giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
         )
 
         RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingGiftAid(true) shouldBe false
@@ -122,23 +128,27 @@ class RepaymentClaimDetailsAnswersOldSpec extends BaseSpec {
     "setClaimingTaxDeducted" - {
       "should delete otherIncomeScheduleDataAnswers when changing to false" in {
         given session: SessionData = SessionData.empty.copy(
-          otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+          otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+          otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
         )
 
         val result = RepaymentClaimDetailsAnswersOld.setClaimingTaxDeducted(false)
 
-        result.otherIncomeScheduleDataAnswers                      shouldBe None
+        result.otherIncomeScheduleData                             shouldBe None
+        result.otherIncomeScheduleFileUploadReference              shouldBe None
         result.repaymentClaimDetailsAnswersOld.claimingTaxDeducted shouldBe Some(false)
       }
 
       "should keep otherIncomeScheduleDataAnswers when changing to true" in {
         given session: SessionData = SessionData.empty.copy(
-          otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+          otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+          otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
         )
 
         val result = RepaymentClaimDetailsAnswersOld.setClaimingTaxDeducted(true)
 
-        result.otherIncomeScheduleDataAnswers                      shouldBe Some(OtherIncomeScheduleDataAnswers())
+        result.otherIncomeScheduleFileUploadReference              shouldBe Some(FileUploadReference("test-file-upload-reference"))
+        result.otherIncomeScheduleData                             shouldBe Some(TestScheduleData.exampleOtherIncomeScheduleData)
         result.repaymentClaimDetailsAnswersOld.claimingTaxDeducted shouldBe Some(true)
       }
     }
@@ -146,7 +156,8 @@ class RepaymentClaimDetailsAnswersOldSpec extends BaseSpec {
     "shouldWarnAboutChangingClaimingTaxDeducted" - {
       "should return true when value is false when there is Other Income data" in {
         given session: SessionData = SessionData.empty.copy(
-          otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+          otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+          otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
         )
 
         RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingTaxDeducted(false) shouldBe true
@@ -154,7 +165,8 @@ class RepaymentClaimDetailsAnswersOldSpec extends BaseSpec {
 
       "should return false when setting value to true" in {
         given session: SessionData = SessionData.empty.copy(
-          otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+          otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+          otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
         )
 
         RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingTaxDeducted(true) shouldBe false
@@ -223,4 +235,5 @@ class RepaymentClaimDetailsAnswersOldSpec extends BaseSpec {
       }
     }
   }
+
 }

@@ -14,34 +14,37 @@
  * limitations under the License.
  *@
 
-@import controllers.repaymentClaimDetails.routes
+@import controllers.repaymentclaimdetailsold.routes
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukRadios: GovukRadios,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    govukInputCharacterCount: GovukInputCharacterCount
 )
 
 @(form: Form[?], mode: Mode)(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle    = title(form, messages("claimingReferenceNumber.title"))
+    pageTitle    = title(form, messages("claimReferenceNumberInput.title"))
 ) {
 
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
-    <span class="govuk-caption-l">@messages("claimingReferenceNumber.caption")</span>
-    <h1 class="govuk-heading-l">@messages("claimingReferenceNumber.heading")</h1>
+    <h1 class="govuk-heading-l">@messages("claimReferenceNumberInput.heading")</h1>
 
-    @formHelper(action = routes.ClaimingReferenceNumberController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    <p class="govuk-body">@messages("claimReferenceNumberInput.paragraph")</p>
 
-        @govukRadios(
-            RadiosViewModel.yesNo(
-                form("value")
-            )
+    @formHelper(action = routes.ClaimReferenceNumberInputControllerOLD.onSubmit(mode), Symbol("autoComplete") -> "off") {
+
+        @govukInputCharacterCount(
+          CharacterCountViewModel(
+            field = form("value"),
+            label = LabelViewModel(messages("claimReferenceNumberInput.heading")),
+            maxLength = 20
+          ).fullWidth()
         )
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))

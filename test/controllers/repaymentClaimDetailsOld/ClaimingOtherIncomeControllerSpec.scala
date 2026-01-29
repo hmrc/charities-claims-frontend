@@ -22,9 +22,10 @@ import controllers.ControllerSpec
 import views.html.ClaimingOtherIncomeView
 import play.api.Application
 import forms.YesNoFormProvider
-import models.{OtherIncomeScheduleDataAnswers, RepaymentClaimDetailsAnswersOld, SessionData}
+import models.*
 import play.api.data.Form
 import models.Mode.*
+import util.TestScheduleData
 
 class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
@@ -170,7 +171,8 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
         "should trigger warning when changing to false when Other Income schedule data present" in {
           val sessionData = SessionData.empty.copy(
             repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
-            otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+            otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+            otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -191,7 +193,8 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
         "should redirect to the next page in NormalMode when value is false and warning has been shown" in {
           val sessionData = SessionData.empty.copy(
             repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
-            otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+            otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+            otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
@@ -236,7 +239,8 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
         "should redirect to CheckYourAnswers in CheckMode after warning confirmation" in {
           val sessionData = SessionData.empty.copy(
             repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
-            otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+            otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+            otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
@@ -256,7 +260,8 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
         "should render warning parameter hidden field when warning flash present" in {
           val sessionData = SessionData.empty.copy(
             repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
-            otherIncomeScheduleDataAnswers = Some(OtherIncomeScheduleDataAnswers())
+            otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+            otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).build()

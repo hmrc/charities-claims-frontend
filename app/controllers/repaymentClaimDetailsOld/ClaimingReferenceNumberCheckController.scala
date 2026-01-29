@@ -57,7 +57,7 @@ class ClaimingReferenceNumberCheckController @Inject() (
             .map { _ =>
               (value, mode) match {
                 case (true, _) =>
-                  Redirect(routes.ClaimReferenceNumberInputController.onPageLoad(mode))
+                  Redirect(routes.ClaimReferenceNumberInputControllerOLD.onPageLoad(mode))
 
                 case (false, NormalMode) =>
                   Redirect(routes.ClaimDeclarationController.onPageLoad)
