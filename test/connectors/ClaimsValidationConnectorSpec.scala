@@ -168,7 +168,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
           HttpResponse(200, Json.stringify(Json.toJson(successResponse)))
         ).once()
 
-        await(connector.deleteSchedule("123", "ref-123")) shouldBe successResponse
+        await(connector.deleteSchedule("123", FileUploadReference("ref-123"))) shouldBe successResponse
       }
 
       "should throw exception when deletion returns success=false" in {
@@ -178,7 +178,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         ).once()
 
         a[Exception] should be thrownBy {
-          await(connector.deleteSchedule("123", "ref-123"))
+          await(connector.deleteSchedule("123", FileUploadReference("ref-123")))
         }
       }
 
@@ -186,7 +186,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         givenDeleteScheduleEndpointReturns(HttpResponse(200, "{\"invalid\"}")).once()
 
         a[Exception] should be thrownBy {
-          await(connector.deleteSchedule("123", "ref-123"))
+          await(connector.deleteSchedule("123", FileUploadReference("ref-123")))
         }
       }
 
@@ -194,7 +194,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         givenDeleteScheduleEndpointReturns(HttpResponse(404, "")).once()
 
         a[Exception] should be thrownBy {
-          await(connector.deleteSchedule("123", "ref-123"))
+          await(connector.deleteSchedule("123", FileUploadReference("ref-123")))
         }
       }
 
@@ -202,7 +202,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         givenDeleteScheduleEndpointReturns(HttpResponse(500, "")).once()
 
         a[Exception] should be thrownBy {
-          await(connector.deleteSchedule("123", "ref-123"))
+          await(connector.deleteSchedule("123", FileUploadReference("ref-123")))
         }
       }
     }
