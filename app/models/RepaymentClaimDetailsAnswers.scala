@@ -36,7 +36,9 @@ final case class RepaymentClaimDetailsAnswers(
   makingAdjustmentToPreviousClaim: Option[Boolean] = None,
   // only for agents
   hmrcCharitiesReference: Option[String] = None,
-  nameOfCharity: Option[String] = None
+  nameOfCharity: Option[String] = None,
+  // repayment claim type - claimingGiftAid,claimingTaxDeducted,claimingUnderGiftAidSmallDonationsScheme
+  repaymentClaimType: Option[RepaymentClaimType] = None
 ) {
 
   def missingFields: List[String] =
@@ -117,6 +119,29 @@ object RepaymentClaimDetailsAnswers {
   def shouldWarnAboutChangingClaimingGiftAid(claimingGiftAid: Boolean)(using session: SessionData): Boolean =
     !claimingGiftAid && session.giftAidScheduleFileUploadReference.isDefined
 
+  def getRepaymentClaimType(using session: SessionData): Option[RepaymentClaimType] = get(answers =>
+//    for
+//      claimingGiftAid                          <- answers.claimingGiftAid
+//      claimingTaxDeducted                      <- Some(answers.claimingTaxDeducted)
+//      claimingUnderGiftAidSmallDonationsScheme <- Some(answers.claimingUnderGiftAidSmallDonationsScheme)
+//    yield RepaymentClaimType(
+//      answers.claimingGiftAid,
+//      answers.claimingTaxDeducted,
+//      answers.claimingUnderGiftAidSmallDonationsScheme
+//    )
+    answers.repaymentClaimType
+  )
+
+  def setRepaymentClaimType(value: RepaymentClaimType)(using session: SessionData): SessionData =
+    set(value)((a, v) =>
+      a.copy(
+//        claimingGiftAid = Some(v.claimingGiftAid),
+//        claimingTaxDeducted = Some(v.claimingTaxDeducted),
+//        claimingUnderGiftAidSmallDonationsScheme = Some(v.claimingUnderGiftAidSmallDonationsScheme)
+        repaymentClaimType = Some(v)
+      )
+    )
+
   def getClaimingDonationsCollectedInCommunityBuildings(using session: SessionData): Option[Boolean] = get(
     _.claimingDonationsCollectedInCommunityBuildings
   )
@@ -175,14 +200,13 @@ object RepaymentClaimDetailsAnswers {
     set(value)((a, v) => a.copy(claimReferenceNumber = Some(v)))
 
   def toRepaymentClaimDetails(answers: RepaymentClaimDetailsAnswers): Try[RepaymentClaimDetails] =
-    for
-      claimingGiftAid                          <- required(answers)(_.claimingGiftAid)
-      claimingTaxDeducted                      <- required(answers)(_.claimingTaxDeducted)
-      claimingUnderGiftAidSmallDonationsScheme <- required(answers)(_.claimingUnderGiftAidSmallDonationsScheme)
+    for repaymentClaimType <- required(answers)(_.repaymentClaimType)
+//      claimingTaxDeducted                      <- required(answers)(_.claimingTaxDeducted)
+//      claimingUnderGiftAidSmallDonationsScheme <- required(answers)(_.claimingUnderGiftAidSmallDonationsScheme)
     yield RepaymentClaimDetails(
-      claimingGiftAid = claimingGiftAid,
-      claimingTaxDeducted = claimingTaxDeducted,
-      claimingUnderGiftAidSmallDonationsScheme = claimingUnderGiftAidSmallDonationsScheme,
+      claimingGiftAid = repaymentClaimType.claimingGiftAid,
+      claimingTaxDeducted = repaymentClaimType.claimingTaxDeducted,
+      claimingUnderGiftAidSmallDonationsScheme = repaymentClaimType.claimingUnderGiftAidSmallDonationsScheme,
       claimReferenceNumber = answers.claimReferenceNumber,
       claimingDonationsNotFromCommunityBuilding = answers.claimingDonationsNotFromCommunityBuilding,
       claimingDonationsCollectedInCommunityBuildings = answers.claimingDonationsCollectedInCommunityBuildings,

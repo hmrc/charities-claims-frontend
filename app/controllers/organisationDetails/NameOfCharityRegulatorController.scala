@@ -30,6 +30,7 @@ import views.html.NameOfCharityRegulatorView
 import models.NameOfCharityRegulator
 
 import scala.concurrent.{ExecutionContext, Future}
+import play.api.mvc.Call
 
 class NameOfCharityRegulatorController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -49,6 +50,8 @@ class NameOfCharityRegulatorController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val previousAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
+
     form
       .bindFromRequest()
       .fold(
@@ -56,15 +59,32 @@ class NameOfCharityRegulatorController @Inject() (
         value =>
           saveService
             .save(OrganisationDetailsAnswers.setNameOfCharityRegulator(value))
-            .map { _ =>
-              (value, mode) match { // TODO - need to get confirmation on what page should be redirected if going from None to EnglandAndWales, NorthernIreland,Scottish ... or vise-versa
-                case (_, CheckMode)                   =>
-                  Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
-                case (NameOfCharityRegulator.None, _) =>
-                  Redirect(routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode))
-                case (_, NormalMode)                  => Redirect(routes.CharityRegulatorNumberController.onPageLoad(NormalMode))
-              }
-            }
+            .map(_ => Redirect(NameOfCharityRegulatorController.nextPage(value, mode, previousAnswer)))
       )
   }
+}
+
+object NameOfCharityRegulatorController {
+
+  def nextPage(value: NameOfCharityRegulator, mode: Mode, previousAnswer: Option[NameOfCharityRegulator]): Call =
+    (value, mode, previousAnswer) match {
+      // NormalMode
+      case (NameOfCharityRegulator.None, NormalMode, _)                                                    =>
+        routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode)
+      case (_, NormalMode, _)                                                                              =>
+        routes.CharityRegulatorNumberController.onPageLoad(NormalMode)
+
+      // CheckMode
+      // regulator to None
+      case (NameOfCharityRegulator.None, CheckMode, Some(prev)) if prev != NameOfCharityRegulator.None     =>
+        routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(CheckMode)
+
+      // None to regulator
+      case (newVal, CheckMode, Some(NameOfCharityRegulator.None)) if newVal != NameOfCharityRegulator.None =>
+        routes.CharityRegulatorNumberController.onPageLoad(CheckMode)
+
+      // unchanged
+      case (_, CheckMode, _)                                                                               =>
+        routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
+    }
 }
