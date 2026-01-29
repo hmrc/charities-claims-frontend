@@ -30,10 +30,17 @@ final case class SessionData(
   repaymentClaimDetailsAnswersOld: RepaymentClaimDetailsAnswersOld,
   repaymentClaimDetailsAnswers: Option[RepaymentClaimDetailsAnswers] = None,
   organisationDetailsAnswers: Option[OrganisationDetailsAnswers] = None,
-  giftAidScheduleDataAnswers: Option[GiftAidScheduleDataAnswers] = None,
   declarationDetailsAnswers: Option[DeclarationDetailsAnswers] = None,
-  otherIncomeScheduleDataAnswers: Option[OtherIncomeScheduleDataAnswers] = None,
-  giftAidSmallDonationsSchemeDonationDetailsAnswers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers] = None
+  giftAidSmallDonationsSchemeDonationDetailsAnswers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers] = None,
+  // File upload references and data retrieved from the validation service
+  giftAidScheduleFileUploadReference: Option[FileUploadReference] = None,
+  giftAidScheduleData: Option[GiftAidScheduleData] = None,
+  otherIncomeScheduleFileUploadReference: Option[FileUploadReference] = None,
+  otherIncomeScheduleData: Option[OtherIncomeScheduleData] = None,
+  communityBuildingsScheduleFileUploadReference: Option[FileUploadReference] = None,
+  communityBuildingsScheduleData: Option[CommunityBuildingsScheduleData] = None,
+  connectedCharitiesScheduleFileUploadReference: Option[FileUploadReference] = None,
+  connectedCharitiesScheduleData: Option[ConnectedCharitiesScheduleData] = None
 )
 
 object SessionData {
@@ -55,7 +62,11 @@ object SessionData {
       giftAidSmallDonationsSchemeDonationDetailsAnswers =
         claim.claimData.giftAidSmallDonationsSchemeDonationDetails.map(
           GiftAidSmallDonationsSchemeDonationDetailsAnswers.from
-        )
+        ),
+      giftAidScheduleFileUploadReference = claim.claimData.giftAidScheduleFileUploadReference,
+      otherIncomeScheduleFileUploadReference = claim.claimData.otherIncomeScheduleFileUploadReference,
+      communityBuildingsScheduleFileUploadReference = claim.claimData.communityBuildingsScheduleFileUploadReference,
+      connectedCharitiesScheduleFileUploadReference = claim.claimData.connectedCharitiesScheduleFileUploadReference
     )
 
   def toUpdateClaimRequest(sessionData: SessionData): Try[UpdateClaimRequest] =
@@ -77,6 +88,10 @@ object SessionData {
       repaymentClaimDetails = repaymentClaimDetails,
       organisationDetails = organisationDetails,
       giftAidSmallDonationsSchemeDonationDetails = giftAidSmallDonationsSchemeDonationDetails,
-      declarationDetails = declarationDetails
+      declarationDetails = declarationDetails,
+      giftAidScheduleFileUploadReference = sessionData.giftAidScheduleFileUploadReference,
+      otherIncomeScheduleFileUploadReference = sessionData.otherIncomeScheduleFileUploadReference,
+      communityBuildingsScheduleFileUploadReference = sessionData.communityBuildingsScheduleFileUploadReference,
+      connectedCharitiesScheduleFileUploadReference = sessionData.connectedCharitiesScheduleFileUploadReference
     )
 }

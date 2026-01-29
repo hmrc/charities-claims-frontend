@@ -18,9 +18,8 @@ package controllers.repaymentclaimdetailsold
 
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
-import models.{GiftAidScheduleDataAnswers, RepaymentClaimDetailsAnswersOld, SessionData}
+import models.*
 import models.Mode.*
-import models.requests.DataRequest
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
@@ -29,6 +28,8 @@ import play.api.test.FakeRequest
 import services.ClaimsValidationService
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.ClaimingGiftAidView
+import util.TestScheduleData
+import models.requests.DataRequest
 
 import scala.concurrent.Future
 
@@ -175,7 +176,8 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
       "should trigger warning when changing to false with Gift Aid schedule data present" in {
         val sessionData = SessionData.empty.copy(
           repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
-          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+          giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+          giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -216,7 +218,8 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
         val sessionData = SessionData.empty.copy(
           unsubmittedClaimId = Some("test-claim-123"),
           repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
-          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+          giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+          giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
         )
 
         (mockClaimsValidationService
@@ -244,7 +247,8 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
         val sessionData = SessionData.empty.copy(
           unsubmittedClaimId = Some("test-claim-456"),
           repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
-          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+          giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+          giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
         )
 
         (mockClaimsValidationService
@@ -271,7 +275,8 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
       "should redirect to ClaimingOtherIncomeController when selecting Yes (not trigger delete)" in {
         val sessionData = SessionData.empty.copy(
           repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
-          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+          giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+          giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
@@ -291,7 +296,8 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
       "should redirect to ClaimingOtherIncomeController when selecting No with no existing schedule data" in {
         val sessionData = SessionData.empty.copy(
           repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(false)),
-          giftAidScheduleDataAnswers = None
+          giftAidScheduleFileUploadReference = None,
+          giftAidScheduleData = None
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
@@ -311,7 +317,8 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
       "should render warning parameter hidden field when flash present" in {
         val sessionData = SessionData.empty.copy(
           repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
-          giftAidScheduleDataAnswers = Some(GiftAidScheduleDataAnswers())
+          giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+          giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
