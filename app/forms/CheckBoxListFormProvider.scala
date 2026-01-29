@@ -16,29 +16,35 @@
 
 package forms
 
-import forms.Mappings
 import play.api.data.Form
 import play.api.data.Forms.*
-import models.RepaymentClaimType
-import CheckBoxListForm.*
+import models.{RepaymentClaimType, RepaymentClaimTypeCheckBox}
+import models.RepaymentClaimTypeCheckBox.*
 
 import javax.inject.Inject
 
 class CheckBoxListFormProvider @Inject() extends Mappings {
 
-  def apply(
-  ): Form[Set[String]] =
+  def apply(): Form[RepaymentClaimType] =
     Form(
-      "value" -> set(text("repaymentClaimType.error.required")).verifying(
-        nonEmptySet("repaymentClaimType.error.required")
-      )
+      "value" -> set(text("repaymentClaimType.error.required"))
+        .verifying(nonEmptySet("repaymentClaimType.error.required"))
+        .transform[RepaymentClaimType](fromSet, toSet)
     )
-}
 
-object CheckBoxListForm {
+  private def fromSet(values: Set[String]): RepaymentClaimType =
+    RepaymentClaimType(
+      claimingGiftAid = values.contains(claimingGiftAid.toString),
+      claimingTaxDeducted = values.contains(claimingTaxDeducted.toString),
+      claimingUnderGiftAidSmallDonationsScheme = values.contains(claimingUnderGiftAidSmallDonationsScheme.toString)
+    )
 
-  val claimingGiftAid                          = "claimingGiftAid"
-  val claimingUnderGiftAidSmallDonationsScheme = "claimingUnderGiftAidSmallDonationsScheme"
-  val claimingTaxDeducted                      = "claimingTaxDeducted"
-
+  private def toSet(repaymentClaimType: RepaymentClaimType): Set[String] =
+    Set(
+      Option.when(repaymentClaimType.claimingGiftAid)(claimingGiftAid.toString),
+      Option.when(repaymentClaimType.claimingTaxDeducted)(claimingTaxDeducted.toString),
+      Option.when(repaymentClaimType.claimingUnderGiftAidSmallDonationsScheme)(
+        claimingUnderGiftAidSmallDonationsScheme.toString
+      )
+    ).flatten
 }

@@ -29,7 +29,6 @@ import services.SaveService
 import views.html.RepaymentClaimTypeView
 
 import scala.concurrent.{ExecutionContext, Future}
-import models.RepaymentClaimTypeCheckBox
 
 class RepaymentClaimTypeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -39,32 +38,22 @@ class RepaymentClaimTypeController @Inject() (
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
-  val form: Form[Set[String]] = formProvider()
+  val form: Form[RepaymentClaimType] = formProvider()
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswers.getRepaymentClaimType
-    Future.successful(Ok(view(form.withDefault(Some(previousAnswer.toSet.fold(Set.empty[String]) { (acc, x) =>
-      if x.claimingGiftAid then acc + "claimingGiftAid"
-      else if x.claimingUnderGiftAidSmallDonationsScheme then acc + "claimingUnderGiftAidSmallDonationsScheme"
-      else if x.claimingTaxDeducted then "claimingTaxDeducted"
-      else None
-
-    })))))
+    Future.successful(Ok(view(form.withDefault(previousAnswer))))
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => BadRequest(view(formWithErrors)),
-        value =>
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        repaymentClaimType =>
           saveService
-            .save(RepaymentClaimDetailsAnswers.setRepaymentClaimType(value.flatMap(RepaymentClaimType.fromString)))
-            .map(_ =>
-              Redirect(
-                routes.ChangePreviousGASDSClaimController.onPageLoad
-              )
-            )
+            .save(RepaymentClaimDetailsAnswers.setRepaymentClaimType(repaymentClaimType))
+            .map(_ => Redirect(routes.ChangePreviousGASDSClaimController.onPageLoad))
       )
   }
 

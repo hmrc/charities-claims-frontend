@@ -16,23 +16,18 @@
 
 package models
 
-import scala.util.Try
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import viewmodels.govuk.checkbox._
+import viewmodels.govuk.checkbox.*
 
 enum RepaymentClaimTypeCheckBox {
-
   case claimingGiftAid, claimingUnderGiftAidSmallDonationsScheme, claimingTaxDeducted
-
 }
 
-object RepaymentClaimTypeCheckBox extends Enumerable.Implicits {
-  given Enumerable[RepaymentClaimTypeCheckBox] =
-    Enumerable[RepaymentClaimTypeCheckBox](str => Try(RepaymentClaimTypeCheckBox.valueOf(str)).toOption)
+object RepaymentClaimTypeCheckBox {
 
-  def checkboxItems(implicit messages: Messages): Seq[CheckboxItem] =
+  def items(using messages: Messages): Seq[CheckboxItem] =
     RepaymentClaimTypeCheckBox.values.toSeq.zipWithIndex.map { case (value, index) =>
       CheckboxItemViewModel(
         content = Text(messages(s"repaymentClaimType.label.${value.toString}")),
@@ -41,12 +36,4 @@ object RepaymentClaimTypeCheckBox extends Enumerable.Implicits {
         value = value.toString
       )
     }
-
-    def fromString(str: String): Option[RepaymentClaimTypeCheckBox] =
-      str match {
-        case "claimingGiftAid"                          => Some(claimingGiftAid)
-        case "claimingUnderGiftAidSmallDonationsScheme" => Some(claimingUnderGiftAidSmallDonationsScheme)
-        case "claimingTaxDeducted"                      => Some(claimingTaxDeducted)
-        case _                                          => None
-      }
 }

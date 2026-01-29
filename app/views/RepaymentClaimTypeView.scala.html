@@ -15,7 +15,6 @@
  *@
 
 @import controllers.repaymentClaimDetails.routes
-@import forms.CheckBoxListForm
 @import models.RepaymentClaimTypeCheckBox
 @import models.RepaymentClaimType
 
@@ -27,7 +26,7 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[Set[String]])(implicit request: Request[?], messages: Messages)
+@(form: Form[RepaymentClaimType])(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = title(form, messages("repaymentClaimType.title"))
@@ -46,9 +45,9 @@
     @govukCheckBoxes(
         CheckboxesViewModel(
             form,
-            name="testing",
-            items = RepaymentClaimTypeCheckBox.checkboxItems,
-            legend =LegendViewModel(messages("repaymentClaimType.heading")).visuallyHidden
+            name = "value",
+            items = RepaymentClaimTypeCheckBox.items,
+            legend = LegendViewModel(messages("repaymentClaimType.heading")).visuallyHidden
         )
     )
 
