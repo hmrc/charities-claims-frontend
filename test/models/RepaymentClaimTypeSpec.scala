@@ -22,7 +22,7 @@ import play.api.libs.json.Json
 class RepaymentClaimTypeSpec extends BaseSpec {
 
   "RepaymentClaimType" - {
-    "be serializable and deserializable with Postcode" in {
+    "be serializable and deserializable" in {
       val repaymentClaimType = RepaymentClaimType(
         claimingGiftAid = false,
         claimingTaxDeducted = true,
