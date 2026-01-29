@@ -24,9 +24,9 @@ class UploadSummarySpec extends BaseSpec {
   "UploadSummary" - {
     "be serialised and deserialised correctly with uploadUrl" in {
       val uploadSummary = UploadSummary(
-        reference = "test-ref-123",
-        validationType = "GiftAid",
-        fileStatus = "VALIDATED",
+        reference = FileUploadReference("test-ref-123"),
+        validationType = ValidationType.GiftAid,
+        fileStatus = FileStatus.VALIDATED,
         uploadUrl = Some("https://example.com/upload")
       )
       Json.parse(Json.prettyPrint(Json.toJson(uploadSummary))).as[UploadSummary] shouldBe uploadSummary
@@ -34,9 +34,9 @@ class UploadSummarySpec extends BaseSpec {
 
     "be serialised and deserialised correctly without uploadUrl" in {
       val uploadSummary = UploadSummary(
-        reference = "test-ref-456",
-        validationType = "OtherIncome",
-        fileStatus = "VALIDATING",
+        reference = FileUploadReference("test-ref-456"),
+        validationType = ValidationType.OtherIncome,
+        fileStatus = FileStatus.VALIDATING,
         uploadUrl = None
       )
       Json.parse(Json.prettyPrint(Json.toJson(uploadSummary))).as[UploadSummary] shouldBe uploadSummary

@@ -16,20 +16,21 @@
 
 package connectors
 
-import com.typesafe.config.ConfigFactory
-import models.{DeleteScheduleResponse, GetUploadSummaryResponse, UploadSummary}
+import util.{BaseSpec, HttpV2Support}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import models.*
 import org.scalamock.handlers.CallHandler
+import play.api.test.Helpers.*
+import com.typesafe.config.ConfigFactory
 import play.api.Configuration
 import play.api.libs.json.Json
-import play.api.test.Helpers.*
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import util.{BaseSpec, HttpV2Support}
+
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.FiniteDuration
 
 import java.net.URL
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import scala.concurrent.duration.FiniteDuration
 
 class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
 
@@ -62,15 +63,15 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
   val testUploadSummaryResponse = GetUploadSummaryResponse(
     uploads = Seq(
       UploadSummary(
-        reference = "f5da5578-8393-4cd1-be0e-d8ef1b78d8e7",
-        validationType = "GiftAid",
-        fileStatus = "VALIDATED",
+        reference = FileUploadReference("f5da5578-8393-4cd1-be0e-d8ef1b78d8e7"),
+        validationType = ValidationType.GiftAid,
+        fileStatus = FileStatus.VALIDATED,
         uploadUrl = None
       ),
       UploadSummary(
-        reference = "501beba6-fb65-4952-93fc-f83be323fde6",
-        validationType = "OtherIncome",
-        fileStatus = "VALIDATING",
+        reference = FileUploadReference("501beba6-fb65-4952-93fc-f83be323fde6"),
+        validationType = ValidationType.OtherIncome,
+        fileStatus = FileStatus.VALIDATING,
         uploadUrl = None
       )
     )
@@ -167,7 +168,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
           HttpResponse(200, Json.stringify(Json.toJson(successResponse)))
         ).once()
 
-        await(connector.deleteSchedule("123", "ref-123")) shouldBe successResponse
+        await(connector.deleteSchedule("123", FileUploadReference("ref-123"))) shouldBe successResponse
       }
 
       "should throw exception when deletion returns success=false" in {
@@ -177,7 +178,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         ).once()
 
         a[Exception] should be thrownBy {
-          await(connector.deleteSchedule("123", "ref-123"))
+          await(connector.deleteSchedule("123", FileUploadReference("ref-123")))
         }
       }
 
@@ -185,7 +186,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         givenDeleteScheduleEndpointReturns(HttpResponse(200, "{\"invalid\"}")).once()
 
         a[Exception] should be thrownBy {
-          await(connector.deleteSchedule("123", "ref-123"))
+          await(connector.deleteSchedule("123", FileUploadReference("ref-123")))
         }
       }
 
@@ -193,7 +194,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         givenDeleteScheduleEndpointReturns(HttpResponse(404, "")).once()
 
         a[Exception] should be thrownBy {
-          await(connector.deleteSchedule("123", "ref-123"))
+          await(connector.deleteSchedule("123", FileUploadReference("ref-123")))
         }
       }
 
@@ -201,7 +202,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         givenDeleteScheduleEndpointReturns(HttpResponse(500, "")).once()
 
         a[Exception] should be thrownBy {
-          await(connector.deleteSchedule("123", "ref-123"))
+          await(connector.deleteSchedule("123", FileUploadReference("ref-123")))
         }
       }
     }

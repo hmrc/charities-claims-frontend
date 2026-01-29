@@ -17,7 +17,15 @@
 package services
 
 import connectors.ClaimsValidationConnector
-import models.{DeleteScheduleResponse, GetUploadSummaryResponse, SessionData, UploadSummary}
+import models.{
+  DeleteScheduleResponse,
+  FileStatus,
+  FileUploadReference,
+  GetUploadSummaryResponse,
+  SessionData,
+  UploadSummary,
+  ValidationType
+}
 import models.requests.DataRequest
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
@@ -36,27 +44,27 @@ class ClaimsValidationServiceSpec extends BaseSpec {
   val testUploadSummaryWithAll: GetUploadSummaryResponse = GetUploadSummaryResponse(
     uploads = Seq(
       UploadSummary(
-        reference = "gift-aid-ref-123",
-        validationType = "GiftAid",
-        fileStatus = "VALIDATED",
+        reference = FileUploadReference("gift-aid-ref-123"),
+        validationType = ValidationType.GiftAid,
+        fileStatus = FileStatus.VALIDATED,
         uploadUrl = None
       ),
       UploadSummary(
-        reference = "other-income-ref-456",
-        validationType = "OtherIncome",
-        fileStatus = "VALIDATED",
+        reference = FileUploadReference("other-income-ref-456"),
+        validationType = ValidationType.OtherIncome,
+        fileStatus = FileStatus.VALIDATED,
         uploadUrl = None
       ),
       UploadSummary(
-        reference = "community-buildings-ref-222",
-        validationType = "CommunityBuildings",
-        fileStatus = "VALIDATED",
+        reference = FileUploadReference("community-buildings-ref-222"),
+        validationType = ValidationType.CommunityBuildings,
+        fileStatus = FileStatus.VALIDATED,
         uploadUrl = None
       ),
       UploadSummary(
-        reference = "connected-charities-ref-333",
-        validationType = "ConnectedCharities",
-        fileStatus = "VALIDATED",
+        reference = FileUploadReference("connected-charities-ref-333"),
+        validationType = ValidationType.ConnectedCharities,
+        fileStatus = FileStatus.VALIDATED,
         uploadUrl = None
       )
     )
@@ -65,9 +73,9 @@ class ClaimsValidationServiceSpec extends BaseSpec {
   val testUploadSummaryWithoutGiftAid: GetUploadSummaryResponse = GetUploadSummaryResponse(
     uploads = Seq(
       UploadSummary(
-        reference = "other-income-ref-456",
-        validationType = "OtherIncome",
-        fileStatus = "VALIDATED",
+        reference = FileUploadReference("other-income-ref-456"),
+        validationType = ValidationType.OtherIncome,
+        fileStatus = FileStatus.VALIDATED,
         uploadUrl = None
       )
     )
@@ -76,9 +84,9 @@ class ClaimsValidationServiceSpec extends BaseSpec {
   val testUploadSummaryWithoutOtherIncome: GetUploadSummaryResponse = GetUploadSummaryResponse(
     uploads = Seq(
       UploadSummary(
-        reference = "gift-aid-ref-123",
-        validationType = "GiftAid",
-        fileStatus = "VALIDATED",
+        reference = FileUploadReference("gift-aid-ref-123"),
+        validationType = ValidationType.GiftAid,
+        fileStatus = FileStatus.VALIDATED,
         uploadUrl = None
       )
     )
@@ -87,9 +95,9 @@ class ClaimsValidationServiceSpec extends BaseSpec {
   val testUploadSummaryWithoutCommunityBuildings: GetUploadSummaryResponse = GetUploadSummaryResponse(
     uploads = Seq(
       UploadSummary(
-        reference = "gift-aid-ref-123",
-        validationType = "GiftAid",
-        fileStatus = "VALIDATED",
+        reference = FileUploadReference("gift-aid-ref-123"),
+        validationType = ValidationType.GiftAid,
+        fileStatus = FileStatus.VALIDATED,
         uploadUrl = None
       )
     )
@@ -98,9 +106,9 @@ class ClaimsValidationServiceSpec extends BaseSpec {
   val testUploadSummaryWithoutConnectedCharities: GetUploadSummaryResponse = GetUploadSummaryResponse(
     uploads = Seq(
       UploadSummary(
-        reference = "gift-aid-ref-123",
-        validationType = "GiftAid",
-        fileStatus = "VALIDATED",
+        reference = FileUploadReference("gift-aid-ref-123"),
+        validationType = ValidationType.GiftAid,
+        fileStatus = FileStatus.VALIDATED,
         uploadUrl = None
       )
     )
@@ -121,8 +129,8 @@ class ClaimsValidationServiceSpec extends BaseSpec {
           .returning(Future.successful(testUploadSummaryWithAll))
 
         (mockConnector
-          .deleteSchedule(_: String, _: String)(using _: HeaderCarrier))
-          .expects("test-claim-123", "gift-aid-ref-123", *)
+          .deleteSchedule(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects("test-claim-123", FileUploadReference("gift-aid-ref-123"), *)
           .returning(Future.successful(DeleteScheduleResponse(success = true)))
 
         await(service.deleteGiftAidSchedule)
@@ -172,8 +180,8 @@ class ClaimsValidationServiceSpec extends BaseSpec {
           .returning(Future.successful(testUploadSummaryWithAll))
 
         (mockConnector
-          .deleteSchedule(_: String, _: String)(using _: HeaderCarrier))
-          .expects("test-claim-456", "other-income-ref-456", *)
+          .deleteSchedule(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects("test-claim-456", FileUploadReference("other-income-ref-456"), *)
           .returning(Future.successful(DeleteScheduleResponse(success = true)))
 
         await(service.deleteOtherIncomeSchedule)
@@ -224,8 +232,8 @@ class ClaimsValidationServiceSpec extends BaseSpec {
           .returning(Future.successful(testUploadSummaryWithAll))
 
         (mockConnector
-          .deleteSchedule(_: String, _: String)(using _: HeaderCarrier))
-          .expects("test-claim-456", "community-buildings-ref-222", *)
+          .deleteSchedule(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects("test-claim-456", FileUploadReference("community-buildings-ref-222"), *)
           .returning(Future.successful(DeleteScheduleResponse(success = true)))
 
         await(service.deleteCommunityBuildingsSchedule)
@@ -278,8 +286,8 @@ class ClaimsValidationServiceSpec extends BaseSpec {
           .returning(Future.successful(testUploadSummaryWithAll))
 
         (mockConnector
-          .deleteSchedule(_: String, _: String)(using _: HeaderCarrier))
-          .expects("test-claim-456", "connected-charities-ref-333", *)
+          .deleteSchedule(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects("test-claim-456", FileUploadReference("connected-charities-ref-333"), *)
           .returning(Future.successful(DeleteScheduleResponse(success = true)))
 
         await(service.deleteConnectedCharitiesSchedule)
