@@ -37,7 +37,11 @@ final case class ClaimData(
   repaymentClaimDetails: RepaymentClaimDetails,
   organisationDetails: Option[OrganisationDetails] = None,
   declarationDetails: Option[DeclarationDetails] = None,
-  giftAidSmallDonationsSchemeDonationDetails: Option[GiftAidSmallDonationsSchemeDonationDetails] = None
+  giftAidSmallDonationsSchemeDonationDetails: Option[GiftAidSmallDonationsSchemeDonationDetails] = None,
+  giftAidScheduleFileUploadReference: Option[FileUploadReference] = None,
+  otherIncomeScheduleFileUploadReference: Option[FileUploadReference] = None,
+  communityBuildingsScheduleFileUploadReference: Option[FileUploadReference] = None,
+  connectedCharitiesScheduleFileUploadReference: Option[FileUploadReference] = None
 )
 
 object ClaimData {
@@ -112,7 +116,7 @@ object SubmissionDetails {
 }
 
 final case class Donation(
-  donationItem: Int,
+  donationItem: Option[Int] = None,
   donationDate: String,
   donationAmount: BigDecimal,
   donorTitle: Option[String] = None,
@@ -129,14 +133,26 @@ object Donation {
 }
 
 final case class OtherIncomeScheduleData(
-  previouslyOverclaimedOtherIncome: BigDecimal,
-  totalGrossPayments: BigDecimal,
-  totalTaxDeducted: BigDecimal,
-  payments: Seq[Payment]
+  adjustmentForOtherIncomePreviousOverClaimed: BigDecimal,
+  totalOfGrossPayments: BigDecimal,
+  totalOfTaxDeducted: BigDecimal,
+  otherIncomes: Seq[OtherIncome]
 )
 
 object OtherIncomeScheduleData {
   given Format[OtherIncomeScheduleData] = Json.format[OtherIncomeScheduleData]
+}
+
+final case class OtherIncome(
+  otherIncomeItem: Int,
+  payerName: String,
+  paymentDate: String,
+  grossPayment: BigDecimal,
+  taxDeducted: BigDecimal
+)
+
+object OtherIncome {
+  given Format[OtherIncome] = Json.format[OtherIncome]
 }
 
 final case class Payment(
@@ -181,6 +197,21 @@ object ConnectedCharity {
   given Format[ConnectedCharity] = Json.format[ConnectedCharity]
 }
 
+final case class CommunityBuilding1(
+  communityBuildingItem: Int,
+  buildingName: String,
+  firstLineOfAddress: String,
+  postcode: String,
+  taxYear1: Int,
+  amountYear1: BigDecimal,
+  taxYear2: Option[Int] = None,
+  amountYear2: Option[BigDecimal] = None
+)
+
+object CommunityBuilding1 {
+  given Format[CommunityBuilding1] = Json.format[CommunityBuilding1]
+}
+
 final case class CommunityBuilding(
   buildingItem: Int,
   buildingName: String,
@@ -196,4 +227,21 @@ final case class CommunityBuilding(
 
 object CommunityBuilding {
   given Format[CommunityBuilding] = Json.format[CommunityBuilding]
+}
+
+case class CommunityBuildingsScheduleData(
+  totalOfAllAmounts: BigDecimal,
+  communityBuildings: Seq[CommunityBuilding1]
+)
+
+object CommunityBuildingsScheduleData {
+  given Format[CommunityBuildingsScheduleData] = Json.format[CommunityBuildingsScheduleData]
+}
+
+case class ConnectedCharitiesScheduleData(
+  charities: Seq[ConnectedCharity]
+)
+
+object ConnectedCharitiesScheduleData {
+  given Format[ConnectedCharitiesScheduleData] = Json.format[ConnectedCharitiesScheduleData]
 }

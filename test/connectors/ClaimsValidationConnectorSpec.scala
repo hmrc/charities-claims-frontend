@@ -31,6 +31,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.FiniteDuration
 
 import java.net.URL
+import util.TestResources
 
 class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
 
@@ -79,9 +80,20 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
 
   val testUploadSummaryResponseJsonString: String = Json.stringify(Json.toJson(testUploadSummaryResponse))
 
+  lazy val testGetUploadResultValidatedGiftAidJsonString: String =
+    TestResources.readTestResource("/test-get-upload-result-validated-gift-aid.json")
+
+  lazy val testGetUploadResultAwaitingUploadJsonString: String =
+    TestResources.readTestResource("/test-get-upload-result-awaiting-upload.json")
+
   def givenGetUploadSummaryEndpointReturns(response: HttpResponse): CallHandler[Future[HttpResponse]] =
     mockHttpGetSuccess(
       URL("http://example.com:1234/charities-claims-validation/123/upload-results")
+    )(response)
+
+  def givenGetUploadResultEndpointReturns(response: HttpResponse): CallHandler[Future[HttpResponse]] =
+    mockHttpGetSuccess(
+      URL("http://example.com:1234/charities-claims-validation/123/upload-results/file-upload-reference-123")
     )(response)
 
   def givenDeleteScheduleEndpointReturns(response: HttpResponse): CallHandler[Future[HttpResponse]] =
@@ -158,6 +170,22 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         givenGetUploadSummaryEndpointReturns(HttpResponse(200, testUploadSummaryResponseJsonString)).once()
 
         await(connector.getUploadSummary("123")) shouldEqual testUploadSummaryResponse
+      }
+    }
+
+    "getUploadResult" - {
+      "should return upload result when service returns 200 status with validated gift aid" in {
+        givenGetUploadResultEndpointReturns(HttpResponse(200, testGetUploadResultValidatedGiftAidJsonString)).once()
+        await(connector.getUploadResult("123", FileUploadReference("file-upload-reference-123"))) should be(
+          a[GetUploadResultValidatedGiftAid]
+        )
+      }
+
+      "should return upload result when service returns 200 status with awaiting upload" in {
+        givenGetUploadResultEndpointReturns(HttpResponse(200, testGetUploadResultValidatedGiftAidJsonString)).once()
+        await(connector.getUploadResult("123", FileUploadReference("file-upload-reference-123"))) should be(
+          a[GetUploadResultValidatedGiftAid]
+        )
       }
     }
 
