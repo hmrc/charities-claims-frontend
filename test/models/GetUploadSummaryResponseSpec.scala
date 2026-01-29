@@ -24,9 +24,9 @@ class GetUploadSummaryResponseSpec extends BaseSpec {
   "GetUploadSummaryResponse" - {
     "be serialised and deserialised correctly" in {
       val uploadSummary            = UploadSummary(
-        reference = "test-ref-123",
-        validationType = "GiftAid",
-        fileStatus = "VALIDATED",
+        reference = FileUploadReference("test-ref-123"),
+        validationType = ValidationType.GiftAid,
+        fileStatus = FileStatus.VALIDATED,
         uploadUrl = Some("https://example.com/upload")
       )
       val getUploadSummaryResponse = GetUploadSummaryResponse(uploads = Seq(uploadSummary))

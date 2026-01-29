@@ -22,6 +22,7 @@ import models.requests.DataRequest
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
+import models.ValidationType
 
 @ImplementedBy(classOf[ClaimsValidationServiceImpl])
 trait ClaimsValidationService {
@@ -38,18 +39,20 @@ class ClaimsValidationServiceImpl @Inject() (
     extends ClaimsValidationService {
 
   def deleteGiftAidSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
-    deleteSchedule("GiftAid", request.sessionData.unsubmittedClaimId)
+    deleteSchedule(ValidationType.GiftAid, request.sessionData.unsubmittedClaimId)
 
   def deleteOtherIncomeSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
-    deleteSchedule("OtherIncome", request.sessionData.unsubmittedClaimId)
+    deleteSchedule(ValidationType.OtherIncome, request.sessionData.unsubmittedClaimId)
 
   def deleteCommunityBuildingsSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
-    deleteSchedule("CommunityBuildings", request.sessionData.unsubmittedClaimId)
+    deleteSchedule(ValidationType.CommunityBuildings, request.sessionData.unsubmittedClaimId)
 
   def deleteConnectedCharitiesSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
-    deleteSchedule("ConnectedCharities", request.sessionData.unsubmittedClaimId)
+    deleteSchedule(ValidationType.ConnectedCharities, request.sessionData.unsubmittedClaimId)
 
-  private def deleteSchedule(validationType: String, claimIdOpt: Option[String])(using HeaderCarrier): Future[Unit] =
+  private def deleteSchedule(validationType: ValidationType, claimIdOpt: Option[String])(using
+    HeaderCarrier
+  ): Future[Unit] =
     claimIdOpt match {
       case Some(claimId) =>
         claimsValidationConnector
