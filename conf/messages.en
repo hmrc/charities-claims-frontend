@@ -282,6 +282,15 @@ cannotViewOrManageClaim.title = You cannot manage this claim
 cannotViewOrManageClaim.heading = You cannot manage this claim
 cannotViewOrManageClaim.paragraph = This claim is being updated by someone else. You can manage this claim by returning to <a class="govuk-link" href="{0}">repayment claim summary</a>.
 
+registerCharityWithARegulator.title = Registering your charity with a regulator
+registerCharityWithARegulator.heading = Registering your charity with a regulator
+registerCharityWithARegulator.warning = You have made claims for Gift Aid repayments on donations over £{1} in the last 12 months.
+registerCharityWithARegulator.paragraph = If your annual income is more than £{1}, you need to <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">register your charity with a regulator (opens in new tab)</a>.
+registerCharityWithARegulator.legend = Do you need to register your charity with a regulator?
+registerCharityWithARegulator.error.required = Select ‘Yes’ if you need to register with a regulator
+registerCharityWithARegulator.radio.yes.label = Yes
+registerCharityWithARegulator.radio.no.label = No, continue with claim
+
 repaymentClaimDetails.title = Repayment claim details
 repaymentClaimDetails.heading = Repayment claim details
 repaymentClaimDetails.subheading = Provide repayment claim details
@@ -289,6 +298,13 @@ repaymentClaimDetails.p1 = Use this service to claim:
 repaymentClaimDetails.bullet1 = tax repayments on Gift Aid donations
 repaymentClaimDetails.bullet2 = top-up payments under the Gift Aid Small Donations Scheme
 repaymentClaimDetails.bullet3 = UK tax deducted from Other Income
+
+claimReferenceNumber.title = What is your claim reference number?
+claimReferenceNumber.heading = What is your claim reference number?
+claimReferenceNumber.paragraph = This can be up to 20 characters and include numerical characters like 123456789 and letters from A to Z. It can be found on the payment advice note when the claim is paid.
+claimReferenceNumber.error.required = Enter your claim reference number
+claimReferenceNumber.error.length = Claim reference number must be 20 characters or less
+claimReferenceNumber.error.pattern = This can be up to 20 characters including numbers and capital letters
 
 # TODO: Placeholder screen messages for G2 - content will be updated in future
 addSchedule.title = Add Schedule
@@ -304,6 +320,11 @@ makeCharityRepaymentClaim.placeholder = Content TBC
 charityRepaymentDashboard.title = Charity Repayment Dashboard
 charityRepaymentDashboard.heading = Charity Repayment Dashboard
 charityRepaymentDashboard.placeholder = Content TBC
+
+# TODO: Placeholder screen messages for D3 - content will be updated in future
+declarationDetailsConfirmation.title = Declaration Confirmation
+declarationDetailsConfirmation.heading = Declaration Confirmation
+declarationDetailsConfirmation.placeholder = Content TBC
 
 phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in a new tab)</a> will help us to improve it.
 phasebanner.phase=Beta

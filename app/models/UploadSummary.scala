@@ -17,14 +17,61 @@
 package models
 
 import play.api.libs.json.{Format, Json}
+import play.api.libs.json.Reads
+import play.api.libs.json.Writes
+
+opaque type FileUploadReference <: String = String
+object FileUploadReference {
+  def apply(value: String): FileUploadReference = value
+  given Format[FileUploadReference]             =
+    Format(
+      Reads.of[String].map(FileUploadReference.apply),
+      Writes.of[String].contramap(identity)
+    )
+}
 
 final case class UploadSummary(
-  reference: String,
-  validationType: String,
-  fileStatus: String,
+  reference: FileUploadReference,
+  validationType: ValidationType,
+  fileStatus: FileStatus,
   uploadUrl: Option[String] = None
 )
 
 object UploadSummary {
   given Format[UploadSummary] = Json.format[UploadSummary]
+}
+
+enum FileStatus {
+
+  /** After initiate but before upload */
+  case AWAITING_UPLOAD
+
+  /** After upload but before callback */
+  case VERIFYING
+
+  /** After callback (failure) - skip validation - */
+  case VERIFICATION_FAILED
+
+  /** After callback (success) but before validation complete */
+  case VALIDATING
+
+  /** After validation complete (success) */
+  case VALIDATED
+
+  /** After validation complete (failure) */
+  case VALIDATION_FAILED
+}
+
+object FileStatus extends Enumerable.Implicits {
+  given Enumerable[FileStatus] =
+    Enumerable[FileStatus](str => scala.util.Try(FileStatus.valueOf(str)).toOption)
+}
+
+enum ValidationType {
+  case GiftAid, OtherIncome, CommunityBuildings, ConnectedCharities
+}
+
+object ValidationType extends Enumerable.Implicits {
+  given Enumerable[ValidationType] =
+    Enumerable[ValidationType](str => scala.util.Try(ValidationType.valueOf(str)).toOption)
 }
