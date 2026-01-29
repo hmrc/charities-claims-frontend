@@ -80,9 +80,9 @@ class RepaymentClaimDetailsAnswersOldSpec extends BaseSpec {
 
         val result = RepaymentClaimDetailsAnswersOld.setClaimingGiftAid(false)
 
-        result.giftAidScheduleFileUploadReference                 shouldBe None
-        result.giftAidScheduleData                                shouldBe None
-        result.repaymentClaimDetailsAnswers.value.claimingGiftAid shouldBe Some(false)
+        result.giftAidScheduleFileUploadReference              shouldBe None
+        result.giftAidScheduleData                             shouldBe None
+        result.repaymentClaimDetailsAnswersOld.claimingGiftAid shouldBe Some(false)
       }
 
       "should keep giftAidScheduleDataAnswers when changing to true" in {

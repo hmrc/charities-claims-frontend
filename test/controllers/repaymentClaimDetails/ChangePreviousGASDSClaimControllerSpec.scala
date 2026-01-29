@@ -31,8 +31,10 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
   private val form: Form[Boolean] = new YesNoFormProvider()()
   "ChangePreviousGASDSClaimController" - {
     "onPageLoad" - {
-      "should render the page correctly" in {
-        given application: Application = applicationBuilder().build()
+      "should render the page correctly when setClaimingUnderGiftAidSmallDonationsScheme is true" in {
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -47,8 +49,10 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
       }
 
       "should render the page and pre-populate correctly with true value" in {
-
-        val sessionData = RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(true)
+        val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData           = RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(true)(using
+          sessionDataUnderGASDS
+        )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -66,7 +70,10 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with false value" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(false)
+        val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData           = RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(false)(using
+          sessionDataUnderGASDS
+        )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
