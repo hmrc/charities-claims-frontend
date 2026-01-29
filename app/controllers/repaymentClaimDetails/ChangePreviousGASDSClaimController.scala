@@ -41,9 +41,11 @@ class ChangePreviousGASDSClaimController @Inject() (
 
   val form: Form[Boolean] = formProvider("changePreviousGASDSClaim.error.required")
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim
-    Ok(view(form.withDefault(previousAnswer), mode))
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) then {
+      val previousAnswer = RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim
+      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+    } else { Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad)) }
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
@@ -54,7 +56,7 @@ class ChangePreviousGASDSClaimController @Inject() (
         value =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(value))
-            .map(_ => Redirect(routes.ConnectedToAnyOtherCharitiesController.onPageLoad(mode)))
+            .map(_ => Redirect(routes.ClaimingCommunityBuildingDonationsController.onPageLoad(mode)))
       )
   }
 }

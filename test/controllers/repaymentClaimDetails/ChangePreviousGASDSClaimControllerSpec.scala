@@ -81,6 +81,22 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
           contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
         }
       }
+
+      "should render page not found if setClaimingUnderGiftAidSmallDonationsScheme is false" in {
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+        }
+      }
     }
 
     "onSubmit" - {
@@ -96,7 +112,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
+            routes.ClaimingCommunityBuildingDonationsController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -113,7 +129,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
+            routes.ClaimingCommunityBuildingDonationsController.onPageLoad(NormalMode).url
           )
         }
       }
