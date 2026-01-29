@@ -21,7 +21,7 @@ import services.SaveService
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
-import views.html.ClaimReferenceNumberInputView
+import views.html.ClaimReferenceNumberInputViewOLD
 import controllers.actions.Actions
 import forms.TextInputFormProvider
 import models.{Mode, RepaymentClaimDetailsAnswersOld}
@@ -29,9 +29,9 @@ import play.api.data.Form
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimReferenceNumberInputController @Inject() (
+class ClaimReferenceNumberInputControllerOLD @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimReferenceNumberInputView,
+  view: ClaimReferenceNumberInputViewOLD,
   actions: Actions,
   formProvider: TextInputFormProvider,
   saveService: SaveService
