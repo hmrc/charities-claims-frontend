@@ -29,6 +29,7 @@ import services.SaveService
 import views.html.CorporateTrusteeClaimView
 
 import scala.concurrent.{ExecutionContext, Future}
+import play.api.mvc.Call
 
 class CorporateTrusteeClaimController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -47,6 +48,8 @@ class CorporateTrusteeClaimController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val previousAnswer: Option[Boolean] = OrganisationDetailsAnswers.getAreYouACorporateTrustee
+
     form
       .bindFromRequest()
       .fold(
@@ -54,13 +57,27 @@ class CorporateTrusteeClaimController @Inject() (
         value =>
           saveService
             .save(OrganisationDetailsAnswers.setAreYouACorporateTrustee(value))
-            .map { _ =>
-              (value, mode) match { // TODO - need to check what action to be taken if value changed from true to false or vise-versa
-                case (true, NormalMode)  => Redirect(routes.CorporateTrusteeAddressController.onPageLoad(NormalMode))
-                case (false, NormalMode) => Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode))
-                case (_, CheckMode)      => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
-              }
-            }
+            .map(_ => Redirect(CorporateTrusteeClaimController.nextPage(value, mode, previousAnswer)))
       )
   }
+}
+
+object CorporateTrusteeClaimController {
+
+  def nextPage(value: Boolean, mode: Mode, previousAnswer: Option[Boolean]): Call =
+    (value, mode, previousAnswer) match {
+      // NormalMode
+      case (true, NormalMode, _)  => routes.CorporateTrusteeAddressController.onPageLoad(NormalMode)
+      case (false, NormalMode, _) => routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode)
+
+      // CheckMode
+      // Yes to No
+      case (false, CheckMode, Some(true)) => routes.AuthorisedOfficialAddressController.onPageLoad(CheckMode)
+
+      // No to Yes
+      case (true, CheckMode, Some(false)) => routes.CorporateTrusteeAddressController.onPageLoad(CheckMode)
+
+      // unchanged
+      case (_, CheckMode, _) => routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
+    }
 }
