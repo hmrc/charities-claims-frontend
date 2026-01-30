@@ -93,63 +93,44 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
                 )
               )
-            case (Some(true), _, _)                   =>
-              Some(
-                summaryRowHTML(
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"
-                  ),
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid"
-                  ),
-                  controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
-                    .onPageLoad(CheckMode)
-                    .url, // TODO
-                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
-                )
-              )
-            case (_, Some(true), _)                   =>
-              Some(
-                summaryRowHTML(
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"
-                  ),
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS"
-                  ),
-                  controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
-                    .onPageLoad(CheckMode)
-                    .url, // TODO
-                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
-                )
-              )
-            case (_, _, Some(true))                   =>
-              Some(
-                summaryRowHTML(
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"
-                  ),
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome"
-                  ),
-                  controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
-                    .onPageLoad(CheckMode)
-                    .url, // TODO
-                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
-                )
-              )
             case (_, _, _)                            =>
-              Some(
-                missingDataRow(
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"
-                  ),
-                  controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
-                    .onPageLoad(CheckMode)
-                    .url, // TODO
-                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
+              if buildList.claimingGiftAid.contains(true) || buildList.claimingUnderGiftAidSmallDonationsScheme
+                  .contains(true) || buildList.claimingTaxDeducted.contains(true)
+              then
+                Some(
+                  summaryRow(
+                    messages(
+                      "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"
+                    ),
+                    if buildList.claimingGiftAid.contains(true) then
+                      messages(
+                        "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid"
+                      )
+                    else if buildList.claimingTaxDeducted.contains(true) then
+                      messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome")
+                    else
+                      messages(
+                        "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS"
+                      )
+                    ,
+                    controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
+                      .onPageLoad(CheckMode)
+                      .url, // TODO
+                    messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
+                  )
                 )
-              )
+              else
+                Some(
+                  missingDataRow(
+                    messages(
+                      "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"
+                    ),
+                    controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
+                      .onPageLoad(CheckMode)
+                      .url, // TODO
+                    messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
+                  )
+                )
           },
           buildList.claimingReferenceNumber match {
             case Some(value) =>
