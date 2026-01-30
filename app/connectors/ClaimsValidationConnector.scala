@@ -130,7 +130,7 @@ class ClaimsValidationConnectorImpl @Inject() (
         .fold(request)(p => request.withBody(Json.toJson(p)))
         .execute[HttpResponse]
     }.flatMap(response =>
-      if response.status == 200 then
+      if response.status >= 200 && response.status < 300 then
         response
           .parseJSON[O]()
           .fold(error => Future.failed(Exception(error)), Future.successful)

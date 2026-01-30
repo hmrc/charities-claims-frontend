@@ -156,8 +156,8 @@ GET         /charity-repayment-dashboard                    controllers.organisa
 
 GET         /claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onPageLoad(mode: Mode = Mode.NormalMode)
 POST        /claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onSubmit(mode: Mode = Mode.NormalMode)
-GET         /change-claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /change-claim-community-building-donations                    controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /change-claim-community-building-donations             controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /change-claim-community-building-donations             controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onSubmit(mode: Mode = Mode.CheckMode)
 
 
 GET         /check-your-repayment-claim                       controllers.repaymentClaimDetails.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
@@ -165,3 +165,8 @@ POST        /check-your-repayment-claim                       controllers.repaym
 GET         /repayment-claim-details-min-data-placeholder      controllers.repaymentClaimDetails.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad
 # TODO: Placeholder screen for D3 - route will be updated in future
 GET         /declaration-details-confirmation               controllers.DeclarationDetailsConfirmationController.onPageLoad
+
+GET         /upload-gift-aid-schedule                       controllers.giftAidSchedule.UploadGiftAidScheduleController.onPageLoad
+GET         /upload-gift-aid-schedule/success               controllers.giftAidSchedule.UploadGiftAidScheduleController.onUploadSuccess(key: Option[String])
+GET         /upload-gift-aid-schedule/error                 controllers.giftAidSchedule.UploadGiftAidScheduleController.onUploadError
+GET         /your-gift-aid-schedule-upload                  controllers.giftAidSchedule.YourGiftAidScheduleUploadController.onPageLoad
