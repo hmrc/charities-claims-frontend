@@ -277,11 +277,11 @@ repaymentClaimDetails.bullet3 = UK tax deducted from Other Income
 
 claimReferenceNumber.title = What is your claim reference number?
 claimReferenceNumber.heading = What is your claim reference number?
-repaymentClaimDetails.caption = Provide repayment claim details
+claimReferenceNumber.caption = Provide repayment claim details
 claimReferenceNumber.hint = This can be up to 20 characters and include numerical characters like 123456789 and letters from A to Z. It can be found on the payment advice note when the claim is paid.
 claimReferenceNumber.error.required = Enter your claim reference number
 claimReferenceNumber.error.length = Claim reference number must be 20 characters or less
-claimReferenceNumber.error.pattern = This can be up to 20 characters including numbers and capital letters
+claimReferenceNumber.error.regex = This can be up to 20 characters including numbers and capital letters
 
 # TODO: Placeholder screen messages for G2 - content will be updated in future
 addSchedule.title = Add Schedule
