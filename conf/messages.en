@@ -111,6 +111,20 @@ connectedToAnyOtherCharities.paragraph = If connected charities and Community Am
 connectedToAnyOtherCharities.title = Connected charities and Community Amateur Sports Clubs
 connectedToAnyOtherCharities.caption = Provide repayment claim details
 
+repaymentClaimDetailsCheckYourAnswers.caption = Provide repayment claim details
+repaymentClaimDetailsCheckYourAnswers.title = Check your repayment claim
+repaymentClaimDetailsCheckYourAnswers.heading = Check your repayment claim
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label = Repayment claim type
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid = Gift Aid
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS = Top up payments for small cash donations under Gift Aid Small Donations Scheme
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome = UK tax deducted from Other Income
+repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label = Gift Aid Small Donations Scheme Payment
+repaymentClaimDetailsCheckYourAnswers.claimingDonationsCollectedInCommunityBuildings.label = Donations from community buildings
+repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label = Change Gift Aid Small Donations Scheme claim
+repaymentClaimDetailsCheckYourAnswers.connectToAnyOtherCharity.label = Connected to charities or Community Amateur Sports Clubs
+repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label = Claim reference number
+repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label = Reference number
+
 claimingOtherIncome.bullet.one =  Bank or Building Society interest
 claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
 claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate

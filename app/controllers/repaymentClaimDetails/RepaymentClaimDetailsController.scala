@@ -19,6 +19,7 @@ package controllers.repaymentClaimDetails
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
+import models.Mode.NormalMode
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.RepaymentClaimDetailsView
 
@@ -35,7 +36,6 @@ class RepaymentClaimDetailsController @Inject() (
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    // Placeholder: PageNotFoundController until R1.1 is built
-    Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+    Future.successful(Redirect(routes.RepaymentClaimTypeController.onPageLoad(NormalMode)))
   }
 }

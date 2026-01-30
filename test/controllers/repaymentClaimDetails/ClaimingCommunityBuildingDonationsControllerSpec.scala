@@ -22,6 +22,7 @@ import controllers.ControllerSpec
 import play.api.Application
 import forms.YesNoFormProvider
 import play.api.data.Form
+import models.Mode.*
 import models.RepaymentClaimDetailsAnswers
 import views.html.ClaimingCommunityBuildingDonationsView
 
@@ -35,13 +36,13 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingCommunityBuildingDonationsController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingCommunityBuildingDonationsController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingCommunityBuildingDonationsView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
+          contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
 
@@ -52,12 +53,14 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingCommunityBuildingDonationsController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingCommunityBuildingDonationsController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.PageNotFoundController.onPageLoad.url
+          )
         }
       }
 
@@ -72,13 +75,13 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingCommunityBuildingDonationsController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingCommunityBuildingDonationsController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingCommunityBuildingDonationsView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(true)).body
+          contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
         }
       }
 
@@ -93,13 +96,13 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingCommunityBuildingDonationsController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingCommunityBuildingDonationsController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingCommunityBuildingDonationsView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(false)).body
+          contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
         }
       }
     }
@@ -110,14 +113,14 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ChangePreviousGASDSClaimController.onPageLoad.url
+            routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -127,14 +130,14 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ClaimingCommunityBuildingDonationsController.onPageLoad.url
+            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -144,7 +147,7 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value

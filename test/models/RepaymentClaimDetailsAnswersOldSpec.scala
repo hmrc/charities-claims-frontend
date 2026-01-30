@@ -16,15 +16,14 @@
 
 package models
 
-import util.BaseSpec
+import util.{BaseSpec, TestScheduleData}
 import play.api.libs.json.Json
-import util.TestScheduleData
 
-class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
+class RepaymentClaimDetailsAnswersOldSpec extends BaseSpec {
 
   "RepaymentClaimDetailsAnswers" - {
     "be serializable and deserializable" in {
-      val repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
+      val repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(
         claimingGiftAid = Some(true),
         claimingTaxDeducted = Some(true),
         claimingUnderGiftAidSmallDonationsScheme = Some(true),
@@ -32,20 +31,20 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
         claimReferenceNumber = Some("1234567890")
       )
 
-      val json                                     = Json.toJson(repaymentClaimDetailsAnswers)
-      val deserializedRepaymentClaimDetailsAnswers = json.as[RepaymentClaimDetailsAnswers]
-      deserializedRepaymentClaimDetailsAnswers shouldBe repaymentClaimDetailsAnswers
+      val json                                        = Json.toJson(repaymentClaimDetailsAnswersOld)
+      val deserializedRepaymentClaimDetailsAnswersOld = json.as[RepaymentClaimDetailsAnswersOld]
+      deserializedRepaymentClaimDetailsAnswersOld shouldBe repaymentClaimDetailsAnswersOld
     }
 
     "be created from RepaymentClaimDetails when claimReferenceNumber is defined" in {
-      val repaymentClaimDetails        = RepaymentClaimDetails(
+      val repaymentClaimDetails           = RepaymentClaimDetails(
         claimingGiftAid = true,
         claimingTaxDeducted = false,
         claimingUnderGiftAidSmallDonationsScheme = true,
         claimReferenceNumber = Some("foobar")
       )
-      val repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers.from(repaymentClaimDetails)
-      repaymentClaimDetailsAnswers shouldBe RepaymentClaimDetailsAnswers(
+      val repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld.from(repaymentClaimDetails)
+      repaymentClaimDetailsAnswersOld shouldBe RepaymentClaimDetailsAnswersOld(
         claimingGiftAid = Some(true),
         claimingTaxDeducted = Some(false),
         claimingUnderGiftAidSmallDonationsScheme = Some(true),
@@ -55,15 +54,15 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
     }
 
     "be created from RepaymentClaimDetails when claimReferenceNumber is not defined" in {
-      val repaymentClaimDetails        = RepaymentClaimDetails(
+      val repaymentClaimDetails           = RepaymentClaimDetails(
         claimingGiftAid = false,
         claimingTaxDeducted = false,
         claimingUnderGiftAidSmallDonationsScheme = true,
         claimReferenceNumber = None
       )
-      val repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers.from(repaymentClaimDetails)
+      val repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld.from(repaymentClaimDetails)
 
-      repaymentClaimDetailsAnswers shouldBe RepaymentClaimDetailsAnswers(
+      repaymentClaimDetailsAnswersOld shouldBe RepaymentClaimDetailsAnswersOld(
         claimingGiftAid = Some(false),
         claimingTaxDeducted = Some(false),
         claimingUnderGiftAidSmallDonationsScheme = Some(true),
@@ -79,11 +78,11 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
         )
 
-        val result = RepaymentClaimDetailsAnswers.setClaimingGiftAid(false)
+        val result = RepaymentClaimDetailsAnswersOld.setClaimingGiftAid(false)
 
-        result.giftAidScheduleFileUploadReference                 shouldBe None
-        result.giftAidScheduleData                                shouldBe None
-        result.repaymentClaimDetailsAnswers.value.claimingGiftAid shouldBe Some(false)
+        result.giftAidScheduleFileUploadReference              shouldBe None
+        result.giftAidScheduleData                             shouldBe None
+        result.repaymentClaimDetailsAnswersOld.claimingGiftAid shouldBe Some(false)
       }
 
       "should keep giftAidScheduleDataAnswers when changing to true" in {
@@ -92,11 +91,11 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
         )
 
-        val result = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
+        val result = RepaymentClaimDetailsAnswersOld.setClaimingGiftAid(true)
 
-        result.giftAidScheduleFileUploadReference                 shouldBe Some(FileUploadReference("test-file-upload-reference"))
-        result.giftAidScheduleData                                shouldBe Some(TestScheduleData.exampleGiftAidScheduleData)
-        result.repaymentClaimDetailsAnswers.value.claimingGiftAid shouldBe Some(true)
+        result.giftAidScheduleFileUploadReference              shouldBe Some(FileUploadReference("test-file-upload-reference"))
+        result.giftAidScheduleData                             shouldBe Some(TestScheduleData.exampleGiftAidScheduleData)
+        result.repaymentClaimDetailsAnswersOld.claimingGiftAid shouldBe Some(true)
       }
     }
 
@@ -107,7 +106,7 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
         )
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(false) shouldBe true
+        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingGiftAid(false) shouldBe true
       }
 
       "should return false when setting value to true" in {
@@ -116,13 +115,13 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
         )
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(true) shouldBe false
+        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingGiftAid(true) shouldBe false
       }
 
       "should return false when no Gift Aid data exists" in {
         given session: SessionData = SessionData.empty
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(false) shouldBe false
+        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingGiftAid(false) shouldBe false
       }
     }
 
@@ -133,11 +132,11 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
         )
 
-        val result = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false)
+        val result = RepaymentClaimDetailsAnswersOld.setClaimingTaxDeducted(false)
 
-        result.otherIncomeScheduleData                                shouldBe None
-        result.otherIncomeScheduleFileUploadReference                 shouldBe None
-        result.repaymentClaimDetailsAnswers.value.claimingTaxDeducted shouldBe Some(false)
+        result.otherIncomeScheduleData                             shouldBe None
+        result.otherIncomeScheduleFileUploadReference              shouldBe None
+        result.repaymentClaimDetailsAnswersOld.claimingTaxDeducted shouldBe Some(false)
       }
 
       "should keep otherIncomeScheduleDataAnswers when changing to true" in {
@@ -146,11 +145,11 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
         )
 
-        val result = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        val result = RepaymentClaimDetailsAnswersOld.setClaimingTaxDeducted(true)
 
-        result.otherIncomeScheduleFileUploadReference                 shouldBe Some(FileUploadReference("test-file-upload-reference"))
-        result.otherIncomeScheduleData                                shouldBe Some(TestScheduleData.exampleOtherIncomeScheduleData)
-        result.repaymentClaimDetailsAnswers.value.claimingTaxDeducted shouldBe Some(true)
+        result.otherIncomeScheduleFileUploadReference              shouldBe Some(FileUploadReference("test-file-upload-reference"))
+        result.otherIncomeScheduleData                             shouldBe Some(TestScheduleData.exampleOtherIncomeScheduleData)
+        result.repaymentClaimDetailsAnswersOld.claimingTaxDeducted shouldBe Some(true)
       }
     }
 
@@ -161,7 +160,7 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
         )
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingTaxDeducted(false) shouldBe true
+        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingTaxDeducted(false) shouldBe true
       }
 
       "should return false when setting value to true" in {
@@ -170,13 +169,13 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
         )
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingTaxDeducted(true) shouldBe false
+        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingTaxDeducted(true) shouldBe false
       }
 
       "should return false when no Other Income data exists" in {
         given session: SessionData = SessionData.empty
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingTaxDeducted(false) shouldBe false
+        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingTaxDeducted(false) shouldBe false
       }
     }
 
@@ -186,10 +185,10 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
         )
 
-        val result = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
+        val result = RepaymentClaimDetailsAnswersOld.setClaimingUnderGiftAidSmallDonationsScheme(false)
 
-        result.giftAidSmallDonationsSchemeDonationDetailsAnswers                           shouldBe None
-        result.repaymentClaimDetailsAnswers.value.claimingUnderGiftAidSmallDonationsScheme shouldBe Some(false)
+        result.giftAidSmallDonationsSchemeDonationDetailsAnswers                        shouldBe None
+        result.repaymentClaimDetailsAnswersOld.claimingUnderGiftAidSmallDonationsScheme shouldBe Some(false)
       }
 
       "should keep gasdsScheduleDataAnswers when changing to true" in {
@@ -197,12 +196,12 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
         )
 
-        val result = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val result = RepaymentClaimDetailsAnswersOld.setClaimingUnderGiftAidSmallDonationsScheme(true)
 
-        result.giftAidSmallDonationsSchemeDonationDetailsAnswers                           shouldBe Some(
+        result.giftAidSmallDonationsSchemeDonationDetailsAnswers                        shouldBe Some(
           GiftAidSmallDonationsSchemeDonationDetailsAnswers()
         )
-        result.repaymentClaimDetailsAnswers.value.claimingUnderGiftAidSmallDonationsScheme shouldBe Some(true)
+        result.repaymentClaimDetailsAnswersOld.claimingUnderGiftAidSmallDonationsScheme shouldBe Some(true)
       }
     }
 
@@ -212,7 +211,7 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
         )
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
+        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
           false
         ) shouldBe true
       }
@@ -222,7 +221,7 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
         )
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
+        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
           true
         ) shouldBe false
       }
@@ -230,10 +229,11 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
       "should return false when no GASDS schedule data exists" in {
         given session: SessionData = SessionData.empty
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
+        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
           false
         ) shouldBe false
       }
     }
   }
+
 }

@@ -20,13 +20,13 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.CheckBoxListFormProvider
-import models.RepaymentClaimDetailsAnswers
-import models.RepaymentClaimType
+import models.{Mode, RepaymentClaimDetailsAnswers, RepaymentClaimType}
 import controllers.repaymentClaimDetails.routes
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.data.Form
 import services.SaveService
 import views.html.RepaymentClaimTypeView
+import models.Mode.*
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,27 +40,29 @@ class RepaymentClaimTypeController @Inject() (
     extends BaseController {
   val form: Form[RepaymentClaimType] = formProvider()
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswers.getRepaymentClaimType
-    Future.successful(Ok(view(form.withDefault(previousAnswer))))
+    Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         repaymentClaimType =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setRepaymentClaimType(repaymentClaimType))
             .map(_ =>
               if (repaymentClaimType.claimingUnderGiftAidSmallDonationsScheme) {
-                Redirect(routes.ChangePreviousGASDSClaimController.onPageLoad)
-              } else {
                 Redirect(
-                  routes.ClaimingReferenceNumberController.onPageLoad
-                ) // TODO - redirect to connected charities when available
-              }
+                  routes.ChangePreviousGASDSClaimController.onPageLoad(mode)
+                ) // TODO redirect when screen R1.2 available
+              } else if (repaymentClaimType.claimingGiftAid || repaymentClaimType.claimingTaxDeducted) {
+                Redirect(
+                  routes.ClaimingReferenceNumberController.onPageLoad(mode)
+                )
+              } else { Redirect(controllers.routes.PageNotFoundController.onPageLoad) }
             )
       )
   }

@@ -21,11 +21,12 @@ import controllers.BaseController
 import controllers.actions.Actions
 import controllers.repaymentClaimDetails.routes
 import forms.YesNoFormProvider
-import models.RepaymentClaimDetailsAnswers
+import models.{Mode, RepaymentClaimDetailsAnswers}
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
 import views.html.ClaimingReferenceNumberView
+import models.Mode.*
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,26 +41,26 @@ class ClaimingReferenceNumberController @Inject() (
 
   val form: Form[Boolean] = formProvider("claimingReferenceNumber.error.required")
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingReferenceNumber
-    Future.successful(Ok(view(form.withDefault(previousAnswer))))
+    Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(value))
             .map(_ =>
               if (value) {
-                Redirect(routes.ClaimingReferenceNumberController.onPageLoad)
+                Redirect(routes.ClaimReferenceNumberInputController.onPageLoad(mode))
               } else {
                 Redirect(
-                  routes.ClaimingReferenceNumberController.onPageLoad
-                ) // TODO - redirect to claim reference input screen
+                  routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+                )
               }
             )
       )

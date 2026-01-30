@@ -24,7 +24,7 @@
     govukButton: GovukButton,
 )
 
-@(form: Form[?])(implicit request: Request[?], messages: Messages)
+@(form: Form[?], mode: Mode)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = title(form, messages("connectedToAnyOtherCharities.title"))
@@ -38,7 +38,7 @@
 
     <p class="govuk-body">@messages("connectedToAnyOtherCharities.paragraph")</p>
 
-    @formHelper(action = routes.ConnectedToAnyOtherCharitiesController.onSubmit, Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.ConnectedToAnyOtherCharitiesController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @govukRadios(
             RadiosViewModel.yesNo(

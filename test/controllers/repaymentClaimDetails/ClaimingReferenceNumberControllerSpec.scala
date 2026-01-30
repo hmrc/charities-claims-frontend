@@ -24,6 +24,7 @@ import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import views.html.ClaimingReferenceNumberView
+import models.Mode.*
 
 class ClaimingReferenceNumberControllerSpec extends ControllerSpec {
   private val form: Form[Boolean] = new YesNoFormProvider()()
@@ -34,13 +35,13 @@ class ClaimingReferenceNumberControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingReferenceNumberController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingReferenceNumberView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
+          contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
 
@@ -52,13 +53,13 @@ class ClaimingReferenceNumberControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingReferenceNumberController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingReferenceNumberView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(true)).body
+          contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
         }
       }
 
@@ -70,13 +71,13 @@ class ClaimingReferenceNumberControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingReferenceNumberController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ClaimingReferenceNumberView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(false)).body
+          contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
         }
       }
     }
@@ -87,31 +88,31 @@ class ClaimingReferenceNumberControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingReferenceNumberController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingReferenceNumberController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ClaimingReferenceNumberController.onPageLoad.url
+            routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url
           )
         }
       }
 
-      "should redirect to the next page when the value is false" in {
+      "should redirect to the next page(cya) when the value is false" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingReferenceNumberController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingReferenceNumberController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ClaimingReferenceNumberController.onPageLoad.url
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
           )
         }
       }
@@ -121,7 +122,7 @@ class ClaimingReferenceNumberControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimingReferenceNumberController.onSubmit.url)
+            FakeRequest(POST, routes.ClaimingReferenceNumberController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value
