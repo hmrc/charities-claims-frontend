@@ -46,6 +46,11 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
   lazy val exceptedLimit: Int               = config.get[Int]("unregulated-limits.exceptedLimit")
   lazy val lowIncomeLimit: Int              = config.get[Int]("unregulated-limits.lowIncomeLimit")
 
+  lazy val maxGifAidScheduleUploadSize: Int = config.get[Int]("scheduleUpload.gifAid.maxSize")
+
+  lazy val allowedFileTypesHint: String   = config.get[String]("scheduleUpload.gifAid.allowedFileTypesHint")
+  lazy val filePickerAcceptFilter: String = config.get[String]("scheduleUpload.gifAid.filePickerAcceptFilter")
+
   def pageTitleWithServiceName(
     pageTitle: String,
     serviceName: String

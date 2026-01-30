@@ -121,7 +121,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         reference = UpscanReference("reference-123"),
         validationType = ValidationType.GiftAid,
         uploadUrl = "upload-url-123",
-        initateTimestamp = "initate-timestamp-123"
+        initiateTimestamp = "initate-timestamp-123"
       )
 
       "should return true when service returns 200 status" in {
