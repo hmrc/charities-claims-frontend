@@ -129,7 +129,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
           createUploadTrackingRequest,
           HttpResponse(200, Json.stringify(Json.toJson(SuccessResponse(success = true))))
         ).once()
-        await(connector.createUpoloadTracking("123", createUploadTrackingRequest)) should be(true)
+        await(connector.createUploadTracking("123", createUploadTrackingRequest)) should be(true)
       }
 
       "should return false when service returns 200 status" in {
@@ -137,7 +137,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
           createUploadTrackingRequest,
           HttpResponse(200, Json.stringify(Json.toJson(SuccessResponse(success = false))))
         ).once()
-        await(connector.createUpoloadTracking("123", createUploadTrackingRequest)) should be(false)
+        await(connector.createUploadTracking("123", createUploadTrackingRequest)) should be(false)
       }
     }
 

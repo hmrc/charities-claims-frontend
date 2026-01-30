@@ -38,7 +38,7 @@ import play.api.libs.json.JsNull
 @ImplementedBy(classOf[ClaimsValidationConnectorImpl])
 trait ClaimsValidationConnector {
 
-  def createUpoloadTracking(claimId: String, request: CreateUploadTrackingRequest)(using
+  def createUploadTracking(claimId: String, request: CreateUploadTrackingRequest)(using
     hc: HeaderCarrier
   ): Future[Boolean]
 
@@ -71,7 +71,7 @@ class ClaimsValidationConnectorImpl @Inject() (
   val contextPath: String = servicesConfig
     .getConfString("charities-claims-validation.context-path", "charities-claims-validation")
 
-  def createUpoloadTracking(claimId: String, request: CreateUploadTrackingRequest)(using
+  def createUploadTracking(claimId: String, request: CreateUploadTrackingRequest)(using
     hc: HeaderCarrier
   ): Future[Boolean] =
     callValidationBackend[CreateUploadTrackingRequest, SuccessResponse](
