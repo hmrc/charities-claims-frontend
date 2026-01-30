@@ -36,7 +36,7 @@ import play.api.libs.json.{Format, Json}
   *   "https://myservice.com/nextPage", "error_action_redirect": "https://myservice.com/errorPage" } } } </pre>
   */
 case class UpscanInitiateResponse(
-  reference: String,
+  reference: UpscanReference,
   uploadRequest: UploadRequest
 )
 
