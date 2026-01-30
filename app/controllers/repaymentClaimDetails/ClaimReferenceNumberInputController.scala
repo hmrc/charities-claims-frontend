@@ -26,6 +26,7 @@ import controllers.actions.Actions
 import forms.TextInputFormProvider
 import models.{Mode, RepaymentClaimDetailsAnswers}
 import play.api.data.Form
+import controllers.repaymentClaimDetails.routes
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -65,9 +66,9 @@ class ClaimReferenceNumberInputController @Inject() (
             .map { _ =>
               // Change to: R1.8 - Check Your Answers (CYA) when created
               if (mode == CheckMode) {
-                Redirect(controllers.routes.PageNotFoundController.onPageLoad)
+                Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad)
               } else {
-                Redirect(controllers.routes.PageNotFoundController.onPageLoad)
+                Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad)
               }
             }
       )

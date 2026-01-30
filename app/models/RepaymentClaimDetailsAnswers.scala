@@ -36,7 +36,9 @@ final case class RepaymentClaimDetailsAnswers(
   makingAdjustmentToPreviousClaim: Option[Boolean] = None,
   // only for agents
   hmrcCharitiesReference: Option[String] = None,
-  nameOfCharity: Option[String] = None
+  nameOfCharity: Option[String] = None,
+  // repayment claim type - claimingGiftAid,claimingTaxDeducted,claimingUnderGiftAidSmallDonationsScheme
+  repaymentClaimType: Option[RepaymentClaimType] = None
 ) {
 
   def missingFields: List[String] =
@@ -47,12 +49,18 @@ final case class RepaymentClaimDetailsAnswers(
       claimingReferenceNumber.isEmpty                                          -> "claimReferenceNumberCheck.heading",
       (claimingReferenceNumber.contains(true) && claimReferenceNumber.isEmpty) -> "claimReferenceNumberInput.heading"
       // TODO: add GASDS fields once pages are implemented
-      // claimingUnderGiftAidSmallDonationsScheme.contains(true) && claimingDonationsNotFromCommunityBuilding.isEmpty -> "claimingDonationsNotFromCommunityBuilding.heading",
-      // claimingUnderGiftAidSmallDonationsScheme.contains(true) && claimingDonationsCollectedInCommunityBuildings.isEmpty -> "claimingDonationsCollectedInCommunityBuildings.heading",
-      // claimingUnderGiftAidSmallDonationsScheme.contains(true) && connectedToAnyOtherCharities.isEmpty -> "connectedToAnyOtherCharities.heading"
+//      claimingUnderGiftAidSmallDonationsScheme.contains(
+//        true
+//      ) && claimingDonationsNotFromCommunityBuilding.isEmpty                   -> "claimingDonationsNotFromCommunityBuilding.heading",
+//      claimingUnderGiftAidSmallDonationsScheme.contains(
+//        true
+//      ) && claimingDonationsCollectedInCommunityBuildings.isEmpty              -> "claimingDonationsCollectedInCommunityBuildings.heading",
+//      claimingUnderGiftAidSmallDonationsScheme.contains(
+//        true
+//      ) && connectedToAnyOtherCharities.isEmpty                                -> "connectedToAnyOtherCharities.heading"
     ).collect { case (true, key) => key }
 
-  def hasCompleteAnswers: Boolean = missingFields.isEmpty
+  def hasRepaymentClaimDetailsCompleteAnswers: Boolean = missingFields.isEmpty
 }
 
 object RepaymentClaimDetailsAnswers {
@@ -90,10 +98,13 @@ object RepaymentClaimDetailsAnswers {
 
   def setClaimingTaxDeducted(value: Boolean)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(claimingTaxDeducted = Some(v)))
-      .copy(otherIncomeScheduleDataAnswers = if (value) session.otherIncomeScheduleDataAnswers else None)
+      .copy(
+        otherIncomeScheduleData = if (value) session.otherIncomeScheduleData else None,
+        otherIncomeScheduleFileUploadReference = if (value) session.otherIncomeScheduleFileUploadReference else None
+      )
 
   def shouldWarnAboutChangingClaimingTaxDeducted(value: Boolean)(using session: SessionData): Boolean =
-    !value && session.otherIncomeScheduleDataAnswers.isDefined
+    !value && session.otherIncomeScheduleFileUploadReference.isDefined
 
   def getMakingAdjustmentToPreviousClaim(using session: SessionData): Option[Boolean] = get(
     _.makingAdjustmentToPreviousClaim
@@ -106,10 +117,36 @@ object RepaymentClaimDetailsAnswers {
 
   def setClaimingGiftAid(value: Boolean)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(claimingGiftAid = Some(v)))
-      .copy(giftAidScheduleDataAnswers = if (value) session.giftAidScheduleDataAnswers else None)
+      .copy(
+        giftAidScheduleData = if (value) session.giftAidScheduleData else None,
+        giftAidScheduleFileUploadReference = if (value) session.giftAidScheduleFileUploadReference else None
+      )
 
   def shouldWarnAboutChangingClaimingGiftAid(claimingGiftAid: Boolean)(using session: SessionData): Boolean =
-    !claimingGiftAid && session.giftAidScheduleDataAnswers.isDefined
+    !claimingGiftAid && session.giftAidScheduleFileUploadReference.isDefined
+
+  def getRepaymentClaimType(using session: SessionData): Option[RepaymentClaimType] = get(answers =>
+    for
+      claimingGiftAid                          <- answers.claimingGiftAid
+      claimingTaxDeducted                      <- answers.claimingTaxDeducted
+      claimingUnderGiftAidSmallDonationsScheme <- answers.claimingUnderGiftAidSmallDonationsScheme
+    yield RepaymentClaimType(
+      claimingGiftAid,
+      claimingTaxDeducted,
+      claimingUnderGiftAidSmallDonationsScheme
+    )
+    // answers.repaymentClaimType
+  )
+
+  def setRepaymentClaimType(value: RepaymentClaimType)(using session: SessionData): SessionData =
+    set(value)((a, v) =>
+      a.copy(
+        claimingGiftAid = Some(v.claimingGiftAid),
+        claimingTaxDeducted = Some(v.claimingTaxDeducted),
+        claimingUnderGiftAidSmallDonationsScheme = Some(v.claimingUnderGiftAidSmallDonationsScheme)
+        // repaymentClaimType = Some(v)
+      )
+    )
 
   def getClaimingDonationsCollectedInCommunityBuildings(using session: SessionData): Option[Boolean] = get(
     _.claimingDonationsCollectedInCommunityBuildings
@@ -169,14 +206,13 @@ object RepaymentClaimDetailsAnswers {
     set(value)((a, v) => a.copy(claimReferenceNumber = Some(v)))
 
   def toRepaymentClaimDetails(answers: RepaymentClaimDetailsAnswers): Try[RepaymentClaimDetails] =
-    for
-      claimingGiftAid                          <- required(answers)(_.claimingGiftAid)
-      claimingTaxDeducted                      <- required(answers)(_.claimingTaxDeducted)
-      claimingUnderGiftAidSmallDonationsScheme <- required(answers)(_.claimingUnderGiftAidSmallDonationsScheme)
+    for repaymentClaimType <- required(answers)(_.repaymentClaimType)
+//      claimingTaxDeducted                      <- required(answers)(_.claimingTaxDeducted)
+//      claimingUnderGiftAidSmallDonationsScheme <- required(answers)(_.claimingUnderGiftAidSmallDonationsScheme)
     yield RepaymentClaimDetails(
-      claimingGiftAid = claimingGiftAid,
-      claimingTaxDeducted = claimingTaxDeducted,
-      claimingUnderGiftAidSmallDonationsScheme = claimingUnderGiftAidSmallDonationsScheme,
+      claimingGiftAid = repaymentClaimType.claimingGiftAid,
+      claimingTaxDeducted = repaymentClaimType.claimingTaxDeducted,
+      claimingUnderGiftAidSmallDonationsScheme = repaymentClaimType.claimingUnderGiftAidSmallDonationsScheme,
       claimReferenceNumber = answers.claimReferenceNumber,
       claimingDonationsNotFromCommunityBuilding = answers.claimingDonationsNotFromCommunityBuilding,
       claimingDonationsCollectedInCommunityBuildings = answers.claimingDonationsCollectedInCommunityBuildings,

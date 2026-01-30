@@ -21,13 +21,14 @@ import controllers.BaseController
 import controllers.actions.Actions
 import controllers.repaymentClaimDetails.routes
 import forms.YesNoFormProvider
-import models.RepaymentClaimDetailsAnswers
+import models.{Mode, RepaymentClaimDetailsAnswers}
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
 import views.html.ClaimingCommunityBuildingDonationsView
 
 import scala.concurrent.{ExecutionContext, Future}
+import models.Mode.*
 
 class ClaimingCommunityBuildingDonationsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -40,28 +41,26 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
 
   val form: Form[Boolean] = formProvider("claimingCommunityBuildingDonations.error.required")
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) then {
       val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
-      Future.successful(Ok(view(form.withDefault(previousAnswer))))
+      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
     } else { Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad)) }
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(value))
             .map(_ =>
               if (value) {
-                Redirect(routes.ChangePreviousGASDSClaimController.onPageLoad)
+                Redirect(routes.ChangePreviousGASDSClaimController.onPageLoad(mode))
               } else {
-                Redirect(
-                  routes.ClaimingCommunityBuildingDonationsController.onPageLoad
-                ) // TODO - redirect to connected charities when available
+                Redirect(routes.ConnectedToAnyOtherCharitiesController.onPageLoad(mode))
               }
             )
       )

@@ -51,6 +51,11 @@ claimDeclaration.heading = Declaration
 claimDeclaration.paragraph =  I declare that:
 claimDeclaration.title = Declaration
 
+claimingReferenceNumber.caption = Provide repayment claim details
+claimingReferenceNumber.error.required = Select ‘Yes’ if you have a claim reference number
+claimingReferenceNumber.heading = Do you have a claim reference number?
+claimingReferenceNumber.title = Do you have a claim reference number?
+
 claimReferenceNumberCheck.error.required = Select ‘Yes’ if you have a reference number for this claim.
 claimReferenceNumberCheck.heading = Do you have a claim reference number?
 claimReferenceNumberCheck.title = Do you have a claim reference number?
@@ -76,6 +81,16 @@ claimingGiftAidSmallDonations.paragraph =  This is separate to a Gift Aid claim.
 claimingGiftAidSmallDonations.title = Gift Aid Small Donations Scheme
 claimingGiftAidSmallDonations.warning = TBC Your data for this section will be lost if you change your answer.
 
+repaymentClaimType.caption = Provide repayment claim details
+repaymentClaimType.label.claimingGiftAid = Tax repayments on Gift Aid donations
+repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme = Top up payments for donations under the Gift Aid Small Donations Scheme
+repaymentClaimType.label.claimingTaxDeducted = UK tax deducted from Other Income
+repaymentClaimType.title = Which type of repayment claim do you want to make?
+repaymentClaimType.heading = Which type of repayment claim do you want to make?
+repaymentClaimType.hint = Select all that apply
+repaymentClaimType.hint.claimingUnderGiftAidSmallDonationsScheme = These are not your Gift Aid donations
+repaymentClaimType.error.required = Select repayment claim type
+
 claimingCommunityBuildingDonations.caption = Provide repayment claim details
 claimingCommunityBuildingDonations.error.required = Select 'Yes' if you are claiming for donations collected in community buildings
 claimingCommunityBuildingDonations.heading = Do you want to claim for donations collected in community buildings?
@@ -95,6 +110,20 @@ connectedToAnyOtherCharities.legend = Are you connected to other charities or a 
 connectedToAnyOtherCharities.paragraph = If connected charities and Community Amateur Sports Clubs claim a top-up payment, they will share the maximum £1,250 payment limit for the tax year.
 connectedToAnyOtherCharities.title = Connected charities and Community Amateur Sports Clubs
 connectedToAnyOtherCharities.caption = Provide repayment claim details
+
+repaymentClaimDetailsCheckYourAnswers.caption = Provide repayment claim details
+repaymentClaimDetailsCheckYourAnswers.title = Check your repayment claim
+repaymentClaimDetailsCheckYourAnswers.heading = Check your repayment claim
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label = Repayment claim type
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid = Gift Aid
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS = Top up payments for small cash donations under Gift Aid Small Donations Scheme
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome = UK tax deducted from Other Income
+repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label = Gift Aid Small Donations Scheme Payment
+repaymentClaimDetailsCheckYourAnswers.claimingDonationsCollectedInCommunityBuildings.label = Donations from community buildings
+repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label = Change Gift Aid Small Donations Scheme claim
+repaymentClaimDetailsCheckYourAnswers.connectToAnyOtherCharity.label = Connected to charities or Community Amateur Sports Clubs
+repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label = Claim reference number
+repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label = Reference number
 
 claimingOtherIncome.bullet.one =  Bank or Building Society interest
 claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
@@ -267,6 +296,15 @@ cannotViewOrManageClaim.title = You cannot manage this claim
 cannotViewOrManageClaim.heading = You cannot manage this claim
 cannotViewOrManageClaim.paragraph = This claim is being updated by someone else. You can manage this claim by returning to <a class="govuk-link" href="{0}">repayment claim summary</a>.
 
+registerCharityWithARegulator.title = Registering your charity with a regulator
+registerCharityWithARegulator.heading = Registering your charity with a regulator
+registerCharityWithARegulator.warning = You have made claims for Gift Aid repayments on donations over £{1} in the last 12 months.
+registerCharityWithARegulator.paragraph = If your annual income is more than £{1}, you need to <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">register your charity with a regulator (opens in new tab)</a>.
+registerCharityWithARegulator.legend = Do you need to register your charity with a regulator?
+registerCharityWithARegulator.error.required = Select ‘Yes’ if you need to register with a regulator
+registerCharityWithARegulator.radio.yes.label = Yes
+registerCharityWithARegulator.radio.no.label = No, continue with claim
+
 repaymentClaimDetails.title = Repayment claim details
 repaymentClaimDetails.heading = Repayment claim details
 repaymentClaimDetails.subheading = Provide repayment claim details
@@ -297,6 +335,11 @@ makeCharityRepaymentClaim.placeholder = Content TBC
 charityRepaymentDashboard.title = Charity Repayment Dashboard
 charityRepaymentDashboard.heading = Charity Repayment Dashboard
 charityRepaymentDashboard.placeholder = Content TBC
+
+# TODO: Placeholder screen messages for D3 - content will be updated in future
+declarationDetailsConfirmation.title = Declaration Confirmation
+declarationDetailsConfirmation.heading = Declaration Confirmation
+declarationDetailsConfirmation.placeholder = Content TBC
 
 phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in a new tab)</a> will help us to improve it.
 phasebanner.phase=Beta

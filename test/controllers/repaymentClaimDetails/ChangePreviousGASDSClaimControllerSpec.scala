@@ -23,6 +23,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import models.RepaymentClaimDetailsAnswers
 import forms.YesNoFormProvider
+import models.Mode.*
 import play.api.data.Form
 import views.html.ChangePreviousGASDSClaimView
 
@@ -30,54 +31,77 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
   private val form: Form[Boolean] = new YesNoFormProvider()()
   "ChangePreviousGASDSClaimController" - {
     "onPageLoad" - {
-      "should render the page correctly" in {
-        given application: Application = applicationBuilder().build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad.url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
-        }
-      }
-
-      "should render the page and pre-populate correctly with true value" in {
-
-        val sessionData = RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(true)
+      "should render the page correctly when setClaimingUnderGiftAidSmallDonationsScheme is true" in {
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad.url)
+            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(true)).body
+          contentAsString(result) shouldEqual view(form, NormalMode).body
+        }
+      }
+
+      "should render the page and pre-populate correctly with true value" in {
+        val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData           = RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(true)(using
+          sessionDataUnderGASDS
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
         }
       }
 
       "should render the page and pre-populate correctly with false value" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(false)
+        val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData           = RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(false)(using
+          sessionDataUnderGASDS
+        )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad.url)
+            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(false)).body
+          contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
+        }
+      }
+
+      "should render page not found if setClaimingUnderGiftAidSmallDonationsScheme is false" in {
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
         }
       }
     }
@@ -88,14 +112,14 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ChangePreviousGASDSClaimController.onSubmit.url)
+            FakeRequest(POST, routes.ChangePreviousGASDSClaimController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad.url
+            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -105,14 +129,14 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ChangePreviousGASDSClaimController.onSubmit.url)
+            FakeRequest(POST, routes.ChangePreviousGASDSClaimController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad.url
+            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -122,7 +146,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ChangePreviousGASDSClaimController.onSubmit.url)
+            FakeRequest(POST, routes.ChangePreviousGASDSClaimController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value

@@ -81,6 +81,18 @@ trait CheckboxFluency {
         name = Some(s"$fieldId[$index]"),
         value = value
       )
+
+    def apply(
+      content: Content,
+      name: String,
+      value: String
+    ): CheckboxItem =
+      CheckboxItem(
+        content = content,
+        id = Some(name),
+        name = Some(name),
+        value = value
+      )
   }
 
   implicit class FluentCheckboxItem(item: CheckboxItem) {

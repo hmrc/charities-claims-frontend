@@ -192,71 +192,144 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to the CYA when the value is None" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+      "in CheckMode when changing from regulator to None" - {
+        "should redirect to ReasonNotRegisteredWithRegulatorController" in {
+          // Previous answer was a regulator (EnglandAndWales), now changing to None
+          val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.NameOfCharityRegulatorController.onSubmit(CheckMode).url)
-              .withFormUrlEncodedBody("value" -> "None")
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
-          val result = route(application, request).value
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.NameOfCharityRegulatorController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "None")
 
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
-          )
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(CheckMode).url
+            )
+          }
         }
       }
 
-      "should redirect to the CYA when the value is Scottish" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+      "in CheckMode when changing from None to regulator" - {
+        "should redirect to CharityRegulatorNumberController" in {
+          // Previous answer was None, now changing to a regulator
+          val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(None)
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.NameOfCharityRegulatorController.onSubmit(CheckMode).url)
-              .withFormUrlEncodedBody("value" -> "Scottish")
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
-          val result = route(application, request).value
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.NameOfCharityRegulatorController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "EnglandAndWales")
 
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
-          )
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.CharityRegulatorNumberController.onPageLoad(CheckMode).url
+            )
+          }
         }
       }
 
-      "should redirect to the CYA when the value is NorthernIreland" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+      "in CheckMode when answer is unchanged (same regulator)" - {
+        "should redirect to CYA when value remains EnglandAndWales" in {
+          val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.NameOfCharityRegulatorController.onSubmit(CheckMode).url)
-              .withFormUrlEncodedBody("value" -> "NorthernIreland")
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
-          val result = route(application, request).value
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.NameOfCharityRegulatorController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "EnglandAndWales")
 
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
-          )
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+            )
+          }
+        }
+
+        "should redirect to CYA when value remains None" in {
+          val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(None)
+
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.NameOfCharityRegulatorController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "None")
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+            )
+          }
         }
       }
 
-      "should redirect to the CYA when the value is EnglandAndWales" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+      "in CheckMode when changing between regulators" - {
+        "should redirect to CYA when changing from EnglandAndWales to Scottish" in {
+          val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.NameOfCharityRegulatorController.onSubmit(CheckMode).url)
-              .withFormUrlEncodedBody("value" -> "EnglandAndWales")
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
-          val result = route(application, request).value
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.NameOfCharityRegulatorController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "Scottish")
 
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
-          )
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+            )
+          }
+        }
+      }
+
+      "in CheckMode with no previous answer (invalid state)" - {
+        "should redirect to CYA when selecting regulator" in {
+          given application: Application = applicationBuilder().mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.NameOfCharityRegulatorController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "EnglandAndWales")
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+            )
+          }
+        }
+
+        "should redirect to CYA when selecting None" in {
+          given application: Application = applicationBuilder().mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.NameOfCharityRegulatorController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "None")
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+            )
+          }
         }
       }
 

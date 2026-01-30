@@ -148,7 +148,9 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
         }
       }
 
@@ -163,7 +165,9 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
         }
       }
 
