@@ -34,66 +34,48 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
             buildList.claimingUnderGiftAidSmallDonationsScheme,
             buildList.claimingTaxDeducted
           ) match {
-            case (Some(true), Some(true), Some(true)) =>
+            case (Some(true), Some(true), Some(true)) | (Some(true), Some(true), _) | (Some(true), _, Some(true)) |
+                (_, Some(true), Some(true)) =>
               Some(
                 summaryRowHTML(
                   messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"),
-                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid") + "<br>" + "<br>" +
+                  if buildList.claimingGiftAid.contains(true) && buildList.claimingUnderGiftAidSmallDonationsScheme
+                      .contains(true) && buildList.claimingTaxDeducted.contains(true)
+                  then
+                    messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid")
+                      + "<br>" + "<br>" +
+                      messages(
+                        "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS"
+                      )
+                      + "<br>" + "<br>" +
+                      messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome")
+                  else if buildList.claimingGiftAid.contains(true) && buildList.claimingTaxDeducted.contains(true) then
+                    messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid")
+                      + "<br>" + "<br>" +
+                      messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome")
+                  else if buildList.claimingGiftAid.contains(true) && buildList.claimingUnderGiftAidSmallDonationsScheme
+                      .contains(true)
+                  then
+                    messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid") + "<br>" + "<br>" +
+                      messages(
+                        "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS"
+                      )
+                  else
                     messages(
                       "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS"
                     ) + "<br>" + "<br>" +
-                    messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome"),
+                      messages(
+                        "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome"
+                      )
+                  ,
                   controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label")
                 )
               )
-            case (Some(true), Some(true), _)          =>
-              Some(
-                summaryRowHTML(
-                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"),
-                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid") + "<br>" + "<br>" +
-                    messages(
-                      "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS"
-                    ),
-                  controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
-                    .onPageLoad(CheckMode)
-                    .url, // TODO
-                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
-                )
-              )
-            case (Some(true), _, Some(true))          =>
-              Some(
-                summaryRowHTML(
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"
-                  ),
-                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid") + "<br>" + "<br>" +
-                    messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome"),
-                  controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
-                    .onPageLoad(CheckMode)
-                    .url, // TODO
-                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
-                )
-              )
-            case (_, Some(true), Some(true))          =>
-              Some(
-                summaryRowHTML(
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"
-                  ),
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS"
-                  ) + "<br>" + "<br>" +
-                    messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome"),
-                  controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
-                    .onPageLoad(CheckMode)
-                    .url, // TODO
-                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
-                )
-              )
-            case (_, _, _)                            =>
+
+            case (_, _, _) =>
               if buildList.claimingGiftAid.contains(true) || buildList.claimingUnderGiftAidSmallDonationsScheme
                   .contains(true) || buildList.claimingTaxDeducted.contains(true)
               then
