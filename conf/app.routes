@@ -127,15 +127,18 @@ POST        /delete-repayment-claim                         controllers.organisa
 GET         /repayment-claim-details                        controllers.repaymentClaimDetails.RepaymentClaimDetailsController.onPageLoad
 POST        /repayment-claim-details                        controllers.repaymentClaimDetails.RepaymentClaimDetailsController.onSubmit
 
-GET         /enter-claim-reference-number               controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = models.Mode.NormalMode)
-GET         /change-enter-claim-reference-number        controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /enter-claim-reference-number               controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = models.Mode.NormalMode)
-POST        /change-enter-claim-reference-number        controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /enter-claim-reference-number                   controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = models.Mode.NormalMode)
+GET         /change-enter-claim-reference-number            controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /enter-claim-reference-number                   controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = models.Mode.NormalMode)
+POST        /change-enter-claim-reference-number            controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /cannot-view-or-manage-claim                    controllers.organisationDetails.CannotViewOrManageClaimController.onPageLoad
 
 GET         /registering-your-charity-with-a-regulator      controllers.RegisterCharityWithARegulatorController.onPageLoad
 POST        /registering-your-charity-with-a-regulator      controllers.RegisterCharityWithARegulatorController.onSubmit
+
+GET         /update-repayment-claim                         controllers.repaymentClaimDetails.UpdateRepaymentClaimController.onPageLoad
+POST        /update-repayment-claim                         controllers.repaymentClaimDetails.UpdateRepaymentClaimController.onSubmit
 
 # TODO: Placeholder screen for G2 - route will be updated in future
 GET         /add-schedule                                   controllers.organisationDetails.AddScheduleController.onPageLoad
