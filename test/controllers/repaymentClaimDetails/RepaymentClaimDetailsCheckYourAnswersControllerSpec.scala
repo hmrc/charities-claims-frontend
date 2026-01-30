@@ -47,15 +47,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
               claimingUnderGiftAidSmallDonationsScheme = Some(true),
               claimingReferenceNumber = Some(true),
               claimReferenceNumber = Some("12345678AB")
-
-//            ,
-//            repaymentClaimType = Some(
-//              RepaymentClaimType(
-//                claimingGiftAid = Some(true),
-//                claimingTaxDeducted = Some(false),
-//                claimingUnderGiftAidSmallDonationsScheme = Some(true)
-//              )
-//            )
             )
           )
         )
@@ -87,14 +78,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
               claimingUnderGiftAidSmallDonationsScheme = Some(true),
               claimingReferenceNumber = Some(false),
               claimReferenceNumber = None
-//            ,
-//            repaymentClaimType = Some(
-//              RepaymentTypeDetails(
-//                claimingGiftAid = Some(true),
-//                claimingTaxDeducted = Some(false),
-//                claimingUnderGiftAidSmallDonationsScheme = Some(true)
-//              )
-//            )
             )
           )
         )
@@ -126,14 +109,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
               claimingUnderGiftAidSmallDonationsScheme = Some(true),
               claimingReferenceNumber = None,
               claimReferenceNumber = Some("12345678AB")
-//            ,
-//            repaymentClaimType = Some(
-//              RepaymentTypeDetails(
-//                claimingGiftAid = Some(true),
-//                claimingTaxDeducted = None,
-//                claimingUnderGiftAidSmallDonationsScheme = Some(true)
-//              )
-//            )
             )
           )
         )
@@ -169,14 +144,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
             claimingUnderGiftAidSmallDonationsScheme = Some(false),
             claimingReferenceNumber = Some(true),
             claimReferenceNumber = Some("12345678AB")
-//          ,
-//          repaymentClaimType = Some(
-//            RepaymentTypeDetails(
-//              claimingGiftAid = Some(true),
-//              claimingTaxDeducted = Some(false),
-//              claimingUnderGiftAidSmallDonationsScheme = Some(false)
-//            )
-//          )
           )
         )
       )
@@ -208,14 +175,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
             claimingUnderGiftAidSmallDonationsScheme = Some(true),
             claimingReferenceNumber = Some(true),
             claimReferenceNumber = Some("12345678AB")
-//          ,
-//          repaymentClaimType = Some(
-//            RepaymentTypeDetails(
-//              claimingGiftAid = Some(true),
-//              claimingTaxDeducted = None,
-//              claimingUnderGiftAidSmallDonationsScheme = Some(true)
-//            )
-//          )
           )
         )
       )
@@ -249,14 +208,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
             claimingUnderGiftAidSmallDonationsScheme = Some(false),
             claimingReferenceNumber = Some(true),
             claimReferenceNumber = Some("12345678AB")
-//          ,
-//          repaymentClaimType = Some(
-//            RepaymentTypeDetails(
-//              claimingGiftAid = Some(true),
-//              claimingTaxDeducted = Some(false),
-//              claimingUnderGiftAidSmallDonationsScheme = Some(false)
-//            )
-//          )
           )
         )
       )

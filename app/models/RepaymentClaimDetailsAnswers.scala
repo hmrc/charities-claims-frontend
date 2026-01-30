@@ -135,7 +135,6 @@ object RepaymentClaimDetailsAnswers {
       claimingTaxDeducted,
       claimingUnderGiftAidSmallDonationsScheme
     )
-    // answers.repaymentClaimType
   )
 
   def setRepaymentClaimType(value: RepaymentClaimType)(using session: SessionData): SessionData =
@@ -144,7 +143,6 @@ object RepaymentClaimDetailsAnswers {
         claimingGiftAid = Some(v.claimingGiftAid),
         claimingTaxDeducted = Some(v.claimingTaxDeducted),
         claimingUnderGiftAidSmallDonationsScheme = Some(v.claimingUnderGiftAidSmallDonationsScheme)
-        // repaymentClaimType = Some(v)
       )
     )
 
@@ -207,8 +205,6 @@ object RepaymentClaimDetailsAnswers {
 
   def toRepaymentClaimDetails(answers: RepaymentClaimDetailsAnswers): Try[RepaymentClaimDetails] =
     for repaymentClaimType <- required(answers)(_.repaymentClaimType)
-//      claimingTaxDeducted                      <- required(answers)(_.claimingTaxDeducted)
-//      claimingUnderGiftAidSmallDonationsScheme <- required(answers)(_.claimingUnderGiftAidSmallDonationsScheme)
     yield RepaymentClaimDetails(
       claimingGiftAid = repaymentClaimType.claimingGiftAid,
       claimingTaxDeducted = repaymentClaimType.claimingTaxDeducted,
