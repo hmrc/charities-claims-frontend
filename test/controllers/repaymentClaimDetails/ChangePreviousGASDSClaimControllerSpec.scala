@@ -119,7 +119,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ClaimingCommunityBuildingDonationsController.onPageLoad(NormalMode).url
+            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -136,7 +136,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ClaimingCommunityBuildingDonationsController.onPageLoad(NormalMode).url
+            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
           )
         }
       }

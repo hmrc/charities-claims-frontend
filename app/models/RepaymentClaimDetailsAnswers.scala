@@ -49,9 +49,15 @@ final case class RepaymentClaimDetailsAnswers(
       claimingReferenceNumber.isEmpty                                          -> "claimReferenceNumberCheck.heading",
       (claimingReferenceNumber.contains(true) && claimReferenceNumber.isEmpty) -> "claimReferenceNumberInput.heading"
       // TODO: add GASDS fields once pages are implemented
-      // claimingUnderGiftAidSmallDonationsScheme.contains(true) && claimingDonationsNotFromCommunityBuilding.isEmpty -> "claimingDonationsNotFromCommunityBuilding.heading",
-      // claimingUnderGiftAidSmallDonationsScheme.contains(true) && claimingDonationsCollectedInCommunityBuildings.isEmpty -> "claimingDonationsCollectedInCommunityBuildings.heading",
-      // claimingUnderGiftAidSmallDonationsScheme.contains(true) && connectedToAnyOtherCharities.isEmpty -> "connectedToAnyOtherCharities.heading"
+//      claimingUnderGiftAidSmallDonationsScheme.contains(
+//        true
+//      ) && claimingDonationsNotFromCommunityBuilding.isEmpty                   -> "claimingDonationsNotFromCommunityBuilding.heading",
+//      claimingUnderGiftAidSmallDonationsScheme.contains(
+//        true
+//      ) && claimingDonationsCollectedInCommunityBuildings.isEmpty              -> "claimingDonationsCollectedInCommunityBuildings.heading",
+//      claimingUnderGiftAidSmallDonationsScheme.contains(
+//        true
+//      ) && connectedToAnyOtherCharities.isEmpty                                -> "connectedToAnyOtherCharities.heading"
     ).collect { case (true, key) => key }
 
   def hasRepaymentClaimDetailsCompleteAnswers: Boolean = missingFields.isEmpty
@@ -120,25 +126,25 @@ object RepaymentClaimDetailsAnswers {
     !claimingGiftAid && session.giftAidScheduleFileUploadReference.isDefined
 
   def getRepaymentClaimType(using session: SessionData): Option[RepaymentClaimType] = get(answers =>
-//    for
-//      claimingGiftAid                          <- answers.claimingGiftAid
-//      claimingTaxDeducted                      <- Some(answers.claimingTaxDeducted)
-//      claimingUnderGiftAidSmallDonationsScheme <- Some(answers.claimingUnderGiftAidSmallDonationsScheme)
-//    yield RepaymentClaimType(
-//      answers.claimingGiftAid,
-//      answers.claimingTaxDeducted,
-//      answers.claimingUnderGiftAidSmallDonationsScheme
-//    )
-    answers.repaymentClaimType
+    for
+      claimingGiftAid                          <- answers.claimingGiftAid
+      claimingTaxDeducted                      <- answers.claimingTaxDeducted
+      claimingUnderGiftAidSmallDonationsScheme <- answers.claimingUnderGiftAidSmallDonationsScheme
+    yield RepaymentClaimType(
+      claimingGiftAid,
+      claimingTaxDeducted,
+      claimingUnderGiftAidSmallDonationsScheme
+    )
+    // answers.repaymentClaimType
   )
 
   def setRepaymentClaimType(value: RepaymentClaimType)(using session: SessionData): SessionData =
     set(value)((a, v) =>
       a.copy(
-//        claimingGiftAid = Some(v.claimingGiftAid),
-//        claimingTaxDeducted = Some(v.claimingTaxDeducted),
-//        claimingUnderGiftAidSmallDonationsScheme = Some(v.claimingUnderGiftAidSmallDonationsScheme)
-        repaymentClaimType = Some(v)
+        claimingGiftAid = Some(v.claimingGiftAid),
+        claimingTaxDeducted = Some(v.claimingTaxDeducted),
+        claimingUnderGiftAidSmallDonationsScheme = Some(v.claimingUnderGiftAidSmallDonationsScheme)
+        // repaymentClaimType = Some(v)
       )
     )
 

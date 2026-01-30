@@ -25,6 +25,7 @@ import models.{RepaymentClaimDetailsAnswers, RepaymentClaimType}
 import forms.CheckBoxListFormProvider
 import play.api.data.Form
 import views.html.RepaymentClaimTypeView
+import models.Mode.*
 
 class RepaymentClaimTypeControllerSpec extends ControllerSpec {
   val formProvider                   = new CheckBoxListFormProvider()
@@ -54,13 +55,13 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.RepaymentClaimTypeController.onPageLoad.url)
+            FakeRequest(GET, routes.RepaymentClaimTypeController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[RepaymentClaimTypeView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
+          contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
 
@@ -72,13 +73,13 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.RepaymentClaimTypeController.onPageLoad.url)
+            FakeRequest(GET, routes.RepaymentClaimTypeController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[RepaymentClaimTypeView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(dataWithAllChecked)).body
+          contentAsString(result) shouldEqual view(form.fill(dataWithAllChecked), NormalMode).body
         }
       }
 
@@ -90,13 +91,13 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.RepaymentClaimTypeController.onPageLoad.url)
+            FakeRequest(GET, routes.RepaymentClaimTypeController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[RepaymentClaimTypeView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(dataWithNoneChecked)).body
+          contentAsString(result) shouldEqual view(form.fill(dataWithNoneChecked), NormalMode).body
         }
       }
     }
@@ -149,7 +150,7 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit.url)
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("claimingGiftAid" -> "None")
 
           val result = route(application, request).value

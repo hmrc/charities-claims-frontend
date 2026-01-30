@@ -38,12 +38,12 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
               Some(
                 summaryRowHTML(
                   messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"),
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid.label" + "<br>" +
-                      "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS.label" + "<br>" +
-                      "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome.label"
-                  ),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
+                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid") + "<br>" + "<br>" +
+                    messages(
+                      "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS"
+                    ) + "<br>" + "<br>" +
+                    messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome"),
+                  controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label")
@@ -53,11 +53,11 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
               Some(
                 summaryRowHTML(
                   messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"),
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid.label" + "<br>" +
-                      "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS.label"
-                  ),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
+                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid") + "<br>" + "<br>" +
+                    messages(
+                      "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS"
+                    ),
+                  controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
@@ -69,11 +69,9 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   messages(
                     "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"
                   ),
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid.label" + "<br>" +
-                      "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome.label"
-                  ),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
+                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid") + "<br>" + "<br>" +
+                    messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome"),
+                  controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
@@ -86,10 +84,10 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                     "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"
                   ),
                   messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS.label" + "<br>" +
-                      "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome.label"
-                  ),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
+                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS"
+                  ) + "<br>" + "<br>" +
+                    messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome"),
+                  controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
@@ -102,9 +100,9 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                     "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"
                   ),
                   messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid.label"
+                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid"
                   ),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
+                  controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
@@ -117,9 +115,9 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                     "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"
                   ),
                   messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS.label"
+                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS"
                   ),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
+                  controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
@@ -132,9 +130,9 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                     "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"
                   ),
                   messages(
-                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome.label"
+                    "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome"
                   ),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
+                  controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
@@ -146,7 +144,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   messages(
                     "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"
                   ),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
+                  controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
@@ -188,7 +186,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                     "repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label"
                   ),
                   refNumber,
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
+                  controllers.repaymentClaimDetails.routes.ClaimReferenceNumberInputController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label")
@@ -200,7 +198,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   messages(
                     "repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label"
                   ),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
+                  controllers.repaymentClaimDetails.routes.ClaimReferenceNumberInputController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label")
@@ -209,7 +207,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
             case (_, _)                        =>
               None
           },
-          buildList.claimingDonationsNotFromCommunityBuilding match {
+          buildList.claimingDonationsNotFromCommunityBuilding match { // TODO when screen R1.2 available
             case Some(value) =>
               Some(
                 summaryRow(
@@ -217,7 +215,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                     "repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label"
                   ),
                   if (value) messages("site.yes") else messages("site.no"),
-                  controllers.repaymentClaimDetails.routes.ChangePreviousGASDSClaimController
+                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label")
@@ -229,7 +227,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   messages(
                     "repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label"
                   ),
-                  controllers.repaymentClaimDetails.routes.ChangePreviousGASDSClaimController
+                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
                     .onPageLoad(CheckMode)
                     .url, // TODO
                   messages("repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label")
@@ -318,11 +316,11 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
         Seq(
           missingDataRow(
             // TODO
-            messages("repaymentClaimDetailsCheckYourAnswers.claimingDonationsCollectedInCommunityBuildings.label"),
-            controllers.organisationDetails.routes.NameOfCharityRegulatorController
+            messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"),
+            controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
               .onPageLoad(CheckMode)
               .url,
-            messages("repaymentClaimDetailsCheckYourAnswers.claimingDonationsCollectedInCommunityBuildings.label")
+            messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
           )
         )
     }

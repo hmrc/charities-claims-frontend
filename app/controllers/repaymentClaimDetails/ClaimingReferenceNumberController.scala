@@ -56,11 +56,11 @@ class ClaimingReferenceNumberController @Inject() (
             .save(RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(value))
             .map(_ =>
               if (value) {
-                Redirect(routes.ClaimingReferenceNumberController.onPageLoad(mode))
+                Redirect(routes.ClaimReferenceNumberInputController.onPageLoad(mode))
               } else {
                 Redirect(
-                  routes.ClaimingReferenceNumberController.onPageLoad(mode)
-                ) // TODO - redirect to claim reference input screen
+                  routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+                )
               }
             )
       )

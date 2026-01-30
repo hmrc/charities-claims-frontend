@@ -95,12 +95,12 @@ class ClaimingReferenceNumberControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url
+            routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url
           )
         }
       }
 
-      "should redirect to the next page when the value is false" in {
+      "should redirect to the next page(cya) when the value is false" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
@@ -112,7 +112,7 @@ class ClaimingReferenceNumberControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
           )
         }
       }

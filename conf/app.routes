@@ -53,9 +53,10 @@ POST        /connected-to-charities                             controllers.repa
 GET         /change-connected-to-charities                      controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /change-connected-to-charities                      controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onSubmit(mode: Mode = Mode.CheckMode)
 
-
-GET         /repayment-claim-type                               controllers.repaymentClaimDetails.RepaymentClaimTypeController.onPageLoad
-POST        /repayment-claim-type                               controllers.repaymentClaimDetails.RepaymentClaimTypeController.onSubmit
+GET         /repayment-claim-type                               controllers.repaymentClaimDetails.RepaymentClaimTypeController.onPageLoad(mode: Mode = Mode.NormalMode)
+POST        /repayment-claim-type                               controllers.repaymentClaimDetails.RepaymentClaimTypeController.onSubmit(mode: Mode = Mode.NormalMode)
+GET         /repayment-claim-type                               controllers.repaymentClaimDetails.RepaymentClaimTypeController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /repayment-claim-type                               controllers.repaymentClaimDetails.RepaymentClaimTypeController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /old/check-your-claim-details                       controllers.repaymentclaimdetailsold.CheckYourAnswersController.onPageLoad
 POST        /old/check-your-claim-details                       controllers.repaymentclaimdetailsold.CheckYourAnswersController.onSubmit

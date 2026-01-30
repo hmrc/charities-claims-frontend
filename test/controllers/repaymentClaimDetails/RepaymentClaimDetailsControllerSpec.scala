@@ -17,6 +17,7 @@
 package controllers.repaymentClaimDetails
 
 import controllers.ControllerSpec
+import models.Mode.NormalMode
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -43,7 +44,7 @@ class RepaymentClaimDetailsControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
-      "should redirect to the next page (R1.1 / PageNotFound)" in {
+      "should redirect to the next page (R1.1)" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -53,7 +54,7 @@ class RepaymentClaimDetailsControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(routes.RepaymentClaimTypeController.onPageLoad(NormalMode).url)
         }
       }
     }
