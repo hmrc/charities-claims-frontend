@@ -34,7 +34,7 @@ govukErrorSummary: GovukErrorSummary
        @govukErrorSummary(ErrorSummaryViewModel(form))
    }
 
-    <span class="govuk-caption-l">@messages("repaymentClaimDetails.caption")</span>
+    <span class="govuk-caption-l">@messages("claimReferenceNumber.caption")</span>
    <h1 class="govuk-heading-l">@messages("claimReferenceNumber.heading")</h1>
 
    @formHelper(action = routes.ClaimReferenceNumberInputController.onSubmit(mode), Symbol("autoComplete") -> "on") {
