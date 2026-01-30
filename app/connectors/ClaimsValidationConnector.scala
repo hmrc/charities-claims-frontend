@@ -38,6 +38,10 @@ import play.api.libs.json.JsNull
 @ImplementedBy(classOf[ClaimsValidationConnectorImpl])
 trait ClaimsValidationConnector {
 
+  def createUploadTracking(claimId: String, request: CreateUploadTrackingRequest)(using
+    hc: HeaderCarrier
+  ): Future[Boolean]
+
   def getUploadSummary(claimId: String)(using hc: HeaderCarrier): Future[GetUploadSummaryResponse]
 
   def getUploadResult(claimId: String, reference: FileUploadReference)(using
@@ -66,6 +70,15 @@ class ClaimsValidationConnectorImpl @Inject() (
 
   val contextPath: String = servicesConfig
     .getConfString("charities-claims-validation.context-path", "charities-claims-validation")
+
+  def createUploadTracking(claimId: String, request: CreateUploadTrackingRequest)(using
+    hc: HeaderCarrier
+  ): Future[Boolean] =
+    callValidationBackend[CreateUploadTrackingRequest, SuccessResponse](
+      method = "POST",
+      url = s"$baseUrl$contextPath/$claimId/create-upload-tracking",
+      payload = Some(request)
+    ).map(_.success)
 
   final def getUploadSummary(claimId: String)(using hc: HeaderCarrier): Future[GetUploadSummaryResponse] =
     callValidationBackend[Nothing, GetUploadSummaryResponse](

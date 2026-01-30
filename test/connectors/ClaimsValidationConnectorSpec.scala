@@ -86,6 +86,16 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
   lazy val testGetUploadResultAwaitingUploadJsonString: String =
     TestResources.readTestResource("/test-get-upload-result-awaiting-upload.json")
 
+  def givenCreateUploadTrackingEndpointReturns(
+    request: CreateUploadTrackingRequest,
+    response: HttpResponse
+  ): CallHandler[Future[HttpResponse]] =
+    mockHttpPostSuccess(
+      url = "http://example.com:1234/charities-claims-validation/123/create-upload-tracking",
+      requestBody = Json.toJson(request),
+      hasHeaders = false
+    )(response)
+
   def givenGetUploadSummaryEndpointReturns(response: HttpResponse): CallHandler[Future[HttpResponse]] =
     mockHttpGetSuccess(
       URL("http://example.com:1234/charities-claims-validation/123/upload-results")
@@ -104,6 +114,33 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
   given HeaderCarrier = HeaderCarrier()
 
   "ClaimsValidationConnector" - {
+
+    "createUpoloadTracking" - {
+
+      val createUploadTrackingRequest = CreateUploadTrackingRequest(
+        reference = UpscanReference("reference-123"),
+        validationType = ValidationType.GiftAid,
+        uploadUrl = "upload-url-123",
+        initateTimestamp = "initate-timestamp-123"
+      )
+
+      "should return true when service returns 200 status" in {
+        givenCreateUploadTrackingEndpointReturns(
+          createUploadTrackingRequest,
+          HttpResponse(200, Json.stringify(Json.toJson(SuccessResponse(success = true))))
+        ).once()
+        await(connector.createUploadTracking("123", createUploadTrackingRequest)) should be(true)
+      }
+
+      "should return false when service returns 200 status" in {
+        givenCreateUploadTrackingEndpointReturns(
+          createUploadTrackingRequest,
+          HttpResponse(200, Json.stringify(Json.toJson(SuccessResponse(success = false))))
+        ).once()
+        await(connector.createUploadTracking("123", createUploadTrackingRequest)) should be(false)
+      }
+    }
+
     "getUploadSummary" - {
       "have retries defined" in {
         connector.retryIntervals shouldBe Seq(FiniteDuration(10, "ms"), FiniteDuration(50, "ms"))
@@ -174,6 +211,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
     }
 
     "getUploadResult" - {
+
       "should return upload result when service returns 200 status with validated gift aid" in {
         givenGetUploadResultEndpointReturns(HttpResponse(200, testGetUploadResultValidatedGiftAidJsonString)).once()
         await(connector.getUploadResult("123", FileUploadReference("file-upload-reference-123"))) should be(
@@ -190,6 +228,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
     }
 
     "deleteSchedule" - {
+
       "should return DeleteScheduleResponse with success=true when deletion is successful" in {
         val successResponse = DeleteScheduleResponse(success = true)
         givenDeleteScheduleEndpointReturns(
