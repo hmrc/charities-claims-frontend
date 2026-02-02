@@ -24,7 +24,7 @@ import forms.YesNoFormProvider
 import models.{Mode, RepaymentClaimDetailsAnswers}
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
-import services.SaveService
+import services.{SaveService, UpdateRepaymentClaimService}
 import views.html.{ClaimingCommunityBuildingDonationsView, UpdateRepaymentClaimView}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -54,15 +54,8 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    // check for the hidden field "confirmingUpdate"
-    // - if "confirmingUpdate=true" is present then user is confirming a change with WRN3
-    // - if "confirmingUpdate" is absent then user is answering the original question as normal
-    val isConfirmingUpdate = request.body.asFormUrlEncoded
-      .flatMap(_.get("confirmingUpdate"))
-      .exists(_.headOption.contains("true"))
-
-    if (isConfirmingUpdate) {
-      // UPDATE CONFIRMATION: User is confirming they want to change from Yes to No
+    // CONFIRMATION CHECK: User is answering the WRN3 confirmation question
+    if (updateRepaymentClaimService.isConfirmationSubmission(request.body.asFormUrlEncoded)) {
       handleUpdateConfirmation(mode)
     } else {
       // ORIGINAL QUESTION: User is answering normal question
@@ -78,15 +71,8 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
         newAnswer => {
           val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
 
-          // Check if we need to show WRN3 confirmation
-          // Show WRN3 when: CheckMode AND changing Yes to No
-          val needsConfirmation =
-            mode == CheckMode &&
-              previousAnswer.contains(true) &&
-              !newAnswer // newAnswer is false - user is changing to 'No'
-
-          if (needsConfirmation) {
-            // we show WRN3 confirmation screen - does NOT save the change yet
+          if (updateRepaymentClaimService.needsUpdateConfirmation(mode, previousAnswer, newAnswer)) {
+            // Show WRN3 confirmation (does NOT save yet)
             Future.successful(
               Ok(
                 confirmationView(
@@ -107,7 +93,7 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
   // handles submission of WRN3 confirmation form
   private def handleUpdateConfirmation(mode: Mode)(implicit request: models.requests.DataRequest[AnyContent]) =
     confirmUpdateForm
-      .bindFromRequest() // binds 'value' field from WRN3 confirmation - yes or no to confirm
+      .bindFromRequest()
       .fold(
         formWithErrors =>
           // validation error - user didn't select Yes/No on
@@ -119,19 +105,17 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
               )
             )
           ),
-        userConfirmedChange =>
-          // userConfirmedChange = true - 'Yes, I want to update' (proceed with change to No)
-          // userConfirmedChange = false - 'No, cancel' (go back to CYA without saving)
-
-          if (userConfirmedChange) {
-            // user confirmed - we save the change to false and proceed with user flow
+        {
+          case true =>
+            // User confirmed - save the change to false and proceed
             saveService
               .save(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false))
               .map(_ => Redirect(nextPage(false, mode)))
-          } else {
-            // user cancelled - we go back to CYA without saving anything
+
+          case false =>
+            // User cancelled - go back to CYA without saving
             Future.successful(Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad))
-          }
+        }
       )
   }
 }
