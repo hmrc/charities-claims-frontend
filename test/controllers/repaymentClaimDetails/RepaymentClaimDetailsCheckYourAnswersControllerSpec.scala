@@ -36,69 +36,254 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
   "RepaymentClaimDetailsCheckYourAnswersController" - {
     "onPageLoad" - {
-      "should render the page correctly when claiming reference number is true" in {
+      "claimingUnderGiftAidSmallDonationsScheme is true" - {
+        "should render the page correctly when claimingUnderGiftAidSmallDonationsScheme is true" in {
 
-        val sessionData = SessionData(
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
-          repaymentClaimDetailsAnswers = Some(
-            RepaymentClaimDetailsAnswers(
-              claimingGiftAid = Some(true),
-              claimingTaxDeducted = Some(false),
-              claimingUnderGiftAidSmallDonationsScheme = Some(true),
-              claimingReferenceNumber = Some(true),
-              claimReferenceNumber = Some("12345678AB")
+          val sessionData = SessionData(
+            repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(false),
+                claimingTaxDeducted = Some(false),
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = Some(true),
+                claimingDonationsCollectedInCommunityBuildings = Some(true),
+                connectedToAnyOtherCharities = Some(true),
+                makingAdjustmentToPreviousClaim = Some(true),
+                claimingReferenceNumber = Some(true),
+                claimReferenceNumber = Some("12345678AB")
+              )
             )
           )
-        )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
 
-          val result = route(application, request).value
+            val result = route(application, request).value
 
-          val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+            val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
 
-          status(result) shouldEqual OK
+            status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+          }
+        }
+
+        "should render the page correctly when claimingGiftAid is true" in {
+
+          val sessionData = SessionData(
+            repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(true),
+                claimingTaxDeducted = Some(false),
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = Some(false),
+                claimingDonationsCollectedInCommunityBuildings = Some(false),
+                connectedToAnyOtherCharities = Some(false),
+                makingAdjustmentToPreviousClaim = Some(false),
+                claimingReferenceNumber = Some(true),
+                claimReferenceNumber = Some("12345678AB")
+              )
+            )
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+          }
+        }
+        "should render the page correctly when claimingTaxDeducted is true " in {
+
+          val sessionData = SessionData(
+            repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(false),
+                claimingTaxDeducted = Some(true),
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = Some(false),
+                claimingDonationsCollectedInCommunityBuildings = Some(false),
+                connectedToAnyOtherCharities = Some(false),
+                makingAdjustmentToPreviousClaim = Some(false),
+                claimingReferenceNumber = Some(true),
+                claimReferenceNumber = Some("12345678AB")
+              )
+            )
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+          }
+        }
+
+        "should render the page correctly when claimingGiftAid & claimingTaxDeducted are true" in {
+
+          val sessionData = SessionData(
+            repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(true),
+                claimingTaxDeducted = Some(true),
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = Some(false),
+                claimingDonationsCollectedInCommunityBuildings = Some(false),
+                connectedToAnyOtherCharities = Some(false),
+                makingAdjustmentToPreviousClaim = Some(false),
+                claimingReferenceNumber = Some(true),
+                claimReferenceNumber = Some("12345678AB")
+              )
+            )
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+          }
+        }
+
+        "should render the page correctly when claimingGiftAid & claimingTaxDeducted are true and some answers is not defined" in {
+
+          val sessionData = SessionData(
+            repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(true),
+                claimingTaxDeducted = Some(true),
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = None,
+                claimingDonationsCollectedInCommunityBuildings = None,
+                connectedToAnyOtherCharities = None,
+                makingAdjustmentToPreviousClaim = None,
+                claimingReferenceNumber = Some(true),
+                claimReferenceNumber = Some("12345678AB")
+              )
+            )
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+          }
+        }
+
+      }
+      "claimingUnderGiftAidSmallDonationsScheme is false" - {
+        "should render the page correctly when claimingGiftAid is true " in {
+
+          val sessionData = SessionData(
+            repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(true),
+                claimingTaxDeducted = Some(false),
+                claimingUnderGiftAidSmallDonationsScheme = Some(false),
+                claimingDonationsNotFromCommunityBuilding = Some(false),
+                claimingDonationsCollectedInCommunityBuildings = Some(false),
+                connectedToAnyOtherCharities = Some(false),
+                makingAdjustmentToPreviousClaim = Some(false),
+                claimingReferenceNumber = Some(false),
+                claimReferenceNumber = None
+              )
+            )
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+          }
+        }
+        "should render the page correctly when claimingGiftAid & claimingTaxDeducted is true " in {
+
+          val sessionData = SessionData(
+            repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(true),
+                claimingTaxDeducted = Some(true),
+                claimingUnderGiftAidSmallDonationsScheme = Some(false),
+                claimingDonationsNotFromCommunityBuilding = Some(false),
+                claimingDonationsCollectedInCommunityBuildings = Some(false),
+                connectedToAnyOtherCharities = Some(false),
+                makingAdjustmentToPreviousClaim = Some(false),
+                claimingReferenceNumber = Some(true),
+                claimReferenceNumber = None
+              )
+            )
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+          }
         }
       }
 
-      "should render the page correctly when claiming reference number is false " in {
-
-        val sessionData = SessionData(
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
-          repaymentClaimDetailsAnswers = Some(
-            RepaymentClaimDetailsAnswers(
-              claimingGiftAid = Some(true),
-              claimingTaxDeducted = Some(false),
-              claimingUnderGiftAidSmallDonationsScheme = Some(true),
-              claimingReferenceNumber = Some(false),
-              claimReferenceNumber = None
-            )
-          )
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
-
-          status(result) shouldEqual OK
-
-          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
-        }
-      }
-
-      "should render the page correctly when some answers are missing" in {
+      "should render the page correctly when some answers are missing & claimingGiftAid is true" in {
 
         val sessionData = SessionData(
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
@@ -106,7 +291,11 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
             RepaymentClaimDetailsAnswers(
               claimingGiftAid = Some(true),
               claimingTaxDeducted = None,
-              claimingUnderGiftAidSmallDonationsScheme = Some(true),
+              claimingUnderGiftAidSmallDonationsScheme = Some(false),
+              claimingDonationsNotFromCommunityBuilding = None,
+              claimingDonationsCollectedInCommunityBuildings = Some(false),
+              connectedToAnyOtherCharities = Some(false),
+              makingAdjustmentToPreviousClaim = Some(false),
               claimingReferenceNumber = None,
               claimReferenceNumber = Some("12345678AB")
             )
@@ -129,6 +318,150 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
         }
       }
+
+      "should render the page correctly when some answers are missing & claimingTaxDeducted is true" in {
+
+        val sessionData = SessionData(
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
+          repaymentClaimDetailsAnswers = Some(
+            RepaymentClaimDetailsAnswers(
+              claimingGiftAid = None,
+              claimingTaxDeducted = Some(true),
+              claimingUnderGiftAidSmallDonationsScheme = Some(false),
+              claimingDonationsNotFromCommunityBuilding = None,
+              claimingDonationsCollectedInCommunityBuildings = Some(false),
+              connectedToAnyOtherCharities = Some(false),
+              makingAdjustmentToPreviousClaim = Some(false),
+              claimingReferenceNumber = None,
+              claimReferenceNumber = Some("12345678AB")
+            )
+          )
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+
+        }
+      }
+      "should render the page correctly when some answers are missing & claimingUnderGiftAidSmallDonationsScheme missing" in {
+
+        val sessionData = SessionData(
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
+          repaymentClaimDetailsAnswers = Some(
+            RepaymentClaimDetailsAnswers(
+              claimingGiftAid = None,
+              claimingTaxDeducted = Some(true),
+              claimingUnderGiftAidSmallDonationsScheme = None,
+              claimingDonationsNotFromCommunityBuilding = None,
+              claimingDonationsCollectedInCommunityBuildings = Some(false),
+              connectedToAnyOtherCharities = Some(false),
+              makingAdjustmentToPreviousClaim = Some(false),
+              claimingReferenceNumber = None,
+              claimReferenceNumber = Some("12345678AB")
+            )
+          )
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+
+        }
+      }
+
+      "should render the page correctly when claimingUnderGiftAidSmallDonationsScheme & claimingGiftAid & claimingTaxDeducted are missing" in {
+
+        val sessionData = SessionData(
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
+          repaymentClaimDetailsAnswers = Some(
+            RepaymentClaimDetailsAnswers(
+              claimingGiftAid = None,
+              claimingTaxDeducted = None,
+              claimingUnderGiftAidSmallDonationsScheme = None,
+              claimingDonationsNotFromCommunityBuilding = None,
+              claimingDonationsCollectedInCommunityBuildings = Some(false),
+              connectedToAnyOtherCharities = Some(false),
+              makingAdjustmentToPreviousClaim = Some(false),
+              claimingReferenceNumber = None,
+              claimReferenceNumber = Some("12345678AB")
+            )
+          )
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+
+        }
+      }
+
+      "should render the page correctly when all are missing" in {
+
+        val sessionData = SessionData(
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
+          repaymentClaimDetailsAnswers = Some(
+            RepaymentClaimDetailsAnswers(
+              claimingGiftAid = None,
+              claimingTaxDeducted = None,
+              claimingUnderGiftAidSmallDonationsScheme = None,
+              claimingDonationsNotFromCommunityBuilding = None,
+              claimingDonationsCollectedInCommunityBuildings = None,
+              connectedToAnyOtherCharities = None,
+              makingAdjustmentToPreviousClaim = None,
+              claimingReferenceNumber = None,
+              claimReferenceNumber = None
+            )
+          )
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+
+        }
+      }
+
     }
   }
 
@@ -140,9 +473,13 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
         repaymentClaimDetailsAnswers = Some(
           RepaymentClaimDetailsAnswers(
             claimingGiftAid = Some(true),
-            claimingTaxDeducted = Some(false),
-            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingTaxDeducted = Some(true),
+            claimingUnderGiftAidSmallDonationsScheme = Some(true),
             claimingReferenceNumber = Some(true),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false),
             claimReferenceNumber = Some("12345678AB")
           )
         )
@@ -175,6 +512,10 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
             claimingGiftAid = Some(true),
             claimingTaxDeducted = None,
             claimingUnderGiftAidSmallDonationsScheme = Some(true),
+            claimingDonationsNotFromCommunityBuilding = None,
+            claimingDonationsCollectedInCommunityBuildings = None,
+            connectedToAnyOtherCharities = None,
+            makingAdjustmentToPreviousClaim = None,
             claimingReferenceNumber = Some(true),
             claimReferenceNumber = Some("12345678AB")
           )

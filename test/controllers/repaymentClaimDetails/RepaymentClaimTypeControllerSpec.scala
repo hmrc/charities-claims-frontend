@@ -119,7 +119,7 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url
+            routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -139,7 +139,7 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url
+            routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -159,7 +159,7 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url
+            routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -178,7 +178,7 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url
+            routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(NormalMode).url
           )
         }
       }

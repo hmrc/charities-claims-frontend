@@ -70,7 +70,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   ,
                   controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
                     .onPageLoad(CheckMode)
-                    .url, // TODO
+                    .url,
                   messages("repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label")
                 )
               )
@@ -97,7 +97,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                     ,
                     controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
                       .onPageLoad(CheckMode)
-                      .url, // TODO
+                      .url,
                     messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
                   )
                 )
@@ -109,7 +109,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                     ),
                     controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
                       .onPageLoad(CheckMode)
-                      .url, // TODO
+                      .url,
                     messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
                   )
                 )
@@ -151,7 +151,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   refNumber,
                   controllers.repaymentClaimDetails.routes.ClaimReferenceNumberInputController
                     .onPageLoad(CheckMode)
-                    .url, // TODO
+                    .url,
                   messages("repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label")
                 )
               )
@@ -163,14 +163,14 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   ),
                   controllers.repaymentClaimDetails.routes.ClaimReferenceNumberInputController
                     .onPageLoad(CheckMode)
-                    .url, // TODO
+                    .url,
                   messages("repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label")
                 )
               )
             case (_, _)                        =>
               None
           },
-          buildList.claimingDonationsNotFromCommunityBuilding match { // TODO when screen R1.2 available
+          buildList.claimingDonationsNotFromCommunityBuilding match {
             case Some(value) =>
               Some(
                 summaryRow(
@@ -178,9 +178,9 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                     "repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label"
                   ),
                   if (value) messages("site.yes") else messages("site.no"),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
+                  controllers.repaymentClaimDetails.routes.ClaimGiftAidSmallDonationsSchemeController
                     .onPageLoad(CheckMode)
-                    .url, // TODO
+                    .url,
                   messages("repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label")
                 )
               )
@@ -190,9 +190,9 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   messages(
                     "repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label"
                   ),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
+                  controllers.repaymentClaimDetails.routes.ClaimGiftAidSmallDonationsSchemeController
                     .onPageLoad(CheckMode)
-                    .url, // TODO
+                    .url,
                   messages("repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label")
                 )
               )
@@ -257,7 +257,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   if (value) messages("site.yes") else messages("site.no"),
                   controllers.repaymentClaimDetails.routes.ConnectedToAnyOtherCharitiesController
                     .onPageLoad(CheckMode)
-                    .url, // TODO
+                    .url,
                   messages("repaymentClaimDetailsCheckYourAnswers.connectToAnyOtherCharity.label")
                 )
               )
@@ -269,7 +269,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   ),
                   controllers.repaymentClaimDetails.routes.ConnectedToAnyOtherCharitiesController
                     .onPageLoad(CheckMode)
-                    .url, // TODO
+                    .url,
                   messages("repaymentClaimDetailsCheckYourAnswers.connectToAnyOtherCharity.label")
                 )
               )
@@ -278,7 +278,6 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
       case _               =>
         Seq(
           missingDataRow(
-            // TODO
             messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"),
             controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
               .onPageLoad(CheckMode)

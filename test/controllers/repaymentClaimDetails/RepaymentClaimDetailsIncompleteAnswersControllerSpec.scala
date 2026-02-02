@@ -30,6 +30,10 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
     claimingTaxDeducted = Some(false),
     claimingUnderGiftAidSmallDonationsScheme = Some(true),
     claimingReferenceNumber = Some(true),
+    claimingDonationsNotFromCommunityBuilding = Some(true),
+    claimingDonationsCollectedInCommunityBuildings = Some(true),
+    connectedToAnyOtherCharities = Some(true),
+    makingAdjustmentToPreviousClaim = Some(true),
     claimReferenceNumber = Some("12345678AB")
   )
   "RepaymentClaimDetailsIncompleteAnswersController" - {
@@ -37,6 +41,8 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
       "should render the page with missing fields when answers are incomplete" in {
         val incompleteAnswers = RepaymentClaimDetailsAnswers()
         val sessionData       = SessionData(
+          unsubmittedClaimId = Some("123"),
+          lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
           repaymentClaimDetailsAnswers = Some(incompleteAnswers)
         )
@@ -66,9 +72,52 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(false),
           claimingUnderGiftAidSmallDonationsScheme = Some(false),
-          claimingReferenceNumber = Some(false)
+          claimingReferenceNumber = Some(false),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(false),
+          makingAdjustmentToPreviousClaim = Some(false)
         )
         val sessionData     = SessionData(
+          unsubmittedClaimId = Some("123"),
+          lastUpdatedReference = Some("123"),
+          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
+          repaymentClaimDetailsAnswers = Some(completeAnswers)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[RepaymentClaimDetailsIncompleteAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url,
+            Seq.empty
+          ).body
+        }
+      }
+
+      "should render the page with no missing fields when answers are complete for claimingUnderGiftAidSmallDonationsScheme is true " in {
+        val completeAnswers = RepaymentClaimDetailsAnswers(
+          claimingGiftAid = Some(true),
+          claimingTaxDeducted = Some(true),
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingReferenceNumber = Some(false),
+          claimingDonationsNotFromCommunityBuilding = Some(true),
+          claimingDonationsCollectedInCommunityBuildings = Some(true),
+          connectedToAnyOtherCharities = Some(true),
+          makingAdjustmentToPreviousClaim = Some(true)
+        )
+        val sessionData     = SessionData(
+          unsubmittedClaimId = Some("123"),
+          lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
           repaymentClaimDetailsAnswers = Some(completeAnswers)
         )
