@@ -702,7 +702,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some("next-page-after-organisation-details-check-your-answers")
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
 
         }
       }

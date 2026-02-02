@@ -153,8 +153,7 @@ POST        /registering-your-charity-with-a-regulator      controllers.Register
 # TODO: Placeholder screen for G2 - route will be updated in future
 GET         /add-schedule                                   controllers.organisationDetails.AddScheduleController.onPageLoad
 
-# TODO: Placeholder screen for R2 - route will be updated in future
-GET         /make-charity-repayment-claim                   controllers.organisationDetails.MakeCharityRepaymentClaimController.onPageLoad
+GET         /make-a-charity-repayment-claim                 controllers.ClaimsTaskListController.onPageLoad
 
 # TODO: Placeholder screen for AA1 - route will be updated in future
 GET         /charity-repayment-dashboard                    controllers.organisationDetails.CharityRepaymentDashboardController.onPageLoad

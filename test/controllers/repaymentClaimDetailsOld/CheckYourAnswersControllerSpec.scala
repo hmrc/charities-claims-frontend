@@ -140,7 +140,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
 
         status(result) shouldEqual SEE_OTHER
 
-        redirectLocation(result) shouldEqual Some("next-page-after-check-your-answers")
+        redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
 
       }
     }

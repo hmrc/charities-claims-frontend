@@ -75,7 +75,6 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
         }
       }
 
-      // TODO: Update test when R2 screen route is completed (currently redirects to placeholder /make-charity-repayment-claim)
       "should redirect to R2 screen when no is selected" in {
         given application: Application = applicationBuilder()
           .overrides(bind[ClaimsConnector].toInstance(mockClaimsConnector))
@@ -89,7 +88,7 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.MakeCharityRepaymentClaimController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 

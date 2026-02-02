@@ -82,7 +82,6 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      // TODO: Update test when R2 screen route is completed (currently redirects to placeholder /make-charity-repayment-claim)
       "should redirect to R2 when yes is selected" in {
         given application: Application = applicationBuilder().build()
 
@@ -95,7 +94,7 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
 
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(
-            controllers.organisationDetails.routes.MakeCharityRepaymentClaimController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }

@@ -44,12 +44,7 @@ class CheckYourAnswersController @Inject() (
     if request.sessionData.repaymentClaimDetailsAnswersOld.hasCompleteAnswers
     then
       claimsService.save
-        .map { _ =>
-          Redirect(
-            // TODO: replace with correct url when ready
-            "next-page-after-check-your-answers"
-          )
-        }
+        .map(_ => Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
     else Future.successful(Redirect(routes.IncompleteAnswersController.onPageLoad))
   }
 }
