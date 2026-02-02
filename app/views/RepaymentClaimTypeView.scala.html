@@ -41,7 +41,7 @@
 
     @formHelper(action = routes.RepaymentClaimTypeController.onSubmit(mode),Symbol("autoComplete") -> "on") {
 
-    <p class="govuk-hint">@messages("repaymentClaimType.hint")</p>
+    <div class="govuk-hint">@messages("repaymentClaimType.hint")</div>
     @govukCheckBoxes(
         CheckboxesViewModel(
             form,
