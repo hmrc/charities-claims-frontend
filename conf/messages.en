@@ -359,3 +359,9 @@ site.no = No
 site.yes = Yes
 
 warning.text = Warning
+
+uploadGiftAidSchedule.title = Upload a Gift Aid schedule
+uploadGiftAidSchedule.heading = Upload a Gift Aid schedule
+
+yourGiftAidScheduleUpload.title = Your Gift Aid schedule upload 
+yourGiftAidScheduleUpload.heading = Your Gift Aid schedule upload 

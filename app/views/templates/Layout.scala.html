@@ -41,7 +41,8 @@
   showBackLink: Boolean = true,
   suppressSignOutLink: Boolean = false,
   hasErrors: Boolean = false,
-  suppressLanguageToggle: Boolean = false
+  suppressLanguageToggle: Boolean = false,
+  refreshPageSeconds: Option[Int] = None
 )(contentBlock: Html)(using request: Request[?], messages: Messages)
 
 @signOutUrl = @{
@@ -76,6 +77,9 @@
         } else {
             
         }
+    }
+    @refreshPageSeconds.map { seconds =>
+        <meta http-equiv="refresh" content="@seconds"/>
     }
 }
 

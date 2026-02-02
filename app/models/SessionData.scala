@@ -33,12 +33,16 @@ final case class SessionData(
   declarationDetailsAnswers: Option[DeclarationDetailsAnswers] = None,
   giftAidSmallDonationsSchemeDonationDetailsAnswers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers] = None,
   // File upload references and data retrieved from the validation service
+  giftAidScheduleUpscanInitialization: Option[UpscanInitiateResponse] = None,
   giftAidScheduleFileUploadReference: Option[FileUploadReference] = None,
   giftAidScheduleData: Option[GiftAidScheduleData] = None,
+  otherIncomeScheduleUpscanInitialization: Option[UpscanInitiateResponse] = None,
   otherIncomeScheduleFileUploadReference: Option[FileUploadReference] = None,
   otherIncomeScheduleData: Option[OtherIncomeScheduleData] = None,
+  communityBuildingsScheduleUpscanInitialization: Option[UpscanInitiateResponse] = None,
   communityBuildingsScheduleFileUploadReference: Option[FileUploadReference] = None,
   communityBuildingsScheduleData: Option[CommunityBuildingsScheduleData] = None,
+  connectedCharitiesScheduleUpscanInitialization: Option[UpscanInitiateResponse] = None,
   connectedCharitiesScheduleFileUploadReference: Option[FileUploadReference] = None,
   connectedCharitiesScheduleData: Option[ConnectedCharitiesScheduleData] = None
 )

@@ -27,14 +27,14 @@ import play.api.libs.json.{Format, Json}
   *   The specific validation ruleset to be executed after the callback URL is called with a 'success' response.
   * @param uploadUrl
   *   The unique upload URL (href) provided in the response from upscan-initiate.
-  * @param initateTimestamp
+  * @param initiateTimestamp
   *   The timestamp of when the call to upscan-initiate was made.
   */
 final case class CreateUploadTrackingRequest(
   reference: UpscanReference,
   validationType: ValidationType,
   uploadUrl: String,
-  initateTimestamp: String
+  initiateTimestamp: String
 )
 
 object CreateUploadTrackingRequest {
