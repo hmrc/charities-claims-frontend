@@ -34,6 +34,10 @@ object RepaymentClaimTypeCheckBox {
         fieldId = "value",
         index = index,
         value = value.toString
+      ).withHint(
+        Option.when(messages.isDefinedAt(s"repaymentClaimType.hint.${value.toString}"))(
+          messages(s"repaymentClaimType.hint.${value.toString}")
+        )
       )
     }
 }

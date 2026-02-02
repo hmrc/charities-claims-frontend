@@ -25,6 +25,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.fieldset.{Fieldset, Legend}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
 import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
 import viewmodels.ErrorMessageAwareness
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
 object checkbox extends CheckboxFluency
 
@@ -77,7 +78,8 @@ trait CheckboxFluency {
     ): CheckboxItem =
       CheckboxItem(
         content = content,
-        id = Some(s"${fieldId}_$index"),
+        // override the href identifier to not have index for the first item in the set
+        id = if index == 0 then Some(fieldId) else Some(s"${fieldId}_$index"),
         name = Some(s"$fieldId[$index]"),
         value = value
       )
@@ -102,6 +104,9 @@ trait CheckboxFluency {
 
     def withHint(hint: Hint): CheckboxItem =
       item.copy(hint = Some(hint))
+
+    def withHint(hint: Option[String]): CheckboxItem =
+      hint.fold(item)(hint => withHint(Hint(content = Text(hint))))
 
     def withConditionalHtml(html: Html): CheckboxItem =
       item.copy(conditionalHtml = Some(html))
