@@ -38,7 +38,7 @@ pageTitle = title(form, messages("claimGASDS.title"))
 
 <p class="govuk-body">@messages("claimGASDS.hint")</p>
 
-@formHelper(action = routes.ClaimGASDSController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+@formHelper(action = routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
 @govukRadios(
 RadiosViewModel.yesNo(
