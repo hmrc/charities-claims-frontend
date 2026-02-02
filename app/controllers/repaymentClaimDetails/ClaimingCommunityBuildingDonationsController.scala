@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import models.{Mode, RepaymentClaimDetailsAnswers}
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
-import views.html.ClaimingCommunityBuildingDonationsView
+import views.html.{ClaimingCommunityBuildingDonationsView, UpdateRepaymentClaimView}
 
 import scala.concurrent.{ExecutionContext, Future}
 import models.Mode.*
@@ -33,13 +33,18 @@ import models.Mode.*
 class ClaimingCommunityBuildingDonationsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: ClaimingCommunityBuildingDonationsView,
+  confirmationView: UpdateRepaymentClaimView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
+  // Form for the original question (field name: "value")
   val form: Form[Boolean] = formProvider("claimingCommunityBuildingDonations.error.required")
+
+  // Form for WRN3 confirmation (field name: "value" - same as above, will have hidden field confirmingUpdate = true)
+  private val confirmUpdateForm: Form[Boolean] = formProvider("updateRepaymentClaim.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) then {
@@ -49,35 +54,84 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val previousAnswer                                  = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
-    val claimingDonationsNotFromCommunityBuildingAnswer =
-      RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
-    val connectedToAnyOtherCharities                    =
-      RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities
+    // check for the hidden field "confirmingUpdate"
+    // - if "confirmingUpdate=true" is present then user is confirming a change with WRN3
+    // - if "confirmingUpdate" is absent then user is answering the original question as normal
+    val isConfirmingUpdate = request.body.asFormUrlEncoded
+      .flatMap(_.get("confirmingUpdate"))
+      .exists(_.headOption.contains("true"))
+
+    if (isConfirmingUpdate) {
+      // UPDATE CONFIRMATION: User is confirming they want to change from Yes to No
+      handleUpdateConfirmation(mode)
+    } else {
+      // ORIGINAL QUESTION: User is answering normal question
+      handleQuestionSubmission(mode)
+    }
+  }
+
+  private def handleQuestionSubmission(mode: Mode)(implicit request: models.requests.DataRequest[AnyContent]) =
     form
-      .bindFromRequest()
+      .bindFromRequest() // binds "value" field from original question
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveService
-            .save(
-              RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(
-                value,
-                claimingDonationsNotFromCommunityBuildingAnswer
+        newAnswer => {
+          val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
+
+          // Check if we need to show WRN3 confirmation
+          // Show WRN3 when: CheckMode AND changing Yes to No
+          val needsConfirmation =
+            mode == CheckMode &&
+              previousAnswer.contains(true) &&
+              !newAnswer // newAnswer is false - user is changing to 'No'
+
+          if (needsConfirmation) {
+            // we show WRN3 confirmation screen - does NOT save the change yet
+            Future.successful(
+              Ok(
+                confirmationView(
+                  confirmUpdateForm,
+                  routes.ClaimingCommunityBuildingDonationsController.onSubmit(mode)
+                )
               )
             )
-            .map(_ =>
-              Redirect(
-                ClaimingCommunityBuildingDonationsController
-                  .nextPage(
-                    value,
-                    mode,
-                    previousAnswer,
-                    claimingDonationsNotFromCommunityBuildingAnswer,
-                    connectedToAnyOtherCharities
-                  )
+          } else {
+            // normal flow - user first time - save answer and redirect to next page
+            saveService
+              .save(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(newAnswer))
+              .map(_ => Redirect(nextPage(newAnswer, mode)))
+          }
+        }
+      )
+
+  // handles submission of WRN3 confirmation form
+  private def handleUpdateConfirmation(mode: Mode)(implicit request: models.requests.DataRequest[AnyContent]) =
+    confirmUpdateForm
+      .bindFromRequest() // binds 'value' field from WRN3 confirmation - yes or no to confirm
+      .fold(
+        formWithErrors =>
+          // validation error - user didn't select Yes/No on
+          Future.successful(
+            BadRequest(
+              confirmationView(
+                formWithErrors,
+                routes.ClaimingCommunityBuildingDonationsController.onSubmit(mode)
               )
             )
+          ),
+        userConfirmedChange =>
+          // userConfirmedChange = true - 'Yes, I want to update' (proceed with change to No)
+          // userConfirmedChange = false - 'No, cancel' (go back to CYA without saving)
+
+          if (userConfirmedChange) {
+            // user confirmed - we save the change to false and proceed with user flow
+            saveService
+              .save(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false))
+              .map(_ => Redirect(nextPage(false, mode)))
+          } else {
+            // user cancelled - we go back to CYA without saving anything
+            Future.successful(Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad))
+          }
       )
   }
 }

@@ -391,6 +391,17 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
           status(result) shouldEqual BAD_REQUEST
         }
       }
+
+      // TODO: Add WRN3 confirmation tests:
+      // - should show WRN3 confirmation when changing Yes to No in CheckMode
+      // - should NOT show WRN3 when submitting in NormalMode
+      // - should NOT show WRN3 when answer made no change in CheckMode
+      // - should NOT show WRN3 when changing No to Yes in CheckMode
+      // - should save false and redirect when user confirms Yes on WRN3
+      // - should redirect to CYA without saving when user selects No on WRN3
+      // - should show WRN3 with errors when no radio selected on confirmation
+      // - needs to have updated sessionData if user confirmed yes adn continue on WRN3
+      // - check all redirects all work in all tests after navigation all confirmed correct
     }
   }
 }
