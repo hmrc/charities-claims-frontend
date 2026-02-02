@@ -140,6 +140,11 @@ GET         /change-enter-claim-reference-number        controllers.repaymentCla
 POST        /enter-claim-reference-number               controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = models.Mode.NormalMode)
 POST        /change-enter-claim-reference-number        controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
 
+GET         /claim-gasds-payment                        controllers.repaymentClaimDetails.ClaimGASDSController.onPageLoad(mode: Mode = models.Mode.NormalMode)
+GET         /change-claim-gasds-payment                 controllers.repaymentClaimDetails.ClaimGASDSController.onPageLoad(mode: Mode = models.Mode.CheckMode)
+POST        /claim-gasds-payment                        controllers.repaymentClaimDetails.ClaimGASDSController.onSubmit(mode: Mode = models.Mode.NormalMode)
+POST        /change-claim-gasds-payment                 controllers.repaymentClaimDetails.ClaimGASDSController.onSubmit(mode: Mode = models.Mode.CheckMode)
+
 GET         /cannot-view-or-manage-claim                    controllers.organisationDetails.CannotViewOrManageClaimController.onPageLoad
 
 GET         /registering-your-charity-with-a-regulator      controllers.RegisterCharityWithARegulatorController.onPageLoad
