@@ -56,7 +56,7 @@ class RepaymentClaimTypeController @Inject() (
             .map(_ =>
               if (repaymentClaimType.claimingUnderGiftAidSmallDonationsScheme) {
                 Redirect(
-                  routes.ClaimGASDSController.onPageLoad(mode)
+                  routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(mode)
                 )
               } else
                 Redirect(

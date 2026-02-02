@@ -178,7 +178,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                     "repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label"
                   ),
                   if (value) messages("site.yes") else messages("site.no"),
-                  controllers.repaymentClaimDetails.routes.ClaimGASDSController
+                  controllers.repaymentClaimDetails.routes.ClaimGiftAidSmallDonationsSchemeController
                     .onPageLoad(CheckMode)
                     .url,
                   messages("repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label")
@@ -190,7 +190,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   messages(
                     "repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label"
                   ),
-                  controllers.repaymentClaimDetails.routes.ClaimGASDSController
+                  controllers.repaymentClaimDetails.routes.ClaimGiftAidSmallDonationsSchemeController
                     .onPageLoad(CheckMode)
                     .url,
                   messages("repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label")
