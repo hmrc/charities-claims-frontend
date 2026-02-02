@@ -25,14 +25,14 @@ import models.{Mode, RepaymentClaimDetailsAnswers}
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.ClaimGASDSView
+import views.html.ClaimGiftAidSmallDonationsSchemeView
 import models.Mode.*
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimGASDSController @Inject() (
+class ClaimGiftAidSmallDonationsSchemeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimGASDSView,
+  view: ClaimGiftAidSmallDonationsSchemeView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService
@@ -42,8 +42,11 @@ class ClaimGASDSController @Inject() (
   val form: Form[Boolean] = formProvider("claimGASDS.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme
-    Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+    if RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true) then {
+      val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
+      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+    } else { Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad)) }
+
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
@@ -53,7 +56,7 @@ class ClaimGASDSController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
-            .save(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(value))
+            .save(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(value))
             .map { _ =>
               Redirect(routes.ClaimingCommunityBuildingDonationsController.onPageLoad(mode))
             }

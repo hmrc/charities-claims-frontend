@@ -140,10 +140,10 @@ GET         /change-enter-claim-reference-number            controllers.repaymen
 POST        /enter-claim-reference-number                   controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = models.Mode.NormalMode)
 POST        /change-enter-claim-reference-number            controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /claim-gasds-payment                        controllers.repaymentClaimDetails.ClaimGASDSController.onPageLoad(mode: Mode = models.Mode.NormalMode)
-GET         /change-claim-gasds-payment                 controllers.repaymentClaimDetails.ClaimGASDSController.onPageLoad(mode: Mode = models.Mode.CheckMode)
-POST        /claim-gasds-payment                        controllers.repaymentClaimDetails.ClaimGASDSController.onSubmit(mode: Mode = models.Mode.NormalMode)
-POST        /change-claim-gasds-payment                 controllers.repaymentClaimDetails.ClaimGASDSController.onSubmit(mode: Mode = models.Mode.CheckMode)
+GET         /claim-gasds-payment                        controllers.repaymentClaimDetails.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(mode: Mode = models.Mode.NormalMode)
+GET         /change-claim-gasds-payment                 controllers.repaymentClaimDetails.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(mode: Mode = models.Mode.CheckMode)
+POST        /claim-gasds-payment                        controllers.repaymentClaimDetails.ClaimGiftAidSmallDonationsSchemeController.onSubmit(mode: Mode = models.Mode.NormalMode)
+POST        /change-claim-gasds-payment                 controllers.repaymentClaimDetails.ClaimGiftAidSmallDonationsSchemeController.onSubmit(mode: Mode = models.Mode.CheckMode)
 
 GET         /cannot-view-or-manage-claim                    controllers.organisationDetails.CannotViewOrManageClaimController.onPageLoad
 
@@ -153,8 +153,7 @@ POST        /registering-your-charity-with-a-regulator      controllers.Register
 # TODO: Placeholder screen for G2 - route will be updated in future
 GET         /add-schedule                                   controllers.organisationDetails.AddScheduleController.onPageLoad
 
-# TODO: Placeholder screen for R2 - route will be updated in future
-GET         /make-charity-repayment-claim                   controllers.organisationDetails.MakeCharityRepaymentClaimController.onPageLoad
+GET         /make-a-charity-repayment-claim                 controllers.ClaimsTaskListController.onPageLoad
 
 # TODO: Placeholder screen for AA1 - route will be updated in future
 GET         /charity-repayment-dashboard                    controllers.organisationDetails.CharityRepaymentDashboardController.onPageLoad

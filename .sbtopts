@@ -1,1 +1,4 @@
 -Dsbt.supershell=false
+-J-Xmx4g
+-J-XX:+UseParallelGC
+-J-Xss8m

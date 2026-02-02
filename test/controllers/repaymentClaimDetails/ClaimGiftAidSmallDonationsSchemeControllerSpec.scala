@@ -16,79 +16,82 @@
 
 package controllers.repaymentClaimDetails
 
-import controllers.ControllerSpec
-import play.api.mvc.AnyContentAsFormUrlEncoded
-import play.api.Application
-import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import models.RepaymentClaimDetailsAnswers
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
+import controllers.ControllerSpec
+import play.api.Application
 import forms.YesNoFormProvider
-import models.Mode.*
 import play.api.data.Form
-import views.html.ClaimGASDSView
+import models.Mode.*
+import models.RepaymentClaimDetailsAnswers
+import views.html.ClaimGiftAidSmallDonationsSchemeView
 
-class ClaimGASDSControllerSpec extends ControllerSpec {
+class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
+
   private val form: Form[Boolean] = new YesNoFormProvider()("claimGASDS.error.required")
 
-  "ClaimGASDSController" - {
+  "ClaimGiftAidSmallDonationsSchemeController" - {
     "onPageLoad" - {
-      "should render the page correctly" in {
-        given application: Application = applicationBuilder().build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimGASDSController.onPageLoad(NormalMode).url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimGASDSView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form, NormalMode).body
-        }
-      }
-
-      "should render the page and pre-populate correctly with true value" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+      "should render the page correctly when claimingDonationsNotFromCommunityBuilding is true" in {
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimGASDSController.onPageLoad(NormalMode).url)
+            FakeRequest(GET, routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimGASDSView]
+          val view   = application.injector.instanceOf[ClaimGiftAidSmallDonationsSchemeView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
         }
       }
 
-      "should render the page and pre-populate correctly with false value" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
+      "should render page not found if claimingDonationsNotFromCommunityBuilding is false" in {
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimGASDSController.onPageLoad(NormalMode).url)
+            FakeRequest(GET, routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimGASDSView]
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.PageNotFoundController.onPageLoad.url
+          )
+        }
+      }
+
+      "should render page not found if claimingDonationsNotFromCommunityBuilding is empty (None)" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.PageNotFoundController.onPageLoad.url
+          )
         }
       }
     }
 
     "onSubmit" - {
-      "should redirect to the next page when the value is true" in {
+      "should redirect to the next page (ClaimingCommunityBuildingDonations) when the value is true" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimGASDSController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
@@ -100,12 +103,12 @@ class ClaimGASDSControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to the next page when the value is false" in {
+      "should redirect to the next page (ClaimingCommunityBuildingDonations) when the value is false" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimGASDSController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
@@ -117,12 +120,12 @@ class ClaimGASDSControllerSpec extends ControllerSpec {
         }
       }
 
-      "should return BadRequest with errors when a required field is missing" in {
+      "should reload the page with errors when a required field is missing" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimGASDSController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value

@@ -51,8 +51,7 @@ class RegisterCharityWithARegulatorController @Inject() (
         formWithErrors => BadRequest(view(appConfig.registerCharityWithARegulatorUrl, formattedLimit)(formWithErrors)),
         {
           case true =>
-            // TODO: User selected 'Yes' - redirect to placeholder R2 screen, route to be updated in the future
-            Redirect(controllers.organisationDetails.routes.MakeCharityRepaymentClaimController.onPageLoad)
+            Redirect(routes.ClaimsTaskListController.onPageLoad)
 
           case false =>
             // TODO: User selected 'No' - redirect to D3 placeholder screen, route to be updated in the future

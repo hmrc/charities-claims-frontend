@@ -496,7 +496,9 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
         status(result) shouldEqual SEE_OTHER
 
-        redirectLocation(result) shouldEqual Some("next-page-after-repayment-details-check-your-answers")
+        redirectLocation(result) shouldEqual Some(
+          controllers.routes.ClaimsTaskListController.onPageLoad.url
+        )
 
       }
     }

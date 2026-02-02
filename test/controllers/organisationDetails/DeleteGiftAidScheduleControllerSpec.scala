@@ -95,7 +95,6 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      // TODO: Update test when R2 screen route is completed (currently redirects to placeholder /make-charity-repayment-claim)
       "should call backend deletion endpoint and redirect to R2 when yes is selected" in {
         val sessionData = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-123"))
 
@@ -116,7 +115,7 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.MakeCharityRepaymentClaimController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
