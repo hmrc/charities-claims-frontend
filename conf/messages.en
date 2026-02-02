@@ -13,7 +13,7 @@ charityExcepted.bullet.3 = a scout or guide group
 charityExcepted.bullet.4 = a charitable service of the Armed Forces
 charityExcepted.bullet.5 = a student union
 charityExcepted.heading = Your charity is excepted
-charityExcepted.p1 = Your charity is excepted as the charity''s income is £100,000 or less and is classed as one of the following:
+charityExcepted.p1 = Your charity is excepted as the charity’s income is £100,000 or less and is classed as one of the following:
 charityExcepted.title = Your charity is excepted
 
 charityExempt.title = Your charity is exempt
@@ -92,7 +92,7 @@ repaymentClaimType.hint.claimingUnderGiftAidSmallDonationsScheme = These are not
 repaymentClaimType.error.required = Select repayment claim type
 
 claimingCommunityBuildingDonations.caption = Provide repayment claim details
-claimingCommunityBuildingDonations.error.required = Select 'Yes' if you are claiming for donations collected in community buildings
+claimingCommunityBuildingDonations.error.required = Select ‘Yes’ if you are claiming for donations collected in community buildings
 claimingCommunityBuildingDonations.heading = Do you want to claim for donations collected in community buildings?
 claimingCommunityBuildingDonations.hint =  For donations of £20 or less that were collected in a community building during charitable activities.
 claimingCommunityBuildingDonations.title = Do you want to claim for donations collected in community buildings?
@@ -167,7 +167,7 @@ reasonNotRegisteredWithRegulator.radio.Excepted = Your charity is excepted
 reasonNotRegisteredWithRegulator.radio.Exempt = Your charity is exempt
 reasonNotRegisteredWithRegulator.radio.Waiting = Your charity is based in Northern Ireland and you are awaiting registration with the CCNI
 reasonNotRegisteredWithRegulator.error.required = Select why the charity is not registered with a regulator
-reasonNotRegisteredWithRegulator.missingDetails = confirm why you're not registered with a regulator
+reasonNotRegisteredWithRegulator.missingDetails = confirm why you’re not registered with a regulator
 
 corporateTrusteeClaim.caption = Provide organisation details
 corporateTrusteeClaim.title = Is a corporate trustee making this claim?
