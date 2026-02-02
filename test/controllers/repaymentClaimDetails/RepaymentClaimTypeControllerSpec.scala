@@ -103,47 +103,143 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
-//      "should redirect to the next page when the value is true" in {
-//        given application: Application = applicationBuilder().mockSaveSession.build()
-//
-//        running(application) {
-//          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-//            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit.url)
-//              .withFormUrlEncodedBody(
-//                "claimingGiftAid"                          -> "true",
-//                "claimingTaxDeducted"                      -> "true",
-//                "claimingUnderGiftAidSmallDonationsScheme" -> "true"
-//              )
-//
-//          val result = route(application, request).value
-//
-//          status(result) shouldEqual SEE_OTHER
-//          redirectLocation(result) shouldEqual Some(
-//            routes.ChangePreviousGASDSClaimController.onPageLoad.url
-//          )
-//        }
-//      }
+      "should redirect to the next page when the value is all are checked" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
 
-//      "should redirect to the next page when the value is false" in {
-//        given application: Application = applicationBuilder().mockSaveSession.build()
-//
-//        running(application) {
-//          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-//            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit.url)
-//              .withFormUrlEncodedBody(
-//                "claimingGiftAid"                          -> "false",
-//                "claimingTaxDeducted"                      -> "false",
-//                "claimingUnderGiftAidSmallDonationsScheme" -> "false"
-//              )
-//
-//          val result = route(application, request).value
-//
-//          status(result) shouldEqual SEE_OTHER
-//          redirectLocation(result) shouldEqual Some(
-//            routes.ChangePreviousGASDSClaimController.onPageLoad.url
-//          )
-//        }
-//      }
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody(
+                "value[0]" -> "claimingGiftAid",
+                "value[1]" -> "claimingUnderGiftAidSmallDonationsScheme",
+                "value[2]" -> "claimingTaxDeducted"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to the next page when the value when only claimingUnderGiftAidSmallDonationsScheme & claimingTaxDeducted are checked" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody(
+                "value[1]" -> "claimingUnderGiftAidSmallDonationsScheme",
+                "value[2]" -> "claimingTaxDeducted"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to the next page when the value when only claimingUnderGiftAidSmallDonationsScheme & claimingGiftAid are checked" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody(
+                "value[0]" -> "claimingGiftAid",
+                "value[1]" -> "claimingUnderGiftAidSmallDonationsScheme"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to the next page when the value when only claimingUnderGiftAidSmallDonationsScheme is checked" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody(
+                "value[1]" -> "claimingUnderGiftAidSmallDonationsScheme"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to the next page when the value when only claimingGiftAid is checked" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody(
+                "value[0]" -> "claimingGiftAid"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to the next page when the value when only claimingTaxDeducted is checked" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody(
+                "value[2]" -> "claimingTaxDeducted"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to the next page when the value when only claimingGiftAid & claimingTaxDeducted are checked" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody(
+                "value[0]" -> "claimingGiftAid",
+                "value[2]" -> "claimingTaxDeducted"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url
+          )
+        }
+      }
 
       "should reload the page with errors when a required field is missing" in {
         given application: Application = applicationBuilder().build()

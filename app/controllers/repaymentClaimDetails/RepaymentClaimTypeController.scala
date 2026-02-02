@@ -58,11 +58,10 @@ class RepaymentClaimTypeController @Inject() (
                 Redirect(
                   routes.ChangePreviousGASDSClaimController.onPageLoad(mode)
                 ) // TODO redirect when screen R1.2 available
-              } else if (repaymentClaimType.claimingGiftAid || repaymentClaimType.claimingTaxDeducted) {
+              } else
                 Redirect(
                   routes.ClaimingReferenceNumberController.onPageLoad(mode)
                 )
-              } else { Redirect(controllers.routes.PageNotFoundController.onPageLoad) }
             )
       )
   }
