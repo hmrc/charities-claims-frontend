@@ -29,6 +29,7 @@ import services.SaveService
 import views.html.AuthorisedOfficialAddressView
 
 import scala.concurrent.{ExecutionContext, Future}
+import play.api.mvc.Call
 
 class AuthorisedOfficialAddressController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -50,6 +51,8 @@ class AuthorisedOfficialAddressController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val previousAnswer = OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress
+
     form
       .bindFromRequest()
       .fold(
@@ -57,14 +60,23 @@ class AuthorisedOfficialAddressController @Inject() (
         value =>
           saveService
             .save(OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(value))
-            .map { _ =>
-              (value, mode) match {
-                case (_, CheckMode)  =>
-                  Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
-                case (_, NormalMode) =>
-                  Redirect(routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode))
-              }
-            }
+            .map(_ => Redirect(AuthorisedOfficialAddressController.nextPage(value, mode, previousAnswer)))
       )
   }
+}
+
+object AuthorisedOfficialAddressController {
+
+  def nextPage(value: Boolean, mode: Mode, previousAnswer: Option[Boolean]): Call =
+    (value, mode, previousAnswer) match {
+      // NormalMode
+      case (_, NormalMode, _) => routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode)
+
+      // CheckMode
+      // No to Yes - need to collect postcode
+      case (true, CheckMode, Some(false)) => routes.AuthorisedOfficialDetailsController.onPageLoad(CheckMode)
+
+      // unchanged or Yes to No
+      case (_, CheckMode, _) => routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
+    }
 }
