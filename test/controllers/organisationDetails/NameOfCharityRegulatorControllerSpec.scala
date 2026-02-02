@@ -194,7 +194,6 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
       "in CheckMode when changing from regulator to None" - {
         "should redirect to ReasonNotRegisteredWithRegulatorController" in {
-          // Previous answer was a regulator (EnglandAndWales), now changing to None
           val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
@@ -216,7 +215,6 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
       "in CheckMode when changing from None to regulator" - {
         "should redirect to CharityRegulatorNumberController" in {
-          // Previous answer was None, now changing to a regulator
           val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(None)
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
@@ -277,7 +275,7 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
       }
 
       "in CheckMode when changing between regulators" - {
-        "should redirect to CYA when changing from EnglandAndWales to Scottish" in {
+        "should redirect to CharityRegulatorNumberController when changing from EnglandAndWales to Scottish" in {
           val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
@@ -291,7 +289,26 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
             status(result) shouldEqual SEE_OTHER
             redirectLocation(result) shouldEqual Some(
-              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+              routes.CharityRegulatorNumberController.onPageLoad(CheckMode).url
+            )
+          }
+        }
+
+        "should redirect to CharityRegulatorNumberController when changing from Scottish to NorthernIreland" in {
+          val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(Scottish)
+
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.NameOfCharityRegulatorController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "NorthernIreland")
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.CharityRegulatorNumberController.onPageLoad(CheckMode).url
             )
           }
         }

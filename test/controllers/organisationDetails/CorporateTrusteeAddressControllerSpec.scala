@@ -142,37 +142,116 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect back to CYA when the value is true" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(CheckMode).url)
-              .withFormUrlEncodedBody("value" -> "true")
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+      "in CheckMode when changing from No to Yes" - {
+        "should redirect to CorporateTrusteeDetailsController" in {
+          val sessionDataWithCorporateTrustee = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+          val sessionData                     = OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(false)(using
+            sessionDataWithCorporateTrustee
           )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "true")
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.CorporateTrusteeDetailsController.onPageLoad(CheckMode).url
+            )
+          }
         }
       }
 
-      "should redirect back to CYA when the value is false" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(CheckMode).url)
-              .withFormUrlEncodedBody("value" -> "false")
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+      "in CheckMode when changing from Yes to No" - {
+        "should redirect to CYA" in {
+          val sessionDataWithCorporateTrustee = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+          val sessionData                     = OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(true)(using
+            sessionDataWithCorporateTrustee
           )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "false")
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+            )
+          }
+        }
+      }
+
+      "in CheckMode when answer is unchanged" - {
+        "should redirect to CYA when value remains true" in {
+          val sessionDataWithCorporateTrustee = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+          val sessionData                     = OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(true)(using
+            sessionDataWithCorporateTrustee
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "true")
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+            )
+          }
+        }
+
+        "should redirect to CYA when value remains false" in {
+          val sessionDataWithCorporateTrustee = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+          val sessionData                     = OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(false)(using
+            sessionDataWithCorporateTrustee
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "false")
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+            )
+          }
+        }
+      }
+
+      "in CheckMode with no previous answer (invalid state)" - {
+        "should redirect to CYA" in {
+          given application: Application = applicationBuilder().mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "true")
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+            )
+          }
         }
       }
 

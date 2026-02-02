@@ -83,7 +83,14 @@ object NameOfCharityRegulatorController {
       case (newVal, CheckMode, Some(NameOfCharityRegulator.None)) if newVal != NameOfCharityRegulator.None =>
         routes.CharityRegulatorNumberController.onPageLoad(CheckMode)
 
-      // unchanged
+      // regulator to different non-None regulator
+      case (newVal, CheckMode, Some(prev))
+          if newVal != NameOfCharityRegulator.None
+            && prev != NameOfCharityRegulator.None
+            && newVal != prev =>
+        routes.CharityRegulatorNumberController.onPageLoad(CheckMode)
+
+      // unchanged or invalid state - return to CYA
       case (_, CheckMode, _)                                                                               =>
         routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
     }

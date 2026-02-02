@@ -29,6 +29,7 @@ import services.SaveService
 import views.html.CorporateTrusteeAddressView
 
 import scala.concurrent.{ExecutionContext, Future}
+import play.api.mvc.Call
 
 class CorporateTrusteeAddressController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -50,6 +51,8 @@ class CorporateTrusteeAddressController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val previousAnswer = OrganisationDetailsAnswers.getDoYouHaveCorporateTrusteeUKAddress
+
     form
       .bindFromRequest()
       .fold(
@@ -57,13 +60,23 @@ class CorporateTrusteeAddressController @Inject() (
         value =>
           saveService
             .save(OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(value))
-            .map { _ =>
-              (value, mode) match {
-                case (_, CheckMode)  =>
-                  Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
-                case (_, NormalMode) => Redirect(routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode))
-              }
-            }
+            .map(_ => Redirect(CorporateTrusteeAddressController.nextPage(value, mode, previousAnswer)))
       )
   }
+}
+
+object CorporateTrusteeAddressController {
+
+  def nextPage(value: Boolean, mode: Mode, previousAnswer: Option[Boolean]): Call =
+    (value, mode, previousAnswer) match {
+      // NormalMode
+      case (_, NormalMode, _) => routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode)
+
+      // CheckMode
+      // No to Yes - need to collect postcode
+      case (true, CheckMode, Some(false)) => routes.CorporateTrusteeDetailsController.onPageLoad(CheckMode)
+
+      // unchanged or Yes to No
+      case (_, CheckMode, _) => routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
+    }
 }
