@@ -54,9 +54,8 @@ class DeleteRepaymentClaimController @Inject() (
         value =>
           (value, request.sessionData.unsubmittedClaimId) match {
             case (false, _) =>
-              // TODO: This redirects to placeholder R2 screen - route to be updated in the future
               Future.successful(
-                Redirect(controllers.organisationDetails.routes.MakeCharityRepaymentClaimController.onPageLoad)
+                Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
               )
 
             case (true, None) =>

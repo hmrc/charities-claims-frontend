@@ -19,7 +19,6 @@ package controllers
 import play.api.test.FakeRequest
 import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
-import models.Mode.*
 import play.api.Application
 
 class StartControllerSpec extends ControllerSpec {
@@ -27,7 +26,7 @@ class StartControllerSpec extends ControllerSpec {
   "StartController" - {
 
     "start" - {
-      "should redirect to the claiming gift aid page" in {
+      "should redirect to the claims task list page" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -38,7 +37,7 @@ class StartControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            repaymentclaimdetailsold.routes.ClaimingGiftAidController.onPageLoad(NormalMode).url
+            routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }

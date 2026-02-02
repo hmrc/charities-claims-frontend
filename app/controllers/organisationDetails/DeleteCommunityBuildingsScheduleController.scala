@@ -50,8 +50,7 @@ class DeleteCommunityBuildingsScheduleController @Inject() (
         value =>
           if value then {
             claimsValidationService.deleteCommunityBuildingsSchedule.map { _ =>
-              // TODO: This redirects to placeholder R2 screen - route to be updated in the future
-              Redirect(controllers.organisationDetails.routes.MakeCharityRepaymentClaimController.onPageLoad)
+              Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
             }
           } else {
             // no deletion, redirect to Add Schedule screen G2

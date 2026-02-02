@@ -333,10 +333,32 @@ addSchedule.title = Add Schedule
 addSchedule.heading = Add Schedule
 addSchedule.placeholder = Content TBC
 
-# TODO: Placeholder screen messages for R2 - content will be updated in future
-makeCharityRepaymentClaim.title = Make Charity Repayment Claim
-makeCharityRepaymentClaim.heading = Make Charity Repayment Claim
-makeCharityRepaymentClaim.placeholder = Content TBC
+# R2 Claims Task List screen
+claimsTaskList.title = Make a charity repayment claim
+claimsTaskList.heading = Make a charity repayment claim
+
+claimsTaskList.section.aboutTheClaim = About the claim
+claimsTaskList.section.uploadDocuments = Upload documents
+claimsTaskList.section.declaration = Declaration
+
+claimsTaskList.task.repaymentClaimDetails = Provide repayment claim details
+claimsTaskList.task.organisationDetails = Provide organisation details
+claimsTaskList.task.gasdsDetails = Gift Aid Small Donations Scheme details
+claimsTaskList.task.giftAidSchedule = Add Gift Aid schedule
+claimsTaskList.task.otherIncomeSchedule = Add other income schedule
+claimsTaskList.task.communityBuildingsSchedule = Add community buildings schedule
+claimsTaskList.task.connectedCharitiesSchedule = Add connected charities schedule
+claimsTaskList.task.readDeclaration = Read declaration
+
+claimsTaskList.status.completed = Completed
+claimsTaskList.status.incomplete = Incomplete
+claimsTaskList.status.notStarted = Not started
+claimsTaskList.status.cannotStartYet = Cannot start yet
+
+claimsTaskList.declaration.warning = You must complete every section before you can declare.
+
+claimsTaskList.link.deleteClaim = Delete claim
+claimsTaskList.link.goToDashboard = Go to dashboard
 
 # TODO: Placeholder screen messages for AA1 - content will be updated in future
 charityRepaymentDashboard.title = Charity Repayment Dashboard
