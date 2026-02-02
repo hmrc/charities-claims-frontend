@@ -40,7 +40,8 @@
 
         @govukRadios(
             RadiosViewModel.yesNo(
-                form("value")
+                form("value"),
+                LegendViewModel(messages("claimingReferenceNumber.heading")).visuallyHidden
             )
         )
 
