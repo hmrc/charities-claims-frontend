@@ -125,6 +125,12 @@ repaymentClaimDetailsCheckYourAnswers.connectToAnyOtherCharity.label = Connected
 repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label = Claim reference number
 repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label = Reference number
 
+repaymentClaimDetailsIncompleteAnswers.title = This claim cannot be setup
+repaymentClaimDetailsIncompleteAnswers.heading = This claim cannot be setup
+repaymentClaimDetailsIncompleteAnswers.warning = This claim cannot be setup because some details are missing.
+repaymentClaimDetailsIncompleteAnswers.message = You need to provide the following details to continue:
+repaymentClaimDetailsIncompleteAnswers.returnLink = Go back to provide the missing details for your claim
+
 claimingOtherIncome.bullet.one =  Bank or Building Society interest
 claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
 claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate

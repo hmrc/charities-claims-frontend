@@ -43,21 +43,21 @@ final case class RepaymentClaimDetailsAnswers(
 
   def missingFields: List[String] =
     List(
-      claimingGiftAid.isEmpty                                                  -> "claimingGiftAid.heading",
-      claimingTaxDeducted.isEmpty                                              -> "claimingOtherIncome.heading",
-      claimingUnderGiftAidSmallDonationsScheme.isEmpty                         -> "claimingGiftAidSmallDonations.heading",
+      (claimingGiftAid.isEmpty
+        && claimingTaxDeducted.isEmpty
+        && claimingUnderGiftAidSmallDonationsScheme.isEmpty)                   -> "repaymentClaimType.heading",
+      (claimingUnderGiftAidSmallDonationsScheme.contains(true)
+        && claimingDonationsNotFromCommunityBuilding.isEmpty)                  -> "claimGASDS.heading",
+      (claimingUnderGiftAidSmallDonationsScheme.contains(true)
+        && claimingDonationsCollectedInCommunityBuildings.isEmpty)             -> "claimingCommunityBuildingDonations.heading",
+      (claimingUnderGiftAidSmallDonationsScheme.contains(true)
+        && ((claimingDonationsNotFromCommunityBuilding.contains(true)
+          || claimingDonationsCollectedInCommunityBuildings.contains(true))
+          && makingAdjustmentToPreviousClaim.isEmpty))                         -> "changePreviousGASDSClaim.heading",
+      (claimingUnderGiftAidSmallDonationsScheme.contains(true)
+        && connectedToAnyOtherCharities.isEmpty)                               -> "connectedToAnyOtherCharities.heading",
       claimingReferenceNumber.isEmpty                                          -> "claimReferenceNumberCheck.heading",
       (claimingReferenceNumber.contains(true) && claimReferenceNumber.isEmpty) -> "claimReferenceNumberInput.heading"
-      // TODO: add GASDS fields once pages are implemented
-//      claimingUnderGiftAidSmallDonationsScheme.contains(
-//        true
-//      ) && claimingDonationsNotFromCommunityBuilding.isEmpty                   -> "claimingDonationsNotFromCommunityBuilding.heading",
-//      claimingUnderGiftAidSmallDonationsScheme.contains(
-//        true
-//      ) && claimingDonationsCollectedInCommunityBuildings.isEmpty              -> "claimingDonationsCollectedInCommunityBuildings.heading",
-//      claimingUnderGiftAidSmallDonationsScheme.contains(
-//        true
-//      ) && connectedToAnyOtherCharities.isEmpty                                -> "connectedToAnyOtherCharities.heading"
     ).collect { case (true, key) => key }
 
   def hasRepaymentClaimDetailsCompleteAnswers: Boolean = missingFields.isEmpty

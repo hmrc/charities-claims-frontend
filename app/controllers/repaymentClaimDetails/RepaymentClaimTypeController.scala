@@ -56,8 +56,8 @@ class RepaymentClaimTypeController @Inject() (
             .map(_ =>
               if (repaymentClaimType.claimingUnderGiftAidSmallDonationsScheme) {
                 Redirect(
-                  routes.ChangePreviousGASDSClaimController.onPageLoad(mode)
-                ) // TODO redirect when screen R1.2 available
+                  routes.ClaimGASDSController.onPageLoad(mode)
+                )
               } else
                 Redirect(
                   routes.ClaimingReferenceNumberController.onPageLoad(mode)
