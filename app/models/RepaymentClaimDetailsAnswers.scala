@@ -164,6 +164,13 @@ object RepaymentClaimDetailsAnswers {
     _.connectedToAnyOtherCharities
   )
 
+  def setClaimingDonationsNotFromCommunityBuilding(value: Boolean)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(claimingDonationsNotFromCommunityBuilding = Some(v)))
+
+  def getClaimingDonationsNotFromCommunityBuilding(using session: SessionData): Option[Boolean] = get(
+    _.claimingDonationsNotFromCommunityBuilding
+  )
+
   def setClaimingUnderGiftAidSmallDonationsScheme(value: Boolean)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(claimingUnderGiftAidSmallDonationsScheme = Some(v)))
       .copy(giftAidSmallDonationsSchemeDonationDetailsAnswers =
