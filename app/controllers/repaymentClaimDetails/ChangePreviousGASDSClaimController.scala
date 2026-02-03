@@ -43,8 +43,9 @@ class ChangePreviousGASDSClaimController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme
-        .contains(true)
-    then { // TODO when screen R1.2 available
+        .contains(true) && (RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
+        .contains(true) || RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true))
+    then {
       val previousAnswer = RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim
       Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
     } else { Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad)) }
