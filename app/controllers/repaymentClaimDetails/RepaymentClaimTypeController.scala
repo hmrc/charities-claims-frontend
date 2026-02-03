@@ -46,6 +46,7 @@ class RepaymentClaimTypeController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val previousAnswer : Option[RepaymentClaimType] = RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme
     form
       .bindFromRequest()
       .fold(
@@ -53,17 +54,35 @@ class RepaymentClaimTypeController @Inject() (
         repaymentClaimType =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setRepaymentClaimType(repaymentClaimType))
-            .map(_ =>
-              if (repaymentClaimType.claimingUnderGiftAidSmallDonationsScheme) {
-                Redirect(
-                  routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(mode)
-                )
-              } else
-                Redirect(
-                  routes.ClaimingReferenceNumberController.onPageLoad(mode)
-                )
-            )
+            .map(_ => Redirect(RepaymentClaimTypeController.nextPage(value,mode, previousAnswer)))
       )
   }
+
+}
+
+object RepaymentClaimTypeController {
+
+  def nextPage(value: RepaymentClaimType, mode: Mode, previousAnswer: Option[RepaymentClaimType]): Call =
+    (value.claimingUnderGiftAidSmallDonationsScheme, mode, previousAnswer) match {
+      // NormalMode
+      case (true, NormalMode, _)                                                    =>
+        routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(NormalMode)
+      case (_, NormalMode, _)                                                                              =>
+        routes.ClaimingReferenceNumberController.onPageLoad(NormalMode)
+
+      // CheckMode: new data
+      case (true, CheckMode, None)                                                  =>
+        routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(CheckMode)
+      case (_, CheckMode, None)                                                                            =>
+        routes.ClaimingReferenceNumberController.onPageLoad(CheckMode)
+
+      // CheckMode: 
+      case (true, CheckMode, Some(prev)) if prev != true     =>
+        routes.ClaimingReferenceNumberController.onPageLoad(CheckMode)
+
+      // unchanged
+      case (_, CheckMode, _)                                                                               =>
+        routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+    }
 
 }
