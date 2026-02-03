@@ -40,7 +40,8 @@
 
         @govukRadios(
             RadiosViewModel.yesNo(
-                form("value")
+                form("value"),
+                LegendViewModel(messages("claimingCommunityBuildingDonations.heading")).visuallyHidden
             )
             .withHint(HintViewModel(Text(messages("claimingCommunityBuildingDonations.hint"))))
         )
