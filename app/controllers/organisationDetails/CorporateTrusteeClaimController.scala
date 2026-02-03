@@ -70,11 +70,14 @@ object CorporateTrusteeClaimController {
       case (true, NormalMode, _)  => routes.CorporateTrusteeAddressController.onPageLoad(NormalMode)
       case (false, NormalMode, _) => routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode)
 
-      // CheckMode
-      // Yes to No
+      // CheckMode: new data
+      case (true, CheckMode, None)  => routes.CorporateTrusteeAddressController.onPageLoad(CheckMode)
+      case (false, CheckMode, None) => routes.AuthorisedOfficialAddressController.onPageLoad(CheckMode)
+
+      // CheckMode: Yes → No
       case (false, CheckMode, Some(true)) => routes.AuthorisedOfficialAddressController.onPageLoad(CheckMode)
 
-      // No to Yes
+      // CheckMode: No → Yes
       case (true, CheckMode, Some(false)) => routes.CorporateTrusteeAddressController.onPageLoad(CheckMode)
 
       // unchanged

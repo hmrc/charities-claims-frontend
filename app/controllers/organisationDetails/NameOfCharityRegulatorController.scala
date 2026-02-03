@@ -74,23 +74,26 @@ object NameOfCharityRegulatorController {
       case (_, NormalMode, _)                                                                              =>
         routes.CharityRegulatorNumberController.onPageLoad(NormalMode)
 
-      // CheckMode
-      // regulator to None
+      // CheckMode: new data
+      case (NameOfCharityRegulator.None, CheckMode, None)                                                  =>
+        routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(CheckMode)
+      case (_, CheckMode, None)                                                                            =>
+        routes.CharityRegulatorNumberController.onPageLoad(CheckMode)
+
+      // CheckMode: regulator → None
       case (NameOfCharityRegulator.None, CheckMode, Some(prev)) if prev != NameOfCharityRegulator.None     =>
         routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(CheckMode)
 
-      // None to regulator
+      // CheckMode: None → regulator
       case (newVal, CheckMode, Some(NameOfCharityRegulator.None)) if newVal != NameOfCharityRegulator.None =>
         routes.CharityRegulatorNumberController.onPageLoad(CheckMode)
 
-      // regulator to different non-None regulator
+      // CheckMode: regulator → different regulator
       case (newVal, CheckMode, Some(prev))
-          if newVal != NameOfCharityRegulator.None
-            && prev != NameOfCharityRegulator.None
-            && newVal != prev =>
+          if newVal != NameOfCharityRegulator.None && prev != NameOfCharityRegulator.None && newVal != prev =>
         routes.CharityRegulatorNumberController.onPageLoad(CheckMode)
 
-      // unchanged or invalid state - return to CYA
+      // unchanged
       case (_, CheckMode, _)                                                                               =>
         routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
     }

@@ -201,8 +201,8 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
         }
       }
 
-      "in CheckMode with no previous answer (invalid state)" - {
-        "should redirect to CYA when selecting Yes" in {
+      "in CheckMode with no previous answer (entering new data)" - {
+        "should redirect to CorporateTrusteeAddressController when selecting Yes" in {
           given application: Application = applicationBuilder().mockSaveSession.build()
 
           running(application) {
@@ -214,12 +214,12 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
 
             status(result) shouldEqual SEE_OTHER
             redirectLocation(result) shouldEqual Some(
-              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+              routes.CorporateTrusteeAddressController.onPageLoad(CheckMode).url
             )
           }
         }
 
-        "should redirect to CYA when selecting No" in {
+        "should redirect to AuthorisedOfficialAddressController when selecting No" in {
           given application: Application = applicationBuilder().mockSaveSession.build()
 
           running(application) {
@@ -231,7 +231,7 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
 
             status(result) shouldEqual SEE_OTHER
             redirectLocation(result) shouldEqual Some(
-              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+              routes.AuthorisedOfficialAddressController.onPageLoad(CheckMode).url
             )
           }
         }

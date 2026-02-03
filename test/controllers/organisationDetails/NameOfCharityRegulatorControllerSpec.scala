@@ -314,8 +314,8 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "in CheckMode with no previous answer (invalid state)" - {
-        "should redirect to CYA when selecting regulator" in {
+      "in CheckMode with no previous answer (entering new data)" - {
+        "should redirect to CharityRegulatorNumberController when selecting regulator" in {
           given application: Application = applicationBuilder().mockSaveSession.build()
 
           running(application) {
@@ -327,12 +327,12 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
             status(result) shouldEqual SEE_OTHER
             redirectLocation(result) shouldEqual Some(
-              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+              routes.CharityRegulatorNumberController.onPageLoad(CheckMode).url
             )
           }
         }
 
-        "should redirect to CYA when selecting None" in {
+        "should redirect to ReasonNotRegisteredWithRegulatorController when selecting None" in {
           given application: Application = applicationBuilder().mockSaveSession.build()
 
           running(application) {
@@ -344,7 +344,7 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
             status(result) shouldEqual SEE_OTHER
             redirectLocation(result) shouldEqual Some(
-              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+              routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(CheckMode).url
             )
           }
         }

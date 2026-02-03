@@ -72,11 +72,16 @@ object CorporateTrusteeAddressController {
       // NormalMode
       case (_, NormalMode, _) => routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode)
 
-      // CheckMode
-      // No to Yes - need to collect postcode
+      // CheckMode: new data
+      case (_, CheckMode, None) => routes.CorporateTrusteeDetailsController.onPageLoad(CheckMode)
+
+      // CheckMode: No → Yes
       case (true, CheckMode, Some(false)) => routes.CorporateTrusteeDetailsController.onPageLoad(CheckMode)
 
-      // unchanged or Yes to No
+      // CheckMode: Yes → No
+      case (false, CheckMode, Some(true)) => routes.CorporateTrusteeDetailsController.onPageLoad(CheckMode)
+
+      // unchanged
       case (_, CheckMode, _) => routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
     }
 }

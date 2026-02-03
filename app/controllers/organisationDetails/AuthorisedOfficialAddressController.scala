@@ -72,11 +72,16 @@ object AuthorisedOfficialAddressController {
       // NormalMode
       case (_, NormalMode, _) => routes.AuthorisedOfficialDetailsController.onPageLoad(NormalMode)
 
-      // CheckMode
-      // No to Yes - need to collect postcode
+      // CheckMode: new data
+      case (_, CheckMode, None) => routes.AuthorisedOfficialDetailsController.onPageLoad(CheckMode)
+
+      // CheckMode: No → Yes
       case (true, CheckMode, Some(false)) => routes.AuthorisedOfficialDetailsController.onPageLoad(CheckMode)
 
-      // unchanged or Yes to No
+      // CheckMode: Yes → No
+      case (false, CheckMode, Some(true)) => routes.AuthorisedOfficialDetailsController.onPageLoad(CheckMode)
+
+      // unchanged
       case (_, CheckMode, _) => routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
     }
 }
