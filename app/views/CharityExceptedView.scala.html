@@ -15,6 +15,7 @@
  *@
 
 @import controllers.organisationDetails.routes
+@import models.Mode
 
 @this(
 layout: templates.Layout,
@@ -22,7 +23,7 @@ formHelper: FormWithCSRF,
 govukButton: GovukButton
 )
 
-@()(implicit request: Request[?], messages: Messages)
+@(mode: Mode)(implicit request: Request[?], messages: Messages)
 
 @layout(
 pageTitle = titleNoForm(messages("charityExcepted.title"))
@@ -41,7 +42,7 @@ pageTitle = titleNoForm(messages("charityExcepted.title"))
     <li>@messages("charityExcepted.bullet.5")</li>
 </ul>
 
-@formHelper(action = routes.CharityExceptedController.onSubmit) {
+@formHelper(action = routes.CharityExceptedController.onSubmit(mode)) {
 @govukButton(ButtonViewModel(Text(messages("site.continue"))))
 }
 }

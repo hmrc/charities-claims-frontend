@@ -71,11 +71,15 @@ GET         /change-name-of-charity-regulator               controllers.organisa
 POST        /name-of-charity-regulator                      controllers.organisationDetails.NameOfCharityRegulatorController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-name-of-charity-regulator               controllers.organisationDetails.NameOfCharityRegulatorController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /charity-excepted                               controllers.organisationDetails.CharityExceptedController.onPageLoad
-POST        /charity-excepted                               controllers.organisationDetails.CharityExceptedController.onSubmit
+GET         /charity-excepted                               controllers.organisationDetails.CharityExceptedController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-charity-excepted                        controllers.organisationDetails.CharityExceptedController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /charity-excepted                               controllers.organisationDetails.CharityExceptedController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-charity-excepted                        controllers.organisationDetails.CharityExceptedController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /charity-exempt                              controllers.organisationDetails.CharityExemptController.onPageLoad
-POST        /charity-exempt                              controllers.organisationDetails.CharityExemptController.onSubmit
+GET         /charity-exempt                                 controllers.organisationDetails.CharityExemptController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-charity-exempt                          controllers.organisationDetails.CharityExemptController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /charity-exempt                                 controllers.organisationDetails.CharityExemptController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-charity-exempt                          controllers.organisationDetails.CharityExemptController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /charity-regulator-number                    controllers.organisationDetails.CharityRegulatorNumberController.onPageLoad(mode: Mode = Mode.NormalMode)
 GET         /change-charity-regulator-number             controllers.organisationDetails.CharityRegulatorNumberController.onPageLoad(mode: Mode = Mode.CheckMode)
