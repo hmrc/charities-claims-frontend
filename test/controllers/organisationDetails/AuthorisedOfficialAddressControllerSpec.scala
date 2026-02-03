@@ -165,7 +165,7 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
       }
 
       "in CheckMode when changing from Yes to No" - {
-        "should redirect to CYA" in {
+        "should redirect to AuthorisedOfficialDetailsController" in {
           val sessionDataWithAuthorisedOfficial = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
           val sessionData                       = OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(true)(using
             sessionDataWithAuthorisedOfficial
@@ -182,7 +182,7 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
 
             status(result) shouldEqual SEE_OTHER
             redirectLocation(result) shouldEqual Some(
-              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+              routes.AuthorisedOfficialDetailsController.onPageLoad(CheckMode).url
             )
           }
         }
@@ -234,8 +234,8 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
         }
       }
 
-      "in CheckMode with no previous answer (invalid state)" - {
-        "should redirect to CYA" in {
+      "in CheckMode with no previous answer (entering new data)" - {
+        "should redirect to AuthorisedOfficialDetailsController when selecting Yes" in {
           given application: Application = applicationBuilder().mockSaveSession.build()
 
           running(application) {
@@ -247,7 +247,24 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
 
             status(result) shouldEqual SEE_OTHER
             redirectLocation(result) shouldEqual Some(
-              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+              routes.AuthorisedOfficialDetailsController.onPageLoad(CheckMode).url
+            )
+          }
+        }
+
+        "should redirect to AuthorisedOfficialDetailsController when selecting No" in {
+          given application: Application = applicationBuilder().mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.AuthorisedOfficialAddressController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "false")
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.AuthorisedOfficialDetailsController.onPageLoad(CheckMode).url
             )
           }
         }
