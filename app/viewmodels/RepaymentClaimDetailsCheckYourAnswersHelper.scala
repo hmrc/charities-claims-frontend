@@ -314,6 +314,13 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
               .onPageLoad(CheckMode)
               .url,
             messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
+          ),
+          missingDataRow(
+            messages("repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label"),
+            controllers.repaymentClaimDetails.routes.ClaimingReferenceNumberController
+              .onPageLoad(CheckMode)
+              .url,
+            messages("repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label")
           )
         )
     }

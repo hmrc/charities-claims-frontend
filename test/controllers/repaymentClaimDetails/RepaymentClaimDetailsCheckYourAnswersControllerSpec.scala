@@ -211,6 +211,41 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
           }
         }
 
+        "should render the page correctly when makingAdjustmentToPreviousClaim are false and some answers is not defined" in {
+
+          val sessionData = SessionData(
+            repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(true),
+                claimingTaxDeducted = Some(true),
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = None,
+                claimingDonationsCollectedInCommunityBuildings = None,
+                connectedToAnyOtherCharities = None,
+                makingAdjustmentToPreviousClaim = Some(false),
+                claimingReferenceNumber = Some(true),
+                claimReferenceNumber = Some("12345678AB")
+              )
+            )
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+          }
+        }
+
       }
       "claimingUnderGiftAidSmallDonationsScheme is false" - {
         "should render the page correctly when claimingGiftAid is true " in {
