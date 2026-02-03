@@ -17,27 +17,34 @@
 package controllers.giftAidSchedule
 
 import com.google.inject.Inject
+import config.FrontendAppConfig
+import controllers.BaseController
 import controllers.actions.Actions
 import controllers.giftAidSchedule.routes
-import play.api.i18n.I18nSupport
+import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.AboutGiftAidScheduleView
+import models.RepaymentClaimDetailsAnswers
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class AboutGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
-  view: AboutGiftAidScheduleView
-) extends FrontendBaseController
-    with I18nSupport {
+  view: AboutGiftAidScheduleView,
+  appConfig: FrontendAppConfig
+)(using ec: ExecutionContext)
+    extends BaseController {
 
-  val onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view())
+  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    if RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true) then {
+      Future.successful(Ok(view(appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl)))
+    } else {
+      Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+    }
   }
 
-  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
   }
 }

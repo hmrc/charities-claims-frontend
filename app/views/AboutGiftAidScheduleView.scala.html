@@ -22,7 +22,7 @@
     govukButton: GovukButton
 )
 
-@()(implicit request: Request[?], messages: Messages)
+@(giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl: String)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle    = titleNoForm(messages("aboutGiftAidSchedule.title"))
@@ -33,11 +33,7 @@
 
     <p class="govuk-body">@messages("aboutGiftAidSchedule.paragraph.one")</p>
     <p class="govuk-body">@messages("aboutGiftAidSchedule.paragraph.two")</p>
-    <p class="govuk-body">
-        @{messages("aboutGiftAidSchedule.paragraph.three.part1")}
-        <a class="govuk-link" href=@messages("aboutGiftAidSchedule.paragraph.three.link") target="_blank" >@{messages("aboutGiftAidSchedule.paragraph.three.link.message")}</a>@{messages("aboutGiftAidSchedule.paragraph.three.part2")}
-    </p>
-
+    <p class="govuk-body">@Html(messages("aboutGiftAidSchedule.paragraph.url", giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl))</p>
 
     @formHelper(action = routes.AboutGiftAidScheduleController.onSubmit) {
 
