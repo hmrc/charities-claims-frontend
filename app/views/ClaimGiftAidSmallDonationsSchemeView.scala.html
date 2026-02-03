@@ -36,16 +36,16 @@ pageTitle = title(form, messages("claimGASDS.title"))
 <span class="govuk-caption-l">@messages("claimGASDS.caption")</span>
 <h1 class="govuk-heading-l">@messages("claimGASDS.heading")</h1>
 
-<p class="govuk-body">@messages("claimGASDS.hint")</p>
-
 @formHelper(action = routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
 @govukRadios(
 RadiosViewModel.yesNo(
 form("value"),
-LegendViewModel(messages("claimGASDS.legend")).withCssClass("govuk-visually-hidden")
+LegendViewModel(messages("claimGASDS.legend")).visuallyHidden
 )
+.withHint(HintViewModel(Text(messages("claimGASDS.hint"))))
 )
+
 
 @govukButton(ButtonViewModel(Text(messages("site.continue"))))
 }
