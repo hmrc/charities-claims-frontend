@@ -66,11 +66,14 @@ class ReasonNotRegisteredWithRegulatorController @Inject() (
           saveService
             .save(OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(value))
             .map { _ =>
-              (value, mode) match { // TODO - need to get confirmation on what page should be redirected if going from Excepted/Exempt to LowIncome/Waiting ... or vise-versa
-                case (_, CheckMode)                                 => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
+              (value, mode) match {
+                // Excepted/Exempt always flow through A2.3/A2.4 (conditional pages)
                 case (ReasonNotRegisteredWithRegulator.Excepted, _) =>
-                  Redirect(routes.CharityExceptedController.onPageLoad)
-                case (ReasonNotRegisteredWithRegulator.Exempt, _)   => Redirect(routes.CharityExemptController.onPageLoad)
+                  Redirect(routes.CharityExceptedController.onPageLoad(mode))
+                case (ReasonNotRegisteredWithRegulator.Exempt, _)   =>
+                  Redirect(routes.CharityExemptController.onPageLoad(mode))
+                // LowIncome/Waiting skip A2.3/A2.4
+                case (_, CheckMode)                                 => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
                 case (_, NormalMode)                                => Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
               }
             }

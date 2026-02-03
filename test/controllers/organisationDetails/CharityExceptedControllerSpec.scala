@@ -17,9 +17,9 @@
 package controllers.organisationDetails
 
 import controllers.ControllerSpec
-import models.Mode.NormalMode
 import models.OrganisationDetailsAnswers
 import models.ReasonNotRegisteredWithRegulator.*
+import models.Mode.*
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -36,13 +36,13 @@ class CharityExceptedControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CharityExceptedController.onPageLoad.url)
+            FakeRequest(GET, routes.CharityExceptedController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[CharityExceptedView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view().body
+          contentAsString(result) shouldEqual view(NormalMode).body
         }
       }
 
@@ -53,7 +53,7 @@ class CharityExceptedControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CharityExceptedController.onPageLoad.url)
+            FakeRequest(GET, routes.CharityExceptedController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -69,7 +69,7 @@ class CharityExceptedControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CharityExceptedController.onPageLoad.url)
+            FakeRequest(GET, routes.CharityExceptedController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -85,7 +85,7 @@ class CharityExceptedControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CharityExceptedController.onPageLoad.url)
+            FakeRequest(GET, routes.CharityExceptedController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -96,18 +96,31 @@ class CharityExceptedControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
-      "should redirect to the next page" in {
+      "in NormalMode should redirect to CorporateTrusteeClaimController" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.CharityExceptedController.onSubmit.url)
+            FakeRequest(POST, routes.CharityExceptedController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-
           redirectLocation(result) shouldEqual Some(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
+        }
+      }
+
+      "in CheckMode should redirect to CYA" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.CharityExceptedController.onSubmit(CheckMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
         }
       }
     }

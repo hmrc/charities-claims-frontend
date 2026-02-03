@@ -189,7 +189,7 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
-      "should redirect to the next page when the value is excepted" in {
+      "should redirect to CharityExceptedController when the value is Excepted in NormalMode" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
@@ -201,12 +201,12 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.CharityExceptedController.onPageLoad.url
+            routes.CharityExceptedController.onPageLoad(NormalMode).url
           )
         }
       }
 
-      "should redirect to the next page when the value is Exempt" in {
+      "should redirect to CharityExemptController when the value is Exempt in NormalMode" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
@@ -218,7 +218,7 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.CharityExemptController.onPageLoad.url
+            routes.CharityExemptController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -257,7 +257,7 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect back to CYA when the value is excepted" in {
+      "should redirect to CharityExceptedController when the value is Excepted in CheckMode" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
@@ -269,12 +269,12 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+            routes.CharityExceptedController.onPageLoad(CheckMode).url
           )
         }
       }
 
-      "should redirect back to CYA when the value is Exempt" in {
+      "should redirect to CharityExemptController when the value is Exempt in CheckMode" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
@@ -286,7 +286,7 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+            routes.CharityExemptController.onPageLoad(CheckMode).url
           )
         }
       }
