@@ -392,9 +392,50 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
         }
       }
 
+      "should show WRN3 confirmation view when changing Yes to No in CheckMode" in {
+        val sessionDataWithGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData          = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true)(using
+          sessionDataWithGASDS
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual OK
+          contentAsString(result) should include("Do you want to update this repayment claim?")
+          contentAsString(result) should include("confirmingUpdate")
+        }
+      }
+
+      "should NOT show WRN3 confirmation when submitting in NormalMode" in {
+        val sessionDataWithGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData          = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true)(using
+          sessionDataWithGASDS
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
       // TODO: Add WRN3 confirmation tests:
-      // - should show WRN3 confirmation when changing Yes to No in CheckMode
-      // - should NOT show WRN3 when submitting in NormalMode
       // - should NOT show WRN3 when answer made no change in CheckMode
       // - should NOT show WRN3 when changing No to Yes in CheckMode
       // - should save false and redirect when user confirms Yes on WRN3

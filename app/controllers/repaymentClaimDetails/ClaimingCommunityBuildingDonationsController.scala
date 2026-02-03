@@ -24,7 +24,7 @@ import forms.YesNoFormProvider
 import models.{Mode, RepaymentClaimDetailsAnswers}
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
-import services.{SaveService, UpdateRepaymentClaimService}
+import services.SaveService
 import views.html.{ClaimingCommunityBuildingDonationsView, UpdateRepaymentClaimView}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,8 +36,7 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
   confirmationView: UpdateRepaymentClaimView,
   actions: Actions,
   formProvider: YesNoFormProvider,
-  saveService: SaveService,
-  updateRepaymentClaimService: UpdateRepaymentClaimService
+  saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -45,7 +44,7 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
   val form: Form[Boolean] = formProvider("claimingCommunityBuildingDonations.error.required")
 
   // this for is for WRN3 confirmation (field name: "value" - same as above, will have hidden field confirmingUpdate = true)
-  private val confirmUpdateForm: Form[Boolean] = formProvider("updateRepaymentClaim.error.required")
+  val confirmUpdateForm: Form[Boolean] = formProvider("updateRepaymentClaim.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) then {
@@ -56,7 +55,7 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     // CONFIRMATION CHECK FLOW: User is answering the WRN3 confirmation question
-    if (updateRepaymentClaimService.isConfirmationSubmission(request.body.asFormUrlEncoded)) {
+    if (isConfirmingUpdate) {
       handleUpdateConfirmation(mode)
     } else {
       // ORIGINAL QUESTION FLOW: User is answering normal question
@@ -64,15 +63,15 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
     }
   }
 
-  private def handleQuestionSubmission(mode: Mode)(implicit request: models.requests.DataRequest[AnyContent]) =
+  def handleQuestionSubmission(mode: Mode)(implicit request: models.requests.DataRequest[AnyContent]) =
     form
-      .bindFromRequest() // binds 'value' field from original question
+      .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         newAnswer => {
           val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
 
-          if (updateRepaymentClaimService.needsUpdateConfirmation(mode, previousAnswer, newAnswer)) {
+          if (needsUpdateConfirmation(mode, previousAnswer, newAnswer)) {
             // then we show WRN3 confirmation
             Future.successful(
               Ok(
@@ -83,7 +82,7 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
               )
             )
           } else {
-            // normal question flow - save and redirect
+            // normal question flow - WRN3 not needed - save and redirect
             saveService
               .save(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(newAnswer))
               .map(_ => Redirect(nextPage(newAnswer, mode)))
@@ -91,8 +90,8 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
         }
       )
 
-  // handles submission of WRN3 confirmation form
-  private def handleUpdateConfirmation(mode: Mode)(implicit request: models.requests.DataRequest[AnyContent]) =
+  // only used when user is answering the WRN3 confirmation question
+  def handleUpdateConfirmation(mode: Mode)(implicit request: models.requests.DataRequest[AnyContent]) =
     confirmUpdateForm
       .bindFromRequest()
       .fold(

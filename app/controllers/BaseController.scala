@@ -24,7 +24,10 @@ import play.api.data.Form
 import play.api.mvc.Request
 import play.api.mvc.Result
 import play.api.mvc.AnyContent
+import models.Mode
+import models.Mode.CheckMode
 
+// TODO: make object - warning service - no need inject - no prefix needed
 trait BaseController extends FrontendBaseController with I18nSupport {
 
   given sessionData(using req: DataRequest[?]): SessionData =
@@ -54,4 +57,22 @@ trait BaseController extends FrontendBaseController with I18nSupport {
     def withWarning(answer: String): Result =
       result.flashing("warning" -> "true", "warningAnswer" -> answer)
   }
+
+  def needsUpdateConfirmation(
+    mode: Mode,
+    previousAnswer: Option[Boolean],
+    newAnswer: Boolean
+  ): Boolean =
+    (mode, previousAnswer, newAnswer) match {
+      case (CheckMode, Some(true), false) => true
+      case _                              => false
+    }
+
+  // checks if the current submission is a WRN3 confirmation submission
+  // looks for hidden field "confirmingUpdate" with value "true"
+  // returns true if found, false otherwise
+  def isConfirmingUpdate(using request: Request[AnyContent]): Boolean =
+    request.body.asFormUrlEncoded
+      .flatMap(_.get("confirmingUpdate"))
+      .exists(_.headOption.contains("true"))
 }
