@@ -42,7 +42,7 @@ class ClaimGiftAidSmallDonationsSchemeController @Inject() (
   val form: Form[Boolean] = formProvider("claimGASDS.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true) then {
+    if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) then {
       val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
       Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
     } else { Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad)) }
