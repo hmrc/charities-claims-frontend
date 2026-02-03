@@ -32,10 +32,8 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
 
   "ClaimGiftAidSmallDonationsSchemeController" - {
     "onPageLoad" - {
-
-      "should render the page correctly when claimingDonationsNotFromCommunityBuilding is true" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true)
-
+      "should render the page correctly when claimingUnderGiftAidSmallDonationsScheme is true" in {
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
@@ -46,7 +44,7 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ClaimGiftAidSmallDonationsSchemeView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
+          contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
 
