@@ -180,3 +180,6 @@ GET         /upload-gift-aid-schedule                       controllers.giftAidS
 GET         /upload-gift-aid-schedule/success               controllers.giftAidSchedule.UploadGiftAidScheduleController.onUploadSuccess(key: Option[String])
 GET         /upload-gift-aid-schedule/error                 controllers.giftAidSchedule.UploadGiftAidScheduleController.onUploadError
 GET         /your-gift-aid-schedule-upload                  controllers.giftAidSchedule.YourGiftAidScheduleUploadController.onPageLoad
+
+GET         /about-gift-aid-schedule                         controllers.giftAidSchedule.AboutGiftAidScheduleController.onPageLoad
+POST        /about-gift-aid-schedule                         controllers.giftAidSchedule.AboutGiftAidScheduleController.onSubmit

@@ -399,4 +399,14 @@ uploadGiftAidSchedule.title = Upload a Gift Aid schedule
 uploadGiftAidSchedule.heading = Upload a Gift Aid schedule
 
 yourGiftAidScheduleUpload.title = Your Gift Aid schedule upload 
-yourGiftAidScheduleUpload.heading = Your Gift Aid schedule upload 
+yourGiftAidScheduleUpload.heading = Your Gift Aid schedule upload
+
+aboutGiftAidSchedule.caption = Add Gift Aid schedule
+aboutGiftAidSchedule.heading = Add Gift Aid schedule
+aboutGiftAidSchedule.paragraph.one = Use this service to add a Gift Aid schedule.
+aboutGiftAidSchedule.paragraph.two = You can upload a Gift Aid schedule in a .ods format.
+aboutGiftAidSchedule.paragraph.three.part1 = You can
+aboutGiftAidSchedule.paragraph.three.link = https://www.gov.uk/government/publications/gift-aid-schedule-spreadsheets-to-claim-back-tax-on-donations
+aboutGiftAidSchedule.paragraph.three.link.message = download a Gift Aid Schedule here (opens in a new tab)
+aboutGiftAidSchedule.paragraph.three.part2 = . You can submit up to 1 file at a time, and each file can be up to 2.5MB.
+aboutGiftAidSchedule.title = Add Gift Aid schedule
