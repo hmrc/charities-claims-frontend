@@ -36,8 +36,8 @@ class UpdateRepaymentClaimServiceSpec extends AnyFreeSpec with Matchers {
 
     "should return false when answer is unchanged or not Yes to No" in {
       service.needsUpdateConfirmation(CheckMode, Some(false), false) shouldBe false
-      service.needsUpdateConfirmation(CheckMode, Some(true), true) shouldBe false
-      service.needsUpdateConfirmation(CheckMode, None, false) shouldBe false
+      service.needsUpdateConfirmation(CheckMode, Some(true), true)   shouldBe false
+      service.needsUpdateConfirmation(CheckMode, None, false)        shouldBe false
     }
   }
 
@@ -49,9 +49,9 @@ class UpdateRepaymentClaimServiceSpec extends AnyFreeSpec with Matchers {
     }
 
     "should return false when confirmingUpdate is not present or has wrong value" in {
-      service.isConfirmationSubmission(Some(Map("value" -> Seq("true")))) shouldBe false
+      service.isConfirmationSubmission(Some(Map("value" -> Seq("true"))))             shouldBe false
       service.isConfirmationSubmission(Some(Map("confirmingUpdate" -> Seq("false")))) shouldBe false
-      service.isConfirmationSubmission(None) shouldBe false
+      service.isConfirmationSubmission(None)                                          shouldBe false
     }
   }
 }
