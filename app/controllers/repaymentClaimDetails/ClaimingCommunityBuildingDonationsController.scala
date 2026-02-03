@@ -36,14 +36,15 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
   confirmationView: UpdateRepaymentClaimView,
   actions: Actions,
   formProvider: YesNoFormProvider,
-  saveService: SaveService
+  saveService: SaveService,
+  updateRepaymentClaimService: UpdateRepaymentClaimService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  // Form for the original question (field name: "value")
+  // this form is for the original question (field name: "value")
   val form: Form[Boolean] = formProvider("claimingCommunityBuildingDonations.error.required")
 
-  // Form for WRN3 confirmation (field name: "value" - same as above, will have hidden field confirmingUpdate = true)
+  // this for is for WRN3 confirmation (field name: "value" - same as above, will have hidden field confirmingUpdate = true)
   private val confirmUpdateForm: Form[Boolean] = formProvider("updateRepaymentClaim.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
@@ -54,25 +55,25 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    // CONFIRMATION CHECK: User is answering the WRN3 confirmation question
+    // CONFIRMATION CHECK FLOW: User is answering the WRN3 confirmation question
     if (updateRepaymentClaimService.isConfirmationSubmission(request.body.asFormUrlEncoded)) {
       handleUpdateConfirmation(mode)
     } else {
-      // ORIGINAL QUESTION: User is answering normal question
+      // ORIGINAL QUESTION FLOW: User is answering normal question
       handleQuestionSubmission(mode)
     }
   }
 
   private def handleQuestionSubmission(mode: Mode)(implicit request: models.requests.DataRequest[AnyContent]) =
     form
-      .bindFromRequest() // binds "value" field from original question
+      .bindFromRequest() // binds 'value' field from original question
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         newAnswer => {
           val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
 
           if (updateRepaymentClaimService.needsUpdateConfirmation(mode, previousAnswer, newAnswer)) {
-            // Show WRN3 confirmation (does NOT save yet)
+            // then we show WRN3 confirmation
             Future.successful(
               Ok(
                 confirmationView(
@@ -82,7 +83,7 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
               )
             )
           } else {
-            // normal flow - user first time - save answer and redirect to next page
+            // normal question flow - save and redirect
             saveService
               .save(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(newAnswer))
               .map(_ => Redirect(nextPage(newAnswer, mode)))
@@ -96,7 +97,6 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
       .bindFromRequest()
       .fold(
         formWithErrors =>
-          // validation error - user didn't select Yes/No on
           Future.successful(
             BadRequest(
               confirmationView(
@@ -107,13 +107,13 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
           ),
         {
           case true =>
-            // User confirmed - save the change to false and proceed
+            // if user confirmed yes - save the change to false and proceed
             saveService
               .save(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false))
               .map(_ => Redirect(nextPage(false, mode)))
 
           case false =>
-            // User cancelled - go back to CYA without saving
+            // user canceled - go back to CYA without any change
             Future.successful(Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad))
         }
       )
