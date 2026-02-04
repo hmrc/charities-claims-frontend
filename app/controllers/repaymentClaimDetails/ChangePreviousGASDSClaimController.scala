@@ -23,7 +23,7 @@ import controllers.repaymentClaimDetails.routes
 import forms.YesNoFormProvider
 import models.{Mode, RepaymentClaimDetailsAnswers}
 import play.api.data.Form
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
 import views.html.ChangePreviousGASDSClaimView
 import models.Mode.*
@@ -52,6 +52,7 @@ class ChangePreviousGASDSClaimController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val previousAnswer = RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim
     form
       .bindFromRequest()
       .fold(
@@ -59,7 +60,22 @@ class ChangePreviousGASDSClaimController @Inject() (
         value =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(value))
-            .map(_ => Redirect(routes.ConnectedToAnyOtherCharitiesController.onPageLoad(mode)))
+            .map(_ => Redirect(ChangePreviousGASDSClaimController.nextPage(value, mode, previousAnswer)))
       )
   }
+}
+object ChangePreviousGASDSClaimController {
+
+  def nextPage(value: Boolean, mode: Mode, previousAnswer: Option[Boolean]): Call =
+    (value, mode, previousAnswer) match {
+      // NormalMode
+      case (_, NormalMode, _) =>
+        routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode)
+
+      // CheckMode
+      case (_, CheckMode, _)  =>
+        routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+
+    }
+
 }

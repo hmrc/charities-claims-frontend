@@ -254,6 +254,138 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
           status(result) shouldEqual BAD_REQUEST
         }
       }
+      "in CheckMode" - {
+        "old GASDS & new GASDS not defined" in {
+          val sessionData                = RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked)
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody(
+                  "value[0]" -> "claimingGiftAid",
+                  "value[2]" -> "claimingTaxDeducted"
+                )
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+            )
+          }
+        }
+
+        "old GASDS not defined & new GASDS is true" in {
+
+          given application: Application = applicationBuilder().mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody(
+                  "value[0]" -> "claimingGiftAid",
+                  "value[1]" -> "claimingUnderGiftAidSmallDonationsScheme",
+                  "value[2]" -> "claimingTaxDeducted"
+                )
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(CheckMode).url
+            )
+          }
+        }
+
+        "old GASDS not defined & new GASDS is false" in {
+          given application: Application = applicationBuilder().mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody(
+                  "value[0]" -> "claimingGiftAid",
+                  "value[2]" -> "claimingTaxDeducted"
+                )
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+            )
+          }
+        }
+
+        "old GASDS is false and new GASDS" in {
+          val sessionData = RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithNoneChecked)
+
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody(
+                  "value[0]" -> "claimingGiftAid",
+                  "value[1]" -> "claimingUnderGiftAidSmallDonationsScheme",
+                  "value[2]" -> "claimingTaxDeducted"
+                )
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(CheckMode).url
+            )
+          }
+        }
+        "no change in old and new GASDS" in {
+          val sessionData = RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked)
+
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody(
+                  "value[0]" -> "claimingGiftAid",
+                  "value[1]" -> "claimingUnderGiftAidSmallDonationsScheme",
+                  "value[2]" -> "claimingTaxDeducted"
+                )
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+            )
+          }
+        }
+
+        "old GASDS is true & new GASDS not defined" in {
+          val sessionGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+          val sessionData  = RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked)(using sessionGASDS)
+
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody(
+                  "value[0]" -> "claimingGiftAid",
+                  "value[2]" -> "claimingTaxDeducted"
+                )
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+            )
+          }
+        }
+      }
     }
   }
 

@@ -63,14 +63,7 @@ class ClaimReferenceNumberInputController @Inject() (
         value =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setClaimReferenceNumber(value))
-            .map { _ =>
-              // Change to: R1.8 - Check Your Answers (CYA) when created
-              if (mode == CheckMode) {
-                Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad)
-              } else {
-                Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad)
-              }
-            }
+            .map(_ => Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad))
       )
   }
 }

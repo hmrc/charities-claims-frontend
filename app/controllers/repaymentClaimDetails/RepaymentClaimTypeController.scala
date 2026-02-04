@@ -29,6 +29,7 @@ import views.html.RepaymentClaimTypeView
 import models.Mode.*
 
 import scala.concurrent.{ExecutionContext, Future}
+import play.api.mvc.Call
 
 class RepaymentClaimTypeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -46,6 +47,7 @@ class RepaymentClaimTypeController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val previousAnswer: Option[RepaymentClaimType] = RepaymentClaimDetailsAnswers.getRepaymentClaimType
     form
       .bindFromRequest()
       .fold(
@@ -53,17 +55,38 @@ class RepaymentClaimTypeController @Inject() (
         repaymentClaimType =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setRepaymentClaimType(repaymentClaimType))
-            .map(_ =>
-              if (repaymentClaimType.claimingUnderGiftAidSmallDonationsScheme) {
-                Redirect(
-                  routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(mode)
-                )
-              } else
-                Redirect(
-                  routes.ClaimingReferenceNumberController.onPageLoad(mode)
-                )
-            )
+            .map(_ => Redirect(RepaymentClaimTypeController.nextPage(repaymentClaimType, mode, previousAnswer)))
       )
   }
+
+}
+
+object RepaymentClaimTypeController {
+
+  def nextPage(value: RepaymentClaimType, mode: Mode, previousAnswer: Option[RepaymentClaimType]): Call =
+    (value, mode, previousAnswer) match {
+      // NormalMode
+      case (value, NormalMode, _)   =>
+        if value.claimingUnderGiftAidSmallDonationsScheme then
+          routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(NormalMode)
+        else routes.ClaimingReferenceNumberController.onPageLoad(NormalMode)
+
+      // CheckMode: new data
+      case (value, CheckMode, None) =>
+        if value.claimingUnderGiftAidSmallDonationsScheme then
+          routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(CheckMode)
+        else routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+
+      // CheckMode:
+      case (newVal, CheckMode, Some(prev))
+          if newVal.claimingUnderGiftAidSmallDonationsScheme && prev.claimingUnderGiftAidSmallDonationsScheme.eq(
+            false
+          ) =>
+        routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(CheckMode)
+
+      // unchanged
+      case (_, CheckMode, _)        =>
+        routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+    }
 
 }
