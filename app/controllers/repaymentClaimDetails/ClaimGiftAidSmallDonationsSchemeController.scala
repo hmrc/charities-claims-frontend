@@ -23,7 +23,7 @@ import controllers.repaymentClaimDetails.routes
 import forms.YesNoFormProvider
 import models.{Mode, RepaymentClaimDetailsAnswers}
 import play.api.data.Form
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
 import views.html.ClaimGiftAidSmallDonationsSchemeView
 import models.Mode.*
@@ -50,6 +50,7 @@ class ClaimGiftAidSmallDonationsSchemeController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
     form
       .bindFromRequest()
       .fold(
@@ -57,9 +58,31 @@ class ClaimGiftAidSmallDonationsSchemeController @Inject() (
         value =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(value))
-            .map { _ =>
-              Redirect(routes.ClaimingCommunityBuildingDonationsController.onPageLoad(mode))
-            }
+            .map(_ => Redirect(ClaimGiftAidSmallDonationsSchemeController.nextPage(value, mode, previousAnswer)))
       )
   }
+}
+
+object ClaimGiftAidSmallDonationsSchemeController {
+
+  def nextPage(value: Boolean, mode: Mode, previousAnswer: Option[Boolean]): Call =
+    (value, mode, previousAnswer) match {
+      // NormalMode
+      case (_, NormalMode, _)                                                        =>
+        routes.ClaimingCommunityBuildingDonationsController.onPageLoad(NormalMode)
+
+      // CheckMode: new data
+      case (_, CheckMode, None)                                                      =>
+        routes.ClaimingCommunityBuildingDonationsController.onPageLoad(CheckMode)
+
+      // CheckMode: new value diff to old value
+      case (newVal, CheckMode, Some(prev)) if (newVal && !prev) || (!newVal && prev) =>
+        routes.ClaimingCommunityBuildingDonationsController.onPageLoad(CheckMode)
+
+      // CheckMode
+      case (_, CheckMode, _)                                                         =>
+        routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+
+    }
+
 }

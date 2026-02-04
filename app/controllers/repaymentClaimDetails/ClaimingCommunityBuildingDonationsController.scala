@@ -23,7 +23,7 @@ import controllers.repaymentClaimDetails.routes
 import forms.YesNoFormProvider
 import models.{Mode, RepaymentClaimDetailsAnswers}
 import play.api.data.Form
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
 import views.html.ClaimingCommunityBuildingDonationsView
 
@@ -49,6 +49,7 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
     form
       .bindFromRequest()
       .fold(
@@ -56,13 +57,39 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
         value =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(value))
-            .map(_ =>
-              if (value) {
-                Redirect(routes.ChangePreviousGASDSClaimController.onPageLoad(mode))
-              } else {
-                Redirect(routes.ConnectedToAnyOtherCharitiesController.onPageLoad(mode))
-              }
-            )
+            .map(_ => Redirect(ClaimingCommunityBuildingDonationsController.nextPage(value, mode, previousAnswer)))
       )
   }
+}
+object ClaimingCommunityBuildingDonationsController {
+
+  def nextPage(value: Boolean, mode: Mode, previousAnswer: Option[Boolean]): Call =
+    (value, mode, previousAnswer) match {
+      // NormalMode
+      case (true, NormalMode, _)                              =>
+        routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode)
+      case (false, NormalMode, _)                             =>
+        routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode)
+
+      // CheckMode: new data
+      case (true, CheckMode, None)                            =>
+        routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
+
+      // CheckMode: new data
+      case (false, CheckMode, None)                           =>
+        routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
+
+      // CheckMode: new value diff to old value
+      case (newVal, CheckMode, Some(prev)) if newVal && !prev =>
+        routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
+
+      case (newVal, CheckMode, Some(prev)) if !newVal && prev =>
+        routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
+
+      // CheckMode
+      case (_, CheckMode, _)                                  =>
+        routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+
+    }
+
 }

@@ -117,6 +117,111 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
           )
         }
       }
+      "Checkmode: should redirect to the next page (ClaimingCommunityBuildingDonations) when the value is true" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ClaimingCommunityBuildingDonationsController.onPageLoad(CheckMode).url
+          )
+        }
+      }
+
+      "Checkmode: should redirect to the next page (ClaimingCommunityBuildingDonations) when the value is false" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ClaimingCommunityBuildingDonationsController.onPageLoad(CheckMode).url
+          )
+        }
+      }
+
+      "Checkmode: should redirect to the next page (ClaimingCommunityBuildingDonations) when the value is change to false from true" in {
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ClaimingCommunityBuildingDonationsController.onPageLoad(CheckMode).url
+          )
+        }
+      }
+
+      "Checkmode: should redirect to the next page (ClaimingCommunityBuildingDonations) when the value is change to true from false" in {
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ClaimingCommunityBuildingDonationsController.onPageLoad(CheckMode).url
+          )
+        }
+      }
+
+      "Checkmode: should redirect to the next page (cya) when the value is not changed change from false" in {
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "Checkmode: should redirect to the next page (cya) when the value is not changed change from true" in {
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
 
       "should reload the page with errors when a required field is missing" in {
         given application: Application = applicationBuilder().build()

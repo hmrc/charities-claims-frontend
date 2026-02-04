@@ -76,7 +76,7 @@ object ClaimingReferenceNumberController {
       case (_, CheckMode, None)                               =>
         routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 
-      // CheckMode:
+      // CheckMode: new value diff to old value
       case (newVal, CheckMode, Some(prev)) if newVal && !prev =>
         routes.ClaimReferenceNumberInputController.onPageLoad(CheckMode)
 
