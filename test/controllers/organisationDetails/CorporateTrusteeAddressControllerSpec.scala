@@ -270,6 +270,30 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
             )
           }
         }
+
+        "should redirect to CorporateTrusteeDetailsController when user switched from auth official flow" in {
+          val sessionDataWithCorporateTrustee    = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+          val sessionDataWithAuthOfficialAddress =
+            OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(true)(using
+              sessionDataWithCorporateTrustee
+            )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionDataWithAuthOfficialAddress).mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "true")
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.CorporateTrusteeDetailsController.onPageLoad(CheckMode).url
+            )
+          }
+        }
       }
 
       "should reload the page with errors when a required field is missing" in {
