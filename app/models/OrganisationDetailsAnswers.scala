@@ -173,8 +173,43 @@ object OrganisationDetailsAnswers {
 
   def getAreYouACorporateTrustee(using session: SessionData): Option[Boolean] = get(_.areYouACorporateTrustee)
 
-  def setAreYouACorporateTrustee(value: Boolean)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(areYouACorporateTrustee = Some(v)))
+  def setAreYouACorporateTrustee(value: Boolean, previousValue: Option[Boolean] = None)(using
+    session: SessionData
+  ): SessionData =
+    val updatedSession = set(value)((a, v) => a.copy(areYouACorporateTrustee = Some(v)))
+    (value, previousValue) match {
+      case (true, Some(false)) => clearCorporateTrusteeData(using updatedSession)
+      case (false, Some(true)) => clearAuthorisedOfficialData(using updatedSession)
+      case _                   => updatedSession
+    }
+
+  private def clearCorporateTrusteeData(using session: SessionData): SessionData =
+    val updated = session.organisationDetailsAnswers match
+      case Some(existing) =>
+        existing.copy(
+          doYouHaveCorporateTrusteeUKAddress = None,
+          nameOfCorporateTrustee = None,
+          corporateTrusteePostcode = None,
+          corporateTrusteeDaytimeTelephoneNumber = None,
+          corporateTrusteeDetails = None
+        )
+      case None           => OrganisationDetailsAnswers()
+    session.copy(organisationDetailsAnswers = Some(updated))
+
+  private def clearAuthorisedOfficialData(using session: SessionData): SessionData =
+    val updated = session.organisationDetailsAnswers match
+      case Some(existing) =>
+        existing.copy(
+          doYouHaveAuthorisedOfficialTrusteeUKAddress = None,
+          authorisedOfficialTrusteePostcode = None,
+          authorisedOfficialTrusteeDaytimeTelephoneNumber = None,
+          authorisedOfficialTrusteeTitle = None,
+          authorisedOfficialTrusteeFirstName = None,
+          authorisedOfficialTrusteeLastName = None,
+          authorisedOfficialDetails = None
+        )
+      case None           => OrganisationDetailsAnswers()
+    session.copy(organisationDetailsAnswers = Some(updated))
 
   def getCharityRegistrationNumber(using session: SessionData): Option[String] = get(_.charityRegistrationNumber)
 
