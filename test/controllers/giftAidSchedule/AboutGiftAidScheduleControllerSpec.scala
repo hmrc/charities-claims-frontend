@@ -26,25 +26,25 @@ import views.html.AboutGiftAidScheduleView
 class AboutGiftAidScheduleControllerSpec extends ControllerSpec {
   "AboutGiftAidScheduleController" - {
     "onPageLoad" - {
-//      "should render the page correctly" in {
+      "should render the page correctly" in {
 //        val customConfig               = Map(
 //          "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
 //        )
-//        given application: Application = applicationBuilder().configure(customConfig).build()
-//
-//        running(application) {
-//          given request: FakeRequest[AnyContentAsEmpty.type] =
-//            FakeRequest(GET, routes.AboutGiftAidScheduleController.onPageLoad.url)
-//
-//          val result = route(application, request).value
-//
-//          val view = application.injector.instanceOf[AboutGiftAidScheduleView]
-//
-//          status(result) shouldEqual OK
-//
-//          contentAsString(result) shouldEqual view().body
-//        }
-//      }
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.AboutGiftAidScheduleController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          // val view = application.injector.instanceOf[AboutGiftAidScheduleView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual include("Use this service to add a Gift Aid schedule.")
+        }
+      }
 
       "should use the correct configured giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl in the message" in {
         val customConfig = Map(
@@ -56,7 +56,8 @@ class AboutGiftAidScheduleControllerSpec extends ControllerSpec {
           .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.AboutGiftAidScheduleController.onPageLoad.url)
+          val request =
+            FakeRequest(GET, routes.AboutGiftAidScheduleController.onPageLoad.url)
           val result  = route(application, request).value
 
           status(result) shouldEqual OK
