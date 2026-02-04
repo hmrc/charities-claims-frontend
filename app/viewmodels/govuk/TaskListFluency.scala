@@ -34,7 +34,10 @@ trait TaskListFluency {
   object TaskListViewModel {
 
     def apply(section: TaskSection)(using messages: Messages): TaskList =
-      TaskList(items = section.tasks.map(task => TaskListItemViewModel(task, section.hintKey)))
+      TaskList(
+        items = section.tasks.map(task => TaskListItemViewModel(task, section.hintKey)),
+        idPrefix = section.headingKey // headingKey is unique per section - sufficient for accessibility
+      )
   }
 
   object TaskListItemViewModel {

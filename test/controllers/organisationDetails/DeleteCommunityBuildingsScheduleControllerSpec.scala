@@ -95,7 +95,7 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
       }
 
       "should call backend deletion endpoint and redirect to R2 when yes is selected" in {
-        val sessionData = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-123"))
+        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
 
         (mockClaimsValidationService
           .deleteCommunityBuildingsSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
@@ -119,7 +119,7 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
       }
 
       "should handle case when no CommunityBuildings upload data is found" in {
-        val sessionData = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-123"))
+        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
 
         (mockClaimsValidationService
           .deleteCommunityBuildingsSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
@@ -146,7 +146,7 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
       }
 
       "should handle case when no claimId is in session data" in {
-        val sessionData = SessionData.empty.copy(unsubmittedClaimId = None)
+        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
 
         (mockClaimsValidationService
           .deleteCommunityBuildingsSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))

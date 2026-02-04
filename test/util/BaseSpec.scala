@@ -60,6 +60,8 @@ abstract class BaseSpec
   implicit val actorSystem: ActorSystem = ActorSystem("unit-tests")
   implicit val mat: Materializer        = Materializer.createMaterializer(actorSystem)
 
+  val testCharitiesReference: String = "test-charities-ref"
+
   override protected def afterAll(): Unit =
     actorSystem.terminate()
 

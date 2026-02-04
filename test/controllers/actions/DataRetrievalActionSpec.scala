@@ -33,10 +33,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class DataRetrievalActionSpec extends BaseSpec {
 
   val request                      = FakeRequest("GET", "/test")
-  val authorisedRequestOrgnisation = AuthorisedRequest(request, AffinityGroup.Organisation)
-  val authorisedRequestAgent       = AuthorisedRequest(request, AffinityGroup.Agent)
+  val authorisedRequestOrgnisation = AuthorisedRequest(request, AffinityGroup.Organisation, testCharitiesReference)
+  val authorisedRequestAgent       = AuthorisedRequest(request, AffinityGroup.Agent, testCharitiesReference)
 
-  given SessionData = SessionData.empty
+  given SessionData = SessionData.empty(testCharitiesReference)
 
   "DataRetrievalAction" - {
     "refines AuthorisedRequest into a DataRequest when session data exists" in {
@@ -78,7 +78,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       val result = action.invokeBlock(
         authorisedRequestOrgnisation,
         (req: DataRequest[?]) =>
-          req.sessionData shouldBe SessionData.empty
+          req.sessionData shouldBe SessionData.empty(testCharitiesReference)
           Future.successful(Ok)
       )
       status(result) shouldBe OK
@@ -117,7 +117,7 @@ class DataRetrievalActionSpec extends BaseSpec {
         authorisedRequestOrgnisation,
         (req: DataRequest[?]) =>
           req.sessionData shouldBe
-            SessionData.from(claim)
+            SessionData.from(claim, testCharitiesReference)
 
           req.sessionData.repaymentClaimDetailsAnswersOld                   shouldBe
             RepaymentClaimDetailsAnswersOld.from(
@@ -178,7 +178,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       val result = action.invokeBlock(
         authorisedRequestAgent,
         (req: DataRequest[?]) =>
-          req.sessionData shouldBe SessionData.empty
+          req.sessionData shouldBe SessionData.empty(testCharitiesReference)
           Future.successful(Ok)
       )
       status(result) shouldBe OK

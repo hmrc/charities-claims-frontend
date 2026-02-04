@@ -174,11 +174,13 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
 
     "onSubmit with warning" - {
       "should trigger warning when changing to false with Gift Aid schedule data present" in {
-        val sessionData = SessionData.empty.copy(
-          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
-          giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-          giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
-        )
+        val sessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
+            giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+            giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
+          )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -196,9 +198,11 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
       }
 
       "should not show warning when no previous gift aid schedule data exists" in {
-        val sessionData = SessionData.empty.copy(
-          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(false))
-        )
+        val sessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(false))
+          )
 
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -215,12 +219,14 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
       }
 
       "should delete schedule and redirect to ClaimingOtherIncomeController when changing to No after warning in NormalMode" in {
-        val sessionData = SessionData.empty.copy(
-          unsubmittedClaimId = Some("test-claim-123"),
-          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
-          giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-          giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
-        )
+        val sessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            unsubmittedClaimId = Some("test-claim-123"),
+            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
+            giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+            giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
+          )
 
         (mockClaimsValidationService
           .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
@@ -244,12 +250,14 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
       }
 
       "should delete schedule and redirect to CheckYourAnswersController when changing to No after warning in CheckMode" in {
-        val sessionData = SessionData.empty.copy(
-          unsubmittedClaimId = Some("test-claim-456"),
-          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
-          giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-          giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
-        )
+        val sessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            unsubmittedClaimId = Some("test-claim-456"),
+            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
+            giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+            giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
+          )
 
         (mockClaimsValidationService
           .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
@@ -273,11 +281,13 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
       }
 
       "should redirect to ClaimingOtherIncomeController when selecting Yes (not trigger delete)" in {
-        val sessionData = SessionData.empty.copy(
-          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
-          giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-          giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
-        )
+        val sessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
+            giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+            giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
+          )
 
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -294,11 +304,13 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
       }
 
       "should redirect to ClaimingOtherIncomeController when selecting No with no existing schedule data" in {
-        val sessionData = SessionData.empty.copy(
-          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(false)),
-          giftAidScheduleFileUploadReference = None,
-          giftAidScheduleData = None
-        )
+        val sessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(false)),
+            giftAidScheduleFileUploadReference = None,
+            giftAidScheduleData = None
+          )
 
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -315,11 +327,13 @@ class ClaimingGiftAidControllerSpec extends ControllerSpec {
       }
 
       "should render warning parameter hidden field when flash present" in {
-        val sessionData = SessionData.empty.copy(
-          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
-          giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-          giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
-        )
+        val sessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
+            giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+            giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
+          )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
