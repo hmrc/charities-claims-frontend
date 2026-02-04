@@ -68,19 +68,19 @@ object ClaimGiftAidSmallDonationsSchemeController {
   def nextPage(value: Boolean, mode: Mode, previousAnswer: Option[Boolean]): Call =
     (value, mode, previousAnswer) match {
       // NormalMode
-      case (_, NormalMode, _)                                                        =>
+      case (_, NormalMode, _)                                =>
         routes.ClaimingCommunityBuildingDonationsController.onPageLoad(NormalMode)
 
       // CheckMode: new data
-      case (_, CheckMode, None)                                                      =>
+      case (_, CheckMode, None)                              =>
         routes.ClaimingCommunityBuildingDonationsController.onPageLoad(CheckMode)
 
       // CheckMode: new value diff to old value
-      case (newVal, CheckMode, Some(prev)) if (newVal && !prev) || (!newVal && prev) =>
+      case (newVal, CheckMode, Some(prev)) if newVal != prev =>
         routes.ClaimingCommunityBuildingDonationsController.onPageLoad(CheckMode)
 
       // CheckMode
-      case (_, CheckMode, _)                                                         =>
+      case (_, CheckMode, _)                                 =>
         routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 
     }
