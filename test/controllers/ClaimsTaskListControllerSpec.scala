@@ -32,6 +32,14 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       claimingReferenceNumber = Some(false)
     )
 
+  def completeRepaymentClaimDetailsAnswers(): RepaymentClaimDetailsAnswers =
+    RepaymentClaimDetailsAnswers(
+      claimingGiftAid = Some(false),
+      claimingTaxDeducted = Some(false),
+      claimingUnderGiftAidSmallDonationsScheme = Some(false),
+      claimingReferenceNumber = Some(false)
+    )
+
   "ClaimsTaskListController" - {
 
     "onPageLoad" - {
@@ -51,7 +59,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       "should display About the claim section with all tasks when repaymentClaimDetails complete" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld()
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
         )
 
         given application: Application = applicationBuilder(sessionData).build()
@@ -70,7 +79,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       "should display Upload documents section with all tasks when repaymentClaimDetails complete" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld()
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
         )
 
         given application: Application = applicationBuilder(sessionData).build()
@@ -90,7 +100,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       "should display Declaration section when Repayment Claim Details complete" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld()
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
         )
 
         given application: Application = applicationBuilder(sessionData).build()
@@ -107,7 +118,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       "should display declaration warning when other sections incomplete" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld()
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
         )
 
         given application: Application = applicationBuilder(sessionData).build()
@@ -123,7 +135,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       "should display Delete claim link when repaymentClaimDetails complete" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld()
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
         )
 
         given application: Application = applicationBuilder(sessionData).build()
@@ -161,7 +174,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       "should show Completed status for GASDS and upload tasks" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld()
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
         )
 
         given application: Application = applicationBuilder(sessionData).build()
@@ -244,7 +258,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       "should link GASDS and upload tasks to page not found" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld()
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
         )
 
         given application: Application = applicationBuilder(sessionData).build()
