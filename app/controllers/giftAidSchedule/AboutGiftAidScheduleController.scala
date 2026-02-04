@@ -21,20 +21,18 @@ import config.FrontendAppConfig
 import controllers.BaseController
 import controllers.actions.Actions
 import controllers.giftAidSchedule.routes
-import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.AboutGiftAidScheduleView
 import models.RepaymentClaimDetailsAnswers
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class AboutGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
   view: AboutGiftAidScheduleView,
   appConfig: FrontendAppConfig
-)(using ec: ExecutionContext)
-    extends BaseController {
+) extends BaseController {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true) then {
