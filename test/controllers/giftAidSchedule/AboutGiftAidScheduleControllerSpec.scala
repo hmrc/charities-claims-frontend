@@ -18,6 +18,7 @@ package controllers.giftAidSchedule
 
 import controllers.ControllerSpec
 import controllers.giftAidSchedule.routes
+import models.RepaymentClaimDetailsAnswers
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -26,11 +27,13 @@ import views.html.AboutGiftAidScheduleView
 class AboutGiftAidScheduleControllerSpec extends ControllerSpec {
   "AboutGiftAidScheduleController" - {
     "onPageLoad" - {
-      "should render the page correctly" in {
-//        val customConfig               = Map(
-//          "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
-//        )
-        given application: Application = applicationBuilder().build()
+      
+      "should render Page Not Found if setClaimingGiftAid is false" in {
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingGiftAid(false)
+        val customConfig               = Map(
+          "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
+        )
+        given application: Application = applicationBuilder(sessionData = sessionData).configure(customConfig).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -38,20 +41,18 @@ class AboutGiftAidScheduleControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          // val view = application.injector.instanceOf[AboutGiftAidScheduleView]
-
-          status(result) shouldEqual OK
-
-          contentAsString(result) shouldEqual include("Use this service to add a Gift Aid schedule.")
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
         }
       }
 
       "should use the correct configured giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl in the message" in {
+        val sessionData  = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
         val customConfig = Map(
           "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
         )
 
-        given application: Application = applicationBuilder()
+        given application: Application = applicationBuilder(sessionData = sessionData)
           .configure(customConfig)
           .build()
 
