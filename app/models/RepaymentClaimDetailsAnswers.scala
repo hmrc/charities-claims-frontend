@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,19 +45,21 @@ final case class RepaymentClaimDetailsAnswers(
     List(
       (claimingGiftAid.isEmpty
         && claimingTaxDeducted.isEmpty
-        && claimingUnderGiftAidSmallDonationsScheme.isEmpty)                   -> "repaymentClaimType.heading",
+        && claimingUnderGiftAidSmallDonationsScheme.isEmpty)       -> "repaymentClaimType.missingDetails",
       (claimingUnderGiftAidSmallDonationsScheme.contains(true)
-        && claimingDonationsNotFromCommunityBuilding.isEmpty)                  -> "claimGASDS.heading",
+        && claimingDonationsNotFromCommunityBuilding.isEmpty)      -> "claimGASDS.missingDetails",
       (claimingUnderGiftAidSmallDonationsScheme.contains(true)
-        && claimingDonationsCollectedInCommunityBuildings.isEmpty)             -> "claimingCommunityBuildingDonations.heading",
+        && claimingDonationsCollectedInCommunityBuildings.isEmpty) -> "claimingCommunityBuildingDonations.missingDetails",
       (claimingUnderGiftAidSmallDonationsScheme.contains(true)
         && ((claimingDonationsNotFromCommunityBuilding.contains(true)
           || claimingDonationsCollectedInCommunityBuildings.contains(true))
-          && makingAdjustmentToPreviousClaim.isEmpty))                         -> "changePreviousGASDSClaim.heading",
+          && makingAdjustmentToPreviousClaim.isEmpty))             -> "changePreviousGASDSClaim.missingDetails",
       (claimingUnderGiftAidSmallDonationsScheme.contains(true)
-        && connectedToAnyOtherCharities.isEmpty)                               -> "connectedToAnyOtherCharities.heading",
-      claimingReferenceNumber.isEmpty                                          -> "claimReferenceNumberCheck.heading",
-      (claimingReferenceNumber.contains(true) && claimReferenceNumber.isEmpty) -> "claimReferenceNumberInput.heading"
+        && connectedToAnyOtherCharities.isEmpty)                   -> "connectedToAnyOtherCharities.missingDetails",
+      claimingReferenceNumber.isEmpty                              -> "claimReferenceNumberCheck.missingDetails",
+      (claimingReferenceNumber.contains(
+        true
+      ) && claimReferenceNumber.isEmpty)                           -> "claimReferenceNumberInput.missingDetails"
     ).collect { case (true, key) => key }
 
   def hasRepaymentClaimDetailsCompleteAnswers: Boolean = missingFields.isEmpty
@@ -93,6 +95,16 @@ object RepaymentClaimDetailsAnswers {
       hmrcCharitiesReference = repaymentClaimDetails.hmrcCharitiesReference,
       nameOfCharity = repaymentClaimDetails.nameOfCharity
     )
+
+  def getMissingFields(answers: Option[RepaymentClaimDetailsAnswers]): List[String] =
+    answers match
+      case Some(a) => a.missingFields
+      case None    => defaultMissingFields
+
+  private val defaultMissingFields: List[String] = List(
+    "repaymentClaimType.missingDetails",
+    "claimReferenceNumberCheck.missingDetails"
+  )
 
   def getClaimingTaxDeducted(using session: SessionData): Option[Boolean] = get(_.claimingTaxDeducted)
 
