@@ -144,10 +144,10 @@ GET         /change-enter-claim-reference-number            controllers.repaymen
 POST        /enter-claim-reference-number                   controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-enter-claim-reference-number            controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /claim-gasds-payment                        controllers.repaymentClaimDetails.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /change-claim-gasds-payment                 controllers.repaymentClaimDetails.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /claim-gasds-payment                        controllers.repaymentClaimDetails.ClaimGiftAidSmallDonationsSchemeController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /change-claim-gasds-payment                 controllers.repaymentClaimDetails.ClaimGiftAidSmallDonationsSchemeController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /claim-gasds-payment                            controllers.repaymentClaimDetails.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-claim-gasds-payment                     controllers.repaymentClaimDetails.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /claim-gasds-payment                            controllers.repaymentClaimDetails.ClaimGiftAidSmallDonationsSchemeController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-claim-gasds-payment                     controllers.repaymentClaimDetails.ClaimGiftAidSmallDonationsSchemeController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /cannot-view-or-manage-claim                    controllers.organisationDetails.CannotViewOrManageClaimController.onPageLoad
 
