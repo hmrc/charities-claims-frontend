@@ -56,7 +56,7 @@ class CorporateTrusteeClaimController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
-            .save(OrganisationDetailsAnswers.setAreYouACorporateTrustee(value))
+            .save(OrganisationDetailsAnswers.setAreYouACorporateTrustee(value, previousAnswer))
             .map(_ => Redirect(CorporateTrusteeClaimController.nextPage(value, mode, previousAnswer)))
       )
   }
