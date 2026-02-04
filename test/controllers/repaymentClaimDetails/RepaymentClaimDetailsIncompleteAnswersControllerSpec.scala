@@ -55,7 +55,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
 
       "should render the page with missing fields when answers are incomplete" in {
         val incompleteAnswers = RepaymentClaimDetailsAnswers()
-        val sessionData = SessionData(
+        val sessionData       = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = scaffoldingForTest, // TODO: MIGRATION - DELETE this line
@@ -94,7 +94,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           connectedToAnyOtherCharities = Some(false),
           makingAdjustmentToPreviousClaim = Some(false)
         )
-        val sessionData = SessionData(
+        val sessionData     = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = scaffoldingForTest, // TODO: MIGRATION - DELETE this line
@@ -132,7 +132,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           connectedToAnyOtherCharities = Some(true),
           makingAdjustmentToPreviousClaim = Some(true)
         )
-        val sessionData = SessionData(
+        val sessionData     = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = scaffoldingForTest, // TODO: MIGRATION - DELETE this line
@@ -166,7 +166,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           claimingUnderGiftAidSmallDonationsScheme = Some(true),
           claimingReferenceNumber = Some(false)
         )
-        val sessionData = SessionData(
+        val sessionData       = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = scaffoldingForTest, // TODO: MIGRATION - DELETE this line
@@ -205,7 +205,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           claimingTaxDeducted = Some(false),
           claimingUnderGiftAidSmallDonationsScheme = Some(false)
         )
-        val sessionData = SessionData(
+        val sessionData       = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = scaffoldingForTest, // TODO: MIGRATION - DELETE this line
@@ -232,7 +232,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
             expectedMissingFields
           ).body
 
-          expectedMissingFields      should contain("claimReferenceNumberCheck.missingDetails")
+          expectedMissingFields        should contain("claimReferenceNumberCheck.missingDetails")
           expectedMissingFields.size shouldBe 1
         }
       }
@@ -244,7 +244,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           claimingUnderGiftAidSmallDonationsScheme = Some(false),
           claimingReferenceNumber = Some(true)
         )
-        val sessionData = SessionData(
+        val sessionData       = SessionData(
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = scaffoldingForTest, // TODO: MIGRATION - DELETE this line
@@ -271,7 +271,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
             expectedMissingFields
           ).body
 
-          expectedMissingFields      should contain("claimReferenceNumberInput.missingDetails")
+          expectedMissingFields        should contain("claimReferenceNumberInput.missingDetails")
           expectedMissingFields.size shouldBe 1
         }
       }
