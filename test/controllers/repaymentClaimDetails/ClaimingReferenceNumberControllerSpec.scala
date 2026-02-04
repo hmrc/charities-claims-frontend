@@ -100,6 +100,76 @@ class ClaimingReferenceNumberControllerSpec extends ControllerSpec {
         }
       }
 
+      "CheckMode: should redirect to the next page when the value is true" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingReferenceNumberController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ClaimReferenceNumberInputController.onPageLoad(CheckMode).url
+          )
+        }
+      }
+
+      "CheckMode: should redirect to the next page when the value is false" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingReferenceNumberController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "checkmode: should redirect to the next page when the value is true and previously was true " in {
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingReferenceNumberController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "checkmode: should redirect to the next page when the value is true and previously was false " in {
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(false)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingReferenceNumberController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ClaimReferenceNumberInputController.onPageLoad(CheckMode).url
+          )
+        }
+      }
+
       "should redirect to the next page(cya) when the value is false" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 

@@ -23,7 +23,7 @@ import forms.YesNoFormProvider
 import models.{Mode, RepaymentClaimDetailsAnswers}
 import models.Mode.*
 import controllers.repaymentClaimDetails.routes
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import play.api.data.Form
 import services.SaveService
 import views.html.ConnectedToAnyOtherCharitiesView
@@ -50,6 +50,7 @@ class ConnectedToAnyOtherCharitiesController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val previousAnswer = RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities
     form
       .bindFromRequest()
       .fold(
@@ -57,18 +58,23 @@ class ConnectedToAnyOtherCharitiesController @Inject() (
         value =>
           saveService
             .save(RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(value))
-            .map(_ =>
-              (value, mode) match {
-                case (_, CheckMode)  =>
-                  Redirect(
-                    routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
-                  )
-                case (_, NormalMode) =>
-                  Redirect(
-                    routes.ClaimingReferenceNumberController.onPageLoad(NormalMode)
-                  )
-              }
-            )
+            .map(_ => Redirect(ConnectedToAnyOtherCharitiesController.nextPage(value, mode, previousAnswer)))
       )
   }
+}
+
+object ConnectedToAnyOtherCharitiesController {
+
+  def nextPage(value: Boolean, mode: Mode, previousAnswer: Option[Boolean]): Call =
+    (value, mode, previousAnswer) match {
+      // NormalMode
+      case (_, NormalMode, _) =>
+        routes.ClaimingReferenceNumberController.onPageLoad(NormalMode)
+
+      // CheckMode
+      case (_, CheckMode, _)  =>
+        routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+
+    }
+
 }
