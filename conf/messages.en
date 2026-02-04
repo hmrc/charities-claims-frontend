@@ -332,7 +332,7 @@ claimGASDS.heading = Do you want to claim a top-up payment under the Gift Aid Sm
 claimGASDS.caption = Provide repayment claim details
 claimGASDS.hint = For donations of £20 or less that were not collected in a community building.
 claimGASDS.legend = Do you want to claim a top-up payment under the Gift Aid Small Donations Scheme?
-claimGASDS.error.required = Select 'Yes' if you are claiming under the Gift Aid Small Donations Scheme
+claimGASDS.error.required = Select ‘Yes’ if you are claiming under the Gift Aid Small Donations Scheme
 
 # TODO: Placeholder screen messages for G2 - content will be updated in future
 addSchedule.title = Add Schedule
