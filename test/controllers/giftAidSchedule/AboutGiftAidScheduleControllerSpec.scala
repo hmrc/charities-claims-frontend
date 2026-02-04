@@ -22,12 +22,11 @@ import models.RepaymentClaimDetailsAnswers
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.AboutGiftAidScheduleView
 
 class AboutGiftAidScheduleControllerSpec extends ControllerSpec {
   "AboutGiftAidScheduleController" - {
     "onPageLoad" - {
-      
+
       "should render Page Not Found if setClaimingGiftAid is false" in {
         val sessionData                = RepaymentClaimDetailsAnswers.setClaimingGiftAid(false)
         val customConfig               = Map(
