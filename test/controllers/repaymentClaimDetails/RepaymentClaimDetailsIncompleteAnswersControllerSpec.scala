@@ -171,6 +171,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
         )
         val sessionData       = SessionData(
           unsubmittedClaimId = Some("123"),
+          charitiesReference = testCharitiesReference,
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = scaffoldingForTest, // TODO: MIGRATION - DELETE this line
           repaymentClaimDetailsAnswers =
@@ -210,6 +211,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
         )
         val sessionData       = SessionData(
           unsubmittedClaimId = Some("123"),
+          charitiesReference = testCharitiesReference,
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = scaffoldingForTest, // TODO: MIGRATION - DELETE this line
           repaymentClaimDetailsAnswers =
@@ -249,6 +251,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
         )
         val sessionData       = SessionData(
           unsubmittedClaimId = Some("123"),
+          charitiesReference = testCharitiesReference,
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = scaffoldingForTest, // TODO: MIGRATION - DELETE this line
           repaymentClaimDetailsAnswers =
