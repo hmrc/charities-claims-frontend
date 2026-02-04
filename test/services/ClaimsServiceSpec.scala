@@ -47,6 +47,7 @@ class ClaimsServiceSpec extends BaseSpec {
       )
 
       val initialSessionData = SessionData(
+        charitiesReference = testCharitiesReference,
         unsubmittedClaimId = None,
         lastUpdatedReference = None,
         repaymentClaimDetailsAnswersOld = repaymentAnswers
@@ -89,6 +90,7 @@ class ClaimsServiceSpec extends BaseSpec {
 
       val existingClaimId    = "existing-claim-id"
       val initialSessionData = SessionData(
+        charitiesReference = testCharitiesReference,
         unsubmittedClaimId = Some(existingClaimId),
         lastUpdatedReference = Some("1234567890"),
         repaymentClaimDetailsAnswersOld = repaymentAnswers
@@ -122,6 +124,7 @@ class ClaimsServiceSpec extends BaseSpec {
       )
 
       val initialSessionData = SessionData(
+        charitiesReference = testCharitiesReference,
         unsubmittedClaimId = None,
         lastUpdatedReference = None,
         repaymentClaimDetailsAnswersOld = incompleteAnswers

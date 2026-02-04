@@ -64,6 +64,7 @@ class SessionDataControllerSpec extends ControllerSpec {
           .instanceOf[SessionCache]
           .store(
             SessionData(
+              charitiesReference = testCharitiesReference,
               repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
               organisationDetailsAnswers =
                 Some(OrganisationDetailsAnswers(nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales)))
@@ -119,6 +120,7 @@ class SessionDataControllerSpec extends ControllerSpec {
                 "sessionData" -> Json
                   .toJson(
                     SessionData(
+                      charitiesReference = testCharitiesReference,
                       repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
                       organisationDetailsAnswers = Some(
                         OrganisationDetailsAnswers(nameOfCharityRegulator =
@@ -152,6 +154,7 @@ class SessionDataControllerSpec extends ControllerSpec {
                 "sessionData" -> Json
                   .toJson(
                     SessionData(
+                      charitiesReference = testCharitiesReference,
                       repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
                       organisationDetailsAnswers = Some(
                         OrganisationDetailsAnswers(nameOfCharityRegulator =

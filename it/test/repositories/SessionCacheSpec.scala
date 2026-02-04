@@ -49,9 +49,9 @@ class SessionCacheSpec
 
     "return some SessionData if found" in {
       given HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(UUID.randomUUID().toString)))
-      whenReady(sessionCache.store(SessionData.empty)) { _ =>
+      whenReady(sessionCache.store(SessionData.empty("123"))) { _ =>
         whenReady(sessionCache.get()) { result =>
-          result should be(Some(SessionData.empty))
+          result should be(Some(SessionData.empty("123")))
         }
       }
     }

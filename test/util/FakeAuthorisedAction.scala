@@ -33,5 +33,5 @@ class FakeAuthorisedAction(using Materializer) extends AuthorisedAction {
   override def parser: BodyParser[AnyContent] = BodyParsers.Default(Helpers.stubPlayBodyParsers)
 
   override def invokeBlock[A](request: Request[A], block: AuthorisedRequest[A] => Future[Result]): Future[Result] =
-    block(AuthorisedRequest(request, AffinityGroup.Organisation))
+    block(AuthorisedRequest(request, AffinityGroup.Organisation, "test-charities-reference"))
 }

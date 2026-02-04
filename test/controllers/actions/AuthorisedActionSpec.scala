@@ -36,7 +36,7 @@ class AuthorisedActionSpec extends BaseSpec {
 
   class Harness(authorisedAction: AuthorisedAction) {
     def onPageLoad: Action[AnyContent] = authorisedAction { request =>
-      Results.Ok(request.affinityGroup.toString())
+      Results.Ok(request.charitiesReference)
     }
   }
 
@@ -67,9 +67,8 @@ class AuthorisedActionSpec extends BaseSpec {
 
       val controller = new Harness(authorisedAction)
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
-      println(redirectLocation(result))
       status(result)          shouldBe OK
-      contentAsString(result) shouldBe "Organisation"
+      contentAsString(result) shouldBe "1234567890"
     }
 
     "create AuthorisedRequest when user has an Agent affinity group" in {
@@ -98,7 +97,7 @@ class AuthorisedActionSpec extends BaseSpec {
       val controller = new Harness(authorisedAction)
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
       status(result)          shouldBe OK
-      contentAsString(result) shouldBe "Agent"
+      contentAsString(result) shouldBe "1234567890"
     }
 
     "redirect to access denied page when user has no affinity group" in {
@@ -114,9 +113,7 @@ class AuthorisedActionSpec extends BaseSpec {
           Future.successful(
             `~`(
               None,
-              Enrolments(
-                Set()
-              )
+              Enrolments(Set())
             )
           )
         )
@@ -145,9 +142,7 @@ class AuthorisedActionSpec extends BaseSpec {
           Future.successful(
             `~`(
               Some(AffinityGroup.Agent),
-              Enrolments(
-                Set()
-              )
+              Enrolments(Set())
             )
           )
         )
@@ -176,9 +171,7 @@ class AuthorisedActionSpec extends BaseSpec {
           Future.successful(
             `~`(
               Some(AffinityGroup.Organisation),
-              Enrolments(
-                Set()
-              )
+              Enrolments(Set())
             )
           )
         )

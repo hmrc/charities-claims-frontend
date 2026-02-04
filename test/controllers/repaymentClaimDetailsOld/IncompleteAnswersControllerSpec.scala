@@ -29,7 +29,8 @@ class IncompleteAnswersControllerSpec extends ControllerSpec {
     "onPageLoad" - {
       "should render the page with missing fields when answers are incomplete" in {
         val incompleteAnswers = RepaymentClaimDetailsAnswersOld()
-        val sessionData       = SessionData(repaymentClaimDetailsAnswersOld = incompleteAnswers)
+        val sessionData       =
+          SessionData(charitiesReference = testCharitiesReference, repaymentClaimDetailsAnswersOld = incompleteAnswers)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -58,7 +59,8 @@ class IncompleteAnswersControllerSpec extends ControllerSpec {
           claimingUnderGiftAidSmallDonationsScheme = Some(false),
           claimingReferenceNumber = Some(false)
         )
-        val sessionData     = SessionData(repaymentClaimDetailsAnswersOld = completeAnswers)
+        val sessionData     =
+          SessionData(charitiesReference = testCharitiesReference, repaymentClaimDetailsAnswersOld = completeAnswers)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 

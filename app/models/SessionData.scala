@@ -24,6 +24,8 @@ final case class SessionData(
   // claimId of the unsubmitted claim stored in the backend,
   // if empty, the user has started a new claim
   unsubmittedClaimId: Option[String] = None,
+  // HMRC Charities reference from enrolment (CHARID for Organisation, AGENTCHARID for Agent)
+  charitiesReference: String,
   // lastUpdatedReference of the claim stored in the backend,
   // if empty, the user has started a new claim
   lastUpdatedReference: Option[String] = None,
@@ -51,13 +53,15 @@ object SessionData {
 
   given Format[SessionData] = Json.format[SessionData]
 
-  val empty: SessionData = SessionData(
+  def empty(charitiesRef: String): SessionData = SessionData(
+    charitiesReference = charitiesRef,
     repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld()
   )
 
-  def from(claim: Claim): SessionData =
+  def from(claim: Claim, charitiesRef: String): SessionData =
     SessionData(
       unsubmittedClaimId = Some(claim.claimId),
+      charitiesReference = charitiesRef,
       lastUpdatedReference = Some(claim.lastUpdatedReference),
       repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld.from(claim.claimData.repaymentClaimDetails),
       repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers.from(claim.claimData.repaymentClaimDetails)),

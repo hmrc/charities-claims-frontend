@@ -27,6 +27,7 @@
 
 @layout(pageTitle = titleNoForm(messages("claimsTaskList.title")), showBackLink = false) {
 
+    <span class="govuk-caption-l">@messages("claimsTaskList.caption", viewModel.charitiesReference)</span>
     <h1 class="govuk-heading-l">@messages("claimsTaskList.heading")</h1>
 
     @for(section <- viewModel.sections) {
