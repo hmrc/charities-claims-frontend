@@ -108,7 +108,7 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
-      "should redirect to the next page when the value is true" in {
+      "should redirect to the next page (change community building donation) when the value is true" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
@@ -125,8 +125,10 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to the next page when the value is false" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+      "should redirect to the next page (connected charities) when the value is false" in {
+        val sessionData                =
+          RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -138,6 +140,26 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
             routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to the next page (change community building donation) when the value is false but claimingDonationsNotFromCommunityBuilding is true" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -159,8 +181,11 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
         }
       }
 
-      "Checkmode: should redirect to the next page when the value is false" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+      "checkmode: should redirect to the next page (connected charities) when the value is false" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -176,8 +201,32 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
         }
       }
 
+      "checkmode:should redirect to the next page (change community building donation) when the value is false but claimingDonationsNotFromCommunityBuilding is true" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode).url
+          )
+        }
+      }
+
       "Checkmode: should redirect to the next page when the value is changed to false from true" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true)
+        val sessionDataClaimDonations  =
+          RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false)
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true)(using
+          sessionDataClaimDonations
+        )
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
@@ -228,6 +277,25 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
             routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "Checkmode: should redirect to the next page when the value is not changed from false and claimingDonationsCollectedInCommunityBuildings=true" in {
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode).url
           )
         }
       }

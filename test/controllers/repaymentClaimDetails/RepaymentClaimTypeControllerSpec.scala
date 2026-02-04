@@ -313,13 +313,13 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
             status(result) shouldEqual SEE_OTHER
             redirectLocation(result) shouldEqual Some(
-              routes.ClaimingReferenceNumberController.onPageLoad(CheckMode).url
+              routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
             )
           }
         }
 
         "old GASDS is false and new GASDS" in {
-          val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
+          val sessionData = RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithNoneChecked)
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -341,7 +341,7 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
           }
         }
         "no change in old and new GASDS" in {
-          val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+          val sessionData = RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked)
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 

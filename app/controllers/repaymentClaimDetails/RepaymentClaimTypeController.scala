@@ -47,7 +47,7 @@ class RepaymentClaimTypeController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val previousAnswer: Option[Boolean] = RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme
+    val previousAnswer: Option[RepaymentClaimType] = RepaymentClaimDetailsAnswers.getRepaymentClaimType
     form
       .bindFromRequest()
       .fold(
@@ -63,26 +63,29 @@ class RepaymentClaimTypeController @Inject() (
 
 object RepaymentClaimTypeController {
 
-  def nextPage(value: RepaymentClaimType, mode: Mode, previousAnswer: Option[Boolean]): Call =
-    (value.claimingUnderGiftAidSmallDonationsScheme, mode, previousAnswer) match {
+  def nextPage(value: RepaymentClaimType, mode: Mode, previousAnswer: Option[RepaymentClaimType]): Call =
+    (value, mode, previousAnswer) match {
       // NormalMode
-      case (true, NormalMode, _)                              =>
-        routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(NormalMode)
-      case (_, NormalMode, _)                                 =>
-        routes.ClaimingReferenceNumberController.onPageLoad(NormalMode)
+      case (value, NormalMode, _)   =>
+        if value.claimingUnderGiftAidSmallDonationsScheme then
+          routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(NormalMode)
+        else routes.ClaimingReferenceNumberController.onPageLoad(NormalMode)
 
       // CheckMode: new data
-      case (true, CheckMode, None)                            =>
-        routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(CheckMode)
-      case (_, CheckMode, None)                               =>
-        routes.ClaimingReferenceNumberController.onPageLoad(CheckMode)
+      case (value, CheckMode, None) =>
+        if value.claimingUnderGiftAidSmallDonationsScheme then
+          routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(CheckMode)
+        else routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 
       // CheckMode:
-      case (newVal, CheckMode, Some(prev)) if newVal && !prev =>
+      case (newVal, CheckMode, Some(prev))
+          if newVal.claimingUnderGiftAidSmallDonationsScheme && prev.claimingUnderGiftAidSmallDonationsScheme.eq(
+            false
+          ) =>
         routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(CheckMode)
 
       // unchanged
-      case (_, CheckMode, _)                                  =>
+      case (_, CheckMode, _)        =>
         routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
     }
 
