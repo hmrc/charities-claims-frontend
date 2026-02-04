@@ -39,6 +39,7 @@ object ClaimsTaskListController {
 
   def buildViewModel(using request: DataRequest[?], messages: Messages): ClaimsTaskListViewModel = {
     val repaymentClaimDetailsComplete = isRepaymentClaimDetailsComplete
+    val charitiesReference            = request.sessionData.charitiesReference
 
     if (!repaymentClaimDetailsComplete) {
       val repaymentClaimDetailsOnlySection = TaskSection(
@@ -53,7 +54,8 @@ object ClaimsTaskListController {
 
       ClaimsTaskListViewModel(
         sections = Seq(repaymentClaimDetailsOnlySection, declarationSection),
-        deleteClaimUrl = None
+        deleteClaimUrl = None,
+        charitiesReference = charitiesReference
       )
     } else {
       val aboutTheClaimSection = TaskSection(
@@ -81,7 +83,8 @@ object ClaimsTaskListController {
 
       ClaimsTaskListViewModel(
         sections = sections,
-        deleteClaimUrl = Some(organisationDetails.routes.DeleteRepaymentClaimController.onPageLoad.url)
+        deleteClaimUrl = Some(organisationDetails.routes.DeleteRepaymentClaimController.onPageLoad.url),
+        charitiesReference = charitiesReference
       )
     }
   }

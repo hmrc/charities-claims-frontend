@@ -169,11 +169,13 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
 
       "onSubmit with warning" - {
         "should trigger warning when changing to false when Other Income schedule data present" in {
-          val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
-            otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-            otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
-          )
+          val sessionData = SessionData
+            .empty(testCharitiesReference)
+            .copy(
+              repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
+              otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+              otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
+            )
 
           given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -191,11 +193,13 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
         }
 
         "should redirect to the next page in NormalMode when value is false and warning has been shown" in {
-          val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
-            otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-            otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
-          )
+          val sessionData = SessionData
+            .empty(testCharitiesReference)
+            .copy(
+              repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
+              otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+              otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
+            )
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -218,9 +222,11 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
         }
 
         "should not show warning when no previous other income schedule data exists" in {
-          val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(false))
-          )
+          val sessionData = SessionData
+            .empty(testCharitiesReference)
+            .copy(
+              repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(false))
+            )
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -237,11 +243,13 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
         }
 
         "should redirect to CheckYourAnswers in CheckMode after warning confirmation" in {
-          val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
-            otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-            otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
-          )
+          val sessionData = SessionData
+            .empty(testCharitiesReference)
+            .copy(
+              repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
+              otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+              otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
+            )
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -258,11 +266,13 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
         }
 
         "should render warning parameter hidden field when warning flash present" in {
-          val sessionData = SessionData.empty.copy(
-            repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
-            otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-            otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
-          )
+          val sessionData = SessionData
+            .empty(testCharitiesReference)
+            .copy(
+              repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
+              otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+              otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
+            )
 
           given application: Application = applicationBuilder(sessionData = sessionData).build()
 

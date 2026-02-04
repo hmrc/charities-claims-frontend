@@ -40,6 +40,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
         "should render the page correctly when claimingUnderGiftAidSmallDonationsScheme is true" in {
 
           val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
             repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
             repaymentClaimDetailsAnswers = Some(
               RepaymentClaimDetailsAnswers(
@@ -75,6 +76,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
         "should render the page correctly when claimingGiftAid is true" in {
 
           val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
             repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
             repaymentClaimDetailsAnswers = Some(
               RepaymentClaimDetailsAnswers(
@@ -109,6 +111,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
         "should render the page correctly when claimingTaxDeducted is true " in {
 
           val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
             repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
             repaymentClaimDetailsAnswers = Some(
               RepaymentClaimDetailsAnswers(
@@ -144,6 +147,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
         "should render the page correctly when claimingGiftAid & claimingTaxDeducted are true" in {
 
           val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
             repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
             repaymentClaimDetailsAnswers = Some(
               RepaymentClaimDetailsAnswers(
@@ -179,6 +183,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
         "should render the page correctly when claimingGiftAid & claimingTaxDeducted are true and some answers is not defined" in {
 
           val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
             repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
             repaymentClaimDetailsAnswers = Some(
               RepaymentClaimDetailsAnswers(
@@ -214,6 +219,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
         "should render the page correctly when makingAdjustmentToPreviousClaim are false and some answers is not defined" in {
 
           val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
             repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
             repaymentClaimDetailsAnswers = Some(
               RepaymentClaimDetailsAnswers(
@@ -251,6 +257,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
         "should render the page correctly when claimingGiftAid is true " in {
 
           val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
             repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
             repaymentClaimDetailsAnswers = Some(
               RepaymentClaimDetailsAnswers(
@@ -285,6 +292,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
         "should render the page correctly when claimingGiftAid & claimingTaxDeducted is true " in {
 
           val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
             repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
             repaymentClaimDetailsAnswers = Some(
               RepaymentClaimDetailsAnswers(
@@ -321,6 +329,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
       "should render the page correctly when some answers are missing & claimingGiftAid is true" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
           repaymentClaimDetailsAnswers = Some(
             RepaymentClaimDetailsAnswers(
@@ -357,6 +366,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
       "should render the page correctly when some answers are missing & claimingTaxDeducted is true" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
           repaymentClaimDetailsAnswers = Some(
             RepaymentClaimDetailsAnswers(
@@ -392,6 +402,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
       "should render the page correctly when some answers are missing & claimingUnderGiftAidSmallDonationsScheme missing" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
           repaymentClaimDetailsAnswers = Some(
             RepaymentClaimDetailsAnswers(
@@ -428,6 +439,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
       "should render the page correctly when claimingUnderGiftAidSmallDonationsScheme & claimingGiftAid & claimingTaxDeducted are missing" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
           repaymentClaimDetailsAnswers = Some(
             RepaymentClaimDetailsAnswers(
@@ -464,6 +476,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
       "should render the page correctly when all are missing" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
           repaymentClaimDetailsAnswers = Some(
             RepaymentClaimDetailsAnswers(
@@ -504,6 +517,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
     "should save the claim and redirect to the next page" in {
 
       val sessionData = SessionData(
+        charitiesReference = testCharitiesReference,
         repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
         repaymentClaimDetailsAnswers = Some(
           RepaymentClaimDetailsAnswers(
@@ -541,6 +555,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
     "should redirect to the incomplete answers page if the answers are not complete" in {
 
       val sessionData = SessionData(
+        charitiesReference = testCharitiesReference,
         repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
         repaymentClaimDetailsAnswers = Some(
           RepaymentClaimDetailsAnswers(
@@ -578,6 +593,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
     "should redirect to CannotViewOrManageClaim page when UpdatedByAnotherUserException is thrown" in {
 
       val sessionData = SessionData(
+        charitiesReference = testCharitiesReference,
         repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
         repaymentClaimDetailsAnswers = Some(
           RepaymentClaimDetailsAnswers(

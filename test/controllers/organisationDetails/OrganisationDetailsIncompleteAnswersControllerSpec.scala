@@ -68,6 +68,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
         )
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -103,6 +104,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
           claimingReferenceNumber = Some(false)
         )
         val sessionData                         = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -157,6 +159,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
         )
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -198,6 +201,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
         )
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -239,6 +243,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
         )
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -283,6 +288,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
         )
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -327,6 +333,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
         )
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,

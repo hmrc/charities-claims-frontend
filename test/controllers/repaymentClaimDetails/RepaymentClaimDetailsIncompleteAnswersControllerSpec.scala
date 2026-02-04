@@ -41,6 +41,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
       "should render the page with missing fields when answers are incomplete" in {
         val incompleteAnswers = RepaymentClaimDetailsAnswers()
         val sessionData       = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
@@ -79,6 +80,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           makingAdjustmentToPreviousClaim = Some(false)
         )
         val sessionData     = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
@@ -116,6 +118,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           makingAdjustmentToPreviousClaim = Some(true)
         )
         val sessionData     = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,

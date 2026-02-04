@@ -29,7 +29,6 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import models.requests.AuthorisedRequest
 
 import scala.concurrent.{ExecutionContext, Future}
-
 import javax.inject.{Inject, Singleton}
 
 @ImplementedBy(classOf[DefaultAuthorisedAction])
@@ -54,14 +53,18 @@ class DefaultAuthorisedAction @Inject() (
 
     authorised()
       .retrieve(Retrievals.affinityGroup.and(Retrievals.allEnrolments)) {
-        case Some(affinityGroup @ AffinityGroup.Agent) ~ AuthorisedAction.HasActiveAgentEnrolment() =>
-          block(AuthorisedRequest(request, affinityGroup))
-        case Some(AffinityGroup.Agent) ~ _                                                          =>
+        case Some(affinityGroup @ AffinityGroup.Agent) ~ AuthorisedAction.HasActiveAgentEnrolment(
+              charitiesReference
+            ) =>
+          block(AuthorisedRequest(request, affinityGroup, charitiesReference))
+        case Some(AffinityGroup.Agent) ~ _ =>
           Future.failed(InsufficientEnrolments("Agent enrolment missing or not activated"))
 
-        case Some(affinityGroup @ AffinityGroup.Organisation) ~ AuthorisedAction.HasActiveOrganisationEnrolment() =>
-          block(AuthorisedRequest(request, affinityGroup))
-        case Some(AffinityGroup.Organisation) ~ _                                                                 =>
+        case Some(affinityGroup @ AffinityGroup.Organisation) ~ AuthorisedAction.HasActiveOrganisationEnrolment(
+              charitiesReference
+            ) =>
+          block(AuthorisedRequest(request, affinityGroup, charitiesReference))
+        case Some(AffinityGroup.Organisation) ~ _ =>
           Future.failed(InsufficientEnrolments("Organisation enrolment missing or not activated"))
 
         case _ =>
@@ -83,25 +86,27 @@ object AuthorisedAction {
   val agentEnrolmentKey          = "HMRC-CHAR-AGENT"
   val agentIdentifierName        = "AGENTCHARID"
 
-  def hasActiveEnrolment(
+  def getEnrolmentIdentifier(
     enrolments: Enrolments,
     enrolmentKey: String,
     identifierName: String
-  ): Boolean =
-    enrolments.getEnrolment(enrolmentKey) match {
-      case Some(enrolment) if enrolment.isActivated =>
-        enrolment.getIdentifier(identifierName).exists(_.value.nonEmpty)
-
-      case _ => false
+  ): Option[String] =
+    enrolments.getEnrolment(enrolmentKey).flatMap { enrolment =>
+      Option
+        .when(enrolment.isActivated)(
+          enrolment.getIdentifier(identifierName).map(_.value)
+        )
+        .flatten
+        .filter(_.nonEmpty)
     }
 
   object HasActiveAgentEnrolment {
-    def unapply(enrolments: Enrolments): Boolean =
-      hasActiveEnrolment(enrolments, agentEnrolmentKey, agentIdentifierName)
+    def unapply(enrolments: Enrolments): Option[String] =
+      getEnrolmentIdentifier(enrolments, agentEnrolmentKey, agentIdentifierName)
   }
 
   object HasActiveOrganisationEnrolment {
-    def unapply(enrolments: Enrolments): Boolean =
-      hasActiveEnrolment(enrolments, organisationEnrolmentKey, organisationIdentifierName)
+    def unapply(enrolments: Enrolments): Option[String] =
+      getEnrolmentIdentifier(enrolments, organisationEnrolmentKey, organisationIdentifierName)
   }
 }

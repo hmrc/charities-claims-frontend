@@ -342,6 +342,7 @@ addSchedule.placeholder = Content TBC
 # R2 Claims Task List screen
 claimsTaskList.title = Make a charity repayment claim
 claimsTaskList.heading = Make a charity repayment claim
+claimsTaskList.caption = HMRC Charities reference: {0}
 
 claimsTaskList.section.aboutTheClaim = About the claim
 claimsTaskList.section.uploadDocuments = Upload documents
