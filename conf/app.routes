@@ -1,34 +1,34 @@
 # microservice specific routes
 
-->          /hmrc-frontend                            hmrcfrontend.Routes
+->          /hmrc-frontend                                      hmrcfrontend.Routes
 
-GET         /assets/*file                             controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                                       controllers.Assets.versioned(path="/public", file: Asset)
 
-GET         /                                         controllers.StartController.start
-GET         /keep-alive                               controllers.StartController.keepAlive
-GET         /timed-out                                controllers.StartController.timedOut
-GET         /page-not-found                           controllers.PageNotFoundController.onPageLoad
-GET         /there-is-a-problem-access-denied         controllers.AccessDeniedController.onPageLoad
+GET         /                                                   controllers.StartController.start
+GET         /keep-alive                                         controllers.StartController.keepAlive
+GET         /timed-out                                          controllers.StartController.timedOut
+GET         /page-not-found                                     controllers.PageNotFoundController.onPageLoad
+GET         /there-is-a-problem-access-denied                   controllers.AccessDeniedController.onPageLoad
 
-GET         /old/gift-aid-small-donations-scheme               controllers.repaymentclaimdetailsold.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /old/change-gift-aid-small-donations-scheme        controllers.repaymentclaimdetailsold.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /old/gift-aid-small-donations-scheme               controllers.repaymentclaimdetailsold.ClaimingGiftAidSmallDonationsController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /old/change-gift-aid-small-donations-scheme        controllers.repaymentclaimdetailsold.ClaimingGiftAidSmallDonationsController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /old/gift-aid-small-donations-scheme                controllers.repaymentclaimdetailsold.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /old/change-gift-aid-small-donations-scheme         controllers.repaymentclaimdetailsold.ClaimingGiftAidSmallDonationsController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /old/gift-aid-small-donations-scheme                controllers.repaymentclaimdetailsold.ClaimingGiftAidSmallDonationsController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /old/change-gift-aid-small-donations-scheme         controllers.repaymentclaimdetailsold.ClaimingGiftAidSmallDonationsController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /old/claim-gift-aid                           controllers.repaymentclaimdetailsold.ClaimingGiftAidController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /old/change-claim-gift-aid                    controllers.repaymentclaimdetailsold.ClaimingGiftAidController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /old/claim-gift-aid                           controllers.repaymentclaimdetailsold.ClaimingGiftAidController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /old/change-claim-gift-aid                    controllers.repaymentclaimdetailsold.ClaimingGiftAidController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /old/claim-gift-aid                                 controllers.repaymentclaimdetailsold.ClaimingGiftAidController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /old/change-claim-gift-aid                          controllers.repaymentclaimdetailsold.ClaimingGiftAidController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /old/claim-gift-aid                                 controllers.repaymentclaimdetailsold.ClaimingGiftAidController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /old/change-claim-gift-aid                          controllers.repaymentclaimdetailsold.ClaimingGiftAidController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /old/claiming-other-income                           controllers.repaymentclaimdetailsold.ClaimingOtherIncomeController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /old/change-claiming-other-income                    controllers.repaymentclaimdetailsold.ClaimingOtherIncomeController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /old/claiming-other-income                           controllers.repaymentclaimdetailsold.ClaimingOtherIncomeController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /old/change-claiming-other-income                    controllers.repaymentclaimdetailsold.ClaimingOtherIncomeController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /old/claiming-other-income                          controllers.repaymentclaimdetailsold.ClaimingOtherIncomeController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /old/change-claiming-other-income                   controllers.repaymentclaimdetailsold.ClaimingOtherIncomeController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /old/claiming-other-income                          controllers.repaymentclaimdetailsold.ClaimingOtherIncomeController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /old/change-claiming-other-income                   controllers.repaymentclaimdetailsold.ClaimingOtherIncomeController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /old/claim-reference-number                          controllers.repaymentclaimdetailsold.ClaimingReferenceNumberCheckController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /old/change-claim-reference-number                   controllers.repaymentclaimdetailsold.ClaimingReferenceNumberCheckController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /old/claim-reference-number                          controllers.repaymentclaimdetailsold.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /old/change-claim-reference-number                   controllers.repaymentclaimdetailsold.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /old/claim-reference-number                         controllers.repaymentclaimdetailsold.ClaimingReferenceNumberCheckController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /old/change-claim-reference-number                  controllers.repaymentclaimdetailsold.ClaimingReferenceNumberCheckController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /old/claim-reference-number                         controllers.repaymentclaimdetailsold.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /old/change-claim-reference-number                  controllers.repaymentclaimdetailsold.ClaimingReferenceNumberCheckController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /old/your-claim-reference-number                    controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputControllerOLD.onPageLoad(mode: Mode = Mode.NormalMode)
 GET         /old/change-your-claim-reference-number             controllers.repaymentclaimdetailsold.ClaimReferenceNumberInputControllerOLD.onPageLoad(mode: Mode = Mode.CheckMode)
@@ -171,7 +171,7 @@ POST        /change-claim-community-building-donations      controllers.repaymen
 GET         /check-your-repayment-claim                     controllers.repaymentClaimDetails.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 POST        /check-your-repayment-claim                     controllers.repaymentClaimDetails.RepaymentClaimDetailsCheckYourAnswersController.onSubmit
 
-GET         /repayment-claim-details-min-data-placeholder   controllers.repaymentClaimDetails.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad
+GET         /cannot-set-up-repayment-claim                  controllers.repaymentClaimDetails.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad
 
 # TODO: Placeholder screen for D3 - route will be updated in future
 GET         /declaration-details-confirmation               controllers.DeclarationDetailsConfirmationController.onPageLoad
