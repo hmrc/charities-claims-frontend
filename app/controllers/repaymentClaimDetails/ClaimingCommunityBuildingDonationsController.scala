@@ -49,6 +49,7 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    val previousClaimingDonationsNotAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
     form
       .bindFromRequest()
       .fold(
@@ -57,7 +58,7 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
           saveService
             .save(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(value))
             .map(_ =>
-              if (value) {
+              if (value || previousClaimingDonationsNotAnswer.contains(true)) {
                 Redirect(routes.ChangePreviousGASDSClaimController.onPageLoad(mode))
               } else {
                 Redirect(routes.ConnectedToAnyOtherCharitiesController.onPageLoad(mode))
