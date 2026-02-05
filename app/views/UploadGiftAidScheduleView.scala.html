@@ -25,6 +25,7 @@
 )
 
 @(
+    giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl: String,
     claimId: String, 
     upscanInitiateResponse: UpscanInitiateResponse, 
     allowedFileTypesHint: String, 
@@ -35,6 +36,11 @@
 @layout(
     pageTitle = titleNoForm(messages("uploadGiftAidSchedule.title")), showBackLink = true
 ) {
+    <span class="govuk-caption-l">@messages("uploadGiftAidSchedule.caption")</span>
+    <h1 class="govuk-heading-l">@messages("uploadGiftAidSchedule.heading")</h1>
+
+    <p class="govuk-body">@messages("uploadGiftAidSchedule.paragraph.one")</p>
+    <p class="govuk-body">@Html(messages("uploadGiftAidSchedule.paragraph.url", giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl))</p>
 
     <form action="@upscanInitiateResponse.uploadRequest.href" method="POST" enctype="multipart/form-data" class="js-form file-upload" novalidate>
 
@@ -55,7 +61,7 @@
                     ),
                     hint = None,
                     errorMessage = None,
-                    classes = "",
+                    classes = "govuk-drop-zone",
                     attributes = Map(
                         "accept" -> filePickerAcceptFilter,
                         "data-msg-required" -> messages("uploadGiftAidSchedule.error.file-upload.required"),
@@ -67,7 +73,7 @@
 
             <div>
                 @govukButton(Button(
-                    content = Text(messages("form.upload-file.submit")),
+                    content = Text(messages("uploadGiftAidSchedule.form.upload-file.submit")),
                     preventDoubleClick = Some(true),
                     classes = "file-upload__submit"
                 ))
