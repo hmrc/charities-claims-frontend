@@ -173,10 +173,6 @@ object RepaymentClaimDetailsAnswers {
     }
   }
 
-//  // clear makingAdjustmentToPreviousClaim if claimingDonationsCollectedInCommunityBuildings & claimingDonationsNotFromCommunityBuilding are both false
-//  def setClaimingDonationsCollectedInCommunityBuildings(value: Boolean)(using session: SessionData): SessionData =
-//    set(value)((a, v) => a.copy(claimingDonationsCollectedInCommunityBuildings = Some(v)))
-
   def getClaimingUnderGiftAidSmallDonationsScheme(using session: SessionData): Option[Boolean] = get(
     _.claimingUnderGiftAidSmallDonationsScheme
   )
@@ -198,9 +194,6 @@ object RepaymentClaimDetailsAnswers {
       case (_, _)               => updatedSession
     }
   }
-
-//  def setClaimingDonationsNotFromCommunityBuilding(value: Boolean)(using session: SessionData): SessionData =
-//    set(value)((a, v) => a.copy(claimingDonationsNotFromCommunityBuilding = Some(v)))
 
   private def clearMakingAdjustmentToPreviousClaim(using session: SessionData): SessionData =
     val updated = session.repaymentClaimDetailsAnswers match
