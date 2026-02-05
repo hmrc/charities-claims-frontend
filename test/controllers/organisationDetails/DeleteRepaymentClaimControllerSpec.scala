@@ -94,7 +94,8 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
 
       // TODO: Update test when AA1 screen route is completed (currently redirects to placeholder /charity-repayment-dashboard)
       "should call backend deletion endpoint and redirect to AA1 when yes is selected and delete succeeds" in {
-        val sessionData = models.SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-123"))
+        val sessionData =
+          models.SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
 
         (mockClaimsConnector
           .deleteClaim(_: String)(using _: HeaderCarrier))
@@ -118,7 +119,8 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
       }
 
       "should handle case when backend returns success: false" in {
-        val sessionData = models.SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-123"))
+        val sessionData =
+          models.SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
 
         (mockClaimsConnector
           .deleteClaim(_: String)(using _: HeaderCarrier))
@@ -141,7 +143,7 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
       }
 
       "should handle case when no claimId is found in session data" in {
-        val sessionData = models.SessionData.empty.copy(unsubmittedClaimId = None)
+        val sessionData = models.SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsConnector].toInstance(mockClaimsConnector))

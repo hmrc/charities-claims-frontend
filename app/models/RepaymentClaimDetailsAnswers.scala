@@ -18,9 +18,10 @@ package models
 
 import play.api.libs.json.{Format, Json}
 import models.SessionData
-import utils.Required.required
 
 import scala.util.Try
+import scala.util.Success
+import scala.util.Failure
 
 final case class RepaymentClaimDetailsAnswers(
   claimingGiftAid: Option[Boolean] = None,
@@ -36,10 +37,15 @@ final case class RepaymentClaimDetailsAnswers(
   makingAdjustmentToPreviousClaim: Option[Boolean] = None,
   // only for agents
   hmrcCharitiesReference: Option[String] = None,
-  nameOfCharity: Option[String] = None,
-  // repayment claim type - claimingGiftAid,claimingTaxDeducted,claimingUnderGiftAidSmallDonationsScheme
-  repaymentClaimType: Option[RepaymentClaimType] = None
+  nameOfCharity: Option[String] = None
 ) {
+
+  def repaymentClaimType: Option[RepaymentClaimType] =
+    for
+      claimingGiftAid                          <- claimingGiftAid
+      claimingTaxDeducted                      <- claimingTaxDeducted
+      claimingUnderGiftAidSmallDonationsScheme <- claimingUnderGiftAidSmallDonationsScheme
+    yield RepaymentClaimType(claimingGiftAid, claimingTaxDeducted, claimingUnderGiftAidSmallDonationsScheme)
 
   def missingFields: List[String] =
     List(
@@ -248,7 +254,11 @@ object RepaymentClaimDetailsAnswers {
     set(value)((a, v) => a.copy(claimReferenceNumber = Some(v)))
 
   def toRepaymentClaimDetails(answers: RepaymentClaimDetailsAnswers): Try[RepaymentClaimDetails] =
-    for repaymentClaimType <- required(answers)(_.repaymentClaimType)
+    for repaymentClaimType <- answers.repaymentClaimType.match {
+                                case Some(repaymentClaimType) => Success(repaymentClaimType)
+                                case None                     =>
+                                  Failure(new MissingRequiredFieldsException("Mandatory fields are missing"))
+                              }
     yield RepaymentClaimDetails(
       claimingGiftAid = repaymentClaimType.claimingGiftAid,
       claimingTaxDeducted = repaymentClaimType.claimingTaxDeducted,

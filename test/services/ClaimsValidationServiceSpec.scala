@@ -120,7 +120,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
       "should delete the GiftAid schedule when claimId is present" in {
         val service          = new ClaimsValidationServiceImpl(mockConnector)
-        val sessionData      = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-123"))
+        val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
         (mockConnector
@@ -138,7 +138,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
       "should fail when claimId is None" in {
         val service          = new ClaimsValidationServiceImpl(mockConnector)
-        val sessionData      = SessionData.empty.copy(unsubmittedClaimId = None)
+        val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
         val result = service.deleteGiftAidSchedule
@@ -150,7 +150,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
       "should fail when no GiftAid upload found" in {
         val service          = new ClaimsValidationServiceImpl(mockConnector)
-        val sessionData      = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-789"))
+        val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-789"))
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
         (mockConnector
@@ -171,7 +171,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
       "should delete the OtherIncome schedule when claimId is present" in {
         val service          = new ClaimsValidationServiceImpl(mockConnector)
-        val sessionData      = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-456"))
+        val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-456"))
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
         (mockConnector
@@ -189,7 +189,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
       "should fail when claimId is None" in {
         val service          = new ClaimsValidationServiceImpl(mockConnector)
-        val sessionData      = SessionData.empty.copy(unsubmittedClaimId = None)
+        val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
         val result = service.deleteOtherIncomeSchedule
@@ -201,7 +201,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
       "should fail when no OtherIncome upload found" in {
         val service          = new ClaimsValidationServiceImpl(mockConnector)
-        val sessionData      = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-999"))
+        val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-999"))
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
         (mockConnector
@@ -222,7 +222,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
       "should delete the CommunityBuildings schedule when claimId is present" in {
         val service     = new ClaimsValidationServiceImpl(mockConnector)
-        val sessionData = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-456"))
+        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-456"))
 
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
@@ -241,7 +241,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
       "should fail when claimId is None" in {
         val service     = new ClaimsValidationServiceImpl(mockConnector)
-        val sessionData = SessionData.empty.copy(unsubmittedClaimId = None)
+        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
 
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
@@ -254,7 +254,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
       "should fail when no CommunityBuildings upload found" in {
         val service     = new ClaimsValidationServiceImpl(mockConnector)
-        val sessionData = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-999"))
+        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-999"))
 
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
@@ -276,7 +276,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
       "should delete the ConnectedCharities schedule when claimId is present" in {
         val service     = new ClaimsValidationServiceImpl(mockConnector)
-        val sessionData = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-456"))
+        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-456"))
 
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
@@ -295,7 +295,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
       "should fail when claimId is None" in {
         val service     = new ClaimsValidationServiceImpl(mockConnector)
-        val sessionData = SessionData.empty.copy(unsubmittedClaimId = None)
+        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
 
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
@@ -308,7 +308,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
       "should fail when no ConnectedCharities upload found" in {
         val service     = new ClaimsValidationServiceImpl(mockConnector)
-        val sessionData = SessionData.empty.copy(unsubmittedClaimId = Some("test-claim-999"))
+        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-999"))
 
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
