@@ -26,7 +26,6 @@ import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
 import views.html.{ClaimingCommunityBuildingDonationsView, UpdateRepaymentClaimView}
-
 import scala.concurrent.{ExecutionContext, Future}
 import models.Mode.*
 
@@ -85,7 +84,16 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
             // normal question flow - WRN3 not needed - save and redirect
             saveService
               .save(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(newAnswer))
-              .map(_ => Redirect(nextPage(newAnswer, mode)))
+              .map(_ =>
+                Redirect(
+                  ClaimingCommunityBuildingDonationsController.nextPage(
+                    newAnswer,
+                    mode,
+                    previousAnswer,
+                    RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
+                  )
+                )
+              )
           }
         }
       )
@@ -107,9 +115,19 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
         {
           case true =>
             // if user confirmed yes - save the change to false and proceed
+            // previousAnswer = Some(true) because they're confirming change from true to false
             saveService
               .save(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false))
-              .map(_ => Redirect(nextPage(false, mode)))
+              .map(_ =>
+                Redirect(
+                  ClaimingCommunityBuildingDonationsController.nextPage(
+                    false,
+                    mode,
+                    Some(true),
+                    RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
+                  )
+                )
+              )
 
           case false =>
             // user canceled - go back to CYA without any change
@@ -118,6 +136,7 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
       )
   }
 }
+
 object ClaimingCommunityBuildingDonationsController {
 
   def nextPage(
@@ -160,5 +179,4 @@ object ClaimingCommunityBuildingDonationsController {
         else routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 
     }
-
 }
