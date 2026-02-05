@@ -39,7 +39,14 @@ class ClaimsServiceSpec extends BaseSpec {
 
       val service = new ClaimsServiceImpl(mockSaveService, mockConnector)
 
-      val repaymentAnswers = RepaymentClaimDetailsAnswersOld(
+      val repaymentAnswersOld = RepaymentClaimDetailsAnswersOld(
+        claimingGiftAid = Some(true),
+        claimingTaxDeducted = Some(true),
+        claimingUnderGiftAidSmallDonationsScheme = Some(false),
+        claimReferenceNumber = Some("1234567890")
+      )
+
+      val repaymentAnswers = RepaymentClaimDetailsAnswers(
         claimingGiftAid = Some(true),
         claimingTaxDeducted = Some(true),
         claimingUnderGiftAidSmallDonationsScheme = Some(false),
@@ -50,7 +57,8 @@ class ClaimsServiceSpec extends BaseSpec {
         charitiesReference = testCharitiesReference,
         unsubmittedClaimId = None,
         lastUpdatedReference = None,
-        repaymentClaimDetailsAnswersOld = repaymentAnswers
+        repaymentClaimDetailsAnswersOld = repaymentAnswersOld,
+        repaymentClaimDetailsAnswers = Some(repaymentAnswers)
       )
 
       given DataRequest[?] = DataRequest(FakeRequest(), initialSessionData)
@@ -117,7 +125,13 @@ class ClaimsServiceSpec extends BaseSpec {
 
       val service = new ClaimsServiceImpl(mockSaveService, mockConnector)
 
-      val incompleteAnswers = RepaymentClaimDetailsAnswersOld(
+      val incompleteAnswersOld = RepaymentClaimDetailsAnswersOld(
+        claimingGiftAid = Some(true),
+        claimingTaxDeducted = None, // missing
+        claimingUnderGiftAidSmallDonationsScheme = Some(false)
+      )
+
+      val incompleteAnswers = RepaymentClaimDetailsAnswers(
         claimingGiftAid = Some(true),
         claimingTaxDeducted = None, // missing
         claimingUnderGiftAidSmallDonationsScheme = Some(false)
@@ -127,7 +141,8 @@ class ClaimsServiceSpec extends BaseSpec {
         charitiesReference = testCharitiesReference,
         unsubmittedClaimId = None,
         lastUpdatedReference = None,
-        repaymentClaimDetailsAnswersOld = incompleteAnswers
+        repaymentClaimDetailsAnswersOld = incompleteAnswersOld,
+        repaymentClaimDetailsAnswers = Some(incompleteAnswers)
       )
 
       given DataRequest[?] = DataRequest(FakeRequest(), initialSessionData)
