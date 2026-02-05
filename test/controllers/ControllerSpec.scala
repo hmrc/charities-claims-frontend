@@ -53,7 +53,7 @@ trait ControllerSpec
   given ActorSystem  = ActorSystem("unit-tests")
   given Materializer = Materializer.createMaterializer(actorSystem)
 
-  given defaultSessionData: SessionData = SessionData.empty
+  given defaultSessionData: SessionData = SessionData.empty(testCharitiesReference)
 
   protected def applicationBuilder(sessionData: SessionData = defaultSessionData): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()

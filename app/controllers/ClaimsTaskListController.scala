@@ -37,8 +37,9 @@ class ClaimsTaskListController @Inject() (
 
 object ClaimsTaskListController {
 
-  def buildViewModel(using request: DataRequest[?], messages: Messages): ClaimsTaskListViewModel = {
+  private def buildViewModel(using request: DataRequest[?], messages: Messages): ClaimsTaskListViewModel = {
     val repaymentClaimDetailsComplete = isRepaymentClaimDetailsComplete
+    val charitiesReference            = request.sessionData.charitiesReference
 
     if (!repaymentClaimDetailsComplete) {
       val repaymentClaimDetailsOnlySection = TaskSection(
@@ -53,7 +54,8 @@ object ClaimsTaskListController {
 
       ClaimsTaskListViewModel(
         sections = Seq(repaymentClaimDetailsOnlySection, declarationSection),
-        deleteClaimUrl = None
+        deleteClaimUrl = None,
+        charitiesReference = charitiesReference
       )
     } else {
       val aboutTheClaimSection = TaskSection(
@@ -81,13 +83,14 @@ object ClaimsTaskListController {
 
       ClaimsTaskListViewModel(
         sections = sections,
-        deleteClaimUrl = Some(organisationDetails.routes.DeleteRepaymentClaimController.onPageLoad.url)
+        deleteClaimUrl = Some(organisationDetails.routes.DeleteRepaymentClaimController.onPageLoad.url),
+        charitiesReference = charitiesReference
       )
     }
   }
 
-  def isRepaymentClaimDetailsComplete(using request: DataRequest[?]): Boolean =
-    request.sessionData.repaymentClaimDetailsAnswersOld.hasCompleteAnswers
+  private def isRepaymentClaimDetailsComplete(using request: DataRequest[?]): Boolean =
+    request.sessionData.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
 
   private def buildAboutTheClaimSection(using request: DataRequest[?], messages: Messages): Seq[TaskItem] =
     Seq(
@@ -120,13 +123,13 @@ object ClaimsTaskListController {
     aboutTheClaim.forall(_.status == TaskStatus.Completed)
   }
 
-  def buildRepaymentClaimDetailsTask(using request: DataRequest[?], messages: Messages): TaskItem = {
-    val isComplete = request.sessionData.repaymentClaimDetailsAnswersOld.hasCompleteAnswers
+  private def buildRepaymentClaimDetailsTask(using request: DataRequest[?], messages: Messages): TaskItem = {
+    val isComplete = request.sessionData.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
     val status     = if (isComplete) TaskStatus.Completed else TaskStatus.Incomplete
     val href       = if (isComplete) {
-      repaymentclaimdetailsold.routes.CheckYourAnswersController.onPageLoad
+      repaymentClaimDetails.routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
     } else {
-      repaymentclaimdetailsold.routes.ClaimingGiftAidController.onPageLoad(models.Mode.NormalMode)
+      repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad
     }
 
     TaskItem(

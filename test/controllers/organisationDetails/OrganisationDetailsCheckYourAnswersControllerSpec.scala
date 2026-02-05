@@ -38,6 +38,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details not defined" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers
@@ -62,6 +63,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity=EnglandAndWales, Reg Num, both Corporate Trustee & UK Address true" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -98,6 +100,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity not defined, Reg Num, both Corporate Trustee & UK Address true" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -133,6 +136,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity=NorthernIreland, Reg Num not defined, both Corporate Trustee is true and not UK Address" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -168,6 +172,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Waiting, both Corporate Trustee is true and not UK Address" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -203,6 +208,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Exempt, both Corporate Trustee is true and not UK Address" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -238,6 +244,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Excepted, both Corporate Trustee is true and not UK Address" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -273,6 +280,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and not UK Address" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -308,6 +316,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and UK Address not defined" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -342,6 +351,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is not defined and UK Address not defined" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -376,6 +386,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity =None, reason for not registered = not defined, both Corporate Trustee is true and not UK Address" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -410,6 +421,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = true and UK address but details not defined" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -442,6 +454,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = true and not UK address but details not defined" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -474,6 +487,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -513,6 +527,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -558,6 +573,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address but details not defined" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -592,6 +608,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address but details not defined" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -626,6 +643,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address not defined" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -667,6 +685,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
 
       "should save the organisation details answers and redirect to next page" in {
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
@@ -710,6 +729,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "should redirect to the incomplete answers page if the answers are not complete" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers

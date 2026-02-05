@@ -32,6 +32,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when claiming reference number is true" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(
             claimingGiftAid = Some(true),
             claimingTaxDeducted = Some(false),
@@ -60,6 +61,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when claiming reference number is false " in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(
             claimingGiftAid = Some(true),
             claimingTaxDeducted = Some(false),
@@ -88,6 +90,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
       "should render the page correctly when some answers are missing" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(
             claimingGiftAid = Some(true),
             claimingTaxDeducted = None,
@@ -120,6 +123,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
     "should save the claim and redirect to the next page" in {
 
       val sessionData = SessionData(
+        charitiesReference = testCharitiesReference,
         repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(false),
@@ -148,6 +152,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
     "should redirect to the incomplete answers page if the answers are not complete" in {
 
       val sessionData = SessionData(
+        charitiesReference = testCharitiesReference,
         repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = None,
@@ -176,6 +181,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec {
     "should redirect to CannotViewOrManageClaim page when UpdatedByAnotherUserException is thrown" in {
 
       val sessionData = SessionData(
+        charitiesReference = testCharitiesReference,
         repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(false),

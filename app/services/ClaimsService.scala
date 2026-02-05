@@ -19,10 +19,11 @@ package services
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.ClaimsConnector
 import uk.gov.hmrc.http.HeaderCarrier
-import models.{RepaymentClaimDetailsAnswersOld, SessionData}
+import models.SessionData
 import models.requests.DataRequest
 
 import scala.concurrent.{ExecutionContext, Future}
+import models.RepaymentClaimDetailsAnswers
 
 @ImplementedBy(classOf[ClaimsServiceImpl])
 trait ClaimsService {
@@ -42,10 +43,10 @@ class ClaimsServiceImpl @Inject() (saveService: SaveService, connector: ClaimsCo
     sessionData.unsubmittedClaimId match {
       case None =>
         for
-          repaymentClaimDetails <- Future.fromTry(
-                                     RepaymentClaimDetailsAnswersOld
-                                       .toRepaymentClaimDetails(sessionData.repaymentClaimDetailsAnswersOld)
-                                   )
+          repaymentClaimDetails <-
+            Future.fromTry(
+              sessionData.repaymentClaimDetailsAnswers.map(RepaymentClaimDetailsAnswers.toRepaymentClaimDetails(_)).get
+            )
           response              <- connector.saveClaim(repaymentClaimDetails)
           _                     <-
             saveService

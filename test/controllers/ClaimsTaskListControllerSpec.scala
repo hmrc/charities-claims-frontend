@@ -32,6 +32,14 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       claimingReferenceNumber = Some(false)
     )
 
+  def completeRepaymentClaimDetailsAnswers(): RepaymentClaimDetailsAnswers =
+    RepaymentClaimDetailsAnswers(
+      claimingGiftAid = Some(false),
+      claimingTaxDeducted = Some(false),
+      claimingUnderGiftAidSmallDonationsScheme = Some(false),
+      claimingReferenceNumber = Some(false)
+    )
+
   "ClaimsTaskListController" - {
 
     "onPageLoad" - {
@@ -49,7 +57,11 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display About the claim section with all tasks when repaymentClaimDetails complete" in {
-        val sessionData = SessionData(repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld())
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
+        )
 
         given application: Application = applicationBuilder(sessionData).build()
 
@@ -65,7 +77,11 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display Upload documents section with all tasks when repaymentClaimDetails complete" in {
-        val sessionData = SessionData(repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld())
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
+        )
 
         given application: Application = applicationBuilder(sessionData).build()
 
@@ -82,7 +98,11 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display Declaration section when Repayment Claim Details complete" in {
-        val sessionData = SessionData(repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld())
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
+        )
 
         given application: Application = applicationBuilder(sessionData).build()
 
@@ -96,7 +116,11 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display declaration warning when other sections incomplete" in {
-        val sessionData = SessionData(repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld())
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
+        )
 
         given application: Application = applicationBuilder(sessionData).build()
 
@@ -109,7 +133,11 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display Delete claim link when repaymentClaimDetails complete" in {
-        val sessionData = SessionData(repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld())
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
+        )
 
         given application: Application = applicationBuilder(sessionData).build()
 
@@ -144,7 +172,11 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should show Completed status for GASDS and upload tasks" in {
-        val sessionData = SessionData(repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld())
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
+        )
 
         given application: Application = applicationBuilder(sessionData).build()
 
@@ -174,7 +206,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           claimingGiftAid = Some(true),
           claimingTaxDeducted = None
         )
-        val sessionData       = SessionData(repaymentClaimDetailsAnswersOld = incompleteAnswers)
+        val sessionData       =
+          SessionData(charitiesReference = testCharitiesReference, repaymentClaimDetailsAnswersOld = incompleteAnswers)
 
         given application: Application = applicationBuilder(sessionData).build()
 
@@ -191,7 +224,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           claimingGiftAid = Some(true),
           claimingTaxDeducted = None
         )
-        val sessionData       = SessionData(repaymentClaimDetailsAnswersOld = incompleteAnswers)
+        val sessionData       =
+          SessionData(charitiesReference = testCharitiesReference, repaymentClaimDetailsAnswersOld = incompleteAnswers)
 
         given application: Application = applicationBuilder(sessionData).build()
 
@@ -205,7 +239,10 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display declaration warning as hint text within task item" in {
-        val sessionData = SessionData(repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld())
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld()
+        )
 
         given application: Application = applicationBuilder(sessionData).build()
 
@@ -219,7 +256,11 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should link GASDS and upload tasks to page not found" in {
-        val sessionData = SessionData(repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld())
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
+        )
 
         given application: Application = applicationBuilder(sessionData).build()
 
@@ -228,6 +269,40 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val result  = route(application, request).value
 
           contentAsString(result) should include("/charities-claims/page-not-found")
+        }
+      }
+
+      "should display caption with HMRC Charities reference" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          content should include("""class="govuk-caption-l"""")
+          content should include("HMRC Charities reference:")
+        }
+      }
+
+      "should have unique IDs for task list status elements" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld()
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          val idPattern    = """id="([^"]*-status)"""".r
+          val statusIds    = idPattern.findAllMatchIn(content).map(_.group(1)).toSeq
+          val duplicateIds = statusIds.groupBy(identity).filter(_._2.size > 1).keys
+
+          duplicateIds shouldBe empty
         }
       }
     }

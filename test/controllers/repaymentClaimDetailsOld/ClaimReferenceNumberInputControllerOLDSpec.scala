@@ -71,6 +71,7 @@ class ClaimReferenceNumberInputControllerOLDSpec extends ControllerSpec {
       "should render page not found if claiming reference number is empty" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimReferenceNumber = Some("123456"))
         )
 
@@ -90,6 +91,7 @@ class ClaimReferenceNumberInputControllerOLDSpec extends ControllerSpec {
       "should render the page and pre-populate correctly" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           repaymentClaimDetailsAnswersOld =
             RepaymentClaimDetailsAnswersOld(claimingReferenceNumber = Some(true), claimReferenceNumber = Some("123456"))
         )
@@ -111,6 +113,7 @@ class ClaimReferenceNumberInputControllerOLDSpec extends ControllerSpec {
       "should render the page not found and incorrectly pre-populate data" in {
 
         val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
           repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(
             claimingReferenceNumber = Some(false),
             claimReferenceNumber = Some("123456")
