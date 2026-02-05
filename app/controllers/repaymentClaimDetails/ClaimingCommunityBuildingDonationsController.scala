@@ -52,17 +52,30 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
     val previousAnswer                                  = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
     val claimingDonationsNotFromCommunityBuildingAnswer =
       RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
+    val connectedToAnyOtherCharities                    =
+      RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
-            .save(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(value))
+            .save(
+              RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(
+                value,
+                claimingDonationsNotFromCommunityBuildingAnswer
+              )
+            )
             .map(_ =>
               Redirect(
                 ClaimingCommunityBuildingDonationsController
-                  .nextPage(value, mode, previousAnswer, claimingDonationsNotFromCommunityBuildingAnswer)
+                  .nextPage(
+                    value,
+                    mode,
+                    previousAnswer,
+                    claimingDonationsNotFromCommunityBuildingAnswer,
+                    connectedToAnyOtherCharities
+                  )
               )
             )
       )
@@ -74,39 +87,40 @@ object ClaimingCommunityBuildingDonationsController {
     value: Boolean,
     mode: Mode,
     previousAnswer: Option[Boolean],
-    claimingDonationsNotFromCommunityBuildingAnswer: Option[Boolean]
+    claimingDonationsNotFromCommunityBuildingAnswer: Option[Boolean],
+    connectedToAnyOtherCharities: Option[Boolean]
   ): Call =
     (value, mode, previousAnswer) match {
       // NormalMode
-      case (true, NormalMode, _)                              =>
+      case (true, NormalMode, _)         =>
         routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode)
-      case (false, NormalMode, _)                             =>
+      case (false, NormalMode, _)        =>
         if claimingDonationsNotFromCommunityBuildingAnswer.contains(false) then
           routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode)
         else routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode)
 
       // CheckMode: new data
-      case (true, CheckMode, None)                            =>
+      case (true, CheckMode, None)       =>
         routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
 
       // CheckMode: new data
-      case (false, CheckMode, None)                           =>
+      case (false, CheckMode, None)      =>
         if claimingDonationsNotFromCommunityBuildingAnswer.contains(false) then
           routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
         else routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
-
-      // CheckMode: new value diff to old value
-      case (newVal, CheckMode, Some(prev)) if newVal && !prev =>
-        routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
-
-      case (newVal, CheckMode, Some(prev)) if !newVal && prev =>
-        if claimingDonationsNotFromCommunityBuildingAnswer.contains(false) then
-          routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
-        else routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
-
-      // CheckMode
-      case (_, CheckMode, _)                                  =>
+      // Checkmode : both new and prev are true
+      case (true, CheckMode, Some(true)) =>
         routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+
+      case (newVal, CheckMode, prev) =>
+        if !newVal && prev.contains(false) && claimingDonationsNotFromCommunityBuildingAnswer.contains(
+            false
+          )
+          && connectedToAnyOtherCharities.isEmpty
+        then routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
+        else if newVal || claimingDonationsNotFromCommunityBuildingAnswer.contains(true) then
+          routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
+        else routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 
     }
 

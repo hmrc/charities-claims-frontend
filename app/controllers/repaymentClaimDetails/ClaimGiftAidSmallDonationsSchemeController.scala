@@ -50,14 +50,15 @@ class ClaimGiftAidSmallDonationsSchemeController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
+    val previousAnswer   = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
+    val nextScreenAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         value =>
           saveService
-            .save(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(value))
+            .save(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(value, nextScreenAnswer))
             .map(_ => Redirect(ClaimGiftAidSmallDonationsSchemeController.nextPage(value, mode, previousAnswer)))
       )
   }

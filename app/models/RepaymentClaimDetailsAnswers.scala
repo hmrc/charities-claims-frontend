@@ -162,8 +162,20 @@ object RepaymentClaimDetailsAnswers {
     _.claimingDonationsCollectedInCommunityBuildings
   )
 
-  def setClaimingDonationsCollectedInCommunityBuildings(value: Boolean)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(claimingDonationsCollectedInCommunityBuildings = Some(v)))
+  // clear makingAdjustmentToPreviousClaim if claimingDonationsCollectedInCommunityBuildings & claimingDonationsNotFromCommunityBuilding are both false
+  def setClaimingDonationsCollectedInCommunityBuildings(value: Boolean, prevScreenAnswer: Option[Boolean])(using
+    session: SessionData
+  ): SessionData = {
+    val updatedSession = set(value)((a, v) => a.copy(claimingDonationsCollectedInCommunityBuildings = Some(v)))
+    (value, prevScreenAnswer) match {
+      case (false, Some(false)) => clearMakingAdjustmentToPreviousClaim(using updatedSession)
+      case (_, _)               => updatedSession
+    }
+  }
+
+//  // clear makingAdjustmentToPreviousClaim if claimingDonationsCollectedInCommunityBuildings & claimingDonationsNotFromCommunityBuilding are both false
+//  def setClaimingDonationsCollectedInCommunityBuildings(value: Boolean)(using session: SessionData): SessionData =
+//    set(value)((a, v) => a.copy(claimingDonationsCollectedInCommunityBuildings = Some(v)))
 
   def getClaimingUnderGiftAidSmallDonationsScheme(using session: SessionData): Option[Boolean] = get(
     _.claimingUnderGiftAidSmallDonationsScheme
@@ -176,8 +188,28 @@ object RepaymentClaimDetailsAnswers {
     _.connectedToAnyOtherCharities
   )
 
-  def setClaimingDonationsNotFromCommunityBuilding(value: Boolean)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(claimingDonationsNotFromCommunityBuilding = Some(v)))
+  // clear makingAdjustmentToPreviousClaim if claimingDonationsCollectedInCommunityBuildings & claimingDonationsNotFromCommunityBuilding are both false
+  def setClaimingDonationsNotFromCommunityBuilding(value: Boolean, nextScreenAnswer: Option[Boolean] = None)(using
+    session: SessionData
+  ): SessionData = {
+    val updatedSession = set(value)((a, v) => a.copy(claimingDonationsNotFromCommunityBuilding = Some(v)))
+    (value, nextScreenAnswer) match {
+      case (false, Some(false)) => clearMakingAdjustmentToPreviousClaim(using updatedSession)
+      case (_, _)               => updatedSession
+    }
+  }
+
+//  def setClaimingDonationsNotFromCommunityBuilding(value: Boolean)(using session: SessionData): SessionData =
+//    set(value)((a, v) => a.copy(claimingDonationsNotFromCommunityBuilding = Some(v)))
+
+  private def clearMakingAdjustmentToPreviousClaim(using session: SessionData): SessionData =
+    val updated = session.repaymentClaimDetailsAnswers match
+      case Some(existing) =>
+        existing.copy(
+          makingAdjustmentToPreviousClaim = None
+        )
+      case None           => RepaymentClaimDetailsAnswers()
+    session.copy(repaymentClaimDetailsAnswers = Some(updated))
 
   def getClaimingDonationsNotFromCommunityBuilding(using session: SessionData): Option[Boolean] = get(
     _.claimingDonationsNotFromCommunityBuilding
