@@ -80,8 +80,8 @@ object SessionData {
   def toUpdateClaimRequest(sessionData: SessionData): Try[UpdateClaimRequest] =
     for {
       lastUpdatedReference                       <- required(sessionData)(_.lastUpdatedReference)
-      repaymentClaimDetails                      <- RepaymentClaimDetailsAnswersOld
-                                                      .toRepaymentClaimDetails(sessionData.repaymentClaimDetailsAnswersOld)
+      repaymentClaimDetails                      <- RepaymentClaimDetailsAnswers
+                                                      .toRepaymentClaimDetails(sessionData.repaymentClaimDetailsAnswers.get)
       organisationDetails                        <- sessionData.organisationDetailsAnswers
                                                       .flatMapTry(OrganisationDetailsAnswers.toOrganisationDetails)
       giftAidSmallDonationsSchemeDonationDetails <-

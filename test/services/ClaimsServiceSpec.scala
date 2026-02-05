@@ -89,7 +89,14 @@ class ClaimsServiceSpec extends BaseSpec {
 
       val service = new ClaimsServiceImpl(mockSaveService, mockConnector)
 
-      val repaymentAnswers = RepaymentClaimDetailsAnswersOld(
+      val repaymentAnswersOld = RepaymentClaimDetailsAnswersOld(
+        claimingGiftAid = Some(true),
+        claimingTaxDeducted = Some(true),
+        claimingUnderGiftAidSmallDonationsScheme = Some(false),
+        claimReferenceNumber = Some("1234567890")
+      )
+
+      val repaymentAnswers = RepaymentClaimDetailsAnswers(
         claimingGiftAid = Some(true),
         claimingTaxDeducted = Some(true),
         claimingUnderGiftAidSmallDonationsScheme = Some(false),
@@ -101,7 +108,8 @@ class ClaimsServiceSpec extends BaseSpec {
         charitiesReference = testCharitiesReference,
         unsubmittedClaimId = Some(existingClaimId),
         lastUpdatedReference = Some("1234567890"),
-        repaymentClaimDetailsAnswersOld = repaymentAnswers
+        repaymentClaimDetailsAnswersOld = repaymentAnswersOld,
+        repaymentClaimDetailsAnswers = Some(repaymentAnswers)
       )
 
       given DataRequest[?] = DataRequest(FakeRequest(), initialSessionData)
