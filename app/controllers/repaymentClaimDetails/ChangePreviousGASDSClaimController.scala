@@ -74,7 +74,7 @@ object ChangePreviousGASDSClaimController {
 
       // CheckMode
       case (_, CheckMode, _)  =>
-        routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+        routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
 
     }
 

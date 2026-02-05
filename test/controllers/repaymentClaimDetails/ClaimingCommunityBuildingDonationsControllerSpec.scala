@@ -67,8 +67,8 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
       "should render the page and pre-populate correctly with true value when setClaimingUnderGiftAidSmallDonationsScheme is true" in {
 
         val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
-        val sessionData           = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true)(using
-          sessionDataUnderGASDS
+        val sessionData           = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None)(
+          using sessionDataUnderGASDS
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -88,8 +88,8 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
       "should render the page and pre-populate correctly with false value when setClaimingUnderGiftAidSmallDonationsScheme is true" in {
 
         val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
-        val sessionData           = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false)(using
-          sessionDataUnderGASDS
+        val sessionData           = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, None)(
+          using sessionDataUnderGASDS
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -224,9 +224,67 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
       "Checkmode: should redirect to the next page when the value is changed to false from true" in {
         val sessionDataClaimDonations  =
           RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false)
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true)(using
-          sessionDataClaimDonations
-        )
+        val sessionData                =
+          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(false))(using
+            sessionDataClaimDonations
+          )
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "Checkmode: should redirect to the next page when the value is unchanged and false" in {
+
+        val sessionDataConnectedToCharity = RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(true)
+        val sessionDataNotFromCommunity   =
+          RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false)(using
+            sessionDataConnectedToCharity
+          )
+
+        val claimingDonationsNotFromCommunityBuildingAnswer = false
+        val sessionData                                     =
+          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(
+            false,
+            Some(claimingDonationsNotFromCommunityBuildingAnswer)
+          )(using
+            sessionDataNotFromCommunity
+          )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "Checkmode: should redirect to the next page (connectedToAnyOtherCharities) when the value is unchanged and false & claimingDonationsNotFromCommunityBuilding =false " in {
+        val sessionDataClaimDonations =
+          RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false)
+        val sessionData               =
+          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, Some(true))(using
+            sessionDataClaimDonations
+          )
+
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
@@ -244,7 +302,7 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
       }
 
       "Checkmode: should redirect to the next page when the value is changed to true from false" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false)
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, None)
 
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -263,7 +321,7 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
       }
 
       "Checkmode: should redirect to the next page when the value is not changed from false" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false)
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, None)
 
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -282,7 +340,8 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
       }
 
       "Checkmode: should redirect to the next page when the value is not changed from false and claimingDonationsCollectedInCommunityBuildings=true" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true)
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(false))
 
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -295,13 +354,13 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode).url
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
           )
         }
       }
 
       "Checkmode: should redirect to the next page when the value is not changed from true" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true)
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None)
 
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 

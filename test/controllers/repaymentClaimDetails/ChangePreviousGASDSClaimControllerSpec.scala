@@ -33,8 +33,8 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
     "onPageLoad" - {
       "should render the page correctly when setClaimingUnderGiftAidSmallDonationsScheme & setClaimingDonationsCollectedInCommunityBuildings are true" in {
         val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
-        val sessionData           = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true)(using
-          sessionDataUnderGASDS
+        val sessionData           = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None)(
+          using sessionDataUnderGASDS
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -54,7 +54,9 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
       "should render the page correctly when setClaimingUnderGiftAidSmallDonationsScheme & setClaimingDonationsNotFromCommunityBuilding are true" in {
         val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
         val sessionData           =
-          RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true)(using sessionDataUnderGASDS)
+          RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true, None)(using
+            sessionDataUnderGASDS
+          )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -73,7 +75,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
       "should render the page and pre-populate correctly with true value" in {
         val sessionDataUnderGASDS    = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
         val sessionDataWithDonations =
-          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true)(using
+          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None)(using
             sessionDataUnderGASDS
           )
         val sessionData              = RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(true)(using
@@ -98,7 +100,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
         val sessionDataUnderGASDS    = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
         val sessionDataWithDonations =
-          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true)(using
+          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None)(using
             sessionDataUnderGASDS
           )
         val sessionData              = RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(false)(using
@@ -171,7 +173,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to CYA if coming from CYA when the value is true" in {
+      "checkmode: should redirect to CYA if coming from CYA when the value is true" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
@@ -183,12 +185,12 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode).url
           )
         }
       }
 
-      "should redirect to CYA if coming from CYA when the value is false" in {
+      "checkmode: should redirect to CYA if coming from CYA when the value is false" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
@@ -200,7 +202,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode).url
           )
         }
       }
