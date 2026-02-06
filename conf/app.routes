@@ -154,6 +154,9 @@ GET         /cannot-view-or-manage-claim                    controllers.organisa
 GET         /registering-your-charity-with-a-regulator      controllers.RegisterCharityWithARegulatorController.onPageLoad
 POST        /registering-your-charity-with-a-regulator      controllers.RegisterCharityWithARegulatorController.onSubmit
 
+GET         /gift-aid-schedule-upload-successful            controllers.repaymentClaimDetails.GiftAidScheduleUploadSuccessfulController.onPageLoad
+POST        /gift-aid-schedule-upload-successful            controllers.repaymentClaimDetails.GiftAidScheduleUploadSuccessfulController.onSubmit
+
 # TODO: Placeholder screen for G2 - route will be updated in future
 GET         /add-schedule                                   controllers.organisationDetails.AddScheduleController.onPageLoad
 

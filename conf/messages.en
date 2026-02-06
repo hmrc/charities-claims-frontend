@@ -347,6 +347,10 @@ claimGASDS.legend = Do you want to claim a top-up payment under the Gift Aid Sma
 claimGASDS.error.required = Select ‘Yes’ if you are claiming under the Gift Aid Small Donations Scheme
 claimGASDS.missingDetails = confirm if you are claiming a top-up payment under the Gift Aid Small Donations Scheme
 
+giftAidScheduleUploadSuccessful.title = Upload successful
+giftAidScheduleUploadSuccessful.heading = Upload successful
+giftAidScheduleUploadSuccessful.paragraph = You have successfully attached your Gift Aid schedule.
+
 # TODO: Placeholder screen messages for G2 - content will be updated in future
 addSchedule.title = Add Schedule
 addSchedule.heading = Add Schedule
