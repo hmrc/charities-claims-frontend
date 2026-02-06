@@ -24,6 +24,8 @@ import play.api.data.Form
 import play.api.mvc.Request
 import play.api.mvc.Result
 import play.api.mvc.AnyContent
+import models.Mode
+import models.Mode.CheckMode
 
 trait BaseController extends FrontendBaseController with I18nSupport {
 
@@ -54,4 +56,19 @@ trait BaseController extends FrontendBaseController with I18nSupport {
     def withWarning(answer: String): Result =
       result.flashing("warning" -> "true", "warningAnswer" -> answer)
   }
+
+  def needsUpdateConfirmation(
+    mode: Mode,
+    previousAnswer: Option[Boolean],
+    newAnswer: Boolean
+  ): Boolean =
+    (mode, previousAnswer, newAnswer) match {
+      case (CheckMode, Some(true), false) => true
+      case _                              => false
+    }
+
+  def isConfirmingUpdate(using request: Request[AnyContent]): Boolean =
+    request.body.asFormUrlEncoded
+      .flatMap(_.get("confirmingUpdate"))
+      .exists(_.headOption.contains("true"))
 }
