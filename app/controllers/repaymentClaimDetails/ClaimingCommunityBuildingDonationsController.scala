@@ -150,11 +150,7 @@ object ClaimingCommunityBuildingDonationsController {
     prevScreenAnswer: Option[Boolean],
     previousAnswer: Option[Boolean],
     nextScreenAnswer: Option[Boolean]
-  )(using request: DataRequest[?]): Call = {
-
-    val connectedToAnyOtherCharities =
-      request.sessionData.repaymentClaimDetailsAnswers.flatMap(_.connectedToAnyOtherCharities)
-
+  ): Call =
     (value, mode, previousAnswer) match {
 
       // NormalMode: User answered Yes
@@ -186,11 +182,10 @@ object ClaimingCommunityBuildingDonationsController {
         else routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 
       // CheckMode: Other scenarios
-      case (newVal, CheckMode, prev)       =>
+      case (newVal, CheckMode, _)          =>
         // checking if answer has changed from yes -> No or no->yes, and if prev screen (R1.2) is true
         if newVal || prevScreenAnswer.contains(true) then
           routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
         else routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
     }
-  }
 }
