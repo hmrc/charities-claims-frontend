@@ -176,14 +176,13 @@ object ClaimingCommunityBuildingDonationsController {
 
       // CheckMode: Other scenarios
       case (newVal, CheckMode, prev)     =>
-        // If changing to No AND both R1.2 and R1.3 are No AND connected charities not answered yet
+        // Change to No & R1.2 and R1.3 are No & ConnectedCharities not answered
         if !newVal && prev.contains(false) && prevScreenAnswer.contains(false) &&
           connectedToAnyOtherCharities.isEmpty
         then routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
-        // If Yes OR R1.2 is Yes
+        // Yes OR R1.2 is Yes
         else if newVal || prevScreenAnswer.contains(true) then
           routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
-        // Else
         else routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
     }
   }
