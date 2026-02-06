@@ -187,12 +187,7 @@ object ClaimingCommunityBuildingDonationsController {
 
       // CheckMode: Other scenarios
       case (newVal, CheckMode, prev)       =>
-        // Change to No & R1.2 and R1.3 are No & ConnectedCharities not answered
-//        if !newVal && prev.contains(false) && prevScreenAnswer.contains(false) &&
-//          connectedToAnyOtherCharities.isEmpty
-//        then routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
-        // Yes OR R1.2 is Yes
-//        else
+        // checking if answer has changed from yes -> No or no->yes, and if prev screen (R1.2) is true
         if newVal || prevScreenAnswer.contains(true) then
           routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
         else routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
