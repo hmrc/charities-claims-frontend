@@ -22,6 +22,7 @@ import controllers.actions.Actions
 import controllers.repaymentClaimDetails.routes
 import forms.YesNoFormProvider
 import models.{Mode, RepaymentClaimDetailsAnswers}
+import models.requests.DataRequest
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
@@ -39,39 +40,37 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  // this form is for the original question (field name: "value")
   val form: Form[Boolean] = formProvider("claimingCommunityBuildingDonations.error.required")
 
-  // this for is for WRN3 confirmation (field name: "value" - same as above, will have hidden field confirmingUpdate = true)
   val confirmUpdateForm: Form[Boolean] = formProvider("updateRepaymentClaim.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) then {
       val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
       Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
-    } else { Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad)) }
+    } else {
+      Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+    }
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    // CONFIRMATION CHECK FLOW: User is answering the WRN3 confirmation question
     if (isConfirmingUpdate) {
-      handleUpdateConfirmation(mode)
+      handleUpdateConfirmationSubmission(mode)
     } else {
-      // ORIGINAL QUESTION FLOW: User is answering normal question
       handleQuestionSubmission(mode)
     }
   }
 
-  def handleQuestionSubmission(mode: Mode)(implicit request: models.requests.DataRequest[AnyContent]) =
+  def handleQuestionSubmission(mode: Mode)(implicit request: DataRequest[AnyContent]) =
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         newAnswer => {
-          val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
+          val previousAnswer   = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
+          val prevScreenAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
 
           if (needsUpdateConfirmation(mode, previousAnswer, newAnswer)) {
-            // then we show WRN3 confirmation
             Future.successful(
               Ok(
                 confirmationView(
@@ -81,16 +80,18 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
               )
             )
           } else {
-            // normal question flow - WRN3 not needed - save and redirect
             saveService
-              .save(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(newAnswer))
+              .save(
+                RepaymentClaimDetailsAnswers
+                  .setClaimingDonationsCollectedInCommunityBuildings(newAnswer, prevScreenAnswer)
+              )
               .map(_ =>
                 Redirect(
                   ClaimingCommunityBuildingDonationsController.nextPage(
                     newAnswer,
                     mode,
-                    previousAnswer,
-                    RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
+                    prevScreenAnswer,
+                    previousAnswer
                   )
                 )
               )
@@ -98,8 +99,7 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
         }
       )
 
-  // only used when user is answering the WRN3 confirmation question
-  def handleUpdateConfirmation(mode: Mode)(implicit request: models.requests.DataRequest[AnyContent]) =
+  def handleUpdateConfirmationSubmission(mode: Mode)(implicit request: DataRequest[AnyContent]) =
     confirmUpdateForm
       .bindFromRequest()
       .fold(
@@ -114,27 +114,28 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
           ),
         {
           case true =>
-            // if user confirmed yes - save the change to false and proceed
-            // previousAnswer = Some(true) because they're confirming change from true to false
+            val previousAnswer   = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
+            val prevScreenAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
+
             saveService
-              .save(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false))
+              .save(
+                RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, prevScreenAnswer)
+              )
               .map(_ =>
                 Redirect(
                   ClaimingCommunityBuildingDonationsController.nextPage(
                     false,
                     mode,
-                    Some(true),
-                    RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
+                    prevScreenAnswer,
+                    previousAnswer
                   )
                 )
               )
 
           case false =>
-            // user canceled - go back to CYA without any change
             Future.successful(Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad))
         }
       )
-  }
 }
 
 object ClaimingCommunityBuildingDonationsController {
@@ -142,41 +143,48 @@ object ClaimingCommunityBuildingDonationsController {
   def nextPage(
     value: Boolean,
     mode: Mode,
-    previousAnswer: Option[Boolean],
-    claimingDonationsNotFromCommunityBuildingAnswer: Option[Boolean],
-    connectedToAnyOtherCharities: Option[Boolean]
-  ): Call =
+    prevScreenAnswer: Option[Boolean],
+    previousAnswer: Option[Boolean]
+  )(using request: DataRequest[?]): Call = {
+
+    val connectedToAnyOtherCharities =
+      request.sessionData.repaymentClaimDetailsAnswers.flatMap(_.connectedToAnyOtherCharities)
+
     (value, mode, previousAnswer) match {
-      // NormalMode
+
+      // NormalMode: User answered Yes
       case (true, NormalMode, _)         =>
         routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode)
+
+      // NormalMode: User answered No
       case (false, NormalMode, _)        =>
-        if claimingDonationsNotFromCommunityBuildingAnswer.contains(false) then
-          routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode)
+        if prevScreenAnswer.contains(false) then routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode)
         else routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode)
 
-      // CheckMode: new data
+      // CheckMode: New answer is Yes
       case (true, CheckMode, None)       =>
         routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
 
-      // CheckMode: new data
+      // CheckMode: New answer is No
       case (false, CheckMode, None)      =>
-        if claimingDonationsNotFromCommunityBuildingAnswer.contains(false) then
-          routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
+        if prevScreenAnswer.contains(false) then routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
         else routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
-      // Checkmode : both new and prev are true
+
+      // CheckMode: Answer unchanged yes
       case (true, CheckMode, Some(true)) =>
         routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 
-      case (newVal, CheckMode, prev) =>
-        if !newVal && prev.contains(false) && claimingDonationsNotFromCommunityBuildingAnswer.contains(
-            false
-          )
-          && connectedToAnyOtherCharities.isEmpty
+      // CheckMode: Other scenarios
+      case (newVal, CheckMode, prev)     =>
+        // If changing to No AND both R1.2 and R1.3 are No AND connected charities not answered yet
+        if !newVal && prev.contains(false) && prevScreenAnswer.contains(false) &&
+          connectedToAnyOtherCharities.isEmpty
         then routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
-        else if newVal || claimingDonationsNotFromCommunityBuildingAnswer.contains(true) then
+        // If Yes OR R1.2 is Yes
+        else if newVal || prevScreenAnswer.contains(true) then
           routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
+        // Else
         else routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
-
     }
+  }
 }
