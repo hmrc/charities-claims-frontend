@@ -69,11 +69,15 @@ object ChangePreviousGASDSClaimController {
   def nextPage(value: Boolean, mode: Mode, previousAnswer: Option[Boolean]): Call =
     (value, mode, previousAnswer) match {
       // NormalMode
-      case (_, NormalMode, _) =>
+      case (_, NormalMode, _)              =>
         routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode)
 
       // CheckMode
-      case (_, CheckMode, _)  =>
+      case (newVal, CheckMode, Some(prev)) =>
+        if newVal == prev then routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+        else routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
+
+      case (_, CheckMode, _) =>
         routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
 
     }
