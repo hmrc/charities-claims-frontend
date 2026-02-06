@@ -49,12 +49,14 @@ class UploadGiftAidScheduleController @Inject() (
         Future.successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
 
       case Some(claimId) =>
+        println("***************** " + request.sessionData.giftAidScheduleFileUploadReference + " **************")
         request.sessionData.giftAidScheduleFileUploadReference match {
           case Some(_) =>
             // if the file upload reference is found, we need to redirect to the your gift aid schedule upload page
             Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
 
           case None =>
+            println("**************** " + claimId + " ****** " + appConfig.baseUrl + " *******")
             for {
               upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
             } yield Ok(
