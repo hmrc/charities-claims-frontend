@@ -155,14 +155,34 @@ object RepaymentClaimDetailsAnswers {
     )
   )
 
-  def setRepaymentClaimType(value: RepaymentClaimType)(using session: SessionData): SessionData =
-    set(value)((a, v) =>
+  def setRepaymentClaimType(value: RepaymentClaimType, prevAnswer: Option[RepaymentClaimType])(using
+    session: SessionData
+  ): SessionData = {
+    val updatedSession = set(value)((a, v) =>
       a.copy(
         claimingGiftAid = Some(v.claimingGiftAid),
         claimingTaxDeducted = Some(v.claimingTaxDeducted),
         claimingUnderGiftAidSmallDonationsScheme = Some(v.claimingUnderGiftAidSmallDonationsScheme)
       )
     )
+    (value.claimingUnderGiftAidSmallDonationsScheme, prevAnswer) match {
+      case (false, Some(prev)) if prev.claimingUnderGiftAidSmallDonationsScheme =>
+        clearRepaymentClaimTypeFlow(using updatedSession)
+      case (_, _)                                                               => updatedSession
+    }
+  }
+
+  private def clearRepaymentClaimTypeFlow(using session: SessionData): SessionData =
+    val updated = session.repaymentClaimDetailsAnswers match
+      case Some(existing) =>
+        existing.copy(
+          makingAdjustmentToPreviousClaim = None,
+          claimingDonationsNotFromCommunityBuilding = None,
+          claimingDonationsCollectedInCommunityBuildings = None,
+          connectedToAnyOtherCharities = None
+        )
+      case None           => RepaymentClaimDetailsAnswers()
+    session.copy(repaymentClaimDetailsAnswers = Some(updated))
 
   def getClaimingDonationsCollectedInCommunityBuildings(using session: SessionData): Option[Boolean] = get(
     _.claimingDonationsCollectedInCommunityBuildings

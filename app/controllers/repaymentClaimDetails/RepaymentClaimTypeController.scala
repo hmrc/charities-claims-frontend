@@ -54,7 +54,7 @@ class RepaymentClaimTypeController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
         repaymentClaimType =>
           saveService
-            .save(RepaymentClaimDetailsAnswers.setRepaymentClaimType(repaymentClaimType))
+            .save(RepaymentClaimDetailsAnswers.setRepaymentClaimType(repaymentClaimType, previousAnswer))
             .map(_ => Redirect(RepaymentClaimTypeController.nextPage(repaymentClaimType, mode, previousAnswer)))
       )
   }
