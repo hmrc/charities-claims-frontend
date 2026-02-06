@@ -67,7 +67,8 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with all checked" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked)
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -85,7 +86,8 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with none checked" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithNoneChecked)
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithNoneChecked, Some(dataWithAllChecked))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -256,7 +258,8 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
       }
       "in CheckMode" - {
         "old GASDS & new GASDS not defined" in {
-          val sessionData                = RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked)
+          val sessionData                =
+            RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithClaimingGiftAidChecked))
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
           running(application) {
@@ -319,7 +322,8 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
         }
 
         "old GASDS is false and new GASDS" in {
-          val sessionData = RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithNoneChecked)
+          val sessionData =
+            RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithNoneChecked, Some(dataWithAllChecked))
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -341,7 +345,8 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
           }
         }
         "no change in old and new GASDS" in {
-          val sessionData = RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked)
+          val sessionData =
+            RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -365,7 +370,10 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
         "old GASDS is true & new GASDS not defined" in {
           val sessionGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
-          val sessionData  = RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked)(using sessionGASDS)
+          val sessionData  =
+            RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))(using
+              sessionGASDS
+            )
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
