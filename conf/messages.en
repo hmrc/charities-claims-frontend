@@ -334,6 +334,11 @@ claimReferenceNumber.error.required = Enter your claim reference number
 claimReferenceNumber.error.length = Claim reference number must be 20 characters or less
 claimReferenceNumber.error.regex = This can be up to 20 characters including numbers and capital letters
 
+updateRepaymentClaim.title = Do you want to update this repayment claim?
+updateRepaymentClaim.heading = Do you want to update this repayment claim?
+updateRepaymentClaim.hint = If you change this claim, you’ll lose any data you’ve already given or attached.
+updateRepaymentClaim.error.required = Select ‘Yes’ if you want to update this repayment claim
+
 claimGASDS.title = Do you want to claim a top-up payment under the Gift Aid Small Donations Scheme?
 claimGASDS.heading = Do you want to claim a top-up payment under the Gift Aid Small Donations Scheme?
 claimGASDS.caption = Provide repayment claim details

@@ -181,5 +181,93 @@ class BaseControllerSpec extends ControllerSpec {
         }
       }
     }
+
+    "needsUpdateConfirmation" - {
+      "should return true when in CheckMode, previous answer was Yes, and new answer is No" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          val controller = new BaseController {
+            override val controllerComponents: MessagesControllerComponents =
+              application.injector.instanceOf[MessagesControllerComponents]
+          }
+
+          controller.needsUpdateConfirmation(models.Mode.CheckMode, Some(true), false) shouldBe true
+        }
+      }
+
+      "should return false when in NormalMode" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          val controller = new BaseController {
+            override val controllerComponents: MessagesControllerComponents =
+              application.injector.instanceOf[MessagesControllerComponents]
+          }
+
+          controller.needsUpdateConfirmation(models.Mode.NormalMode, Some(true), false) shouldBe false
+        }
+      }
+
+      "should return false when answer is unchanged or not Yes to No" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          val controller = new BaseController {
+            override val controllerComponents: MessagesControllerComponents =
+              application.injector.instanceOf[MessagesControllerComponents]
+          }
+
+          controller.needsUpdateConfirmation(models.Mode.CheckMode, Some(false), false) shouldBe false
+          controller.needsUpdateConfirmation(models.Mode.CheckMode, Some(true), true)   shouldBe false
+          controller.needsUpdateConfirmation(models.Mode.CheckMode, None, false)        shouldBe false
+        }
+      }
+    }
+
+    "isConfirmingUpdate" - {
+      "should return true when confirmingUpdate field is present with value 'true'" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, "/test")
+              .withFormUrlEncodedBody("confirmingUpdate" -> "true")
+
+          val controller = new BaseController {
+            override val controllerComponents: MessagesControllerComponents =
+              application.injector.instanceOf[MessagesControllerComponents]
+          }
+
+          controller.isConfirmingUpdate shouldBe true
+        }
+      }
+
+      "should return false when confirmingUpdate is not present or has wrong value" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          val controller = new BaseController {
+            override val controllerComponents: MessagesControllerComponents =
+              application.injector.instanceOf[MessagesControllerComponents]
+          }
+
+          given request1: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, "/test")
+              .withFormUrlEncodedBody("value" -> "true")
+          controller.isConfirmingUpdate(using request1) shouldBe false
+
+          given request2: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, "/test")
+              .withFormUrlEncodedBody("confirmingUpdate" -> "false")
+          controller.isConfirmingUpdate(using request2) shouldBe false
+
+          given request3: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, "/test")
+              .withFormUrlEncodedBody("other" -> "field")
+          controller.isConfirmingUpdate(using request3) shouldBe false
+        }
+      }
+    }
   }
 }

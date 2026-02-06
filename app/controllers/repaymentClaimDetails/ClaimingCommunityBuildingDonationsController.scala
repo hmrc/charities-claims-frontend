@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,17 +22,18 @@ import controllers.actions.Actions
 import controllers.repaymentClaimDetails.routes
 import forms.YesNoFormProvider
 import models.{Mode, RepaymentClaimDetailsAnswers}
+import models.requests.DataRequest
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
-import views.html.ClaimingCommunityBuildingDonationsView
-
+import views.html.{ClaimingCommunityBuildingDonationsView, UpdateRepaymentClaimView}
 import scala.concurrent.{ExecutionContext, Future}
 import models.Mode.*
 
 class ClaimingCommunityBuildingDonationsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: ClaimingCommunityBuildingDonationsView,
+  confirmationView: UpdateRepaymentClaimView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService
@@ -41,87 +42,148 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
 
   val form: Form[Boolean] = formProvider("claimingCommunityBuildingDonations.error.required")
 
+  val confirmUpdateForm: Form[Boolean] = formProvider("updateRepaymentClaim.error.required")
+
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) then {
       val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
       Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
-    } else { Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad)) }
+    } else {
+      Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+    }
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val previousAnswer                                  = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
-    val claimingDonationsNotFromCommunityBuildingAnswer =
-      RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
-    val connectedToAnyOtherCharities                    =
-      RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities
+    if (isConfirmingUpdate) {
+      handleUpdateConfirmationSubmission(mode)
+    } else {
+      handleQuestionSubmission(mode)
+    }
+  }
+
+  def handleQuestionSubmission(mode: Mode)(implicit request: DataRequest[AnyContent]) =
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveService
-            .save(
-              RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(
-                value,
-                claimingDonationsNotFromCommunityBuildingAnswer
+        newAnswer => {
+          val previousAnswer   = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
+          val prevScreenAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
+
+          if (needsUpdateConfirmation(mode, previousAnswer, newAnswer)) {
+            Future.successful(
+              Ok(
+                confirmationView(
+                  confirmUpdateForm,
+                  routes.ClaimingCommunityBuildingDonationsController.onSubmit(mode)
+                )
               )
             )
-            .map(_ =>
-              Redirect(
-                ClaimingCommunityBuildingDonationsController
-                  .nextPage(
-                    value,
+          } else {
+            saveService
+              .save(
+                RepaymentClaimDetailsAnswers
+                  .setClaimingDonationsCollectedInCommunityBuildings(newAnswer, prevScreenAnswer)
+              )
+              .map(_ =>
+                Redirect(
+                  ClaimingCommunityBuildingDonationsController.nextPage(
+                    newAnswer,
                     mode,
-                    previousAnswer,
-                    claimingDonationsNotFromCommunityBuildingAnswer,
-                    connectedToAnyOtherCharities
+                    prevScreenAnswer,
+                    previousAnswer
                   )
+                )
+              )
+          }
+        }
+      )
+
+  def handleUpdateConfirmationSubmission(mode: Mode)(implicit request: DataRequest[AnyContent]) =
+    confirmUpdateForm
+      .bindFromRequest()
+      .fold(
+        formWithErrors =>
+          Future.successful(
+            BadRequest(
+              confirmationView(
+                formWithErrors,
+                routes.ClaimingCommunityBuildingDonationsController.onSubmit(mode)
               )
             )
+          ),
+        {
+          case true =>
+            val previousAnswer   = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
+            val prevScreenAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
+
+            saveService
+              .save(
+                RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, prevScreenAnswer)
+              )
+              .map(_ =>
+                Redirect(
+                  ClaimingCommunityBuildingDonationsController.nextPage(
+                    false,
+                    mode,
+                    prevScreenAnswer,
+                    previousAnswer
+                  )
+                )
+              )
+
+          case false =>
+            Future.successful(Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad))
+        }
       )
-  }
 }
+
 object ClaimingCommunityBuildingDonationsController {
 
   def nextPage(
     value: Boolean,
     mode: Mode,
-    previousAnswer: Option[Boolean],
-    claimingDonationsNotFromCommunityBuildingAnswer: Option[Boolean],
-    connectedToAnyOtherCharities: Option[Boolean]
-  ): Call =
+    prevScreenAnswer: Option[Boolean],
+    previousAnswer: Option[Boolean]
+  )(using request: DataRequest[?]): Call = {
+
+    val connectedToAnyOtherCharities =
+      request.sessionData.repaymentClaimDetailsAnswers.flatMap(_.connectedToAnyOtherCharities)
+
     (value, mode, previousAnswer) match {
-      // NormalMode
+
+      // NormalMode: User answered Yes
       case (true, NormalMode, _)         =>
         routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode)
+
+      // NormalMode: User answered No
       case (false, NormalMode, _)        =>
-        if claimingDonationsNotFromCommunityBuildingAnswer.contains(false) then
-          routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode)
+        if prevScreenAnswer.contains(false) then routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode)
         else routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode)
 
-      // CheckMode: new data
+      // CheckMode: New answer is Yes
       case (true, CheckMode, None)       =>
         routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
 
-      // CheckMode: new data
+      // CheckMode: New answer is No
       case (false, CheckMode, None)      =>
-        if claimingDonationsNotFromCommunityBuildingAnswer.contains(false) then
-          routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
+        if prevScreenAnswer.contains(false) then routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
         else routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
-      // Checkmode : both new and prev are true
+
+      // CheckMode: Answer unchanged yes
       case (true, CheckMode, Some(true)) =>
         routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 
-      case (newVal, CheckMode, prev) =>
-        if !newVal && prev.contains(false) && claimingDonationsNotFromCommunityBuildingAnswer.contains(
-            false
-          )
-          && connectedToAnyOtherCharities.isEmpty
+      // CheckMode: Other scenarios
+      case (newVal, CheckMode, prev)     =>
+        // Change to No & R1.2 and R1.3 are No & ConnectedCharities not answered
+        if !newVal && prev.contains(false) && prevScreenAnswer.contains(false) &&
+          connectedToAnyOtherCharities.isEmpty
         then routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
-        else if newVal || claimingDonationsNotFromCommunityBuildingAnswer.contains(true) then
+        // Yes OR R1.2 is Yes
+        else if newVal || prevScreenAnswer.contains(true) then
           routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
         else routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
-
     }
-
+  }
 }
