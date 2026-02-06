@@ -156,21 +156,25 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec {
 //      }
     }
 
-//    "onUploadError" - {
-//      "should redirect to the next page" in {
-//        given application: Application = applicationBuilder().build()
-//
-//        running(application) {
-//          given request: FakeRequest[AnyContentAsEmpty.type] =
-//            FakeRequest(POST, routes.UploadGiftAidScheduleController.onUploadError.url)
-//
-//          val result = route(application, request).value
-//
-//          status(result) shouldEqual SEE_OTHER
-//          redirectLocation(result) shouldEqual Some(routes.YourGiftAidScheduleUploadController.onPageLoad.url)
-//        }
-//      }
-//    }
+    "onUploadError" - {
+      "should redirect to the next page" in {
+        val sessionData                =
+          SessionData
+            .empty(testCharitiesReference)
+            .copy(giftAidScheduleFileUploadReference = Some("test-claim-123"))
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.UploadGiftAidScheduleController.onUploadError.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.YourGiftAidScheduleUploadController.onPageLoad.url)
+        }
+      }
+    }
   }
 
 }
