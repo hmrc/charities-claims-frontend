@@ -320,8 +320,73 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
         }
       }
 
-      "checkMode: should redirect to the next page when the value is not changed from true" in {
+      "checkMode: should redirect to the next page when the value is not changed from true and next screen (R1.4) is is not defined" in {
         val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode).url
+          )
+        }
+      }
+      "checkMode: should redirect to back to CYA when the value is not changed from false and next screen is defined" in {
+        val sessionDataNextScreen = RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(false)
+        val sessionData           =
+          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, None)(using
+            sessionDataNextScreen
+          )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "checkMode: should redirect to back to CYA when the value is not changed from false and next screen is not defined" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, None)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "checkMode: should redirect to back to CYA when the value is not changed from true and next screen is defined" in {
+        val sessionDataNextScreen = RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(true)
+        val sessionData           =
+          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None)(using
+            sessionDataNextScreen
+          )
 
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -492,12 +557,8 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
       }
 
       "CheckMode: should redirect to ConnectedToAnyOtherCharities when value unchanged (false) and question not changed" in {
-        val sessionDataClaimDonations =
+        val sessionData =
           RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false)
-        val sessionData               =
-          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, Some(true))(using
-            sessionDataClaimDonations
-          )
 
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
