@@ -19,7 +19,8 @@ package controllers.giftAidSchedule
 import connectors.ClaimsConnector
 import controllers.giftAidSchedule.routes
 import controllers.ControllerSpec
-import models.{RepaymentClaimDetailsAnswers, SessionData}
+import models.{RepaymentClaimDetailsAnswers, SessionData, UploadRequest, UpscanInitiateResponse}
+import connectors.{ClaimsValidationConnector, UpscanInitiateConnector}
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -99,59 +100,64 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-//      "should render Page Not Found if setClaimingGiftAid is false && unsubmittedClaimId is not None" in {
-//        val sessionDataTestClaim =
-//          SessionData
-//            .empty(testCharitiesReference)
-//            .copy(unsubmittedClaimId = Some("test-claim-123"))
-//
-//        val sessionData          = RepaymentClaimDetailsAnswers.setClaimingGiftAid(false)(using sessionDataTestClaim)
-//        (mockClaimsConnector
-//          .deleteClaim(_: String)(using _: HeaderCarrier))
-//          .expects("test-claim-123", *)
-//          .returning(Future.successful(false))
-//
-//        val customConfig = Map(
-//          "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
-//        )
-//
-//        given application: Application = applicationBuilder(sessionData = sessionData)
-//          .overrides(bind[ClaimsConnector].toInstance(mockClaimsConnector))
-//          .configure(customConfig)
-//          .build()
-//
-//        running(application) {
-//          given request: FakeRequest[AnyContentAsEmpty.type] =
-//            FakeRequest(GET, routes.UploadGiftAidScheduleController.onPageLoad.url)
-//
-//          val result = route(application, request).value
-//
-//          status(result) shouldEqual SEE_OTHER
-//          redirectLocation(result) shouldEqual Some(
-//            controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad.url
-//          )
-//        }
-//      }
+      "should render next page if setClaimingGiftAid is true && unsubmittedClaimId is not None & giftAidScheduleFileUploadReference is defined" in {
+        val validUploadRequest          = UploadRequest(
+          href = "https://xxxx/upscan-upload-proxy/bucketName",
+          fields =
+            "fields = { \"Content-Type\": \"application/xml\", \"acl\": \"private\",\n  *   \"key\": \"xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\", \"policy\": \"xxxxxxxx==\", \"x-amz-algorithm\": \"AWS4-HMAC-SHA256\",\n  *   \"x-amz-credential\": \"ASIAxxxxxxxxx/20180202/eu-west-2/s3/aws4_request\", \"x-amz-date\": \"yyyyMMddThhmmssZ\",\n  *   \"x-amz-meta-callback-url\": \"https://myservice.com/callback\", \"x-amz-signature\": \"xxxx\", \"success_action_redirect\":\n  *   \"https://myservice.com/nextPage\", \"error_action_redirect\": \"https://myservice.com/errorPage\"}"
+        )
+        val validUpscanInitiateResponse = UpscanInitiateResponse(
+          reference = "11370e18-6e24-453e-b45a-76d3e32ea33d",
+          uploadRequest = validUploadRequest
+        )
+        val sessionDataTestClaim        =
+          SessionData
+            .empty(testCharitiesReference)
+            .copy(unsubmittedClaimId = Some("test-claim-123"))
+            .copy(giftAidScheduleUpscanInitialization = Some(validUpscanInitiateResponse))
 
-//      "should use the correct configured giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl in the message" in {
-//        val sessionData  = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
-//        val customConfig = Map(
-//          "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
-//        )
-//
-//        given application: Application = applicationBuilder(sessionData = sessionData)
-//          .configure(customConfig)
-//          .build()
-//
-//        running(application) {
-//          val request =
-//            FakeRequest(GET, routes.UploadGiftAidScheduleController.onPageLoad.url)
-//          val result  = route(application, request).value
-//
-//          status(result) shouldEqual OK
-//          contentAsString(result) should include("https://test.example.com/charity-repayment-claim")
-//        }
-//      }
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)(using sessionDataTestClaim)
+
+        val customConfig = Map(
+          "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .configure(customConfig)
+          .build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.UploadGiftAidScheduleController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.YourGiftAidScheduleUploadController.onPageLoad.url
+          )
+        }
+      }
+
+      "should use the correct configured giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl in the message" in {
+        val sessionData  = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
+        val customConfig = Map(
+          "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .configure(customConfig)
+          .build()
+
+        running(application) {
+          val request =
+            FakeRequest(GET, routes.UploadGiftAidScheduleController.onPageLoad.url)
+          val result  = route(application, request).value
+
+          status(result) shouldEqual OK
+          contentAsString(result) should include("https://test.example.com/charity-repayment-claim")
+        }
+      }
     }
 
     "onUploadSuccess" - {

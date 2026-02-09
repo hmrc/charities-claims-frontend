@@ -43,23 +43,18 @@ class UploadGiftAidScheduleController @Inject() (
     extends BaseController {
 
   val onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    println("***************** unsubmittedClaimId::: " + request.sessionData.unsubmittedClaimId + " **************")
     request.sessionData.unsubmittedClaimId match {
       case None =>
         // if the claim id is not found, we need to redirect to the repayment claim details page
         Future.successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
 
       case Some(claimId) =>
-        println(
-          "***************** giftAidScheduleFileUploadReference:: " + request.sessionData.giftAidScheduleFileUploadReference + " **************"
-        )
         request.sessionData.giftAidScheduleFileUploadReference match {
           case Some(_) =>
             // if the file upload reference is found, we need to redirect to your gift aid schedule upload page
             Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
 
           case None =>
-            println("**************** " + claimId + " ****** " + appConfig.baseUrl + " *******")
             for {
               upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
             } yield Ok(
