@@ -421,3 +421,9 @@ aboutGiftAidSchedule.paragraph.one = Use this service to add a Gift Aid schedule
 aboutGiftAidSchedule.paragraph.two = You can upload a Gift Aid schedule in a .ods format.
 aboutGiftAidSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Gift Aid Schedule here (opens in new tab)</a>. You can submit up to 1 file at a time, and each file can be up to 2.5MB.
 aboutGiftAidSchedule.title = About Gift Aid schedule
+
+checkYourGiftAidSchedule.title = Check your Gift Aid schedule
+checkYourGiftAidSchedule.heading = Check your Gift Aid schedule
+
+problemWithGiftAidSchedule.title = There is a problem with the data in your Gift Aid schedule
+problemWithGiftAidSchedule.heading = There is a problem with the data in your Gift Aid schedule
