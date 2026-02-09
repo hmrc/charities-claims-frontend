@@ -166,7 +166,7 @@ object ClaimsTaskListController {
   private def buildGiftAidScheduleTask(using messages: Messages): TaskItem =
     TaskItem(
       name = messages("claimsTaskList.task.giftAidSchedule"),
-      href = routes.PageNotFoundController.onPageLoad,
+      href = controllers.giftAidSchedule.routes.AboutGiftAidScheduleController.onPageLoad,
       status = TaskStatus.Completed
     )
 
