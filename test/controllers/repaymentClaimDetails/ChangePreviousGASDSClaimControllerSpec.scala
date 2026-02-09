@@ -233,7 +233,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
           )
         }
       }
-// TODO: check this test has correct redirect
+
       "checkMode: should redirect to ConnectedToAnyOtherCharitiesController when the value is false" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
@@ -276,8 +276,8 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
           )
         }
       }
-// TODO: check if redirect is correct here for nextPage navigation, should it be CYA?
-      "checkMode: should redirect to ConnectedToAnyOtherCharitiesController when the value is not changed from false" in {
+
+      "checkMode: should redirect to CYA when the value is not changed from false" in {
         val sessionDataUnderGASDS    = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
         val sessionDataWithDonations =
           RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None)(using
@@ -298,7 +298,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode).url
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
           )
         }
       }
@@ -326,8 +326,8 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
           contentAsString(result) should include("Do you want to update this repayment claim?")
         }
       }
-      // TODO: check if the logic is correct here for this nextPage navigation, should it be CYA?
-      "checkMode: should redirect to ConnectedToAnyOtherCharitiesController when the value is not changed from true" in {
+
+      "checkMode: should redirect to CYA when the value is not changed from true" in {
         val sessionDataUnderGASDS    = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
         val sessionDataWithDonations =
           RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None)(using
@@ -348,7 +348,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode).url
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
           )
         }
       }
@@ -379,7 +379,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
       }
 
       // WRN3 Confirmation Screen Tests:
-// TODO: check if the logic is correct here for this nextPage navigation, should it be CYA?
+
       "WRN3: should NOT show confirmation when answer unchanged (false to false) in CheckMode" in {
         val sessionDataUnderGASDS    = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
         val sessionDataWithDonations =
@@ -401,7 +401,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode).url
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
           )
         }
       }

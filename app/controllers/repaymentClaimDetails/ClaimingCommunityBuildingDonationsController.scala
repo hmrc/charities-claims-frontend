@@ -153,36 +153,38 @@ object ClaimingCommunityBuildingDonationsController {
     (value, mode, previousAnswer) match {
 
       // NormalMode: User answered Yes
-      case (true, NormalMode, _)         =>
+      case (true, NormalMode, _)           =>
         routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode)
 
       // NormalMode: User answered No
-      case (false, NormalMode, _)        =>
+      case (false, NormalMode, _)          =>
         if prevScreenAnswer.contains(false) then routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode)
         else routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode)
 
       // CheckMode: New answer is Yes
-      case (true, CheckMode, None)       =>
+      case (true, CheckMode, None)         =>
         routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
 
       // CheckMode: New answer is No
-      case (false, CheckMode, None)      =>
+      case (false, CheckMode, None)        =>
         if prevScreenAnswer.contains(false) then routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
         else routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
 
       // CheckMode: Answer unchanged yes
-      case (true, CheckMode, Some(true)) =>
+      case (true, CheckMode, Some(true))   =>
         if nextScreenAnswer.isDefined then routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
         else routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
 
+      // CheckMode: Answer unchanged No
       case (false, CheckMode, Some(false)) =>
         if prevScreenAnswer.contains(true) && nextScreenAnswer.isEmpty
         then routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
         else routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 
-      // CheckMode: Other scenarios
+      // CheckMode: Answer changed (Yes->No or No->Yes)
       case (newVal, CheckMode, _)          =>
-        // checking if answer has changed from yes -> No or no->yes, and if prev screen (R1.2) is true
+        // New answer Yes OR prev screen Yes -> next screen
+        // Otherwise -> CYA
         if newVal || prevScreenAnswer.contains(true) then
           routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
         else routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
