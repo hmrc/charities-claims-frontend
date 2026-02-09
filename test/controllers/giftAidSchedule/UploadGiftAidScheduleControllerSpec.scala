@@ -16,43 +16,99 @@
 
 package controllers.giftAidSchedule
 
+import com.typesafe.config.ConfigFactory
 import connectors.ClaimsConnector
 import controllers.giftAidSchedule.routes
 import controllers.ControllerSpec
-import models.{RepaymentClaimDetailsAnswers, SessionData, UploadRequest, UpscanInitiateResponse}
+import models.{RepaymentClaimDetailsAnswers, SessionData, UploadRequest, UpscanInitiateRequest, UpscanInitiateResponse}
 import connectors.{ClaimsValidationConnector, UpscanInitiateConnector}
-import play.api.Application
+import play.api.{Application, Configuration}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.http.HeaderCarrier
+import play.api.libs.json.Json
+import util.HttpV2Support
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import org.scalamock.handlers.CallHandler
 
 import scala.concurrent.Future
 
-class UploadGiftAidScheduleControllerSpec extends ControllerSpec {
-  "UploadGiftAidScheduleController" - {
-    val mockClaimsConnector: ClaimsConnector = mock[ClaimsConnector]
+class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Support {
+  val config: Configuration = Configuration(
+    ConfigFactory.parseString(
+      """
+        |  microservice {
+        |    services {
+        |      upscan-initiate {
+        |        protocol = http
+        |        host     = foo.bar.com
+        |        port     = 1234
+        |        retryIntervals = [10ms,50ms]
+        |        context-path = "/foo-upscan"
+        |        service-name = "foo-bar"
+        |      }
+        |      charities-claims-validation {
+        |        protocol = http
+        |        host     = example.com
+        |        port     = 1235
+        |        context-path = "/charities-claims-validation"
+        |      }
+        |   }
+        |}
+        |""".stripMargin
+    )
+  )
 
-//    "must initiate a request to upscan to bring back an upload form" in {
-//      val fakeUpscanConnector: FakeUpscanConnector = inject[FakeUpscanConnector]
-//      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-//
-//      val application: Application = applicationBuilder(userAnswers = Some(userAnswers))
-//        .overrides(
-//          bind[UpscanConnector].toInstance(fakeUpscanConnector)
-//        )
-//        .build()
-//
-//      val request = FakeRequest(GET, routes.UploadGiftAidScheduleController.onPageLoad().url)
-//      val result  = route(application, request).value
-//
-//      val view = application.injector.instanceOf[UploadGiftAidScheduleView]
-//
-//      status(result) mustEqual OK
-//      contentAsString(result) mustEqual view(form(), UpscanInitiateResponse(Reference(""), "target", Map.empty))(
-//        request,
-//        messages(application)
-//      ).toString
-//    }
+  def givenPostInitiateEndpointReturns(
+    request: UpscanInitiateRequest,
+    response: HttpResponse
+  ): CallHandler[Future[HttpResponse]] =
+    mockHttpPostSuccess(
+      url = "http://foo.bar.com:1234/foo-upscan/v2/initiate",
+      requestBody = Json.toJson(request),
+      hasHeaders = false
+    )(response)
+
+  given HeaderCarrier = HeaderCarrier()
+
+  val uploadUrl   = "http://foo.bar.com/upscan-upload-proxy/bucketName"
+  val callbackUrl = "http://example.com:1235/charities-claims-validation/claim-1234567890/upscan-callback"
+
+  val upscanInitiateRequest =
+    UpscanInitiateRequest(
+      successRedirect = "http://foo.bar.com/success",
+      errorRedirect = "http://foo.bar.com/error"
+    )
+
+  val expectedUpscanInitiateRequest =
+    upscanInitiateRequest.copy(
+      consumingService = Some("foo-bar"),
+      callbackUrl = Some(callbackUrl)
+    )
+
+  val responseJson =
+    s"""{
+          "reference": "11370e18-6e24-453e-b45a-76d3e32ea33d",
+          "uploadRequest": {
+              "href": "$uploadUrl",
+              "fields": {
+                  "Content-Type": "application/xml",
+                  "acl": "private",
+                  "key": "xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                  "policy": "xxxxxxxx==",
+                  "x-amz-algorithm": "AWS4-HMAC-SHA256",
+                  "x-amz-credential": "ASIAxxxxxxxxx/20180202/eu-west-2/s3/aws4_request",
+                  "x-amz-date": "yyyyMMddThhmmssZ",
+                  "x-amz-meta-callback-url": "$callbackUrl",
+                  "x-amz-signature": "xxxx",
+                  "success_action_redirect": "http://foo.bar.com/success",
+                  "error_action_redirect": "http://foo.bar.com/error"
+              }
+          }
+        }""".stripMargin
+
+  val response = Json.parse(responseJson).as[UpscanInitiateResponse]
+
+  "UploadGiftAidScheduleController" - {
 
     "onPageLoad" - {
 
@@ -78,8 +134,6 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should render Page Not Found if setClaimingGiftAid is true && unsubmittedClaimId is None" in {
-        // val sessionDataUnC = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
-
         val sessionData  = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
         val customConfig = Map(
           "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
@@ -101,20 +155,12 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should render next page if setClaimingGiftAid is true && unsubmittedClaimId is not None & giftAidScheduleFileUploadReference is defined" in {
-        val validUploadRequest          = UploadRequest(
-          href = "https://xxxx/upscan-upload-proxy/bucketName",
-          fields =
-            "fields = { \"Content-Type\": \"application/xml\", \"acl\": \"private\",\n  *   \"key\": \"xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\", \"policy\": \"xxxxxxxx==\", \"x-amz-algorithm\": \"AWS4-HMAC-SHA256\",\n  *   \"x-amz-credential\": \"ASIAxxxxxxxxx/20180202/eu-west-2/s3/aws4_request\", \"x-amz-date\": \"yyyyMMddThhmmssZ\",\n  *   \"x-amz-meta-callback-url\": \"https://myservice.com/callback\", \"x-amz-signature\": \"xxxx\", \"success_action_redirect\":\n  *   \"https://myservice.com/nextPage\", \"error_action_redirect\": \"https://myservice.com/errorPage\"}"
-        )
-        val validUpscanInitiateResponse = UpscanInitiateResponse(
-          reference = "11370e18-6e24-453e-b45a-76d3e32ea33d",
-          uploadRequest = validUploadRequest
-        )
-        val sessionDataTestClaim        =
+
+        val sessionDataTestClaim =
           SessionData
             .empty(testCharitiesReference)
             .copy(unsubmittedClaimId = Some("test-claim-123"))
-            .copy(giftAidScheduleUpscanInitialization = Some(validUpscanInitiateResponse))
+            .copy(giftAidScheduleUpscanInitialization = Some(response))
 
         val sessionData = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)(using sessionDataTestClaim)
 

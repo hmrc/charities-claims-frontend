@@ -53,16 +53,15 @@
                     name = "file",
                     id = "file",
                     value = Some(""),
-                    describedBy = None,
+                    describedBy = Some("select-error-error"),
                     label = Label(
                         content = Text(
                             messages("uploadGiftAidSchedule.input.label")
                         )
                     ),
                     hint = None,
-                    errorMessage = None,
                     javascript = Some(true),
-                    classes = "",
+                    classes = "govuk-file-upload--error",
                     attributes = Map(
                         "accept" -> filePickerAcceptFilter,
                         "data-msg-required" -> messages("uploadGiftAidSchedule.error.file-upload.required"),
