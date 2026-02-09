@@ -87,9 +87,9 @@ object OrganisationDetails {
 }
 
 final case class GiftAidScheduleData(
-  earliestDonationDate: String,
+  earliestDonationDate: Option[String] = None,
   prevOverclaimedGiftAid: Option[BigDecimal] = None,
-  totalDonations: BigDecimal,
+  totalDonations: Option[BigDecimal] = None,
   donations: Seq[Donation]
 )
 

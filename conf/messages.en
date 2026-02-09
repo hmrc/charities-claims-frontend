@@ -406,6 +406,9 @@ site.enter = Enter
 site.govuk = GOV.UK
 site.no = No
 site.yes = Yes
+site.pagination.landmark = Pagination
+site.pagination.previous = Previous
+site.pagination.next = Next
 
 warning.text = Warning
 

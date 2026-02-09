@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,22 +23,25 @@ import forms.YesNoFormProvider
 import models.{Mode, RepaymentClaimDetailsAnswers}
 import models.Mode.*
 import controllers.repaymentClaimDetails.routes
+import models.requests.DataRequest
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import play.api.data.Form
 import services.SaveService
-import views.html.ConnectedToAnyOtherCharitiesView
-
+import views.html.{ConnectedToAnyOtherCharitiesView, UpdateRepaymentClaimView}
 import scala.concurrent.{ExecutionContext, Future}
 
 class ConnectedToAnyOtherCharitiesController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: ConnectedToAnyOtherCharitiesView,
+  updateRepaymentClaimView: UpdateRepaymentClaimView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
-  val form: Form[Boolean] = formProvider("connectedToAnyOtherCharities.error.required")
+
+  val form: Form[Boolean]              = formProvider("connectedToAnyOtherCharities.error.required")
+  val confirmUpdateForm: Form[Boolean] = formProvider("updateRepaymentClaim.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) then {
@@ -50,17 +53,75 @@ class ConnectedToAnyOtherCharitiesController @Inject() (
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val previousAnswer = RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities
+    if (isConfirmingUpdate) {
+      handleUpdateConfirmationSubmit(mode)
+    } else {
+      handleQuestionSubmit(mode)
+    }
+  }
+
+  def handleQuestionSubmit(mode: Mode)(implicit request: DataRequest[AnyContent]) =
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveService
-            .save(RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(value))
-            .map(_ => Redirect(ConnectedToAnyOtherCharitiesController.nextPage(value, mode, previousAnswer)))
+        newAnswer => {
+          val previousAnswer = RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities
+
+          if (needsUpdateConfirmation(mode, previousAnswer, newAnswer)) {
+            Future.successful(
+              Ok(
+                updateRepaymentClaimView(
+                  confirmUpdateForm,
+                  routes.ConnectedToAnyOtherCharitiesController.onSubmit(mode)
+                )
+              )
+            )
+          } else {
+            saveService
+              .save(
+                RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(newAnswer)
+              )
+              .map(_ =>
+                Redirect(
+                  ConnectedToAnyOtherCharitiesController.nextPage(newAnswer, mode, previousAnswer)
+                )
+              )
+          }
+        }
       )
-  }
+
+  def handleUpdateConfirmationSubmit(mode: Mode)(implicit request: DataRequest[AnyContent]) =
+    confirmUpdateForm
+      .bindFromRequest()
+      .fold(
+        formWithErrors =>
+          Future.successful(
+            BadRequest(
+              updateRepaymentClaimView(
+                formWithErrors,
+                routes.ConnectedToAnyOtherCharitiesController.onSubmit(mode)
+              )
+            )
+          ),
+        {
+          case true =>
+            val previousAnswer = RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities
+
+            saveService
+              .save(
+                RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(false)
+              )
+              .map(_ =>
+                Redirect(
+                  ConnectedToAnyOtherCharitiesController.nextPage(false, mode, previousAnswer)
+                )
+              )
+
+          case false =>
+            Future.successful(Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad))
+        }
+      )
 }
 
 object ConnectedToAnyOtherCharitiesController {
@@ -74,7 +135,5 @@ object ConnectedToAnyOtherCharitiesController {
       // CheckMode
       case (_, CheckMode, _)  =>
         routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
-
     }
-
 }

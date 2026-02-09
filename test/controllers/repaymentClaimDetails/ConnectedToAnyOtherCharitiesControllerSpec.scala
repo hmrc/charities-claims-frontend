@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,12 @@ import views.html.ConnectedToAnyOtherCharitiesView
 
 class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
   private val form: Form[Boolean] = new YesNoFormProvider()()
+
   "ConnectedToAnyOtherCharitiesController" - {
+
     "onPageLoad" - {
-      "should render the page correctly setClaimingUnderGiftAidSmallDonationsScheme is true" in {
+
+      "should render the page correctly when setClaimingUnderGiftAidSmallDonationsScheme is true" in {
         val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -63,7 +66,6 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
       }
 
       "should render the page and pre-populate correctly with true value when setClaimingUnderGiftAidSmallDonationsScheme is true" in {
-
         val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
         val sessionData           = RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(true)(using
           sessionDataUnderGASDS
@@ -83,8 +85,7 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render the page and pre-populate correctly with false value when setClaimingUnderGiftAidSmallDonationsScheme is true" in {
-
+      "should render the page and pre-populate correctly with false value" in {
         val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
         val sessionData           = RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(false)(using
           sessionDataUnderGASDS
@@ -106,7 +107,10 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
-      "should redirect to the next page when the value is true" in {
+
+      // Normal Mode Tests:
+
+      "normalMode: should redirect to ClaimingReferenceNumberController when the value is true" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
@@ -123,7 +127,7 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to the next page when the value is false" in {
+      "normalMode: should redirect to ClaimingReferenceNumberController when the value is false" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
@@ -140,41 +144,7 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to the cya when the value is true if coming from CYA" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(CheckMode).url)
-              .withFormUrlEncodedBody("value" -> "true")
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
-          )
-        }
-      }
-
-      "should redirect to the cya when the value is false if coming from CYA" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(CheckMode).url)
-              .withFormUrlEncodedBody("value" -> "false")
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
-          )
-        }
-      }
-
-      "should reload the page with errors when a required field is missing" in {
+      "normalMode: should reload the page with errors when a required field is missing" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -185,6 +155,268 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual BAD_REQUEST
+        }
+      }
+
+      "normalMode: should NOT show WRN3 confirmation when submitting in NormalMode" in {
+        val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData           = RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(true)(using
+          sessionDataUnderGASDS
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      // Check Mode Tests:
+
+      "checkMode: should redirect to CYA when the value is true" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "checkMode: should redirect to CYA when the value is false" in {
+        given application: Application = applicationBuilder().mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "checkMode: should redirect to CYA when the value is changed from false to true" in {
+        val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData           = RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(false)(using
+          sessionDataUnderGASDS
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "checkMode: should redirect to CYA when the value is not changed from false" in {
+        val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData           = RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(false)(using
+          sessionDataUnderGASDS
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "checkMode: should show WRN3 confirmation when the value is changed from true to false" in {
+        val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData           = RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(true)(using
+          sessionDataUnderGASDS
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual OK
+          contentAsString(result) should include("Do you want to update this repayment claim?")
+        }
+      }
+
+      "checkMode: should redirect to CYA when the value is not changed from true" in {
+        val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData           = RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(true)(using
+          sessionDataUnderGASDS
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "checkMode: should show WRN3 confirmation view when changing Yes to No in CheckMode" in {
+        val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData           = RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(true)(using
+          sessionDataUnderGASDS
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual OK
+          contentAsString(result) should include("Do you want to update this repayment claim?")
+          contentAsString(result) should include("confirmingUpdate")
+        }
+      }
+
+      // WRN3 Confirmation Screen Tests:
+
+      "WRN3: should NOT show confirmation when changing No to Yes in CheckMode" in {
+        val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData           = RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(false)(using
+          sessionDataUnderGASDS
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "WRN3: should redirect to CYA without saving when user selects No on WRN3" in {
+        val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData           = RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(true)(using
+          sessionDataUnderGASDS
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody(
+                "confirmingUpdate" -> "true",
+                "value"            -> "false"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "WRN3: should save and redirect to CYA when user selects Yes on WRN3" in {
+        val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData           = RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(true)(using
+          sessionDataUnderGASDS
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody(
+                "confirmingUpdate" -> "true",
+                "value"            -> "true"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "WRN3: should show errors when no radio selected on confirmation screen" in {
+        val sessionDataUnderGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData           = RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(true)(using
+          sessionDataUnderGASDS
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody(
+                "confirmingUpdate" -> "true"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual BAD_REQUEST
+          contentAsString(result) should include("Do you want to update this repayment claim?")
+          contentAsString(result) should include("Select ‘Yes’ if you want to update this repayment claim")
         }
       }
     }

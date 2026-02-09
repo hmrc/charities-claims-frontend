@@ -39,7 +39,7 @@ class CheckBoxListFormProvider @Inject() extends Mappings {
       claimingTaxDeducted = values.contains(claimingTaxDeducted.toString)
     )
 
-  private def toSet(repaymentClaimType: RepaymentClaimType): Set[String] =
+  def toSet(repaymentClaimType: RepaymentClaimType): Set[String] =
     Set(
       Option.when(repaymentClaimType.claimingGiftAid)(claimingGiftAid.toString),
       Option.when(repaymentClaimType.claimingUnderGiftAidSmallDonationsScheme)(
