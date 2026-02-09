@@ -33,15 +33,14 @@ import models.Mode.*
 class ClaimingCommunityBuildingDonationsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: ClaimingCommunityBuildingDonationsView,
-  confirmationView: UpdateRepaymentClaimView,
+  updateRepaymentClaimView: UpdateRepaymentClaimView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("claimingCommunityBuildingDonations.error.required")
-
+  val form: Form[Boolean]              = formProvider("claimingCommunityBuildingDonations.error.required")
   val confirmUpdateForm: Form[Boolean] = formProvider("updateRepaymentClaim.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
@@ -55,13 +54,13 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if (isConfirmingUpdate) {
-      handleUpdateConfirmationSubmission(mode)
+      handleUpdateConfirmationSubmit(mode)
     } else {
-      handleQuestionSubmission(mode)
+      handleQuestionSubmit(mode)
     }
   }
 
-  def handleQuestionSubmission(mode: Mode)(implicit request: DataRequest[AnyContent]) =
+  def handleQuestionSubmit(mode: Mode)(implicit request: DataRequest[AnyContent]) =
     form
       .bindFromRequest()
       .fold(
@@ -74,7 +73,7 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
           if (needsUpdateConfirmation(mode, previousAnswer, newAnswer)) {
             Future.successful(
               Ok(
-                confirmationView(
+                updateRepaymentClaimView(
                   confirmUpdateForm,
                   routes.ClaimingCommunityBuildingDonationsController.onSubmit(mode)
                 )
@@ -101,14 +100,14 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
         }
       )
 
-  def handleUpdateConfirmationSubmission(mode: Mode)(implicit request: DataRequest[AnyContent]) =
+  def handleUpdateConfirmationSubmit(mode: Mode)(implicit request: DataRequest[AnyContent]) =
     confirmUpdateForm
       .bindFromRequest()
       .fold(
         formWithErrors =>
           Future.successful(
             BadRequest(
-              confirmationView(
+              updateRepaymentClaimView(
                 formWithErrors,
                 routes.ClaimingCommunityBuildingDonationsController.onSubmit(mode)
               )

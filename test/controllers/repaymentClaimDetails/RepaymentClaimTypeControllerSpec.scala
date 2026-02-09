@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,6 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
       }
 
       "should render the page and pre-populate correctly with all checked" in {
-
         val sessionData =
           RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
 
@@ -85,7 +84,6 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
       }
 
       "should render the page and pre-populate correctly with none checked" in {
-
         val sessionData =
           RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithNoneChecked, Some(dataWithAllChecked))
 
@@ -256,11 +254,12 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
           status(result) shouldEqual BAD_REQUEST
         }
       }
+
       "in CheckMode" - {
-        "old GASDS & new GASDS not defined" in {
+        "old selection with GASDS & new selection with GASDS not defined should show WRN3" in {
           val sessionData                =
             RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithClaimingGiftAidChecked))
-          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -272,15 +271,12 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
             val result = route(application, request).value
 
-            status(result) shouldEqual SEE_OTHER
-            redirectLocation(result) shouldEqual Some(
-              routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
-            )
+            status(result) shouldEqual OK
+            contentAsString(result) should include("Do you want to update this repayment claim?")
           }
         }
 
         "old GASDS not defined & new GASDS is true" in {
-
           given application: Application = applicationBuilder().mockSaveSession.build()
 
           running(application) {
@@ -344,6 +340,7 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
             )
           }
         }
+
         "no change in old and new GASDS" in {
           val sessionData =
             RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
@@ -367,34 +364,220 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
             )
           }
         }
+      }
 
-        "old GASDS is true & new GASDS not defined" in {
-          val sessionGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
-          val sessionData  =
-            RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))(using
-              sessionGASDS
-            )
+      // WRN3 Confirmation Screen Tests:
 
-          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+      "WRN3: should show confirmation when changing claimingGiftAid from Yes to No in CheckMode" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
 
-          running(application) {
-            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-              FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(CheckMode).url)
-                .withFormUrlEncodedBody(
-                  "value[0]" -> "claimingGiftAid",
-                  "value[2]" -> "claimingTaxDeducted"
-                )
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-            val result = route(application, request).value
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody(
+                "value[1]" -> "claimingUnderGiftAidSmallDonationsScheme",
+                "value[2]" -> "claimingTaxDeducted"
+              )
 
-            status(result) shouldEqual SEE_OTHER
-            redirectLocation(result) shouldEqual Some(
-              routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
-            )
-          }
+          val result = route(application, request).value
+
+          status(result) shouldEqual OK
+          contentAsString(result) should include("Do you want to update this repayment claim?")
+          contentAsString(result) should include("confirmingUpdate")
+        }
+      }
+
+      "WRN3: should show confirmation when changing claimingTaxDeducted from Yes to No in CheckMode" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody(
+                "value[0]" -> "claimingGiftAid",
+                "value[1]" -> "claimingUnderGiftAidSmallDonationsScheme"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual OK
+          contentAsString(result) should include("Do you want to update this repayment claim?")
+          contentAsString(result) should include("confirmingUpdate")
+        }
+      }
+
+      "WRN3: should show confirmation when changing claimingUnderGiftAidSmallDonationsScheme from Yes to No in CheckMode" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody(
+                "value[0]" -> "claimingGiftAid",
+                "value[2]" -> "claimingTaxDeducted"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual OK
+          contentAsString(result) should include("Do you want to update this repayment claim?")
+          contentAsString(result) should include("confirmingUpdate")
+        }
+      }
+
+      "WRN3: should NOT show confirmation when changing No to Yes in CheckMode" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setRepaymentClaimType(
+            dataWithClaimingGiftAidChecked,
+            Some(dataWithClaimingGiftAidChecked)
+          )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody(
+                "value[0]" -> "claimingGiftAid",
+                "value[1]" -> "claimingUnderGiftAidSmallDonationsScheme"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(CheckMode).url
+          )
+        }
+      }
+
+      "WRN3: should NOT show confirmation when answer unchanged in CheckMode" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody(
+                "value[0]" -> "claimingGiftAid",
+                "value[1]" -> "claimingUnderGiftAidSmallDonationsScheme",
+                "value[2]" -> "claimingTaxDeducted"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "WRN3: should NOT show confirmation in NormalMode when unchecking selection" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody(
+                "value[0]" -> "claimingGiftAid"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "WRN3: should save updated values and redirect to CYA when user confirms Yes on WRN3" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody(
+                "confirmingUpdate" -> "true",
+                "value"            -> "true",
+                "value[]"          -> "claimingGiftAid",
+                "value[]"          -> "claimingTaxDeducted"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "WRN3: should redirect to CYA without saving when user selects No on WRN3" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody(
+                "confirmingUpdate" -> "true",
+                "value"            -> "false",
+                "value[]"          -> "claimingGiftAid",
+                "value[]"          -> "claimingTaxDeducted"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "WRN3: should show errors when no radio selected on confirmation screen" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.RepaymentClaimTypeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody(
+                "confirmingUpdate" -> "true",
+                "value[]"          -> "claimingGiftAid",
+                "value[]"          -> "claimingTaxDeducted"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual BAD_REQUEST
+          contentAsString(result) should include("Do you want to update this repayment claim?")
+          contentAsString(result) should include("Select ‘Yes’ if you want to update this repayment claim")
         }
       }
     }
   }
-
 }
