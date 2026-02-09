@@ -24,7 +24,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[Boolean], submitAction: Call)(implicit request: Request[?], messages: Messages)
+@(form: Form[Boolean], submitAction: Call, repaymentClaimTypeValues: Seq[String] = Seq.empty)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = title(form, messages("updateRepaymentClaim.title"))
@@ -39,6 +39,10 @@
     @formHelper(action = submitAction, Symbol("autoComplete") -> "off") {
 
         <input type="hidden" name="confirmingUpdate" value="true">
+
+        @for(checkboxValue <- repaymentClaimTypeValues) {
+            <input type="hidden" name="value[]" value="@checkboxValue">
+        }
 
         @govukRadios(
             RadiosViewModel.yesNo(

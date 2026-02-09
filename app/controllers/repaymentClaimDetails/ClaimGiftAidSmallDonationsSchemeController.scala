@@ -25,65 +25,135 @@ import models.{Mode, RepaymentClaimDetailsAnswers}
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
-import views.html.ClaimGiftAidSmallDonationsSchemeView
+import views.html.{ClaimGiftAidSmallDonationsSchemeView, UpdateRepaymentClaimView}
 import models.Mode.*
-
+import models.requests.DataRequest
 import scala.concurrent.{ExecutionContext, Future}
 
 class ClaimGiftAidSmallDonationsSchemeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: ClaimGiftAidSmallDonationsSchemeView,
+  updateRepaymentClaimView: UpdateRepaymentClaimView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("claimGASDS.error.required")
+  val form: Form[Boolean]              = formProvider("claimGASDS.error.required")
+  val confirmUpdateForm: Form[Boolean] = formProvider("updateRepaymentClaim.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) then {
       val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
       Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
-    } else { Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad)) }
-
+    } else {
+      Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+    }
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val previousAnswer   = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
-    val nextScreenAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
+    if (isConfirmingUpdate) {
+      handleUpdateConfirmationSubmit(mode)
+    } else {
+      handleQuestionSubmit(mode)
+    }
+  }
+
+  def handleQuestionSubmit(mode: Mode)(implicit request: DataRequest[AnyContent]) =
     form
       .bindFromRequest()
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveService
-            .save(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(value, nextScreenAnswer))
-            .map(_ => Redirect(ClaimGiftAidSmallDonationsSchemeController.nextPage(value, mode, previousAnswer)))
+        newAnswer => {
+          val previousAnswer   = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
+          val nextScreenAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
+
+          if (needsUpdateConfirmation(mode, previousAnswer, newAnswer)) {
+            Future.successful(
+              Ok(
+                updateRepaymentClaimView(
+                  confirmUpdateForm,
+                  routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(mode)
+                )
+              )
+            )
+          } else {
+            saveService
+              .save(
+                RepaymentClaimDetailsAnswers
+                  .setClaimingDonationsNotFromCommunityBuilding(newAnswer, nextScreenAnswer)
+              )
+              .map(_ =>
+                Redirect(
+                  ClaimGiftAidSmallDonationsSchemeController.nextPage(
+                    newAnswer,
+                    mode,
+                    previousAnswer
+                  )
+                )
+              )
+          }
+        }
       )
-  }
+
+  def handleUpdateConfirmationSubmit(mode: Mode)(implicit request: DataRequest[AnyContent]) =
+    confirmUpdateForm
+      .bindFromRequest()
+      .fold(
+        formWithErrors =>
+          Future.successful(
+            BadRequest(
+              updateRepaymentClaimView(
+                formWithErrors,
+                routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(mode)
+              )
+            )
+          ),
+        {
+          case true =>
+            val previousAnswer   = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
+            val nextScreenAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
+
+            saveService
+              .save(
+                RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false, nextScreenAnswer)
+              )
+              .map(_ =>
+                Redirect(
+                  ClaimGiftAidSmallDonationsSchemeController.nextPage(
+                    false,
+                    mode,
+                    previousAnswer
+                  )
+                )
+              )
+
+          case false =>
+            Future.successful(Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad))
+        }
+      )
 }
 
 object ClaimGiftAidSmallDonationsSchemeController {
 
   def nextPage(value: Boolean, mode: Mode, previousAnswer: Option[Boolean]): Call =
     (value, mode, previousAnswer) match {
-      // NormalMode
-      case (_, NormalMode, _)                                =>
+
+      // NormalMode: User answered Yes or No
+      case (_, NormalMode, _)                                            =>
         routes.ClaimingCommunityBuildingDonationsController.onPageLoad(NormalMode)
 
-      // CheckMode: new data
-      case (_, CheckMode, None)                              =>
+      // CheckMode: New data
+      case (_, CheckMode, None)                                          =>
         routes.ClaimingCommunityBuildingDonationsController.onPageLoad(CheckMode)
 
-      // CheckMode: new value diff to old value
-      case (newVal, CheckMode, Some(prev)) if newVal != prev =>
+      // CheckMode: New value diff to old value
+      case (newVal, CheckMode, Some(prevAnswer)) if newVal != prevAnswer =>
         routes.ClaimingCommunityBuildingDonationsController.onPageLoad(CheckMode)
 
-      // CheckMode
-      case (_, CheckMode, _)                                 =>
+      // CheckMode: Answer unchanged
+      case (_, CheckMode, _)                                             =>
         routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
-
     }
-
 }
