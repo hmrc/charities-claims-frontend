@@ -21,9 +21,9 @@ import models.*
 object TestScheduleData {
 
   val exampleGiftAidScheduleData: GiftAidScheduleData = GiftAidScheduleData(
-    earliestDonationDate = "2025-01-01",
+    earliestDonationDate = Some("2025-01-01"),
     prevOverclaimedGiftAid = Some(2000.00),
-    totalDonations = 1000.00,
+    totalDonations = Some(1000.00),
     donations = Seq(
       Donation(donationItem = Some(1), donationDate = "2025-01-01", donationAmount = 1000.00),
       Donation(donationItem = Some(2), donationDate = "2025-01-02", donationAmount = 2000.00),

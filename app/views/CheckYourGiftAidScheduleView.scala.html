@@ -16,22 +16,30 @@
 
 @import controllers.giftAidSchedule.routes
 @import models.*
+@import views.html.components.*
+@import viewmodels.govuk.PaginationFluency.*
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukButton: GovukButton,
-    govukErrorSummary: GovukErrorSummary
+    govukErrorSummary: GovukErrorSummary,
+    pageNavigator: PageNavigator
 )
 
 @(
     claimId: String,
-    giftAidScheduleData: GiftAidScheduleData
+    giftAidScheduleData: GiftAidScheduleData,
+    paginationViewModel: PaginationViewModel
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("checkYourGiftAidSchedule.title")), 
     showBackLink = true
 ) {
+
+    
+    
+    @pageNavigator(paginationViewModel)
     
 }
