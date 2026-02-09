@@ -69,6 +69,7 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
         newAnswer => {
           val previousAnswer   = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
           val prevScreenAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
+          val nextScreenAnswer = RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim
 
           if (needsUpdateConfirmation(mode, previousAnswer, newAnswer)) {
             Future.successful(
@@ -91,7 +92,8 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
                     newAnswer,
                     mode,
                     prevScreenAnswer,
-                    previousAnswer
+                    previousAnswer,
+                    nextScreenAnswer
                   )
                 )
               )
@@ -116,6 +118,7 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
           case true =>
             val previousAnswer   = RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
             val prevScreenAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
+            val nextScreenAnswer = RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim
 
             saveService
               .save(
@@ -127,7 +130,8 @@ class ClaimingCommunityBuildingDonationsController @Inject() (
                     false,
                     mode,
                     prevScreenAnswer,
-                    previousAnswer
+                    previousAnswer,
+                    nextScreenAnswer
                   )
                 )
               )
@@ -144,12 +148,9 @@ object ClaimingCommunityBuildingDonationsController {
     value: Boolean,
     mode: Mode,
     prevScreenAnswer: Option[Boolean],
-    previousAnswer: Option[Boolean]
-  )(using request: DataRequest[?]): Call = {
-
-    val connectedToAnyOtherCharities =
-      request.sessionData.repaymentClaimDetailsAnswers.flatMap(_.connectedToAnyOtherCharities)
-
+    previousAnswer: Option[Boolean],
+    nextScreenAnswer: Option[Boolean]
+  ): Call =
     (value, mode, previousAnswer) match {
 
       // NormalMode: User answered Yes
@@ -172,18 +173,19 @@ object ClaimingCommunityBuildingDonationsController {
 
       // CheckMode: Answer unchanged yes
       case (true, CheckMode, Some(true)) =>
-        routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+        if nextScreenAnswer.isDefined then routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+        else routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
+
+      case (false, CheckMode, Some(false)) =>
+        if prevScreenAnswer.contains(true) && nextScreenAnswer.isEmpty
+        then routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
+        else routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 
       // CheckMode: Other scenarios
-      case (newVal, CheckMode, prev)     =>
-        // Change to No & R1.2 and R1.3 are No & ConnectedCharities not answered
-        if !newVal && prev.contains(false) && prevScreenAnswer.contains(false) &&
-          connectedToAnyOtherCharities.isEmpty
-        then routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
-        // Yes OR R1.2 is Yes
-        else if newVal || prevScreenAnswer.contains(true) then
+      case (newVal, CheckMode, _)          =>
+        // checking if answer has changed from yes -> No or no->yes, and if prev screen (R1.2) is true
+        if newVal || prevScreenAnswer.contains(true) then
           routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
         else routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
     }
-  }
 }

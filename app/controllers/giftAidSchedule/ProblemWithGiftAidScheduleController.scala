@@ -21,15 +21,15 @@ import play.api.mvc.*
 import com.google.inject.Inject
 import connectors.ClaimsValidationConnector
 import controllers.BaseController
-import views.html.YourGifAidScheduleUploadView
+import views.html.ProblemWithGiftAidScheduleView
 import controllers.actions.Actions
 import models.*
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class YourGiftAidScheduleUploadController @Inject() (
+class ProblemWithGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: YourGifAidScheduleUploadView,
+  view: ProblemWithGiftAidScheduleView,
   actions: Actions,
   claimsValidationConnector: ClaimsValidationConnector
 )(using ec: ExecutionContext)
@@ -51,27 +51,13 @@ class YourGiftAidScheduleUploadController @Inject() (
             claimsValidationConnector
               .getUploadResult(claimId, fileUploadReference)
               .map {
-                case uploadResult: GetUploadResultAwaitingUpload =>
-                  Ok(view(claimId = claimId, uploadResult = uploadResult, failureDetails = None))
-
-                case uploadResult: GetUploadResultVeryfying =>
-                  Ok(view(claimId = claimId, uploadResult = uploadResult, failureDetails = None))
-
-                case uploadResult: GetUploadResultValidating =>
-                  Ok(view(claimId = claimId, uploadResult = uploadResult, failureDetails = None))
-
-                case uploadResult @ GetUploadResultVeryficationFailed(reference, validationType, failureDetails) =>
-                  Ok(view(claimId = claimId, uploadResult = uploadResult, failureDetails = Some(failureDetails)))
-
-                case _: GetUploadResultValidatedGiftAid =>
-                  Redirect(routes.CheckYourGiftAidScheduleController.onPageLoad)
-
-                case _: GetUploadResultValidationFailedGiftAid =>
-                  Redirect(routes.ProblemWithGiftAidScheduleController.onPageLoad)
+                case GetUploadResultValidationFailedGiftAid(reference, giftAidScheduleData, errors) =>
+                  Ok(view(claimId = claimId, giftAidScheduleData = giftAidScheduleData, errors = errors))
 
                 case _ =>
-                  // strange case, but we need to handle it
-                  Redirect(routes.UploadGiftAidScheduleController.onPageLoad)
+                  // In case of any other upload result, we need to redirect to the /your-gift-aid-schedule-upload page,
+                  // which in turn will redirect to the right page based on the upload result
+                  Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad)
               }
         }
     }

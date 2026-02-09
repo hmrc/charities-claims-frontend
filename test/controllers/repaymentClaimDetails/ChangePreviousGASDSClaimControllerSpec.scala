@@ -173,7 +173,44 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
         }
       }
 
-      "checkmode: should redirect to CYA if coming from CYA when the value is true" in {
+      "checkmode: should redirect to CYA if coming from CYA when the value is true and not change" in {
+        val sessionData                = RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ChangePreviousGASDSClaimController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "checkmode: should redirect to CYA if coming from CYA when the value is false and not change" in {
+        val sessionData = RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(false)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ChangePreviousGASDSClaimController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "checkmode: should redirect to connectedToAnyOtherCharities if coming from CYA when the value is true" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
@@ -190,7 +227,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
         }
       }
 
-      "checkmode: should redirect to CYA if coming from CYA when the value is false" in {
+      "checkmode: should redirect to connectedToAnyOtherCharities if coming from CYA when the value is false" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
