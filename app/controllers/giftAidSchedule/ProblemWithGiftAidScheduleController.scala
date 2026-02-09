@@ -26,6 +26,7 @@ import controllers.actions.Actions
 import models.*
 
 import scala.concurrent.{ExecutionContext, Future}
+import services.PaginationService
 
 class ProblemWithGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -52,7 +53,20 @@ class ProblemWithGiftAidScheduleController @Inject() (
               .getUploadResult(claimId, fileUploadReference)
               .map {
                 case GetUploadResultValidationFailedGiftAid(reference, giftAidScheduleData, errors) =>
-                  Ok(view(claimId = claimId, giftAidScheduleData = giftAidScheduleData, errors = errors))
+                  val currentPage      = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
+                  val paginationResult = PaginationService.paginateValidationErrors(
+                    allErrors = errors,
+                    currentPage = currentPage,
+                    baseUrl = routes.ProblemWithGiftAidScheduleController.onPageLoad.url
+                  )
+                  Ok(
+                    view(
+                      claimId = claimId,
+                      giftAidScheduleData = giftAidScheduleData,
+                      errors = errors,
+                      paginationViewModel = paginationResult.paginationViewModel
+                    )
+                  )
 
                 case _ =>
                   // In case of any other upload result, we need to redirect to the /your-gift-aid-schedule-upload page,
