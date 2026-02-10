@@ -45,9 +45,8 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
 
     "checkUnregulatedLimit" - {
 
-      "should return None when reasonNotRegisteredWithRegulator is None" in {
-        // user has a regulator - no limit check required
-        val sessionData = SessionData.empty(testCharitiesReference)
+      "should return None when reasonNotRegisteredWithRegulator is None, user has regulator, no limit check needed" in {
+        val sessionData                        = SessionData.empty(testCharitiesReference)
         given request: DataRequest[AnyContent] =
           DataRequest(FakeRequest(), sessionData)
 
@@ -86,6 +85,7 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
 
       "when charity reason is LowIncome" - {
 
+        // TODO: TBC
         "should return None when total donations are under the limit" in {
           (mockConnector
             .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
@@ -102,8 +102,6 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
 
           val result = await(service.checkUnregulatedLimit)
 
-          // TODO: update this test when getCurrentClaimDonationsTotal is ready
-          // currently returns None because placeholder returns 0, so 0 + 1000 < 5000
           result shouldEqual None
         }
 
@@ -127,6 +125,7 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
           result shouldEqual Some(UnregulatedLimitExceeded(5000, "5,000"))
         }
 
+        // TODO: TBC
         "should handle when connector returns None (no existing unregulated donations)" in {
           (mockConnector
             .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
@@ -143,7 +142,6 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
 
           val result = await(service.checkUnregulatedLimit)
 
-          // TODO: Update when getCurrentClaimDonationsTotal is ready
           // currently 0 + 0 = 0, which is under 5000
           result shouldEqual None
         }
@@ -194,6 +192,74 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
 
           result shouldEqual Some(UnregulatedLimitExceeded(100000, "100,000"))
         }
+      }
+    }
+
+    // getApplicableLimit tests
+
+    "getApplicableLimit" - {
+
+      "should return formatted LowIncome limit (5,000) for LowIncome charity" in {
+        val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
+          ReasonNotRegisteredWithRegulator.LowIncome
+        )(using SessionData.empty(testCharitiesReference))
+
+        given request: DataRequest[AnyContent] =
+          DataRequest(FakeRequest(), sessionData)
+
+        val result = service.getApplicableLimit
+
+        result shouldEqual Some("5,000")
+      }
+
+      "should return formatted Excepted limit (100,000) for Excepted charity" in {
+        val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
+          ReasonNotRegisteredWithRegulator.Excepted
+        )(using SessionData.empty(testCharitiesReference))
+
+        given request: DataRequest[AnyContent] =
+          DataRequest(FakeRequest(), sessionData)
+
+        val result = service.getApplicableLimit
+
+        result shouldEqual Some("100,000")
+      }
+
+      "should return None for Exempt charity" in {
+        val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
+          ReasonNotRegisteredWithRegulator.Exempt
+        )(using SessionData.empty(testCharitiesReference))
+
+        given request: DataRequest[AnyContent] =
+          DataRequest(FakeRequest(), sessionData)
+
+        val result = service.getApplicableLimit
+
+        result shouldEqual None
+      }
+
+      "should return None for Waiting charity" in {
+        val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
+          ReasonNotRegisteredWithRegulator.Waiting
+        )(using SessionData.empty(testCharitiesReference))
+
+        given request: DataRequest[AnyContent] =
+          DataRequest(FakeRequest(), sessionData)
+
+        val result = service.getApplicableLimit
+
+        result shouldEqual None
+      }
+
+      "should return None when reasonNotRegisteredWithRegulator is not set" in {
+        val sessionData = SessionData.empty(testCharitiesReference)
+
+        given request: DataRequest[AnyContent] =
+          DataRequest(FakeRequest(), sessionData)
+
+        val result = service.getApplicableLimit
+
+        result shouldEqual None
       }
     }
 

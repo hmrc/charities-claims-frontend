@@ -16,44 +16,74 @@
 
 package controllers
 
-import config.FrontendAppConfig
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
+import models.{OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator, SessionData}
 import play.api.Application
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
-import views.html.RegisterCharityWithARegulatorView
 
 class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
 
   val form: Form[Boolean] = new YesNoFormProvider()()
 
+  val sessionDataLowIncome: SessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
+    ReasonNotRegisteredWithRegulator.LowIncome
+  )(using SessionData.empty(testCharitiesReference))
+
+  val sessionDataExcepted: SessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
+    ReasonNotRegisteredWithRegulator.Excepted
+  )(using SessionData.empty(testCharitiesReference))
+
   "RegisterCharityWithARegulatorController" - {
     "onPageLoad" - {
-      "should render the page correctly" in {
+      "should render the page with LowIncome limit (£5,000) for LowIncome charity" in {
+        given application: Application = applicationBuilder(sessionData = sessionDataLowIncome).build()
 
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RegisterCharityWithARegulatorController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result)        shouldBe OK
+          contentAsString(result) should include("5,000")
+        }
+      }
+
+      "should render the page with Excepted limit (£100,000) for Excepted charity" in {
+        given application: Application = applicationBuilder(sessionData = sessionDataExcepted).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RegisterCharityWithARegulatorController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result)        shouldBe OK
+          contentAsString(result) should include("100,000")
+        }
+      }
+
+      "should render the page with default limit (£100,000) when charity type is not set" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.RegisterCharityWithARegulatorController.onPageLoad.url)
 
-          val result    = route(application, request).value
-          val view      = application.injector.instanceOf[RegisterCharityWithARegulatorView]
-          val appConfig = application.injector.instanceOf[FrontendAppConfig]
+          val result = route(application, request).value
 
-          val formattedLimit = java.text.DecimalFormat("#,###").format(appConfig.exceptedLimit)
-
-          status(result)          shouldBe OK
-          contentAsString(result) shouldBe view(appConfig.registerCharityWithARegulatorUrl, formattedLimit)(form).body
+          status(result)        shouldBe OK
+          contentAsString(result) should include("100,000")
         }
       }
     }
 
     "onSubmit" - {
       "should reload the page with errors when a required field is missing" in {
-        given application: Application = applicationBuilder().build()
+        given application: Application = applicationBuilder(sessionData = sessionDataExcepted).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -66,9 +96,8 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      // TODO: Update test when D3 screen route is completed (currently redirects to placeholder /declaration-details-confirmation)
-      "should redirect to D3 screen when no is selected" in {
-        given application: Application = applicationBuilder().build()
+      "should redirect to D3 screen when No is selected" in {
+        given application: Application = applicationBuilder(sessionData = sessionDataExcepted).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -82,8 +111,8 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to R2 when yes is selected" in {
-        given application: Application = applicationBuilder().build()
+      "should redirect to R2 (Claims Task List) when Yes is selected" in {
+        given application: Application = applicationBuilder(sessionData = sessionDataExcepted).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -98,19 +127,6 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
           )
         }
       }
-
-      // TODO: Add more tests when F9 is implemented:
-
-      // TODO: add test to check if under limit
-
-      // TODO: add test to check if over high limit and is 'excepted and over £100k'
-
-      // TODO: add test to check if over lower limit and is 'England & Wales regulated and over £5k'
-
-      // TODO: add test to check if exactly at limit
-
-      // TODO: check if no response from backend when checking F9
-
     }
   }
 }
