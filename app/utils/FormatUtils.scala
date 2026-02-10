@@ -24,10 +24,14 @@ import play.api.i18n.Messages
 
 object FormatUtils {
 
-  lazy val gdsFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+  lazy val gdsFormatter: DateTimeFormatter           = DateTimeFormatter.ofPattern("d MMMM yyyy")
+  lazy val gdsShortMonthFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM yyyy")
 
   def formatDateToGds(localDate: LocalDate): String =
     localDate.format(gdsFormatter)
+
+  def formatDateToGdsShortMonth(localDate: LocalDate): String =
+    localDate.format(gdsShortMonthFormatter)
 
   def formatAmount(amount: BigDecimal): String = {
     val currencyFormatter = NumberFormat.getCurrencyInstance(Locale.UK)
@@ -35,7 +39,8 @@ object FormatUtils {
   }
 
   extension (localDate: LocalDate) {
-    def toGdsDateString: String = formatDateToGds(localDate)
+    def toGdsDateString: String           = formatDateToGds(localDate)
+    def toGdsShortMonthDateString: String = formatDateToGdsShortMonth(localDate)
   }
 
   extension (amount: BigDecimal) {
@@ -43,7 +48,8 @@ object FormatUtils {
   }
 
   extension (string: String) {
-    def toGdsDateString: String = formatDateToGds(LocalDate.parse(string))
+    def toGdsDateString: String           = formatDateToGds(LocalDate.parse(string))
+    def toGdsShortMonthDateString: String = formatDateToGdsShortMonth(LocalDate.parse(string))
   }
 
   extension (boolean: Boolean) {

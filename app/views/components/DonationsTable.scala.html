@@ -45,9 +45,9 @@
                 TableRow(content = Text(donation.donorPostcode.getOrElse(messages("data.notApplicable")))),
                 TableRow(content = Text(donation.aggregatedDonations.getOrElse(messages("data.notApplicable")))),
                 TableRow(content = Text(donation.sponsoredEvent.map(_.toYesNoString).getOrElse(messages("data.notApplicable")))),
-                TableRow(content = Text(donation.donationDate.toString)),
+                TableRow(content = Text(donation.donationDate.toGdsShortMonthDateString)),
                 TableRow(content = Text(donation.donationAmount.toAmountString))
             )
         }
     )
-)
+)   
