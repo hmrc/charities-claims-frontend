@@ -141,7 +141,8 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should redirect to Declaration page when in NormalMode" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -158,7 +159,8 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
       }
 
       "should redirect back to CYA page when in CheckMode" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -175,7 +177,8 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
       }
 
       "should reload the page with errors when a required field is missing" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -185,6 +188,41 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual BAD_REQUEST
+        }
+      }
+
+      "should redirect to page not found when claimingReferenceNumber is false" in {
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(false)
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "123456")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.PageNotFoundController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect to page not found when claimingReferenceNumber is None" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "123456")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.PageNotFoundController.onPageLoad.url
+          )
         }
       }
     }

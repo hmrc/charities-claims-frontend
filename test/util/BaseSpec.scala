@@ -93,6 +93,11 @@ abstract class BaseSpec
           |  accessibilityStatementUrl = "http://foo.com/accessibility-statement"
           |  betaFeedbackUrl = "http://foo.com/beta-feedback"
           |  researchUrl = "http://foo.com/research"
+          |  charityRepaymentDashboardUrl = "http://foo.com/charity-repayment-dashboard"
+          |  accountUrl = "http://foo.com/account"
+          |  makeCharityRepaymentClaimUrl = "http://foo.com/make-a-charity-repayment-claim"
+          |  registerCharityWithARegulatorUrl = "http://foo.com/register-charity"
+          |  giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl = "http://foo.com/gift-aid-schedule"
           | }
           |
           | enableLanguageSwitching = true  
@@ -102,6 +107,19 @@ abstract class BaseSpec
           |   countdown = 5
           | }
           | agentUnsubmittedClaimLimit = 3
+          |
+          | unregulated-limits {
+          |   lowIncomeLimit = 5000
+          |   exceptedLimit = 100000
+          | }
+          |
+          | scheduleUpload {
+          |   gifAid {
+          |     maxSize = 2621440
+          |     filePickerAcceptFilter = ".ods,application/vnd.oasis.opendocument.spreadsheet"
+          |     allowedFileTypesHint = ".ods"
+          |   }
+          | }
           |""".stripMargin
       )
     )

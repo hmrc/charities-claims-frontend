@@ -47,7 +47,7 @@ class AuthLoginStubControllerSpec extends ControllerSpec {
 
           contentAsString(result) shouldEqual view(
             userId = "1234567890",
-            continueUrl = "http://localhost:8030/charities-claims",
+            continueUrl = "http://localhost:8033/charities-management/charity-repayment-dashboard",
             postAction = Call("POST", "http://localhost:9949/auth-login-stub/gg-sign-in")
           ).body
         }

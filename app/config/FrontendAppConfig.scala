@@ -35,6 +35,7 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
   lazy val betaFeedbackUrl: String                                         = config.get[String]("urls.betaFeedbackUrl")
   lazy val researchUrl: String                                             = config.get[String]("urls.researchUrl")
   lazy val authLoginStubSignInUrl: String                                  = config.get[String]("urls.authLoginStubSignInUrl")
+  lazy val charityRepaymentDashboardUrl: String                            = config.get[String]("urls.charityRepaymentDashboardUrl")
   lazy val accountUrl: String                                              = config.get[String]("urls.accountUrl")
   lazy val makeCharityRepaymentClaimUrl: String                            = config.get[String]("urls.makeCharityRepaymentClaimUrl")
   lazy val registerCharityWithARegulatorUrl: String                        = config.get[String]("urls.registerCharityWithARegulatorUrl")
