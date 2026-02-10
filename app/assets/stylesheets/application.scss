@@ -6,6 +6,7 @@
 .js-visible {
   display: none !important;
 }
+
 .js-enabled .js-visible {
   display: inline-block !important;
 }
@@ -13,4 +14,8 @@
 .character-count-input-wrapper {
   display: inline-block;
   width: 100%;
+}
+
+.custom-summary-list dd {
+  width: 20%
 }

@@ -608,8 +608,8 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
       val mockClaimsService = mock[services.ClaimsService]
       (mockClaimsService
-        .save(using _: models.requests.DataRequest[?], _: uk.gov.hmrc.http.HeaderCarrier))
-        .expects(*, *)
+        .save(using _: uk.gov.hmrc.http.HeaderCarrier))
+        .expects(*)
         .returning(scala.concurrent.Future.failed(UpdatedByAnotherUserException()))
 
       given application: Application =

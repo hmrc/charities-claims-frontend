@@ -16,16 +16,15 @@
 
 package services
 
-import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import util.BaseSpec
 import connectors.ClaimsConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import models.*
-import models.requests.DataRequest
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import repositories.SessionCache
 
 class ClaimsServiceSpec extends BaseSpec {
 
@@ -34,10 +33,10 @@ class ClaimsServiceSpec extends BaseSpec {
   "ClaimsService.save" - {
 
     "create a new claim when there is no unsubmittedClaimId in the session" in {
-      val mockSaveService = mock[SaveService]
-      val mockConnector   = mock[ClaimsConnector]
+      val mockSessionCache = mock[SessionCache]
+      val mockConnector    = mock[ClaimsConnector]
 
-      val service = new ClaimsServiceImpl(mockSaveService, mockConnector)
+      val service = new ClaimsServiceImpl(mockSessionCache, mockConnector)
 
       val repaymentAnswersOld = RepaymentClaimDetailsAnswersOld(
         claimingGiftAid = Some(true),
@@ -61,7 +60,10 @@ class ClaimsServiceSpec extends BaseSpec {
         repaymentClaimDetailsAnswers = Some(repaymentAnswers)
       )
 
-      given DataRequest[?] = DataRequest(FakeRequest(), initialSessionData)
+      (mockSessionCache
+        .get()(using _: HeaderCarrier))
+        .expects(*)
+        .returns(Future.successful(Some(initialSessionData)))
 
       (mockConnector
         .saveClaim(_: RepaymentClaimDetails)(using _: HeaderCarrier))
@@ -75,19 +77,19 @@ class ClaimsServiceSpec extends BaseSpec {
         lastUpdatedReference = Some("0123456789")
       )
 
-      (mockSaveService
-        .save(_: SessionData)(using _: DataRequest[?], _: HeaderCarrier))
-        .expects(expectedSessionData, *, *)
+      (mockSessionCache
+        .store(_: SessionData)(using _: HeaderCarrier))
+        .expects(expectedSessionData, *)
         .returning(Future.successful(()))
 
       await(service.save)
     }
 
     "update an existing claim when there is an unsubmittedClaimId in the session" in {
-      val mockSaveService = mock[SaveService]
-      val mockConnector   = mock[ClaimsConnector]
+      val mockSessionCache = mock[SessionCache]
+      val mockConnector    = mock[ClaimsConnector]
 
-      val service = new ClaimsServiceImpl(mockSaveService, mockConnector)
+      val service = new ClaimsServiceImpl(mockSessionCache, mockConnector)
 
       val repaymentAnswersOld = RepaymentClaimDetailsAnswersOld(
         claimingGiftAid = Some(true),
@@ -103,7 +105,8 @@ class ClaimsServiceSpec extends BaseSpec {
         claimReferenceNumber = Some("1234567890")
       )
 
-      val existingClaimId    = "existing-claim-id"
+      val existingClaimId = "existing-claim-id"
+
       val initialSessionData = SessionData(
         charitiesReference = testCharitiesReference,
         unsubmittedClaimId = Some(existingClaimId),
@@ -112,26 +115,29 @@ class ClaimsServiceSpec extends BaseSpec {
         repaymentClaimDetailsAnswers = Some(repaymentAnswers)
       )
 
-      given DataRequest[?] = DataRequest(FakeRequest(), initialSessionData)
+      (mockSessionCache
+        .get()(using _: HeaderCarrier))
+        .expects(*)
+        .returns(Future.successful(Some(initialSessionData)))
 
       (mockConnector
         .updateClaim(_: String, _: UpdateClaimRequest)(using _: HeaderCarrier))
         .expects(existingClaimId, *, *)
         .returning(Future.successful(UpdateClaimResponse(success = true, lastUpdatedReference = "1234567891")))
 
-      (mockSaveService
-        .save(_: SessionData)(using _: DataRequest[?], _: HeaderCarrier))
-        .expects(initialSessionData.copy(lastUpdatedReference = Some("1234567891")), *, *)
+      (mockSessionCache
+        .store(_: SessionData)(using _: HeaderCarrier))
+        .expects(initialSessionData.copy(lastUpdatedReference = Some("1234567891")), *)
         .returning(Future.successful(()))
 
       await(service.save)
     }
 
     "fail with MissingRequiredFieldsException when required fields are not present" in {
-      val mockSaveService = mock[SaveService]
-      val mockConnector   = mock[ClaimsConnector]
+      val mockSessionCache = mock[SessionCache]
+      val mockConnector    = mock[ClaimsConnector]
 
-      val service = new ClaimsServiceImpl(mockSaveService, mockConnector)
+      val service = new ClaimsServiceImpl(mockSessionCache, mockConnector)
 
       val incompleteAnswersOld = RepaymentClaimDetailsAnswersOld(
         claimingGiftAid = Some(true),
@@ -153,7 +159,10 @@ class ClaimsServiceSpec extends BaseSpec {
         repaymentClaimDetailsAnswers = Some(incompleteAnswers)
       )
 
-      given DataRequest[?] = DataRequest(FakeRequest(), initialSessionData)
+      (mockSessionCache
+        .get()(using _: HeaderCarrier))
+        .expects(*)
+        .returns(Future.successful(Some(initialSessionData)))
 
       an[MissingRequiredFieldsException] should be thrownBy await(service.save)
     }

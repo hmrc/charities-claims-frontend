@@ -39,6 +39,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
   given HeaderCarrier = HeaderCarrier()
 
+  val mockSaveService: SaveService             = mock[SaveService]
   val mockConnector: ClaimsValidationConnector = mock[ClaimsValidationConnector]
 
   val testUploadSummaryWithAll: GetUploadSummaryResponse = GetUploadSummaryResponse(
@@ -119,7 +120,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
     "deleteGiftAidSchedule" - {
 
       "should delete the GiftAid schedule when claimId is present" in {
-        val service          = new ClaimsValidationServiceImpl(mockConnector)
+        val service          = new ClaimsValidationServiceImpl(mockSaveService, mockConnector)
         val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
@@ -133,11 +134,16 @@ class ClaimsValidationServiceSpec extends BaseSpec {
           .expects("test-claim-123", FileUploadReference("gift-aid-ref-123"), *)
           .returning(Future.successful(DeleteScheduleResponse(success = true)))
 
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(sessionData.copy(giftAidScheduleFileUploadReference = None, giftAidScheduleData = None), *)
+          .returning(Future.successful(()))
+
         await(service.deleteGiftAidSchedule)
       }
 
       "should fail when claimId is None" in {
-        val service          = new ClaimsValidationServiceImpl(mockConnector)
+        val service          = new ClaimsValidationServiceImpl(mockSaveService, mockConnector)
         val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
@@ -149,7 +155,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
       }
 
       "should fail when no GiftAid upload found" in {
-        val service          = new ClaimsValidationServiceImpl(mockConnector)
+        val service          = new ClaimsValidationServiceImpl(mockSaveService, mockConnector)
         val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-789"))
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
@@ -170,7 +176,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
     "deleteOtherIncomeSchedule" - {
 
       "should delete the OtherIncome schedule when claimId is present" in {
-        val service          = new ClaimsValidationServiceImpl(mockConnector)
+        val service          = new ClaimsValidationServiceImpl(mockSaveService, mockConnector)
         val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-456"))
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
@@ -184,11 +190,16 @@ class ClaimsValidationServiceSpec extends BaseSpec {
           .expects("test-claim-456", FileUploadReference("other-income-ref-456"), *)
           .returning(Future.successful(DeleteScheduleResponse(success = true)))
 
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(sessionData.copy(otherIncomeScheduleFileUploadReference = None, otherIncomeScheduleData = None), *)
+          .returning(Future.successful(()))
+
         await(service.deleteOtherIncomeSchedule)
       }
 
       "should fail when claimId is None" in {
-        val service          = new ClaimsValidationServiceImpl(mockConnector)
+        val service          = new ClaimsValidationServiceImpl(mockSaveService, mockConnector)
         val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
@@ -200,7 +211,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
       }
 
       "should fail when no OtherIncome upload found" in {
-        val service          = new ClaimsValidationServiceImpl(mockConnector)
+        val service          = new ClaimsValidationServiceImpl(mockSaveService, mockConnector)
         val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-999"))
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
@@ -221,7 +232,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
     "deleteCommunityBuildingsSchedule" - {
 
       "should delete the CommunityBuildings schedule when claimId is present" in {
-        val service     = new ClaimsValidationServiceImpl(mockConnector)
+        val service     = new ClaimsValidationServiceImpl(mockSaveService, mockConnector)
         val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-456"))
 
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
@@ -236,11 +247,20 @@ class ClaimsValidationServiceSpec extends BaseSpec {
           .expects("test-claim-456", FileUploadReference("community-buildings-ref-222"), *)
           .returning(Future.successful(DeleteScheduleResponse(success = true)))
 
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(
+            sessionData
+              .copy(communityBuildingsScheduleFileUploadReference = None, communityBuildingsScheduleData = None),
+            *
+          )
+          .returning(Future.successful(()))
+
         await(service.deleteCommunityBuildingsSchedule)
       }
 
       "should fail when claimId is None" in {
-        val service     = new ClaimsValidationServiceImpl(mockConnector)
+        val service     = new ClaimsValidationServiceImpl(mockSaveService, mockConnector)
         val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
 
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
@@ -253,7 +273,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
       }
 
       "should fail when no CommunityBuildings upload found" in {
-        val service     = new ClaimsValidationServiceImpl(mockConnector)
+        val service     = new ClaimsValidationServiceImpl(mockSaveService, mockConnector)
         val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-999"))
 
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
@@ -275,7 +295,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
     "deleteConnectedCharitiesSchedule" - {
 
       "should delete the ConnectedCharities schedule when claimId is present" in {
-        val service     = new ClaimsValidationServiceImpl(mockConnector)
+        val service     = new ClaimsValidationServiceImpl(mockSaveService, mockConnector)
         val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-456"))
 
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
@@ -290,11 +310,20 @@ class ClaimsValidationServiceSpec extends BaseSpec {
           .expects("test-claim-456", FileUploadReference("connected-charities-ref-333"), *)
           .returning(Future.successful(DeleteScheduleResponse(success = true)))
 
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(
+            sessionData
+              .copy(connectedCharitiesScheduleFileUploadReference = None, connectedCharitiesScheduleData = None),
+            *
+          )
+          .returning(Future.successful(()))
+
         await(service.deleteConnectedCharitiesSchedule)
       }
 
       "should fail when claimId is None" in {
-        val service     = new ClaimsValidationServiceImpl(mockConnector)
+        val service     = new ClaimsValidationServiceImpl(mockSaveService, mockConnector)
         val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
 
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
@@ -307,7 +336,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
       }
 
       "should fail when no ConnectedCharities upload found" in {
-        val service     = new ClaimsValidationServiceImpl(mockConnector)
+        val service     = new ClaimsValidationServiceImpl(mockSaveService, mockConnector)
         val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-999"))
 
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
