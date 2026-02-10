@@ -18,7 +18,7 @@ package controllers.repaymentClaimDetails
 
 import com.google.inject.Inject
 import controllers.BaseController
-import controllers.actions.Actions
+import controllers.actions.{Actions, GuardAction}
 import controllers.repaymentClaimDetails.routes
 import forms.YesNoFormProvider
 import models.{Mode, RepaymentClaimDetailsAnswers}
@@ -35,6 +35,7 @@ class ChangePreviousGASDSClaimController @Inject() (
   view: ChangePreviousGASDSClaimView,
   updateRepaymentClaimView: UpdateRepaymentClaimView,
   actions: Actions,
+  guard: GuardAction,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
@@ -43,23 +44,22 @@ class ChangePreviousGASDSClaimController @Inject() (
   val form: Form[Boolean]              = formProvider("changePreviousGASDSClaim.error.required")
   val confirmUpdateForm: Form[Boolean] = formProvider("updateRepaymentClaim.error.required")
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme
-        .contains(true) && (RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
-        .contains(true) || RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true))
-    then {
-      val previousAnswer = RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim
-      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
-    } else { Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad)) }
-  }
-
-  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if (isConfirmingUpdate) {
-      handleUpdateConfirmationSubmit(mode)
-    } else {
-      handleQuestionSubmit(mode)
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetData().andThen(guard(RepaymentClaimDetailsAnswers.isClaimingGASDSWithDonations)).async {
+      implicit request =>
+        val previousAnswer = RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim
+        Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
     }
-  }
+
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetData().andThen(guard(RepaymentClaimDetailsAnswers.isClaimingGASDSWithDonations)).async {
+      implicit request =>
+        if (isConfirmingUpdate) {
+          handleUpdateConfirmationSubmit(mode)
+        } else {
+          handleQuestionSubmit(mode)
+        }
+    }
 
   def handleQuestionSubmit(mode: Mode)(implicit request: DataRequest[AnyContent]) =
     form

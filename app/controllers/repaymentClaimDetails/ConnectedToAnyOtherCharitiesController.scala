@@ -18,7 +18,7 @@ package controllers.repaymentClaimDetails
 
 import com.google.inject.Inject
 import controllers.BaseController
-import controllers.actions.Actions
+import controllers.actions.{Actions, GuardAction}
 import forms.YesNoFormProvider
 import models.{Mode, RepaymentClaimDetailsAnswers}
 import models.Mode.*
@@ -35,6 +35,7 @@ class ConnectedToAnyOtherCharitiesController @Inject() (
   view: ConnectedToAnyOtherCharitiesView,
   updateRepaymentClaimView: UpdateRepaymentClaimView,
   actions: Actions,
+  guard: GuardAction,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
@@ -43,22 +44,26 @@ class ConnectedToAnyOtherCharitiesController @Inject() (
   val form: Form[Boolean]              = formProvider("connectedToAnyOtherCharities.error.required")
   val confirmUpdateForm: Form[Boolean] = formProvider("updateRepaymentClaim.error.required")
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) then {
-      val previousAnswer = RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities
-      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
-    } else {
-      Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
-    }
-  }
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
+    actions
+      .authAndGetData()
+      .andThen(guard(RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)))
+      .async { implicit request =>
+        val previousAnswer = RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities
+        Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+      }
 
-  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if (isConfirmingUpdate) {
-      handleUpdateConfirmationSubmit(mode)
-    } else {
-      handleQuestionSubmit(mode)
-    }
-  }
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
+    actions
+      .authAndGetData()
+      .andThen(guard(RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)))
+      .async { implicit request =>
+        if (isConfirmingUpdate) {
+          handleUpdateConfirmationSubmit(mode)
+        } else {
+          handleQuestionSubmit(mode)
+        }
+      }
 
   def handleQuestionSubmit(mode: Mode)(implicit request: DataRequest[AnyContent]) =
     form
