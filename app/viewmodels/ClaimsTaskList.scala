@@ -52,5 +52,6 @@ final case class TaskSection(
 final case class ClaimsTaskListViewModel(
   sections: Seq[TaskSection],
   deleteClaimUrl: Option[String],
-  charitiesReference: String
+  charitiesReference: String,
+  dashboardUrl: String
 )

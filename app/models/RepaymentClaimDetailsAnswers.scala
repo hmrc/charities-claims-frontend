@@ -234,6 +234,11 @@ object RepaymentClaimDetailsAnswers {
     _.claimingDonationsNotFromCommunityBuilding
   )
 
+  def isClaimingGASDSWithDonations(using session: SessionData): Boolean =
+    getClaimingUnderGiftAidSmallDonationsScheme.contains(true) &&
+      (getClaimingDonationsCollectedInCommunityBuildings.contains(true) ||
+        getClaimingDonationsNotFromCommunityBuilding.contains(true))
+
   def setClaimingUnderGiftAidSmallDonationsScheme(value: Boolean)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(claimingUnderGiftAidSmallDonationsScheme = Some(v)))
       .copy(giftAidSmallDonationsSchemeDonationDetailsAnswers =

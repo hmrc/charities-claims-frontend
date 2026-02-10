@@ -53,6 +53,8 @@ object SessionData {
 
   given Format[SessionData] = Json.format[SessionData]
 
+  extension (sd: SessionData) def and(f: SessionData ?=> SessionData): SessionData = f(using sd)
+
   def empty(charitiesRef: String): SessionData = SessionData(
     charitiesReference = charitiesRef,
     repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld()

@@ -16,7 +16,6 @@
 
 @import viewmodels.ClaimsTaskListViewModel
 @import viewmodels.govuk.tasklist.*
-@import controllers.organisationDetails.routes.CharityRepaymentDashboardController
 
 @this(
     layout: templates.Layout,
@@ -42,7 +41,7 @@
     }
 
     <p class="govuk-body">
-        <a class="govuk-link" href="@CharityRepaymentDashboardController.onPageLoad">@messages("claimsTaskList.link.goToDashboard")</a>
+        <a class="govuk-link" href="@viewModel.dashboardUrl">@messages("claimsTaskList.link.goToDashboard")</a>
     </p>
 
 }

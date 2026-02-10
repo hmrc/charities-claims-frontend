@@ -22,7 +22,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
 import views.html.ClaimReferenceNumberInputView
-import controllers.actions.Actions
+import controllers.actions.{Actions, GuardAction}
 import forms.TextInputFormProvider
 import models.{Mode, RepaymentClaimDetailsAnswers}
 import play.api.data.Form
@@ -34,6 +34,7 @@ class ClaimReferenceNumberInputController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: ClaimReferenceNumberInputView,
   actions: Actions,
+  guard: GuardAction,
   formProvider: TextInputFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
@@ -45,25 +46,28 @@ class ClaimReferenceNumberInputController @Inject() (
     "claimReferenceNumber.error.regex"
   )
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true)
-    then {
-      val previousAnswer = RepaymentClaimDetailsAnswers.getClaimReferenceNumber
-      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
-    } else {
-      Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
-    }
-  }
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
+    actions
+      .authAndGetData()
+      .andThen(guard(RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true)))
+      .async { implicit request =>
+        val previousAnswer = RepaymentClaimDetailsAnswers.getClaimReferenceNumber
+        Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+      }
 
-  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveService
-            .save(RepaymentClaimDetailsAnswers.setClaimReferenceNumber(value))
-            .map(_ => Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad))
-      )
-  }
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
+    actions
+      .authAndGetData()
+      .andThen(guard(RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true)))
+      .async { implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value =>
+              saveService
+                .save(RepaymentClaimDetailsAnswers.setClaimReferenceNumber(value))
+                .map(_ => Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad))
+          )
+      }
 }

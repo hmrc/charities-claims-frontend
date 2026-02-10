@@ -149,14 +149,16 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         }
       }
 
-      "should display Go to dashboard link" in {
+      "should display Go to dashboard link pointing to management frontend" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
           val request = FakeRequest(GET, url)
           val result  = route(application, request).value
+          val content = contentAsString(result)
 
-          contentAsString(result) should include("Go to dashboard")
+          content should include("Go to dashboard")
+          content should include("http://localhost:8033/charities-management/charity-repayment-dashboard")
         }
       }
 

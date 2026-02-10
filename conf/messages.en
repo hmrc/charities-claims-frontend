@@ -160,6 +160,7 @@ global.error.pageNotFound404.message = If you typed the web address, check it is
 index.guidance = Hello
 index.heading = Charities Claims
 
+
 nameOfCharityRegulator.caption = Provide organisation details
 nameOfCharityRegulator.error.required = Select the name of the charity regulator
 nameOfCharityRegulator.heading = What is the name of the charity regulator?

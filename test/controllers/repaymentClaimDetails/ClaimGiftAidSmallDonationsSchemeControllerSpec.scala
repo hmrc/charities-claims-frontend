@@ -24,6 +24,7 @@ import forms.YesNoFormProvider
 import play.api.data.Form
 import models.Mode.*
 import models.RepaymentClaimDetailsAnswers
+import models.SessionData.and
 import views.html.ClaimGiftAidSmallDonationsSchemeView
 
 class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
@@ -83,10 +84,12 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
+
       // Normal Mode Tests:
 
       "normalMode: should redirect to ClaimingCommunityBuildingDonationsController when the value is true" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -103,7 +106,8 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
       }
 
       "normalMode: should redirect to ClaimingCommunityBuildingDonationsController when the value is false" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -120,7 +124,8 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
       }
 
       "normalMode: should reload the page with errors when a required field is missing" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -134,10 +139,9 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
       }
 
       "normalMode: should NOT show WRN3 confirmation when submitting in NormalMode" in {
-        val sessionDataWithGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
-        val sessionData          = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true, None)(using
-          sessionDataWithGASDS
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingUnderGiftAidSmallDonationsScheme(true)
+          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true, None))
 
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -158,7 +162,8 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
       // Check Mode Tests:
 
       "checkMode: should redirect to the next page when the value is true" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -174,8 +179,9 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
         }
       }
 
-      "Checkmode: should redirect to the next page (ClaimingCommunityBuildingDonations) when the value is false" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+      "checkMode: should redirect to the next page when the value is false" in {
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -192,8 +198,9 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
       }
 
       "checkMode: should redirect to the next page when the value is changed to true from false" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false, None)
-
+        val sessionData                = RepaymentClaimDetailsAnswers
+          .setClaimingUnderGiftAidSmallDonationsScheme(true)
+          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false))
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
@@ -211,8 +218,9 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
       }
 
       "checkMode: should redirect to the CYA page when the value is not changed from false" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false, None)
-
+        val sessionData                = RepaymentClaimDetailsAnswers
+          .setClaimingUnderGiftAidSmallDonationsScheme(true)
+          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false))
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
@@ -230,7 +238,9 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
       }
 
       "checkMode: should show WRN3 confirmation when the value is changed from true to false" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true, None)
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingUnderGiftAidSmallDonationsScheme(true)
+          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -247,8 +257,9 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
       }
 
       "checkMode: should redirect to the CYA page when the value is not changed from true" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true, None)
-
+        val sessionData                = RepaymentClaimDetailsAnswers
+          .setClaimingUnderGiftAidSmallDonationsScheme(true)
+          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true))
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
@@ -266,10 +277,9 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
       }
 
       "checkMode: should show WRN3 confirmation view when changing Yes to No in CheckMode" in {
-        val sessionDataWithGASDS = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
-        val sessionData          = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true, None)(using
-          sessionDataWithGASDS
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingUnderGiftAidSmallDonationsScheme(true)
+          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true, None))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -289,7 +299,9 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
       // WRN3 Confirmation Screen Tests:
 
       "WRN3: should NOT show confirmation when answer unchanged in CheckMode" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false, None)
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingUnderGiftAidSmallDonationsScheme(true)
+          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false))
 
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -308,7 +320,9 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
       }
 
       "WRN3: should NOT show confirmation when changing No to Yes in CheckMode" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false, None)
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingUnderGiftAidSmallDonationsScheme(true)
+          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false))
 
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -327,7 +341,9 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
       }
 
       "WRN3: should redirect to CYA without saving when user selects No on WRN3" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true, None)
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingUnderGiftAidSmallDonationsScheme(true)
+          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -349,7 +365,9 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
       }
 
       "WRN3: should show errors when no radio selected on confirmation screen" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true, None)
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingUnderGiftAidSmallDonationsScheme(true)
+          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -364,7 +382,42 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual BAD_REQUEST
           contentAsString(result) should include("Do you want to update this repayment claim?")
-          contentAsString(result) should include("Select ‘Yes’ if you want to update this repayment claim")
+          contentAsString(result) should include("Select \u2018Yes\u2019 if you want to update this repayment claim")
+        }
+      }
+
+      "should redirect to page not found when claimingUnderGiftAidSmallDonationsScheme is false" in {
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.PageNotFoundController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect to page not found when claimingUnderGiftAidSmallDonationsScheme is None" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.PageNotFoundController.onPageLoad.url
+          )
         }
       }
     }
