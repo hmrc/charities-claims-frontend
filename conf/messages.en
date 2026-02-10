@@ -426,7 +426,29 @@ aboutGiftAidSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" ta
 aboutGiftAidSchedule.title = About Gift Aid schedule
 
 checkYourGiftAidSchedule.title = Check your Gift Aid schedule
+checkYourGiftAidSchedule.caption = Add Gift Aid schedule
 checkYourGiftAidSchedule.heading = Check your Gift Aid schedule
+checkYourGiftAidSchedule.summary.title = Gift Aid schedule details
+checkYourGiftAidSchedule.summary.item.1 = Earliest donation date
+checkYourGiftAidSchedule.summary.item.2 = Adjustment for Gift Aid previously over-claimed
+checkYourGiftAidSchedule.summary.item.3 = Total donations
+checkYourGiftAidSchedule.table.column.1 = Item	
+checkYourGiftAidSchedule.table.column.2 = Title	
+checkYourGiftAidSchedule.table.column.3 = First name	
+checkYourGiftAidSchedule.table.column.4 = Last name	
+checkYourGiftAidSchedule.table.column.5 = House name or number	
+checkYourGiftAidSchedule.table.column.6 = Postcode	
+checkYourGiftAidSchedule.table.column.7 = Aggregated donations	
+checkYourGiftAidSchedule.table.column.8 = Sponsored event
+checkYourGiftAidSchedule.table.column.9 = Donation date	
+checkYourGiftAidSchedule.table.column.10 = Amount (£)
+checkYourGiftAidSchedule.hint = Do you need to update this Gift Aid schedule?
+checkYourGiftAidSchedule.radios.no = No, continue with Gift Aid schedule
+checkYourGiftAidSchedule.error.required = Select ‘Yes’ if you need to update this Gift Aid schedule
 
 problemWithGiftAidSchedule.title = There is a problem with the data in your Gift Aid schedule
 problemWithGiftAidSchedule.heading = There is a problem with the data in your Gift Aid schedule
+
+giftAidScheduleUploadSuccessful.title = Upload successful
+
+data.notApplicable = Not applicable

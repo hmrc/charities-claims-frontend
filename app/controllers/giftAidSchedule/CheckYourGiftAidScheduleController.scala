@@ -16,66 +16,91 @@
 
 package controllers.giftAidSchedule
 
-import controllers.giftAidSchedule.routes
 import play.api.mvc.*
 import com.google.inject.Inject
-import connectors.ClaimsValidationConnector
 import controllers.BaseController
 import views.html.CheckYourGiftAidScheduleView
 import controllers.actions.Actions
-import models.*
+import forms.YesNoFormProvider
+import play.api.data.Form
+import services.{ClaimsService, ClaimsValidationService, PaginationService}
+import controllers.giftAidSchedule.routes
 
 import scala.concurrent.{ExecutionContext, Future}
-import services.PaginationService
 
 class CheckYourGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourGiftAidScheduleView,
   actions: Actions,
-  claimsValidationConnector: ClaimsValidationConnector
+  claimsValidationService: ClaimsValidationService,
+  formProvider: YesNoFormProvider,
+  claimsService: ClaimsService
 )(using ec: ExecutionContext)
     extends BaseController {
 
+  val form: Form[Boolean] = formProvider("checkYourGiftAidSchedule.error.required")
+
   val onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    request.sessionData.unsubmittedClaimId match {
-      case None =>
-        // if the claim id is not found, we need to redirect to the repayment claim details page
-        Future.successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+    claimsValidationService.getGiftAidScheduleData
+      .map { giftAidScheduleData =>
 
-      case Some(claimId) =>
-        request.sessionData.giftAidScheduleFileUploadReference match {
-          case None =>
-            // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
-            Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+        val currentPage      = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
+        val paginationResult = PaginationService.paginateDonations(
+          allDonations = giftAidScheduleData.donations,
+          currentPage = currentPage,
+          baseUrl = routes.CheckYourGiftAidScheduleController.onPageLoad.url
+        )
 
-          case Some(fileUploadReference) =>
-            claimsValidationConnector
-              .getUploadResult(claimId, fileUploadReference)
-              .map {
-                case GetUploadResultValidatedGiftAid(reference, giftAidScheduleData) =>
-                  val currentPage      = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
-                  val paginationResult = PaginationService.paginateDonations(
-                    allDonations = giftAidScheduleData.donations,
-                    currentPage = currentPage,
-                    baseUrl = routes.CheckYourGiftAidScheduleController.onPageLoad.url
+        Ok(
+          view(
+            form = form,
+            giftAidScheduleData = giftAidScheduleData,
+            donations = paginationResult.paginatedData,
+            paginationViewModel = paginationResult.paginationViewModel
+          )
+        )
+      }
+  }
+
+  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    claimsValidationService.getGiftAidScheduleData
+      .flatMap { giftAidScheduleData =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => {
+              val paginationResult = PaginationService.paginateDonations(
+                allDonations = giftAidScheduleData.donations,
+                currentPage = 1,
+                baseUrl = routes.CheckYourGiftAidScheduleController.onPageLoad.url
+              )
+
+              Future.successful(
+                BadRequest(
+                  view(
+                    form = formWithErrors,
+                    giftAidScheduleData = giftAidScheduleData,
+                    donations = paginationResult.paginatedData,
+                    paginationViewModel = paginationResult.paginationViewModel
                   )
+                )
+              )
+            },
+            answer =>
+              answer match {
+                case true =>
+                  for {
+                    _ <- claimsValidationService.deleteGiftAidSchedule
+                    _ <- claimsService.save
+                  } yield Redirect(routes.UploadGiftAidScheduleController.onPageLoad)
 
-                  Ok(
-                    view(
-                      claimId = claimId,
-                      giftAidScheduleData = giftAidScheduleData,
-                      paginationViewModel = paginationResult.paginationViewModel
-                    )
-                  )
-
-                case _ =>
-                  // In case of any other upload result, we need to redirect to the /your-gift-aid-schedule-upload page,
-                  // which in turn will redirect to the right page based on the upload result
-                  Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad)
+                case false =>
+                  claimsService.save
+                    .map(_ => Redirect(routes.GiftAidScheduleUploadSuccessfulController.onPageLoad))
               }
-        }
-    }
+          )
 
+      }
   }
 
 }

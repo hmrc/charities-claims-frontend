@@ -20,52 +20,60 @@ import com.google.inject.{ImplementedBy, Inject}
 import connectors.ClaimsConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import models.SessionData
-import models.requests.DataRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 import models.RepaymentClaimDetailsAnswers
+import repositories.SessionCache
 
 @ImplementedBy(classOf[ClaimsServiceImpl])
 trait ClaimsService {
 
   /** Create new or update an existing claim and update the session data */
-  def save(using dataRequest: DataRequest[?], hc: HeaderCarrier): Future[Unit]
+  def save(using hc: HeaderCarrier): Future[Unit]
 }
 
-class ClaimsServiceImpl @Inject() (saveService: SaveService, connector: ClaimsConnector)(using ec: ExecutionContext)
+class ClaimsServiceImpl @Inject() (
+  sessionCache: SessionCache,
+  connector: ClaimsConnector
+)(using ec: ExecutionContext)
     extends ClaimsService {
 
-  final def save(using
-    dataRequest: DataRequest[?],
-    hc: HeaderCarrier
-  ): Future[Unit] = {
-    val sessionData = dataRequest.sessionData
-    sessionData.unsubmittedClaimId match {
+  final def save(using hc: HeaderCarrier): Future[Unit] =
+    sessionCache.get().flatMap {
       case None =>
-        for
-          repaymentClaimDetails <-
-            Future.fromTry(
-              sessionData.repaymentClaimDetailsAnswers.map(RepaymentClaimDetailsAnswers.toRepaymentClaimDetails(_)).get
-            )
-          response              <- connector.saveClaim(repaymentClaimDetails)
-          _                     <-
-            saveService
-              .save(
-                dataRequest.sessionData
-                  .copy(
-                    unsubmittedClaimId = Some(response.claimId),
-                    lastUpdatedReference = Some(response.lastUpdatedReference)
-                  )
-              )
-        yield ()
+        Future.failed(new RuntimeException("No session data found"))
 
-      case Some(claimId) =>
-        for
-          updateClaimRequest <- Future.fromTry(SessionData.toUpdateClaimRequest(sessionData))
-          response           <- connector.updateClaim(claimId, updateClaimRequest)
-          _                  <- saveService
-                                  .save(dataRequest.sessionData.copy(lastUpdatedReference = Some(response.lastUpdatedReference)))
-        yield ()
+      case Some(sessionData) =>
+        sessionData.unsubmittedClaimId match {
+          case None =>
+            for
+              repaymentClaimDetails <-
+                Future.fromTry(
+                  sessionData.repaymentClaimDetailsAnswers
+                    .map(RepaymentClaimDetailsAnswers.toRepaymentClaimDetails(_))
+                    .get
+                )
+              response              <- connector.saveClaim(repaymentClaimDetails)
+              _                     <-
+                sessionCache.store(
+                  sessionData
+                    .copy(
+                      unsubmittedClaimId = Some(response.claimId),
+                      lastUpdatedReference = Some(response.lastUpdatedReference)
+                    )
+                )
+            yield ()
+
+          case Some(claimId) =>
+            for
+              updateClaimRequest <- Future.fromTry(SessionData.toUpdateClaimRequest(sessionData))
+              response           <- connector.updateClaim(claimId, updateClaimRequest)
+              _                  <- sessionCache.store(
+                                      sessionData.copy(
+                                        lastUpdatedReference = Some(response.lastUpdatedReference)
+                                      )
+                                    )
+            yield ()
+        }
     }
-  }
 }

@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,25 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package services
+@import controllers.giftAidSchedule.routes
+@import models.*
+@import views.html.components.*
 
-import com.google.inject.ImplementedBy
-import models.SessionData
-import repositories.SessionCache
-import uk.gov.hmrc.http.HeaderCarrier
+@this(
+    layout: templates.Layout,
+    govukButton: GovukButton
+)
 
-import javax.inject.Inject
-import scala.concurrent.Future
+@()(implicit request: Request[?], messages: Messages)
 
-@ImplementedBy(classOf[SaveServiceImpl])
-trait SaveService {
-  def save(sessionData: SessionData)(using hc: HeaderCarrier): Future[Unit]
-}
+@layout(
+    pageTitle = titleNoForm(messages("giftAidScheduleUploadSuccessful.title")), 
+    showBackLink = true
+) {
 
-class SaveServiceImpl @Inject() (cache: SessionCache) extends SaveService {
-  def save(updatedSessionData: SessionData)(using hc: HeaderCarrier): Future[Unit] =
-    cache.store(updatedSessionData)
-
+    
+    
 }

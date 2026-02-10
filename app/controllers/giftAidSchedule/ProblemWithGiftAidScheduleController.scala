@@ -16,7 +16,6 @@
 
 package controllers.giftAidSchedule
 
-import controllers.giftAidSchedule.routes
 import play.api.mvc.*
 import com.google.inject.Inject
 import connectors.ClaimsValidationConnector
@@ -24,9 +23,10 @@ import controllers.BaseController
 import views.html.ProblemWithGiftAidScheduleView
 import controllers.actions.Actions
 import models.*
+import services.PaginationService
+import controllers.giftAidSchedule.routes
 
 import scala.concurrent.{ExecutionContext, Future}
-import services.PaginationService
 
 class ProblemWithGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
