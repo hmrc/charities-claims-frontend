@@ -24,6 +24,7 @@ import controllers.BaseController
 import views.html.YourGiftAidScheduleUploadView
 import controllers.actions.Actions
 import models.*
+import services.{ClaimsService, ClaimsValidationService}
 
 import _root_.scala.concurrent.{ExecutionContext, Future}
 
@@ -31,7 +32,9 @@ class YourGiftAidScheduleUploadController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: YourGiftAidScheduleUploadView,
   actions: Actions,
-  claimsValidationConnector: ClaimsValidationConnector
+  claimsValidationConnector: ClaimsValidationConnector,
+  claimsValidationService: ClaimsValidationService,
+  claimsService: ClaimsService
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -57,7 +60,6 @@ class YourGiftAidScheduleUploadController @Inject() (
                       claimId = claimId,
                       uploadResult = uploadResult,
                       failureDetails = None,
-                      warningOne = Some("someUrl"),
                       screenLocked = true
                     )
                   )
@@ -68,7 +70,6 @@ class YourGiftAidScheduleUploadController @Inject() (
                       claimId = claimId,
                       uploadResult = uploadResult,
                       failureDetails = None,
-                      warningOne = Some("someUrl"),
                       screenLocked = true
                     )
                   )
@@ -79,7 +80,6 @@ class YourGiftAidScheduleUploadController @Inject() (
                       claimId = claimId,
                       uploadResult = uploadResult,
                       failureDetails = None,
-                      warningOne = Some("someUrl"),
                       screenLocked = true
                     )
                   )
@@ -90,7 +90,6 @@ class YourGiftAidScheduleUploadController @Inject() (
                       claimId = claimId,
                       uploadResult = uploadResult,
                       failureDetails = Some(failureDetails),
-                      warningOne = Some("someUrl"),
                       screenLocked = true
                     )
                   )
@@ -101,7 +100,6 @@ class YourGiftAidScheduleUploadController @Inject() (
                       claimId = claimId,
                       uploadResult = uploadResult,
                       failureDetails = None,
-                      warningOne = Some("someUrl"),
                       screenLocked = false
                     )
                   )
@@ -114,6 +112,12 @@ class YourGiftAidScheduleUploadController @Inject() (
         }
     }
 
+  }
+
+  def onRemove: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    for {
+      _ <- claimsValidationService.deleteGiftAidSchedule
+    } yield Redirect(routes.UploadGiftAidScheduleController.onPageLoad)
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>

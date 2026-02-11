@@ -28,7 +28,6 @@
     claimId: String,
     uploadResult: GetUploadResultResponse,
     failureDetails: Option[GetUploadResultFailureDetails],
-    warningOne: Option[String],
     screenLocked: Boolean
 )(implicit request: Request[?], messages: Messages)
 
@@ -52,7 +51,7 @@
                     </strong>
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="{warningOne}">Remove</a>
+                    <a class="govuk-link" href="@controllers.giftAidSchedule.routes.YourGiftAidScheduleUploadController.onRemove.url">Remove</a>
                 </dd>
             </div>
         </dl>   
