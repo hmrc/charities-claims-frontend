@@ -20,6 +20,7 @@
 
 @this(
     layout: templates.Layout,
+    formHelper: FormWithCSRF,
     govukButton: GovukButton
 )
 
@@ -30,6 +31,17 @@
     showBackLink = true
 ) {
 
-    
+
+    <div class="govuk-panel govuk-panel--confirmation">
+        <h1 class="govuk-panel__title">
+            @messages("giftAidScheduleUploadSuccessful.message.1")
+        </h1>
+    </div>
+
+    <p class="govuk-body">@messages("giftAidScheduleUploadSuccessful.message.2")</p>
+
+    @formHelper(action = routes.GiftAidScheduleUploadSuccessfulController.onSubmit) {
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+    }
     
 }

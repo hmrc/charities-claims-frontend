@@ -189,6 +189,7 @@ GET         /check-your-gift-aid-schedule                   controllers.giftAidS
 POST        /check-your-gift-aid-schedule                   controllers.giftAidSchedule.CheckYourGiftAidScheduleController.onSubmit
 GET         /problem-with-gift-aid-schedule                 controllers.giftAidSchedule.ProblemWithGiftAidScheduleController.onPageLoad
 GET         /gift-aid-schedule-upload-successful            controllers.giftAidSchedule.GiftAidScheduleUploadSuccessfulController.onPageLoad
+POST        /gift-aid-schedule-upload-successful            controllers.giftAidSchedule.GiftAidScheduleUploadSuccessfulController.onSubmit
 
 
 GET         /about-other-income-schedule                     controllers.otherIncomeSchedule.AboutOtherIncomeScheduleController.onPageLoad
