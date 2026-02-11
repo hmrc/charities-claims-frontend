@@ -21,21 +21,24 @@ import play.api.mvc.*
 import com.google.inject.Inject
 import connectors.ClaimsValidationConnector
 import controllers.BaseController
-import views.html.YourGifAidScheduleUploadView
+import views.html.YourGiftAidScheduleUploadView
 import controllers.actions.Actions
 import models.*
+import services.{ClaimsService, ClaimsValidationService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class YourGiftAidScheduleUploadController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: YourGifAidScheduleUploadView,
+  view: YourGiftAidScheduleUploadView,
   actions: Actions,
-  claimsValidationConnector: ClaimsValidationConnector
+  claimsValidationConnector: ClaimsValidationConnector,
+  claimsValidationService: ClaimsValidationService,
+  claimsService: ClaimsService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     request.sessionData.unsubmittedClaimId match {
       case None =>
         // if the claim id is not found, we need to redirect to the repayment claim details page
@@ -52,17 +55,87 @@ class YourGiftAidScheduleUploadController @Inject() (
               .getUploadResult(claimId, fileUploadReference)
               .map {
                 case uploadResult: GetUploadResultAwaitingUpload =>
-                  Ok(view(claimId = claimId, uploadResult = uploadResult, failureDetails = None))
+                  Ok(
+                    view(
+                      claimId = claimId,
+                      uploadResult = uploadResult,
+                      failureDetails = None,
+                      screenLocked = true
+                    )
+                  )
 
                 case uploadResult: GetUploadResultVeryfying =>
-                  Ok(view(claimId = claimId, uploadResult = uploadResult, failureDetails = None))
+                  Ok(
+                    view(
+                      claimId = claimId,
+                      uploadResult = uploadResult,
+                      failureDetails = None,
+                      screenLocked = true
+                    )
+                  )
 
                 case uploadResult: GetUploadResultValidating =>
-                  Ok(view(claimId = claimId, uploadResult = uploadResult, failureDetails = None))
+                  Ok(
+                    view(
+                      claimId = claimId,
+                      uploadResult = uploadResult,
+                      failureDetails = None,
+                      screenLocked = true
+                    )
+                  )
 
                 case uploadResult @ GetUploadResultVeryficationFailed(reference, validationType, failureDetails) =>
-                  Ok(view(claimId = claimId, uploadResult = uploadResult, failureDetails = Some(failureDetails)))
+                  Ok(
+                    view(
+                      claimId = claimId,
+                      uploadResult = uploadResult,
+                      failureDetails = Some(failureDetails),
+                      screenLocked = true
+                    )
+                  )
 
+                case uploadResult: GetUploadResultValidatedGiftAid =>
+                  Ok(
+                    view(
+                      claimId = claimId,
+                      uploadResult = uploadResult,
+                      failureDetails = None,
+                      screenLocked = false
+                    )
+                  )
+
+                case _ =>
+                  // Ok(view(claimId = claimId, uploadResult = uploadResult, failureDetails = None, screenLocked = false))
+                  // strange case, but we need to handle it
+                  Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad)
+              }
+        }
+    }
+
+  }
+
+  def onRemove: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    for {
+      _ <- claimsValidationService.deleteGiftAidSchedule
+    } yield Redirect(routes.UploadGiftAidScheduleController.onPageLoad)
+  }
+
+  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    request.sessionData.unsubmittedClaimId match {
+      case None =>
+        // if the claim id is not found, we need to redirect to the repayment claim details page
+        Future.successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+
+      case Some(claimId) =>
+        request.sessionData.giftAidScheduleFileUploadReference match {
+          case None =>
+            // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
+            Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+
+          case Some(fileUploadReference) =>
+            claimsValidationConnector
+              .getUploadResult(claimId, fileUploadReference)
+              .map {
                 case _: GetUploadResultValidatedGiftAid =>
                   Redirect(routes.CheckYourGiftAidScheduleController.onPageLoad)
 
@@ -71,11 +144,10 @@ class YourGiftAidScheduleUploadController @Inject() (
 
                 case _ =>
                   // strange case, but we need to handle it
-                  Redirect(routes.UploadGiftAidScheduleController.onPageLoad)
+                  Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad)
               }
         }
     }
-
   }
 
 }
