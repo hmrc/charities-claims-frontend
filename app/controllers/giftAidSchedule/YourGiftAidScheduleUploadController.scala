@@ -44,71 +44,73 @@ class YourGiftAidScheduleUploadController @Inject() (
         Future.successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
 
       case Some(claimId) =>
-        request.sessionData.giftAidScheduleFileUploadReference match {
-          case None =>
-            // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
-            Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+        claimsValidationService
+          .getFileUploadReference(ValidationType.GiftAid)
+          .flatMap {
+            case None =>
+              // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
+              Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
 
-          case Some(fileUploadReference) =>
-            claimsValidationConnector
-              .getUploadResult(claimId, fileUploadReference)
-              .map {
-                case uploadResult: GetUploadResultAwaitingUpload =>
-                  Ok(
-                    view(
-                      claimId = claimId,
-                      uploadResult = uploadResult,
-                      failureDetails = None,
-                      screenLocked = true
+            case Some(fileUploadReference) =>
+              claimsValidationConnector
+                .getUploadResult(claimId, fileUploadReference)
+                .map {
+                  case uploadResult: GetUploadResultAwaitingUpload =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = None,
+                        screenLocked = true
+                      )
                     )
-                  )
 
-                case uploadResult: GetUploadResultVeryfying =>
-                  Ok(
-                    view(
-                      claimId = claimId,
-                      uploadResult = uploadResult,
-                      failureDetails = None,
-                      screenLocked = true
+                  case uploadResult: GetUploadResultVeryfying =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = None,
+                        screenLocked = true
+                      )
                     )
-                  )
 
-                case uploadResult: GetUploadResultValidating =>
-                  Ok(
-                    view(
-                      claimId = claimId,
-                      uploadResult = uploadResult,
-                      failureDetails = None,
-                      screenLocked = true
+                  case uploadResult: GetUploadResultValidating =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = None,
+                        screenLocked = true
+                      )
                     )
-                  )
 
-                case uploadResult @ GetUploadResultVeryficationFailed(reference, validationType, failureDetails) =>
-                  Ok(
-                    view(
-                      claimId = claimId,
-                      uploadResult = uploadResult,
-                      failureDetails = Some(failureDetails),
-                      screenLocked = true
+                  case uploadResult @ GetUploadResultVeryficationFailed(reference, validationType, failureDetails) =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = Some(failureDetails),
+                        screenLocked = true
+                      )
                     )
-                  )
 
-                case uploadResult: GetUploadResultValidatedGiftAid =>
-                  Ok(
-                    view(
-                      claimId = claimId,
-                      uploadResult = uploadResult,
-                      failureDetails = None,
-                      screenLocked = false
+                  case uploadResult: GetUploadResultValidatedGiftAid =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = None,
+                        screenLocked = false
+                      )
                     )
-                  )
 
-                case _ =>
-                  // Ok(view(claimId = claimId, uploadResult = uploadResult, failureDetails = None, screenLocked = false))
-                  // strange case, but we need to handle it
-                  Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad)
-              }
-        }
+                  case _ =>
+                    // Ok(view(claimId = claimId, uploadResult = uploadResult, failureDetails = None, screenLocked = false))
+                    // strange case, but we need to handle it
+                    Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad)
+                }
+          }
     }
 
   }

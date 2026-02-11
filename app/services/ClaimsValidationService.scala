@@ -27,6 +27,10 @@ import scala.concurrent.{ExecutionContext, Future}
 @ImplementedBy(classOf[ClaimsValidationServiceImpl])
 trait ClaimsValidationService {
 
+  def getFileUploadReference(
+    validationType: ValidationType
+  )(using DataRequest[?], HeaderCarrier): Future[Option[FileUploadReference]]
+
   def getGiftAidScheduleData(using DataRequest[?], HeaderCarrier): Future[GiftAidScheduleData]
   def getOtherIncomeScheduleData(using DataRequest[?], HeaderCarrier): Future[OtherIncomeScheduleData]
   def getCommunityBuildingsScheduleData(using DataRequest[?], HeaderCarrier): Future[CommunityBuildingsScheduleData]
@@ -45,6 +49,36 @@ class ClaimsValidationServiceImpl @Inject() (
 )(using ec: ExecutionContext)
     extends ClaimsValidationService {
 
+  def getFileUploadReference(validationType: ValidationType)(using
+    request: DataRequest[?],
+    hc: HeaderCarrier
+  ): Future[Option[FileUploadReference]] =
+    getFileUploadReference(ValidationType.GiftAid)
+      .flatMap {
+        case Some(reference) => Future.successful(Some(reference))
+        case None            =>
+          claimsValidationConnector
+            .getUploadSummary(request.sessionData.unsubmittedClaimId.get)
+            .flatMap { summaryResponse =>
+              summaryResponse.uploads.find(_.validationType == validationType) match {
+                case None         => Future.successful(None)
+                case Some(upload) =>
+                  saveService
+                    .save(validationType match {
+                      case ValidationType.GiftAid            =>
+                        request.sessionData.copy(giftAidScheduleFileUploadReference = Some(upload.reference))
+                      case ValidationType.OtherIncome        =>
+                        request.sessionData.copy(otherIncomeScheduleFileUploadReference = Some(upload.reference))
+                      case ValidationType.CommunityBuildings =>
+                        request.sessionData.copy(communityBuildingsScheduleFileUploadReference = Some(upload.reference))
+                      case ValidationType.ConnectedCharities =>
+                        request.sessionData.copy(connectedCharitiesScheduleFileUploadReference = Some(upload.reference))
+                    })
+                    .map(_ => Some(upload.reference))
+              }
+            }
+      }
+
   def getGiftAidScheduleData(using request: DataRequest[?], hc: HeaderCarrier): Future[GiftAidScheduleData] =
     request.sessionData.giftAidScheduleData match {
       case Some(data) => Future.successful(data)
@@ -54,27 +88,28 @@ class ClaimsValidationServiceImpl @Inject() (
             Future.failed(new RuntimeException("No claimId found when attempting to get GiftAid schedule data"))
 
           case Some(claimId) =>
-            request.sessionData.giftAidScheduleFileUploadReference match {
-              case None =>
-                Future.failed(new RuntimeException("No GiftAid schedule file upload reference found"))
+            getFileUploadReference(ValidationType.GiftAid)
+              .flatMap {
+                case None =>
+                  Future.failed(new RuntimeException("No GiftAid schedule file upload reference found"))
 
-              case Some(fileUploadReference) =>
-                claimsValidationConnector
-                  .getUploadResult(claimId, fileUploadReference)
-                  .flatMap {
-                    case GetUploadResultValidatedGiftAid(reference, data) =>
-                      saveService
-                        .save(request.sessionData.copy(giftAidScheduleData = Some(data)))
-                        .map(_ => data)
+                case Some(fileUploadReference) =>
+                  claimsValidationConnector
+                    .getUploadResult(claimId, fileUploadReference)
+                    .flatMap {
+                      case GetUploadResultValidatedGiftAid(reference, data) =>
+                        saveService
+                          .save(request.sessionData.copy(giftAidScheduleData = Some(data)))
+                          .map(_ => data)
 
-                    case other =>
-                      Future.failed(
-                        new RuntimeException(
-                          s"No Gift Aid schedule data found, upload file status is ${other.fileStatus}"
+                      case other =>
+                        Future.failed(
+                          new RuntimeException(
+                            s"No Gift Aid schedule data found, upload file status is ${other.fileStatus}"
+                          )
                         )
-                      )
-                  }
-            }
+                    }
+              }
         }
     }
 
@@ -87,7 +122,7 @@ class ClaimsValidationServiceImpl @Inject() (
             Future.failed(new RuntimeException("No claimId found when attempting to get Other Income schedule data"))
 
           case Some(claimId) =>
-            request.sessionData.otherIncomeScheduleFileUploadReference match {
+            getFileUploadReference(ValidationType.OtherIncome).flatMap {
               case None =>
                 Future.failed(new RuntimeException("No Other Income schedule file upload reference found"))
 
@@ -125,28 +160,29 @@ class ClaimsValidationServiceImpl @Inject() (
             )
 
           case Some(claimId) =>
-            request.sessionData.communityBuildingsScheduleFileUploadReference match {
-              case None =>
-                Future.failed(new RuntimeException("No Community Buildings schedule file upload reference found"))
+            getFileUploadReference(ValidationType.CommunityBuildings)
+              .flatMap {
+                case None =>
+                  Future.failed(new RuntimeException("No Community Buildings schedule file upload reference found"))
 
-              case Some(fileUploadReference) =>
-                claimsValidationConnector
-                  .getUploadResult(claimId, fileUploadReference)
-                  .flatMap {
+                case Some(fileUploadReference) =>
+                  claimsValidationConnector
+                    .getUploadResult(claimId, fileUploadReference)
+                    .flatMap {
 
-                    case GetUploadResultValidatedCommunityBuildings(reference, data) =>
-                      saveService
-                        .save(request.sessionData.copy(communityBuildingsScheduleData = Some(data)))
-                        .map(_ => data)
+                      case GetUploadResultValidatedCommunityBuildings(reference, data) =>
+                        saveService
+                          .save(request.sessionData.copy(communityBuildingsScheduleData = Some(data)))
+                          .map(_ => data)
 
-                    case other =>
-                      Future.failed(
-                        new RuntimeException(
-                          s"No Community Buildings schedule data found, upload file status is ${other.fileStatus}"
+                      case other =>
+                        Future.failed(
+                          new RuntimeException(
+                            s"No Community Buildings schedule data found, upload file status is ${other.fileStatus}"
+                          )
                         )
-                      )
-                  }
-            }
+                    }
+              }
         }
     }
 
@@ -164,27 +200,28 @@ class ClaimsValidationServiceImpl @Inject() (
             )
 
           case Some(claimId) =>
-            request.sessionData.connectedCharitiesScheduleFileUploadReference match {
-              case None =>
-                Future.failed(new RuntimeException("No Connected Charities schedule file upload reference found"))
+            getFileUploadReference(ValidationType.ConnectedCharities)
+              .flatMap {
+                case None =>
+                  Future.failed(new RuntimeException("No Connected Charities schedule file upload reference found"))
 
-              case Some(fileUploadReference) =>
-                claimsValidationConnector
-                  .getUploadResult(claimId, fileUploadReference)
-                  .flatMap {
-                    case GetUploadResultValidatedConnectedCharities(reference, data) =>
-                      saveService
-                        .save(request.sessionData.copy(connectedCharitiesScheduleData = Some(data)))
-                        .map(_ => data)
+                case Some(fileUploadReference) =>
+                  claimsValidationConnector
+                    .getUploadResult(claimId, fileUploadReference)
+                    .flatMap {
+                      case GetUploadResultValidatedConnectedCharities(reference, data) =>
+                        saveService
+                          .save(request.sessionData.copy(connectedCharitiesScheduleData = Some(data)))
+                          .map(_ => data)
 
-                    case other =>
-                      Future.failed(
-                        new RuntimeException(
-                          s"No Connected Charities schedule data found, upload file status is ${other.fileStatus}"
+                      case other =>
+                        Future.failed(
+                          new RuntimeException(
+                            s"No Connected Charities schedule data found, upload file status is ${other.fileStatus}"
+                          )
                         )
-                      )
-                  }
-            }
+                    }
+              }
         }
     }
 
