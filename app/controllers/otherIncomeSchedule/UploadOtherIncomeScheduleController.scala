@@ -30,7 +30,6 @@ class UploadOtherIncomeScheduleController @Inject() (
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-
     Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
   }
 }
