@@ -19,7 +19,7 @@ package controllers.giftAidSchedule
 import utils.ISODateTime
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
-import connectors.{ClaimsValidationConnector, UpscanInitiateConnector}
+import connectors.UpscanInitiateConnector
 import controllers.BaseController
 import config.FrontendAppConfig
 import views.html.UploadGiftAidScheduleView
@@ -30,13 +30,14 @@ import services.SaveService
 import controllers.giftAidSchedule.routes
 
 import scala.concurrent.{ExecutionContext, Future}
+import services.ClaimsValidationService
 
 class UploadGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: UploadGiftAidScheduleView,
   actions: Actions,
   upscanInitiateConnector: UpscanInitiateConnector,
-  claimsValidationConnector: ClaimsValidationConnector,
+  claimsValidationService: ClaimsValidationService,
   saveService: SaveService,
   appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)
@@ -49,25 +50,27 @@ class UploadGiftAidScheduleController @Inject() (
         Future.successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
 
       case Some(claimId) =>
-        request.sessionData.giftAidScheduleFileUploadReference match {
-          case Some(_) =>
-            // if the file upload reference is found, we need to redirect to your gift aid schedule upload page
-            Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
+        claimsValidationService
+          .getFileUploadReference(ValidationType.GiftAid)
+          .flatMap {
+            case Some(_) =>
+              // if the file upload reference is found, we need to redirect to your gift aid schedule upload page
+              Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
 
-          case None =>
-            for {
-              upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
-            } yield Ok(
-              view(
-                appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl,
-                claimId = claimId,
-                upscanInitiateResponse = upscanInitiateResponse,
-                allowedFileTypesHint = appConfig.allowedFileTypesHint,
-                filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-                hasError = true
+            case None =>
+              for {
+                upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
+              } yield Ok(
+                view(
+                  appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl,
+                  claimId = claimId,
+                  upscanInitiateResponse = upscanInitiateResponse,
+                  allowedFileTypesHint = appConfig.allowedFileTypesHint,
+                  filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
+                  hasError = true
+                )
               )
-            )
-        }
+          }
     }
   }
 
@@ -94,7 +97,7 @@ class UploadGiftAidScheduleController @Inject() (
                   )
                 )
               _                      <-
-                claimsValidationConnector
+                claimsValidationService
                   .createUploadTracking(
                     claimId = claimId,
                     request = CreateUploadTrackingRequest(
@@ -120,83 +123,65 @@ class UploadGiftAidScheduleController @Inject() (
         // if the claim id is not found, we need to redirect to the repayment claim details page
         Future.successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
 
-      case Some(claimId) =>
-        request.sessionData.giftAidScheduleFileUploadReference match {
-          case Some(_) =>
-            // if the file upload reference is found, we need to redirect to the your gift aid schedule upload page
-            Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
+      case Some(_) =>
+        claimsValidationService
+          .getFileUploadReference(ValidationType.GiftAid)
+          .flatMap {
+            case Some(_) =>
+              // if the file upload reference is found, we need to redirect to the your gift aid schedule upload page
+              Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
 
-          case None =>
-            request.sessionData.giftAidScheduleUpscanInitialization match {
-              case Some(upscanInitiateResponse)
-                  // check if the received key is the same as the reference from the upscan initiate response
-                  if key.map(UpscanReference(_)).contains(upscanInitiateResponse.reference) =>
-                claimsValidationConnector
-                  .getUploadSummary(claimId)
-                  .flatMap(
-                    _.uploads
-                      .find(_.validationType == ValidationType.GiftAid)
-                      .match {
-                        case None =>
-                          // upload summary not found, so we need to start a new upload
-                          // remove existing upscan initiate response because charities-claims-validation will need fresh upscan reference
-                          saveService
-                            .save(
-                              request.sessionData.copy(
-                                giftAidScheduleFileUploadReference = None,
-                                giftAidScheduleUpscanInitialization = None
-                              )
-                            )
-                            .map(_ => Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+            case None =>
+              request.sessionData.giftAidScheduleUpscanInitialization match {
+                case Some(upscanInitiateResponse)
+                    // check if the received key is the same as the reference from the upscan initiate response
+                    if key.map(UpscanReference(_)).contains(upscanInitiateResponse.reference) =>
+                  saveService
+                    .save(
+                      request.sessionData.copy(
+                        giftAidScheduleFileUploadReference = None,
+                        giftAidScheduleUpscanInitialization = None
+                      )
+                    )
+                    .map(_ => Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
 
-                        case Some(uploadSummary) =>
-                          // store file upload reference and remove upscan initiate response because no longer needed
-                          saveService
-                            .save(
-                              request.sessionData.copy(
-                                giftAidScheduleFileUploadReference = Some(uploadSummary.reference),
-                                giftAidScheduleUpscanInitialization = None
-                              )
-                            )
-                            .map(_ => Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
-                      }
-                  )
-
-              case _ =>
-                // if the upload summary is not found, we need to redirect to the upload page to start a new upload
-                Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
-            }
-        }
+                case _ =>
+                  // if the upload summary is not found, we need to redirect to the upload page to start a new upload
+                  Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+              }
+          }
     }
   }
 
   def onUploadError: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    request.sessionData.giftAidScheduleFileUploadReference match {
-      case Some(_) =>
-        // if the file upload reference is found, we need to redirect to the your gift aid schedule upload page
-        Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
+    claimsValidationService
+      .getFileUploadReference(ValidationType.GiftAid)
+      .flatMap {
+        case Some(_) =>
+          // if the file upload reference is found, we need to redirect to the your gift aid schedule upload page
+          Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
 
-      case None =>
-        request.sessionData.giftAidScheduleUpscanInitialization match {
-          case Some(upscanInitiateResponse) =>
-            Future.successful(
-              Ok(
-                view(
-                  appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl,
-                  claimId = request.sessionData.unsubmittedClaimId.get,
-                  upscanInitiateResponse = upscanInitiateResponse,
-                  allowedFileTypesHint = appConfig.allowedFileTypesHint,
-                  filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-                  hasError = true // we are showing the error page because the upload failed
+        case None =>
+          request.sessionData.giftAidScheduleUpscanInitialization match {
+            case Some(upscanInitiateResponse) =>
+              Future.successful(
+                Ok(
+                  view(
+                    appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl,
+                    claimId = request.sessionData.unsubmittedClaimId.get,
+                    upscanInitiateResponse = upscanInitiateResponse,
+                    allowedFileTypesHint = appConfig.allowedFileTypesHint,
+                    filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
+                    hasError = true // we are showing the error page because the upload failed
+                  )
                 )
               )
-            )
 
-          case None =>
-            // if the upscan initiate response is not found, we need to redirect to the upload page to start a new upload
-            Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
-        }
-    }
+            case None =>
+              // if the upscan initiate response is not found, we need to redirect to the upload page to start a new upload
+              Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+          }
+      }
 
   }
 
