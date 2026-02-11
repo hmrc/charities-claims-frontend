@@ -184,7 +184,7 @@ GET         /upload-gift-aid-schedule/success               controllers.giftAidS
 GET         /upload-gift-aid-schedule/error                 controllers.giftAidSchedule.UploadGiftAidScheduleController.onUploadError
 GET         /your-gift-aid-schedule-upload                  controllers.giftAidSchedule.YourGiftAidScheduleUploadController.onPageLoad
 POST        /your-gift-aid-schedule-upload                  controllers.giftAidSchedule.YourGiftAidScheduleUploadController.onSubmit
-GET        /your-gift-aid-schedule-upload/remove           controllers.giftAidSchedule.YourGiftAidScheduleUploadController.onRemove
+GET         /your-gift-aid-schedule-upload/remove           controllers.giftAidSchedule.YourGiftAidScheduleUploadController.onRemove
 GET         /check-your-gift-aid-schedule                   controllers.giftAidSchedule.CheckYourGiftAidScheduleController.onPageLoad
 POST        /check-your-gift-aid-schedule                   controllers.giftAidSchedule.CheckYourGiftAidScheduleController.onSubmit
 GET         /problem-with-gift-aid-schedule                 controllers.giftAidSchedule.ProblemWithGiftAidScheduleController.onPageLoad
