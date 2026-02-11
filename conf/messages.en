@@ -482,3 +482,7 @@ aboutOtherIncomeSchedule.paragraph.one = Use this service to add an Other Income
 aboutOtherIncomeSchedule.paragraph.two = You can upload an Other Income schedule in a .ods format.
 aboutOtherIncomeSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download an Other Income schedule here (opens in new tab)</a>. You can submit up to 1 file at a time, and each file can be up to 2.5MB.
 aboutOtherIncomeSchedule.title = About Other Income schedule
+
+giftAidScheduleUploadSuccessful.title = Upload successful
+giftAidScheduleUploadSuccessful.message.1 = Upload successful
+giftAidScheduleUploadSuccessful.message.2 = You have successfully attached your Gift Aid schedule.
