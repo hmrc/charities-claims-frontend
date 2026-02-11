@@ -30,6 +30,9 @@ import org.scalamock.handlers.CallHandler
 import views.html.YourGiftAidScheduleUploadView
 import services.{ClaimsService, ClaimsValidationService}
 import models.*
+import util.TestScheduleData
+import models.FileUploadReference
+import connectors.ClaimsValidationConnector
 
 import scala.concurrent.Future
 
@@ -70,6 +73,8 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2
     )(response)
 
   given HeaderCarrier = HeaderCarrier()
+
+  val mockConnector: ClaimsValidationConnector = mock[ClaimsValidationConnector]
 
   val uploadUrl   = "http://foo.bar.com/upscan-upload-proxy/bucketName"
   val callbackUrl = "http://example.com:1235/charities-claims-validation/claim-1234567890/upscan-callback"
@@ -144,9 +149,15 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Awaiting - display the screen" in {
+        val claimId                    = "test-claim-123"
+        val fileUploadReference        = FileUploadReference("test-file-upload-reference")
         val sessionData                = defaultSessionData
-          .copy(unsubmittedClaimId = Some("test-claim-123"))
-          .copy(giftAidScheduleFileUploadReference = "11370e18-6e24-453e-b45a-76d3e32ea33d")
+          .copy(unsubmittedClaimId = Some(claimId))
+          .copy(
+            giftAidScheduleFileUploadReference = Some(fileUploadReference),
+            giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
+          )
+        val uploadResult               = mockConnector.getUploadResult(claimId, fileUploadReference)
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
@@ -158,10 +169,10 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(
-            claimId = claimId,
-            uploadResult = FileStatus.AWAITING_UPLOAD,
-            failureDetails = None,
-            screenLocked = true
+            claimId,
+            uploadResult,
+            None,
+            true
           ).body
 
         }
