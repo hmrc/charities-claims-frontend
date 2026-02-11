@@ -173,7 +173,7 @@ object ClaimingCommunityBuildingDonationsController {
 
       // CheckMode: New answer is No
       case (false, CheckMode, None)        =>
-        if prevScreenAnswer.contains(false) then routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
+        if prevScreenAnswer.contains(false) || prevScreenAnswer.isEmpty then routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode)
         else routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode)
 
       // CheckMode: Answer unchanged yes
