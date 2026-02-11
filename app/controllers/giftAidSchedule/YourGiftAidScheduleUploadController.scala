@@ -26,7 +26,7 @@ import controllers.actions.Actions
 import models.*
 import services.{ClaimsService, ClaimsValidationService}
 
-import _root_.scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future}
 
 class YourGiftAidScheduleUploadController @Inject() (
   val controllerComponents: MessagesControllerComponents,
