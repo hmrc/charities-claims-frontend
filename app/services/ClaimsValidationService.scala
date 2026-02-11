@@ -31,6 +31,9 @@ trait ClaimsValidationService {
     validationType: ValidationType
   )(using DataRequest[?], HeaderCarrier): Future[Option[FileUploadReference]]
 
+  def createUploadTracking(claimId: String, request: CreateUploadTrackingRequest)(using HeaderCarrier): Future[Boolean]
+  def getUploadSummary(claimId: String)(using HeaderCarrier): Future[GetUploadSummaryResponse]
+
   def getGiftAidScheduleData(using DataRequest[?], HeaderCarrier): Future[GiftAidScheduleData]
   def getOtherIncomeScheduleData(using DataRequest[?], HeaderCarrier): Future[OtherIncomeScheduleData]
   def getCommunityBuildingsScheduleData(using DataRequest[?], HeaderCarrier): Future[CommunityBuildingsScheduleData]
@@ -49,11 +52,33 @@ class ClaimsValidationServiceImpl @Inject() (
 )(using ec: ExecutionContext)
     extends ClaimsValidationService {
 
-  def getFileUploadReference(validationType: ValidationType)(using
+  override def createUploadTracking(claimId: String, request: CreateUploadTrackingRequest)(using
+    HeaderCarrier
+  ): Future[Boolean] =
+    claimsValidationConnector.createUploadTracking(claimId, request)
+
+  override def getUploadSummary(claimId: String)(using HeaderCarrier): Future[GetUploadSummaryResponse] =
+    claimsValidationConnector.getUploadSummary(claimId)
+
+  private def getFileUploadReferenceFromSession(validationType: ValidationType)(using
+    request: DataRequest[?]
+  ): Future[Option[FileUploadReference]] =
+    validationType match {
+      case ValidationType.GiftAid            =>
+        Future.successful(request.sessionData.giftAidScheduleFileUploadReference)
+      case ValidationType.OtherIncome        =>
+        Future.successful(request.sessionData.otherIncomeScheduleFileUploadReference)
+      case ValidationType.CommunityBuildings =>
+        Future.successful(request.sessionData.communityBuildingsScheduleFileUploadReference)
+      case ValidationType.ConnectedCharities =>
+        Future.successful(request.sessionData.connectedCharitiesScheduleFileUploadReference)
+    }
+
+  override def getFileUploadReference(validationType: ValidationType)(using
     request: DataRequest[?],
     hc: HeaderCarrier
   ): Future[Option[FileUploadReference]] =
-    getFileUploadReference(ValidationType.GiftAid)
+    getFileUploadReferenceFromSession(validationType)
       .flatMap {
         case Some(reference) => Future.successful(Some(reference))
         case None            =>
@@ -77,9 +102,13 @@ class ClaimsValidationServiceImpl @Inject() (
                     .map(_ => Some(upload.reference))
               }
             }
+            .recoverWith {
+              case e: Exception if e.getMessage.contains("CLAIM_DOES_NOT_EXIST") =>
+                Future.successful(None)
+            }
       }
 
-  def getGiftAidScheduleData(using request: DataRequest[?], hc: HeaderCarrier): Future[GiftAidScheduleData] =
+  override def getGiftAidScheduleData(using request: DataRequest[?], hc: HeaderCarrier): Future[GiftAidScheduleData] =
     request.sessionData.giftAidScheduleData match {
       case Some(data) => Future.successful(data)
       case None       =>
@@ -113,7 +142,10 @@ class ClaimsValidationServiceImpl @Inject() (
         }
     }
 
-  def getOtherIncomeScheduleData(using request: DataRequest[?], hc: HeaderCarrier): Future[OtherIncomeScheduleData] =
+  override def getOtherIncomeScheduleData(using
+    request: DataRequest[?],
+    hc: HeaderCarrier
+  ): Future[OtherIncomeScheduleData] =
     request.sessionData.otherIncomeScheduleData match {
       case Some(data) => Future.successful(data)
       case None       =>
@@ -146,7 +178,7 @@ class ClaimsValidationServiceImpl @Inject() (
         }
     }
 
-  def getCommunityBuildingsScheduleData(using
+  override def getCommunityBuildingsScheduleData(using
     request: DataRequest[?],
     hc: HeaderCarrier
   ): Future[CommunityBuildingsScheduleData] =
@@ -186,7 +218,7 @@ class ClaimsValidationServiceImpl @Inject() (
         }
     }
 
-  def getConnectedCharitiesScheduleData(using
+  override def getConnectedCharitiesScheduleData(using
     request: DataRequest[?],
     hc: HeaderCarrier
   ): Future[ConnectedCharitiesScheduleData] =
@@ -225,16 +257,16 @@ class ClaimsValidationServiceImpl @Inject() (
         }
     }
 
-  def deleteGiftAidSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
+  override def deleteGiftAidSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
     deleteSchedule(ValidationType.GiftAid, request.sessionData.unsubmittedClaimId)
 
-  def deleteOtherIncomeSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
+  override def deleteOtherIncomeSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
     deleteSchedule(ValidationType.OtherIncome, request.sessionData.unsubmittedClaimId)
 
-  def deleteCommunityBuildingsSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
+  override def deleteCommunityBuildingsSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
     deleteSchedule(ValidationType.CommunityBuildings, request.sessionData.unsubmittedClaimId)
 
-  def deleteConnectedCharitiesSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
+  override def deleteConnectedCharitiesSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
     deleteSchedule(ValidationType.ConnectedCharities, request.sessionData.unsubmittedClaimId)
 
   private def deleteSchedule(validationType: ValidationType, claimIdOpt: Option[String])(using

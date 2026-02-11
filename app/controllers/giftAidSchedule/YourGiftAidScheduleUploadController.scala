@@ -27,13 +27,15 @@ import services.ClaimsValidationService
 import controllers.giftAidSchedule.routes
 
 import scala.concurrent.{ExecutionContext, Future}
+import services.SaveService
 
 class YourGiftAidScheduleUploadController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: YourGiftAidScheduleUploadView,
   actions: Actions,
   claimsValidationConnector: ClaimsValidationConnector,
-  claimsValidationService: ClaimsValidationService
+  claimsValidationService: ClaimsValidationService,
+  saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -109,6 +111,13 @@ class YourGiftAidScheduleUploadController @Inject() (
                     // Ok(view(claimId = claimId, uploadResult = uploadResult, failureDetails = None, screenLocked = false))
                     // strange case, but we need to handle it
                     Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad)
+                }
+                .recoverWith {
+                  case e: Exception if e.getMessage.contains("CLAIM_REFERENCE_DOES_NOT_EXIST") =>
+                    saveService
+                      .save(request.sessionData.copy(giftAidScheduleFileUploadReference = None))
+                      .map(_ => Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+
                 }
           }
     }
