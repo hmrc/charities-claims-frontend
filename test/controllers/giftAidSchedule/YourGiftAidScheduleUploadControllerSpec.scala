@@ -29,6 +29,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import org.scalamock.handlers.CallHandler
 import views.html.YourGiftAidScheduleUploadView
 import services.{ClaimsService, ClaimsValidationService}
+import models.*
 
 import scala.concurrent.Future
 
@@ -110,7 +111,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2
   "YourGiftAidScheduleUploadControllerSpec" - {
 
     "onPageLoad" - {
-      "unsubmitted Claim ID is not defined" {
+      "unsubmitted Claim ID is not defined" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -125,8 +126,8 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2
           )
         }
       }
-      "unsubmitted Claim ID is defined and file reference is not defined" {
-        val sessionData                = sessionData(unsubmittedClaimId = Some("test-claim-123"))
+      "unsubmitted Claim ID is defined and file reference is not defined" in {
+        val sessionData                = defaultSessionData.copy(unsubmittedClaimId = Some("test-claim-123"))
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
@@ -141,21 +142,44 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2
           )
         }
       }
-      //      "unsubmitted Claim ID & file reference are defined - result = Awaiting" {}
-      //      "unsubmitted Claim ID & file reference are defined - result = Verifying" {}
-      //      "unsubmitted Claim ID & file reference are defined - result = Validating" {}
-      //      "unsubmitted Claim ID & file reference are defined - result = Verification Failed" {}
-      //      "unsubmitted Claim ID & file reference are defined - result = Validated" {}
-      //      "unsubmitted Claim ID & file reference are defined - result = other" {}
+
+      "unsubmitted Claim ID & file reference are defined - result = Awaiting - display the screen" in {
+        val sessionData                = defaultSessionData
+          .copy(unsubmittedClaimId = Some("test-claim-123"))
+          .copy(giftAidScheduleFileUploadReference = "11370e18-6e24-453e-b45a-76d3e32ea33d")
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.YourGiftAidScheduleUploadController.onPageLoad.url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[YourGiftAidScheduleUploadView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(
+            claimId = claimId,
+            uploadResult = FileStatus.AWAITING_UPLOAD,
+            failureDetails = None,
+            screenLocked = true
+          ).body
+
+        }
+      }
+      //      "unsubmitted Claim ID & file reference are defined - result = Verifying" in {}
+      //      "unsubmitted Claim ID & file reference are defined - result = Validating" in {}
+      //      "unsubmitted Claim ID & file reference are defined - result = Verification Failed" in {}
+      //      "unsubmitted Claim ID & file reference are defined - result = Validated" in {}
+      //      "unsubmitted Claim ID & file reference are defined - result = other" in {}
     }
 
-    //    "onRemove" - {}
+    //    "onRemove" in {}
     //
     //    "onSubmit" - {
-    //      "unsubmitted Claim ID is not defined" {}
-    //      "unsubmitted Claim ID & file reference are defined - result = Validated" {}
-    //      "unsubmitted Claim ID & file reference are defined - result = Validation Failed" {}
-    //      "unsubmitted Claim ID & file reference are defined - result = other" {}
+    //      "unsubmitted Claim ID is not defined" in {}
+    //      "unsubmitted Claim ID & file reference are defined - result = Validated" in {}
+    //      "unsubmitted Claim ID & file reference are defined - result = Validation Failed" in {}
+    //      "unsubmitted Claim ID & file reference are defined - result = other" in {}
     //    }
   }
 }
