@@ -59,4 +59,11 @@ object FormatUtils {
       else messages("site.no")
   }
 
+  extension (field: String) {
+    def toRowNumber: String = {
+      val pattern = """\[(\d+)\]""".r
+      pattern.findFirstMatchIn(field).map(_.group(1)).getOrElse("0")
+    }
+  }
+
 }

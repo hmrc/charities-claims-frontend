@@ -413,8 +413,16 @@ site.pagination.next = Next
 
 warning.text = Warning
 
+uploadGiftAidSchedule.caption = Add Gift Aid schedule
 uploadGiftAidSchedule.title = Upload a Gift Aid schedule
 uploadGiftAidSchedule.heading = Upload a Gift Aid schedule
+uploadGiftAidSchedule.paragraph.one = To claim Gift Aid, you need to upload a completed Gift Aid schedule with details of your donors and donations. You can save your claim without uploading the Gift Aid schedule, but you need to upload a Gift Aid schedule before submitting your claim.
+uploadGiftAidSchedule.paragraph.url = If you have not completed a Gift Aid schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Gift Aid Schedule here (opens in new tab)</a>.
+uploadGiftAidSchedule.input.label = Upload a file
+uploadGiftAidSchedule.form.upload-file.submit = Continue
+uploadGiftAidSchedule.error.file.upload-file.required = Select a Gift Aid schedule
+uploadGiftAidSchedule.error.file.upload-file.invalid-size-large = File can be up to 2.5MB
+uploadGiftAidSchedule.error.file.upload-file.other = Some other error message to be put here
 
 yourGiftAidScheduleUpload.caption = Add Gift Aid schedule
 yourGiftAidScheduleUpload.title = Your Gift Aid schedule upload 
@@ -450,7 +458,19 @@ checkYourGiftAidSchedule.radios.no = No, continue with Gift Aid schedule
 checkYourGiftAidSchedule.error.required = Select ‘Yes’ if you need to update this Gift Aid schedule
 
 problemWithGiftAidSchedule.title = There is a problem with the data in your Gift Aid schedule
+problemWithGiftAidSchedule.caption = Add Gift Aid schedule
 problemWithGiftAidSchedule.heading = There is a problem with the data in your Gift Aid schedule
+problemWithGiftAidSchedule.warning = We cannot accept the file [file-name] because it has errors. You must fix these errors and upload the updated file before you can continue.
+problemWithGiftAidSchedule.subheading.1 = What you can do next
+problemWithGiftAidSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Gift Aid donations</a>.
+problemWithGiftAidSchedule.list.item.2 = Delete this Gift Aid schedule.
+problemWithGiftAidSchedule.list.item.3 = Update your spreadsheet.
+problemWithGiftAidSchedule.list.item.4 = Upload the updated spreadsheet.
+problemWithGiftAidSchedule.subheading.2 = Summary of errors
+problemWithGiftAidSchedule.table.column.1 = Row
+problemWithGiftAidSchedule.table.column.2 = Error
+problemWithGiftAidSchedule.link.attachUpdatedSchedule = Attach an updated Gift Aid schedule
+problemWithGiftAidSchedule.link.deleteSchedule = Delete schedule
 
 giftAidScheduleUploadSuccessful.title = Upload successful
 
