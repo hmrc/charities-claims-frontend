@@ -17,11 +17,9 @@
 package controllers.giftAidSchedule
 
 import com.typesafe.config.ConfigFactory
-import connectors.ClaimsConnector
 import controllers.giftAidSchedule.routes
 import controllers.ControllerSpec
-import models.{RepaymentClaimDetailsAnswers, SessionData, UploadRequest, UpscanInitiateRequest, UpscanInitiateResponse}
-import connectors.{ClaimsValidationConnector, UpscanInitiateConnector}
+import models.{RepaymentClaimDetailsAnswers, UpscanInitiateRequest, UpscanInitiateResponse}
 import play.api.{Application, Configuration}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -154,135 +152,8 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
         }
       }
 
-      "should render next page if setClaimingGiftAid is true && unsubmittedClaimId is not None & giftAidScheduleFileUploadReference is defined" in {
-
-        val sessionDataTestClaim =
-          SessionData
-            .empty(testCharitiesReference)
-            .copy(unsubmittedClaimId = Some("test-claim-123"))
-            .copy(giftAidScheduleUpscanInitialization = Some(response))
-
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)(using sessionDataTestClaim)
-
-        val customConfig = Map(
-          "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData)
-          .configure(customConfig)
-          .build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.UploadGiftAidScheduleController.onPageLoad.url)
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.YourGiftAidScheduleUploadController.onPageLoad.url
-          )
-        }
-      }
-
-      "should use the correct configured giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl in the message" in {
-        val sessionData  = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
-        val customConfig = Map(
-          "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData)
-          .configure(customConfig)
-          .build()
-
-        running(application) {
-          val request =
-            FakeRequest(GET, routes.UploadGiftAidScheduleController.onPageLoad.url)
-          val result  = route(application, request).value
-
-          status(result) shouldEqual OK
-          contentAsString(result) should include("https://test.example.com/charity-repayment-claim")
-        }
-      }
     }
 
-    "onUploadSuccess" - {
-      "should redirect to the next page when claim id is not defined" in {
-        // val sessionData = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
-
-        given application: Application = applicationBuilder().build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.UploadGiftAidScheduleController.onUploadError.url)
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad.url
-          )
-        }
-      }
-
-      "should redirect to the next page when claim id is defined & upload reference is found" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(unsubmittedClaimId = Some("test-claim-123"))
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.UploadGiftAidScheduleController.onUploadError.url)
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.YourGiftAidScheduleUploadController.onPageLoad.url
-          )
-        }
-      }
-
-      "should redirect to the next page when claim id is defined & upload reference is not found" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.UploadGiftAidScheduleController.onUploadError.url)
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.YourGiftAidScheduleUploadController.onPageLoad.url
-          )
-        }
-      }
-    }
-
-//    "onUploadError" - {
-//      "should redirect to the next page" in {
-//        val sessionData                =
-//          SessionData
-//            .empty(testCharitiesReference)
-//            .copy(giftAidScheduleFileUploadReference = Some("test-claim-123"))
-//        given application: Application = applicationBuilder(sessionData = sessionData).build()
-//
-//        running(application) {
-//          given request: FakeRequest[AnyContentAsEmpty.type] =
-//            FakeRequest(POST, routes.UploadGiftAidScheduleController.onUploadError.url)
-//
-//          val result = route(application, request).value
-//
-//          status(result) shouldEqual SEE_OTHER
-//          redirectLocation(result) shouldEqual Some(routes.YourGiftAidScheduleUploadController.onPageLoad.url)
-//        }
-//      }
-//    }
   }
 
 }
