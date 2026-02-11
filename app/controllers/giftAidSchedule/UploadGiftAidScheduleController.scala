@@ -22,7 +22,7 @@ import com.google.inject.Inject
 import connectors.{ClaimsValidationConnector, UpscanInitiateConnector}
 import controllers.BaseController
 import config.FrontendAppConfig
-import views.html.UploadGifAidScheduleView
+import views.html.UploadGiftAidScheduleView
 import controllers.actions.Actions
 import models.*
 import models.requests.DataRequest
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class UploadGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: UploadGifAidScheduleView,
+  view: UploadGiftAidScheduleView,
   actions: Actions,
   upscanInitiateConnector: UpscanInitiateConnector,
   claimsValidationConnector: ClaimsValidationConnector,
@@ -51,7 +51,7 @@ class UploadGiftAidScheduleController @Inject() (
       case Some(claimId) =>
         request.sessionData.giftAidScheduleFileUploadReference match {
           case Some(_) =>
-            // if the file upload reference is found, we need to redirect to the your gift aid schedule upload page
+            // if the file upload reference is found, we need to redirect to your gift aid schedule upload page
             Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
 
           case None =>
@@ -59,6 +59,7 @@ class UploadGiftAidScheduleController @Inject() (
               upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
             } yield Ok(
               view(
+                appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl,
                 claimId = claimId,
                 upscanInitiateResponse = upscanInitiateResponse,
                 allowedFileTypesHint = appConfig.allowedFileTypesHint,
@@ -181,6 +182,7 @@ class UploadGiftAidScheduleController @Inject() (
             Future.successful(
               Ok(
                 view(
+                  appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl,
                   claimId = request.sessionData.unsubmittedClaimId.get,
                   upscanInitiateResponse = upscanInitiateResponse,
                   allowedFileTypesHint = appConfig.allowedFileTypesHint,

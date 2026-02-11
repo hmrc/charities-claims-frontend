@@ -413,8 +413,16 @@ site.pagination.next = Next
 
 warning.text = Warning
 
+uploadGiftAidSchedule.caption = Add Gift Aid schedule
 uploadGiftAidSchedule.title = Upload a Gift Aid schedule
 uploadGiftAidSchedule.heading = Upload a Gift Aid schedule
+uploadGiftAidSchedule.paragraph.one = To claim Gift Aid, you need to upload a completed Gift Aid schedule with details of your donors and donations. You can save your claim without uploading the Gift Aid schedule, but you need to upload a Gift Aid schedule before submitting your claim.
+uploadGiftAidSchedule.paragraph.url = If you have not completed a Gift Aid schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Gift Aid Schedule here (opens in new tab)</a>.
+uploadGiftAidSchedule.input.label = Upload a file
+uploadGiftAidSchedule.form.upload-file.submit = Continue
+uploadGiftAidSchedule.error.file.upload-file.required = Select a Gift Aid schedule
+uploadGiftAidSchedule.error.file.upload-file.invalid-size-large = File can be up to 2.5MB
+uploadGiftAidSchedule.error.file.upload-file.other = Some other error message to be put here
 
 yourGiftAidScheduleUpload.title = Your Gift Aid schedule upload 
 yourGiftAidScheduleUpload.heading = Your Gift Aid schedule upload
