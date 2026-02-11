@@ -22,6 +22,7 @@
 
 @this(
     layout: templates.Layout,
+    formHelper: FormWithCSRF,
     govukButton: GovukButton,
     pageNavigator: PageNavigator,
     donationsErrorsTable: DonationsErrorsTable
@@ -65,9 +66,9 @@
 
     @pageNavigator(paginationViewModel)
 
-    <a href="@routes.UploadGiftAidScheduleController.onPageLoad.url" class="govuk-button" role="button" data-module="govuk-button">
-        @messages("problemWithGiftAidSchedule.link.attachUpdatedSchedule")
-    </a>
+    @formHelper(action = routes.ProblemWithGiftAidScheduleController.onSubmit, Symbol("autoComplete") -> "off") {
+        @govukButton(ButtonViewModel(Text(messages("problemWithGiftAidSchedule.link.attachUpdatedSchedule"))))
+    }
 
     <p class="govuk-body">
         <a href="@DeleteGiftAidScheduleController.onPageLoad.url" class="govuk-link govuk-link--no-visited-state">
