@@ -28,14 +28,13 @@
     claimId: String,
     uploadResult: GetUploadResultResponse,
     failureDetails: Option[GetUploadResultFailureDetails],
-    uploadFileName: Option[String],
     warningOne: Option[String],
     screenLocked: Boolean
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("yourGiftAidScheduleUpload.title")), 
-    showBackLink = true,
+    showBackLink = false,
     refreshPageSeconds = Some(3)
 ) {
 
@@ -47,16 +46,13 @@
         <dl class="govuk-summary-list govuk-summary-list--long-key">
         
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    @uploadFileName
-                </dt>
                 <dd class="govuk-summary-list__value">
                     <strong class="govuk-tag govuk-tag--yellow">
                         @uploadResult.fileStatus.toString
                     </strong>
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="{warningOne}">Remove<span class="govuk-visually-hidden"> @uploadFileName</span></a>
+                    <a class="govuk-link" href="{warningOne}">Remove</a>
                 </dd>
             </div>
         </dl>   

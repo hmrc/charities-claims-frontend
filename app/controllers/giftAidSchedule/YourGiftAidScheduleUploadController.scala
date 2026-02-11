@@ -57,7 +57,6 @@ class YourGiftAidScheduleUploadController @Inject() (
                       claimId = claimId,
                       uploadResult = uploadResult,
                       failureDetails = None,
-                      uploadFileName = Some(fileUploadReference),
                       warningOne = Some("someUrl"),
                       screenLocked = true
                     )
@@ -69,7 +68,6 @@ class YourGiftAidScheduleUploadController @Inject() (
                       claimId = claimId,
                       uploadResult = uploadResult,
                       failureDetails = None,
-                      uploadFileName = Some(fileUploadReference),
                       warningOne = Some("someUrl"),
                       screenLocked = true
                     )
@@ -81,7 +79,6 @@ class YourGiftAidScheduleUploadController @Inject() (
                       claimId = claimId,
                       uploadResult = uploadResult,
                       failureDetails = None,
-                      uploadFileName = Some(fileUploadReference),
                       warningOne = Some("someUrl"),
                       screenLocked = true
                     )
@@ -93,7 +90,6 @@ class YourGiftAidScheduleUploadController @Inject() (
                       claimId = claimId,
                       uploadResult = uploadResult,
                       failureDetails = Some(failureDetails),
-                      uploadFileName = Some(fileUploadReference),
                       warningOne = Some("someUrl"),
                       screenLocked = true
                     )
@@ -105,7 +101,6 @@ class YourGiftAidScheduleUploadController @Inject() (
                       claimId = claimId,
                       uploadResult = uploadResult,
                       failureDetails = None,
-                      uploadFileName = Some(fileUploadReference),
                       warningOne = Some("someUrl"),
                       screenLocked = false
                     )
