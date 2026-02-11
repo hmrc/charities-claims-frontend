@@ -102,6 +102,8 @@ class UnregulatedDonationsServiceImpl @Inject() (
   }
 
   // sums schedule totals from sessionData (giftAid, otherIncome, communityBuildings - connected charities schedule has no total donations)
+  // pass in sessionData - make the function pure - use companion objects
+  // update unit test for all sub functions
   private def getCurrentClaimDonationsTotal(using request: DataRequest[?]): BigDecimal = {
     val session = request.sessionData
 
