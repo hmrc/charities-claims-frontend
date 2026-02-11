@@ -18,9 +18,9 @@ package controllers.giftAidSchedule
 
 import play.api.mvc.*
 import com.google.inject.Inject
-import config.FrontendAppConfig
 import connectors.ClaimsValidationConnector
 import controllers.BaseController
+import config.FrontendAppConfig
 import views.html.ProblemWithGiftAidScheduleView
 import controllers.actions.Actions
 import models.*
@@ -64,7 +64,6 @@ class ProblemWithGiftAidScheduleController @Inject() (
                   Ok(
                     view(
                       claimId = claimId,
-                      giftAidScheduleData = giftAidScheduleData,
                       errors = paginationResult.paginatedData,
                       paginationViewModel = paginationResult.paginationViewModel,
                       giftAidScheduleSpreadsheetGuidanceUrl = appConfig.giftAidScheduleSpreadsheetGuidanceUrl

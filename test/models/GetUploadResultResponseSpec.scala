@@ -16,11 +16,8 @@
 
 package models
 
-import util.BaseSpec
-import play.api.libs.json.Json
-import util.TestScheduleData
-import play.api.libs.json.JsSuccess
-import play.api.libs.json.JsError
+import util.{BaseSpec, TestScheduleData}
+import play.api.libs.json.{JsError, JsSuccess, Json}
 
 class GetUploadResultResponseSpec extends BaseSpec {
 
@@ -586,7 +583,7 @@ class GetUploadResultResponseSpec extends BaseSpec {
       "be serialised and deserialised correctly" in {
         val result = GetUploadResultValidationFailedGiftAid(
           reference = FileUploadReference("test-ref-123"),
-          giftAidScheduleData = TestScheduleData.exampleGiftAidScheduleData,
+          giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData),
           errors = Seq(
             ValidationError(field = "test-field", error = "test-error"),
             ValidationError(field = "test-field-2", error = "test-error-2")
@@ -599,7 +596,7 @@ class GetUploadResultResponseSpec extends BaseSpec {
       "be serialised and deserialised correctly" in {
         val result = GetUploadResultValidationFailedOtherIncome(
           reference = FileUploadReference("test-ref-123"),
-          otherIncomeData = TestScheduleData.exampleOtherIncomeScheduleData,
+          otherIncomeData = Some(TestScheduleData.exampleOtherIncomeScheduleData),
           errors = Seq(
             ValidationError(field = "test-field", error = "test-error"),
             ValidationError(field = "test-field-2", error = "test-error-2")
@@ -612,7 +609,7 @@ class GetUploadResultResponseSpec extends BaseSpec {
       "be serialised and deserialised correctly" in {
         val result = GetUploadResultValidationFailedCommunityBuildings(
           reference = FileUploadReference("test-ref-123"),
-          communityBuildingsData = TestScheduleData.exampleCommunityBuildingsScheduleData,
+          communityBuildingsData = Some(TestScheduleData.exampleCommunityBuildingsScheduleData),
           errors = Seq(
             ValidationError(field = "test-field", error = "test-error"),
             ValidationError(field = "test-field-2", error = "test-error-2")
@@ -625,7 +622,7 @@ class GetUploadResultResponseSpec extends BaseSpec {
       "be serialised and deserialised correctly" in {
         val result = GetUploadResultValidationFailedConnectedCharities(
           reference = FileUploadReference("test-ref-123"),
-          connectedCharitiesData = TestScheduleData.exampleConnectedCharitiesScheduleData,
+          connectedCharitiesData = Some(TestScheduleData.exampleConnectedCharitiesScheduleData),
           errors = Seq(
             ValidationError(field = "test-field", error = "test-error"),
             ValidationError(field = "test-field-2", error = "test-error-2")

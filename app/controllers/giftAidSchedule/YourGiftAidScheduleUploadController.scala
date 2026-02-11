@@ -16,7 +16,6 @@
 
 package controllers.giftAidSchedule
 
-import controllers.giftAidSchedule.routes
 import play.api.mvc.*
 import com.google.inject.Inject
 import connectors.ClaimsValidationConnector
@@ -24,7 +23,8 @@ import controllers.BaseController
 import views.html.YourGiftAidScheduleUploadView
 import controllers.actions.Actions
 import models.*
-import services.{ClaimsService, ClaimsValidationService}
+import services.ClaimsValidationService
+import controllers.giftAidSchedule.routes
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,8 +33,7 @@ class YourGiftAidScheduleUploadController @Inject() (
   view: YourGiftAidScheduleUploadView,
   actions: Actions,
   claimsValidationConnector: ClaimsValidationConnector,
-  claimsValidationService: ClaimsValidationService,
-  claimsService: ClaimsService
+  claimsValidationService: ClaimsValidationService
 )(using ec: ExecutionContext)
     extends BaseController {
 

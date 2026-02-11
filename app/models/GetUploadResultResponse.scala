@@ -141,7 +141,7 @@ object ValidationError {
 
 final case class GetUploadResultValidationFailedGiftAid(
   reference: FileUploadReference,
-  giftAidScheduleData: GiftAidScheduleData,
+  giftAidScheduleData: Option[GiftAidScheduleData] = None,
   errors: Seq[ValidationError]
 ) extends GetUploadResultResponse {
   def fileStatus: FileStatus         = FileStatus.VALIDATION_FAILED
@@ -155,7 +155,7 @@ object GetUploadResultValidationFailedGiftAid {
 
 final case class GetUploadResultValidationFailedOtherIncome(
   reference: FileUploadReference,
-  otherIncomeData: OtherIncomeScheduleData,
+  otherIncomeData: Option[OtherIncomeScheduleData] = None,
   errors: Seq[ValidationError]
 ) extends GetUploadResultResponse {
   def fileStatus: FileStatus         = FileStatus.VALIDATION_FAILED
@@ -169,7 +169,7 @@ object GetUploadResultValidationFailedOtherIncome {
 
 final case class GetUploadResultValidationFailedCommunityBuildings(
   reference: FileUploadReference,
-  communityBuildingsData: CommunityBuildingsScheduleData,
+  communityBuildingsData: Option[CommunityBuildingsScheduleData] = None,
   errors: Seq[ValidationError]
 ) extends GetUploadResultResponse {
   def fileStatus: FileStatus         = FileStatus.VALIDATION_FAILED
@@ -183,7 +183,7 @@ object GetUploadResultValidationFailedCommunityBuildings {
 
 final case class GetUploadResultValidationFailedConnectedCharities(
   reference: FileUploadReference,
-  connectedCharitiesData: ConnectedCharitiesScheduleData,
+  connectedCharitiesData: Option[ConnectedCharitiesScheduleData] = None,
   errors: Seq[ValidationError]
 ) extends GetUploadResultResponse {
   def fileStatus: FileStatus         = FileStatus.VALIDATION_FAILED
