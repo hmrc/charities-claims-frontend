@@ -28,7 +28,8 @@ import scala.concurrent.{ExecutionContext, Future}
 trait ClaimsValidationService {
 
   def getFileUploadReference(
-    validationType: ValidationType
+    validationType: ValidationType,
+    acceptAwaitingUpload: Boolean = false
   )(using DataRequest[?], HeaderCarrier): Future[Option[FileUploadReference]]
 
   def createUploadTracking(claimId: String, request: CreateUploadTrackingRequest)(using HeaderCarrier): Future[Boolean]
@@ -74,7 +75,10 @@ class ClaimsValidationServiceImpl @Inject() (
         Future.successful(request.sessionData.connectedCharitiesScheduleFileUploadReference)
     }
 
-  override def getFileUploadReference(validationType: ValidationType)(using
+  override def getFileUploadReference(
+    validationType: ValidationType,
+    acceptAwaitingUpload: Boolean = false
+  )(using
     request: DataRequest[?],
     hc: HeaderCarrier
   ): Future[Option[FileUploadReference]] =
@@ -88,18 +92,23 @@ class ClaimsValidationServiceImpl @Inject() (
               summaryResponse.uploads.find(_.validationType == validationType) match {
                 case None         => Future.successful(None)
                 case Some(upload) =>
-                  saveService
-                    .save(validationType match {
-                      case ValidationType.GiftAid            =>
-                        request.sessionData.copy(giftAidScheduleFileUploadReference = Some(upload.reference))
-                      case ValidationType.OtherIncome        =>
-                        request.sessionData.copy(otherIncomeScheduleFileUploadReference = Some(upload.reference))
-                      case ValidationType.CommunityBuildings =>
-                        request.sessionData.copy(communityBuildingsScheduleFileUploadReference = Some(upload.reference))
-                      case ValidationType.ConnectedCharities =>
-                        request.sessionData.copy(connectedCharitiesScheduleFileUploadReference = Some(upload.reference))
-                    })
-                    .map(_ => Some(upload.reference))
+                  if acceptAwaitingUpload || upload.fileStatus != FileStatus.AWAITING_UPLOAD
+                  then
+                    saveService
+                      .save(validationType match {
+                        case ValidationType.GiftAid            =>
+                          request.sessionData.copy(giftAidScheduleFileUploadReference = Some(upload.reference))
+                        case ValidationType.OtherIncome        =>
+                          request.sessionData.copy(otherIncomeScheduleFileUploadReference = Some(upload.reference))
+                        case ValidationType.CommunityBuildings =>
+                          request.sessionData
+                            .copy(communityBuildingsScheduleFileUploadReference = Some(upload.reference))
+                        case ValidationType.ConnectedCharities =>
+                          request.sessionData
+                            .copy(connectedCharitiesScheduleFileUploadReference = Some(upload.reference))
+                      })
+                      .map(_ => Some(upload.reference))
+                  else Future.successful(None)
               }
             }
             .recoverWith {

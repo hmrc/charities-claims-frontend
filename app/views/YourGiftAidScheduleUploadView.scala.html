@@ -34,7 +34,7 @@
 @layout(
     pageTitle = titleNoForm(messages("yourGiftAidScheduleUpload.title")), 
     showBackLink = false,
-    refreshPageSeconds = Some(3)
+    refreshPageSeconds = if (screenLocked) Some(3) else None
 ) {
 
     <span class="govuk-caption-l">@messages("yourGiftAidScheduleUpload.caption")</span>
