@@ -36,7 +36,7 @@ class AuthLoginStubController @Inject() (
 
   val defaultUserId         = "1234567890"
   val postAction: Call      = Call("POST", config.authLoginStubSignInUrl)
-  val startClaimUrl: String = s"${config.baseUrl}${controllers.routes.StartController.start}"
+  val startClaimUrl: String = config.charityRepaymentDashboardUrl
   val redirectPolicy        = UnsafePermitAll
 
   final val onPageLoad: Action[AnyContent] =

@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.Inject
+import config.FrontendAppConfig
 import controllers.actions.Actions
 import models.requests.DataRequest
 import play.api.i18n.Messages
@@ -27,17 +28,20 @@ import views.html.ClaimsTaskListView
 class ClaimsTaskListController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: ClaimsTaskListView,
-  actions: Actions
+  actions: Actions,
+  appConfig: FrontendAppConfig
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(ClaimsTaskListController.buildViewModel))
+    Ok(view(ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl)))
   }
 }
 
 object ClaimsTaskListController {
 
-  private def buildViewModel(using request: DataRequest[?], messages: Messages): ClaimsTaskListViewModel = {
+  private def buildViewModel(
+    dashboardUrl: String
+  )(using request: DataRequest[?], messages: Messages): ClaimsTaskListViewModel = {
     val repaymentClaimDetailsComplete = isRepaymentClaimDetailsComplete
     val charitiesReference            = request.sessionData.charitiesReference
 
@@ -55,7 +59,8 @@ object ClaimsTaskListController {
       ClaimsTaskListViewModel(
         sections = Seq(repaymentClaimDetailsOnlySection, declarationSection),
         deleteClaimUrl = None,
-        charitiesReference = charitiesReference
+        charitiesReference = charitiesReference,
+        dashboardUrl = dashboardUrl
       )
     } else {
       val aboutTheClaimSection = TaskSection(
@@ -84,7 +89,8 @@ object ClaimsTaskListController {
       ClaimsTaskListViewModel(
         sections = sections,
         deleteClaimUrl = Some(organisationDetails.routes.DeleteRepaymentClaimController.onPageLoad.url),
-        charitiesReference = charitiesReference
+        charitiesReference = charitiesReference,
+        dashboardUrl = dashboardUrl
       )
     }
   }

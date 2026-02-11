@@ -1,0 +1,53 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.*
+@import uk.gov.hmrc.govukfrontend.views.html.components.*
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.table.*
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.*
+@import java.time.LocalDate
+@import java.time.format.DateTimeFormatter
+@import java.util.Locale
+@import utils.FormatUtils.*
+
+@this(govukTable: GovukTable)
+
+@(donations: Seq[Donation])(implicit request: Request[_], messages: Messages)
+
+@govukTable(
+    Table(
+        classes = "donations-table",
+        head = Some(
+            (1 to 10).map { index =>
+                HeadCell(content = Text(messages("checkYourGiftAidSchedule.table.column."+index)), classes = "")
+                } 
+        ),
+        rows = donations.map { donation =>
+            Seq(
+                TableRow(content = Text(donation.donationItem.map(_.toString).getOrElse(messages("data.notApplicable"))), classes = "govuk-table__header"),
+                TableRow(content = Text(donation.donorTitle.getOrElse(messages("data.notApplicable")))),
+                TableRow(content = Text(donation.donorFirstName.getOrElse(messages("data.notApplicable")))),
+                TableRow(content = Text(donation.donorLastName.getOrElse(messages("data.notApplicable")))),
+                TableRow(content = Text(donation.donorHouse.getOrElse(messages("data.notApplicable")))),
+                TableRow(content = Text(donation.donorPostcode.getOrElse(messages("data.notApplicable")))),
+                TableRow(content = Text(donation.aggregatedDonations.getOrElse(messages("data.notApplicable")))),
+                TableRow(content = Text(donation.sponsoredEvent.map(_.toYesNoString).getOrElse(messages("data.notApplicable")))),
+                TableRow(content = Text(donation.donationDate.toGdsShortMonthDateString)),
+                TableRow(content = Text(donation.donationAmount.toAmountString))
+            )
+        }
+    )
+)   

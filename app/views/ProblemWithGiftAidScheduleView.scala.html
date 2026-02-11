@@ -1,5 +1,5 @@
 @*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,24 @@
  *@
 
 @import controllers.giftAidSchedule.routes
+@import controllers.organisationDetails.routes.DeleteGiftAidScheduleController
 @import models.*
 @import views.html.components.*
 @import viewmodels.govuk.PaginationFluency.*
 
 @this(
     layout: templates.Layout,
-    formHelper: FormWithCSRF,
     govukButton: GovukButton,
-    govukErrorSummary: GovukErrorSummary,
-    pageNavigator: PageNavigator
+    pageNavigator: PageNavigator,
+    donationsErrorsTable: DonationsErrorsTable
 )
 
 @(
     claimId: String,
     giftAidScheduleData: GiftAidScheduleData,
     errors: Seq[ValidationError],
-    paginationViewModel: PaginationViewModel
+    paginationViewModel: PaginationViewModel,
+    giftAidScheduleSpreadsheetGuidanceUrl: String
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
@@ -39,6 +40,40 @@
     showBackLink = true
 ) {
 
+    <span class="govuk-caption-l">@messages("problemWithGiftAidSchedule.caption")</span>
+    <h1 class="govuk-heading-l">@messages("problemWithGiftAidSchedule.heading")</h1>
+
+    <div class="govuk-warning-text">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-visually-hidden">@messages("warning.text")</span>
+            @messages("problemWithGiftAidSchedule.warning")
+        </strong>
+    </div>
+
+    <h2 class="govuk-heading-m">@messages("problemWithGiftAidSchedule.subheading.1")</h2>
+
+    <ol class="govuk-list govuk-list--number">
+        <li>@Html(messages("problemWithGiftAidSchedule.list.item.1", giftAidScheduleSpreadsheetGuidanceUrl))</li>
+        <li>@messages("problemWithGiftAidSchedule.list.item.2")</li>
+        <li>@messages("problemWithGiftAidSchedule.list.item.3")</li>
+        <li>@messages("problemWithGiftAidSchedule.list.item.4")</li>
+    </ol>
+
+    <h2 class="govuk-heading-m">@messages("problemWithGiftAidSchedule.subheading.2")</h2>
+
+    @donationsErrorsTable(errors)
+
     @pageNavigator(paginationViewModel)
-    
+
+    <a href="@routes.UploadGiftAidScheduleController.onPageLoad.url" class="govuk-button" role="button" data-module="govuk-button">
+        @messages("problemWithGiftAidSchedule.link.attachUpdatedSchedule")
+    </a>
+
+    <p class="govuk-body">
+        <a href="@DeleteGiftAidScheduleController.onPageLoad.url" class="govuk-link govuk-link--no-visited-state">
+            @messages("problemWithGiftAidSchedule.link.deleteSchedule")
+        </a>
+    </p>
+
 }

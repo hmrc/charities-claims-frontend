@@ -100,6 +100,10 @@ class FrontendAppConfigSpec extends BaseSpec {
       testFrontendAppConfig.agentUnsubmittedClaimLimit shouldBe 3
     }
 
+    "return charityRepaymentDashboardUrl" in {
+      testFrontendAppConfig.charityRepaymentDashboardUrl shouldBe "http://foo.com/charity-repayment-dashboard"
+    }
+
   }
 
 }

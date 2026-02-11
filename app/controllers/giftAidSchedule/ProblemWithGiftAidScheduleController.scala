@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,25 @@
 
 package controllers.giftAidSchedule
 
-import controllers.giftAidSchedule.routes
 import play.api.mvc.*
 import com.google.inject.Inject
+import config.FrontendAppConfig
 import connectors.ClaimsValidationConnector
 import controllers.BaseController
 import views.html.ProblemWithGiftAidScheduleView
 import controllers.actions.Actions
 import models.*
+import services.PaginationService
+import controllers.giftAidSchedule.routes
 
 import scala.concurrent.{ExecutionContext, Future}
-import services.PaginationService
 
 class ProblemWithGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: ProblemWithGiftAidScheduleView,
   actions: Actions,
-  claimsValidationConnector: ClaimsValidationConnector
+  claimsValidationConnector: ClaimsValidationConnector,
+  appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -63,8 +65,9 @@ class ProblemWithGiftAidScheduleController @Inject() (
                     view(
                       claimId = claimId,
                       giftAidScheduleData = giftAidScheduleData,
-                      errors = errors,
-                      paginationViewModel = paginationResult.paginationViewModel
+                      errors = paginationResult.paginatedData,
+                      paginationViewModel = paginationResult.paginationViewModel,
+                      giftAidScheduleSpreadsheetGuidanceUrl = appConfig.giftAidScheduleSpreadsheetGuidanceUrl
                     )
                   )
 

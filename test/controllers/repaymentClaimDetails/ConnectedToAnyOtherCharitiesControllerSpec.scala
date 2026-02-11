@@ -111,7 +111,8 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
       // Normal Mode Tests:
 
       "normalMode: should redirect to ClaimingReferenceNumberController when the value is true" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -128,7 +129,8 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
       }
 
       "normalMode: should redirect to ClaimingReferenceNumberController when the value is false" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -145,7 +147,8 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
       }
 
       "normalMode: should reload the page with errors when a required field is missing" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -183,7 +186,8 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
       // Check Mode Tests:
 
       "checkMode: should redirect to CYA when the value is true" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -200,7 +204,8 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
       }
 
       "checkMode: should redirect to CYA when the value is false" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -416,7 +421,42 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual BAD_REQUEST
           contentAsString(result) should include("Do you want to update this repayment claim?")
-          contentAsString(result) should include("Select ‘Yes’ if you want to update this repayment claim")
+          contentAsString(result) should include("Select \u2018Yes\u2019 if you want to update this repayment claim")
+        }
+      }
+
+      "should redirect to page not found when claimingUnderGiftAidSmallDonationsScheme is false" in {
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.PageNotFoundController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect to page not found when claimingUnderGiftAidSmallDonationsScheme is None" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ConnectedToAnyOtherCharitiesController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.PageNotFoundController.onPageLoad.url
+          )
         }
       }
     }

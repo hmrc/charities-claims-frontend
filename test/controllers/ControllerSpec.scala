@@ -19,7 +19,6 @@ package controllers
 import com.softwaremill.diffx.scalatest.DiffShouldMatcher
 import controllers.actions.{AuthorisedAction, DataRetrievalAction}
 import models.SessionData
-import models.requests.DataRequest
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import play.api.data.Form
@@ -78,8 +77,8 @@ trait ControllerSpec
     def mockSaveSession: GuiceApplicationBuilder                           = {
       val mockSaveService: SaveService = mock[SaveService]
       (mockSaveService
-        .save(_: SessionData)(using _: DataRequest[?], _: HeaderCarrier))
-        .expects(*, *, *)
+        .save(_: SessionData)(using _: HeaderCarrier))
+        .expects(*, *)
         .returning(Future.successful(()))
       appBuilder.overrides(
         inject
@@ -90,8 +89,8 @@ trait ControllerSpec
     def mockSaveClaim: GuiceApplicationBuilder                             = {
       val mockClaimsService: ClaimsService = mock[ClaimsService]
       (mockClaimsService
-        .save(using _: DataRequest[?], _: HeaderCarrier))
-        .expects(*, *)
+        .save(using _: HeaderCarrier))
+        .expects(*)
         .returning(Future.successful(()))
       appBuilder.overrides(
         inject
@@ -102,8 +101,8 @@ trait ControllerSpec
     def mockSaveClaimFailed(exception: Throwable): GuiceApplicationBuilder = {
       val mockClaimsService: ClaimsService = mock[ClaimsService]
       (mockClaimsService
-        .save(using _: DataRequest[?], _: HeaderCarrier))
-        .expects(*, *)
+        .save(using _: HeaderCarrier))
+        .expects(*)
         .returning(Future.failed(exception))
       appBuilder.overrides(
         inject
