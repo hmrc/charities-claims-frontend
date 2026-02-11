@@ -47,7 +47,7 @@ class YourGiftAidScheduleUploadController @Inject() (
 
       case Some(claimId) =>
         claimsValidationService
-          .getFileUploadReference(ValidationType.GiftAid)
+          .getFileUploadReference(ValidationType.GiftAid, acceptAwaitingUpload = true)
           .flatMap {
             case None =>
               // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
