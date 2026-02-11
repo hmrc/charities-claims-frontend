@@ -63,7 +63,7 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
   val testValidationFailedResponse: GetUploadResultValidationFailedGiftAid =
     GetUploadResultValidationFailedGiftAid(
       reference = testFileUploadReference,
-      giftAidScheduleData = testGiftAidScheduleData,
+      giftAidScheduleData = Some(testGiftAidScheduleData),
       errors = testValidationErrors
     )
 
