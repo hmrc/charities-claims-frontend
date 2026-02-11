@@ -57,6 +57,8 @@ object SessionData {
 
   given Format[SessionData] = Json.format[SessionData]
 
+  def unsubmittedClaimId(using sd: SessionData): Option[String] = sd.unsubmittedClaimId
+
   extension (sd: SessionData) def and(f: SessionData ?=> SessionData): SessionData = f(using sd)
 
   def empty(charitiesRef: String): SessionData = SessionData(
