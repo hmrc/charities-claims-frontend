@@ -89,10 +89,7 @@ class CheckYourGiftAidScheduleController @Inject() (
             answer =>
               answer match {
                 case true =>
-                  for {
-                    _ <- claimsValidationService.deleteGiftAidSchedule
-                    _ <- claimsService.save
-                  } yield Redirect(routes.UploadGiftAidScheduleController.onPageLoad)
+                  Future.successful(Redirect(routes.UpdateGiftAidScheduleController.onPageLoad))
 
                 case false =>
                   claimsService.save
