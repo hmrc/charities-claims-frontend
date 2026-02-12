@@ -22,6 +22,7 @@
 
 @this(
     layout: templates.Layout,
+    formHelper: FormWithCSRF,
     govukButton: GovukButton,
     pageNavigator: PageNavigator,
     donationsErrorsTable: DonationsErrorsTable
@@ -52,22 +53,22 @@
 
     <h2 class="govuk-heading-m">@messages("problemWithGiftAidSchedule.subheading.1")</h2>
 
-    <ol class="govuk-list govuk-list--number">
+    <ol class="govuk-list govuk-list--number govuk-!-margin-bottom-9">
         <li>@Html(messages("problemWithGiftAidSchedule.list.item.1", giftAidScheduleSpreadsheetGuidanceUrl))</li>
         <li>@messages("problemWithGiftAidSchedule.list.item.2")</li>
         <li>@messages("problemWithGiftAidSchedule.list.item.3")</li>
         <li>@messages("problemWithGiftAidSchedule.list.item.4")</li>
     </ol>
 
-    <h2 class="govuk-heading-m">@messages("problemWithGiftAidSchedule.subheading.2")</h2>
+    <h2 class="govuk-heading-m custom-padding-header govuk-!-margin-bottom-7">@messages("problemWithGiftAidSchedule.subheading.2")</h2>
 
     @donationsErrorsTable(errors)
 
     @pageNavigator(paginationViewModel)
 
-    <a href="@routes.UploadGiftAidScheduleController.onPageLoad.url" class="govuk-button" role="button" data-module="govuk-button">
-        @messages("problemWithGiftAidSchedule.link.attachUpdatedSchedule")
-    </a>
+    @formHelper(action = routes.ProblemWithGiftAidScheduleController.onSubmit, Symbol("autoComplete") -> "off") {
+        @govukButton(ButtonViewModel(Text(messages("problemWithGiftAidSchedule.link.attachUpdatedSchedule"))))
+    }
 
     <p class="govuk-body">
         <a href="@DeleteGiftAidScheduleController.onPageLoad.url" class="govuk-link govuk-link--no-visited-state">
