@@ -93,11 +93,11 @@ class YourGiftAidScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = Some(failureDetails),
-                        screenLocked = true
+                        screenLocked = false
                       )
                     )
 
-                  case uploadResult: GetUploadResultValidatedGiftAid =>
+                  case uploadResult =>
                     Ok(
                       view(
                         claimId = claimId,
@@ -106,21 +106,6 @@ class YourGiftAidScheduleUploadController @Inject() (
                         screenLocked = false
                       )
                     )
-
-                  case uploadResult: GetUploadResultValidationFailedGiftAid =>
-                    Ok(
-                      view(
-                        claimId = claimId,
-                        uploadResult = uploadResult,
-                        failureDetails = None,
-                        screenLocked = false
-                      )
-                    )
-
-                  case _ =>
-                    // Ok(view(claimId = claimId, uploadResult = uploadResult, failureDetails = None, screenLocked = false))
-                    // strange case, but we need to handle it
-                    Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad)
                 }
                 .recoverWith {
                   case e: Exception if e.getMessage.contains("CLAIM_REFERENCE_DOES_NOT_EXIST") =>
@@ -155,16 +140,20 @@ class YourGiftAidScheduleUploadController @Inject() (
           case Some(fileUploadReference) =>
             claimsValidationConnector
               .getUploadResult(claimId, fileUploadReference)
-              .map {
+              .flatMap {
+                case _: GetUploadResultVeryficationFailed =>
+                  claimsValidationService.deleteGiftAidSchedule
+                    .map(_ => Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+
                 case _: GetUploadResultValidatedGiftAid =>
-                  Redirect(routes.CheckYourGiftAidScheduleController.onPageLoad)
+                  Future.successful(Redirect(routes.CheckYourGiftAidScheduleController.onPageLoad))
 
                 case _: GetUploadResultValidationFailedGiftAid =>
-                  Redirect(routes.ProblemWithGiftAidScheduleController.onPageLoad)
+                  Future.successful(Redirect(routes.ProblemWithGiftAidScheduleController.onPageLoad))
 
                 case _ =>
                   // strange case, but we need to handle it
-                  Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad)
+                  Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
               }
         }
     }
