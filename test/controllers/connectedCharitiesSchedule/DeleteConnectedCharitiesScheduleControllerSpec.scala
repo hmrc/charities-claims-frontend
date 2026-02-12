@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.organisationDetails
+package controllers.connectedCharitiesSchedule
 
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
@@ -26,17 +26,17 @@ import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import services.ClaimsValidationService
 import uk.gov.hmrc.http.HeaderCarrier
-import views.html.DeleteCommunityBuildingsScheduleView
+import views.html.DeleteConnectedCharitiesScheduleView
 
 import scala.concurrent.Future
 
-class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
+class DeleteConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
 
   val form: Form[Boolean] = new YesNoFormProvider()()
 
   val mockClaimsValidationService: ClaimsValidationService = mock[ClaimsValidationService]
 
-  "DeleteCommunityBuildingsScheduleController" - {
+  "DeleteConnectedCharitiesScheduleController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
 
@@ -46,10 +46,10 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DeleteCommunityBuildingsScheduleController.onPageLoad.url)
+            FakeRequest(GET, routes.DeleteConnectedCharitiesScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[DeleteCommunityBuildingsScheduleView]
+          val view   = application.injector.instanceOf[DeleteConnectedCharitiesScheduleView]
           val msgs   = application.injector.instanceOf[play.api.i18n.MessagesApi].preferred(request)
 
           status(result)                        shouldBe OK
@@ -67,7 +67,7 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteCommunityBuildingsScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteConnectedCharitiesScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value
@@ -84,13 +84,13 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteCommunityBuildingsScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteConnectedCharitiesScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
 
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.AddScheduleController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some("/problem-with-connected-charities-schedule")
         }
       }
 
@@ -98,7 +98,7 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
         val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
 
         (mockClaimsValidationService
-          .deleteCommunityBuildingsSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
+          .deleteConnectedCharitiesSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
           .returning(Future.successful(()))
 
@@ -108,7 +108,7 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteCommunityBuildingsScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteConnectedCharitiesScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
@@ -118,15 +118,15 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      "should handle case when no CommunityBuildings upload data is found" in {
+      "should handle case when no ConnectedCharities upload data is found" in {
         val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
 
         (mockClaimsValidationService
-          .deleteCommunityBuildingsSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
+          .deleteConnectedCharitiesSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
           .returning(
             Future.failed(
-              new RuntimeException("No CommunityBuildings schedule upload found for claimId: test-claim-123")
+              new RuntimeException("No ConnectedCharities schedule upload found for claimId: test-claim-123")
             )
           )
 
@@ -136,7 +136,7 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteCommunityBuildingsScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteConnectedCharitiesScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
@@ -149,11 +149,11 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
         val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
 
         (mockClaimsValidationService
-          .deleteCommunityBuildingsSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
+          .deleteConnectedCharitiesSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
           .returning(
             Future.failed(
-              new RuntimeException("No claimId found when attempting to delete CommunityBuildings schedule")
+              new RuntimeException("No claimId found when attempting to delete ConnectedCharities schedule")
             )
           )
 
@@ -163,7 +163,7 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteCommunityBuildingsScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteConnectedCharitiesScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value

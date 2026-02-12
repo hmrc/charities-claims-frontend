@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.organisationDetails
+package controllers.giftAidSchedule
 
 import com.google.inject.Inject
 import controllers.BaseController
@@ -23,20 +23,20 @@ import forms.YesNoFormProvider
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ClaimsValidationService
-import views.html.DeleteCommunityBuildingsScheduleView
+import views.html.DeleteGiftAidScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DeleteCommunityBuildingsScheduleController @Inject() (
+class DeleteGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: DeleteCommunityBuildingsScheduleView,
+  view: DeleteGiftAidScheduleView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   claimsValidationService: ClaimsValidationService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("deleteCommunityBuildingsSchedule.error.required")
+  val form: Form[Boolean] = formProvider("deleteGiftAidSchedule.error.required")
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     Ok(view(form))
@@ -49,13 +49,11 @@ class DeleteCommunityBuildingsScheduleController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           if value then {
-            claimsValidationService.deleteCommunityBuildingsSchedule.map { _ =>
+            claimsValidationService.deleteGiftAidSchedule.map { _ =>
               Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
             }
           } else {
-            // no deletion, redirect to Add Schedule screen G2
-            // TODO: This redirects to placeholder G2 screen - route to be updated in the future
-            Future.successful(Redirect(controllers.organisationDetails.routes.AddScheduleController.onPageLoad))
+            Future.successful(Redirect(routes.ProblemWithGiftAidScheduleController.onPageLoad))
           }
       )
   }
