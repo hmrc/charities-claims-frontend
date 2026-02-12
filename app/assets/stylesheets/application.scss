@@ -17,5 +17,22 @@
 }
 
 .custom-summary-list dd {
-  width: 20%
+  width: 20%;
 }
+
+.custom-margin-body {
+  margin-bottom: 40px;
+
+  @media (min-width: 641px) {
+    margin-bottom: 60px;
+  }
+}
+
+// .custom-margin-header {
+//   margin-bottom: 25px;
+//   padding: 0;
+//
+//   @media (min-width: 641px) {
+//     margin-bottom: 40px;
+//   }
+// }

@@ -22,12 +22,15 @@ import controllers.giftAidSchedule.routes
 import models.*
 import models.requests.DataRequest
 import play.api.Application
+import play.api.inject.bind
 import play.api.inject.guice.GuiceableModule
+import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.inject
 import services.ClaimsValidationService
 import uk.gov.hmrc.http.HeaderCarrier
+import util.TestResources
 
 import scala.concurrent.Future
 
@@ -37,41 +40,31 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
   val mockClaimsValidationService: ClaimsValidationService     = mock[ClaimsValidationService]
 
   override protected val additionalBindings: List[GuiceableModule] = List(
-    inject.bind[ClaimsValidationConnector].toInstance(mockClaimsValidationConnector),
-    inject.bind[ClaimsValidationService].toInstance(mockClaimsValidationService)
+    bind[ClaimsValidationConnector].toInstance(mockClaimsValidationConnector),
+    bind[ClaimsValidationService].toInstance(mockClaimsValidationService)
   )
 
   val testClaimId: String                          = "test-claim-id-123"
   val testFileUploadReference: FileUploadReference = FileUploadReference("test-file-upload-ref")
 
-  val testGiftAidScheduleData: GiftAidScheduleData = GiftAidScheduleData(
-    earliestDonationDate = Some("2025-01-01"),
-    prevOverclaimedGiftAid = Some(100.00),
-    totalDonations = Some(500.00),
-    donations = Seq.empty
-  )
+  lazy val testValidationFailedJsonString: String =
+    TestResources.readTestResource("/test-get-upload-result-validation-failed-gift-aid.json")
 
-  val testValidationErrors: Seq[ValidationError] = Seq(
-    ValidationError("earliestDonationDate", "ERROR: Earliest donation date is missing."),
-    ValidationError("donations[0]", "ERROR: Item You have entered data in an invalid area of the form."),
-    ValidationError(
-      "donations[2]",
-      "ERROR: Item 3 You cannot provide both a title and an entry for an aggregated donation box."
-    )
-  )
+  lazy val testValidatedJsonString: String =
+    TestResources.readTestResource("/test-get-upload-result-validated-gift-aid.json")
 
-  val testValidationFailedResponse: GetUploadResultValidationFailedGiftAid =
-    GetUploadResultValidationFailedGiftAid(
-      reference = testFileUploadReference,
-      giftAidScheduleData = Some(testGiftAidScheduleData),
-      errors = testValidationErrors
-    )
+  // parse JSON into model objects
+  lazy val testValidationFailedResponse: GetUploadResultValidationFailedGiftAid =
+    Json.parse(testValidationFailedJsonString).as[GetUploadResultValidationFailedGiftAid]
+
+  lazy val testValidatedResponse: GetUploadResultValidatedGiftAid =
+    Json.parse(testValidatedJsonString).as[GetUploadResultValidatedGiftAid]
 
   "ProblemWithGiftAidScheduleController" - {
 
     "onPageLoad" - {
 
-      // Redirect Tests
+      // Redirect Tests:
 
       "should redirect to RepaymentClaimDetailsController when no claimId in session" in {
         val sessionData = defaultSessionData.copy(unsubmittedClaimId = None)
@@ -112,24 +105,273 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      // tests requiring mock connector setup to follow - see TODO below
-      // TODO: Add tests for successful page render with validation errors
-      // tests require mocking ClaimsValidationConnector.getUploadResult to return
-      // GetUploadResultValidationFailedGiftAid with test errors
-      //
-      // tests to add:
-      // - "should render page with validation errors when upload has VALIDATION_FAILED status"
-      // - "should display correct error count in the table"
-      // - "should include the giftAidScheduleSpreadsheetGuidanceUrl link"
-      // - "should paginate errors correctly when more than 10 errors"
-      // - "should redirect to UploadGiftAidScheduleController when button is clicked to return to upload page"
-      // - "should redirect to DeleteGiftAidScheduleController when delete action is triggered"
+      // Page Render Tests:
 
+      "should render page with validation errors when upload has VALIDATION_FAILED status" in {
+        val sessionData = defaultSessionData.copy(
+          unsubmittedClaimId = Some(testClaimId),
+          giftAidScheduleFileUploadReference = Some(testFileUploadReference)
+        )
+
+        (mockClaimsValidationConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(testClaimId, testFileUploadReference, *)
+          .returning(Future.successful(testValidationFailedResponse))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ProblemWithGiftAidScheduleController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual OK
+          contentAsString(result) should include("There is a problem with the data in your Gift Aid schedule")
+        }
+      }
+
+      "should display error messages in the table" in {
+        val sessionData = defaultSessionData.copy(
+          unsubmittedClaimId = Some(testClaimId),
+          giftAidScheduleFileUploadReference = Some(testFileUploadReference)
+        )
+
+        (mockClaimsValidationConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(testClaimId, testFileUploadReference, *)
+          .returning(Future.successful(testValidationFailedResponse))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ProblemWithGiftAidScheduleController.onPageLoad.url)
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          content should include("ERROR: Earliest donation date is missing.")
+          content should include("ERROR: Item You have entered data in an invalid area of the form.")
+          content should include(
+            "ERROR: Item 3 You cannot provide both a title and an entry for an aggregated donation box."
+          )
+        }
+      }
+
+      "should display all 5 errors from test schedule data" in {
+        val sessionData = defaultSessionData.copy(
+          unsubmittedClaimId = Some(testClaimId),
+          giftAidScheduleFileUploadReference = Some(testFileUploadReference)
+        )
+
+        (mockClaimsValidationConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(testClaimId, testFileUploadReference, *)
+          .returning(Future.successful(testValidationFailedResponse))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ProblemWithGiftAidScheduleController.onPageLoad.url)
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          content should include("ERROR: Earliest donation date is missing.")
+          content should include("ERROR: Item You have entered data in an invalid area of the form.")
+          content should include("You cannot provide both a title and an entry for an aggregated donation box")
+          content should include("You cannot provide both a first name and an entry for an aggregated donation")
+          content should include("You cannot provide both a last name and an entry for an aggregated donation")
+        }
+      }
+
+      "should display number 0 in row column for two occurrences from FAILED_VALIDATION test data" in {
+        val sessionData = defaultSessionData.copy(
+          unsubmittedClaimId = Some(testClaimId),
+          giftAidScheduleFileUploadReference = Some(testFileUploadReference)
+        )
+
+        (mockClaimsValidationConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(testClaimId, testFileUploadReference, *)
+          .returning(Future.successful(testValidationFailedResponse))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ProblemWithGiftAidScheduleController.onPageLoad.url)
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          val zeroRowPattern = ">0<".r
+          zeroRowPattern.findAllIn(content).length should be >= 2
+        }
+      }
+
+      "should display row column with number 2 at least 3 occurrences using test data" in {
+        val sessionData = defaultSessionData.copy(
+          unsubmittedClaimId = Some(testClaimId),
+          giftAidScheduleFileUploadReference = Some(testFileUploadReference)
+        )
+
+        (mockClaimsValidationConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(testClaimId, testFileUploadReference, *)
+          .returning(Future.successful(testValidationFailedResponse))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ProblemWithGiftAidScheduleController.onPageLoad.url)
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          val twoRowPattern = ">2<".r
+          twoRowPattern.findAllIn(content).length should be >= 3
+        }
+      }
+
+      "should include the giftAidScheduleSpreadsheetGuidanceUrl link" in {
+        val sessionData = defaultSessionData.copy(
+          unsubmittedClaimId = Some(testClaimId),
+          giftAidScheduleFileUploadReference = Some(testFileUploadReference)
+        )
+
+        (mockClaimsValidationConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(testClaimId, testFileUploadReference, *)
+          .returning(Future.successful(testValidationFailedResponse))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ProblemWithGiftAidScheduleController.onPageLoad.url)
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          content should include("schedule-spreadsheet-to-claim-back-tax-on-gift-aid-donations")
+        }
+      }
+
+      "should include the (attach updated schedule) button" in {
+        val sessionData = defaultSessionData.copy(
+          unsubmittedClaimId = Some(testClaimId),
+          giftAidScheduleFileUploadReference = Some(testFileUploadReference)
+        )
+
+        (mockClaimsValidationConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(testClaimId, testFileUploadReference, *)
+          .returning(Future.successful(testValidationFailedResponse))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ProblemWithGiftAidScheduleController.onPageLoad.url)
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          content should include("Attach an updated Gift Aid schedule")
+        }
+      }
+
+      "should include the delete schedule link" in {
+        val sessionData = defaultSessionData.copy(
+          unsubmittedClaimId = Some(testClaimId),
+          giftAidScheduleFileUploadReference = Some(testFileUploadReference)
+        )
+
+        (mockClaimsValidationConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(testClaimId, testFileUploadReference, *)
+          .returning(Future.successful(testValidationFailedResponse))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ProblemWithGiftAidScheduleController.onPageLoad.url)
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          content should include("Delete schedule")
+          content should include("delete-gift-aid-schedule")
+        }
+      }
+
+      "should redirect to YourGiftAidScheduleUploadController when upload result is VALIDATED" in {
+        val sessionData = defaultSessionData.copy(
+          unsubmittedClaimId = Some(testClaimId),
+          giftAidScheduleFileUploadReference = Some(testFileUploadReference)
+        )
+
+        (mockClaimsValidationConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(testClaimId, testFileUploadReference, *)
+          .returning(Future.successful(testValidatedResponse))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ProblemWithGiftAidScheduleController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.YourGiftAidScheduleUploadController.onPageLoad.url
+          )
+        }
+      }
+
+      "should NOT render problem page when upload has VALIDATED status (should redirect)" in {
+        val sessionData = defaultSessionData.copy(
+          unsubmittedClaimId = Some(testClaimId),
+          giftAidScheduleFileUploadReference = Some(testFileUploadReference)
+        )
+
+        (mockClaimsValidationConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(testClaimId, testFileUploadReference, *)
+          .returning(Future.successful(testValidatedResponse))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ProblemWithGiftAidScheduleController.onPageLoad.url)
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual SEE_OTHER
+          (content should not).include("There is a problem with the data in your Gift Aid schedule")
+        }
+      }
     }
 
     "onSubmit" - {
 
-      "should delete the gift aid schedule and redirect to UploadGiftAidScheduleController" in {
+      "should delete the schedule and redirect to UploadGiftAidScheduleController in Attach updated schedule path" in {
         val sessionData = defaultSessionData.copy(
           unsubmittedClaimId = Some(testClaimId),
           giftAidScheduleFileUploadReference = Some(testFileUploadReference)
@@ -155,6 +397,28 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
         }
       }
 
+      "should handle when delete fails" in {
+        val sessionData = defaultSessionData.copy(
+          unsubmittedClaimId = Some(testClaimId),
+          giftAidScheduleFileUploadReference = Some(testFileUploadReference)
+        )
+
+        (mockClaimsValidationService
+          .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.failed(new RuntimeException("Delete failed")))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.ProblemWithGiftAidScheduleController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          a[RuntimeException] should be thrownBy result.futureValue
+        }
+      }
     }
   }
 }
