@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.organisationDetails
+package controllers.otherIncomeSchedule
 
 import com.google.inject.Inject
 import controllers.BaseController
@@ -23,20 +23,21 @@ import forms.YesNoFormProvider
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ClaimsValidationService
-import views.html.DeleteConnectedCharitiesScheduleView
+import views.html.DeleteOtherIncomeScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
+import play.api.mvc.Call
 
-class DeleteConnectedCharitiesScheduleController @Inject() (
+class DeleteOtherIncomeScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: DeleteConnectedCharitiesScheduleView,
+  view: DeleteOtherIncomeScheduleView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   claimsValidationService: ClaimsValidationService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("deleteConnectedCharitiesSchedule.error.required")
+  val form: Form[Boolean] = formProvider("deleteOtherIncomeSchedule.error.required")
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     Ok(view(form))
@@ -49,13 +50,12 @@ class DeleteConnectedCharitiesScheduleController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
           if value then {
-            claimsValidationService.deleteConnectedCharitiesSchedule.map { _ =>
+            claimsValidationService.deleteOtherIncomeSchedule.map { _ =>
               Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
             }
           } else {
-            // no deletion, redirect to Add Schedule screen G2
-            // TODO: This redirects to placeholder G2 screen - route to be updated in the future
-            Future.successful(Redirect(controllers.organisationDetails.routes.AddScheduleController.onPageLoad))
+            // FIXME: replace with proper route
+            Future.successful(Redirect(Call("GET", "/problem-with-other-income-schedule")))
           }
       )
   }
