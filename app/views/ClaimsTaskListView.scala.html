@@ -24,7 +24,7 @@
 
 @(viewModel: ClaimsTaskListViewModel)(implicit request: Request[?], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("claimsTaskList.title")), showBackLink = false) {
+@layout(pageTitle = titleNoForm(messages("claimsTaskList.title"))) {
 
     <span class="govuk-caption-l">@messages("claimsTaskList.caption", viewModel.charitiesReference)</span>
     <h1 class="govuk-heading-l">@messages("claimsTaskList.heading")</h1>
