@@ -107,6 +107,16 @@ class YourGiftAidScheduleUploadController @Inject() (
                       )
                     )
 
+                  case uploadResult: GetUploadResultValidationFailedGiftAid =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = None,
+                        screenLocked = false
+                      )
+                    )
+
                   case _ =>
                     // Ok(view(claimId = claimId, uploadResult = uploadResult, failureDetails = None, screenLocked = false))
                     // strange case, but we need to handle it
