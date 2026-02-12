@@ -413,6 +413,13 @@ site.pagination.next = Next
 
 warning.text = Warning
 
+fileUpload.status.AWAITING_UPLOAD = Awaiting upload
+fileUpload.status.VERIFYING = Verifying
+fileUpload.status.VERIFICATION_FAILED = Verification Failed
+fileUpload.status.VALIDATING = Upload file is validating
+fileUpload.status.VALIDATED = Upload file validated
+fileUpload.status.VALIDATION_FAILED = Validation failed
+
 uploadGiftAidSchedule.caption = Add Gift Aid schedule
 uploadGiftAidSchedule.title = Upload a Gift Aid schedule
 uploadGiftAidSchedule.heading = Upload a Gift Aid schedule
