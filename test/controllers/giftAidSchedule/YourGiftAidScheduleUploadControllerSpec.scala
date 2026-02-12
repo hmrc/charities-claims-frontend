@@ -157,7 +157,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2
             giftAidScheduleFileUploadReference = Some(fileUploadReference),
             giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
           )
-        val uploadResult               = mockConnector.getUploadResult(claimId, fileUploadReference)
+        val uploadResult               = GetUploadResultResponse.
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
@@ -172,7 +172,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2
             claimId,
             uploadResult,
             None,
-            true
+            false
           ).body
 
         }
