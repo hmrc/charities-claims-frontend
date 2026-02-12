@@ -194,6 +194,7 @@ POST        /gift-aid-schedule-upload-successful            controllers.giftAidS
 
 GET         /about-other-income-schedule                     controllers.otherIncomeSchedule.AboutOtherIncomeScheduleController.onPageLoad
 POST        /about-other-income-schedule                     controllers.otherIncomeSchedule.AboutOtherIncomeScheduleController.onSubmit
+POST        /other-income-schedule-upload-successful         controllers.otherIncomeSchedule.OtherIncomeScheduleUploadSuccessfulController.onSubmit 
 
 # TODO: Placeholder route for O1.1 - to be implemented in future ticket
 GET         /upload-other-income-schedule                    controllers.otherIncomeSchedule.UploadOtherIncomeScheduleController.onPageLoad

@@ -486,3 +486,7 @@ aboutOtherIncomeSchedule.title = About Other Income schedule
 giftAidScheduleUploadSuccessful.title = Upload successful
 giftAidScheduleUploadSuccessful.message.1 = Upload successful
 giftAidScheduleUploadSuccessful.message.2 = You have successfully attached your Gift Aid schedule.
+
+otherIncomeScheduleUploadSuccessful.title = Upload successful
+otherIncomeScheduleUploadSuccessful.message.1 = Upload successful
+otherIncomeScheduleUploadSuccessful.message.2 = You have successfully attached your Other Income schedule.
