@@ -176,6 +176,8 @@ GET         /gift-aid-schedule-upload-successful            controllers.giftAidS
 POST        /gift-aid-schedule-upload-successful            controllers.giftAidSchedule.GiftAidScheduleUploadSuccessfulController.onSubmit
 GET         /delete-gift-aid-schedule                       controllers.giftAidSchedule.DeleteGiftAidScheduleController.onPageLoad
 POST        /delete-gift-aid-schedule                       controllers.giftAidSchedule.DeleteGiftAidScheduleController.onSubmit
+GET         /update-gift-aid-schedule                       controllers.giftAidSchedule.UpdateGiftAidScheduleController.onPageLoad
+POST        /update-gift-aid-schedule                       controllers.giftAidSchedule.UpdateGiftAidScheduleController.onSubmit
 
 GET         /about-other-income-schedule                    controllers.otherIncomeSchedule.AboutOtherIncomeScheduleController.onPageLoad
 POST        /about-other-income-schedule                    controllers.otherIncomeSchedule.AboutOtherIncomeScheduleController.onSubmit

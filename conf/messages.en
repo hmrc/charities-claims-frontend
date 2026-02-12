@@ -493,3 +493,7 @@ aboutOtherIncomeSchedule.title = About Other Income schedule
 giftAidScheduleUploadSuccessful.title = Upload successful
 giftAidScheduleUploadSuccessful.message.1 = Upload successful
 giftAidScheduleUploadSuccessful.message.2 = You have successfully attached your Gift Aid schedule.
+
+updateGiftAidSchedule.title = Are you sure you want to update this Gift Aid schedule? 
+updateGiftAidSchedule.heading = Are you sure you want to update this Gift Aid schedule? 
+updateGiftAidSchedule.hint = By updating this file, you will lose any Gift Aid schedule data you have previously attached.
