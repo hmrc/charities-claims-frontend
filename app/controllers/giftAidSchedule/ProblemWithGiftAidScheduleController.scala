@@ -24,7 +24,7 @@ import config.FrontendAppConfig
 import views.html.ProblemWithGiftAidScheduleView
 import controllers.actions.Actions
 import models.*
-import services.PaginationService
+import services.{ClaimsValidationService, PaginationService}
 import controllers.giftAidSchedule.routes
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,6 +34,7 @@ class ProblemWithGiftAidScheduleController @Inject() (
   view: ProblemWithGiftAidScheduleView,
   actions: Actions,
   claimsValidationConnector: ClaimsValidationConnector,
+  claimsValidationService: ClaimsValidationService,
   appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)
     extends BaseController {
@@ -77,7 +78,10 @@ class ProblemWithGiftAidScheduleController @Inject() (
               }
         }
     }
-
   }
 
+  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    claimsValidationService.deleteGiftAidSchedule
+      .map(_ => Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+  }
 }

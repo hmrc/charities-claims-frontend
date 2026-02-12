@@ -172,6 +172,7 @@ GET         /your-gift-aid-schedule-upload/remove           controllers.giftAidS
 GET         /check-your-gift-aid-schedule                   controllers.giftAidSchedule.CheckYourGiftAidScheduleController.onPageLoad
 POST        /check-your-gift-aid-schedule                   controllers.giftAidSchedule.CheckYourGiftAidScheduleController.onSubmit
 GET         /problem-with-gift-aid-schedule                 controllers.giftAidSchedule.ProblemWithGiftAidScheduleController.onPageLoad
+POST        /problem-with-gift-aid-schedule                 controllers.giftAidSchedule.ProblemWithGiftAidScheduleController.onSubmit
 GET         /gift-aid-schedule-upload-successful            controllers.giftAidSchedule.GiftAidScheduleUploadSuccessfulController.onPageLoad
 POST        /gift-aid-schedule-upload-successful            controllers.giftAidSchedule.GiftAidScheduleUploadSuccessfulController.onSubmit
 GET         /delete-gift-aid-schedule                       controllers.giftAidSchedule.DeleteGiftAidScheduleController.onPageLoad
