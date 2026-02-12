@@ -77,8 +77,7 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      // TODO: Update test when G2 screen route is completed (currently redirects to placeholder /add-schedule)
-      "should redirect to G2 screen when no is selected" in {
+      "should redirect to ProblemWithGiftAidScheduleController (G1.4) when no is selected" in {
         given application: Application = applicationBuilder()
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -92,7 +91,7 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
 
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(
-            routes.ProblemWithGiftAidScheduleController.onPageLoad.url
+            controllers.giftAidSchedule.routes.ProblemWithGiftAidScheduleController.onPageLoad.url
           )
         }
       }
