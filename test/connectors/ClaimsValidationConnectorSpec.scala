@@ -111,6 +111,12 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
       "http://example.com:1234/charities-claims-validation/123/upload-results/ref-123"
     )(response)
 
+  def givenUpdateUploadStatusEndpointReturns(response: HttpResponse): CallHandler[Future[HttpResponse]] =
+    mockHttpPutSuccess(
+      "http://example.com:1234/charities-claims-validation/123/upload-results/file-upload-reference-123",
+      Json.toJson(UpdateUploadStatusRequest(FileStatus.VERIFYING))
+    )(response)
+
   given HeaderCarrier = HeaderCarrier()
 
   "ClaimsValidationConnector" - {
@@ -274,9 +280,15 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
       }
     }
 
-    // Note: The POST/PUT and JSON payload handling in ClaimsValidationConnector
-    // are not covered by tests because current methods (getUploadSummary, deleteSchedule) only use
-    // GET and DELETE without payloads. The POST/PUT and payload are part of the reusable callValidationBackend.
-    // Tests will be added to cover those scenarios in the future.
+    "updateUploadStatus" - {
+      "should return true when service returns 200 status" in {
+        givenUpdateUploadStatusEndpointReturns(
+          HttpResponse(200, Json.stringify(Json.toJson(SuccessResponse(success = true))))
+        ).once()
+        await(
+          connector.updateUploadStatus("123", FileUploadReference("file-upload-reference-123"), FileStatus.VERIFYING)
+        ) should be(true)
+      }
+    }
   }
 }
