@@ -180,7 +180,7 @@ GET         /declaration-details-confirmation               controllers.Declarat
 GET         /about-gift-aid-schedule                        controllers.giftAidSchedule.AboutGiftAidScheduleController.onPageLoad
 POST        /about-gift-aid-schedule                        controllers.giftAidSchedule.AboutGiftAidScheduleController.onSubmit
 GET         /upload-gift-aid-schedule                       controllers.giftAidSchedule.UploadGiftAidScheduleController.onPageLoad
-GET         /upload-gift-aid-schedule/success               controllers.giftAidSchedule.UploadGiftAidScheduleController.onUploadSuccess(key: Option[String])
+GET         /upload-gift-aid-schedule/success               controllers.giftAidSchedule.UploadGiftAidScheduleController.onUploadSuccess
 GET         /upload-gift-aid-schedule/error                 controllers.giftAidSchedule.UploadGiftAidScheduleController.onUploadError
 GET         /your-gift-aid-schedule-upload                  controllers.giftAidSchedule.YourGiftAidScheduleUploadController.onPageLoad
 POST        /your-gift-aid-schedule-upload                  controllers.giftAidSchedule.YourGiftAidScheduleUploadController.onSubmit

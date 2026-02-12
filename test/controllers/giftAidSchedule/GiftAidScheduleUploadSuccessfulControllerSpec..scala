@@ -20,7 +20,6 @@ import controllers.ControllerSpec
 import controllers.giftAidSchedule.routes
 import models.RepaymentClaimDetailsAnswers
 import play.api.Application
-import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import util.TestScheduleData
 import models.FileUploadReference

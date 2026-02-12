@@ -27,6 +27,14 @@ import scala.concurrent.{ExecutionContext, Future}
 @ImplementedBy(classOf[ClaimsValidationServiceImpl])
 trait ClaimsValidationService {
 
+  def getFileUploadReference(
+    validationType: ValidationType,
+    acceptAwaitingUpload: Boolean = false
+  )(using DataRequest[?], HeaderCarrier): Future[Option[FileUploadReference]]
+
+  def createUploadTracking(claimId: String, request: CreateUploadTrackingRequest)(using HeaderCarrier): Future[Boolean]
+  def getUploadSummary(claimId: String)(using HeaderCarrier): Future[GetUploadSummaryResponse]
+
   def getGiftAidScheduleData(using DataRequest[?], HeaderCarrier): Future[GiftAidScheduleData]
   def getOtherIncomeScheduleData(using DataRequest[?], HeaderCarrier): Future[OtherIncomeScheduleData]
   def getCommunityBuildingsScheduleData(using DataRequest[?], HeaderCarrier): Future[CommunityBuildingsScheduleData]
@@ -45,7 +53,71 @@ class ClaimsValidationServiceImpl @Inject() (
 )(using ec: ExecutionContext)
     extends ClaimsValidationService {
 
-  def getGiftAidScheduleData(using request: DataRequest[?], hc: HeaderCarrier): Future[GiftAidScheduleData] =
+  override def createUploadTracking(claimId: String, request: CreateUploadTrackingRequest)(using
+    HeaderCarrier
+  ): Future[Boolean] =
+    claimsValidationConnector.createUploadTracking(claimId, request)
+
+  override def getUploadSummary(claimId: String)(using HeaderCarrier): Future[GetUploadSummaryResponse] =
+    claimsValidationConnector.getUploadSummary(claimId)
+
+  private def getFileUploadReferenceFromSession(validationType: ValidationType)(using
+    request: DataRequest[?]
+  ): Future[Option[FileUploadReference]] =
+    validationType match {
+      case ValidationType.GiftAid            =>
+        Future.successful(request.sessionData.giftAidScheduleFileUploadReference)
+      case ValidationType.OtherIncome        =>
+        Future.successful(request.sessionData.otherIncomeScheduleFileUploadReference)
+      case ValidationType.CommunityBuildings =>
+        Future.successful(request.sessionData.communityBuildingsScheduleFileUploadReference)
+      case ValidationType.ConnectedCharities =>
+        Future.successful(request.sessionData.connectedCharitiesScheduleFileUploadReference)
+    }
+
+  override def getFileUploadReference(
+    validationType: ValidationType,
+    acceptAwaitingUpload: Boolean = false
+  )(using
+    request: DataRequest[?],
+    hc: HeaderCarrier
+  ): Future[Option[FileUploadReference]] =
+    getFileUploadReferenceFromSession(validationType)
+      .flatMap {
+        case Some(reference) => Future.successful(Some(reference))
+        case None            =>
+          claimsValidationConnector
+            .getUploadSummary(request.sessionData.unsubmittedClaimId.get)
+            .flatMap { summaryResponse =>
+              summaryResponse.uploads.find(_.validationType == validationType) match {
+                case None         => Future.successful(None)
+                case Some(upload) =>
+                  if acceptAwaitingUpload || upload.fileStatus != FileStatus.AWAITING_UPLOAD
+                  then
+                    saveService
+                      .save(validationType match {
+                        case ValidationType.GiftAid            =>
+                          request.sessionData.copy(giftAidScheduleFileUploadReference = Some(upload.reference))
+                        case ValidationType.OtherIncome        =>
+                          request.sessionData.copy(otherIncomeScheduleFileUploadReference = Some(upload.reference))
+                        case ValidationType.CommunityBuildings =>
+                          request.sessionData
+                            .copy(communityBuildingsScheduleFileUploadReference = Some(upload.reference))
+                        case ValidationType.ConnectedCharities =>
+                          request.sessionData
+                            .copy(connectedCharitiesScheduleFileUploadReference = Some(upload.reference))
+                      })
+                      .map(_ => Some(upload.reference))
+                  else Future.successful(None)
+              }
+            }
+            .recoverWith {
+              case e: Exception if e.getMessage.contains("CLAIM_DOES_NOT_EXIST") =>
+                Future.successful(None)
+            }
+      }
+
+  override def getGiftAidScheduleData(using request: DataRequest[?], hc: HeaderCarrier): Future[GiftAidScheduleData] =
     request.sessionData.giftAidScheduleData match {
       case Some(data) => Future.successful(data)
       case None       =>
@@ -54,31 +126,35 @@ class ClaimsValidationServiceImpl @Inject() (
             Future.failed(new RuntimeException("No claimId found when attempting to get GiftAid schedule data"))
 
           case Some(claimId) =>
-            request.sessionData.giftAidScheduleFileUploadReference match {
-              case None =>
-                Future.failed(new RuntimeException("No GiftAid schedule file upload reference found"))
+            getFileUploadReference(ValidationType.GiftAid)
+              .flatMap {
+                case None =>
+                  Future.failed(new RuntimeException("No GiftAid schedule file upload reference found"))
 
-              case Some(fileUploadReference) =>
-                claimsValidationConnector
-                  .getUploadResult(claimId, fileUploadReference)
-                  .flatMap {
-                    case GetUploadResultValidatedGiftAid(reference, data) =>
-                      saveService
-                        .save(request.sessionData.copy(giftAidScheduleData = Some(data)))
-                        .map(_ => data)
+                case Some(fileUploadReference) =>
+                  claimsValidationConnector
+                    .getUploadResult(claimId, fileUploadReference)
+                    .flatMap {
+                      case GetUploadResultValidatedGiftAid(reference, data) =>
+                        saveService
+                          .save(request.sessionData.copy(giftAidScheduleData = Some(data)))
+                          .map(_ => data)
 
-                    case other =>
-                      Future.failed(
-                        new RuntimeException(
-                          s"No Gift Aid schedule data found, upload file status is ${other.fileStatus}"
+                      case other =>
+                        Future.failed(
+                          new RuntimeException(
+                            s"No Gift Aid schedule data found, upload file status is ${other.fileStatus}"
+                          )
                         )
-                      )
-                  }
-            }
+                    }
+              }
         }
     }
 
-  def getOtherIncomeScheduleData(using request: DataRequest[?], hc: HeaderCarrier): Future[OtherIncomeScheduleData] =
+  override def getOtherIncomeScheduleData(using
+    request: DataRequest[?],
+    hc: HeaderCarrier
+  ): Future[OtherIncomeScheduleData] =
     request.sessionData.otherIncomeScheduleData match {
       case Some(data) => Future.successful(data)
       case None       =>
@@ -87,7 +163,7 @@ class ClaimsValidationServiceImpl @Inject() (
             Future.failed(new RuntimeException("No claimId found when attempting to get Other Income schedule data"))
 
           case Some(claimId) =>
-            request.sessionData.otherIncomeScheduleFileUploadReference match {
+            getFileUploadReference(ValidationType.OtherIncome).flatMap {
               case None =>
                 Future.failed(new RuntimeException("No Other Income schedule file upload reference found"))
 
@@ -111,7 +187,7 @@ class ClaimsValidationServiceImpl @Inject() (
         }
     }
 
-  def getCommunityBuildingsScheduleData(using
+  override def getCommunityBuildingsScheduleData(using
     request: DataRequest[?],
     hc: HeaderCarrier
   ): Future[CommunityBuildingsScheduleData] =
@@ -125,32 +201,33 @@ class ClaimsValidationServiceImpl @Inject() (
             )
 
           case Some(claimId) =>
-            request.sessionData.communityBuildingsScheduleFileUploadReference match {
-              case None =>
-                Future.failed(new RuntimeException("No Community Buildings schedule file upload reference found"))
+            getFileUploadReference(ValidationType.CommunityBuildings)
+              .flatMap {
+                case None =>
+                  Future.failed(new RuntimeException("No Community Buildings schedule file upload reference found"))
 
-              case Some(fileUploadReference) =>
-                claimsValidationConnector
-                  .getUploadResult(claimId, fileUploadReference)
-                  .flatMap {
+                case Some(fileUploadReference) =>
+                  claimsValidationConnector
+                    .getUploadResult(claimId, fileUploadReference)
+                    .flatMap {
 
-                    case GetUploadResultValidatedCommunityBuildings(reference, data) =>
-                      saveService
-                        .save(request.sessionData.copy(communityBuildingsScheduleData = Some(data)))
-                        .map(_ => data)
+                      case GetUploadResultValidatedCommunityBuildings(reference, data) =>
+                        saveService
+                          .save(request.sessionData.copy(communityBuildingsScheduleData = Some(data)))
+                          .map(_ => data)
 
-                    case other =>
-                      Future.failed(
-                        new RuntimeException(
-                          s"No Community Buildings schedule data found, upload file status is ${other.fileStatus}"
+                      case other =>
+                        Future.failed(
+                          new RuntimeException(
+                            s"No Community Buildings schedule data found, upload file status is ${other.fileStatus}"
+                          )
                         )
-                      )
-                  }
-            }
+                    }
+              }
         }
     }
 
-  def getConnectedCharitiesScheduleData(using
+  override def getConnectedCharitiesScheduleData(using
     request: DataRequest[?],
     hc: HeaderCarrier
   ): Future[ConnectedCharitiesScheduleData] =
@@ -164,40 +241,41 @@ class ClaimsValidationServiceImpl @Inject() (
             )
 
           case Some(claimId) =>
-            request.sessionData.connectedCharitiesScheduleFileUploadReference match {
-              case None =>
-                Future.failed(new RuntimeException("No Connected Charities schedule file upload reference found"))
+            getFileUploadReference(ValidationType.ConnectedCharities)
+              .flatMap {
+                case None =>
+                  Future.failed(new RuntimeException("No Connected Charities schedule file upload reference found"))
 
-              case Some(fileUploadReference) =>
-                claimsValidationConnector
-                  .getUploadResult(claimId, fileUploadReference)
-                  .flatMap {
-                    case GetUploadResultValidatedConnectedCharities(reference, data) =>
-                      saveService
-                        .save(request.sessionData.copy(connectedCharitiesScheduleData = Some(data)))
-                        .map(_ => data)
+                case Some(fileUploadReference) =>
+                  claimsValidationConnector
+                    .getUploadResult(claimId, fileUploadReference)
+                    .flatMap {
+                      case GetUploadResultValidatedConnectedCharities(reference, data) =>
+                        saveService
+                          .save(request.sessionData.copy(connectedCharitiesScheduleData = Some(data)))
+                          .map(_ => data)
 
-                    case other =>
-                      Future.failed(
-                        new RuntimeException(
-                          s"No Connected Charities schedule data found, upload file status is ${other.fileStatus}"
+                      case other =>
+                        Future.failed(
+                          new RuntimeException(
+                            s"No Connected Charities schedule data found, upload file status is ${other.fileStatus}"
+                          )
                         )
-                      )
-                  }
-            }
+                    }
+              }
         }
     }
 
-  def deleteGiftAidSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
+  override def deleteGiftAidSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
     deleteSchedule(ValidationType.GiftAid, request.sessionData.unsubmittedClaimId)
 
-  def deleteOtherIncomeSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
+  override def deleteOtherIncomeSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
     deleteSchedule(ValidationType.OtherIncome, request.sessionData.unsubmittedClaimId)
 
-  def deleteCommunityBuildingsSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
+  override def deleteCommunityBuildingsSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
     deleteSchedule(ValidationType.CommunityBuildings, request.sessionData.unsubmittedClaimId)
 
-  def deleteConnectedCharitiesSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
+  override def deleteConnectedCharitiesSchedule(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
     deleteSchedule(ValidationType.ConnectedCharities, request.sessionData.unsubmittedClaimId)
 
   private def deleteSchedule(validationType: ValidationType, claimIdOpt: Option[String])(using
