@@ -70,6 +70,11 @@ class DataRetrievalActionSpec extends BaseSpec {
         .expects(*)
         .returning(Future.successful(None))
 
+      (mockSessionCache
+        .store(_: SessionData)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(Future.successful(()))
+
       (mockClaimsConnector
         .retrieveUnsubmittedClaims(using _: HeaderCarrier))
         .expects(*)
@@ -93,6 +98,11 @@ class DataRetrievalActionSpec extends BaseSpec {
         .get()(using _: HeaderCarrier))
         .expects(*)
         .returning(Future.successful(None))
+
+      (mockSessionCache
+        .store(_: SessionData)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(Future.successful(()))
 
       (mockClaimsConnector
         .retrieveUnsubmittedClaims(using _: HeaderCarrier))
@@ -169,6 +179,11 @@ class DataRetrievalActionSpec extends BaseSpec {
         .get()(using _: HeaderCarrier))
         .expects(*)
         .returning(Future.successful(None))
+
+      (mockSessionCache
+        .store(_: SessionData)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(Future.successful(()))
 
       (mockClaimsConnector
         .retrieveUnsubmittedClaims(using _: HeaderCarrier))
