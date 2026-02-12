@@ -47,7 +47,7 @@ class YourGiftAidScheduleUploadController @Inject() (
 
       case Some(claimId) =>
         claimsValidationService
-          .getFileUploadReference(ValidationType.GiftAid, acceptAwaitingUpload = true)
+          .getFileUploadReference(ValidationType.GiftAid, acceptAwaitingUpload = false)
           .flatMap {
             case None =>
               // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
@@ -57,16 +57,6 @@ class YourGiftAidScheduleUploadController @Inject() (
               claimsValidationConnector
                 .getUploadResult(claimId, fileUploadReference)
                 .map {
-                  case uploadResult: GetUploadResultAwaitingUpload =>
-                    Ok(
-                      view(
-                        claimId = claimId,
-                        uploadResult = uploadResult,
-                        failureDetails = None,
-                        screenLocked = true
-                      )
-                    )
-
                   case uploadResult: GetUploadResultVeryfying =>
                     Ok(
                       view(

@@ -29,6 +29,7 @@ import play.api.mvc.Result
 import models.UpdatedByAnotherUserException
 import play.api.mvc.Results.Redirect
 import play.api.Logger
+import services.ScheduleUploadNotFoundException
 
 @Singleton
 class ErrorHandler @Inject() (
@@ -42,12 +43,16 @@ class ErrorHandler @Inject() (
 
   override def resolveError(rh: RequestHeader, ex: Throwable): Future[Result] =
     ex match {
-      case _: UpdatedByAnotherUserException =>
+      case _: UpdatedByAnotherUserException   =>
         logger.error(ex.getMessage)
         Future.successful(
           Redirect(controllers.organisationDetails.routes.CannotViewOrManageClaimController.onPageLoad)
         )
-      case _                                =>
+      case _: ScheduleUploadNotFoundException =>
+        Future.successful(
+          Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
+        )
+      case _                                  =>
         super.resolveError(rh, ex)
     }
 

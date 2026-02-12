@@ -34,6 +34,10 @@ trait ClaimsValidationService {
 
   def createUploadTracking(claimId: String, request: CreateUploadTrackingRequest)(using HeaderCarrier): Future[Boolean]
   def getUploadSummary(claimId: String)(using HeaderCarrier): Future[GetUploadSummaryResponse]
+  def updateUploadStatus(claimId: String, reference: FileUploadReference)(using
+    request: DataRequest[?],
+    hc: HeaderCarrier
+  ): Future[Boolean]
 
   def getGiftAidScheduleData(using DataRequest[?], HeaderCarrier): Future[GiftAidScheduleData]
   def getOtherIncomeScheduleData(using DataRequest[?], HeaderCarrier): Future[OtherIncomeScheduleData]
@@ -60,6 +64,30 @@ class ClaimsValidationServiceImpl @Inject() (
 
   override def getUploadSummary(claimId: String)(using HeaderCarrier): Future[GetUploadSummaryResponse] =
     claimsValidationConnector.getUploadSummary(claimId)
+
+  override def updateUploadStatus(claimId: String, reference: FileUploadReference)(using
+    request: DataRequest[?],
+    hc: HeaderCarrier
+  ): Future[Boolean] =
+    saveService
+      .save(request.sessionData.copy(giftAidScheduleUpscanInitialization = None))
+      .flatMap { _ =>
+        claimsValidationConnector.updateUploadStatus(claimId, reference, FileStatus.VERIFYING)
+      }
+
+  private def geUpscanInitializationFromSession(validationType: ValidationType)(using
+    request: DataRequest[?]
+  ): Future[Option[UpscanInitiateResponse]] =
+    validationType match {
+      case ValidationType.GiftAid            =>
+        Future.successful(request.sessionData.giftAidScheduleUpscanInitialization)
+      case ValidationType.OtherIncome        =>
+        Future.successful(request.sessionData.otherIncomeScheduleUpscanInitialization)
+      case ValidationType.CommunityBuildings =>
+        Future.successful(request.sessionData.communityBuildingsScheduleUpscanInitialization)
+      case ValidationType.ConnectedCharities =>
+        Future.successful(request.sessionData.connectedCharitiesScheduleUpscanInitialization)
+    }
 
   private def getFileUploadReferenceFromSession(validationType: ValidationType)(using
     request: DataRequest[?]
@@ -113,7 +141,13 @@ class ClaimsValidationServiceImpl @Inject() (
             }
             .recoverWith {
               case e: Exception if e.getMessage.contains("CLAIM_DOES_NOT_EXIST") =>
-                Future.successful(None)
+                geUpscanInitializationFromSession(validationType)
+                  .flatMap {
+                    case Some(upscanInitiateResponse) =>
+                      Future.successful(Some(FileUploadReference(upscanInitiateResponse.reference)))
+                    case None                         =>
+                      Future.successful(None)
+                  }
             }
       }
 
@@ -129,7 +163,7 @@ class ClaimsValidationServiceImpl @Inject() (
             getFileUploadReference(ValidationType.GiftAid)
               .flatMap {
                 case None =>
-                  Future.failed(new RuntimeException("No GiftAid schedule file upload reference found"))
+                  Future.failed(new ScheduleUploadNotFoundException(ValidationType.GiftAid))
 
                 case Some(fileUploadReference) =>
                   claimsValidationConnector
@@ -165,7 +199,7 @@ class ClaimsValidationServiceImpl @Inject() (
           case Some(claimId) =>
             getFileUploadReference(ValidationType.OtherIncome).flatMap {
               case None =>
-                Future.failed(new RuntimeException("No Other Income schedule file upload reference found"))
+                Future.failed(new ScheduleUploadNotFoundException(ValidationType.OtherIncome))
 
               case Some(fileUploadReference) =>
                 claimsValidationConnector
@@ -204,7 +238,7 @@ class ClaimsValidationServiceImpl @Inject() (
             getFileUploadReference(ValidationType.CommunityBuildings)
               .flatMap {
                 case None =>
-                  Future.failed(new RuntimeException("No Community Buildings schedule file upload reference found"))
+                  Future.failed(new ScheduleUploadNotFoundException(ValidationType.CommunityBuildings))
 
                 case Some(fileUploadReference) =>
                   claimsValidationConnector
@@ -244,7 +278,7 @@ class ClaimsValidationServiceImpl @Inject() (
             getFileUploadReference(ValidationType.ConnectedCharities)
               .flatMap {
                 case None =>
-                  Future.failed(new RuntimeException("No Connected Charities schedule file upload reference found"))
+                  Future.failed(new ScheduleUploadNotFoundException(ValidationType.ConnectedCharities))
 
                 case Some(fileUploadReference) =>
                   claimsValidationConnector
@@ -331,3 +365,6 @@ class ClaimsValidationServiceImpl @Inject() (
         )
     }
 }
+
+case class ScheduleUploadNotFoundException(validationType: ValidationType)
+    extends RuntimeException(s"No $validationType schedule found")

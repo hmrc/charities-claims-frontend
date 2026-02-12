@@ -128,21 +128,26 @@ class UploadGiftAidScheduleController @Inject() (
     } yield upscanInitiateResponse
 
   val onUploadSuccess: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    request.sessionData.unsubmittedClaimId match {
-      case None =>
-        // if the claim id is not found, we need to redirect to the repayment claim details page
-        Future.successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+    claimsValidationService
+      .getFileUploadReference(ValidationType.GiftAid, acceptAwaitingUpload = true)
+      .flatMap {
+        case Some(fileUploadReference) =>
+          claimsValidationService
+            .updateUploadStatus(
+              claimId = request.sessionData.unsubmittedClaimId.get,
+              reference = fileUploadReference
+            )
+            .map(_ => Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
 
-      case Some(_) =>
-        saveService
-          .save(request.sessionData.copy(giftAidScheduleUpscanInitialization = None))
-          .map(_ => Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
-    }
+        case None =>
+          Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+
+      }
   }
 
   val onUploadError: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     claimsValidationService
-      .getFileUploadReference(ValidationType.GiftAid)
+      .getFileUploadReference(ValidationType.GiftAid, acceptAwaitingUpload = true)
       .flatMap {
         case Some(_) =>
           // if the file upload reference is found, we need to redirect to the your gift aid schedule upload page
