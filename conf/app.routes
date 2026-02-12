@@ -120,19 +120,6 @@ GET         /authorised-official-details                    controllers.organisa
 GET         /change-authorised-official-details             controllers.organisationDetails.AuthorisedOfficialDetailsController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-authorised-official-details             controllers.organisationDetails.AuthorisedOfficialDetailsController.onSubmit(mode: Mode = Mode.CheckMode)
-
-GET         /delete-gift-aid-schedule                       controllers.organisationDetails.DeleteGiftAidScheduleController.onPageLoad
-POST        /delete-gift-aid-schedule                       controllers.organisationDetails.DeleteGiftAidScheduleController.onSubmit
-
-GET         /delete-other-income-schedule                   controllers.organisationDetails.DeleteOtherIncomeScheduleController.onPageLoad
-POST        /delete-other-income-schedule                   controllers.organisationDetails.DeleteOtherIncomeScheduleController.onSubmit
-
-GET         /delete-gasds-community-buildings-schedule      controllers.organisationDetails.DeleteCommunityBuildingsScheduleController.onPageLoad
-POST        /delete-gasds-community-buildings-schedule      controllers.organisationDetails.DeleteCommunityBuildingsScheduleController.onSubmit
-
-GET         /delete-gasds-connected-charities-schedule      controllers.organisationDetails.DeleteConnectedCharitiesScheduleController.onPageLoad
-POST        /delete-gasds-connected-charities-schedule      controllers.organisationDetails.DeleteConnectedCharitiesScheduleController.onSubmit
-
 GET         /delete-repayment-claim                         controllers.organisationDetails.DeleteRepaymentClaimController.onPageLoad
 POST        /delete-repayment-claim                         controllers.organisationDetails.DeleteRepaymentClaimController.onSubmit
 
@@ -153,9 +140,6 @@ GET         /cannot-view-or-manage-claim                    controllers.organisa
 
 GET         /registering-your-charity-with-a-regulator      controllers.RegisterCharityWithARegulatorController.onPageLoad
 POST        /registering-your-charity-with-a-regulator      controllers.RegisterCharityWithARegulatorController.onSubmit
-
-# TODO: Placeholder screen for G2 - route will be updated in future
-GET         /add-schedule                                   controllers.organisationDetails.AddScheduleController.onPageLoad
 
 GET         /make-a-charity-repayment-claim                 controllers.ClaimsTaskListController.onPageLoad
 
@@ -190,10 +174,20 @@ POST        /check-your-gift-aid-schedule                   controllers.giftAidS
 GET         /problem-with-gift-aid-schedule                 controllers.giftAidSchedule.ProblemWithGiftAidScheduleController.onPageLoad
 GET         /gift-aid-schedule-upload-successful            controllers.giftAidSchedule.GiftAidScheduleUploadSuccessfulController.onPageLoad
 POST        /gift-aid-schedule-upload-successful            controllers.giftAidSchedule.GiftAidScheduleUploadSuccessfulController.onSubmit
+GET         /delete-gift-aid-schedule                       controllers.giftAidSchedule.DeleteGiftAidScheduleController.onPageLoad
+POST        /delete-gift-aid-schedule                       controllers.giftAidSchedule.DeleteGiftAidScheduleController.onSubmit
 
-
-GET         /about-other-income-schedule                     controllers.otherIncomeSchedule.AboutOtherIncomeScheduleController.onPageLoad
-POST        /about-other-income-schedule                     controllers.otherIncomeSchedule.AboutOtherIncomeScheduleController.onSubmit
+GET         /about-other-income-schedule                    controllers.otherIncomeSchedule.AboutOtherIncomeScheduleController.onPageLoad
+POST        /about-other-income-schedule                    controllers.otherIncomeSchedule.AboutOtherIncomeScheduleController.onSubmit
 
 # TODO: Placeholder route for O1.1 - to be implemented in future ticket
-GET         /upload-other-income-schedule                    controllers.otherIncomeSchedule.UploadOtherIncomeScheduleController.onPageLoad
+GET         /upload-other-income-schedule                   controllers.otherIncomeSchedule.UploadOtherIncomeScheduleController.onPageLoad
+
+GET         /delete-other-income-schedule                   controllers.otherIncomeSchedule.DeleteOtherIncomeScheduleController.onPageLoad
+POST        /delete-other-income-schedule                   controllers.otherIncomeSchedule.DeleteOtherIncomeScheduleController.onSubmit
+
+GET         /delete-gasds-community-buildings-schedule      controllers.communityBuildingsSchedule.DeleteCommunityBuildingsScheduleController.onPageLoad
+POST        /delete-gasds-community-buildings-schedule      controllers.communityBuildingsSchedule.DeleteCommunityBuildingsScheduleController.onSubmit
+
+GET         /delete-gasds-connected-charities-schedule      controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onPageLoad
+POST        /delete-gasds-connected-charities-schedule      controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onSubmit
