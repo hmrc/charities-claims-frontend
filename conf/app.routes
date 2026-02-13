@@ -198,3 +198,6 @@ POST        /delete-gasds-community-buildings-schedule      controllers.communit
 
 GET         /delete-gasds-connected-charities-schedule      controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onPageLoad
 POST        /delete-gasds-connected-charities-schedule      controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onSubmit
+
+GET         /check-your-other-income-schedule                controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onPageLoad
+POST        /check-your-other-income-schedule                controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onSubmit

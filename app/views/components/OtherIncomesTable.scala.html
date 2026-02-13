@@ -1,0 +1,45 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.*
+@import uk.gov.hmrc.govukfrontend.views.html.components.*
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.table.*
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.*
+@import utils.FormatUtils.*
+
+@this(govukTable: GovukTable)
+
+@(otherIncomes: Seq[OtherIncome])(implicit request: Request[_], messages: Messages)
+
+@govukTable(
+    Table(
+        classes = "other-incomes-table",
+        head = Some(
+            (1 to 5).map { index =>
+                HeadCell(content = Text(messages("checkYourOtherIncomeSchedule.table.column."+index)), classes = "")
+                }
+        ),
+        rows = otherIncomes.map { income =>
+            Seq(
+                TableRow(content = Text(income.otherIncomeItem.toString), classes = "govuk-table__header"),
+                TableRow(content = Text(income.payerName)),
+                TableRow(content = Text(income.paymentDate.toDdMmYyyyDateString)),
+                TableRow(content = Text(income.grossPayment.setScale(2).bigDecimal.toPlainString)),
+                TableRow(content = Text(income.taxDeducted.setScale(2).bigDecimal.toPlainString))
+            )
+        }
+    )
+)
