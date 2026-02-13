@@ -509,3 +509,7 @@ uploadOtherIncomeSchedule.form.upload-file.submit = Continue
 uploadOtherIncomeSchedule.error.file-upload.required = Select an Other Income schedule
 uploadOtherIncomeSchedule.error.file-upload.invalid-size-large = File can be up to 2.5MB
 uploadOtherIncomeSchedule.error.file-upload.other = Some other error message to be put here
+
+otherIncomeScheduleUploadSuccessful.title = Upload successful
+otherIncomeScheduleUploadSuccessful.message.1 = Upload successful
+otherIncomeScheduleUploadSuccessful.message.2 = You have successfully attached your Other Income schedule.
