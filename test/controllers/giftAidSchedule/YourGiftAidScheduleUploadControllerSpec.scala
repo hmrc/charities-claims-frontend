@@ -87,7 +87,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
         given application: Application = applicationBuilder().build()
 
         running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
+          val request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.YourGiftAidScheduleUploadController.onPageLoad.url)
 
           val result = route(application, request).value
@@ -115,7 +115,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
           .build()
 
         running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
+          val request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.YourGiftAidScheduleUploadController.onPageLoad.url)
 
           val result = route(application, request).value
@@ -274,14 +274,14 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
           .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testVerificationFailedResponse))
+          .returning(Future.failed(new Exception("CLAIM_REFERENCE_DOES_NOT_EXIST")))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
           .build()
 
         running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
+          val request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.YourGiftAidScheduleUploadController.onPageLoad.url)
 
           val result = route(application, request).value
@@ -312,7 +312,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
         .build()
 
       running(application) {
-        given request: FakeRequest[AnyContentAsEmpty.type] =
+        val request: FakeRequest[AnyContentAsEmpty.type] =
           FakeRequest(GET, routes.YourGiftAidScheduleUploadController.onRemove.url)
 
         val result = route(application, request).value
@@ -329,7 +329,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
         given application: Application = applicationBuilder().build()
 
         running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
+          val request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(POST, routes.YourGiftAidScheduleUploadController.onSubmit.url)
 
           val result = route(application, request).value
@@ -346,7 +346,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
+          val request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(POST, routes.YourGiftAidScheduleUploadController.onSubmit.url)
 
           val result = route(application, request).value
@@ -380,7 +380,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
           .build()
 
         running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
+          val request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(POST, routes.YourGiftAidScheduleUploadController.onSubmit.url)
 
           val result = route(application, request).value
@@ -408,7 +408,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
           .build()
 
         running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
+          val request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(POST, routes.YourGiftAidScheduleUploadController.onSubmit.url)
 
           val result = route(application, request).value
@@ -437,7 +437,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
           .build()
 
         running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
+          val request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(POST, routes.YourGiftAidScheduleUploadController.onSubmit.url)
 
           val result = route(application, request).value
@@ -465,7 +465,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
           .build()
 
         running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
+          val request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(POST, routes.YourGiftAidScheduleUploadController.onSubmit.url)
 
           val result = route(application, request).value
