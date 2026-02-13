@@ -24,6 +24,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
 
   val url = s"$baseUrl/make-a-charity-repayment-claim"
 
+  val testClaimId = "test-claim-id"
+
   def completeRepaymentClaimDetailsAnswersOld(): RepaymentClaimDetailsAnswersOld =
     RepaymentClaimDetailsAnswersOld(
       claimingGiftAid = Some(false),
@@ -40,12 +42,39 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       claimingReferenceNumber = Some(false)
     )
 
+  def sessionDataWithClaimId(): SessionData =
+    SessionData(
+      charitiesReference = testCharitiesReference,
+      unsubmittedClaimId = Some(testClaimId),
+      repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld()
+    )
+
+  def sessionDataWithCompleteRcd(): SessionData =
+    SessionData(
+      charitiesReference = testCharitiesReference,
+      unsubmittedClaimId = Some(testClaimId),
+      repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+      repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
+    )
+
   "ClaimsTaskListController" - {
 
     "onPageLoad" - {
 
-      "should render the page with correct heading" in {
+      "should redirect to PageNotFound when unsubmittedClaimId is missing" in {
         given application: Application = applicationBuilder().build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.PageNotFoundController.onPageLoad.url)
+        }
+      }
+
+      "should render the page with correct heading when unsubmittedClaimId is present" in {
+        given application: Application = applicationBuilder(sessionDataWithClaimId()).build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -57,13 +86,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display About the claim section with all tasks when repaymentClaimDetails complete" in {
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
-          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
-        )
-
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -72,15 +95,195 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           contentAsString(result) should include("About the claim")
           contentAsString(result) should include("Provide repayment claim details")
           contentAsString(result) should include("Provide organisation details")
+        }
+      }
+
+      "should display GASDS task when claimingUnderGiftAidSmallDonationsScheme is true" in {
+        val answers     = completeRepaymentClaimDetailsAnswers().copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingDonationsNotFromCommunityBuilding = Some(true),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(false),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(answers)
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
           contentAsString(result) should include("Gift Aid Small Donations Scheme details")
         }
       }
 
-      "should display Upload documents section with all tasks when repaymentClaimDetails complete" in {
+      "should not display GASDS task when claimingUnderGiftAidSmallDonationsScheme is false" in {
+        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
+          contentAsString(result) shouldNot include("Gift Aid Small Donations Scheme details")
+        }
+      }
+
+      "should display Gift Aid schedule task when claimingGiftAid is true" in {
+        val answers     = completeRepaymentClaimDetailsAnswers().copy(claimingGiftAid = Some(true))
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
-          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
+          repaymentClaimDetailsAnswers = Some(answers)
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
+          contentAsString(result) should include("Add Gift Aid schedule")
+        }
+      }
+
+      "should not display Gift Aid schedule task when claimingGiftAid is false" in {
+        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
+          contentAsString(result) shouldNot include("Add Gift Aid schedule")
+        }
+      }
+
+      "should display Other income schedule task when claimingTaxDeducted is true" in {
+        val answers     = completeRepaymentClaimDetailsAnswers().copy(claimingTaxDeducted = Some(true))
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(answers)
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
+          contentAsString(result) should include("Add other income schedule")
+        }
+      }
+
+      "should not display Other income schedule task when claimingTaxDeducted is false" in {
+        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
+          contentAsString(result) shouldNot include("Add other income schedule")
+        }
+      }
+
+      "should display Community buildings schedule task when claimingDonationsCollectedInCommunityBuildings is true" in {
+        val answers     = completeRepaymentClaimDetailsAnswers().copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingDonationsCollectedInCommunityBuildings = Some(true),
+          claimingDonationsNotFromCommunityBuilding = Some(true),
+          connectedToAnyOtherCharities = Some(false),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(answers)
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
+          contentAsString(result) should include("Add community buildings schedule")
+        }
+      }
+
+      "should not display Community buildings schedule task when claimingDonationsCollectedInCommunityBuildings is false" in {
+        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
+          contentAsString(result) shouldNot include("Add community buildings schedule")
+        }
+      }
+
+      "should display Connected charities schedule task when connectedToAnyOtherCharities is true" in {
+        val answers     = completeRepaymentClaimDetailsAnswers().copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          connectedToAnyOtherCharities = Some(true),
+          claimingDonationsNotFromCommunityBuilding = Some(true),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(answers)
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
+          contentAsString(result) should include("Add connected charities schedule")
+        }
+      }
+
+      "should not display Connected charities schedule task when connectedToAnyOtherCharities is false" in {
+        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
+          contentAsString(result) shouldNot include("Add connected charities schedule")
+        }
+      }
+
+      "should not display Upload documents section when no upload tasks are visible" in {
+        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
+          contentAsString(result) shouldNot include("Upload documents")
+        }
+      }
+
+      "should display Upload documents section when at least one upload task is visible" in {
+        val answers     = completeRepaymentClaimDetailsAnswers().copy(claimingGiftAid = Some(true))
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(answers)
         )
 
         given application: Application = applicationBuilder(sessionData).build()
@@ -90,21 +293,113 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val result  = route(application, request).value
 
           contentAsString(result) should include("Upload documents")
-          contentAsString(result) should include("Add Gift Aid schedule")
-          contentAsString(result) should include("Add other income schedule")
-          contentAsString(result) should include("Add community buildings schedule")
-          contentAsString(result) should include("Add connected charities schedule")
+        }
+      }
+
+      "should show Gift Aid schedule as Incomplete when not completed" in {
+        val answers     = completeRepaymentClaimDetailsAnswers().copy(claimingGiftAid = Some(true))
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(answers)
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
+          contentAsString(result) should include("Incomplete")
+        }
+      }
+
+      "should show Gift Aid schedule as Completed when giftAidScheduleCompleted is true" in {
+        val answers     = completeRepaymentClaimDetailsAnswers().copy(claimingGiftAid = Some(true))
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(answers),
+          giftAidScheduleCompleted = true
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          content should include("Add Gift Aid schedule")
+          content should include("Completed")
+        }
+      }
+
+      "should show Other income schedule as Incomplete when not completed" in {
+        val answers     = completeRepaymentClaimDetailsAnswers().copy(claimingTaxDeducted = Some(true))
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(answers)
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
+          contentAsString(result) should include("Incomplete")
+        }
+      }
+
+      "should show Other income schedule as Completed when otherIncomeScheduleCompleted is true" in {
+        val answers     = completeRepaymentClaimDetailsAnswers().copy(claimingTaxDeducted = Some(true))
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(answers),
+          otherIncomeScheduleCompleted = true
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          content should include("Add other income schedule")
+          content should include("Completed")
+        }
+      }
+
+      "should show Declaration as CannotStartYet when upload tasks are incomplete" in {
+        val answers     = completeRepaymentClaimDetailsAnswers().copy(claimingGiftAid = Some(true))
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
+          repaymentClaimDetailsAnswers = Some(answers)
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
+          contentAsString(result) should include("Cannot start yet")
+          contentAsString(result) should include("You must complete every section before you can declare.")
         }
       }
 
       "should display Declaration section when Repayment Claim Details complete" in {
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
-          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
-        )
-
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -116,13 +411,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display declaration warning when other sections incomplete" in {
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
-          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
-        )
-
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -133,13 +422,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display Delete claim link when repaymentClaimDetails complete" in {
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
-          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
-        )
-
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -150,7 +433,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display Go to dashboard link pointing to management frontend" in {
-        given application: Application = applicationBuilder().build()
+        given application: Application = applicationBuilder(sessionDataWithClaimId()).build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -163,7 +446,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should show status tags for tasks" in {
-        given application: Application = applicationBuilder().build()
+        given application: Application = applicationBuilder(sessionDataWithClaimId()).build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -173,26 +456,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         }
       }
 
-      "should show Completed status for GASDS and upload tasks" in {
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
-          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
-        )
-
-        given application: Application = applicationBuilder(sessionData).build()
-
-        running(application) {
-          val request = FakeRequest(GET, url)
-          val result  = route(application, request).value
-          val content = contentAsString(result)
-
-          content should include("Completed")
-        }
-      }
-
       "should use govuk-heading-l class for the page heading" in {
-        given application: Application = applicationBuilder().build()
+        given application: Application = applicationBuilder(sessionDataWithClaimId()).build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -204,12 +469,14 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should not display Upload documents section when Repayment Claim Details incomplete" in {
-        val incompleteAnswers = RepaymentClaimDetailsAnswersOld(
-          claimingGiftAid = Some(true),
-          claimingTaxDeducted = None
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(
+            claimingGiftAid = Some(true),
+            claimingTaxDeducted = None
+          )
         )
-        val sessionData       =
-          SessionData(charitiesReference = testCharitiesReference, repaymentClaimDetailsAnswersOld = incompleteAnswers)
 
         given application: Application = applicationBuilder(sessionData).build()
 
@@ -222,12 +489,14 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display Declaration section as Cannot start yet when Repayment Claim Details incomplete" in {
-        val incompleteAnswers = RepaymentClaimDetailsAnswersOld(
-          claimingGiftAid = Some(true),
-          claimingTaxDeducted = None
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(
+            claimingGiftAid = Some(true),
+            claimingTaxDeducted = None
+          )
         )
-        val sessionData       =
-          SessionData(charitiesReference = testCharitiesReference, repaymentClaimDetailsAnswersOld = incompleteAnswers)
 
         given application: Application = applicationBuilder(sessionData).build()
 
@@ -243,6 +512,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       "should display declaration warning as hint text within task item" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld()
         )
 
@@ -257,25 +527,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         }
       }
 
-      "should link GASDS and upload tasks to page not found" in {
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
-          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
-        )
-
-        given application: Application = applicationBuilder(sessionData).build()
-
-        running(application) {
-          val request = FakeRequest(GET, url)
-          val result  = route(application, request).value
-
-          contentAsString(result) should include("/charities-claims/page-not-found")
-        }
-      }
-
       "should display caption with HMRC Charities reference" in {
-        given application: Application = applicationBuilder().build()
+        given application: Application = applicationBuilder(sessionDataWithClaimId()).build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -290,6 +543,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       "should have unique IDs for task list status elements" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld()
         )
 

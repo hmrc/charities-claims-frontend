@@ -18,7 +18,8 @@ package controllers
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import controllers.actions.Actions
+import controllers.actions.{Actions, GuardAction}
+import models.SessionData
 import models.requests.DataRequest
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -29,12 +30,14 @@ class ClaimsTaskListController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: ClaimsTaskListView,
   actions: Actions,
+  guard: GuardAction,
   appConfig: FrontendAppConfig
 ) extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl)))
-  }
+  def onPageLoad: Action[AnyContent] =
+    actions.authAndGetData().andThen(guard(SessionData.unsubmittedClaimId.isDefined)) { implicit request =>
+      Ok(view(ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl)))
+    }
 }
 
 object ClaimsTaskListController {
@@ -63,28 +66,31 @@ object ClaimsTaskListController {
         dashboardUrl = dashboardUrl
       )
     } else {
+      val aboutTheClaimTasks   = buildAboutTheClaimSection
+      val uploadDocumentsTasks = buildUploadDocumentsSection
+      val allTasks             = aboutTheClaimTasks ++ uploadDocumentsTasks
+      val allSectionsComplete  = allTasks.forall(_.status == TaskStatus.Completed)
+
       val aboutTheClaimSection = TaskSection(
         headingKey = "claimsTaskList.section.aboutTheClaim",
-        tasks = buildAboutTheClaimSection
+        tasks = aboutTheClaimTasks
       )
 
-      val uploadDocumentsSection = TaskSection(
-        headingKey = "claimsTaskList.section.uploadDocuments",
-        tasks = buildUploadDocumentsSection
-      )
-
-      val allSectionsComplete = areAllSectionsComplete
-      val declarationSection  = TaskSection(
+      val declarationSection = TaskSection(
         headingKey = "claimsTaskList.section.declaration",
         tasks = buildDeclarationSection(allSectionsComplete),
         hintKey = if (allSectionsComplete) None else Some("claimsTaskList.declaration.warning")
       )
 
-      val sections = Seq(
-        aboutTheClaimSection,
-        uploadDocumentsSection,
-        declarationSection
-      )
+      val sections = if (uploadDocumentsTasks.nonEmpty) {
+        val uploadDocumentsSection = TaskSection(
+          headingKey = "claimsTaskList.section.uploadDocuments",
+          tasks = uploadDocumentsTasks
+        )
+        Seq(aboutTheClaimSection, uploadDocumentsSection, declarationSection)
+      } else {
+        Seq(aboutTheClaimSection, declarationSection)
+      }
 
       ClaimsTaskListViewModel(
         sections = sections,
@@ -98,20 +104,31 @@ object ClaimsTaskListController {
   private def isRepaymentClaimDetailsComplete(using request: DataRequest[?]): Boolean =
     request.sessionData.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
 
-  private def buildAboutTheClaimSection(using request: DataRequest[?], messages: Messages): Seq[TaskItem] =
-    Seq(
-      buildRepaymentClaimDetailsTask,
-      buildOrganisationDetailsTask,
-      buildGasdsDetailsTask
-    )
+  private def buildAboutTheClaimSection(using request: DataRequest[?], messages: Messages): Seq[TaskItem] = {
+    val answers         = request.sessionData.repaymentClaimDetailsAnswers
+    val isClaimingGasds = answers.exists(_.claimingUnderGiftAidSmallDonationsScheme.contains(true))
 
-  private def buildUploadDocumentsSection(using request: DataRequest[?], messages: Messages): Seq[TaskItem] =
     Seq(
-      buildGiftAidScheduleTask,
-      buildOtherIncomeScheduleTask,
-      buildCommunityBuildingsScheduleTask,
-      buildConnectedCharitiesScheduleTask
-    )
+      Some(buildRepaymentClaimDetailsTask),
+      Some(buildOrganisationDetailsTask),
+      Option.when(isClaimingGasds)(buildGasdsDetailsTask)
+    ).flatten
+  }
+
+  private def buildUploadDocumentsSection(using request: DataRequest[?], messages: Messages): Seq[TaskItem] = {
+    val answers                      = request.sessionData.repaymentClaimDetailsAnswers
+    val isClaimingGiftAid            = answers.exists(_.claimingGiftAid.contains(true))
+    val isClaimingTaxDeducted        = answers.exists(_.claimingTaxDeducted.contains(true))
+    val isClaimingCommunityBuildings = answers.exists(_.claimingDonationsCollectedInCommunityBuildings.contains(true))
+    val isConnectedToOtherCharities  = answers.exists(_.connectedToAnyOtherCharities.contains(true))
+
+    Seq(
+      Option.when(isClaimingGiftAid)(buildGiftAidScheduleTask),
+      Option.when(isClaimingTaxDeducted)(buildOtherIncomeScheduleTask),
+      Option.when(isClaimingCommunityBuildings)(buildCommunityBuildingsScheduleTask),
+      Option.when(isConnectedToOtherCharities)(buildConnectedCharitiesScheduleTask)
+    ).flatten
+  }
 
   private def buildDeclarationSection(allSectionsComplete: Boolean)(using messages: Messages): Seq[TaskItem] = {
     val status = if (allSectionsComplete) TaskStatus.NotStarted else TaskStatus.CannotStartYet
@@ -122,11 +139,6 @@ object ClaimsTaskListController {
         status = status
       )
     )
-  }
-
-  private def areAllSectionsComplete(using request: DataRequest[?], messages: Messages): Boolean = {
-    val aboutTheClaim = buildAboutTheClaimSection
-    aboutTheClaim.forall(_.status == TaskStatus.Completed)
   }
 
   private def buildRepaymentClaimDetailsTask(using request: DataRequest[?], messages: Messages): TaskItem = {
