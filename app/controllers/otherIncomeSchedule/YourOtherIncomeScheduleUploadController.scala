@@ -17,32 +17,18 @@
 package controllers.otherIncomeSchedule
 
 import com.google.inject.Inject
-import config.FrontendAppConfig
 import controllers.BaseController
 import controllers.actions.Actions
-import controllers.otherIncomeSchedule.routes
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import views.html.AboutOtherIncomeScheduleView
-import models.RepaymentClaimDetailsAnswers
 
 import scala.concurrent.Future
 
-class AboutOtherIncomeScheduleController @Inject() (
+class YourOtherIncomeScheduleUploadController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  actions: Actions,
-  view: AboutOtherIncomeScheduleView,
-  appConfig: FrontendAppConfig
+  actions: Actions
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true) then {
-      Future.successful(Ok(view(appConfig.otherIncomeScheduleSpreadsheetGuidancesUrl)))
-    } else {
-      Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
-    }
-  }
-
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
+    Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
   }
 }
