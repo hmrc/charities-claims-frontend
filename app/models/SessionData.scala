@@ -38,15 +38,19 @@ final case class SessionData(
   giftAidScheduleUpscanInitialization: Option[UpscanInitiateResponse] = None,
   giftAidScheduleFileUploadReference: Option[FileUploadReference] = None,
   giftAidScheduleData: Option[GiftAidScheduleData] = None,
+  giftAidScheduleCompleted: Boolean = false,
   otherIncomeScheduleUpscanInitialization: Option[UpscanInitiateResponse] = None,
   otherIncomeScheduleFileUploadReference: Option[FileUploadReference] = None,
   otherIncomeScheduleData: Option[OtherIncomeScheduleData] = None,
+  otherIncomeScheduleCompleted: Boolean = false,
   communityBuildingsScheduleUpscanInitialization: Option[UpscanInitiateResponse] = None,
   communityBuildingsScheduleFileUploadReference: Option[FileUploadReference] = None,
   communityBuildingsScheduleData: Option[CommunityBuildingsScheduleData] = None,
+  communityBuildingsScheduleCompleted: Boolean = false,
   connectedCharitiesScheduleUpscanInitialization: Option[UpscanInitiateResponse] = None,
   connectedCharitiesScheduleFileUploadReference: Option[FileUploadReference] = None,
-  connectedCharitiesScheduleData: Option[ConnectedCharitiesScheduleData] = None
+  connectedCharitiesScheduleData: Option[ConnectedCharitiesScheduleData] = None,
+  connectedCharitiesScheduleCompleted: Boolean = false
 )
 
 object SessionData {
@@ -74,9 +78,13 @@ object SessionData {
           GiftAidSmallDonationsSchemeDonationDetailsAnswers.from
         ),
       giftAidScheduleFileUploadReference = claim.claimData.giftAidScheduleFileUploadReference,
+      giftAidScheduleCompleted = claim.claimData.giftAidScheduleFileUploadReference.isDefined,
       otherIncomeScheduleFileUploadReference = claim.claimData.otherIncomeScheduleFileUploadReference,
+      otherIncomeScheduleCompleted = claim.claimData.otherIncomeScheduleFileUploadReference.isDefined,
       communityBuildingsScheduleFileUploadReference = claim.claimData.communityBuildingsScheduleFileUploadReference,
-      connectedCharitiesScheduleFileUploadReference = claim.claimData.connectedCharitiesScheduleFileUploadReference
+      communityBuildingsScheduleCompleted = claim.claimData.communityBuildingsScheduleFileUploadReference.isDefined,
+      connectedCharitiesScheduleFileUploadReference = claim.claimData.connectedCharitiesScheduleFileUploadReference,
+      connectedCharitiesScheduleCompleted = claim.claimData.connectedCharitiesScheduleFileUploadReference.isDefined
     )
 
   def toUpdateClaimRequest(sessionData: SessionData): Try[UpdateClaimRequest] =
@@ -99,9 +107,25 @@ object SessionData {
       organisationDetails = organisationDetails,
       giftAidSmallDonationsSchemeDonationDetails = giftAidSmallDonationsSchemeDonationDetails,
       declarationDetails = declarationDetails,
-      giftAidScheduleFileUploadReference = sessionData.giftAidScheduleFileUploadReference,
-      otherIncomeScheduleFileUploadReference = sessionData.otherIncomeScheduleFileUploadReference,
-      communityBuildingsScheduleFileUploadReference = sessionData.communityBuildingsScheduleFileUploadReference,
-      connectedCharitiesScheduleFileUploadReference = sessionData.connectedCharitiesScheduleFileUploadReference
+      giftAidScheduleFileUploadReference =
+        // only include the file upload reference if the schedule has been accepted
+        if sessionData.giftAidScheduleCompleted
+        then sessionData.giftAidScheduleFileUploadReference
+        else None,
+      otherIncomeScheduleFileUploadReference =
+        // only include the file upload reference if the schedule has been accepted
+        if sessionData.otherIncomeScheduleCompleted
+        then sessionData.otherIncomeScheduleFileUploadReference
+        else None,
+      communityBuildingsScheduleFileUploadReference =
+        // only include the file upload reference if the schedule has been accepted
+        if sessionData.communityBuildingsScheduleCompleted
+        then sessionData.communityBuildingsScheduleFileUploadReference
+        else None,
+      connectedCharitiesScheduleFileUploadReference =
+        // only include the file upload reference if the schedule has been accepted
+        if sessionData.connectedCharitiesScheduleCompleted
+        then sessionData.connectedCharitiesScheduleFileUploadReference
+        else None
     )
 }

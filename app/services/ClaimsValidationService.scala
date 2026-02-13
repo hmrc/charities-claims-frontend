@@ -337,23 +337,31 @@ class ClaimsValidationServiceImpl @Inject() (
             val modifiedSessionData = validationType match {
               case ValidationType.GiftAid            =>
                 request.sessionData.copy(
+                  giftAidScheduleUpscanInitialization = None,
                   giftAidScheduleFileUploadReference = None,
-                  giftAidScheduleData = None
+                  giftAidScheduleData = None,
+                  giftAidScheduleCompleted = false
                 )
               case ValidationType.OtherIncome        =>
                 request.sessionData.copy(
+                  otherIncomeScheduleUpscanInitialization = None,
                   otherIncomeScheduleFileUploadReference = None,
-                  otherIncomeScheduleData = None
+                  otherIncomeScheduleData = None,
+                  otherIncomeScheduleCompleted = false
                 )
               case ValidationType.CommunityBuildings =>
                 request.sessionData.copy(
+                  communityBuildingsScheduleUpscanInitialization = None,
                   communityBuildingsScheduleFileUploadReference = None,
-                  communityBuildingsScheduleData = None
+                  communityBuildingsScheduleData = None,
+                  communityBuildingsScheduleCompleted = false
                 )
               case ValidationType.ConnectedCharities =>
                 request.sessionData.copy(
+                  connectedCharitiesScheduleUpscanInitialization = None,
                   connectedCharitiesScheduleFileUploadReference = None,
-                  connectedCharitiesScheduleData = None
+                  connectedCharitiesScheduleData = None,
+                  connectedCharitiesScheduleCompleted = false
                 )
             }
             saveService.save(modifiedSessionData)

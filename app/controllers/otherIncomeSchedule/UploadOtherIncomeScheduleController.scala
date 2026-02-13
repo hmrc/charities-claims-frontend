@@ -122,7 +122,10 @@ class UploadOtherIncomeScheduleController @Inject() (
         // store upscan initiate response because charities-claims-validation will not accept the same reference twice
         saveService.save(
           request.sessionData
-            .copy(otherIncomeScheduleUpscanInitialization = Some(upscanInitiateResponse))
+            .copy(
+              otherIncomeScheduleUpscanInitialization = Some(upscanInitiateResponse),
+              otherIncomeScheduleFileUploadReference = Some(FileUploadReference(upscanInitiateResponse.reference))
+            )
         )
     } yield upscanInitiateResponse
 
