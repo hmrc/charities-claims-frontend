@@ -36,7 +36,12 @@ class AboutGiftAidScheduleController @Inject() (
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true) then {
-      Future.successful(Ok(view(appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl)))
+      if request.sessionData.giftAidScheduleCompleted
+      then {
+        Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
+      } else {
+        Future.successful(Ok(view(appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl)))
+      }
     } else {
       Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
     }

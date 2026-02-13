@@ -64,6 +64,24 @@ class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
           contentAsString(result) should include("https://test.example.com/other-income-schedule")
         }
       }
+
+      "should redirect to the next page if the otherIncomeScheduleCompleted is true" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers
+            .setClaimingTaxDeducted(true)
+            .copy(otherIncomeScheduleCompleted = true)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          val request =
+            FakeRequest(GET, routes.AboutOtherIncomeScheduleController.onPageLoad.url)
+          val result  = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.YourOtherIncomeScheduleUploadController.onPageLoad.url)
+        }
+      }
     }
 
     "onSubmit" - {

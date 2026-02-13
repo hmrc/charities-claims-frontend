@@ -105,7 +105,7 @@ object ClaimsTaskListController {
       buildGasdsDetailsTask
     )
 
-  private def buildUploadDocumentsSection(using messages: Messages): Seq[TaskItem] =
+  private def buildUploadDocumentsSection(using request: DataRequest[?], messages: Messages): Seq[TaskItem] =
     Seq(
       buildGiftAidScheduleTask,
       buildOtherIncomeScheduleTask,
@@ -169,31 +169,51 @@ object ClaimsTaskListController {
       status = TaskStatus.Completed
     )
 
-  private def buildGiftAidScheduleTask(using messages: Messages): TaskItem =
+  private def buildGiftAidScheduleTask(using request: DataRequest[?], messages: Messages): TaskItem =
+    val status =
+      if request.sessionData.giftAidScheduleCompleted
+      then TaskStatus.Completed
+      else TaskStatus.Incomplete
+
     TaskItem(
       name = messages("claimsTaskList.task.giftAidSchedule"),
       href = controllers.giftAidSchedule.routes.AboutGiftAidScheduleController.onPageLoad,
-      status = TaskStatus.Completed
+      status = status
     )
 
-  private def buildOtherIncomeScheduleTask(using messages: Messages): TaskItem =
+  private def buildOtherIncomeScheduleTask(using request: DataRequest[?], messages: Messages): TaskItem =
+    val status =
+      if request.sessionData.otherIncomeScheduleCompleted
+      then TaskStatus.Completed
+      else TaskStatus.Incomplete
+
     TaskItem(
       name = messages("claimsTaskList.task.otherIncomeSchedule"),
       href = controllers.otherIncomeSchedule.routes.AboutOtherIncomeScheduleController.onPageLoad,
-      status = TaskStatus.Completed
+      status = status
     )
 
-  private def buildCommunityBuildingsScheduleTask(using messages: Messages): TaskItem =
+  private def buildCommunityBuildingsScheduleTask(using request: DataRequest[?], messages: Messages): TaskItem =
+    val status =
+      if request.sessionData.communityBuildingsScheduleCompleted
+      then TaskStatus.Completed
+      else TaskStatus.Incomplete
+
     TaskItem(
       name = messages("claimsTaskList.task.communityBuildingsSchedule"),
       href = routes.PageNotFoundController.onPageLoad,
-      status = TaskStatus.Completed
+      status = status
     )
 
-  private def buildConnectedCharitiesScheduleTask(using messages: Messages): TaskItem =
+  private def buildConnectedCharitiesScheduleTask(using request: DataRequest[?], messages: Messages): TaskItem =
+    val status =
+      if request.sessionData.connectedCharitiesScheduleCompleted
+      then TaskStatus.Completed
+      else TaskStatus.Incomplete
+
     TaskItem(
       name = messages("claimsTaskList.task.connectedCharitiesSchedule"),
       href = routes.PageNotFoundController.onPageLoad,
-      status = TaskStatus.Completed
+      status = status
     )
 }
