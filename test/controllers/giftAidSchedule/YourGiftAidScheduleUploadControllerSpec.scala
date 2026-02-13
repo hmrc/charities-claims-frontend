@@ -17,10 +17,9 @@
 package controllers.giftAidSchedule
 
 import com.typesafe.config.ConfigFactory
-import controllers.giftAidSchedule.routes
 import controllers.ControllerSpec
 import models.{RepaymentClaimDetailsAnswers, UpscanInitiateRequest, UpscanInitiateResponse}
-import play.api.{Application, Configuration}
+import play.api.{inject, Application, Configuration}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.libs.json.Json
@@ -28,17 +27,16 @@ import util.HttpV2Support
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import org.scalamock.handlers.CallHandler
 import views.html.YourGiftAidScheduleUploadView
-import services.{ClaimsService, ClaimsValidationService}
+import services.ClaimsValidationService
 import models.*
-import util.TestScheduleData
 import models.FileUploadReference
 import connectors.ClaimsValidationConnector
+import play.api.inject.bind
 
 import scala.concurrent.Future
 import util.TestResources
 import models.requests.DataRequest
 import play.api.inject.guice.GuiceableModule
-import play.api.inject.bind
 
 class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2Support {
   val config: Configuration = Configuration(
@@ -81,10 +79,10 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2
   val mockConnector: ClaimsValidationConnector = mock[ClaimsValidationConnector]
   val mockService: ClaimsValidationService     = mock[ClaimsValidationService]
 
-  override protected val additionalBindings: List[GuiceableModule] = List(
-    bind[ClaimsValidationConnector].toInstance(mockConnector),
-    bind[ClaimsValidationService].toInstance(mockService)
-  )
+//  override protected val additionalBindings: List[GuiceableModule] = List(
+//    bind[ClaimsValidationConnector].toInstance(mockConnector),
+//    bind[ClaimsValidationService].toInstance(mockService)
+//  )
 
   val uploadUrl   = "http://foo.bar.com/upscan-upload-proxy/bucketName"
   val callbackUrl = "http://example.com:1235/charities-claims-validation/claim-1234567890/upscan-callback"
@@ -134,7 +132,13 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2
     TestResources.readTestResource("/test-get-upload-result-validated-gift-aid.json")
 
   lazy val testAwaitingJsonString: String =
-    TestResources.readTestResource("/test-get-upload-result-awaiting-upload.json")
+    TestResources.readTestResource("/test-get-upload-result-awaiting-upload-gift-aid.json")
+
+  lazy val testVerifyingJsonString: String =
+    TestResources.readTestResource("/test-get-upload-result-verifying-upload-gift-aid.json")
+
+  lazy val testValidatingJsonString: String =
+    TestResources.readTestResource("/test-get-upload-result-validating-upload-gift-aid.json")
 
   // parse JSON into model objects
   lazy val testValidationFailedResponse: GetUploadResultValidationFailedGiftAid =
@@ -145,6 +149,12 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2
 
   lazy val testAwaitingResponse: GetUploadResultAwaitingUpload =
     Json.parse(testAwaitingJsonString).as[GetUploadResultAwaitingUpload]
+
+  lazy val testVerifyingResponse: GetUploadResultVeryfying =
+    Json.parse(testVerifyingJsonString).as[GetUploadResultVeryfying]
+
+  lazy val testValidatingResponse: GetUploadResultValidating =
+    Json.parse(testValidatingJsonString).as[GetUploadResultValidating]
 
   "YourGiftAidScheduleUploadControllerSpec" - {
 
@@ -167,9 +177,18 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2
 
       "unsubmitted Claim ID is defined and file reference is not defined" in {
         val sessionData =
-          defaultSessionData.copy(unsubmittedClaimId = Some(claimId), giftAidScheduleFileUploadReference = None)
+          RepaymentClaimDetailsAnswers
+            .setClaimingGiftAid(true)
+            .copy(unsubmittedClaimId = Some(claimId), giftAidScheduleFileUploadReference = None)
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        (mockService
+          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(ValidationType.GiftAid, false, *, *)
+          .returning(Future.successful(None))
+
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
+          .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -198,7 +217,9 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2
           .expects(claimId, fileUploadReference, *)
           .returning(Future.successful(testAwaitingResponse))
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+          .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -218,14 +239,82 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2
         }
       }
 
-      //      "unsubmitted Claim ID & file reference are defined - result = Verifying" in {}
-      //      "unsubmitted Claim ID & file reference are defined - result = Validating" in {}
+      "unsubmitted Claim ID & file reference are defined - result = Verifying" in {
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .copy(
+            unsubmittedClaimId = Some(claimId),
+            giftAidScheduleFileUploadReference = Some(fileUploadReference)
+          )
+
+        (mockConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(claimId, fileUploadReference, *)
+          .returning(Future.successful(testVerifyingResponse))
+
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+          .build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.YourGiftAidScheduleUploadController.onPageLoad.url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[YourGiftAidScheduleUploadView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(
+            claimId,
+            testVerifyingResponse,
+            None,
+            true
+          ).body
+
+        }
+      }
+      "unsubmitted Claim ID & file reference are defined - result = Validating" in {
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .copy(
+            unsubmittedClaimId = Some(claimId),
+            giftAidScheduleFileUploadReference = Some(fileUploadReference)
+          )
+
+        (mockConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(claimId, fileUploadReference, *)
+          .returning(Future.successful(testValidatingResponse))
+
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+          .build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.YourGiftAidScheduleUploadController.onPageLoad.url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[YourGiftAidScheduleUploadView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(
+            claimId,
+            testValidatingResponse,
+            None,
+            true
+          ).body
+
+        }
+
+      }
       //      "unsubmitted Claim ID & file reference are defined - result = Verification Failed" in {}
       //      "unsubmitted Claim ID & file reference are defined - result = Validated" in {}
       //      "unsubmitted Claim ID & file reference are defined - result = other" in {}
     }
 
     "onRemove - delete schedule and redirect" in {
+
       val sessionData = defaultSessionData.copy(
         unsubmittedClaimId = Some(claimId),
         giftAidScheduleFileUploadReference = Some(fileUploadReference)
@@ -236,7 +325,10 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2
         .expects(*, *)
         .returning(Future.successful(()))
 
-      given application: Application = applicationBuilder(sessionData = sessionData).build()
+      given application: Application = applicationBuilder(sessionData = sessionData)
+        .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+        .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
+        .build()
 
       running(application) {
         given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -306,47 +398,62 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec with HttpV2
 //        }
 //      }
 
-//      "unsubmitted Claim ID & file reference are defined - result = passed Validation" in {
-//        val sessionData = defaultSessionData.copy(
-//          unsubmittedClaimId = Some("test-claim-123"),
-//          giftAidScheduleFileUploadReference = Some(fileUploadReference)
-//        )
-//
-//        given application: Application = applicationBuilder(sessionData = sessionData).build()
-//
-//        running(application) {
-//          given request: FakeRequest[AnyContentAsEmpty.type] =
-//            FakeRequest(POST, routes.YourGiftAidScheduleUploadController.onSubmit.url)
-//
-//          val result = route(application, request).value
-//
-//          status(result) shouldEqual SEE_OTHER
-//          redirectLocation(result) shouldEqual Some(
-//            routes.CheckYourGiftAidScheduleController.onPageLoad.url
-//          )
-//        }
-//      }
+      "unsubmitted Claim ID & file reference are defined - result = passed Validation" in {
+        val sessionData = defaultSessionData.copy(
+          unsubmittedClaimId = Some(claimId),
+          giftAidScheduleFileUploadReference = Some(fileUploadReference)
+        )
 
-//      "unsubmitted Claim ID & file reference are defined - result = failed Validation" in {
-//        val sessionData = defaultSessionData.copy(
-//          unsubmittedClaimId = Some("test-claim-123"),
-//          giftAidScheduleFileUploadReference = Some(fileUploadReference)
-//        )
-//
-//        given application: Application = applicationBuilder(sessionData = sessionData).build()
-//
-//        running(application) {
-//          given request: FakeRequest[AnyContentAsEmpty.type] =
-//            FakeRequest(POST, routes.YourGiftAidScheduleUploadController.onSubmit.url)
-//
-//          val result = route(application, request).value
-//
-//          status(result) shouldEqual SEE_OTHER
-//          redirectLocation(result) shouldEqual Some(
-//            routes.ProblemWithGiftAidScheduleController.onPageLoad.url
-//          )
-//        }
-//      }
+        (mockConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(claimId, fileUploadReference, *)
+          .returning(Future.successful(testValidatedResponse))
+
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+          .build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.YourGiftAidScheduleUploadController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.CheckYourGiftAidScheduleController.onPageLoad.url
+          )
+        }
+
+      }
+
+      "unsubmitted Claim ID & file reference are defined - result = failed Validation" in {
+        val sessionData = defaultSessionData.copy(
+          unsubmittedClaimId = Some(claimId),
+          giftAidScheduleFileUploadReference = Some(fileUploadReference)
+        )
+
+        (mockConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(claimId, fileUploadReference, *)
+          .returning(Future.successful(testValidationFailedResponse))
+
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+          .build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.YourGiftAidScheduleUploadController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ProblemWithGiftAidScheduleController.onPageLoad.url
+          )
+        }
+      }
 
 //      "unsubmitted Claim ID & file reference are defined - result = other" in {
 //        val sessionData = defaultSessionData.copy(
