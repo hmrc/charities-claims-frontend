@@ -427,9 +427,9 @@ uploadGiftAidSchedule.paragraph.one = To claim Gift Aid, you need to upload a co
 uploadGiftAidSchedule.paragraph.url = If you have not completed a Gift Aid schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Gift Aid schedule here (opens in new tab)</a>.
 uploadGiftAidSchedule.input.label = Upload a file
 uploadGiftAidSchedule.form.upload-file.submit = Continue
-uploadGiftAidSchedule.error.file.upload-file.required = Select a Gift Aid schedule
-uploadGiftAidSchedule.error.file.upload-file.invalid-size-large = File can be up to 2.5MB
-uploadGiftAidSchedule.error.file.upload-file.other = Some other error message to be put here
+uploadGiftAidSchedule.error.file-upload.required = Select a Gift Aid schedule
+uploadGiftAidSchedule.error.file-upload.invalid-size-large = File can be up to 2.5MB
+uploadGiftAidSchedule.error.file-upload.other = Some other error message to be put here
 
 yourGiftAidScheduleUpload.caption = Add Gift Aid schedule
 yourGiftAidScheduleUpload.title = Your Gift Aid schedule upload 
@@ -494,6 +494,17 @@ giftAidScheduleUploadSuccessful.title = Upload successful
 giftAidScheduleUploadSuccessful.message.1 = Upload successful
 giftAidScheduleUploadSuccessful.message.2 = You have successfully attached your Gift Aid schedule.
 
-updateGiftAidSchedule.title = Are you sure you want to update this Gift Aid schedule? 
-updateGiftAidSchedule.heading = Are you sure you want to update this Gift Aid schedule? 
+updateGiftAidSchedule.title = Are you sure you want to update this Gift Aid schedule?
+updateGiftAidSchedule.heading = Are you sure you want to update this Gift Aid schedule?
 updateGiftAidSchedule.hint = By updating this file, you will lose any Gift Aid schedule data you have previously attached.
+
+uploadOtherIncomeSchedule.caption = Add Other Income schedule
+uploadOtherIncomeSchedule.title = Upload an Other Income schedule
+uploadOtherIncomeSchedule.heading = Upload an Other Income schedule
+uploadOtherIncomeSchedule.paragraph.one = To claim Other Income, you need to upload a completed Other Income schedule with details of your donors and donations. You can save your claim without uploading the Other Income schedule, but you need to upload a Other Income schedule before submitting your claim.
+uploadOtherIncomeSchedule.paragraph.url = If you have not completed a Other Income schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Other Income schedule here (opens in a new tab)</a>.
+uploadOtherIncomeSchedule.input.label = Upload a file
+uploadOtherIncomeSchedule.form.upload-file.submit = Continue
+uploadOtherIncomeSchedule.error.file-upload.required = Select an Other Income schedule
+uploadOtherIncomeSchedule.error.file-upload.invalid-size-large = File can be up to 2.5MB
+uploadOtherIncomeSchedule.error.file-upload.other = Some other error message to be put here

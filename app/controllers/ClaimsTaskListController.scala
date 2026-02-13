@@ -179,7 +179,7 @@ object ClaimsTaskListController {
   private def buildOtherIncomeScheduleTask(using messages: Messages): TaskItem =
     TaskItem(
       name = messages("claimsTaskList.task.otherIncomeSchedule"),
-      href = routes.PageNotFoundController.onPageLoad,
+      href = controllers.otherIncomeSchedule.routes.AboutOtherIncomeScheduleController.onPageLoad,
       status = TaskStatus.Completed
     )
 

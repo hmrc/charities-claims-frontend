@@ -41,8 +41,8 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
   lazy val registerCharityWithARegulatorUrl: String                        = config.get[String]("urls.registerCharityWithARegulatorUrl")
   lazy val giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl: String =
     config.get[String]("urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl")
-  lazy val otherIncomeScheduleSpreadsheetsUrl: String                      =
-    config.get[String]("urls.otherIncomeScheduleSpreadsheetsUrl")
+  lazy val otherIncomeScheduleSpreadsheetGuidancesUrl: String              =
+    config.get[String]("urls.otherIncomeScheduleSpreadsheetGuidancesUrl")
   lazy val giftAidScheduleSpreadsheetGuidanceUrl: String                   =
     config.get[String]("urls.giftAidScheduleSpreadsheetGuidanceUrl")
 
@@ -53,10 +53,11 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
   lazy val exceptedLimit: Int               = config.get[Int]("unregulated-limits.exceptedLimit")
   lazy val lowIncomeLimit: Int              = config.get[Int]("unregulated-limits.lowIncomeLimit")
 
-  lazy val maxGifAidScheduleUploadSize: Int = config.get[Int]("scheduleUpload.gifAid.maxSize")
+  lazy val maxGifAidScheduleUploadSize: Int      = config.get[Int]("scheduleUpload.gifAid.maxSize")
+  lazy val maxOtherIncomeScheduleUploadSize: Int = config.get[Int]("scheduleUpload.otherIncome.maxSize")
 
-  lazy val allowedFileTypesHint: String   = config.get[String]("scheduleUpload.gifAid.allowedFileTypesHint")
-  lazy val filePickerAcceptFilter: String = config.get[String]("scheduleUpload.gifAid.filePickerAcceptFilter")
+  lazy val allowedFileTypesHint: String   = config.get[String]("scheduleUpload.allowedFileTypesHint")
+  lazy val filePickerAcceptFilter: String = config.get[String]("scheduleUpload.filePickerAcceptFilter")
 
   def pageTitleWithServiceName(
     pageTitle: String,

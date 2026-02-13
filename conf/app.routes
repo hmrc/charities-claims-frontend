@@ -183,8 +183,12 @@ POST        /update-gift-aid-schedule                       controllers.giftAidS
 GET         /about-other-income-schedule                    controllers.otherIncomeSchedule.AboutOtherIncomeScheduleController.onPageLoad
 POST        /about-other-income-schedule                    controllers.otherIncomeSchedule.AboutOtherIncomeScheduleController.onSubmit
 
-# TODO: Placeholder route for O1.1 - to be implemented in future ticket
-GET         /upload-other-income-schedule                   controllers.otherIncomeSchedule.UploadOtherIncomeScheduleController.onPageLoad
+GET         /upload-other-income-schedule                    controllers.otherIncomeSchedule.UploadOtherIncomeScheduleController.onPageLoad
+GET         /upload-other-income-schedule/success            controllers.otherIncomeSchedule.UploadOtherIncomeScheduleController.onUploadSuccess
+GET         /upload-other-income-schedule/error              controllers.otherIncomeSchedule.UploadOtherIncomeScheduleController.onUploadError
+
+# TODO: Placeholder route for O1.2 - to be implemented in future ticket
+GET         /your-other-income-schedule-upload               controllers.otherIncomeSchedule.YourOtherIncomeScheduleUploadController.onPageLoad
 
 GET         /delete-other-income-schedule                   controllers.otherIncomeSchedule.DeleteOtherIncomeScheduleController.onPageLoad
 POST        /delete-other-income-schedule                   controllers.otherIncomeSchedule.DeleteOtherIncomeScheduleController.onSubmit

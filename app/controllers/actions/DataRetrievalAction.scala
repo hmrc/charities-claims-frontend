@@ -56,20 +56,27 @@ class DefaultDataRetrievalAction @Inject() (
                     case claimInfo :: _ =>
                       claimsConnector.getClaim(claimInfo.claimId).flatMap {
                         case Some(claim) =>
-                          Future.successful(
-                            Right(DataRequest(request, SessionData.from(claim, request.charitiesReference)))
-                          )
+                          val sessionData = SessionData.from(claim, request.charitiesReference)
+                          cache
+                            .store(sessionData)
+                            .map(_ => Right(DataRequest(request, sessionData)))
                         case None        =>
                           Future
                             .failed(new RuntimeException(s"claimId $claimInfo.claimId could not be found in backend"))
                       }
                     case _              =>
-                      Future.successful(Right(DataRequest(request, SessionData.empty(request.charitiesReference))))
+                      val sessionData = SessionData.empty(request.charitiesReference)
+                      cache
+                        .store(sessionData)
+                        .map(_ => Right(DataRequest(request, sessionData)))
 
                 case AffinityGroup.Agent =>
                   getClaimsResponse.claimsCount match {
                     case 0 =>
-                      Future.successful(Right(DataRequest(request, SessionData.empty(request.charitiesReference))))
+                      val sessionData = SessionData.empty(request.charitiesReference)
+                      cache
+                        .store(sessionData)
+                        .map(_ => Right(DataRequest(request, sessionData)))
 
                     case x if x > 0 && x < config.agentUnsubmittedClaimLimit =>
                       Future.successful(
