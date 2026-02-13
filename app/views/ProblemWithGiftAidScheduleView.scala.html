@@ -25,7 +25,7 @@
     formHelper: FormWithCSRF,
     govukButton: GovukButton,
     pageNavigator: PageNavigator,
-    donationsErrorsTable: DonationsErrorsTable
+    validationFailedTable: ValidationFailedTable
 )
 
 @(
@@ -62,7 +62,11 @@
 
     <h2 class="govuk-heading-m custom-padding-header govuk-!-margin-bottom-7">@messages("problemWithGiftAidSchedule.subheading.2")</h2>
 
-    @donationsErrorsTable(errors)
+    @validationFailedTable(
+        errors,
+        messages("problemWithGiftAidSchedule.table.column.1"),
+        messages("problemWithGiftAidSchedule.table.column.2")
+    )
 
     @pageNavigator(paginationViewModel)
 

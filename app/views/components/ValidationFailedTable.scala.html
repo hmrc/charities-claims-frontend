@@ -22,14 +22,14 @@
 
 @this(govukTable: GovukTable)
 
-@(errors: Seq[ValidationError])(implicit request: Request[_], messages: Messages)
+@(errors: Seq[ValidationError], headCell1: String, headCell2: String)(implicit request: Request[_], messages: Messages)
 
 @govukTable(
     Table(
-        classes = "donations-table",
+        classes = "validation-failed-table",
         head = Some(Seq(
-            HeadCell(content = Text(messages("problemWithGiftAidSchedule.table.column.1")), classes = ""),
-            HeadCell(content = Text(messages("problemWithGiftAidSchedule.table.column.2")), classes = "")
+            HeadCell(content = Text(headCell1), classes = ""),
+            HeadCell(content = Text(headCell2), classes = "")
         )),
         rows = errors.map { error =>
             Seq(

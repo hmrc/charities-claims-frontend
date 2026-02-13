@@ -241,6 +241,30 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
         }
       }
 
+      "should default to page 1 of pagination when page query parameter is not a valid integer" in {
+        val sessionData = defaultSessionData.copy(
+          unsubmittedClaimId = Some(testClaimId),
+          giftAidScheduleFileUploadReference = Some(testFileUploadReference)
+        )
+
+        (mockClaimsValidationConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(testClaimId, testFileUploadReference, *)
+          .returning(Future.successful(testValidationFailedResponse))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ProblemWithGiftAidScheduleController.onPageLoad.url + "?page=invalid")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual OK
+          contentAsString(result) should include("There is a problem with the data in your Gift Aid schedule")
+        }
+      }
+
       "should include the giftAidScheduleSpreadsheetGuidanceUrl link" in {
         val sessionData = defaultSessionData.copy(
           unsubmittedClaimId = Some(testClaimId),
