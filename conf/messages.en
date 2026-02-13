@@ -431,6 +431,7 @@ uploadGiftAidSchedule.error.file-upload.required = Select a Gift Aid schedule
 uploadGiftAidSchedule.error.file-upload.invalid-size-large = File can be up to 2.5MB
 uploadGiftAidSchedule.error.file-upload.other = Some other error message to be put here
 
+yourGiftAidScheduleUpload.file = Gift Aid Schedule
 yourGiftAidScheduleUpload.caption = Add Gift Aid schedule
 yourGiftAidScheduleUpload.title = Your Gift Aid schedule upload 
 yourGiftAidScheduleUpload.heading = Your Gift Aid schedule upload
