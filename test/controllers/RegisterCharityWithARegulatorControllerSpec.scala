@@ -128,5 +128,40 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
         }
       }
     }
+
+    "WRN5 screen content" - {
+
+      "should display WRN5 page title and LowIncome limit content" in {
+        given application: Application = applicationBuilder(sessionData = sessionDataLowIncome).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RegisterCharityWithARegulatorController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result)        shouldBe OK
+          contentAsString(result) should include("5,000")
+          contentAsString(result) should include("Registering your charity with a regulator")
+          contentAsString(result) should include("Do you need to register your charity with a regulator")
+        }
+      }
+
+      "should display WRN5 page title and Excepted limit content" in {
+        given application: Application = applicationBuilder(sessionData = sessionDataExcepted).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RegisterCharityWithARegulatorController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result)        shouldBe OK
+          contentAsString(result) should include("100,000")
+          contentAsString(result) should include("Registering your charity with a regulator")
+          contentAsString(result) should include("Do you need to register your charity with a regulator")
+        }
+      }
+    }
   }
 }

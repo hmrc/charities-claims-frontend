@@ -19,13 +19,13 @@ package services
 import com.google.inject.{ImplementedBy, Inject, Singleton}
 import config.FrontendAppConfig
 import connectors.UnregulatedDonationsConnector
-import models.{OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator}
+import models.{OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator, SessionData}
 import models.requests.DataRequest
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
+import java.text.DecimalFormat
 
-// result returned when limit is exceeded - contains limit value and formatted string for display
 case class UnregulatedLimitExceeded(
   limit: Int,
   formattedLimit: String
@@ -34,17 +34,76 @@ case class UnregulatedLimitExceeded(
 @ImplementedBy(classOf[UnregulatedDonationsServiceImpl])
 trait UnregulatedDonationsService {
 
-  // F9 - checks if user should see WRN5 screen
-  // returns Some(UnregulatedLimitExceeded) if over limit, None otherwise
   def checkUnregulatedLimit(using DataRequest[?], HeaderCarrier): Future[Option[UnregulatedLimitExceeded]]
 
-  // returns formatted limit string for WRN5 display (example: "5,000" or "100,000")
-  // returns None if charity is not LowIncome or Excepted
   def getApplicableLimit(using DataRequest[?]): Option[String]
 
-  // F11 - records unregulated donation in FormP
-  // TODO: implementation details to be confirmed
-  def recordUnregulatedDonation(using DataRequest[?], HeaderCarrier): Future[Unit]
+  // TODO: implementation of F11 def recordUnregulatedDonation
+  //  (records unregulated donation in FormP) details to be confirmed
+}
+
+object UnregulatedDonationsService {
+
+  private val currencyFormatter = new DecimalFormat("#,###")
+
+  def getReasonNotRegistered(sessionData: SessionData): Option[ReasonNotRegisteredWithRegulator] =
+    OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator(using sessionData)
+
+  def getCurrentClaimDonationsTotal(sessionData: SessionData): BigDecimal = {
+    val giftAidTotal            = sessionData.giftAidScheduleData.flatMap(_.totalDonations).getOrElse(BigDecimal(0))
+    val otherIncomeTotal        = sessionData.otherIncomeScheduleData.map(_.totalOfGrossPayments).getOrElse(BigDecimal(0))
+    val communityBuildingsTotal =
+      sessionData.communityBuildingsScheduleData.map(_.totalOfAllAmounts).getOrElse(BigDecimal(0))
+
+    giftAidTotal + otherIncomeTotal + communityBuildingsTotal
+  }
+
+  def getLimitForReason(
+    reason: ReasonNotRegisteredWithRegulator,
+    lowIncomeLimit: Int,
+    exceptedLimit: Int
+  ): Option[Int] =
+    reason match {
+      case ReasonNotRegisteredWithRegulator.LowIncome => Some(lowIncomeLimit)
+      case ReasonNotRegisteredWithRegulator.Excepted  => Some(exceptedLimit)
+      case _                                          => None
+    }
+
+  def formatLimit(limit: Int): String =
+    currencyFormatter.format(limit)
+
+  def calculateTotalDonations(
+    currentClaimTotal: BigDecimal,
+    existingUnregulatedDonations: BigDecimal
+  ): BigDecimal =
+    currentClaimTotal + existingUnregulatedDonations
+
+  def isOverLimit(totalDonations: BigDecimal, limit: Int): Boolean =
+    totalDonations > limit
+
+  def buildLimitExceededResult(limit: Int): UnregulatedLimitExceeded =
+    UnregulatedLimitExceeded(limit, formatLimit(limit))
+
+  def checkIfOverLimit(
+    currentClaimTotal: BigDecimal,
+    existingUnregulatedDonations: BigDecimal,
+    limit: Int
+  ): Option[UnregulatedLimitExceeded] = {
+    val totalDonations = calculateTotalDonations(currentClaimTotal, existingUnregulatedDonations)
+
+    if (isOverLimit(totalDonations, limit)) {
+      Some(buildLimitExceededResult(limit))
+    } else {
+      None
+    }
+  }
+
+  def getFormattedLimitForReason(
+    reason: Option[ReasonNotRegisteredWithRegulator],
+    lowIncomeLimit: Int,
+    exceptedLimit: Int
+  ): Option[String] =
+    reason.flatMap(r => getLimitForReason(r, lowIncomeLimit, exceptedLimit).map(formatLimit))
 }
 
 @Singleton
@@ -54,85 +113,46 @@ class UnregulatedDonationsServiceImpl @Inject() (
 )(using ec: ExecutionContext)
     extends UnregulatedDonationsService {
 
-  import java.text.DecimalFormat
-  private val currencyFormatter = new DecimalFormat("#,###")
+  import UnregulatedDonationsService.*
 
-  // F9 - unregulated limit check
   def checkUnregulatedLimit(using
     request: DataRequest[?],
     hc: HeaderCarrier
   ): Future[Option[UnregulatedLimitExceeded]] = {
 
-    val reasonNotRegistered: Option[ReasonNotRegisteredWithRegulator] =
-      OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator(using request.sessionData)
+    val sessionData         = request.sessionData
+    val reasonNotRegistered = getReasonNotRegistered(sessionData)
 
     reasonNotRegistered match {
-      case Some(ReasonNotRegisteredWithRegulator.LowIncome) =>
-        performLimitCheck(appConfig.lowIncomeLimit)
+      case Some(reason) =>
+        getLimitForReason(reason, appConfig.lowIncomeLimit, appConfig.exceptedLimit) match {
+          case Some(limit) =>
+            val charityReference = sessionData.charitiesReference
+            unregulatedDonationsConnector.getTotalUnregulatedDonations(charityReference).map { existingDonationsOpt =>
 
-      case Some(ReasonNotRegisteredWithRegulator.Excepted) =>
-        performLimitCheck(appConfig.exceptedLimit)
+              val existingDonations = existingDonationsOpt.getOrElse(BigDecimal(0))
+              val currentClaimTotal = getCurrentClaimDonationsTotal(sessionData)
 
-      // Exempt, Waiting, or None - no limit check required proceed to D3
-      case _                                               =>
+              checkIfOverLimit(currentClaimTotal, existingDonations, limit)
+            }
+
+          case None =>
+            // Exempt or Waiting - no limit check required, proceed
+            Future.successful(None)
+        }
+
+      // No reason set (charity has regulator) - no limit check required, proceed
+      case None         =>
         Future.successful(None)
     }
   }
 
-  // performs limit check: (current claim total + existing unregulated donations) > limit
-  private def performLimitCheck(
-    limit: Int
-  )(using request: DataRequest[?], hc: HeaderCarrier): Future[Option[UnregulatedLimitExceeded]] = {
-
-    val charityReference = request.sessionData.charitiesReference
-
-    for {
-      existingUnregulatedDonationsOpt <- unregulatedDonationsConnector.getTotalUnregulatedDonations(charityReference)
-      currentClaimTotal                = getCurrentClaimDonationsTotal
-    } yield {
-      val existingUnregulatedDonations = existingUnregulatedDonationsOpt.getOrElse(BigDecimal(0))
-      val totalDonations               = currentClaimTotal + existingUnregulatedDonations
-
-      if (totalDonations > limit) {
-        Some(UnregulatedLimitExceeded(limit, currencyFormatter.format(limit)))
-      } else {
-        None
-      }
-    }
-  }
-
-  // sums schedule totals from sessionData (giftAid, otherIncome, communityBuildings - connected charities schedule has no total donations)
-  // pass in sessionData - make the function pure - use companion objects
-  // update unit test for all sub functions
-  private def getCurrentClaimDonationsTotal(using request: DataRequest[?]): BigDecimal = {
-    val session = request.sessionData
-
-    val giftAidTotal            = session.giftAidScheduleData.flatMap(_.totalDonations).getOrElse(BigDecimal(0))
-    val otherIncomeTotal        = session.otherIncomeScheduleData.map(_.totalOfGrossPayments).getOrElse(BigDecimal(0))
-    val communityBuildingsTotal =
-      session.communityBuildingsScheduleData.map(_.totalOfAllAmounts).getOrElse(BigDecimal(0))
-
-    giftAidTotal + otherIncomeTotal + communityBuildingsTotal
-  }
-
-  // returns formatted limit for WRN5 display based on charity type
   def getApplicableLimit(using request: DataRequest[?]): Option[String] = {
-    val reasonNotRegistered = OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator(using request.sessionData)
+    val sessionData = request.sessionData
+    val reason      = getReasonNotRegistered(sessionData)
 
-    reasonNotRegistered match {
-      case Some(ReasonNotRegisteredWithRegulator.LowIncome) =>
-        Some(currencyFormatter.format(appConfig.lowIncomeLimit))
-
-      case Some(ReasonNotRegisteredWithRegulator.Excepted) =>
-        Some(currencyFormatter.format(appConfig.exceptedLimit))
-
-      case _ =>
-        None
-    }
+    getFormattedLimitForReason(reason, appConfig.lowIncomeLimit, appConfig.exceptedLimit)
   }
 
-  // F11 - record unregulated donation
-  // TODO: implementation TBC
-  def recordUnregulatedDonation(using request: DataRequest[?], hc: HeaderCarrier): Future[Unit] =
-    Future.successful(())
+  // TODO: Implementation of F11 - def recordUnregulatedDonation - details to be confirmed
 }
