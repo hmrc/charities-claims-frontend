@@ -59,7 +59,7 @@ class UploadOtherIncomeScheduleController @Inject() (
                   upscanInitiateResponse = upscanInitiateResponse,
                   allowedFileTypesHint = appConfig.allowedFileTypesHint,
                   filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-                  hasError = false
+                  errorCode = None
                 )
               )
             )
@@ -82,7 +82,7 @@ class UploadOtherIncomeScheduleController @Inject() (
                       upscanInitiateResponse = upscanInitiateResponse,
                       allowedFileTypesHint = appConfig.allowedFileTypesHint,
                       filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-                      hasError = false
+                      errorCode = None
                     )
                   )
               }
@@ -148,34 +148,26 @@ class UploadOtherIncomeScheduleController @Inject() (
   }
 
   def onUploadError: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    claimsValidationService
-      .getFileUploadReference(ValidationType.OtherIncome, acceptAwaitingUpload = true)
-      .flatMap {
-        case Some(_) =>
-          // if the file upload reference is found, we need to redirect to the your other income schedule upload page
-          Future.successful(Redirect(routes.YourOtherIncomeScheduleUploadController.onPageLoad))
+    val errorCode = request.getQueryString("errorCode")
+    request.sessionData.otherIncomeScheduleUpscanInitialization match {
+      case Some(upscanInitiateResponse) =>
+        Future.successful(
+          BadRequest(
+            view(
+              appConfig.otherIncomeScheduleSpreadsheetGuidancesUrl,
+              claimId = request.sessionData.unsubmittedClaimId.get,
+              upscanInitiateResponse = upscanInitiateResponse,
+              allowedFileTypesHint = appConfig.allowedFileTypesHint,
+              filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
+              errorCode = errorCode
+            )
+          )
+        )
 
-        case None =>
-          request.sessionData.otherIncomeScheduleUpscanInitialization match {
-            case Some(upscanInitiateResponse) =>
-              Future.successful(
-                Ok(
-                  view(
-                    appConfig.otherIncomeScheduleSpreadsheetGuidancesUrl,
-                    claimId = request.sessionData.unsubmittedClaimId.get,
-                    upscanInitiateResponse = upscanInitiateResponse,
-                    allowedFileTypesHint = appConfig.allowedFileTypesHint,
-                    filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-                    hasError = true // we are showing the error page because the upload failed
-                  )
-                )
-              )
-
-            case None =>
-              // if the upscan initiate response is not found, we need to redirect to the upload page to start a new upload
-              Future.successful(Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
-          }
-      }
+      case None =>
+        // if the upscan initiate response is not found, we need to redirect to the upload page to start a new upload
+        Future.successful(Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
+    }
 
   }
 

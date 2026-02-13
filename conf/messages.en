@@ -427,15 +427,14 @@ uploadGiftAidSchedule.paragraph.one = To claim Gift Aid, you need to upload a co
 uploadGiftAidSchedule.paragraph.url = If you have not completed a Gift Aid schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Gift Aid schedule here (opens in new tab)</a>.
 uploadGiftAidSchedule.input.label = Upload a file
 uploadGiftAidSchedule.form.upload-file.submit = Continue
-uploadGiftAidSchedule.error.file-upload.required = Select a Gift Aid schedule
-uploadGiftAidSchedule.error.file-upload.invalid-size-large = File can be up to 2.5MB
-uploadGiftAidSchedule.error.file-upload.other = Some other error message to be put here
+uploadGiftAidSchedule.error.file-upload.InvalidArgument = Select a Gift Aid schedule
+uploadGiftAidSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 2.5 MB
 
 yourGiftAidScheduleUpload.file = Gift Aid Schedule
 yourGiftAidScheduleUpload.caption = Add Gift Aid schedule
-yourGiftAidScheduleUpload.title = Your Gift Aid schedule upload 
+yourGiftAidScheduleUpload.title = Your Gift Aid schedule upload   
 yourGiftAidScheduleUpload.heading = Your Gift Aid schedule upload
-yourGiftAidScheduleUpload.paragraph.one = You can upload your Gift Aid schedule as a spreadsheet. The selected file must be smaller than 2.5MB.
+yourGiftAidScheduleUpload.paragraph.one = You can upload your Gift Aid schedule as a spreadsheet. The selected file must be smaller than 2.5 MB.
 
 aboutGiftAidSchedule.caption = Add Gift Aid schedule
 aboutGiftAidSchedule.heading = About Gift Aid schedule
@@ -506,9 +505,8 @@ uploadOtherIncomeSchedule.paragraph.one = To claim Other Income, you need to upl
 uploadOtherIncomeSchedule.paragraph.url = If you have not completed a Other Income schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Other Income schedule here (opens in a new tab)</a>.
 uploadOtherIncomeSchedule.input.label = Upload a file
 uploadOtherIncomeSchedule.form.upload-file.submit = Continue
-uploadOtherIncomeSchedule.error.file-upload.required = Select an Other Income schedule
-uploadOtherIncomeSchedule.error.file-upload.invalid-size-large = File can be up to 2.5MB
-uploadOtherIncomeSchedule.error.file-upload.other = Some other error message to be put here
+uploadOtherIncomeSchedule.error.file-upload.InvalidArgument = Select an Other Income schedule
+uploadOtherIncomeSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 2.5 MB
 
 otherIncomeScheduleUploadSuccessful.title = Upload successful
 otherIncomeScheduleUploadSuccessful.message.1 = Upload successful

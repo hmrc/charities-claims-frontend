@@ -43,6 +43,10 @@
     showBackLink = true
 ) {
 
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+
     <span class="govuk-caption-l">@messages("checkYourGiftAidSchedule.caption")</span>
     <h1 class="govuk-heading-l">@messages("checkYourGiftAidSchedule.heading")</h1>
 
