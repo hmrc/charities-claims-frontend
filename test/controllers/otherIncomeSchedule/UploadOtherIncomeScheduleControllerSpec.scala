@@ -340,17 +340,12 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
 
     "onUploadError" - {
 
-      "should redirect when reference exists" in {
+      "should redirect when upscan initialization does not exist in session" in {
 
         val sessionData =
           RepaymentClaimDetailsAnswers
             .setClaimingTaxDeducted(true)
             .copy(unsubmittedClaimId = Some("claim-123"))
-
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.OtherIncome, true, *, *)
-          .returning(Future.successful(Some(FileUploadReference("ref-123"))))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -366,7 +361,7 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            Some(routes.YourOtherIncomeScheduleUploadController.onPageLoad.url)
+            Some(routes.UploadOtherIncomeScheduleController.onPageLoad.url)
         }
       }
 
@@ -380,11 +375,6 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
               otherIncomeScheduleUpscanInitialization = Some(response)
             )
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.OtherIncome, true, *, *)
-          .returning(Future.successful(None))
-
         given application: Application =
           applicationBuilder(sessionData = sessionData)
             .overrides(
@@ -397,7 +387,7 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
 
           val result = route(application, request).value
 
-          status(result) shouldEqual OK
+          status(result) shouldEqual BAD_REQUEST
         }
       }
 
@@ -407,11 +397,6 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
           RepaymentClaimDetailsAnswers
             .setClaimingTaxDeducted(true)
             .copy(unsubmittedClaimId = Some("claim-123"))
-
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.OtherIncome, true, *, *)
-          .returning(Future.successful(None))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)

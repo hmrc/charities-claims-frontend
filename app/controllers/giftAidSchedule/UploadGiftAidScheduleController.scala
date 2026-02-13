@@ -60,7 +60,7 @@ class UploadGiftAidScheduleController @Inject() (
                   upscanInitiateResponse = upscanInitiateResponse,
                   allowedFileTypesHint = appConfig.allowedFileTypesHint,
                   filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-                  hasError = false
+                  errorCode = None
                 )
               )
             )
@@ -83,7 +83,7 @@ class UploadGiftAidScheduleController @Inject() (
                       upscanInitiateResponse = upscanInitiateResponse,
                       allowedFileTypesHint = appConfig.allowedFileTypesHint,
                       filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-                      hasError = false
+                      errorCode = None
                     )
                   )
               }
@@ -149,34 +149,26 @@ class UploadGiftAidScheduleController @Inject() (
   }
 
   val onUploadError: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    claimsValidationService
-      .getFileUploadReference(ValidationType.GiftAid, acceptAwaitingUpload = true)
-      .flatMap {
-        case Some(_) =>
-          // if the file upload reference is found, we need to redirect to the your gift aid schedule upload page
-          Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
+    val errorCode = request.getQueryString("errorCode")
+    request.sessionData.giftAidScheduleUpscanInitialization match {
+      case Some(upscanInitiateResponse) =>
+        Future.successful(
+          BadRequest(
+            view(
+              appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl,
+              claimId = request.sessionData.unsubmittedClaimId.get,
+              upscanInitiateResponse = upscanInitiateResponse,
+              allowedFileTypesHint = appConfig.allowedFileTypesHint,
+              filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
+              errorCode = errorCode
+            )
+          )
+        )
 
-        case None =>
-          request.sessionData.giftAidScheduleUpscanInitialization match {
-            case Some(upscanInitiateResponse) =>
-              Future.successful(
-                Ok(
-                  view(
-                    appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl,
-                    claimId = request.sessionData.unsubmittedClaimId.get,
-                    upscanInitiateResponse = upscanInitiateResponse,
-                    allowedFileTypesHint = appConfig.allowedFileTypesHint,
-                    filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-                    hasError = true // we are showing the error page because the upload failed
-                  )
-                )
-              )
-
-            case None =>
-              // if the upscan initiate response is not found, we need to redirect to the upload page to start a new upload
-              Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
-          }
-      }
+      case None =>
+        // if the upscan initiate response is not found, we need to redirect to the upload page to start a new upload
+        Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+    }
 
   }
 

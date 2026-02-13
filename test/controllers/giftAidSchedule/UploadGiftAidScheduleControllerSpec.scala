@@ -16,29 +16,21 @@
 
 package controllers.giftAidSchedule
 
-import com.typesafe.config.ConfigFactory
-import connectors.UpscanInitiateConnector
-import controllers.giftAidSchedule.routes
-import controllers.ControllerSpec
-import models.requests.DataRequest
-import models.{
-  CreateUploadTrackingRequest,
-  FileUploadReference,
-  RepaymentClaimDetailsAnswers,
-  SessionData,
-  UpscanInitiateRequest,
-  UpscanInitiateResponse,
-  ValidationType
-}
-import play.api.{inject, Application, Configuration}
-import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.libs.json.Json
 import util.HttpV2Support
+import play.api.mvc.AnyContentAsEmpty
+import connectors.UpscanInitiateConnector
+import controllers.ControllerSpec
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import models.*
 import org.scalamock.handlers.CallHandler
-import play.api.inject.guice.GuiceableModule
+import models.requests.DataRequest
 import services.{ClaimsValidationService, SaveService}
+import controllers.giftAidSchedule.routes
+import play.api.inject.guice.GuiceableModule
+import com.typesafe.config.ConfigFactory
+import play.api.{inject, Application, Configuration}
+import play.api.libs.json.Json
 
 import scala.concurrent.Future
 
@@ -340,37 +332,7 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
 
     "onUploadError" - {
 
-      "should redirect when reference exists" in {
-
-        val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
-
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.GiftAid, true, *, *)
-          .returning(Future.successful(Some(FileUploadReference("ref-123"))))
-
-        given application: Application =
-          applicationBuilder(sessionData = sessionData)
-            .overrides(
-              inject.bind[ClaimsValidationService].toInstance(mockClaimsValidationService)
-            )
-            .build()
-
-        running(application) {
-          val request = FakeRequest(GET, routes.UploadGiftAidScheduleController.onUploadError.url)
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual
-            Some(routes.YourGiftAidScheduleUploadController.onPageLoad.url)
-        }
-      }
-
-      "should render error page when upscan exists in session" in {
+      "should render error page when upscan initialization exists in session" in {
 
         val sessionData =
           RepaymentClaimDetailsAnswers
@@ -380,11 +342,6 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
               giftAidScheduleUpscanInitialization = Some(response)
             )
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.GiftAid, true, *, *)
-          .returning(Future.successful(None))
-
         given application: Application =
           applicationBuilder(sessionData = sessionData)
             .overrides(
@@ -394,24 +351,21 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
 
         running(application) {
           val request = FakeRequest(GET, routes.UploadGiftAidScheduleController.onUploadError.url)
+          val result  = route(application, request).value
 
-          val result = route(application, request).value
-
-          status(result) shouldEqual OK
+          status(result) shouldEqual BAD_REQUEST
+          contentAsString(result) should include("")
         }
       }
 
-      "should redirect when no upscan and no reference" in {
+      "should redirect when no upscan initialization exists in session" in {
 
         val sessionData =
           RepaymentClaimDetailsAnswers
             .setClaimingGiftAid(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
-
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.GiftAid, true, *, *)
-          .returning(Future.successful(None))
+            .copy(
+              unsubmittedClaimId = Some("claim-123")
+            )
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)

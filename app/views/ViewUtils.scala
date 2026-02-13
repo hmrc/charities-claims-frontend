@@ -27,6 +27,14 @@ object ViewUtils {
       section = section
     )
 
+  def titleWithErrorOpt(error: Option[?], title: String, section: Option[String] = None)(implicit
+    messages: Messages
+  ): String =
+    titleNoForm(
+      title = s"${if (error.nonEmpty) messages("error.browser.title.prefix") + " " else ""}${messages(title)}",
+      section = section
+    )
+
   def titleNoForm(title: String, section: Option[String] = None)(implicit messages: Messages): String =
     s"${messages(title)} - ${section.fold("")(messages(_) + " - ")}${messages("service.title")} - ${messages("site.govuk")}"
 

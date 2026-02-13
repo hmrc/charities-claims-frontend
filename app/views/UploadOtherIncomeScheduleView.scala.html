@@ -30,12 +30,23 @@
     upscanInitiateResponse: UpscanInitiateResponse, 
     allowedFileTypesHint: String, 
     filePickerAcceptFilter: String, 
-    hasError: Boolean
+    errorCode: Option[String]
 )(using request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleNoForm(messages("uploadOtherIncomeSchedule.title")), showBackLink = true
+    pageTitle = titleWithErrorOpt(errorCode, messages("uploadOtherIncomeSchedule.title")), showBackLink = true
 ) {
+
+    @if(errorCode.nonEmpty) {
+        @govukErrorSummary(ErrorSummary(
+            errorList = errorCode.map(error => ErrorLink(
+                href = Some(s"#file"),
+                content = Text(messages(s"uploadGiftAidSchedule.error.file-upload.$error"))
+            )).toList,
+            title = Text(messages("error.summary.title"))
+        ))
+    }
+    
     <span class="govuk-caption-l">@messages("uploadOtherIncomeSchedule.caption")</span>
     <h1 class="govuk-heading-l">@messages("uploadOtherIncomeSchedule.heading")</h1>
 
@@ -67,7 +78,8 @@
                         "data-msg-required" -> messages("uploadOtherIncomeSchedule.error.file-upload.required"),
                         "data-msg-filesize" -> messages("uploadOtherIncomeSchedule.error.file-upload.invalid-size-large"),
                         "data-msg-accept" -> messages("uploadOtherIncomeSchedule.error.file-upload.other", allowedFileTypesHint)
-                    )
+                    ),
+                    errorMessage = errorCode.map(error => ErrorMessage(content = Text(messages(s"uploadGiftAidSchedule.error.file-upload.$error"))))
                 )
             )
 
