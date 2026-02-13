@@ -123,7 +123,10 @@ class UploadGiftAidScheduleController @Inject() (
         // store upscan initiate response because charities-claims-validation will not accept the same reference twice
         saveService.save(
           request.sessionData
-            .copy(giftAidScheduleUpscanInitialization = Some(upscanInitiateResponse))
+            .copy(
+              giftAidScheduleUpscanInitialization = Some(upscanInitiateResponse),
+              giftAidScheduleFileUploadReference = Some(FileUploadReference(upscanInitiateResponse.reference))
+            )
         )
     } yield upscanInitiateResponse
 
