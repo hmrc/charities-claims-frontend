@@ -20,34 +20,23 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import play.api.mvc.*
-import services.{ClaimsValidationService, SaveService}
 import views.html.OtherIncomeScheduleUploadSuccessfulView
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 class OtherIncomeScheduleUploadSuccessfulController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: OtherIncomeScheduleUploadSuccessfulView,
-  actions: Actions,
-  claimsValidationService: ClaimsValidationService,
-  saveService: SaveService
-)(using ec: ExecutionContext)
-    extends BaseController {
+  actions: Actions
+) extends BaseController {
 
   val onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    claimsValidationService.getOtherIncomeScheduleData
-      .map(_ => Ok(view()))
+    Future.successful(Ok(view()))
 
   }
 
   val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    saveService
-      .save(
-        request.sessionData.copy(
-          otherIncomeScheduleData = None
-        )
-      )
-      .map(_ => Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+    Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
   }
 
 }
