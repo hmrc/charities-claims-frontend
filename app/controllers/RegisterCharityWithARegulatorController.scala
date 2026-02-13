@@ -23,6 +23,7 @@ import controllers.actions.Actions
 import forms.YesNoFormProvider
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.UnregulatedDonationsService
 import views.html.RegisterCharityWithARegulatorView
 import java.text.DecimalFormat
 
@@ -31,20 +32,23 @@ class RegisterCharityWithARegulatorController @Inject() (
   view: RegisterCharityWithARegulatorView,
   actions: Actions,
   formProvider: YesNoFormProvider,
-  appConfig: FrontendAppConfig
+  appConfig: FrontendAppConfig,
+  unregulatedDonationsService: UnregulatedDonationsService
 ) extends BaseController {
 
   val form: Form[Boolean] = formProvider("registerCharityWithARegulator.error.required")
 
-  // TODO: After F9 is implemented this will be dynamic
-  // Currently hardcoded to display exceptedLimit (£100,000)
-  lazy val formattedLimit: String = new DecimalFormat("#,###").format(appConfig.exceptedLimit)
+  // default is set to Excepted limit - fallback
+  private lazy val defaultFormattedLimit: String = new DecimalFormat("#,###").format(appConfig.exceptedLimit)
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+    // gets dynamic limit based on charity type (LowIncome = £5,000, Excepted = £100,000)
+    val formattedLimit = unregulatedDonationsService.getApplicableLimit.getOrElse(defaultFormattedLimit)
     Ok(view(appConfig.registerCharityWithARegulatorUrl, formattedLimit)(form))
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData() { implicit request =>
+    val formattedLimit = unregulatedDonationsService.getApplicableLimit.getOrElse(defaultFormattedLimit)
     form
       .bindFromRequest()
       .fold(

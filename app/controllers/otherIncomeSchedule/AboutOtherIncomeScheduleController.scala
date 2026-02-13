@@ -36,7 +36,12 @@ class AboutOtherIncomeScheduleController @Inject() (
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     if RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true) then {
-      Future.successful(Ok(view(appConfig.otherIncomeScheduleSpreadsheetsUrl)))
+      if request.sessionData.otherIncomeScheduleCompleted
+      then {
+        Future.successful(Redirect(routes.YourOtherIncomeScheduleUploadController.onPageLoad))
+      } else {
+        Future.successful(Ok(view(appConfig.otherIncomeScheduleSpreadsheetGuidancesUrl)))
+      }
     } else {
       Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
     }

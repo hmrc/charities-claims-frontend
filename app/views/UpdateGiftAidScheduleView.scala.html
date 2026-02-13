@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import controllers.communityBuildingsSchedule.routes
+@import controllers.giftAidSchedule.routes
 
 @this(
     layout: templates.Layout,
@@ -27,22 +27,22 @@
 @(form: Form[Boolean])(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = title(form, messages("deleteCommunityBuildingsSchedule.title"))
+    pageTitle = title(form, messages("updateGiftAidSchedule.title"))
 ) {
 
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <h1 class="govuk-heading-l">@messages("deleteCommunityBuildingsSchedule.heading")</h1>
+    <h1 class="govuk-heading-l">@messages("updateGiftAidSchedule.heading")</h1>
 
-    @formHelper(action = routes.DeleteCommunityBuildingsScheduleController.onSubmit, Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.UpdateGiftAidScheduleController.onSubmit, Symbol("autoComplete") -> "off") {
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 form("value"),
-                LegendViewModel(messages("deleteCommunityBuildingsSchedule.heading")).visuallyHidden
-            )
+                LegendViewModel(messages("updateGiftAidSchedule.heading")).visuallyHidden
+            ).withHint(HintViewModel(Text(messages("updateGiftAidSchedule.hint"))))
         )
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))

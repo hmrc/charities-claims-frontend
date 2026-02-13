@@ -52,6 +52,10 @@ trait ClaimsValidationConnector {
     hc: HeaderCarrier
   ): Future[DeleteScheduleResponse]
 
+  def updateUploadStatus(claimId: String, reference: FileUploadReference, status: FileStatus)(using
+    hc: HeaderCarrier
+  ): Future[Boolean]
+
 }
 
 class ClaimsValidationConnectorImpl @Inject() (
@@ -109,6 +113,15 @@ class ClaimsValidationConnectorImpl @Inject() (
           )
         )
     }
+
+  final def updateUploadStatus(claimId: String, reference: FileUploadReference, status: FileStatus)(using
+    hc: HeaderCarrier
+  ): Future[Boolean] =
+    callValidationBackend[UpdateUploadStatusRequest, SuccessResponse](
+      method = "PUT",
+      url = s"$baseUrl$contextPath/$claimId/upload-results/$reference",
+      payload = Some(UpdateUploadStatusRequest(status))
+    ).map(_.success)
 
   private def callValidationBackend[I, O](
     method: String,

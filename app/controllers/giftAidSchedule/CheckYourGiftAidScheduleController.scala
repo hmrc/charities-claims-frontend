@@ -27,6 +27,7 @@ import services.{ClaimsService, ClaimsValidationService, PaginationService}
 import controllers.giftAidSchedule.routes
 
 import scala.concurrent.{ExecutionContext, Future}
+import services.SaveService
 
 class CheckYourGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -34,7 +35,8 @@ class CheckYourGiftAidScheduleController @Inject() (
   actions: Actions,
   claimsValidationService: ClaimsValidationService,
   formProvider: YesNoFormProvider,
-  claimsService: ClaimsService
+  claimsService: ClaimsService,
+  saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -89,14 +91,23 @@ class CheckYourGiftAidScheduleController @Inject() (
             answer =>
               answer match {
                 case true =>
-                  for {
-                    _ <- claimsValidationService.deleteGiftAidSchedule
-                    _ <- claimsService.save
-                  } yield Redirect(routes.UploadGiftAidScheduleController.onPageLoad)
+                  Future.successful(Redirect(routes.UpdateGiftAidScheduleController.onPageLoad))
 
                 case false =>
-                  claimsService.save
-                    .map(_ => Redirect(routes.GiftAidScheduleUploadSuccessfulController.onPageLoad))
+                  if request.sessionData.giftAidScheduleCompleted
+                  then {
+                    Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+                  } else {
+                    for {
+                      _ <- saveService.save(
+                             request.sessionData.copy(
+                               giftAidScheduleCompleted = true,
+                               giftAidScheduleData = None
+                             )
+                           )
+                      _ <- claimsService.save
+                    } yield Redirect(routes.GiftAidScheduleUploadSuccessfulController.onPageLoad)
+                  }
               }
           )
 

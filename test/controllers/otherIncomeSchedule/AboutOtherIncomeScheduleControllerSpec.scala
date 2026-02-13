@@ -30,7 +30,7 @@ class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
       "should return Page Not Found if setClaimingTaxDeducted is false" in {
         val sessionData                = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false)
         val customConfig               = Map(
-          "urls.otherIncomeScheduleSpreadsheetsUrl" -> "https://test.example.com/other-income-schedule"
+          "urls.otherIncomeScheduleSpreadsheetGuidancesUrl" -> "https://test.example.com/other-income-schedule"
         )
         given application: Application = applicationBuilder(sessionData = sessionData).configure(customConfig).build()
 
@@ -48,7 +48,7 @@ class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
       "should return OK if setClaimingTaxDeducted is true" in {
         val sessionData  = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
         val customConfig = Map(
-          "urls.otherIncomeScheduleSpreadsheetsUrl" -> "https://test.example.com/other-income-schedule"
+          "urls.otherIncomeScheduleSpreadsheetGuidancesUrl" -> "https://test.example.com/other-income-schedule"
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData)
@@ -62,6 +62,24 @@ class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
           contentAsString(result) should include("https://test.example.com/other-income-schedule")
+        }
+      }
+
+      "should redirect to the next page if the otherIncomeScheduleCompleted is true" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers
+            .setClaimingTaxDeducted(true)
+            .copy(otherIncomeScheduleCompleted = true)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          val request =
+            FakeRequest(GET, routes.AboutOtherIncomeScheduleController.onPageLoad.url)
+          val result  = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.YourOtherIncomeScheduleUploadController.onPageLoad.url)
         }
       }
     }

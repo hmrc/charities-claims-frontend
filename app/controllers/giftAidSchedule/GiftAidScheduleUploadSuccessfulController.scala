@@ -21,35 +21,22 @@ import com.google.inject.Inject
 import controllers.BaseController
 import views.html.GiftAidScheduleUploadSuccessfulView
 import controllers.actions.Actions
-import services.{ClaimsValidationService, SaveService}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 class GiftAidScheduleUploadSuccessfulController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: GiftAidScheduleUploadSuccessfulView,
-  actions: Actions,
-  claimsValidationService: ClaimsValidationService,
-  saveService: SaveService
-)(using ec: ExecutionContext)
-    extends BaseController {
+  actions: Actions
+) extends BaseController {
 
   val onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    claimsValidationService.getGiftAidScheduleData
-      .map(_ => Ok(view()))
+    Future.successful(Ok(view()))
 
   }
 
   val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    saveService
-      .save(
-        request.sessionData.copy(
-          // we remove cached gift aid schedule data because it is no longer needed at this point,
-          // we keep only the file upload reference because
-          giftAidScheduleData = None
-        )
-      )
-      .map(_ => Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+    Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
   }
 
 }

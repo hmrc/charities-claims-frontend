@@ -64,6 +64,22 @@ class AboutGiftAidScheduleControllerSpec extends ControllerSpec {
           contentAsString(result) should include("https://test.example.com/charity-repayment-claim")
         }
       }
+
+      "should redirect to the next page if the giftAidScheduleCompleted is true" in {
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .copy(giftAidScheduleCompleted = true)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        running(application) {
+          val request =
+            FakeRequest(GET, routes.AboutGiftAidScheduleController.onPageLoad.url)
+          val result  = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.YourGiftAidScheduleUploadController.onPageLoad.url)
+        }
+      }
     }
 
     "onSubmit" - {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package controllers.giftAidSchedule
+package controllers.otherIncomeSchedule
 
 import com.typesafe.config.ConfigFactory
 import connectors.UpscanInitiateConnector
-import controllers.giftAidSchedule.routes
+import controllers.otherIncomeSchedule.routes
 import controllers.ControllerSpec
 import models.requests.DataRequest
 import models.{
@@ -42,7 +42,7 @@ import services.{ClaimsValidationService, SaveService}
 
 import scala.concurrent.Future
 
-class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Support {
+class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2Support {
   val config: Configuration = Configuration(
     ConfigFactory.parseString(
       """
@@ -122,12 +122,12 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
   val mockUpscanInitiateConnector: UpscanInitiateConnector = mock[UpscanInitiateConnector]
   val mockSaveService: SaveService                         = mock[SaveService]
 
-  "UploadGiftAidScheduleController" - {
+  "UploadOtherIncomeScheduleController" - {
 
     "onPageLoad" - {
 
-      "should render Page Not Found if setClaimingGiftAid is false" in {
-        val sessionData  = RepaymentClaimDetailsAnswers.setClaimingGiftAid(false)
+      "should render Page Not Found if setClaimingTaxDeducted is false" in {
+        val sessionData  = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false)
         val customConfig = Map(
           "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
         )
@@ -136,7 +136,7 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.UploadGiftAidScheduleController.onPageLoad.url)
+            FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -147,8 +147,8 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
         }
       }
 
-      "should render Page Not Found if setClaimingGiftAid is true && unsubmittedClaimId is None" in {
-        val sessionData  = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
+      "should render Page Not Found if setClaimingTaxDeducted is true && unsubmittedClaimId is None" in {
+        val sessionData  = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
         val customConfig = Map(
           "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
         )
@@ -157,7 +157,7 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.UploadGiftAidScheduleController.onPageLoad.url)
+            FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -174,17 +174,17 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
 
         val sessionData =
           RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
+            .setClaimingTaxDeducted(true)
             .copy(
               unsubmittedClaimId = Some("claim-123"),
-              giftAidScheduleUpscanInitialization = Some(upscan)
+              otherIncomeScheduleUpscanInitialization = Some(upscan)
             )
 
         given application: Application =
           applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadGiftAidScheduleController.onPageLoad.url)
+          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -197,12 +197,12 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
 
         val sessionData =
           RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
+            .setClaimingTaxDeducted(true)
             .copy(unsubmittedClaimId = Some("claim-123"))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.GiftAid, false, *, *)
+          .expects(ValidationType.OtherIncome, false, *, *)
           .returning(Future.successful(Some(FileUploadReference("ref-123"))))
 
         given application: Application =
@@ -213,13 +213,13 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadGiftAidScheduleController.onPageLoad.url)
+          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            Some(routes.YourGiftAidScheduleUploadController.onPageLoad.url)
+            Some(routes.YourOtherIncomeScheduleUploadController.onPageLoad.url)
         }
       }
 
@@ -227,12 +227,12 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
 
         val sessionData =
           RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
+            .setClaimingTaxDeducted(true)
             .copy(unsubmittedClaimId = Some("claim-123"))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.GiftAid, false, *, *)
+          .expects(ValidationType.OtherIncome, false, *, *)
           .returning(Future.successful(None))
 
         (mockUpscanInitiateConnector
@@ -260,7 +260,7 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadGiftAidScheduleController.onPageLoad.url)
+          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -275,12 +275,12 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
 
         val sessionData =
           RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
+            .setClaimingTaxDeducted(true)
             .copy(unsubmittedClaimId = Some("claim-123"))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.GiftAid, true, *, *)
+          .expects(ValidationType.OtherIncome, true, *, *)
           .returning(Future.successful(Some(FileUploadReference("ref-123"))))
 
         (mockClaimsValidationService
@@ -296,13 +296,13 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadGiftAidScheduleController.onUploadSuccess.url)
+          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onUploadSuccess.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            Some(routes.YourGiftAidScheduleUploadController.onPageLoad.url)
+            Some(routes.YourOtherIncomeScheduleUploadController.onPageLoad.url)
         }
       }
 
@@ -310,12 +310,12 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
 
         val sessionData =
           RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
+            .setClaimingTaxDeducted(true)
             .copy(unsubmittedClaimId = Some("claim-123"))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.GiftAid, true, *, *)
+          .expects(ValidationType.OtherIncome, true, *, *)
           .returning(Future.successful(None))
 
         given application: Application =
@@ -326,13 +326,13 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadGiftAidScheduleController.onUploadSuccess.url)
+          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onUploadSuccess.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            Some(routes.UploadGiftAidScheduleController.onPageLoad.url)
+            Some(routes.UploadOtherIncomeScheduleController.onPageLoad.url)
         }
       }
 
@@ -344,12 +344,12 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
 
         val sessionData =
           RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
+            .setClaimingTaxDeducted(true)
             .copy(unsubmittedClaimId = Some("claim-123"))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.GiftAid, true, *, *)
+          .expects(ValidationType.OtherIncome, true, *, *)
           .returning(Future.successful(Some(FileUploadReference("ref-123"))))
 
         given application: Application =
@@ -360,13 +360,13 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadGiftAidScheduleController.onUploadError.url)
+          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onUploadError.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            Some(routes.YourGiftAidScheduleUploadController.onPageLoad.url)
+            Some(routes.YourOtherIncomeScheduleUploadController.onPageLoad.url)
         }
       }
 
@@ -374,15 +374,15 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
 
         val sessionData =
           RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
+            .setClaimingTaxDeducted(true)
             .copy(
               unsubmittedClaimId = Some("claim-123"),
-              giftAidScheduleUpscanInitialization = Some(response)
+              otherIncomeScheduleUpscanInitialization = Some(response)
             )
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.GiftAid, true, *, *)
+          .expects(ValidationType.OtherIncome, true, *, *)
           .returning(Future.successful(None))
 
         given application: Application =
@@ -393,7 +393,7 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadGiftAidScheduleController.onUploadError.url)
+          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onUploadError.url)
 
           val result = route(application, request).value
 
@@ -405,12 +405,12 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
 
         val sessionData =
           RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
+            .setClaimingTaxDeducted(true)
             .copy(unsubmittedClaimId = Some("claim-123"))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.GiftAid, true, *, *)
+          .expects(ValidationType.OtherIncome, true, *, *)
           .returning(Future.successful(None))
 
         given application: Application =
@@ -421,13 +421,13 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadGiftAidScheduleController.onUploadError.url)
+          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onUploadError.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            Some(routes.UploadGiftAidScheduleController.onPageLoad.url)
+            Some(routes.UploadOtherIncomeScheduleController.onPageLoad.url)
         }
       }
 

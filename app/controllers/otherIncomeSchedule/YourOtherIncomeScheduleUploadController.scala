@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package controllers.organisationDetails
+package controllers.otherIncomeSchedule
 
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import views.html.AddScheduleView
 
-// TODO: This is a placeholder controller for screen (G2) used on redirect on screens WRN1.0 to WRN1.3
-// TODO: This controller and route /charities-claims/add-schedule will be updated in the future
-class AddScheduleController @Inject() (
+import scala.concurrent.Future
+
+class YourOtherIncomeScheduleUploadController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: AddScheduleView,
   actions: Actions
 ) extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view())
+  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
   }
 }

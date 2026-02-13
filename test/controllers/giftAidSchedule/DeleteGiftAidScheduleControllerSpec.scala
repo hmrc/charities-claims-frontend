@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package controllers.organisationDetails
+package controllers.giftAidSchedule
 
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
 import models.SessionData
+import models.requests.DataRequest
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
@@ -26,17 +27,17 @@ import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import services.ClaimsValidationService
 import uk.gov.hmrc.http.HeaderCarrier
-import views.html.DeleteOtherIncomeScheduleView
+import views.html.DeleteGiftAidScheduleView
 
 import scala.concurrent.Future
 
-class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
+class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
 
   val form: Form[Boolean] = new YesNoFormProvider()()
 
   val mockClaimsValidationService: ClaimsValidationService = mock[ClaimsValidationService]
 
-  "DeleteOtherIncomeScheduleController" - {
+  "DeleteGiftAidScheduleController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
 
@@ -46,10 +47,10 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DeleteOtherIncomeScheduleController.onPageLoad.url)
+            FakeRequest(GET, routes.DeleteGiftAidScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[DeleteOtherIncomeScheduleView]
+          val view   = application.injector.instanceOf[DeleteGiftAidScheduleView]
           val msgs   = application.injector.instanceOf[play.api.i18n.MessagesApi].preferred(request)
 
           status(result)                        shouldBe OK
@@ -67,7 +68,7 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteOtherIncomeScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteGiftAidScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value
@@ -76,21 +77,22 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      // TODO: Update test when G2 screen route is completed (currently redirects to placeholder /add-schedule)
-      "should redirect to G2 screen when no is selected" in {
+      "should redirect to ProblemWithGiftAidScheduleController (G1.4) when no is selected" in {
         given application: Application = applicationBuilder()
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteOtherIncomeScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteGiftAidScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
 
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.AddScheduleController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(
+            controllers.giftAidSchedule.routes.ProblemWithGiftAidScheduleController.onPageLoad.url
+          )
         }
       }
 
@@ -98,7 +100,7 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
         val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
 
         (mockClaimsValidationService
-          .deleteOtherIncomeSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
+          .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
           .returning(Future.successful(()))
 
@@ -108,7 +110,7 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteOtherIncomeScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteGiftAidScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
@@ -118,15 +120,13 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      "should handle case when no OtherIncome upload data is found" in {
+      "should handle case when no GiftAid upload data is found" in {
         val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
 
         (mockClaimsValidationService
-          .deleteOtherIncomeSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
+          .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
-          .returning(
-            Future.failed(new RuntimeException("No OtherIncome schedule upload found for claimId: test-claim-123"))
-          )
+          .returning(Future.failed(new RuntimeException("No GiftAid schedule upload found")))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
@@ -134,7 +134,7 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteOtherIncomeScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteGiftAidScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
@@ -147,11 +147,9 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
         val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
 
         (mockClaimsValidationService
-          .deleteOtherIncomeSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
+          .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
-          .returning(
-            Future.failed(new RuntimeException("No claimId found when attempting to delete OtherIncome schedule"))
-          )
+          .returning(Future.failed(new RuntimeException("No claimId found")))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
@@ -159,7 +157,7 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteOtherIncomeScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteGiftAidScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.organisationDetails
+package controllers.giftAidSchedule
 
 import com.google.inject.Inject
 import controllers.BaseController
@@ -23,20 +23,22 @@ import forms.YesNoFormProvider
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ClaimsValidationService
-import views.html.DeleteOtherIncomeScheduleView
+import views.html.UpdateGiftAidScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
+import services.ClaimsService
 
-class DeleteOtherIncomeScheduleController @Inject() (
+class UpdateGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: DeleteOtherIncomeScheduleView,
+  view: UpdateGiftAidScheduleView,
   actions: Actions,
   formProvider: YesNoFormProvider,
-  claimsValidationService: ClaimsValidationService
+  claimsValidationService: ClaimsValidationService,
+  claimsService: ClaimsService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("deleteOtherIncomeSchedule.error.required")
+  val form: Form[Boolean] = formProvider("updateGiftAidSchedule.error.required")
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     Ok(view(form))
@@ -48,14 +50,14 @@ class DeleteOtherIncomeScheduleController @Inject() (
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
         value =>
-          if value then {
-            claimsValidationService.deleteOtherIncomeSchedule.map { _ =>
-              Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
-            }
+          if value
+          then {
+            for {
+              _ <- claimsValidationService.deleteGiftAidSchedule
+              _ <- claimsService.save
+            } yield Redirect(routes.UploadGiftAidScheduleController.onPageLoad)
           } else {
-            // no deletion, redirect to Add Schedule screen G2
-            // TODO: This redirects to placeholder G2 screen - route to be updated in the future
-            Future.successful(Redirect(controllers.organisationDetails.routes.AddScheduleController.onPageLoad))
+            Future.successful(Redirect(routes.CheckYourGiftAidScheduleController.onPageLoad))
           }
       )
   }
