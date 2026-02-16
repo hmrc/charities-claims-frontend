@@ -417,6 +417,15 @@ fileUpload.status.VALIDATING = Uploading
 fileUpload.status.VALIDATED = Uploaded
 fileUpload.status.VALIDATION_FAILED = Uploaded
 
+uploadCommunityBuildingsSchedule.caption = Add Community Buildings schedule
+uploadCommunityBuildingsSchedule.title = Upload a Community Buildings schedule
+uploadCommunityBuildingsSchedule.heading = Upload a Community Buildings schedule
+uploadCommunityBuildingsSchedule.paragraph.one = To claim Community Buildings top-up payment, you need to upload a completed Community Buildings schedule with details of the community building(s) where donations were collected and amounts received. You can save your claim without uploading the Community Buildings schedule, but you need to upload a Community Buildings schedule before submitting your claim.
+uploadCommunityBuildingsSchedule.input.label = Upload a file
+uploadCommunityBuildingsSchedule.form.upload-file.submit = Continue
+uploadCommunityBuildingsSchedule.error.file-upload.InvalidArgument = Select a Community Buildings schedule
+uploadCommunityBuildingsSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 2.5 MB
+
 uploadGiftAidSchedule.caption = Add Gift Aid schedule
 uploadGiftAidSchedule.title = Upload a Gift Aid schedule
 uploadGiftAidSchedule.heading = Upload a Gift Aid schedule

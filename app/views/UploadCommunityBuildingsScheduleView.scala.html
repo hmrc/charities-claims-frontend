@@ -1,0 +1,100 @@
+@*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.communityBuildingsSchedule.routes
+@import models.UpscanInitiateResponse
+
+@this(
+    layout: templates.Layout,
+    govukButton: GovukButton,
+    govukErrorSummary: GovukErrorSummary,
+    govukFileUpload: GovukFileUpload
+)
+
+@(
+    claimId: String,
+    upscanInitiateResponse: UpscanInitiateResponse,
+    allowedFileTypesHint: String,
+    filePickerAcceptFilter: String,
+    errorCode: Option[String]
+)(using request: Request[?], messages: Messages)
+
+@layout(
+    pageTitle = titleWithErrorOpt(errorCode, messages("uploadCommunityBuildingsSchedule.title")), showBackLink = true
+) {
+
+    @if(errorCode.nonEmpty) {
+        @govukErrorSummary(ErrorSummary(
+            errorList = errorCode.map(error => ErrorLink(
+                href = Some(s"#file"),
+                content = Text(messages(s"uploadCommunityBuildingsSchedule.error.file-upload.$error"))
+                )).toList,
+                title = Text(messages("error.summary.title"))
+            )
+        )
+    }
+
+    <span class="govuk-caption-l">@messages("uploadCommunityBuildingsSchedule.caption")</span>
+    <h1 class="govuk-heading-l">@messages("uploadCommunityBuildingsSchedule.heading")</h1>
+
+    <p class="govuk-body">@messages("uploadCommunityBuildingsSchedule.paragraph.one")</p>
+
+    <form action="@upscanInitiateResponse.uploadRequest.href" method="POST" enctype="multipart/form-data" class="js-form file-upload" novalidate>
+
+        @upscanInitiateResponse.uploadRequest.fields.map { case (key, value) =>
+            <input type="hidden" id="@key" name="@key" value="@value">
+        }
+
+        @govukFileUpload(
+            FileUpload(
+                name = "file",
+                id = "file",
+                value = Some(""),
+                describedBy = Some("select-error-error"),
+                label = Label(
+                    content = Text(
+                        messages("uploadCommunityBuildingsSchedule.input.label")
+                    )
+                ),
+                hint = None,
+                javascript = Some(true),
+                classes = "govuk-file-upload--error",
+                attributes = Map(
+                    "accept" -> filePickerAcceptFilter,
+                    "data-msg-required" -> messages("uploadCommunityBuildingsSchedule.error.file-upload.required"),
+                    "data-msg-filesize" -> messages("uploadCommunityBuildingsSchedule.error.file-upload.invalid-size-large"),
+                    "data-msg-accept" -> messages("uploadCommunityBuildingsSchedule.error.file-upload.other", allowedFileTypesHint)
+                ),
+                errorMessage = errorCode.map(error => ErrorMessage(content = Text(messages(s"uploadCommunityBuildingsSchedule.error.file-upload.$error"))))
+            )
+        )
+
+        <div>
+            @govukButton(Button(
+            content = Text(messages("uploadCommunityBuildingsSchedule.form.upload-file.submit")),
+            preventDoubleClick = Some(true),
+            classes = "file-upload__submit"
+            ))
+            <div class="file-upload__spinner ccms-loader hidden"></div>
+        </div>
+
+        <div class="file-upload__loading-container" aria-live="polite" role="region">
+
+        </div>
+
+    </form>
+
+}
