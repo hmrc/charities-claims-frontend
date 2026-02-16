@@ -180,14 +180,15 @@ POST        /delete-gift-aid-schedule                       controllers.giftAidS
 GET         /update-gift-aid-schedule                       controllers.giftAidSchedule.UpdateGiftAidScheduleController.onPageLoad
 POST        /update-gift-aid-schedule                       controllers.giftAidSchedule.UpdateGiftAidScheduleController.onSubmit
 
-GET         /about-other-income-schedule                     controllers.otherIncomeSchedule.AboutOtherIncomeScheduleController.onPageLoad
-POST        /about-other-income-schedule                     controllers.otherIncomeSchedule.AboutOtherIncomeScheduleController.onSubmit
-GET         /other-income-schedule-upload-successful         controllers.otherIncomeSchedule.OtherIncomeScheduleUploadSuccessfulController.onPageLoad
-POST        /other-income-schedule-upload-successful         controllers.otherIncomeSchedule.OtherIncomeScheduleUploadSuccessfulController.onSubmit
-
-GET         /upload-other-income-schedule                    controllers.otherIncomeSchedule.UploadOtherIncomeScheduleController.onPageLoad
-GET         /upload-other-income-schedule/success            controllers.otherIncomeSchedule.UploadOtherIncomeScheduleController.onUploadSuccess
-GET         /upload-other-income-schedule/error              controllers.otherIncomeSchedule.UploadOtherIncomeScheduleController.onUploadError
+GET         /about-other-income-schedule                    controllers.otherIncomeSchedule.AboutOtherIncomeScheduleController.onPageLoad
+POST        /about-other-income-schedule                    controllers.otherIncomeSchedule.AboutOtherIncomeScheduleController.onSubmit
+GET         /upload-other-income-schedule                   controllers.otherIncomeSchedule.UploadOtherIncomeScheduleController.onPageLoad
+GET         /upload-other-income-schedule/success           controllers.otherIncomeSchedule.UploadOtherIncomeScheduleController.onUploadSuccess
+GET         /upload-other-income-schedule/error             controllers.otherIncomeSchedule.UploadOtherIncomeScheduleController.onUploadError
+GET         /problem-with-other-income-schedule             controllers.otherIncomeSchedule.ProblemWithOtherIncomeScheduleController.onPageLoad
+POST        /problem-with-other-income-schedule             controllers.otherIncomeSchedule.ProblemWithOtherIncomeScheduleController.onSubmit
+GET         /other-income-schedule-upload-successful        controllers.otherIncomeSchedule.OtherIncomeScheduleUploadSuccessfulController.onPageLoad
+POST        /other-income-schedule-upload-successful        controllers.otherIncomeSchedule.OtherIncomeScheduleUploadSuccessfulController.onSubmit
 
 GET         /your-other-income-schedule-upload               controllers.otherIncomeSchedule.YourOtherIncomeScheduleUploadController.onPageLoad
 GET         /your-other-income-schedule-upload                  controllers.otherIncomeSchedule.YourOtherIncomeScheduleUploadController.onPageLoad

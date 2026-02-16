@@ -17,18 +17,71 @@
 package controllers.otherIncomeSchedule
 
 import com.google.inject.Inject
+import config.FrontendAppConfig
+import connectors.ClaimsValidationConnector
 import controllers.BaseController
 import controllers.actions.Actions
+import controllers.otherIncomeSchedule.routes
+import models.*
 import play.api.mvc.*
+import services.{ClaimsValidationService, PaginationService}
+import views.html.ProblemWithOtherIncomeScheduleView
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class ProblemWithOtherIncomeScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  actions: Actions
-) extends BaseController {
+  view: ProblemWithOtherIncomeScheduleView,
+  actions: Actions,
+  claimsValidationConnector: ClaimsValidationConnector,
+  claimsValidationService: ClaimsValidationService,
+  appConfig: FrontendAppConfig
+)(using ec: ExecutionContext)
+    extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+  val onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    request.sessionData.unsubmittedClaimId match {
+      case None =>
+        // if the claim id is not found, we need to redirect to the repayment claim details page
+        Future.successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+
+      case Some(claimId) =>
+        request.sessionData.otherIncomeScheduleFileUploadReference match {
+          case None =>
+            // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
+            Future.successful(Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
+
+          case Some(fileUploadReference) =>
+            claimsValidationConnector
+              .getUploadResult(claimId, fileUploadReference)
+              .map {
+                case GetUploadResultValidationFailedOtherIncome(reference, otherIncomeData, errors) =>
+                  val currentPage      = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
+                  val paginationResult = PaginationService.paginateValidationErrors(
+                    allErrors = errors,
+                    currentPage = currentPage,
+                    baseUrl = routes.ProblemWithOtherIncomeScheduleController.onPageLoad.url
+                  )
+                  Ok(
+                    view(
+                      claimId = claimId,
+                      errors = paginationResult.paginatedData,
+                      paginationViewModel = paginationResult.paginationViewModel,
+                      otherIncomeScheduleSpreadsheetGuidanceUrl = appConfig.otherIncomeScheduleSpreadsheetGuidanceUrl
+                    )
+                  )
+
+                case _ =>
+                  // In case of any other upload result, we need to redirect to the /your-other-income-schedule-upload page,
+                  // which in turn will redirect to the right page based on the upload result
+                  Redirect(routes.YourOtherIncomeScheduleUploadController.onPageLoad)
+              }
+        }
+    }
+  }
+
+  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    claimsValidationService.deleteOtherIncomeSchedule
+      .map(_ => Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
   }
 }

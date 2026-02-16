@@ -516,6 +516,21 @@ uploadOtherIncomeSchedule.form.upload-file.submit = Continue
 uploadOtherIncomeSchedule.error.file-upload.InvalidArgument = Select an Other Income schedule
 uploadOtherIncomeSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 2.5 MB
 
+problemWithOtherIncomeSchedule.title = There is a problem with the data in your Other Income schedule
+problemWithOtherIncomeSchedule.caption = Add Other Income schedule
+problemWithOtherIncomeSchedule.heading = There is a problem with the data in your Other Income schedule
+problemWithOtherIncomeSchedule.warning = We cannot accept the file because it has errors. You must fix these errors and upload the updated file before you can continue.
+problemWithOtherIncomeSchedule.subheading.1 = What you can do next
+problemWithOtherIncomeSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Other Income donations</a>.
+problemWithOtherIncomeSchedule.list.item.2 = Delete this Other Income schedule.
+problemWithOtherIncomeSchedule.list.item.3 = Update your spreadsheet.
+problemWithOtherIncomeSchedule.list.item.4 = Upload the updated spreadsheet.
+problemWithOtherIncomeSchedule.subheading.2 = Summary of errors
+problemWithOtherIncomeSchedule.table.column.1 = Row
+problemWithOtherIncomeSchedule.table.column.2 = Error
+problemWithOtherIncomeSchedule.link.attachUpdatedSchedule = Attach an updated Other Income schedule
+problemWithOtherIncomeSchedule.link.deleteSchedule = Delete schedule
+
 otherIncomeScheduleUploadSuccessful.title = Upload successful
 otherIncomeScheduleUploadSuccessful.message.1 = Upload successful
 otherIncomeScheduleUploadSuccessful.message.2 = You have successfully attached your Other Income schedule.
