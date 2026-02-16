@@ -54,7 +54,7 @@ class UploadOtherIncomeScheduleController @Inject() (
             Future.successful(
               Ok(
                 view(
-                  appConfig.otherIncomeScheduleSpreadsheetGuidancesUrl,
+                  appConfig.otherIncomeScheduleSpreadsheetGuidanceUrl,
                   claimId = claimId,
                   upscanInitiateResponse = upscanInitiateResponse,
                   allowedFileTypesHint = appConfig.allowedFileTypesHint,
@@ -77,7 +77,7 @@ class UploadOtherIncomeScheduleController @Inject() (
                     upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
                   } yield Ok(
                     view(
-                      appConfig.otherIncomeScheduleSpreadsheetGuidancesUrl,
+                      appConfig.otherIncomeScheduleSpreadsheetGuidanceUrl,
                       claimId = claimId,
                       upscanInitiateResponse = upscanInitiateResponse,
                       allowedFileTypesHint = appConfig.allowedFileTypesHint,
@@ -155,7 +155,7 @@ class UploadOtherIncomeScheduleController @Inject() (
         Future.successful(
           BadRequest(
             view(
-              appConfig.otherIncomeScheduleSpreadsheetGuidancesUrl,
+              appConfig.otherIncomeScheduleSpreadsheetGuidanceUrl,
               claimId = request.sessionData.unsubmittedClaimId.get,
               upscanInitiateResponse = upscanInitiateResponse,
               allowedFileTypesHint = appConfig.allowedFileTypesHint,

@@ -94,9 +94,6 @@ object RepaymentClaimDetailsAnswersOld {
         otherIncomeScheduleFileUploadReference = if (value) session.otherIncomeScheduleFileUploadReference else None
       )
 
-  def shouldWarnAboutChangingClaimingTaxDeducted(value: Boolean)(using session: SessionData): Boolean =
-    !value && session.otherIncomeScheduleFileUploadReference.isDefined
-
   def getClaimingGiftAid(using session: SessionData): Option[Boolean] = get(_.claimingGiftAid)
 
   def setClaimingGiftAid(value: Boolean)(using session: SessionData): SessionData =
@@ -105,9 +102,6 @@ object RepaymentClaimDetailsAnswersOld {
         giftAidScheduleData = if (value) session.giftAidScheduleData else None,
         giftAidScheduleFileUploadReference = if (value) session.giftAidScheduleFileUploadReference else None
       )
-
-  def shouldWarnAboutChangingClaimingGiftAid(claimingGiftAid: Boolean)(using session: SessionData): Boolean =
-    !claimingGiftAid && session.giftAidScheduleFileUploadReference.isDefined
 
   def getClaimingUnderGiftAidSmallDonationsScheme(using session: SessionData): Option[Boolean] = get(
     _.claimingUnderGiftAidSmallDonationsScheme
@@ -130,11 +124,6 @@ object RepaymentClaimDetailsAnswersOld {
 
   def setNameOfCharity(value: String)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(nameOfCharity = Some(v)))
-
-  def shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(value: Boolean)(using
-    session: SessionData
-  ): Boolean =
-    !value && session.giftAidSmallDonationsSchemeDonationDetailsAnswers.isDefined
 
   def getClaimingReferenceNumber(using session: SessionData): Option[Boolean] = get(_.claimingReferenceNumber)
 

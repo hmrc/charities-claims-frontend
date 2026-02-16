@@ -43,7 +43,7 @@ class ClaimingGiftAidSmallDonationsController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswersOld.getClaimingUnderGiftAidSmallDonationsScheme
-    Ok(view(form.withDefault(warningAnswerBoolean.orElse(previousAnswer)), mode, isWarning))
+    Ok(view(form.withDefault(previousAnswer), mode))
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
@@ -53,23 +53,15 @@ class ClaimingGiftAidSmallDonationsController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
-            if hadNoWarningShown && RepaymentClaimDetailsAnswersOld
-                .shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(value)
-            then
-              Future.successful(
-                Redirect(routes.ClaimingGiftAidSmallDonationsController.onPageLoad(mode))
-                  .withWarning(value.toString)
-              )
-            else
-              saveService
-                .save(RepaymentClaimDetailsAnswersOld.setClaimingUnderGiftAidSmallDonationsScheme(value))
-                .map { _ =>
-                  if (mode == CheckMode) {
-                    Redirect(routes.CheckYourAnswersController.onPageLoad)
-                  } else {
-                    Redirect(routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode))
-                  }
+            saveService
+              .save(RepaymentClaimDetailsAnswersOld.setClaimingUnderGiftAidSmallDonationsScheme(value))
+              .map { _ =>
+                if (mode == CheckMode) {
+                  Redirect(routes.CheckYourAnswersController.onPageLoad)
+                } else {
+                  Redirect(routes.ClaimingReferenceNumberCheckController.onPageLoad(NormalMode))
                 }
+              }
         )
     }
 }

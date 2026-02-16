@@ -56,14 +56,6 @@
     {
       "field": "taxDeducted[32]",
       "error": "ERROR: Item 9 The tax deducted you have provided is in an invalid format."
-    },
-    {
-      "field": "item[33]",
-      "error": "ERROR: You have entered data in an invalid area of the form."
-    },
-    {
-      "field": "taxDeducted[33]",
-      "error": "ERROR: Item The tax deducted must be less than the gross payment."
     }
   ]
 }

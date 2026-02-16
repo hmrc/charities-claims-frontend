@@ -1,5 +1,5 @@
 @*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import controllers.repaymentclaimdetailsold.routes
+@import controllers.otherIncomeSchedule.routes
 
 @this(
     layout: templates.Layout,
@@ -24,26 +24,25 @@
     govukButton: GovukButton
 )
 
-@(form: Form[?], mode: Mode)(implicit request: Request[?], messages: Messages)
+@(form: Form[Boolean])(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = title(form, messages("claimingGiftAid.title"))
+    pageTitle = title(form, messages("updateOtherIncomeSchedule.title"))
 ) {
+
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <h1 class="govuk-heading-l">@messages("claimingGiftAid.heading")</h1>
+    <h1 class="govuk-heading-l">@messages("updateOtherIncomeSchedule.heading")</h1>
 
-    @formHelper(action = routes.ClaimingGiftAidController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.UpdateOtherIncomeScheduleController.onSubmit, Symbol("autoComplete") -> "off") {
 
         @govukRadios(
-            RadiosViewModel
-                .yesNo(
-                    form("value"),
-                    LegendViewModel(messages("claimingGiftAid.legend")).visuallyHidden
-                )
-                .withHint(HintViewModel(Text(messages("claimingGiftAid.hint"))))
+            RadiosViewModel.yesNo(
+                form("value"),
+                LegendViewModel(messages("updateOtherIncomeSchedule.heading")).visuallyHidden
+            ).withHint(HintViewModel(Text(messages("updateOtherIncomeSchedule.hint"))))
         )
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
