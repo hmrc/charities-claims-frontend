@@ -39,7 +39,7 @@
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleNoForm(messages("checkYourGiftAidSchedule.title")), 
+    pageTitle = title(form, messages("checkYourGiftAidSchedule.title")), 
     showBackLink = true
 ) {
 
