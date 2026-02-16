@@ -209,3 +209,5 @@ POST        /delete-gasds-community-buildings-schedule       controllers.communi
 
 GET         /delete-gasds-connected-charities-schedule       controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onPageLoad
 POST        /delete-gasds-connected-charities-schedule       controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onSubmit
+GET         /connected-charities-schedule-upload-successful  controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadSuccessfulController.onPageLoad
+POST        /connected-charities-schedule-upload-successful  controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadSuccessfulController.onSubmit

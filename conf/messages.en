@@ -536,3 +536,7 @@ updateOtherIncomeSchedule.title = Are you sure you want to update this Other Inc
 updateOtherIncomeSchedule.heading = Are you sure you want to update this Other Income schedule?
 updateOtherIncomeSchedule.hint = By updating this file, you will lose any Other Income schedule data you have previously attached.
 updateOtherIncomeSchedule.error.required = Select ‘Yes’ if you want to update this Other Income schedule
+
+connectedCharitiesScheduleUploadSuccessful.title = Upload successful
+connectedCharitiesScheduleUploadSuccessful.message.1 = Upload successful
+connectedCharitiesScheduleUploadSuccessful.message.2 = You have successfully attached your Connected Charities schedule.
