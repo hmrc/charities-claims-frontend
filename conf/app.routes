@@ -189,8 +189,14 @@ GET         /upload-other-income-schedule                    controllers.otherIn
 GET         /upload-other-income-schedule/success            controllers.otherIncomeSchedule.UploadOtherIncomeScheduleController.onUploadSuccess
 GET         /upload-other-income-schedule/error              controllers.otherIncomeSchedule.UploadOtherIncomeScheduleController.onUploadError
 
-# TODO: Placeholder route for O1.2 - to be implemented in future ticket
 GET         /your-other-income-schedule-upload               controllers.otherIncomeSchedule.YourOtherIncomeScheduleUploadController.onPageLoad
+GET         /your-other-income-schedule-upload                  controllers.otherIncomeSchedule.YourOtherIncomeScheduleUploadController.onPageLoad
+POST        /your-other-income-schedule-upload                  controllers.otherIncomeSchedule.YourOtherIncomeScheduleUploadController.onSubmit
+GET         /your-other-income-schedule-upload/remove           controllers.otherIncomeSchedule.YourOtherIncomeScheduleUploadController.onRemove
+
+# TODO: Placeholder screen for O1.3 and O1.4 will be updated in future
+GET         /check-your-other-income-schedule                   controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onPageLoad
+GET         /problem-with-other-income-schedule                 controllers.otherIncomeSchedule.ProblemWithOtherIncomeScheduleController.onPageLoad
 
 GET         /delete-other-income-schedule                   controllers.otherIncomeSchedule.DeleteOtherIncomeScheduleController.onPageLoad
 POST        /delete-other-income-schedule                   controllers.otherIncomeSchedule.DeleteOtherIncomeScheduleController.onSubmit

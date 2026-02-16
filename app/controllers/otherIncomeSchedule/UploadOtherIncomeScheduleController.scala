@@ -22,8 +22,8 @@ import connectors.UpscanInitiateConnector
 import controllers.BaseController
 import controllers.actions.Actions
 import controllers.otherIncomeSchedule.routes
-import models.*
 import models.requests.DataRequest
+import models.*
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{ClaimsValidationService, SaveService}
 import utils.ISODateTime
@@ -137,7 +137,8 @@ class UploadOtherIncomeScheduleController @Inject() (
           claimsValidationService
             .updateUploadStatus(
               claimId = request.sessionData.unsubmittedClaimId.get,
-              reference = fileUploadReference
+              reference = fileUploadReference,
+              ValidationType.OtherIncome
             )
             .map(_ => Redirect(routes.YourOtherIncomeScheduleUploadController.onPageLoad))
 

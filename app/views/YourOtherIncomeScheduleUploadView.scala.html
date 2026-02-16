@@ -1,0 +1,67 @@
+@*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.otherIncomeSchedule.routes
+@import models.*
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukButton: GovukButton,
+    govukErrorSummary: GovukErrorSummary
+)
+
+@(
+    claimId: String,
+    uploadResult: GetUploadResultResponse,
+    failureDetails: Option[GetUploadResultFailureDetails],
+    screenLocked: Boolean
+)(implicit request: Request[?], messages: Messages)
+
+@layout(
+    pageTitle = titleNoForm(messages("yourOtherIncomeScheduleUpload.title")),
+    showBackLink = false,
+    refreshPageSeconds = if (screenLocked) Some(3) else None
+) {
+
+    <span class="govuk-caption-l">@messages("yourOtherIncomeScheduleUpload.caption")</span>
+    <h1 class="govuk-heading-l">@messages("yourOtherIncomeScheduleUpload.heading")</h1>
+    <p class="govuk-body">@messages("yourOtherIncomeScheduleUpload.paragraph.one")</p>
+
+    @formHelper(action = routes.YourOtherIncomeScheduleUploadController.onSubmit) {
+        <dl class="govuk-summary-list govuk-summary-list--long-key">
+        
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @messages("yourOtherIncomeScheduleUpload.table.key")
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    <strong class="govuk-tag govuk-tag--yellow">
+                        @messages(s"fileUpload.status.${uploadResult.fileStatus.toString}")
+                    </strong>
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="@controllers.otherIncomeSchedule.routes.YourOtherIncomeScheduleUploadController.onRemove.url">Remove</a>
+                </dd>
+            </div>
+        </dl>   
+
+        <div></div>
+        <div></div>
+
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+    }
+}
