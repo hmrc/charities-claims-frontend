@@ -45,7 +45,7 @@ class ClaimingGiftAidController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswersOld.getClaimingGiftAid
-    Ok(view(form.withDefault(warningAnswerBoolean.orElse(previousAnswer)), mode, isWarning))
+    Ok(view(form.withDefault(previousAnswer), mode))
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
@@ -55,27 +55,19 @@ class ClaimingGiftAidController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           claimingGiftAid =>
-            if hadNoWarningShown && RepaymentClaimDetailsAnswersOld
-                .shouldWarnAboutChangingClaimingGiftAid(claimingGiftAid)
-            then
-              Future.successful(
-                Redirect(routes.ClaimingGiftAidController.onPageLoad(mode))
-                  .withWarning(claimingGiftAid.toString)
-              )
-            else
-              claimsValidationService.deleteGiftAidSchedule
-                .whenA(warningWasShown && !claimingGiftAid)
-                .flatMap { _ =>
-                  saveService
-                    .save(RepaymentClaimDetailsAnswersOld.setClaimingGiftAid(claimingGiftAid))
-                    .map { _ =>
-                      if (mode == CheckMode) {
-                        Redirect(routes.CheckYourAnswersController.onPageLoad)
-                      } else {
-                        Redirect(routes.ClaimingOtherIncomeController.onPageLoad(NormalMode))
-                      }
+            claimsValidationService.deleteGiftAidSchedule
+              .whenA(!claimingGiftAid)
+              .flatMap { _ =>
+                saveService
+                  .save(RepaymentClaimDetailsAnswersOld.setClaimingGiftAid(claimingGiftAid))
+                  .map { _ =>
+                    if (mode == CheckMode) {
+                      Redirect(routes.CheckYourAnswersController.onPageLoad)
+                    } else {
+                      Redirect(routes.ClaimingOtherIncomeController.onPageLoad(NormalMode))
                     }
-                }
+                  }
+              }
         )
     }
 }

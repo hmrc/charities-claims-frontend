@@ -75,14 +75,12 @@ claimingGiftAid.heading = Are you claiming Gift Aid?
 claimingGiftAid.hint = Select ‘Yes’ if you want to claim tax repayment on donations from a Gift Aid declaration.
 claimingGiftAid.legend = Are you claiming Gift Aid?
 claimingGiftAid.title = Are you claiming Gift Aid?
-claimingGiftAid.warning = TBC Your data for this section will be lost if you change your answer.
 
 claimingGiftAidSmallDonations.error.required = Select ‘Yes’ if you are claiming for the Gift Aid Small Donations Scheme.
 claimingGiftAidSmallDonations.heading = Gift Aid Small Donations Scheme
 claimingGiftAidSmallDonations.legend =  Are you claiming for the Gift Aid Small Donations Scheme?
 claimingGiftAidSmallDonations.paragraph =  This is separate to a Gift Aid claim. The Gift Aid Small Donation Scheme (GASDS) is for donations of £20 or less and does not need declaring.
 claimingGiftAidSmallDonations.title = Gift Aid Small Donations Scheme
-claimingGiftAidSmallDonations.warning = TBC Your data for this section will be lost if you change your answer.
 
 repaymentClaimType.caption = Provide repayment claim details
 repaymentClaimType.label.claimingGiftAid = Tax repayments on Gift Aid donations
@@ -145,7 +143,6 @@ claimingOtherIncome.error.required = Select ‘Yes’ if you are claiming tax de
 claimingOtherIncome.heading = Are you claiming tax deducted from other income?
 claimingOtherIncome.paragraph =  Tax relief can include:
 claimingOtherIncome.title = Are you claiming tax deducted from other income?
-claimingOtherIncome.warning = TBC Your data for this section will be lost if you change your answer.
 error.browser.title.prefix = Error:
 
 global.error.InternalServerError500.heading = Sorry, there is a problem with this service

@@ -43,7 +43,7 @@ class ClaimingOtherIncomeController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswersOld.getClaimingTaxDeducted
-    Ok(view(form.withDefault(warningAnswerBoolean.orElse(previousAnswer)), mode, isWarning))
+    Ok(view(form.withDefault(previousAnswer), mode))
   }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
@@ -53,22 +53,15 @@ class ClaimingOtherIncomeController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
-            if hadNoWarningShown && RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingTaxDeducted(value)
-            then
-              Future.successful(
-                Redirect(routes.ClaimingOtherIncomeController.onPageLoad(mode))
-                  .withWarning(value.toString)
-              )
-            else
-              saveService
-                .save(RepaymentClaimDetailsAnswersOld.setClaimingTaxDeducted(value))
-                .map { _ =>
-                  if (mode == CheckMode) {
-                    Redirect(routes.CheckYourAnswersController.onPageLoad)
-                  } else {
-                    Redirect(routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode))
-                  }
+            saveService
+              .save(RepaymentClaimDetailsAnswersOld.setClaimingTaxDeducted(value))
+              .map { _ =>
+                if (mode == CheckMode) {
+                  Redirect(routes.CheckYourAnswersController.onPageLoad)
+                } else {
+                  Redirect(routes.ClaimingGiftAidSmallDonationsController.onPageLoad(NormalMode))
                 }
+              }
         )
     }
 }

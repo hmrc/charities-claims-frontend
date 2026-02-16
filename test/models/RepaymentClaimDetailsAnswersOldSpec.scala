@@ -103,36 +103,6 @@ class RepaymentClaimDetailsAnswersOldSpec extends BaseSpec {
       }
     }
 
-    "shouldWarnAboutChangingClaimingGiftAid" - {
-      "should return true when value is false when there is Gift Aid data" in {
-        given session: SessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-            giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
-          )
-
-        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingGiftAid(false) shouldBe true
-      }
-
-      "should return false when setting value to true" in {
-        given session: SessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-            giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
-          )
-
-        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingGiftAid(true) shouldBe false
-      }
-
-      "should return false when no Gift Aid data exists" in {
-        given session: SessionData = SessionData.empty(testCharitiesReference)
-
-        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingGiftAid(false) shouldBe false
-      }
-    }
-
     "setClaimingTaxDeducted" - {
       "should delete otherIncomeScheduleDataAnswers when changing to false" in {
         given session: SessionData = SessionData
@@ -162,36 +132,6 @@ class RepaymentClaimDetailsAnswersOldSpec extends BaseSpec {
         result.otherIncomeScheduleFileUploadReference              shouldBe Some(FileUploadReference("test-file-upload-reference"))
         result.otherIncomeScheduleData                             shouldBe Some(TestScheduleData.exampleOtherIncomeScheduleData)
         result.repaymentClaimDetailsAnswersOld.claimingTaxDeducted shouldBe Some(true)
-      }
-    }
-
-    "shouldWarnAboutChangingClaimingTaxDeducted" - {
-      "should return true when value is false when there is Other Income data" in {
-        given session: SessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-            otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
-          )
-
-        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingTaxDeducted(false) shouldBe true
-      }
-
-      "should return false when setting value to true" in {
-        given session: SessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-            otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
-          )
-
-        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingTaxDeducted(true) shouldBe false
-      }
-
-      "should return false when no Other Income data exists" in {
-        given session: SessionData = SessionData.empty(testCharitiesReference)
-
-        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingTaxDeducted(false) shouldBe false
       }
     }
 
@@ -226,42 +166,5 @@ class RepaymentClaimDetailsAnswersOldSpec extends BaseSpec {
         result.repaymentClaimDetailsAnswersOld.claimingUnderGiftAidSmallDonationsScheme shouldBe Some(true)
       }
     }
-
-    "shouldWarnAboutChangingClaimingUnderGasds" - {
-      "should return true when value is false when there is GASDS data" in {
-        given session: SessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            giftAidSmallDonationsSchemeDonationDetailsAnswers =
-              Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
-          )
-
-        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
-          false
-        ) shouldBe true
-      }
-
-      "should return false when setting value to true" in {
-        given session: SessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            giftAidSmallDonationsSchemeDonationDetailsAnswers =
-              Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
-          )
-
-        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
-          true
-        ) shouldBe false
-      }
-
-      "should return false when no GASDS schedule data exists" in {
-        given session: SessionData = SessionData.empty(testCharitiesReference)
-
-        RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
-          false
-        ) shouldBe false
-      }
-    }
   }
-
 }
