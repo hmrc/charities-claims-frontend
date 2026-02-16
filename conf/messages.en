@@ -494,7 +494,6 @@ yourOtherIncomeScheduleUpload.heading = Your Other Income schedule upload
 yourOtherIncomeScheduleUpload.paragraph.one = You can upload your Other Income schedule as a spreadsheet. The selected file must be smaller than 2.5MB.
 yourOtherIncomeScheduleUpload.table.key = Other Income Schedule
 
-
 giftAidScheduleUploadSuccessful.title = Upload successful
 giftAidScheduleUploadSuccessful.message.1 = Upload successful
 giftAidScheduleUploadSuccessful.message.2 = You have successfully attached your Gift Aid schedule.
@@ -502,6 +501,7 @@ giftAidScheduleUploadSuccessful.message.2 = You have successfully attached your 
 updateGiftAidSchedule.title = Are you sure you want to update this Gift Aid schedule?
 updateGiftAidSchedule.heading = Are you sure you want to update this Gift Aid schedule?
 updateGiftAidSchedule.hint = By updating this file, you will lose any Gift Aid schedule data you have previously attached.
+updateGiftAidSchedule.error.required = Select ‘Yes’ if you want to update this Gift Aid schedule
 
 uploadOtherIncomeSchedule.caption = Add Other Income schedule
 uploadOtherIncomeSchedule.title = Upload an Other Income schedule
@@ -531,3 +531,8 @@ problemWithOtherIncomeSchedule.link.deleteSchedule = Delete schedule
 otherIncomeScheduleUploadSuccessful.title = Upload successful
 otherIncomeScheduleUploadSuccessful.message.1 = Upload successful
 otherIncomeScheduleUploadSuccessful.message.2 = You have successfully attached your Other Income schedule.
+
+updateOtherIncomeSchedule.title = Are you sure you want to update this Other Income schedule?
+updateOtherIncomeSchedule.heading = Are you sure you want to update this Other Income schedule?
+updateOtherIncomeSchedule.hint = By updating this file, you will lose any Other Income schedule data you have previously attached.
+updateOtherIncomeSchedule.error.required = Select ‘Yes’ if you want to update this Other Income schedule
