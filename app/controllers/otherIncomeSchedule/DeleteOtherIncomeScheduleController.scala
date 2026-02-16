@@ -27,6 +27,7 @@ import views.html.DeleteOtherIncomeScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.mvc.Call
+import models.SessionData
 
 class DeleteOtherIncomeScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -39,24 +40,28 @@ class DeleteOtherIncomeScheduleController @Inject() (
 
   val form: Form[Boolean] = formProvider("deleteOtherIncomeSchedule.error.required")
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(form))
+  def onPageLoad: Action[AnyContent] = actions.authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule) {
+    implicit request =>
+      Ok(view(form))
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          if value then {
-            claimsValidationService.deleteOtherIncomeSchedule.map { _ =>
-              Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
-            }
-          } else {
-            // FIXME: replace with proper route
-            Future.successful(Redirect(Call("GET", "/problem-with-other-income-schedule")))
-          }
-      )
-  }
+  def onSubmit: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .async { implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+            value =>
+              if value then {
+                claimsValidationService.deleteOtherIncomeSchedule.map { _ =>
+                  Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
+                }
+              } else {
+                // FIXME: replace with proper route
+                Future.successful(Redirect(Call("GET", "/problem-with-other-income-schedule")))
+              }
+          )
+      }
 }

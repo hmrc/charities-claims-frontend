@@ -22,13 +22,17 @@ import controllers.actions.Actions
 import play.api.mvc.*
 
 import scala.concurrent.Future
+import models.SessionData
 
 class CheckYourOtherIncomeScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions
 ) extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
-  }
+  def onPageLoad: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .async { implicit request =>
+        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      }
 }

@@ -68,7 +68,8 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
 
     "onPageLoad" - {
       "unsubmitted Claim ID is not defined" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           val request: FakeRequest[AnyContentAsEmpty.type] =
@@ -280,10 +281,12 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
 
     "onRemove - delete schedule and redirect" in {
 
-      val sessionData = defaultSessionData.copy(
-        unsubmittedClaimId = Some(claimId),
-        giftAidScheduleFileUploadReference = Some(fileUploadReference)
-      )
+      val sessionData = RepaymentClaimDetailsAnswers
+        .setClaimingGiftAid(true)
+        .copy(
+          unsubmittedClaimId = Some(claimId),
+          giftAidScheduleFileUploadReference = Some(fileUploadReference)
+        )
 
       (mockService
         .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
@@ -310,7 +313,10 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "unsubmitted Claim ID is not defined" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .copy(unsubmittedClaimId = None)
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           val request: FakeRequest[AnyContentAsEmpty.type] =
@@ -326,7 +332,9 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined" in {
-        val sessionData                = defaultSessionData.copy(unsubmittedClaimId = Some("test-claim-123"))
+        val sessionData                = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .copy(unsubmittedClaimId = Some("test-claim-123"))
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
@@ -343,10 +351,12 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(claimId),
-          giftAidScheduleFileUploadReference = Some(fileUploadReference)
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .copy(
+            unsubmittedClaimId = Some(claimId),
+            giftAidScheduleFileUploadReference = Some(fileUploadReference)
+          )
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -377,10 +387,12 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = passed Validation" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(claimId),
-          giftAidScheduleFileUploadReference = Some(fileUploadReference)
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .copy(
+            unsubmittedClaimId = Some(claimId),
+            giftAidScheduleFileUploadReference = Some(fileUploadReference)
+          )
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -406,10 +418,12 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = failed Validation" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(claimId),
-          giftAidScheduleFileUploadReference = Some(fileUploadReference)
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .copy(
+            unsubmittedClaimId = Some(claimId),
+            giftAidScheduleFileUploadReference = Some(fileUploadReference)
+          )
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -434,10 +448,12 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = other" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(claimId),
-          giftAidScheduleFileUploadReference = Some(fileUploadReference)
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .copy(
+            unsubmittedClaimId = Some(claimId),
+            giftAidScheduleFileUploadReference = Some(fileUploadReference)
+          )
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))

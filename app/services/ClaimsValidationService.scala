@@ -186,11 +186,9 @@ class ClaimsValidationServiceImpl @Inject() (
                           .save(request.sessionData.copy(giftAidScheduleData = Some(data)))
                           .map(_ => data)
 
-                      case other =>
+                      case _ =>
                         Future.failed(
-                          new RuntimeException(
-                            s"No Gift Aid schedule data found, upload file status is ${other.fileStatus}"
-                          )
+                          new ScheduleUploadNotFoundException(ValidationType.GiftAid)
                         )
                     }
               }
@@ -222,12 +220,8 @@ class ClaimsValidationServiceImpl @Inject() (
                         .save(request.sessionData.copy(otherIncomeScheduleData = Some(data)))
                         .map(_ => data)
 
-                    case other =>
-                      Future.failed(
-                        new RuntimeException(
-                          s"No Other Income schedule data found, upload file status is ${other.fileStatus}"
-                        )
-                      )
+                    case _ =>
+                      Future.failed(new ScheduleUploadNotFoundException(ValidationType.OtherIncome))
                   }
             }
         }
@@ -262,12 +256,8 @@ class ClaimsValidationServiceImpl @Inject() (
                           .save(request.sessionData.copy(communityBuildingsScheduleData = Some(data)))
                           .map(_ => data)
 
-                      case other =>
-                        Future.failed(
-                          new RuntimeException(
-                            s"No Community Buildings schedule data found, upload file status is ${other.fileStatus}"
-                          )
-                        )
+                      case _ =>
+                        Future.failed(new ScheduleUploadNotFoundException(ValidationType.OtherIncome))
                     }
               }
         }
@@ -301,12 +291,8 @@ class ClaimsValidationServiceImpl @Inject() (
                           .save(request.sessionData.copy(connectedCharitiesScheduleData = Some(data)))
                           .map(_ => data)
 
-                      case other =>
-                        Future.failed(
-                          new RuntimeException(
-                            s"No Connected Charities schedule data found, upload file status is ${other.fileStatus}"
-                          )
-                        )
+                      case _ =>
+                        Future.failed(new ScheduleUploadNotFoundException(ValidationType.OtherIncome))
                     }
               }
         }

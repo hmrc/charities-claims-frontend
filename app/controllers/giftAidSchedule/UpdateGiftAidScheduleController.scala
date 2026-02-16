@@ -27,6 +27,7 @@ import views.html.UpdateGiftAidScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
 import services.ClaimsService
+import models.SessionData
 
 class UpdateGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -40,25 +41,29 @@ class UpdateGiftAidScheduleController @Inject() (
 
   val form: Form[Boolean] = formProvider("updateGiftAidSchedule.error.required")
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(form))
+  def onPageLoad: Action[AnyContent] = actions.authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule) {
+    implicit request =>
+      Ok(view(form))
   }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          if value
-          then {
-            for {
-              _ <- claimsValidationService.deleteGiftAidSchedule
-              _ <- claimsService.save
-            } yield Redirect(routes.UploadGiftAidScheduleController.onPageLoad)
-          } else {
-            Future.successful(Redirect(routes.CheckYourGiftAidScheduleController.onPageLoad))
-          }
-      )
-  }
+  def onSubmit: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .async { implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+            value =>
+              if value
+              then {
+                for {
+                  _ <- claimsValidationService.deleteGiftAidSchedule
+                  _ <- claimsService.save
+                } yield Redirect(routes.UploadGiftAidScheduleController.onPageLoad)
+              } else {
+                Future.successful(Redirect(routes.CheckYourGiftAidScheduleController.onPageLoad))
+              }
+          )
+      }
 }

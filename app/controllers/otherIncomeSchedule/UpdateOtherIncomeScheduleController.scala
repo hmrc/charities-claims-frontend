@@ -27,6 +27,7 @@ import views.html.UpdateOtherIncomeScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
 import services.ClaimsService
+import models.SessionData
 
 class UpdateOtherIncomeScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -38,27 +39,31 @@ class UpdateOtherIncomeScheduleController @Inject() (
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("updateGiftAidSchedule.error.required")
+  val form: Form[Boolean] = formProvider("updateOtherIncomeSchedule.error.required")
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(form))
-  }
+  def onPageLoad: Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule) { implicit request =>
+      Ok(view(form))
+    }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          if value
-          then {
-            for {
-              _ <- claimsValidationService.deleteOtherIncomeSchedule
-              _ <- claimsService.save
-            } yield Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad)
-          } else {
-            Future.successful(Redirect(routes.CheckYourOtherIncomeScheduleController.onPageLoad))
-          }
-      )
-  }
+  def onSubmit: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .async { implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+            value =>
+              if value
+              then {
+                for {
+                  _ <- claimsValidationService.deleteOtherIncomeSchedule
+                  _ <- claimsService.save
+                } yield Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad)
+              } else {
+                Future.successful(Redirect(routes.CheckYourOtherIncomeScheduleController.onPageLoad))
+              }
+          )
+      }
 }
