@@ -1,0 +1,83 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.otherIncomeSchedule.routes
+@import controllers.otherIncomeSchedule.routes.DeleteOtherIncomeScheduleController
+@import models.*
+@import views.html.components.*
+@import viewmodels.govuk.PaginationFluency.*
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukButton: GovukButton,
+    pageNavigator: PageNavigator,
+    validationFailedTable: ValidationFailedTable
+)
+
+@(
+    claimId: String,
+    errors: Seq[ValidationError],
+    paginationViewModel: PaginationViewModel,
+    otherIncomeScheduleSpreadsheetGuidanceUrl: String
+)(implicit request: Request[?], messages: Messages)
+
+@layout(
+    pageTitle = titleNoForm(messages("problemWithOtherIncomeSchedule.title")), 
+    showBackLink = true
+) {
+
+    <span class="govuk-caption-l">@messages("problemWithOtherIncomeSchedule.caption")</span>
+    <h1 class="govuk-heading-l">@messages("problemWithOtherIncomeSchedule.heading")</h1>
+
+    <div class="govuk-warning-text">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-visually-hidden">@messages("warning.text")</span>
+            @messages("problemWithOtherIncomeSchedule.warning")
+        </strong>
+    </div>
+
+    <h2 class="govuk-heading-m">@messages("problemWithOtherIncomeSchedule.subheading.1")</h2>
+
+    <ol class="govuk-list govuk-list--number govuk-!-margin-bottom-9">
+        <li>@Html(messages("problemWithOtherIncomeSchedule.list.item.1", otherIncomeScheduleSpreadsheetGuidanceUrl))</li>
+        <li>@messages("problemWithOtherIncomeSchedule.list.item.2")</li>
+        <li>@messages("problemWithOtherIncomeSchedule.list.item.3")</li>
+        <li>@messages("problemWithOtherIncomeSchedule.list.item.4")</li>
+    </ol>
+
+    <h2 class="govuk-heading-m custom-padding-header govuk-!-margin-bottom-7">@messages("problemWithOtherIncomeSchedule.subheading.2")</h2>
+
+    @validationFailedTable(
+        errors,
+        messages("problemWithOtherIncomeSchedule.table.column.1"),
+        messages("problemWithOtherIncomeSchedule.table.column.2")
+    )
+
+    @pageNavigator(paginationViewModel)
+
+    @formHelper(action = routes.ProblemWithOtherIncomeScheduleController.onSubmit, Symbol("autoComplete") -> "off") {
+        @govukButton(ButtonViewModel(Text(messages("problemWithOtherIncomeSchedule.link.attachUpdatedSchedule"))))
+    }
+
+    <p class="govuk-body">
+        <a href="@DeleteOtherIncomeScheduleController.onPageLoad.url" class="govuk-link govuk-link--no-visited-state">
+            @messages("problemWithOtherIncomeSchedule.link.deleteSchedule")
+        </a>
+    </p>
+
+}

@@ -48,7 +48,7 @@ class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
       "should return OK if setClaimingTaxDeducted is true" in {
         val sessionData  = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
         val customConfig = Map(
-          "urls.otherIncomeScheduleSpreadsheetGuidancesUrl" -> "https://test.example.com/other-income-schedule"
+          "urls.otherIncomeScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/other-income-schedule"
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData)
