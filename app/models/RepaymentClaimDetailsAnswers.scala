@@ -121,8 +121,9 @@ object RepaymentClaimDetailsAnswers {
         otherIncomeScheduleFileUploadReference = if (value) session.otherIncomeScheduleFileUploadReference else None
       )
 
-  def shouldWarnAboutChangingClaimingTaxDeducted(value: Boolean)(using session: SessionData): Boolean =
-    !value && session.otherIncomeScheduleFileUploadReference.isDefined
+  // OLD FLASH-BASED WARNING - COMMENTED OUT (replaced by WRN3 flow)
+  // def shouldWarnAboutChangingClaimingTaxDeducted(value: Boolean)(using session: SessionData): Boolean =
+  //   !value && session.otherIncomeScheduleFileUploadReference.isDefined
 
   def getMakingAdjustmentToPreviousClaim(using session: SessionData): Option[Boolean] = get(
     _.makingAdjustmentToPreviousClaim
@@ -140,8 +141,9 @@ object RepaymentClaimDetailsAnswers {
         giftAidScheduleFileUploadReference = if (value) session.giftAidScheduleFileUploadReference else None
       )
 
-  def shouldWarnAboutChangingClaimingGiftAid(claimingGiftAid: Boolean)(using session: SessionData): Boolean =
-    !claimingGiftAid && session.giftAidScheduleFileUploadReference.isDefined
+  // OLD FLASH-BASED WARNING - COMMENTED OUT (replaced by WRN3 flow)
+  // def shouldWarnAboutChangingClaimingGiftAid(claimingGiftAid: Boolean)(using session: SessionData): Boolean =
+  //   !claimingGiftAid && session.giftAidScheduleFileUploadReference.isDefined
 
   def getRepaymentClaimType(using session: SessionData): Option[RepaymentClaimType] = get(answers =>
     for
@@ -257,10 +259,11 @@ object RepaymentClaimDetailsAnswers {
   def setNameOfCharity(value: String)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(nameOfCharity = Some(v)))
 
-  def shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(value: Boolean)(using
-    session: SessionData
-  ): Boolean =
-    !value && session.giftAidSmallDonationsSchemeDonationDetailsAnswers.isDefined
+  // OLD FLASH-BASED WARNING - COMMENTED OUT (replaced by WRN3 flow)
+  // def shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(value: Boolean)(using
+  //   session: SessionData
+  // ): Boolean =
+  //   !value && session.giftAidSmallDonationsSchemeDonationDetailsAnswers.isDefined
 
   def getClaimingReferenceNumber(using session: SessionData): Option[Boolean] = get(_.claimingReferenceNumber)
 

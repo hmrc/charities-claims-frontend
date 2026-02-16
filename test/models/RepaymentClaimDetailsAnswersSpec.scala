@@ -104,35 +104,36 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
       }
     }
 
-    "shouldWarnAboutChangingClaimingGiftAid" - {
-      "should return true when value is false when there is Gift Aid data" in {
-        given session: SessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-            giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
-          )
+    // OLD FLASH-BASED WARNING TESTS - COMMENTED OUT (replaced by WRN3 flow)
+    // "shouldWarnAboutChangingClaimingGiftAid" - {
+    //   "should return true when value is false when there is Gift Aid data" in {
+    //     given session: SessionData = SessionData
+    //       .empty(testCharitiesReference)
+    //       .copy(
+    //         giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+    //         giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
+    //       )
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(false) shouldBe true
-      }
+    //     RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(false) shouldBe true
+    //   }
 
-      "should return false when setting value to true" in {
-        given session: SessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-            giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
-          )
+    //   "should return false when setting value to true" in {
+    //     given session: SessionData = SessionData
+    //       .empty(testCharitiesReference)
+    //       .copy(
+    //         giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+    //         giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
+    //       )
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(true) shouldBe false
-      }
+    //     RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(true) shouldBe false
+    //   }
 
-      "should return false when no Gift Aid data exists" in {
-        given session: SessionData = SessionData.empty(testCharitiesReference)
+    //   "should return false when no Gift Aid data exists" in {
+    //     given session: SessionData = SessionData.empty(testCharitiesReference)
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(false) shouldBe false
-      }
-    }
+    //     RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingGiftAid(false) shouldBe false
+    //   }
+    // }
 
     "setClaimingTaxDeducted" - {
       "should delete otherIncomeScheduleDataAnswers when changing to false" in {
@@ -166,35 +167,36 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
       }
     }
 
-    "shouldWarnAboutChangingClaimingTaxDeducted" - {
-      "should return true when value is false when there is Other Income data" in {
-        given session: SessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-            otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
-          )
+    // OLD FLASH-BASED WARNING TESTS - COMMENTED OUT (replaced by WRN3 flow)
+    // "shouldWarnAboutChangingClaimingTaxDeducted" - {
+    //   "should return true when value is false when there is Other Income data" in {
+    //     given session: SessionData = SessionData
+    //       .empty(testCharitiesReference)
+    //       .copy(
+    //         otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+    //         otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
+    //       )
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingTaxDeducted(false) shouldBe true
-      }
+    //     RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingTaxDeducted(false) shouldBe true
+    //   }
 
-      "should return false when setting value to true" in {
-        given session: SessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-            otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
-          )
+    //   "should return false when setting value to true" in {
+    //     given session: SessionData = SessionData
+    //       .empty(testCharitiesReference)
+    //       .copy(
+    //         otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+    //         otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
+    //       )
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingTaxDeducted(true) shouldBe false
-      }
+    //     RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingTaxDeducted(true) shouldBe false
+    //   }
 
-      "should return false when no Other Income data exists" in {
-        given session: SessionData = SessionData.empty(testCharitiesReference)
+    //   "should return false when no Other Income data exists" in {
+    //     given session: SessionData = SessionData.empty(testCharitiesReference)
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingTaxDeducted(false) shouldBe false
-      }
-    }
+    //     RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingTaxDeducted(false) shouldBe false
+    //   }
+    // }
 
     "setClaimingUnderGasds" - {
       "should delete gasdsScheduleDataAnswers when changing to false" in {
@@ -228,40 +230,41 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
       }
     }
 
-    "shouldWarnAboutChangingClaimingUnderGasds" - {
-      "should return true when value is false when there is GASDS data" in {
-        given session: SessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            giftAidSmallDonationsSchemeDonationDetailsAnswers =
-              Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
-          )
+    // OLD FLASH-BASED WARNING TESTS - COMMENTED OUT (replaced by WRN3 flow)
+    // "shouldWarnAboutChangingClaimingUnderGasds" - {
+    //   "should return true when value is false when there is GASDS data" in {
+    //     given session: SessionData = SessionData
+    //       .empty(testCharitiesReference)
+    //       .copy(
+    //         giftAidSmallDonationsSchemeDonationDetailsAnswers =
+    //           Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
+    //       )
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
-          false
-        ) shouldBe true
-      }
+    //     RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
+    //       false
+    //     ) shouldBe true
+    //   }
 
-      "should return false when setting value to true" in {
-        given session: SessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            giftAidSmallDonationsSchemeDonationDetailsAnswers =
-              Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
-          )
+    //   "should return false when setting value to true" in {
+    //     given session: SessionData = SessionData
+    //       .empty(testCharitiesReference)
+    //       .copy(
+    //         giftAidSmallDonationsSchemeDonationDetailsAnswers =
+    //           Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
+    //       )
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
-          true
-        ) shouldBe false
-      }
+    //     RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
+    //       true
+    //     ) shouldBe false
+    //   }
 
-      "should return false when no GASDS schedule data exists" in {
-        given session: SessionData = SessionData.empty(testCharitiesReference)
+    //   "should return false when no GASDS schedule data exists" in {
+    //     given session: SessionData = SessionData.empty(testCharitiesReference)
 
-        RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
-          false
-        ) shouldBe false
-      }
-    }
+    //     RepaymentClaimDetailsAnswers.shouldWarnAboutChangingClaimingUnderGiftAidSmallDonationsScheme(
+    //       false
+    //     ) shouldBe false
+    //   }
+    // }
   }
 }

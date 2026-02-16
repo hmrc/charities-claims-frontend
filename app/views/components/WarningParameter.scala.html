@@ -18,6 +18,8 @@
 
 @()(implicit request: Request[?])
 
+@*
 @request.flash.get("warning").map{value => 
     <input type="hidden" name="warningShown" value="@value"/>
 }
+*@

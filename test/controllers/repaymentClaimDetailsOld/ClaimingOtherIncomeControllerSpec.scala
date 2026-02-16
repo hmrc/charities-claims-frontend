@@ -168,29 +168,29 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
       }
 
       "onSubmit with warning" - {
-        "should trigger warning when changing to false when Other Income schedule data present" in {
-          val sessionData = SessionData
-            .empty(testCharitiesReference)
-            .copy(
-              repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
-              otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-              otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
-            )
-
-          given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-          running(application) {
-            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-              FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(NormalMode).url)
-                .withFormUrlEncodedBody("value" -> "false")
-
-            val result = route(application, request).value
-
-            status(result) shouldEqual SEE_OTHER
-            redirectLocation(result) shouldEqual Some(routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
-            flash(result).get("warning") shouldEqual Some("true")
-          }
-        }
+//        "should trigger warning when changing to false when Other Income schedule data present" in {
+//          val sessionData = SessionData
+//            .empty(testCharitiesReference)
+//            .copy(
+//              repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
+//              otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+//              otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
+//            )
+//
+//          given application: Application = applicationBuilder(sessionData = sessionData).build()
+//
+//          running(application) {
+//            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+//              FakeRequest(POST, routes.ClaimingOtherIncomeController.onSubmit(NormalMode).url)
+//                .withFormUrlEncodedBody("value" -> "false")
+//
+//            val result = route(application, request).value
+//
+//            status(result) shouldEqual SEE_OTHER
+//            redirectLocation(result) shouldEqual Some(routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
+//            flash(result).get("warning") shouldEqual Some("true")
+//          }
+//        }
 
         "should redirect to the next page in NormalMode when value is false and warning has been shown" in {
           val sessionData = SessionData
@@ -265,27 +265,27 @@ class ClaimingOtherIncomeControllerSpec extends ControllerSpec {
           }
         }
 
-        "should render warning parameter hidden field when warning flash present" in {
-          val sessionData = SessionData
-            .empty(testCharitiesReference)
-            .copy(
-              repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
-              otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-              otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
-            )
-
-          given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-          running(application) {
-            given request: FakeRequest[AnyContentAsEmpty.type] =
-              FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
-                .withFlash("warning" -> "true", "warningAnswer" -> "false")
-
-            val result = route(application, request).value
-
-            contentAsString(result) should include("warningShown")
-          }
-        }
+//        "should render warning parameter hidden field when warning flash present" in {
+//          val sessionData = SessionData
+//            .empty(testCharitiesReference)
+//            .copy(
+//              repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingTaxDeducted = Some(true)),
+//              otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+//              otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
+//            )
+//
+//          given application: Application = applicationBuilder(sessionData = sessionData).build()
+//
+//          running(application) {
+//            given request: FakeRequest[AnyContentAsEmpty.type] =
+//              FakeRequest(GET, routes.ClaimingOtherIncomeController.onPageLoad(NormalMode).url)
+//                .withFlash("warning" -> "true", "warningAnswer" -> "false")
+//
+//            val result = route(application, request).value
+//
+//            contentAsString(result) should include("warningShown")
+//          }
+//        }
       }
     }
   }

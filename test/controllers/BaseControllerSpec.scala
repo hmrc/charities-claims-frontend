@@ -17,170 +17,172 @@
 package controllers
 
 import play.api.Application
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, MessagesControllerComponents}
+import play.api.mvc.{AnyContentAsFormUrlEncoded, MessagesControllerComponents}
 import play.api.test.FakeRequest
 
 class BaseControllerSpec extends ControllerSpec {
 
   "BaseController" - {
 
-    "isWarning" - {
-      "should return true when warning flash is set to true" in {
-        given application: Application = applicationBuilder().build()
+    // OLD FLASH-BASED WARNING TESTS - COMMENTED OUT (replaced by WRN3 flow)
+    // "isWarning" - {
+    //   "should return true when warning flash is set to true" in {
+    //     given application: Application = applicationBuilder().build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, "/test")
-              .withFlash("warning" -> "true")
+    //     running(application) {
+    //       given request: FakeRequest[AnyContentAsEmpty.type] =
+    //         FakeRequest(GET, "/test")
+    //           .withFlash("warning" -> "true")
 
-          val controller = new BaseController {
-            val controllerComponents: MessagesControllerComponents =
-              application.injector.instanceOf[MessagesControllerComponents]
-          }
+    //       val controller = new BaseController {
+    //         val controllerComponents: MessagesControllerComponents =
+    //           application.injector.instanceOf[MessagesControllerComponents]
+    //       }
 
-          controller.isWarning shouldBe true
-        }
-      }
+    //       controller.isWarning shouldBe true
+    //     }
+    //   }
 
-      "should return false when warning flash is not set" in {
-        given application: Application = applicationBuilder().build()
+    //   "should return false when warning flash is not set" in {
+    //     given application: Application = applicationBuilder().build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, "/test")
+    //     running(application) {
+    //       given request: FakeRequest[AnyContentAsEmpty.type] =
+    //         FakeRequest(GET, "/test")
 
-          val controller = new BaseController {
-            val controllerComponents = application.injector.instanceOf[MessagesControllerComponents]
-          }
+    //       val controller = new BaseController {
+    //         val controllerComponents = application.injector.instanceOf[MessagesControllerComponents]
+    //       }
 
-          controller.isWarning shouldBe false
-        }
-      }
-    }
+    //       controller.isWarning shouldBe false
+    //     }
+    //   }
+    // }
 
-    "warningAnswerBoolean" - {
-      "should return true when warningAnswer flash is true" in {
-        given application: Application = applicationBuilder().build()
+    // "warningAnswerBoolean" - {
+    //   "should return true when warningAnswer flash is true" in {
+    //     given application: Application = applicationBuilder().build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, "/test")
-              .withFlash("warningAnswer" -> "true")
+    //     running(application) {
+    //       given request: FakeRequest[AnyContentAsEmpty.type] =
+    //         FakeRequest(GET, "/test")
+    //           .withFlash("warningAnswer" -> "true")
 
-          val controller = new BaseController {
-            val controllerComponents: MessagesControllerComponents =
-              application.injector.instanceOf[MessagesControllerComponents]
-          }
+    //       val controller = new BaseController {
+    //         val controllerComponents: MessagesControllerComponents =
+    //           application.injector.instanceOf[MessagesControllerComponents]
+    //       }
 
-          controller.warningAnswerBoolean shouldBe Some(true)
-        }
-      }
-    }
+    //       controller.warningAnswerBoolean shouldBe Some(true)
+    //     }
+    //   }
+    // }
 
-    "hadNoWarningShown" - {
-      "should return true when warningShown is not present" in {
-        given application: Application = applicationBuilder().build()
+    // "hadNoWarningShown" - {
+    //   "should return true when warningShown is not present" in {
+    //     given application: Application = applicationBuilder().build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, "/test")
-              .withFormUrlEncodedBody("someField" -> "value")
+    //     running(application) {
+    //       given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+    //         FakeRequest(POST, "/test")
+    //           .withFormUrlEncodedBody("someField" -> "value")
 
-          val controller = new BaseController {
-            val controllerComponents: MessagesControllerComponents =
-              application.injector.instanceOf[MessagesControllerComponents]
-          }
+    //       val controller = new BaseController {
+    //         val controllerComponents: MessagesControllerComponents =
+    //           application.injector.instanceOf[MessagesControllerComponents]
+    //       }
 
-          controller.hadNoWarningShown shouldBe true
-        }
-      }
+    //       controller.hadNoWarningShown shouldBe true
+    //     }
+    //   }
 
-      "should return false when warningShown is true in body" in {
-        given application: Application = applicationBuilder().build()
+    //   "should return false when warningShown is true in body" in {
+    //     given application: Application = applicationBuilder().build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, "/test")
-              .withFormUrlEncodedBody("warningShown" -> "true")
+    //     running(application) {
+    //       given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+    //         FakeRequest(POST, "/test")
+    //           .withFormUrlEncodedBody("warningShown" -> "true")
 
-          val controller = new BaseController {
-            val controllerComponents: MessagesControllerComponents =
-              application.injector.instanceOf[MessagesControllerComponents]
-          }
+    //       val controller = new BaseController {
+    //         val controllerComponents: MessagesControllerComponents =
+    //           application.injector.instanceOf[MessagesControllerComponents]
+    //       }
 
-          controller.hadNoWarningShown shouldBe false
-        }
-      }
-    }
+    //       controller.hadNoWarningShown shouldBe false
+    //     }
+    //   }
+    // }
 
-    "warningWasShown" - {
-      "should return false when warningShown is not present" in {
-        given application: Application = applicationBuilder().build()
+    // "warningWasShown" - {
+    //   "should return false when warningShown is not present" in {
+    //     given application: Application = applicationBuilder().build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, "/test")
-              .withFormUrlEncodedBody("someField" -> "value")
+    //     running(application) {
+    //       given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+    //         FakeRequest(POST, "/test")
+    //           .withFormUrlEncodedBody("someField" -> "value")
 
-          val controller = new BaseController {
-            val controllerComponents: MessagesControllerComponents =
-              application.injector.instanceOf[MessagesControllerComponents]
-          }
+    //       val controller = new BaseController {
+    //         val controllerComponents: MessagesControllerComponents =
+    //           application.injector.instanceOf[MessagesControllerComponents]
+    //       }
 
-          controller.warningWasShown shouldBe false
-        }
-      }
+    //       controller.warningWasShown shouldBe false
+    //     }
+    //   }
 
-      "should return true when warningShown is true in body" in {
-        given application: Application = applicationBuilder().build()
+    //   "should return true when warningShown is true in body" in {
+    //     given application: Application = applicationBuilder().build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, "/test")
-              .withFormUrlEncodedBody("warningShown" -> "true")
+    //     running(application) {
+    //       given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+    //         FakeRequest(POST, "/test")
+    //           .withFormUrlEncodedBody("warningShown" -> "true")
 
-          val controller = new BaseController {
-            val controllerComponents: MessagesControllerComponents =
-              application.injector.instanceOf[MessagesControllerComponents]
-          }
+    //       val controller = new BaseController {
+    //         val controllerComponents: MessagesControllerComponents =
+    //           application.injector.instanceOf[MessagesControllerComponents]
+    //       }
 
-          controller.warningWasShown shouldBe true
-        }
-      }
-    }
+    //       controller.warningWasShown shouldBe true
+    //     }
+    //   }
+    // }
 
-    "warningAnswerString" - {
-      "should return None when no warning answer exists" in {
-        given application: Application = applicationBuilder().build()
+    // "warningAnswerString" - {
+    //   "should return None when no warning answer exists" in {
+    //     given application: Application = applicationBuilder().build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+    //     running(application) {
+    //       given request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-          val controller = new BaseController {
-            override val controllerComponents: MessagesControllerComponents =
-              application.injector.instanceOf[MessagesControllerComponents]
-          }
+    //       val controller = new BaseController {
+    //         override val controllerComponents: MessagesControllerComponents =
+    //           application.injector.instanceOf[MessagesControllerComponents]
+    //       }
 
-          controller.warningAnswerString(using request) shouldBe None
-        }
-      }
+    //       controller.warningAnswerString(using request) shouldBe None
+    //     }
+    //   }
 
-      "should return Some(string) when warning answer exists" in {
-        given application: Application = applicationBuilder().build()
+    //   "should return Some(string) when warning answer exists" in {
+    //     given application: Application = applicationBuilder().build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest().withFlash("warningAnswer" -> "someAnswer")
+    //     running(application) {
+    //       given request: FakeRequest[AnyContentAsEmpty.type] =
+    //         FakeRequest().withFlash("warningAnswer" -> "someAnswer")
 
-          val controller = new BaseController {
-            override val controllerComponents: MessagesControllerComponents =
-              application.injector.instanceOf[MessagesControllerComponents]
-          }
+    //       val controller = new BaseController {
+    //         override val controllerComponents: MessagesControllerComponents =
+    //           application.injector.instanceOf[MessagesControllerComponents]
+    //       }
 
-          controller.warningAnswerString(using request) shouldBe Some("someAnswer")
-        }
-      }
-    }
+    //       controller.warningAnswerString(using request) shouldBe Some("someAnswer")
+    //     }
+    //   }
+    // }
+    // END OLD FLASH-BASED WARNING TESTS
 
     "needsUpdateConfirmation" - {
       "should return true when in CheckMode, previous answer was Yes, and new answer is No" in {
