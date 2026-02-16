@@ -61,19 +61,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
 
     "onPageLoad" - {
 
-      "should redirect to PageNotFound when unsubmittedClaimId is missing" in {
-        given application: Application = applicationBuilder().build()
-
-        running(application) {
-          val request = FakeRequest(GET, url)
-          val result  = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.PageNotFoundController.onPageLoad.url)
-        }
-      }
-
-      "should render the page with correct heading when unsubmittedClaimId is present" in {
+      "should render the page with correct heading" in {
         given application: Application = applicationBuilder(sessionDataWithClaimId()).build()
 
         running(application) {

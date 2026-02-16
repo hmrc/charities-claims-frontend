@@ -18,8 +18,7 @@ package controllers
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import controllers.actions.{Actions, GuardAction}
-import models.SessionData
+import controllers.actions.Actions
 import models.requests.DataRequest
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -30,12 +29,11 @@ class ClaimsTaskListController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: ClaimsTaskListView,
   actions: Actions,
-  guard: GuardAction,
   appConfig: FrontendAppConfig
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] =
-    actions.authAndGetData().andThen(guard(SessionData.unsubmittedClaimId.isDefined)) { implicit request =>
+    actions.authAndGetData() { implicit request =>
       Ok(view(ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl)))
     }
 }
