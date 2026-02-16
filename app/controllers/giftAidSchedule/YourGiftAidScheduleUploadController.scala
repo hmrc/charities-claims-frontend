@@ -39,114 +39,129 @@ class YourGiftAidScheduleUploadController @Inject() (
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    request.sessionData.unsubmittedClaimId match {
-      case None =>
-        // if the claim id is not found, we need to redirect to the repayment claim details page
-        Future.successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
-
-      case Some(claimId) =>
-        claimsValidationService
-          .getFileUploadReference(ValidationType.GiftAid, acceptAwaitingUpload = false)
-          .flatMap {
-            case None =>
-              // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
-              Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
-
-            case Some(fileUploadReference) =>
-              claimsValidationConnector
-                .getUploadResult(claimId, fileUploadReference)
-                .map {
-                  case uploadResult: GetUploadResultVeryfying =>
-                    Ok(
-                      view(
-                        claimId = claimId,
-                        uploadResult = uploadResult,
-                        failureDetails = None,
-                        screenLocked = true
-                      )
-                    )
-
-                  case uploadResult: GetUploadResultValidating =>
-                    Ok(
-                      view(
-                        claimId = claimId,
-                        uploadResult = uploadResult,
-                        failureDetails = None,
-                        screenLocked = true
-                      )
-                    )
-
-                  case uploadResult @ GetUploadResultVeryficationFailed(reference, validationType, failureDetails) =>
-                    Ok(
-                      view(
-                        claimId = claimId,
-                        uploadResult = uploadResult,
-                        failureDetails = Some(failureDetails),
-                        screenLocked = false
-                      )
-                    )
-
-                  case uploadResult =>
-                    Ok(
-                      view(
-                        claimId = claimId,
-                        uploadResult = uploadResult,
-                        failureDetails = None,
-                        screenLocked = false
-                      )
-                    )
-                }
-                .recoverWith {
-                  case e: Exception if e.getMessage.contains("CLAIM_REFERENCE_DOES_NOT_EXIST") =>
-                    saveService
-                      .save(request.sessionData.copy(giftAidScheduleFileUploadReference = None))
-                      .map(_ => Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
-
-                }
-          }
-    }
-
-  }
-
-  def onRemove: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    for {
-      _ <- claimsValidationService.deleteGiftAidSchedule
-    } yield Redirect(routes.UploadGiftAidScheduleController.onPageLoad)
-  }
-
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    request.sessionData.unsubmittedClaimId match {
-      case None =>
-        // if the claim id is not found, we need to redirect to the repayment claim details page
-        Future.successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
-
-      case Some(claimId) =>
-        request.sessionData.giftAidScheduleFileUploadReference match {
+  def onPageLoad: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .async { implicit request =>
+        request.sessionData.unsubmittedClaimId match {
           case None =>
-            // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
-            Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+            // if the claim id is not found, we need to redirect to the repayment claim details page
+            Future
+              .successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
 
-          case Some(fileUploadReference) =>
-            claimsValidationConnector
-              .getUploadResult(claimId, fileUploadReference)
+          case Some(claimId) =>
+            claimsValidationService
+              .getFileUploadReference(ValidationType.GiftAid, acceptAwaitingUpload = false)
               .flatMap {
-                case _: GetUploadResultVeryficationFailed =>
-                  claimsValidationService.deleteGiftAidSchedule
-                    .map(_ => Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+                case None =>
+                  // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
+                  Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
 
-                case _: GetUploadResultValidatedGiftAid =>
-                  Future.successful(Redirect(routes.CheckYourGiftAidScheduleController.onPageLoad))
+                case Some(fileUploadReference) =>
+                  claimsValidationConnector
+                    .getUploadResult(claimId, fileUploadReference)
+                    .map {
+                      case uploadResult: GetUploadResultVeryfying =>
+                        Ok(
+                          view(
+                            claimId = claimId,
+                            uploadResult = uploadResult,
+                            failureDetails = None,
+                            screenLocked = true
+                          )
+                        )
 
-                case _: GetUploadResultValidationFailedGiftAid =>
-                  Future.successful(Redirect(routes.ProblemWithGiftAidScheduleController.onPageLoad))
+                      case uploadResult: GetUploadResultValidating =>
+                        Ok(
+                          view(
+                            claimId = claimId,
+                            uploadResult = uploadResult,
+                            failureDetails = None,
+                            screenLocked = true
+                          )
+                        )
 
-                case _ =>
-                  // strange case, but we need to handle it
-                  Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
+                      case uploadResult @ GetUploadResultVeryficationFailed(
+                            reference,
+                            validationType,
+                            failureDetails
+                          ) =>
+                        Ok(
+                          view(
+                            claimId = claimId,
+                            uploadResult = uploadResult,
+                            failureDetails = Some(failureDetails),
+                            screenLocked = false
+                          )
+                        )
+
+                      case uploadResult =>
+                        Ok(
+                          view(
+                            claimId = claimId,
+                            uploadResult = uploadResult,
+                            failureDetails = None,
+                            screenLocked = false
+                          )
+                        )
+                    }
+                    .recoverWith {
+                      case e: Exception if e.getMessage.contains("CLAIM_REFERENCE_DOES_NOT_EXIST") =>
+                        saveService
+                          .save(request.sessionData.copy(giftAidScheduleFileUploadReference = None))
+                          .map(_ => Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+
+                    }
               }
         }
-    }
-  }
+
+      }
+
+  def onRemove: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .async { implicit request =>
+        for {
+          _ <- claimsValidationService.deleteGiftAidSchedule
+        } yield Redirect(routes.UploadGiftAidScheduleController.onPageLoad)
+      }
+
+  def onSubmit: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .async { implicit request =>
+        request.sessionData.unsubmittedClaimId match {
+          case None =>
+            // if the claim id is not found, we need to redirect to the repayment claim details page
+            Future
+              .successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+
+          case Some(claimId) =>
+            request.sessionData.giftAidScheduleFileUploadReference match {
+              case None =>
+                // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
+                Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+
+              case Some(fileUploadReference) =>
+                claimsValidationConnector
+                  .getUploadResult(claimId, fileUploadReference)
+                  .flatMap {
+                    case _: GetUploadResultVeryficationFailed =>
+                      claimsValidationService.deleteGiftAidSchedule
+                        .map(_ => Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+
+                    case _: GetUploadResultValidatedGiftAid =>
+                      Future.successful(Redirect(routes.CheckYourGiftAidScheduleController.onPageLoad))
+
+                    case _: GetUploadResultValidationFailedGiftAid =>
+                      Future.successful(Redirect(routes.ProblemWithGiftAidScheduleController.onPageLoad))
+
+                    case _ =>
+                      // strange case, but we need to handle it
+                      Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
+                  }
+            }
+        }
+      }
 
 }

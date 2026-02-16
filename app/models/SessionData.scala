@@ -130,4 +130,16 @@ object SessionData {
         then sessionData.connectedCharitiesScheduleFileUploadReference
         else None
     )
+
+  def shouldUploadGiftAidSchedule(using session: SessionData): Boolean =
+    RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true)
+
+  def shouldUploadOtherIncomeSchedule(using session: SessionData): Boolean =
+    RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true)
+
+  def shouldUploadCommunityBuildingsSchedule(using session: SessionData): Boolean =
+    RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings.contains(true)
+
+  def shouldUploadConnectedCharitiesSchedule(using session: SessionData): Boolean =
+    RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities.contains(true)
 }

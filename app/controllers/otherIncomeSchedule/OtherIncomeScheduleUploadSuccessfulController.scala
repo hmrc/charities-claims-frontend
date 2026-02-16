@@ -23,6 +23,7 @@ import play.api.mvc.*
 import views.html.OtherIncomeScheduleUploadSuccessfulView
 
 import scala.concurrent.Future
+import models.SessionData
 
 class OtherIncomeScheduleUploadSuccessfulController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -30,13 +31,19 @@ class OtherIncomeScheduleUploadSuccessfulController @Inject() (
   actions: Actions
 ) extends BaseController {
 
-  val onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Ok(view()))
+  val onPageLoad: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .async { implicit request =>
+        Future.successful(Ok(view()))
 
-  }
+      }
 
-  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
-  }
+  val onSubmit: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .async { implicit request =>
+        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      }
 
 }

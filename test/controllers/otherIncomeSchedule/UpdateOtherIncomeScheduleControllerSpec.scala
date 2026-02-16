@@ -31,6 +31,7 @@ import views.html.UpdateOtherIncomeScheduleView
 
 import scala.concurrent.Future
 import services.ClaimsService
+import models.RepaymentClaimDetailsAnswers
 
 class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
@@ -42,8 +43,8 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
   "UpdateOtherIncomeScheduleController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-
-        given application: Application = applicationBuilder()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -64,7 +65,8 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should reload the page with errors when a required field is missing" in {
-        given application: Application = applicationBuilder()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -80,7 +82,8 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should redirect to CheckYourOtherIncomeSchedule screen when no is selected" in {
-        given application: Application = applicationBuilder()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -99,7 +102,10 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should call backend deletion endpoint and redirect to UploadOtherIncomeSchedule when yes is selected" in {
-        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
+        val sessionData =
+          RepaymentClaimDetailsAnswers
+            .setClaimingTaxDeducted(true)
+            .copy(unsubmittedClaimId = Some("test-claim-123"))
 
         (mockClaimsValidationService
           .deleteOtherIncomeSchedule(using _: DataRequest[?], _: HeaderCarrier))
@@ -129,7 +135,10 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should handle case when no OtherIncome upload data is found" in {
-        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
+        val sessionData =
+          RepaymentClaimDetailsAnswers
+            .setClaimingTaxDeducted(true)
+            .copy(unsubmittedClaimId = Some("test-claim-123"))
 
         (mockClaimsValidationService
           .deleteOtherIncomeSchedule(using _: DataRequest[?], _: HeaderCarrier))
@@ -152,7 +161,9 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should handle case when no claimId is in session data" in {
-        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(unsubmittedClaimId = None)
 
         (mockClaimsValidationService
           .deleteOtherIncomeSchedule(using _: DataRequest[?], _: HeaderCarrier))

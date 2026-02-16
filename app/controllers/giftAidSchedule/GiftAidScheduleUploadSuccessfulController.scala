@@ -23,6 +23,7 @@ import views.html.GiftAidScheduleUploadSuccessfulView
 import controllers.actions.Actions
 
 import scala.concurrent.Future
+import models.SessionData
 
 class GiftAidScheduleUploadSuccessfulController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -30,13 +31,15 @@ class GiftAidScheduleUploadSuccessfulController @Inject() (
   actions: Actions
 ) extends BaseController {
 
-  val onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Ok(view()))
+  val onPageLoad: Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule).async { implicit request =>
+      Future.successful(Ok(view()))
 
-  }
+    }
 
-  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
-  }
+  val onSubmit: Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule).async { implicit request =>
+      Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+    }
 
 }

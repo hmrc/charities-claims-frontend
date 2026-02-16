@@ -142,7 +142,7 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad.url
+            controllers.routes.PageNotFoundController.onPageLoad.url
           )
         }
       }

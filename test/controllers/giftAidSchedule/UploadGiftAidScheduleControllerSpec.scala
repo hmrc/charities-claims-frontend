@@ -134,7 +134,7 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad.url
+            controllers.routes.PageNotFoundController.onPageLoad.url
           )
         }
       }
