@@ -276,8 +276,11 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
           .returning(Future.successful(Some(FileUploadReference("ref-123"))))
 
         (mockClaimsValidationService
-          .updateUploadStatus(_: String, _: FileUploadReference)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects("claim-123", FileUploadReference("ref-123"), *, *)
+          .updateUploadStatus(_: String, _: FileUploadReference, _: ValidationType)(using
+            _: DataRequest[?],
+            _: HeaderCarrier
+          ))
+          .expects("claim-123", FileUploadReference("ref-123"), ValidationType.GiftAid, *, *)
           .returning(Future.successful(true))
 
         given application: Application =

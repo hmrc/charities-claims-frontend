@@ -28,6 +28,7 @@ import models.*
 import models.requests.DataRequest
 import services.SaveService
 import controllers.giftAidSchedule.routes
+import models.ValidationType.GiftAid
 
 import scala.concurrent.{ExecutionContext, Future}
 import services.ClaimsValidationService
@@ -138,7 +139,8 @@ class UploadGiftAidScheduleController @Inject() (
           claimsValidationService
             .updateUploadStatus(
               claimId = request.sessionData.unsubmittedClaimId.get,
-              reference = fileUploadReference
+              reference = fileUploadReference,
+              GiftAid
             )
             .map(_ => Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
 

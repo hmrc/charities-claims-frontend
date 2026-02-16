@@ -17,18 +17,135 @@
 package controllers.otherIncomeSchedule
 
 import com.google.inject.Inject
+import connectors.ClaimsValidationConnector
 import controllers.BaseController
 import controllers.actions.Actions
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import controllers.otherIncomeSchedule.routes
+import models.*
+import play.api.mvc.*
+import services.{ClaimsValidationService, SaveService}
+import views.html.YourOtherIncomeScheduleUploadView
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class YourOtherIncomeScheduleUploadController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  actions: Actions
-) extends BaseController {
+  view: YourOtherIncomeScheduleUploadView,
+  actions: Actions,
+  claimsValidationConnector: ClaimsValidationConnector,
+  claimsValidationService: ClaimsValidationService,
+  saveService: SaveService
+)(using ec: ExecutionContext)
+    extends BaseController {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+    request.sessionData.unsubmittedClaimId match {
+      case None =>
+        // if the claim id is not found, we need to redirect to the repayment claim details page
+        Future.successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+
+      case Some(claimId) =>
+        claimsValidationService
+          .getFileUploadReference(ValidationType.OtherIncome, acceptAwaitingUpload = false)
+          .flatMap {
+            case None =>
+              // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
+              Future.successful(Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
+
+            case Some(fileUploadReference) =>
+              claimsValidationConnector
+                .getUploadResult(claimId, fileUploadReference)
+                .map {
+                  case uploadResult: GetUploadResultVeryfying =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = None,
+                        screenLocked = true
+                      )
+                    )
+
+                  case uploadResult: GetUploadResultValidating =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = None,
+                        screenLocked = true
+                      )
+                    )
+
+                  case uploadResult @ GetUploadResultVeryficationFailed(reference, validationType, failureDetails) =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = Some(failureDetails),
+                        screenLocked = false
+                      )
+                    )
+
+                  case uploadResult =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = None,
+                        screenLocked = false
+                      )
+                    )
+                }
+                .recoverWith {
+                  case e: Exception if e.getMessage.contains("CLAIM_REFERENCE_DOES_NOT_EXIST") =>
+                    saveService
+                      .save(request.sessionData.copy(otherIncomeScheduleFileUploadReference = None))
+                      .map(_ => Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
+
+                }
+          }
+    }
+
   }
+
+  def onRemove: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    for {
+      _ <- claimsValidationService.deleteOtherIncomeSchedule
+    } yield Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad)
+  }
+
+  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
+    request.sessionData.unsubmittedClaimId match {
+      case None =>
+        // if the claim id is not found, we need to redirect to the repayment claim details page
+        Future.successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+
+      case Some(claimId) =>
+        request.sessionData.otherIncomeScheduleFileUploadReference match {
+          case None =>
+            // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
+            Future.successful(Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
+
+          case Some(fileUploadReference) =>
+            claimsValidationConnector
+              .getUploadResult(claimId, fileUploadReference)
+              .flatMap {
+                case _: GetUploadResultVeryficationFailed =>
+                  claimsValidationService.deleteOtherIncomeSchedule
+                    .map(_ => Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
+
+                case _: GetUploadResultValidatedOtherIncome =>
+                  Future.successful(Redirect(routes.CheckYourOtherIncomeScheduleController.onPageLoad))
+
+                case _: GetUploadResultValidationFailedOtherIncome =>
+                  Future.successful(Redirect(routes.ProblemWithOtherIncomeScheduleController.onPageLoad))
+
+                case _ =>
+                  // strange case, but we need to handle it
+                  Future.successful(Redirect(routes.YourOtherIncomeScheduleUploadController.onPageLoad))
+              }
+        }
+    }
+  }
+
 }

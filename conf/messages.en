@@ -490,6 +490,14 @@ aboutOtherIncomeSchedule.paragraph.two = You can upload an Other Income schedule
 aboutOtherIncomeSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download an Other Income schedule here (opens in new tab)</a>. You can submit 1 file at a time, and each file can be up to 2.5MB.
 aboutOtherIncomeSchedule.title = About Other Income schedule
 
+#O1.2 - Your Other Income schedule upload
+yourOtherIncomeScheduleUpload.caption = Add Other Income schedule
+yourOtherIncomeScheduleUpload.title = Your Other Income schedule upload
+yourOtherIncomeScheduleUpload.heading = Your Other Income schedule upload
+yourOtherIncomeScheduleUpload.paragraph.one = You can upload your Other Income schedule as a spreadsheet. The selected file must be smaller than 2.5MB.
+yourOtherIncomeScheduleUpload.table.key = Other Income Schedule
+
+
 giftAidScheduleUploadSuccessful.title = Upload successful
 giftAidScheduleUploadSuccessful.message.1 = Upload successful
 giftAidScheduleUploadSuccessful.message.2 = You have successfully attached your Gift Aid schedule.

@@ -284,8 +284,11 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
           .returning(Future.successful(Some(FileUploadReference("ref-123"))))
 
         (mockClaimsValidationService
-          .updateUploadStatus(_: String, _: FileUploadReference)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects("claim-123", FileUploadReference("ref-123"), *, *)
+          .updateUploadStatus(_: String, _: FileUploadReference, _: ValidationType)(using
+            _: DataRequest[?],
+            _: HeaderCarrier
+          ))
+          .expects("claim-123", FileUploadReference("ref-123"), ValidationType.OtherIncome, *, *)
           .returning(Future.successful(true))
 
         given application: Application =

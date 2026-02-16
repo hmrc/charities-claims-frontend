@@ -34,7 +34,7 @@ trait ClaimsValidationService {
 
   def createUploadTracking(claimId: String, request: CreateUploadTrackingRequest)(using HeaderCarrier): Future[Boolean]
   def getUploadSummary(claimId: String)(using HeaderCarrier): Future[GetUploadSummaryResponse]
-  def updateUploadStatus(claimId: String, reference: FileUploadReference)(using
+  def updateUploadStatus(claimId: String, reference: FileUploadReference, validationType: ValidationType)(using
     request: DataRequest[?],
     hc: HeaderCarrier
   ): Future[Boolean]
@@ -65,12 +65,23 @@ class ClaimsValidationServiceImpl @Inject() (
   override def getUploadSummary(claimId: String)(using HeaderCarrier): Future[GetUploadSummaryResponse] =
     claimsValidationConnector.getUploadSummary(claimId)
 
-  override def updateUploadStatus(claimId: String, reference: FileUploadReference)(using
+  override def updateUploadStatus(claimId: String, reference: FileUploadReference, validationType: ValidationType)(using
     request: DataRequest[?],
     hc: HeaderCarrier
   ): Future[Boolean] =
     saveService
-      .save(request.sessionData.copy(giftAidScheduleUpscanInitialization = None))
+      .save(validationType match {
+        case ValidationType.GiftAid            =>
+          request.sessionData.copy(giftAidScheduleUpscanInitialization = None)
+        case ValidationType.OtherIncome        =>
+          request.sessionData.copy(otherIncomeScheduleUpscanInitialization = None)
+        case ValidationType.CommunityBuildings =>
+          request.sessionData
+            .copy(communityBuildingsScheduleUpscanInitialization = None)
+        case ValidationType.ConnectedCharities =>
+          request.sessionData
+            .copy(connectedCharitiesScheduleUpscanInitialization = None)
+      })
       .flatMap { _ =>
         claimsValidationConnector.updateUploadStatus(claimId, reference, FileStatus.VERIFYING)
       }
