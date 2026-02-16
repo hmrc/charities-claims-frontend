@@ -42,15 +42,41 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          // redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
-          redirectLocation(result) shouldEqual Some(routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+        }
+      }
+
+      "should render Page Not Found if setClaimingUnderGiftAidSmallDonationsScheme is false & setClaimingDonationsCollectedInCommunityBuildings is true" in {
+        val sessionDataGASDS =
+          RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData      =
+          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, Some(true))(using
+            sessionDataGASDS
+          )
+        val customConfig     = Map(
+          "urls.communityBuildingsScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).configure(customConfig).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
         }
       }
 
       "should use the correct configured communityBuildingsScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl in the message" in {
-        val sessionData  =
-          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-        val customConfig = Map(
+        val sessionDataGASDS =
+          RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+        val sessionData      =
+          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))(using
+            sessionDataGASDS
+          )
+        val customConfig     = Map(
           "urls.communityBuildingsScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/charity-repayment-claim"
         )
 

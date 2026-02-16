@@ -51,7 +51,9 @@ class AboutCommunityBuildingsScheduleController @Inject() (
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings.contains(true) then {
+    if RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
+        .contains(true) && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
+    then {
       if request.sessionData.communityBuildingsScheduleCompleted
       then {
         Future.successful(Redirect(routes.AboutCommunityBuildingsScheduleController.onPageLoad))
@@ -61,8 +63,7 @@ class AboutCommunityBuildingsScheduleController @Inject() (
         Future.successful(Ok(view(appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl)))
       }
     } else {
-      Future.successful(Redirect(routes.AboutCommunityBuildingsScheduleController.onPageLoad))
-      // Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+      Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
     }
   }
 
