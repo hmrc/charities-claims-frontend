@@ -42,8 +42,9 @@
     <p class="govuk-body">@messages("yourGiftAidScheduleUpload.paragraph.one")</p>
 
     @formHelper(action = routes.YourGiftAidScheduleUploadController.onSubmit) {
+        <p class="govuk-body govuk-!-display-none" id="refreshPageProgress"><a href="#" class="govuk-link">Refresh page to update file upload progress</a></p>
         <dl class="govuk-summary-list govuk-summary-list--long-key">
-        
+
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     @messages("yourGiftAidScheduleUpload.file")

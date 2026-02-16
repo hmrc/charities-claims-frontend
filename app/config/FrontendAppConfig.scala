@@ -45,6 +45,8 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
     config.get[String]("urls.otherIncomeScheduleSpreadsheetGuidancesUrl")
   lazy val giftAidScheduleSpreadsheetGuidanceUrl: String                   =
     config.get[String]("urls.giftAidScheduleSpreadsheetGuidanceUrl")
+  lazy val communityBuildingsScheduleSpreadsheetGuidanceUrl: String        =
+    config.get[String]("urls.communityBuildingsScheduleSpreadsheetGuidanceUrl")
 
   lazy val enableLanguageSwitching: Boolean = config.get[Boolean]("enableLanguageSwitching")
   lazy val timeoutInSeconds: Int            = config.get[Int]("timeout-dialog.timeout")
