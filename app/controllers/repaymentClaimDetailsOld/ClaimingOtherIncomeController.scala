@@ -43,8 +43,6 @@ class ClaimingOtherIncomeController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswersOld.getClaimingTaxDeducted
-    // OLD FLASH-BASED WARNING - COMMENTED OUT (replaced by WRN3 flow)
-    // Ok(view(form.withDefault(warningAnswerBoolean.orElse(previousAnswer)), mode, isWarning))
     Ok(view(form.withDefault(previousAnswer), mode))
   }
 
@@ -55,14 +53,6 @@ class ClaimingOtherIncomeController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
-            // OLD FLASH-BASED WARNING - COMMENTED OUT (replaced by WRN3 flow)
-            // if hadNoWarningShown && RepaymentClaimDetailsAnswersOld.shouldWarnAboutChangingClaimingTaxDeducted(value)
-            // then
-            //   Future.successful(
-            //     Redirect(routes.ClaimingOtherIncomeController.onPageLoad(mode))
-            //       .withWarning(value.toString)
-            //   )
-            // else
             saveService
               .save(RepaymentClaimDetailsAnswersOld.setClaimingTaxDeducted(value))
               .map { _ =>

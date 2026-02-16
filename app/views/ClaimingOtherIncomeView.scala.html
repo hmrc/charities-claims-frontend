@@ -16,10 +16,6 @@
 
 @import controllers.repaymentclaimdetailsold.routes
 
-@* OLD FLASH-BASED WARNING IMPORTS - REMOVED (replaced by WRN3 flow)
-   Previously imported: WarningBanner, WarningParameter
-*@
-
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
@@ -28,10 +24,7 @@
     govukButton: GovukButton
 )
 
-@* OLD FLASH-BASED WARNING - warningBanner and warningParameter were injected here (replaced by WRN3 flow) *@
-
 @(form: Form[?], mode: Mode)(implicit request: Request[?], messages: Messages)
-@* OLD: @(form: Form[?], mode: Mode, isWarning: Boolean = false)(implicit request: Request[?], messages: Messages) *@
 
 @layout(
     pageTitle = title(form, messages("claimingOtherIncome.title"))
@@ -39,12 +32,6 @@
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
-
-    @* OLD FLASH-BASED WARNING - COMMENTED OUT (replaced by WRN3 flow)
-    @if(isWarning) {
-        @warningBanner("claimingOtherIncome.warning")
-    }
-    *@
 
     <h1 class="govuk-heading-l">@messages("claimingOtherIncome.heading")</h1>
 
@@ -64,10 +51,6 @@
                 LegendViewModel(messages("claimingOtherIncome.heading")).visuallyHidden
             )
         )
-
-        @* OLD FLASH-BASED WARNING - COMMENTED OUT
-        @warningParameter()
-        *@
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
     }

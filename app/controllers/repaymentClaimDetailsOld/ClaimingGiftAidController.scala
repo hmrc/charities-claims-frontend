@@ -45,8 +45,6 @@ class ClaimingGiftAidController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
     val previousAnswer = RepaymentClaimDetailsAnswersOld.getClaimingGiftAid
-    // OLD FLASH-BASED WARNING - COMMENTED OUT (replaced by WRN3 flow)
-    // Ok(view(form.withDefault(warningAnswerBoolean.orElse(previousAnswer)), mode, isWarning))
     Ok(view(form.withDefault(previousAnswer), mode))
   }
 
@@ -57,17 +55,7 @@ class ClaimingGiftAidController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           claimingGiftAid =>
-            // OLD FLASH-BASED WARNING - COMMENTED OUT (replaced by WRN3 flow)
-            // if hadNoWarningShown && RepaymentClaimDetailsAnswersOld
-            //     .shouldWarnAboutChangingClaimingGiftAid(claimingGiftAid)
-            // then
-            //   Future.successful(
-            //     Redirect(routes.ClaimingGiftAidController.onPageLoad(mode))
-            //       .withWarning(claimingGiftAid.toString)
-            //   )
-            // else
             claimsValidationService.deleteGiftAidSchedule
-              // OLD: .whenA(warningWasShown && !claimingGiftAid)
               .whenA(!claimingGiftAid)
               .flatMap { _ =>
                 saveService

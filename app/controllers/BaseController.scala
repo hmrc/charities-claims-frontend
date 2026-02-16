@@ -22,7 +22,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import models.requests.DataRequest
 import play.api.data.Form
 import play.api.mvc.Request
-// import play.api.mvc.Result
 import play.api.mvc.AnyContent
 import models.Mode
 import models.Mode.CheckMode
@@ -36,28 +35,6 @@ trait BaseController extends FrontendBaseController with I18nSupport {
     def withDefault(optValue: Option[A]): Form[A] =
       optValue.map(form.fill).getOrElse(form)
   }
-
-  // OLD FLASH-BASED WARNING CODE - COMMENTED OUT (replaced by WRN3 flow)
-  // def isWarning(using request: Request[AnyContent]): Boolean =
-  //   request.flash.get("warning").contains("true")
-
-  // def warningAnswerBoolean(using request: Request[AnyContent]): Option[Boolean] =
-  //   request.flash.get("warningAnswer").flatMap(_.toBooleanOption)
-
-  // def warningAnswerString(using request: Request[AnyContent]): Option[String] =
-  //   request.flash.get("warningAnswer")
-
-  // def hadNoWarningShown(using request: Request[AnyContent]): Boolean =
-  //   !request.body.asFormUrlEncoded.flatMap(_.get("warningShown").flatMap(_.headOption)).contains("true")
-
-  // def warningWasShown(using request: Request[AnyContent]): Boolean =
-  //   !hadNoWarningShown
-
-  // extension (result: Result) {
-  //   def withWarning(answer: String): Result =
-  //     result.flashing("warning" -> "true", "warningAnswer" -> answer)
-  // }
-  // END OLD FLASH-BASED WARNING CODE
 
   def needsUpdateConfirmation(
     mode: Mode,
