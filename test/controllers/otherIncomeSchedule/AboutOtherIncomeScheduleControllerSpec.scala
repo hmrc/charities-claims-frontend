@@ -86,7 +86,8 @@ class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should redirect to the next page" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =

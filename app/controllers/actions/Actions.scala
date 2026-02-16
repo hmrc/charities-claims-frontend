@@ -19,14 +19,22 @@ package controllers.actions
 import com.google.inject.Inject
 import models.requests.DataRequest
 import play.api.mvc.{ActionBuilder, AnyContent, DefaultActionBuilder}
+import models.SessionData
 
 class Actions @Inject() (
   actionBuilder: DefaultActionBuilder,
   identify: AuthorisedAction,
-  getData: DataRetrievalAction
+  getData: DataRetrievalAction,
+  guard: GuardAction
 ) {
   def authAndGetData(): ActionBuilder[DataRequest, AnyContent] =
     actionBuilder
       .andThen(identify)
       .andThen(getData)
+
+  def authAndGetDataWithGuard(predicate: SessionData ?=> Boolean): ActionBuilder[DataRequest, AnyContent] =
+    actionBuilder
+      .andThen(identify)
+      .andThen(getData)
+      .andThen(guard(predicate))
 }

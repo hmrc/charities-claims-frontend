@@ -32,7 +32,7 @@ class OtherIncomeScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
 
       "should render page successfully" in {
         val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingTaxDeducted(false)
+          .setClaimingTaxDeducted(true)
           .copy(
             otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
             otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
@@ -55,7 +55,8 @@ class OtherIncomeScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should redirect to the next page" in {
-        val application: Application = applicationBuilder().build()
+        val sessionData              = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        val application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           val request = FakeRequest(POST, routes.OtherIncomeScheduleUploadSuccessfulController.onSubmit.url)
