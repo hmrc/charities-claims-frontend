@@ -59,8 +59,7 @@ class DeleteOtherIncomeScheduleController @Inject() (
                   Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
                 }
               } else {
-                // FIXME: replace with proper route
-                Future.successful(Redirect(Call("GET", "/problem-with-other-income-schedule")))
+                Future.successful(Redirect(routes.ProblemWithOtherIncomeScheduleController.onPageLoad))
               }
           )
       }
