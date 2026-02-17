@@ -99,7 +99,7 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad.url
+            controllers.routes.PageNotFoundController.onPageLoad.url
           )
         }
       }
@@ -303,7 +303,10 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "unsubmitted Claim ID is not defined" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        val sessionData =
+          RepaymentClaimDetailsAnswers
+            .setClaimingTaxDeducted(true)
+
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
@@ -314,14 +317,17 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad.url
+            controllers.routes.PageNotFoundController.onPageLoad.url
           )
         }
       }
 
       "unsubmitted Claim ID & file reference are defined" in {
         val sessionData                =
-          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).copy(unsubmittedClaimId = Some("test-claim-123"))
+          RepaymentClaimDetailsAnswers
+            .setClaimingTaxDeducted(true)
+            .and(SessionData.setUnsubmittedClaimId("claim-123"))
+            .copy(unsubmittedClaimId = Some("test-claim-123"))
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {

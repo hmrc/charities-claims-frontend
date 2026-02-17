@@ -36,6 +36,7 @@ class GiftAidScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
         val sessionData = RepaymentClaimDetailsAnswers
           .setClaimingGiftAid(true)
           .copy(
+            unsubmittedClaimId = Some("claim-123"),
             giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
             giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
           )
@@ -60,6 +61,7 @@ class GiftAidScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
         val sessionData              = RepaymentClaimDetailsAnswers
           .setClaimingGiftAid(true)
           .copy(
+            unsubmittedClaimId = Some("claim-123"),
             giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference"))
           )
         val application: Application = applicationBuilder(sessionData = sessionData).build()

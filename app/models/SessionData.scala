@@ -128,15 +128,22 @@ object SessionData {
         else None
     )
 
+  def setUnsubmittedClaimId(unsubmittedClaimId: String)(using session: SessionData): SessionData =
+    session.copy(unsubmittedClaimId = Some(unsubmittedClaimId))
+
   def shouldUploadGiftAidSchedule(using session: SessionData): Boolean =
     RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true)
+      && session.unsubmittedClaimId.isDefined
 
   def shouldUploadOtherIncomeSchedule(using session: SessionData): Boolean =
     RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true)
+      && session.unsubmittedClaimId.isDefined
 
   def shouldUploadCommunityBuildingsSchedule(using session: SessionData): Boolean =
     RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings.contains(true)
+      && session.unsubmittedClaimId.isDefined
 
   def shouldUploadConnectedCharitiesSchedule(using session: SessionData): Boolean =
     RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities.contains(true)
+      && session.unsubmittedClaimId.isDefined
 }
