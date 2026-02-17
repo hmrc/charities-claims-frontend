@@ -54,11 +54,26 @@ class ProblemUpdatingGiftAidScheduleRejectedControllerSpec extends ControllerSpe
         }
       }
 
-      "should refuse when schedule checkbox is not selected" in {
+      "should decline when schedule checkbox is not selected" in {
         val sessionData =
           RepaymentClaimDetailsAnswers
             .setClaimingGiftAid(false)
             .and(SessionData.setUnsubmittedClaimId("claim-123"))
+
+        val application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.ProblemUpdatingGiftAidScheduleRejectedController.onPageLoad.url)
+          val result  = route(application, request).value
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+        }
+      }
+
+      "should decline when claim id is not in session" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers
+            .setClaimingGiftAid(true)
 
         val application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -87,11 +102,26 @@ class ProblemUpdatingGiftAidScheduleRejectedControllerSpec extends ControllerSpe
         }
       }
 
-      "should refuse when schedule checkbox is not selected" in {
+      "should decline when schedule checkbox is not selected" in {
         val sessionData =
           RepaymentClaimDetailsAnswers
             .setClaimingGiftAid(false)
             .and(SessionData.setUnsubmittedClaimId("claim-123"))
+
+        val application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(POST, routes.ProblemUpdatingGiftAidScheduleRejectedController.onSubmit.url)
+          val result  = route(application, request).value
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+        }
+      }
+
+      "should decline when claim id is not in session" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers
+            .setClaimingGiftAid(true)
 
         val application: Application = applicationBuilder(sessionData = sessionData).build()
 
