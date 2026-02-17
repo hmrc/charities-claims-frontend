@@ -39,7 +39,6 @@ import controllers.actions.Actions
 import controllers.communityBuildingsSchedule.routes
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.AboutCommunityBuildingsScheduleView
-import models.RepaymentClaimDetailsAnswers
 
 import scala.concurrent.Future
 import models.SessionData
@@ -53,18 +52,13 @@ class AboutCommunityBuildingsScheduleController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
-      if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
+      if request.sessionData.communityBuildingsScheduleCompleted
       then {
-        if request.sessionData.communityBuildingsScheduleCompleted
-        then {
-          Future.successful(Redirect(routes.AboutCommunityBuildingsScheduleController.onPageLoad))
-          // TODO when available
-          // Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
-        } else {
-          Future.successful(Ok(view(appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl)))
-        }
+        Future.successful(Redirect(routes.AboutCommunityBuildingsScheduleController.onPageLoad))
+        // TODO when available
+        // Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
       } else {
-        Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+        Future.successful(Ok(view(appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl)))
       }
     }
 

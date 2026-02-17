@@ -21,6 +21,7 @@ import models.RepaymentClaimDetailsAnswers
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import models.SessionData
 
 class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
   "AboutCommunityBuildingsScheduleController" - {
@@ -71,7 +72,9 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
 
       "should use the correct configured communityBuildingsScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl in the message" in {
         val sessionDataGASDS =
-          RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+          RepaymentClaimDetailsAnswers
+            .setClaimingUnderGiftAidSmallDonationsScheme(true)
+            .and(SessionData.setUnsubmittedClaimId("claim-123"))
         val sessionData      =
           RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))(using
             sessionDataGASDS
@@ -98,6 +101,7 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
       "should redirect to the next page if the communityBuildingsScheduleCompleted is true" in {
         val sessionDataDonations = RepaymentClaimDetailsAnswers
           .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
+          .and(SessionData.setUnsubmittedClaimId("claim-123"))
           .copy(communityBuildingsScheduleCompleted = true)
 
         val sessionData = RepaymentClaimDetailsAnswers
@@ -122,6 +126,7 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
       "should redirect to the next page" in {
         val sessionDataDonations       = RepaymentClaimDetailsAnswers
           .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
+          .and(SessionData.setUnsubmittedClaimId("claim-123"))
           .copy(communityBuildingsScheduleCompleted = true)
         val sessionData                = RepaymentClaimDetailsAnswers
           .setClaimingUnderGiftAidSmallDonationsScheme(true)(using sessionDataDonations)
