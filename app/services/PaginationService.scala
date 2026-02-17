@@ -25,13 +25,19 @@ case class PaginationConfig(
   maxVisiblePages: Int = 5
 )
 
+trait PaginationStatus {
+  val totalRecords: Int
+  val currentPage: Int
+  val totalPages: Int
+}
+
 case class DonationsPaginationResult(
   paginatedData: Seq[Donation],
   paginationViewModel: PaginationViewModel,
   totalRecords: Int,
   currentPage: Int,
   totalPages: Int
-)
+) extends PaginationStatus
 
 case class OtherIncomesPaginationResult(
   paginatedData: Seq[OtherIncome],
@@ -39,7 +45,7 @@ case class OtherIncomesPaginationResult(
   totalRecords: Int,
   currentPage: Int,
   totalPages: Int
-)
+) extends PaginationStatus
 
 case class ValidationErrorsPaginationResult(
   paginatedData: Seq[ValidationError],
@@ -47,7 +53,7 @@ case class ValidationErrorsPaginationResult(
   totalRecords: Int,
   currentPage: Int,
   totalPages: Int
-)
+) extends PaginationStatus
 
 object PaginationService {
 

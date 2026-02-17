@@ -44,7 +44,8 @@ class DataRetrievalActionSpec extends BaseSpec {
       val mockClaimsConnector = mock[ClaimsConnector]
       val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
 
-      val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+      val sessionData =
+        RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
 
       (mockSessionCache
         .get()(using _: HeaderCarrier))
@@ -150,7 +151,8 @@ class DataRetrievalActionSpec extends BaseSpec {
       val mockClaimsConnector = mock[ClaimsConnector]
       val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
 
-      val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+      val sessionData =
+        RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
 
       (mockSessionCache
         .get()(using _: HeaderCarrier))

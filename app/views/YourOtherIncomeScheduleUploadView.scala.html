@@ -71,6 +71,6 @@
         <div></div>
         <div></div>
 
-        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+        @if(screenLocked) { @govukButton(ButtonViewModel(Text(messages("site.continue"))).disabled()) } else { @govukButton(ButtonViewModel(Text(messages("site.continue")))) }
     }
 }

@@ -18,6 +18,7 @@ package views
 
 import play.api.i18n.Messages
 import play.api.data.Form
+import services.PaginationStatus
 
 object ViewUtils {
 
@@ -34,6 +35,35 @@ object ViewUtils {
       title = s"${if (error.nonEmpty) messages("error.browser.title.prefix") + " " else ""}${messages(title)}",
       section = section
     )
+
+  def titleWithPagination(
+    form: Form[?],
+    title: String,
+    pagination: PaginationStatus
+  )(implicit
+    messages: Messages
+  ): String =
+    titleNoForm(
+      title = s"${errorPrefix(form)} ${messages(title)}${paginationSuffix(pagination)}",
+      section = None
+    )
+
+  def titleWithPagination(
+    title: String,
+    pagination: PaginationStatus
+  )(implicit
+    messages: Messages
+  ): String =
+    titleNoForm(
+      title = s"${messages(title)}${paginationSuffix(pagination)}",
+      section = None
+    )
+
+  def paginationSuffix(pagination: PaginationStatus)(implicit messages: Messages): String =
+    if (pagination.totalPages > 1)
+      s" (${messages("site.pagination.page")} ${pagination.currentPage} ${messages("site.pagination.of")} ${pagination.totalPages})"
+    else
+      ""
 
   def titleNoForm(title: String, section: Option[String] = None)(implicit messages: Messages): String =
     s"${messages(title)} - ${section.fold("")(messages(_) + " - ")}${messages("service.title")} - ${messages("site.govuk")}"

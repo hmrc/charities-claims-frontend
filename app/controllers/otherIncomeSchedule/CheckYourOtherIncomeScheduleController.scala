@@ -60,7 +60,8 @@ class CheckYourOtherIncomeScheduleController @Inject() (
                 form = form,
                 otherIncomeScheduleData = otherIncomeScheduleData,
                 otherIncomes = paginationResult.paginatedData,
-                paginationViewModel = paginationResult.paginationViewModel
+                paginationViewModel = paginationResult.paginationViewModel,
+                paginationStatus = paginationResult
               )
             )
           }
@@ -88,7 +89,8 @@ class CheckYourOtherIncomeScheduleController @Inject() (
                         form = formWithErrors,
                         otherIncomeScheduleData = otherIncomeScheduleData,
                         otherIncomes = paginationResult.paginatedData,
-                        paginationViewModel = paginationResult.paginationViewModel
+                        paginationViewModel = paginationResult.paginationViewModel,
+                        paginationStatus = paginationResult
                       )
                     )
                   )
