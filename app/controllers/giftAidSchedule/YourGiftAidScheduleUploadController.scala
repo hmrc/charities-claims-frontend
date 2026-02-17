@@ -146,9 +146,20 @@ class YourGiftAidScheduleUploadController @Inject() (
                 claimsValidationConnector
                   .getUploadResult(claimId, fileUploadReference)
                   .flatMap {
-                    case _: GetUploadResultVeryficationFailed =>
+                    case failure: GetUploadResultVeryficationFailed =>
                       claimsValidationService.deleteGiftAidSchedule
-                        .map(_ => Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+                        .map(_ =>
+                          Redirect {
+                            failure.failureDetails.failureReason match {
+                              case FailureReason.REJECTED   =>
+                                routes.ProblemUpdatingGiftAidScheduleRejectedController.onPageLoad
+                              case FailureReason.QUARANTINE =>
+                                routes.UploadGiftAidScheduleController.onPageLoad // TODO: Add quarantine page
+                              case _                        =>
+                                routes.UploadGiftAidScheduleController.onPageLoad // TODO: Add other failure reasons page
+                            }
+                          }
+                        )
 
                     case _: GetUploadResultValidatedGiftAid =>
                       Future.successful(Redirect(routes.CheckYourGiftAidScheduleController.onPageLoad))

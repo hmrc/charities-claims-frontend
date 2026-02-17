@@ -528,8 +528,7 @@ class GetUploadResultResponseSpec extends BaseSpec {
         val result = GetUploadResultVeryficationFailed(
           reference = FileUploadReference("test-ref-123"),
           validationType = ValidationType.CommunityBuildings,
-          failureDetails =
-            GetUploadResultFailureDetails(failureReason = "test-failure-reason", message = "test-message")
+          failureDetails = GetUploadResultFailureDetails(failureReason = FailureReason.OTHER, message = "test-message")
         )
         validateReadingAndWriting(result)
       }
