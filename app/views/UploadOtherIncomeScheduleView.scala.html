@@ -41,7 +41,7 @@
         @govukErrorSummary(ErrorSummary(
             errorList = errorCode.map(error => ErrorLink(
                 href = Some(s"#file"),
-                content = Text(messages(s"uploadGiftAidSchedule.error.file-upload.$error"))
+                content = Text(messages(s"uploadOtherIncomeSchedule.error.file-upload.$error"))
             )).toList,
             title = Text(messages("error.summary.title"))
         ))
@@ -79,7 +79,7 @@
                         "data-msg-filesize" -> messages("uploadOtherIncomeSchedule.error.file-upload.invalid-size-large"),
                         "data-msg-accept" -> messages("uploadOtherIncomeSchedule.error.file-upload.other", allowedFileTypesHint)
                     ),
-                    errorMessage = errorCode.map(error => ErrorMessage(content = Text(messages(s"uploadGiftAidSchedule.error.file-upload.$error"))))
+                    errorMessage = errorCode.map(error => ErrorMessage(content = Text(messages(s"uploadOtherIncomeSchedule.error.file-upload.$error"))))
                 )
             )
 

@@ -26,6 +26,7 @@ import services.ClaimsValidationService
 import views.html.DeleteGiftAidScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
+import models.SessionData
 
 class DeleteGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -38,23 +39,27 @@ class DeleteGiftAidScheduleController @Inject() (
 
   val form: Form[Boolean] = formProvider("deleteGiftAidSchedule.error.required")
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(form))
-  }
+  def onPageLoad: Action[AnyContent] = actions
+    .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule) { implicit request =>
+      Ok(view(form))
+    }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          if value then {
-            claimsValidationService.deleteGiftAidSchedule.map { _ =>
-              Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
-            }
-          } else {
-            Future.successful(Redirect(routes.ProblemWithGiftAidScheduleController.onPageLoad))
-          }
-      )
-  }
+  def onSubmit: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .async { implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+            value =>
+              if value then {
+                claimsValidationService.deleteGiftAidSchedule.map { _ =>
+                  Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
+                }
+              } else {
+                Future.successful(Redirect(routes.ProblemWithGiftAidScheduleController.onPageLoad))
+              }
+          )
+      }
 }
