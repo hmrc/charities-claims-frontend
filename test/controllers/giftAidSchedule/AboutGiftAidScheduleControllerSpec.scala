@@ -31,7 +31,7 @@ class AboutGiftAidScheduleControllerSpec extends ControllerSpec {
       "should render Page Not Found if setClaimingGiftAid is false" in {
         val sessionData                = RepaymentClaimDetailsAnswers.setClaimingGiftAid(false)
         val customConfig               = Map(
-          "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
+          "urls.giftAidScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/charity-repayment-claim"
         )
         given application: Application = applicationBuilder(sessionData = sessionData).configure(customConfig).build()
 
@@ -51,7 +51,7 @@ class AboutGiftAidScheduleControllerSpec extends ControllerSpec {
           .setClaimingGiftAid(true)
           .and(SessionData.setUnsubmittedClaimId("claim-123"))
         val customConfig = Map(
-          "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
+          "urls.giftAidScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/charity-repayment-claim"
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData)
