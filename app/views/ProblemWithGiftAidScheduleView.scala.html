@@ -19,6 +19,7 @@
 @import models.*
 @import views.html.components.*
 @import viewmodels.govuk.PaginationFluency.*
+@import services.PaginationStatus
 
 @this(
     layout: templates.Layout,
@@ -32,11 +33,12 @@
     claimId: String,
     errors: Seq[ValidationError],
     paginationViewModel: PaginationViewModel,
+    paginationStatus: PaginationStatus,
     giftAidScheduleSpreadsheetGuidanceUrl: String
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleNoForm(messages("problemWithGiftAidSchedule.title")), 
+    pageTitle = titleWithPagination(messages("problemWithGiftAidSchedule.title"), paginationStatus), 
     showBackLink = true
 ) {
 

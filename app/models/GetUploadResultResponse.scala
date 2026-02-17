@@ -47,8 +47,21 @@ object GetUploadResultVeryfying {
   given Format[GetUploadResultVeryfying] = Json.format[GetUploadResultVeryfying]
 }
 
+enum FailureReason {
+  case REJECTED
+  case QUARANTINE
+  case OTHER
+}
+
+object FailureReason extends Enumerable.Implicits {
+  given Enumerable[FailureReason] =
+    Enumerable[FailureReason](str =>
+      scala.util.Try(FailureReason.valueOf(str)).toOption.orElse(Some(FailureReason.OTHER))
+    )
+}
+
 case class GetUploadResultFailureDetails(
-  failureReason: String,
+  failureReason: FailureReason,
   message: String
 )
 

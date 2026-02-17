@@ -62,7 +62,8 @@ class CheckYourGiftAidScheduleController @Inject() (
                 form = form,
                 giftAidScheduleData = giftAidScheduleData,
                 donations = paginationResult.paginatedData,
-                paginationViewModel = paginationResult.paginationViewModel
+                paginationViewModel = paginationResult.paginationViewModel,
+                paginationStatus = paginationResult
               )
             )
           }
@@ -90,7 +91,8 @@ class CheckYourGiftAidScheduleController @Inject() (
                         form = formWithErrors,
                         giftAidScheduleData = giftAidScheduleData,
                         donations = paginationResult.paginatedData,
-                        paginationViewModel = paginationResult.paginationViewModel
+                        paginationViewModel = paginationResult.paginationViewModel,
+                        paginationStatus = paginationResult
                       )
                     )
                   )
