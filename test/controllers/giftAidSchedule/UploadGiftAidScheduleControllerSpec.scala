@@ -140,7 +140,9 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
       }
 
       "should render Page Not Found if setClaimingGiftAid is true && unsubmittedClaimId is None" in {
-        val sessionData  = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+
         val customConfig = Map(
           "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
         )
@@ -155,7 +157,7 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad.url
+            controllers.routes.PageNotFoundController.onPageLoad.url
           )
         }
       }

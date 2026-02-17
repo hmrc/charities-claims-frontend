@@ -22,6 +22,7 @@ import models.RepaymentClaimDetailsAnswers
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import models.SessionData
 
 class AboutGiftAidScheduleControllerSpec extends ControllerSpec {
   "AboutGiftAidScheduleController" - {
@@ -46,7 +47,9 @@ class AboutGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should use the correct configured giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl in the message" in {
-        val sessionData  = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
+        val sessionData  = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .and(SessionData.setUnsubmittedClaimId("claim-123"))
         val customConfig = Map(
           "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
         )
@@ -68,7 +71,10 @@ class AboutGiftAidScheduleControllerSpec extends ControllerSpec {
       "should redirect to the next page if the giftAidScheduleCompleted is true" in {
         val sessionData = RepaymentClaimDetailsAnswers
           .setClaimingGiftAid(true)
-          .copy(giftAidScheduleCompleted = true)
+          .copy(
+            unsubmittedClaimId = Some("claim-123"),
+            giftAidScheduleCompleted = true
+          )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
         running(application) {
@@ -84,7 +90,9 @@ class AboutGiftAidScheduleControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should redirect to the next page" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
+        val sessionData                = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .and(SessionData.setUnsubmittedClaimId("claim-123"))
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {

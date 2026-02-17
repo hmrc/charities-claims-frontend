@@ -40,7 +40,8 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
   "DeleteOtherIncomeScheduleController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        val sessionData                =
+          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -62,7 +63,8 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should reload the page with errors when a required field is missing" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        val sessionData                =
+          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -80,7 +82,8 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
       // TODO: Update test when G2 screen route is completed (currently redirects to placeholder /add-schedule)
       "should redirect to G2 screen when no is selected" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        val sessionData                =
+          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -156,13 +159,6 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
           .setClaimingTaxDeducted(true)
           .copy(unsubmittedClaimId = None)
 
-        (mockClaimsValidationService
-          .deleteOtherIncomeSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(
-            Future.failed(new RuntimeException("No claimId found when attempting to delete OtherIncome schedule"))
-          )
-
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -173,8 +169,10 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
-
-          a[RuntimeException] should be thrownBy result.futureValue
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(
+            controllers.routes.PageNotFoundController.onPageLoad.url
+          )
         }
       }
     }
