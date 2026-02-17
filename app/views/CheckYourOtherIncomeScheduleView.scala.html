@@ -19,6 +19,7 @@
 @import views.html.components.*
 @import viewmodels.govuk.PaginationFluency.*
 @import utils.FormatUtils.*
+@import services.PaginationStatus
 
 @this(
     layout: templates.Layout,
@@ -35,11 +36,12 @@
     form: Form[?],
     otherIncomeScheduleData: OtherIncomeScheduleData,
     otherIncomes: Seq[OtherIncome],
-    paginationViewModel: PaginationViewModel
+    paginationViewModel: PaginationViewModel,
+    paginationStatus: PaginationStatus
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleNoForm(messages("checkYourOtherIncomeSchedule.title")),
+    pageTitle = titleWithPagination(form, messages("checkYourOtherIncomeSchedule.title"), paginationStatus),
     showBackLink = true
 ) {
 

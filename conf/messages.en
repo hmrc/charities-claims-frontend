@@ -490,6 +490,8 @@ site.pagination.landmark = Pagination
 site.pagination.next = Next
 site.pagination.previous = Previous
 site.yes = Yes
+site.pagination.page = page
+site.pagination.of = of
 
 updateGiftAidSchedule.error.required = Select ‘Yes’ if you want to update this Gift Aid schedule
 updateGiftAidSchedule.heading = Are you sure you want to update this Gift Aid schedule?
