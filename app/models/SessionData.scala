@@ -141,6 +141,7 @@ object SessionData {
 
   def shouldUploadCommunityBuildingsSchedule(using session: SessionData): Boolean =
     RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings.contains(true)
+      && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
       && session.unsubmittedClaimId.isDefined
 
   def shouldUploadConnectedCharitiesSchedule(using session: SessionData): Boolean =
