@@ -96,7 +96,9 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
             giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
           )
 
-        val result = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
+        val result = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .and(SessionData.setUnsubmittedClaimId("claim-123"))
 
         result.giftAidScheduleFileUploadReference                 shouldBe Some(FileUploadReference("test-file-upload-reference"))
         result.giftAidScheduleData                                shouldBe Some(TestScheduleData.exampleGiftAidScheduleData)
@@ -128,7 +130,8 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
             otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
           )
 
-        val result = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        val result =
+          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
 
         result.otherIncomeScheduleFileUploadReference                 shouldBe Some(FileUploadReference("test-file-upload-reference"))
         result.otherIncomeScheduleData                                shouldBe Some(TestScheduleData.exampleOtherIncomeScheduleData)

@@ -24,7 +24,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
 
   val url = s"$baseUrl/make-a-charity-repayment-claim"
 
-  val testClaimId = "test-claim-id"
+  val testClaimId = "claim-123"
 
   def completeRepaymentClaimDetailsAnswers(): RepaymentClaimDetailsAnswers =
     RepaymentClaimDetailsAnswers(

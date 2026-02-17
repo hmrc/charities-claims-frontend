@@ -66,7 +66,7 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
 
       // Redirect Tests:
 
-      "should redirect to RepaymentClaimDetailsController when no claimId in session" in {
+      "should decline when no claimId in session" in {
         val sessionData = RepaymentClaimDetailsAnswers
           .setClaimingGiftAid(true)
           .copy(unsubmittedClaimId = None)
@@ -81,7 +81,7 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad.url
+            controllers.routes.PageNotFoundController.onPageLoad.url
           )
         }
       }

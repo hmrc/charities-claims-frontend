@@ -43,7 +43,8 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
   "UpdateOtherIncomeScheduleController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        val sessionData                =
+          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -65,7 +66,8 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should reload the page with errors when a required field is missing" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        val sessionData                =
+          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -82,7 +84,8 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should redirect to CheckYourOtherIncomeSchedule screen when no is selected" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        val sessionData                =
+          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -165,11 +168,6 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
           .setClaimingTaxDeducted(true)
           .copy(unsubmittedClaimId = None)
 
-        (mockClaimsValidationService
-          .deleteOtherIncomeSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.failed(new RuntimeException("No claimId found")))
-
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -180,8 +178,10 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
-
-          a[RuntimeException] should be thrownBy result.futureValue
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(
+            controllers.routes.PageNotFoundController.onPageLoad.url
+          )
         }
       }
     }

@@ -65,7 +65,7 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
       // Redirect Tests:
 
-      "should redirect to RepaymentClaimDetailsController when no claimId in session" in {
+      "should decline when no claim id in session" in {
         val sessionData = RepaymentClaimDetailsAnswers
           .setClaimingTaxDeducted(true)
           .copy(unsubmittedClaimId = None)
@@ -80,7 +80,7 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad.url
+            controllers.routes.PageNotFoundController.onPageLoad.url
           )
         }
       }
