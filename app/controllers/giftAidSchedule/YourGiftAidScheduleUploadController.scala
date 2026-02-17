@@ -151,11 +151,11 @@ class YourGiftAidScheduleUploadController @Inject() (
                         .map(_ =>
                           Redirect {
                             failure.failureDetails.failureReason match {
-                              case "REJECTED"   =>
+                              case FailureReason.REJECTED   =>
                                 routes.ProblemUpdatingGiftAidScheduleRejectedController.onPageLoad
-                              case "QUARANTINE" =>
+                              case FailureReason.QUARANTINE =>
                                 routes.UploadGiftAidScheduleController.onPageLoad // TODO: Add quarantine page
-                              case _            =>
+                              case _                        =>
                                 routes.UploadGiftAidScheduleController.onPageLoad // TODO: Add other failure reasons page
                             }
                           }
