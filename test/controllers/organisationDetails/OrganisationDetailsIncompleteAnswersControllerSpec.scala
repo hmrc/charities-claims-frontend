@@ -25,7 +25,7 @@ import models.{
   NameOfCharityRegulator,
   OrganisationDetailsAnswers,
   ReasonNotRegisteredWithRegulator,
-  RepaymentClaimDetailsAnswersOld,
+  RepaymentClaimDetailsAnswers,
   SessionData
 }
 import play.api.Application
@@ -59,7 +59,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
       "should render the page with missing fields when answers are incomplete" in {
 
-        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswersOld(
+        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(false),
           claimingUnderGiftAidSmallDonationsScheme = Some(true),
@@ -71,7 +71,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(OrganisationDetailsAnswers())
         )
 
@@ -97,7 +97,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
       }
 
       "should render the page with no missing fields when answers are complete" in {
-        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswersOld(
+        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(false),
           claimingUnderGiftAidSmallDonationsScheme = Some(false),
@@ -107,7 +107,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -150,7 +150,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
       }
 
       "should render the page with charity regulator number missing when regulator is EnglandAndWales" in {
-        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswersOld(
+        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(false),
           claimingUnderGiftAidSmallDonationsScheme = Some(true),
@@ -162,7 +162,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales)
@@ -192,7 +192,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
       }
 
       "should render the page with reason not registered missing when regulator is None" in {
-        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswersOld(
+        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(false),
           claimingUnderGiftAidSmallDonationsScheme = Some(true),
@@ -204,7 +204,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None)
@@ -234,7 +234,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
       }
 
       "should render the page with corporate trustee details missing when corporate trustee selected" in {
-        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswersOld(
+        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(false),
           claimingUnderGiftAidSmallDonationsScheme = Some(true),
@@ -246,7 +246,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -279,7 +279,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
       }
 
       "should render the page with authorised official details missing when not corporate trustee" in {
-        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswersOld(
+        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(false),
           claimingUnderGiftAidSmallDonationsScheme = Some(true),
@@ -291,7 +291,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -324,7 +324,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
       }
 
       "should render the page with multiple missing fields when only regulator name provided" in {
-        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswersOld(
+        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(false),
           claimingUnderGiftAidSmallDonationsScheme = Some(true),
@@ -336,7 +336,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales)
