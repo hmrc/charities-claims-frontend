@@ -68,7 +68,7 @@ object FormatUtils {
   extension (field: String) {
     def toRowNumber: String = {
       val pattern = """\[(\d+)\]""".r
-      pattern.findFirstMatchIn(field).map(_.group(1)).getOrElse("0")
+      pattern.findFirstMatchIn(field).map(m => (m.group(1).toInt + 1).toString).getOrElse("0")
     }
   }
 

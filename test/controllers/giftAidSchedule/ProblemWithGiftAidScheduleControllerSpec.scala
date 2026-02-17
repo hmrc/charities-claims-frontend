@@ -199,7 +199,7 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      "should display number 0 in row column for two occurrences from FAILED_VALIDATION test data" in {
+      "should display number 0 in row column for earliestDonationDate error (string field defaults to 0)" in {
         val sessionData = RepaymentClaimDetailsAnswers
           .setClaimingGiftAid(true)
           .copy(
@@ -223,11 +223,11 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
           val zeroRowPattern = ">0<".r
-          zeroRowPattern.findAllIn(content).length should be >= 2
+          zeroRowPattern.findAllIn(content).length should be >= 1
         }
       }
 
-      "should display row column with number 2 at least 3 occurrences using test data" in {
+      "should display row column with number 3 at least 3 occurrences using test data" in {
         val sessionData = RepaymentClaimDetailsAnswers
           .setClaimingGiftAid(true)
           .copy(
@@ -250,8 +250,8 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
           val content = contentAsString(result)
 
           status(result) shouldEqual OK
-          val twoRowPattern = ">2<".r
-          twoRowPattern.findAllIn(content).length should be >= 3
+          val threeRowPattern = ">3<".r
+          threeRowPattern.findAllIn(content).length should be >= 3
         }
       }
 
