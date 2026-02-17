@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package controllers.communityBuildingsSchedule
 
 import controllers.ControllerSpec
-import controllers.communityBuildingsSchedule
 import models.RepaymentClaimDetailsAnswers
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
@@ -48,9 +47,9 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
 
       "should render Page Not Found if setClaimingUnderGiftAidSmallDonationsScheme is false & setClaimingDonationsCollectedInCommunityBuildings is true" in {
         val sessionDataGASDS =
-          RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
+          RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
         val sessionData      =
-          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, Some(true))(using
+          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))(using
             sessionDataGASDS
           )
         val customConfig     = Map(
@@ -66,6 +65,7 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
         }
       }
 
@@ -95,40 +95,48 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
       }
 
       // TODO when redirect available
-//      "should redirect to the next page if the communityBuildingsScheduleCompleted is true" in {
-//        val sessionData = RepaymentClaimDetailsAnswers
-//          .setClaimingDonationsCollectedInCommunityBuildings(true)
-//          .copy(communityBuildingsScheduleCompleted = true)
-//
-//        given application: Application = applicationBuilder(sessionData = sessionData).build()
-//        running(application) {
-//          val request =
-//            FakeRequest(GET, routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
-//          val result  = route(application, request).value
-//
-//          status(result) shouldEqual SEE_OTHER
-//          redirectLocation(result) shouldEqual Some(
-//            routes.YourCommunityBuildingsScheduleUploadController.onPageLoad.url
-//          )
-//        }
-//      }
+      "should redirect to the next page if the communityBuildingsScheduleCompleted is true" in {
+        val sessionDataDonations = RepaymentClaimDetailsAnswers
+          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
+          .copy(communityBuildingsScheduleCompleted = true)
+
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingUnderGiftAidSmallDonationsScheme(true)(using sessionDataDonations)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        running(application) {
+          val request =
+            FakeRequest(GET, routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
+          val result  = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.AboutCommunityBuildingsScheduleController.onPageLoad.url
+          )
+        }
+      }
     }
 
     // TODO when redirect available
-//    "onSubmit" - {
-//      "should redirect to the next page" in {
-//        given application: Application = applicationBuilder().build()
-//
-//        running(application) {
-//          given request: FakeRequest[AnyContentAsEmpty.type] =
-//            FakeRequest(POST, routes.AboutCommunityBuildingsScheduleController.onSubmit.url)
-//
-//          val result = route(application, request).value
-//
-//          status(result) shouldEqual SEE_OTHER
-//          redirectLocation(result) shouldEqual Some(routes.UploadCommunityBuildingsScheduleController.onPageLoad.url)
-//        }
-//      }
-//    }
+    "onSubmit" - {
+      "should redirect to the next page" in {
+        val sessionDataDonations       = RepaymentClaimDetailsAnswers
+          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
+          .copy(communityBuildingsScheduleCompleted = true)
+        val sessionData                = RepaymentClaimDetailsAnswers
+          .setClaimingUnderGiftAidSmallDonationsScheme(true)(using sessionDataDonations)
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.AboutCommunityBuildingsScheduleController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
+        }
+      }
+    }
   }
 }

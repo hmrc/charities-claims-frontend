@@ -42,6 +42,7 @@ import views.html.AboutCommunityBuildingsScheduleView
 import models.RepaymentClaimDetailsAnswers
 
 import scala.concurrent.Future
+import models.SessionData
 
 class AboutCommunityBuildingsScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -50,26 +51,27 @@ class AboutCommunityBuildingsScheduleController @Inject() (
   appConfig: FrontendAppConfig
 ) extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings
-        .contains(true) && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
-    then {
-      if request.sessionData.communityBuildingsScheduleCompleted
+  def onPageLoad: Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
+      if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
       then {
-        Future.successful(Redirect(routes.AboutCommunityBuildingsScheduleController.onPageLoad))
-        // TODO when available
-        // Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
+        if request.sessionData.communityBuildingsScheduleCompleted
+        then {
+          Future.successful(Redirect(routes.AboutCommunityBuildingsScheduleController.onPageLoad))
+          // TODO when available
+          // Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
+        } else {
+          Future.successful(Ok(view(appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl)))
+        }
       } else {
-        Future.successful(Ok(view(appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl)))
+        Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
       }
-    } else {
-      Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
     }
-  }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Redirect(routes.AboutCommunityBuildingsScheduleController.onPageLoad))
-    // TODO: when controller available
-    // Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
-  }
+  def onSubmit: Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
+      // TODO: when controller available
+      // Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
+      Future.successful(Redirect(routes.AboutCommunityBuildingsScheduleController.onPageLoad))
+    }
 }
