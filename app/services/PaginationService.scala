@@ -33,6 +33,14 @@ case class DonationsPaginationResult(
   totalPages: Int
 )
 
+case class OtherIncomesPaginationResult(
+  paginatedData: Seq[OtherIncome],
+  paginationViewModel: PaginationViewModel,
+  totalRecords: Int,
+  currentPage: Int,
+  totalPages: Int
+)
+
 case class ValidationErrorsPaginationResult(
   paginatedData: Seq[ValidationError],
   paginationViewModel: PaginationViewModel,
@@ -68,6 +76,35 @@ object PaginationService {
     )
 
     DonationsPaginationResult(
+      paginatedData = paginatedData,
+      paginationViewModel = paginationViewModel,
+      totalRecords = totalRecords,
+      currentPage = validCurrentPage,
+      totalPages = totalPages
+    )
+  }
+
+  def paginateOtherIncomes(
+    allOtherIncomes: Seq[OtherIncome],
+    currentPage: Int = 1,
+    baseUrl: String
+  ): OtherIncomesPaginationResult = {
+
+    val totalRecords     = allOtherIncomes.length
+    val totalPages       = calculateTotalPages(totalRecords)
+    val validCurrentPage = validateCurrentPage(currentPage, totalPages)
+
+    val (startIndex, endIndex) = calculatePageIndices(validCurrentPage, totalRecords)
+
+    val paginatedData = allOtherIncomes.slice(startIndex, endIndex)
+
+    val paginationViewModel = createPaginationViewModel(
+      currentPage = validCurrentPage,
+      totalPages = totalPages,
+      baseUrl = baseUrl
+    )
+
+    OtherIncomesPaginationResult(
       paginatedData = paginatedData,
       paginationViewModel = paginationViewModel,
       totalRecords = totalRecords,

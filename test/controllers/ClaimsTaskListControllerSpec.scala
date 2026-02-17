@@ -26,14 +26,6 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
 
   val testClaimId = "test-claim-id"
 
-  def completeRepaymentClaimDetailsAnswersOld(): RepaymentClaimDetailsAnswersOld =
-    RepaymentClaimDetailsAnswersOld(
-      claimingGiftAid = Some(false),
-      claimingTaxDeducted = Some(false),
-      claimingUnderGiftAidSmallDonationsScheme = Some(false),
-      claimingReferenceNumber = Some(false)
-    )
-
   def completeRepaymentClaimDetailsAnswers(): RepaymentClaimDetailsAnswers =
     RepaymentClaimDetailsAnswers(
       claimingGiftAid = Some(false),
@@ -45,16 +37,14 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
   def sessionDataWithClaimId(): SessionData =
     SessionData(
       charitiesReference = testCharitiesReference,
-      unsubmittedClaimId = Some(testClaimId),
-      repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld()
+      unsubmittedClaimId = Some(testClaimId)
     )
 
   def sessionDataWithCompleteRcd(): SessionData =
     SessionData(
       charitiesReference = testCharitiesReference,
-      unsubmittedClaimId = Some(testClaimId),
-      repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
-      repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers())
+      repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers()),
+      unsubmittedClaimId = Some(testClaimId)
     )
 
   "ClaimsTaskListController" - {
@@ -97,7 +87,6 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
@@ -127,7 +116,6 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
@@ -157,7 +145,6 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
@@ -193,7 +180,6 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
@@ -229,7 +215,6 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
@@ -270,7 +255,6 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
@@ -289,7 +273,6 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
@@ -308,7 +291,6 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
           repaymentClaimDetailsAnswers = Some(answers),
           giftAidScheduleCompleted = true
         )
@@ -330,7 +312,6 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
@@ -349,7 +330,6 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
           repaymentClaimDetailsAnswers = Some(answers),
           otherIncomeScheduleCompleted = true
         )
@@ -371,7 +351,6 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld(),
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
@@ -459,11 +438,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       "should not display Upload documents section when Repayment Claim Details incomplete" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(
-            claimingGiftAid = Some(true),
-            claimingTaxDeducted = None
-          )
+          unsubmittedClaimId = Some(testClaimId)
         )
 
         given application: Application = applicationBuilder(sessionData).build()
@@ -479,11 +454,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       "should display Declaration section as Cannot start yet when Repayment Claim Details incomplete" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(
-            claimingGiftAid = Some(true),
-            claimingTaxDeducted = None
-          )
+          unsubmittedClaimId = Some(testClaimId)
         )
 
         given application: Application = applicationBuilder(sessionData).build()
@@ -500,8 +471,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       "should display declaration warning as hint text within task item" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld()
+          unsubmittedClaimId = Some(testClaimId)
         )
 
         given application: Application = applicationBuilder(sessionData).build()
@@ -531,8 +501,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       "should have unique IDs for task list status elements" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswersOld = completeRepaymentClaimDetailsAnswersOld()
+          unsubmittedClaimId = Some(testClaimId)
         )
 
         given application: Application = applicationBuilder(sessionData).build()

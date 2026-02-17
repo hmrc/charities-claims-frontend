@@ -436,7 +436,7 @@ uploadGiftAidSchedule.error.file-upload.EntityTooLarge = The selected file must 
 
 yourGiftAidScheduleUpload.file = Gift Aid Schedule
 yourGiftAidScheduleUpload.caption = Add Gift Aid schedule
-yourGiftAidScheduleUpload.title = Your Gift Aid schedule upload   
+yourGiftAidScheduleUpload.title = Your Gift Aid schedule upload
 yourGiftAidScheduleUpload.heading = Your Gift Aid schedule upload
 yourGiftAidScheduleUpload.paragraph.one = You can upload your Gift Aid schedule as a spreadsheet. The selected file must be smaller than 2.5 MB.
 
@@ -514,7 +514,7 @@ uploadOtherIncomeSchedule.caption = Add Other Income schedule
 uploadOtherIncomeSchedule.title = Upload an Other Income schedule
 uploadOtherIncomeSchedule.heading = Upload an Other Income schedule
 uploadOtherIncomeSchedule.paragraph.one = To claim Other Income, you need to upload a completed Other Income schedule with details of your donors and donations. You can save your claim without uploading the Other Income schedule, but you need to upload a Other Income schedule before submitting your claim.
-uploadOtherIncomeSchedule.paragraph.url = If you have not completed a Other Income schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Other Income schedule here (opens in a new tab)</a>.
+uploadOtherIncomeSchedule.paragraph.url = If you have not completed an Other Income schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download an Other Income schedule here (opens in new tab)</a>.
 uploadOtherIncomeSchedule.input.label = Upload a file
 uploadOtherIncomeSchedule.form.upload-file.submit = Continue
 uploadOtherIncomeSchedule.error.file-upload.InvalidArgument = Select an Other Income schedule
@@ -543,3 +543,22 @@ updateOtherIncomeSchedule.title = Are you sure you want to update this Other Inc
 updateOtherIncomeSchedule.heading = Are you sure you want to update this Other Income schedule?
 updateOtherIncomeSchedule.hint = By updating this file, you will lose any Other Income schedule data you have previously attached.
 updateOtherIncomeSchedule.error.required = Select ‘Yes’ if you want to update this Other Income schedule
+uploadOtherIncomeSchedule.error.file-upload.required = Select an Other Income schedule
+uploadOtherIncomeSchedule.error.file-upload.invalid-size-large = File can be up to 2.5MB
+uploadOtherIncomeSchedule.error.file-upload.other = Some other error message to be put here
+
+checkYourOtherIncomeSchedule.title = Check your Other Income schedule
+checkYourOtherIncomeSchedule.caption = Add Other Income schedule
+checkYourOtherIncomeSchedule.heading = Check your Other Income schedule
+checkYourOtherIncomeSchedule.summary.title = Other Income schedule details
+checkYourOtherIncomeSchedule.summary.item.1 = Adjustment for Other Income previously over-claimed
+checkYourOtherIncomeSchedule.summary.item.2 = Total gross payment
+checkYourOtherIncomeSchedule.summary.item.3 = Total tax deducted
+checkYourOtherIncomeSchedule.table.column.1 = Item
+checkYourOtherIncomeSchedule.table.column.2 = Name of payer
+checkYourOtherIncomeSchedule.table.column.3 = Date of payment
+checkYourOtherIncomeSchedule.table.column.4 = Gross payment (£)
+checkYourOtherIncomeSchedule.table.column.5 = Tax deducted (£)
+checkYourOtherIncomeSchedule.hint = Do you need to update this Other Income schedule?
+checkYourOtherIncomeSchedule.radios.no = No, continue with Other Income schedule
+checkYourOtherIncomeSchedule.error.required = Select 'Yes' if you need to update this Other Income schedule

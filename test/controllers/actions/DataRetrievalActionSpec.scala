@@ -16,19 +16,19 @@
 
 package controllers.actions
 
-import play.api.test.{FakeRequest, Helpers}
-import play.api.test.Helpers.*
-import util.{BaseSpec, TestClaims}
 import connectors.ClaimsConnector
-import uk.gov.hmrc.auth.core.AffinityGroup
-import models.{GetClaimsResponse, OrganisationDetailsAnswers, RepaymentClaimDetailsAnswersOld, SessionData}
 import models.requests.{AuthorisedRequest, DataRequest}
+import models.*
 import play.api.mvc.Results.*
+import play.api.test.Helpers.*
+import play.api.test.{FakeRequest, Helpers}
 import repositories.SessionCache
+import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.http.HeaderCarrier
+import util.{BaseSpec, TestClaims}
 
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
 class DataRetrievalActionSpec extends BaseSpec {
 
@@ -44,7 +44,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       val mockClaimsConnector = mock[ClaimsConnector]
       val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
 
-      val sessionData = RepaymentClaimDetailsAnswersOld.setClaimingTaxDeducted(true)
+      val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
 
       (mockSessionCache
         .get()(using _: HeaderCarrier))
@@ -129,10 +129,6 @@ class DataRetrievalActionSpec extends BaseSpec {
           req.sessionData shouldBe
             SessionData.from(claim, testCharitiesReference)
 
-          req.sessionData.repaymentClaimDetailsAnswersOld                   shouldBe
-            RepaymentClaimDetailsAnswersOld.from(
-              claim.claimData.repaymentClaimDetails
-            )
           req.sessionData.organisationDetailsAnswers                        shouldBe None
           req.sessionData.giftAidScheduleData                               shouldBe None
           req.sessionData.giftAidScheduleFileUploadReference                shouldBe None
@@ -154,7 +150,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       val mockClaimsConnector = mock[ClaimsConnector]
       val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
 
-      val sessionData = RepaymentClaimDetailsAnswersOld.setClaimingTaxDeducted(true)
+      val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
 
       (mockSessionCache
         .get()(using _: HeaderCarrier))

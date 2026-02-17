@@ -38,13 +38,6 @@ class ClaimsServiceSpec extends BaseSpec {
 
       val service = new ClaimsServiceImpl(mockSessionCache, mockConnector)
 
-      val repaymentAnswersOld = RepaymentClaimDetailsAnswersOld(
-        claimingGiftAid = Some(true),
-        claimingTaxDeducted = Some(true),
-        claimingUnderGiftAidSmallDonationsScheme = Some(false),
-        claimReferenceNumber = Some("1234567890")
-      )
-
       val repaymentAnswers = RepaymentClaimDetailsAnswers(
         claimingGiftAid = Some(true),
         claimingTaxDeducted = Some(true),
@@ -56,7 +49,6 @@ class ClaimsServiceSpec extends BaseSpec {
         charitiesReference = testCharitiesReference,
         unsubmittedClaimId = None,
         lastUpdatedReference = None,
-        repaymentClaimDetailsAnswersOld = repaymentAnswersOld,
         repaymentClaimDetailsAnswers = Some(repaymentAnswers)
       )
 
@@ -91,13 +83,6 @@ class ClaimsServiceSpec extends BaseSpec {
 
       val service = new ClaimsServiceImpl(mockSessionCache, mockConnector)
 
-      val repaymentAnswersOld = RepaymentClaimDetailsAnswersOld(
-        claimingGiftAid = Some(true),
-        claimingTaxDeducted = Some(true),
-        claimingUnderGiftAidSmallDonationsScheme = Some(false),
-        claimReferenceNumber = Some("1234567890")
-      )
-
       val repaymentAnswers = RepaymentClaimDetailsAnswers(
         claimingGiftAid = Some(true),
         claimingTaxDeducted = Some(true),
@@ -111,7 +96,6 @@ class ClaimsServiceSpec extends BaseSpec {
         charitiesReference = testCharitiesReference,
         unsubmittedClaimId = Some(existingClaimId),
         lastUpdatedReference = Some("1234567890"),
-        repaymentClaimDetailsAnswersOld = repaymentAnswersOld,
         repaymentClaimDetailsAnswers = Some(repaymentAnswers)
       )
 
@@ -139,12 +123,6 @@ class ClaimsServiceSpec extends BaseSpec {
 
       val service = new ClaimsServiceImpl(mockSessionCache, mockConnector)
 
-      val incompleteAnswersOld = RepaymentClaimDetailsAnswersOld(
-        claimingGiftAid = Some(true),
-        claimingTaxDeducted = None, // missing
-        claimingUnderGiftAidSmallDonationsScheme = Some(false)
-      )
-
       val incompleteAnswers = RepaymentClaimDetailsAnswers(
         claimingGiftAid = Some(true),
         claimingTaxDeducted = None, // missing
@@ -155,7 +133,6 @@ class ClaimsServiceSpec extends BaseSpec {
         charitiesReference = testCharitiesReference,
         unsubmittedClaimId = None,
         lastUpdatedReference = None,
-        repaymentClaimDetailsAnswersOld = incompleteAnswersOld,
         repaymentClaimDetailsAnswers = Some(incompleteAnswers)
       )
 

@@ -22,7 +22,7 @@ import controllers.ControllerSpec
 import play.api.Application
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.libs.json.Json
-import models.{NameOfCharityRegulator, OrganisationDetailsAnswers, RepaymentClaimDetailsAnswersOld, SessionData}
+import models.{NameOfCharityRegulator, OrganisationDetailsAnswers, RepaymentClaimDetailsAnswers, SessionData}
 import repositories.SessionCache
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.SessionId
@@ -65,7 +65,7 @@ class SessionDataControllerSpec extends ControllerSpec {
           .store(
             SessionData(
               charitiesReference = testCharitiesReference,
-              repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
+              repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true))),
               organisationDetailsAnswers =
                 Some(OrganisationDetailsAnswers(nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales)))
             )
@@ -121,7 +121,7 @@ class SessionDataControllerSpec extends ControllerSpec {
                   .toJson(
                     SessionData(
                       charitiesReference = testCharitiesReference,
-                      repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
+                      repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true))),
                       organisationDetailsAnswers = Some(
                         OrganisationDetailsAnswers(nameOfCharityRegulator =
                           Some(NameOfCharityRegulator.EnglandAndWales)
@@ -155,7 +155,7 @@ class SessionDataControllerSpec extends ControllerSpec {
                   .toJson(
                     SessionData(
                       charitiesReference = testCharitiesReference,
-                      repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(claimingGiftAid = Some(true)),
+                      repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers(claimingGiftAid = Some(true))),
                       organisationDetailsAnswers = Some(
                         OrganisationDetailsAnswers(nameOfCharityRegulator =
                           Some(NameOfCharityRegulator.EnglandAndWales)
