@@ -22,13 +22,17 @@ import controllers.ControllerSpec
 import views.html.ScheduleUploadFailureView
 import play.api.Application
 import models.RepaymentClaimDetailsAnswers
+import models.SessionData
 
 class ProblemUpdatingGiftAidScheduleRejectedControllerSpec extends ControllerSpec {
 
   "ProblemUpdatingGiftAidScheduleRejectedController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
+        val sessionData                =
+          RepaymentClaimDetailsAnswers
+            .setClaimingGiftAid(true)
+            .and(SessionData.setUnsubmittedClaimId("claim-123"))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .build()
 
@@ -51,7 +55,10 @@ class ProblemUpdatingGiftAidScheduleRejectedControllerSpec extends ControllerSpe
       }
 
       "should refuse when schedule checkbox is not selected" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingGiftAid(false)
+        val sessionData =
+          RepaymentClaimDetailsAnswers
+            .setClaimingGiftAid(false)
+            .and(SessionData.setUnsubmittedClaimId("claim-123"))
 
         val application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -66,7 +73,10 @@ class ProblemUpdatingGiftAidScheduleRejectedControllerSpec extends ControllerSpe
 
     "onSubmit" - {
       "should redirect to the next page" in {
-        val sessionData              = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .and(SessionData.setUnsubmittedClaimId("claim-123"))
+
         val application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
@@ -78,7 +88,10 @@ class ProblemUpdatingGiftAidScheduleRejectedControllerSpec extends ControllerSpe
       }
 
       "should refuse when schedule checkbox is not selected" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingGiftAid(false)
+        val sessionData =
+          RepaymentClaimDetailsAnswers
+            .setClaimingGiftAid(false)
+            .and(SessionData.setUnsubmittedClaimId("claim-123"))
 
         val application: Application = applicationBuilder(sessionData = sessionData).build()
 
