@@ -80,7 +80,6 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      // TODO: Update test when G2 screen route is completed (currently redirects to placeholder /add-schedule)
       "should redirect to G2 screen when no is selected" in {
         val sessionData                =
           RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
@@ -96,7 +95,7 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some("/problem-with-other-income-schedule")
+          redirectLocation(result) shouldBe Some("/charities-claims/problem-with-other-income-schedule")
         }
       }
 
