@@ -32,7 +32,7 @@ class ConnectedCharitiesScheduleUploadSuccessfulControllerSpec extends Controlle
 
       "should render page successfully" in {
         val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingConnectedCharities(false)
+          .setClaimingConnectedCharities(true)
           .copy(
             connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
             connectedCharitiesScheduleData = Some(TestScheduleData.exampleConnectedCharitiesScheduleData)
@@ -55,7 +55,12 @@ class ConnectedCharitiesScheduleUploadSuccessfulControllerSpec extends Controlle
 
     "onSubmit" - {
       "should redirect to the next page" in {
-        val application: Application = applicationBuilder().build()
+        val sessionData              = RepaymentClaimDetailsAnswers
+          .setClaimingConnectedCharities(true)
+          .copy(
+            connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference"))
+          )
+        val application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           val request = FakeRequest(POST, routes.ConnectedCharitiesScheduleUploadSuccessfulController.onSubmit.url)
