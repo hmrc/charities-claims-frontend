@@ -190,14 +190,12 @@ POST        /problem-with-other-income-schedule             controllers.otherInc
 GET         /other-income-schedule-upload-successful        controllers.otherIncomeSchedule.OtherIncomeScheduleUploadSuccessfulController.onPageLoad
 POST        /other-income-schedule-upload-successful        controllers.otherIncomeSchedule.OtherIncomeScheduleUploadSuccessfulController.onSubmit
 
-GET         /your-other-income-schedule-upload               controllers.otherIncomeSchedule.YourOtherIncomeScheduleUploadController.onPageLoad
-GET         /your-other-income-schedule-upload               controllers.otherIncomeSchedule.YourOtherIncomeScheduleUploadController.onPageLoad
-POST        /your-other-income-schedule-upload               controllers.otherIncomeSchedule.YourOtherIncomeScheduleUploadController.onSubmit
-GET         /your-other-income-schedule-upload/remove        controllers.otherIncomeSchedule.YourOtherIncomeScheduleUploadController.onRemove
+GET         /your-other-income-schedule-upload                  controllers.otherIncomeSchedule.YourOtherIncomeScheduleUploadController.onPageLoad
+POST        /your-other-income-schedule-upload                  controllers.otherIncomeSchedule.YourOtherIncomeScheduleUploadController.onSubmit
+GET         /your-other-income-schedule-upload/remove           controllers.otherIncomeSchedule.YourOtherIncomeScheduleUploadController.onRemove
 
-# TODO: Placeholder screen for O1.3 and O1.4 will be updated in future
-GET         /check-your-other-income-schedule                controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onPageLoad
-GET         /problem-with-other-income-schedule              controllers.otherIncomeSchedule.ProblemWithOtherIncomeScheduleController.onPageLoad
+# TODO: Placeholder screen for O1.4 - to be updated in future
+GET         /problem-with-other-income-schedule                 controllers.otherIncomeSchedule.ProblemWithOtherIncomeScheduleController.onPageLoad
 
 GET         /delete-other-income-schedule                    controllers.otherIncomeSchedule.DeleteOtherIncomeScheduleController.onPageLoad
 POST        /delete-other-income-schedule                    controllers.otherIncomeSchedule.DeleteOtherIncomeScheduleController.onSubmit
@@ -209,3 +207,6 @@ POST        /delete-gasds-community-buildings-schedule       controllers.communi
 
 GET         /delete-gasds-connected-charities-schedule       controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onPageLoad
 POST        /delete-gasds-connected-charities-schedule       controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onSubmit
+
+GET         /check-your-other-income-schedule                controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onPageLoad
+POST        /check-your-other-income-schedule                controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onSubmit

@@ -26,12 +26,16 @@ object FormatUtils {
 
   lazy val gdsFormatter: DateTimeFormatter           = DateTimeFormatter.ofPattern("d MMMM yyyy")
   lazy val gdsShortMonthFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM yyyy")
+  lazy val ddMmYyyyFormatter: DateTimeFormatter      = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
   def formatDateToGds(localDate: LocalDate): String =
     localDate.format(gdsFormatter)
 
   def formatDateToGdsShortMonth(localDate: LocalDate): String =
     localDate.format(gdsShortMonthFormatter)
+
+  def formatDateToDdMmYyyy(localDate: LocalDate): String =
+    localDate.format(ddMmYyyyFormatter)
 
   def formatAmount(amount: BigDecimal): String = {
     val currencyFormatter = NumberFormat.getCurrencyInstance(Locale.UK)
@@ -41,6 +45,7 @@ object FormatUtils {
   extension (localDate: LocalDate) {
     def toGdsDateString: String           = formatDateToGds(localDate)
     def toGdsShortMonthDateString: String = formatDateToGdsShortMonth(localDate)
+    def toDdMmYyyyDateString: String      = formatDateToDdMmYyyy(localDate)
   }
 
   extension (amount: BigDecimal) {
@@ -50,6 +55,7 @@ object FormatUtils {
   extension (string: String) {
     def toGdsDateString: String           = formatDateToGds(LocalDate.parse(string))
     def toGdsShortMonthDateString: String = formatDateToGdsShortMonth(LocalDate.parse(string))
+    def toDdMmYyyyDateString: String      = formatDateToDdMmYyyy(LocalDate.parse(string))
   }
 
   extension (boolean: Boolean) {
