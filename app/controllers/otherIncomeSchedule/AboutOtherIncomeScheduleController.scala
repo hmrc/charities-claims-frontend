@@ -26,6 +26,7 @@ import views.html.AboutOtherIncomeScheduleView
 import models.RepaymentClaimDetailsAnswers
 
 import scala.concurrent.Future
+import models.SessionData
 
 class AboutOtherIncomeScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -34,20 +35,26 @@ class AboutOtherIncomeScheduleController @Inject() (
   appConfig: FrontendAppConfig
 ) extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true) then {
-      if request.sessionData.otherIncomeScheduleCompleted
-      then {
-        Future.successful(Redirect(routes.YourOtherIncomeScheduleUploadController.onPageLoad))
-      } else {
-        Future.successful(Ok(view(appConfig.otherIncomeScheduleSpreadsheetGuidanceUrl)))
+  def onPageLoad: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .async { implicit request =>
+        if RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true) then {
+          if request.sessionData.otherIncomeScheduleCompleted
+          then {
+            Future.successful(Redirect(routes.YourOtherIncomeScheduleUploadController.onPageLoad))
+          } else {
+            Future.successful(Ok(view(appConfig.otherIncomeScheduleSpreadsheetGuidanceUrl)))
+          }
+        } else {
+          Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+        }
       }
-    } else {
-      Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
-    }
-  }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
-  }
+  def onSubmit: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .async { implicit request =>
+        Future.successful(Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
+      }
 }

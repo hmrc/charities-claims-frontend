@@ -26,6 +26,7 @@ import views.html.AboutGiftAidScheduleView
 import models.RepaymentClaimDetailsAnswers
 
 import scala.concurrent.Future
+import models.SessionData
 
 class AboutGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -34,20 +35,26 @@ class AboutGiftAidScheduleController @Inject() (
   appConfig: FrontendAppConfig
 ) extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true) then {
-      if request.sessionData.giftAidScheduleCompleted
-      then {
-        Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
-      } else {
-        Future.successful(Ok(view(appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl)))
+  def onPageLoad: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .async { implicit request =>
+        if RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true) then {
+          if request.sessionData.giftAidScheduleCompleted
+          then {
+            Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
+          } else {
+            Future.successful(Ok(view(appConfig.giftAidScheduleSpreadsheetGuidanceUrl)))
+          }
+        } else {
+          Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+        }
       }
-    } else {
-      Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
-    }
-  }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
-  }
+  def onSubmit: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .async { implicit request =>
+        Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+      }
 }

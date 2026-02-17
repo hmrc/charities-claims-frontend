@@ -1,5 +1,5 @@
 @*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import controllers.giftAidSchedule.routes
+@import controllers.otherIncomeSchedule.routes
 @import models.*
 @import views.html.components.*
 @import viewmodels.govuk.PaginationFluency.*
@@ -29,19 +29,19 @@
     govukSummaryList: GovukSummaryList,
     govukRadios: GovukRadios,
     pageNavigator: PageNavigator,
-    donationsTable: DonationsTable
+    otherIncomesTable: OtherIncomesTable
 )
 
 @(
     form: Form[?],
-    giftAidScheduleData: GiftAidScheduleData,
-    donations: Seq[Donation],
+    otherIncomeScheduleData: OtherIncomeScheduleData,
+    otherIncomes: Seq[OtherIncome],
     paginationViewModel: PaginationViewModel,
     paginationStatus: PaginationStatus
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleWithPagination(form, messages("checkYourGiftAidSchedule.title"), paginationStatus), 
+    pageTitle = titleWithPagination(form, messages("checkYourOtherIncomeSchedule.title"), paginationStatus),
     showBackLink = true
 ) {
 
@@ -49,30 +49,30 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="govuk-caption-l">@messages("checkYourGiftAidSchedule.caption")</span>
-    <h1 class="govuk-heading-l">@messages("checkYourGiftAidSchedule.heading")</h1>
+    <span class="govuk-caption-l">@messages("checkYourOtherIncomeSchedule.caption")</span>
+    <h1 class="govuk-heading-l">@messages("checkYourOtherIncomeSchedule.heading")</h1>
 
     @govukSummaryList(SummaryList(
         card = Some(Card(
             title = Some(CardTitle(
-                content = Text(messages("checkYourGiftAidSchedule.summary.title")),
+                content = Text(messages("checkYourOtherIncomeSchedule.summary.title")),
                 headingLevel = Some(2)
             ))
         )),
         rows = Seq(
             SummaryListRow(
-                key = Key(content = Text(messages("checkYourGiftAidSchedule.summary.item.1"))),
-                value = Value(content = Text(giftAidScheduleData.earliestDonationDate.map(_.toGdsDateString).getOrElse(messages("data.notApplicable")))),
+                key = Key(content = Text(messages("checkYourOtherIncomeSchedule.summary.item.1"))),
+                value = Value(content = Text(otherIncomeScheduleData.adjustmentForOtherIncomePreviousOverClaimed.toAmountString)),
                 classes = "custom-summary-list"
             ),
             SummaryListRow(
-                key = Key(content = Text(messages("checkYourGiftAidSchedule.summary.item.2"))),
-                value = Value(content = Text(giftAidScheduleData.prevOverclaimedGiftAid.map(_.toAmountString).getOrElse(messages("data.notApplicable")))),
+                key = Key(content = Text(messages("checkYourOtherIncomeSchedule.summary.item.2"))),
+                value = Value(content = Text(otherIncomeScheduleData.totalOfGrossPayments.toAmountString)),
                 classes = "custom-summary-list"
             ),
             SummaryListRow(
-                key = Key(content = Text(messages("checkYourGiftAidSchedule.summary.item.3"))),
-                value = Value(content = Text(giftAidScheduleData.totalDonations.map(_.toAmountString).getOrElse(messages("data.notApplicable")))),
+                key = Key(content = Text(messages("checkYourOtherIncomeSchedule.summary.item.3"))),
+                value = Value(content = Text(otherIncomeScheduleData.totalOfTaxDeducted.toAmountString)),
                 classes = "custom-summary-list"
             )
         )
@@ -80,22 +80,22 @@
 
     <div class="govuk-!-margin-bottom-9"></div>
 
-    @donationsTable(donations)
-    
+    @otherIncomesTable(otherIncomes)
+
     @pageNavigator(paginationViewModel)
 
-    @formHelper(action = routes.CheckYourGiftAidScheduleController.onSubmit, Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.CheckYourOtherIncomeScheduleController.onSubmit, Symbol("autoComplete") -> "off") {
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                fieldset = FieldsetViewModel(LegendViewModel(messages("checkYourGiftAidSchedule.hint")).bold),
+                fieldset = FieldsetViewModel(LegendViewModel(messages("checkYourOtherIncomeSchedule.hint")).bold),
                 yesMessageKey = "site.yes",
-                noMessageKey = "checkYourGiftAidSchedule.radios.no"
+                noMessageKey = "checkYourOtherIncomeSchedule.radios.no"
             )
         )
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
     }
-    
+
 }

@@ -65,8 +65,10 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
       // Redirect Tests:
 
-      "should redirect to RepaymentClaimDetailsController when no claimId in session" in {
-        val sessionData = defaultSessionData.copy(unsubmittedClaimId = None)
+      "should decline when no claim id in session" in {
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(unsubmittedClaimId = None)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -78,16 +80,18 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad.url
+            controllers.routes.PageNotFoundController.onPageLoad.url
           )
         }
       }
 
       "should redirect to UploadOtherIncomeScheduleController when no file upload reference in session" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(testClaimId),
-          otherIncomeScheduleFileUploadReference = None
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(
+            unsubmittedClaimId = Some(testClaimId),
+            otherIncomeScheduleFileUploadReference = None
+          )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -107,10 +111,12 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
       // Page Render Tests:
 
       "should render page with validation errors when upload has VALIDATION_FAILED status" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(testClaimId),
-          otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(
+            unsubmittedClaimId = Some(testClaimId),
+            otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
+          )
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -131,10 +137,12 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should display error messages in the table" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(testClaimId),
-          otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(
+            unsubmittedClaimId = Some(testClaimId),
+            otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
+          )
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -161,10 +169,12 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should display all 10 errors from test schedule data" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(testClaimId),
-          otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(
+            unsubmittedClaimId = Some(testClaimId),
+            otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
+          )
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -196,11 +206,13 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      "should display number 24 in row column exactly 1 time from FAILED_VALIDATION test data" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(testClaimId),
-          otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
-        )
+      "should display number 25 in row column exactly 1 time from FAILED_VALIDATION test data" in {
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(
+            unsubmittedClaimId = Some(testClaimId),
+            otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
+          )
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -217,16 +229,18 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           val content = contentAsString(result)
 
           status(result) shouldEqual OK
-          val zeroRowPattern = ">24<".r
-          zeroRowPattern.findAllIn(content).length shouldEqual 1
+          val rowPattern = ">25<".r
+          rowPattern.findAllIn(content).length shouldEqual 1
         }
       }
 
-      "should display number 32 in row column exactly 1 time from FAILED_VALIDATION test data" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(testClaimId),
-          otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
-        )
+      "should display number 33 in row column exactly 1 time from FAILED_VALIDATION test data" in {
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(
+            unsubmittedClaimId = Some(testClaimId),
+            otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
+          )
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -243,16 +257,18 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           val content = contentAsString(result)
 
           status(result) shouldEqual OK
-          val zeroRowPattern = ">32<".r
-          zeroRowPattern.findAllIn(content).length shouldEqual 1
+          val rowPattern = ">33<".r
+          rowPattern.findAllIn(content).length shouldEqual 1
         }
       }
 
       "should default to page 1 of pagination when page query parameter is not a valid integer" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(testClaimId),
-          otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(
+            unsubmittedClaimId = Some(testClaimId),
+            otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
+          )
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -273,10 +289,12 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should include the otherIncomeScheduleSpreadsheetGuidanceUrl link" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(testClaimId),
-          otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(
+            unsubmittedClaimId = Some(testClaimId),
+            otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
+          )
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -298,10 +316,12 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should include the (attach updated schedule) button" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(testClaimId),
-          otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(
+            unsubmittedClaimId = Some(testClaimId),
+            otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
+          )
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -323,10 +343,12 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should include the delete schedule link" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(testClaimId),
-          otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(
+            unsubmittedClaimId = Some(testClaimId),
+            otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
+          )
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -349,10 +371,12 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should redirect to YourOtherIncomeScheduleUploadController when upload result is VALIDATED" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(testClaimId),
-          otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(
+            unsubmittedClaimId = Some(testClaimId),
+            otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
+          )
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -375,10 +399,12 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should NOT render problem page when upload has VALIDATED status (should redirect)" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(testClaimId),
-          otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(
+            unsubmittedClaimId = Some(testClaimId),
+            otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
+          )
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -403,10 +429,12 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
     "onSubmit" - {
 
       "should delete the schedule and redirect to UploadOtherIncomeScheduleController in Attach updated schedule path" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(testClaimId),
-          otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(
+            unsubmittedClaimId = Some(testClaimId),
+            otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
+          )
 
         (mockClaimsValidationService
           .deleteOtherIncomeSchedule(using _: DataRequest[?], _: HeaderCarrier))
@@ -429,10 +457,12 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should handle when delete fails" in {
-        val sessionData = defaultSessionData.copy(
-          unsubmittedClaimId = Some(testClaimId),
-          otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
-        )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(
+            unsubmittedClaimId = Some(testClaimId),
+            otherIncomeScheduleFileUploadReference = Some(testFileUploadReference)
+          )
 
         (mockClaimsValidationService
           .deleteOtherIncomeSchedule(using _: DataRequest[?], _: HeaderCarrier))

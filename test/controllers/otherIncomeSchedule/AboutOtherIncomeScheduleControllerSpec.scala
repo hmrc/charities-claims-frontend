@@ -22,6 +22,7 @@ import models.RepaymentClaimDetailsAnswers
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import models.SessionData
 
 class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
   "AboutOtherIncomeScheduleController" - {
@@ -46,7 +47,8 @@ class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should return OK if setClaimingTaxDeducted is true" in {
-        val sessionData  = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        val sessionData  =
+          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
         val customConfig = Map(
           "urls.otherIncomeScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/other-income-schedule"
         )
@@ -69,7 +71,10 @@ class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
         val sessionData =
           RepaymentClaimDetailsAnswers
             .setClaimingTaxDeducted(true)
-            .copy(otherIncomeScheduleCompleted = true)
+            .copy(
+              unsubmittedClaimId = Some("claim-123"),
+              otherIncomeScheduleCompleted = true
+            )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -86,7 +91,9 @@ class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should redirect to the next page" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                =
+          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =

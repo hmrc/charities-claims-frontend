@@ -24,6 +24,7 @@ import play.api.i18n.{Lang, MessagesApi}
 import play.api.test.FakeRequest
 import util.TestScheduleData
 import views.html.OtherIncomeScheduleUploadSuccessfulView
+import models.SessionData
 
 class OtherIncomeScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
 
@@ -32,8 +33,9 @@ class OtherIncomeScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
 
       "should render page successfully" in {
         val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingTaxDeducted(false)
+          .setClaimingTaxDeducted(true)
           .copy(
+            unsubmittedClaimId = Some("claim-123"),
             otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
             otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
           )
@@ -55,7 +57,11 @@ class OtherIncomeScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should redirect to the next page" in {
-        val application: Application = applicationBuilder().build()
+        val sessionData              =
+          RepaymentClaimDetailsAnswers
+            .setClaimingTaxDeducted(true)
+            .and(SessionData.setUnsubmittedClaimId("claim-123"))
+        val application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           val request = FakeRequest(POST, routes.OtherIncomeScheduleUploadSuccessfulController.onSubmit.url)

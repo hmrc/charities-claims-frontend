@@ -28,6 +28,7 @@ import controllers.giftAidSchedule.routes
 
 import scala.concurrent.{ExecutionContext, Future}
 import services.SaveService
+import models.SessionData
 
 class CheckYourGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -42,76 +43,84 @@ class CheckYourGiftAidScheduleController @Inject() (
 
   val form: Form[Boolean] = formProvider("checkYourGiftAidSchedule.error.required")
 
-  val onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    claimsValidationService.getGiftAidScheduleData
-      .map { giftAidScheduleData =>
+  val onPageLoad: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .async { implicit request =>
+        claimsValidationService.getGiftAidScheduleData
+          .map { giftAidScheduleData =>
 
-        val currentPage      = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
-        val paginationResult = PaginationService.paginateDonations(
-          allDonations = giftAidScheduleData.donations,
-          currentPage = currentPage,
-          baseUrl = routes.CheckYourGiftAidScheduleController.onPageLoad.url
-        )
+            val currentPage      = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
+            val paginationResult = PaginationService.paginateDonations(
+              allDonations = giftAidScheduleData.donations,
+              currentPage = currentPage,
+              baseUrl = routes.CheckYourGiftAidScheduleController.onPageLoad.url
+            )
 
-        Ok(
-          view(
-            form = form,
-            giftAidScheduleData = giftAidScheduleData,
-            donations = paginationResult.paginatedData,
-            paginationViewModel = paginationResult.paginationViewModel
-          )
-        )
-      }
-  }
-
-  val onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    claimsValidationService.getGiftAidScheduleData
-      .flatMap { giftAidScheduleData =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => {
-              val paginationResult = PaginationService.paginateDonations(
-                allDonations = giftAidScheduleData.donations,
-                currentPage = 1,
-                baseUrl = routes.CheckYourGiftAidScheduleController.onPageLoad.url
+            Ok(
+              view(
+                form = form,
+                giftAidScheduleData = giftAidScheduleData,
+                donations = paginationResult.paginatedData,
+                paginationViewModel = paginationResult.paginationViewModel,
+                paginationStatus = paginationResult
               )
+            )
+          }
+      }
 
-              Future.successful(
-                BadRequest(
-                  view(
-                    form = formWithErrors,
-                    giftAidScheduleData = giftAidScheduleData,
-                    donations = paginationResult.paginatedData,
-                    paginationViewModel = paginationResult.paginationViewModel
+  val onSubmit: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .async { implicit request =>
+        claimsValidationService.getGiftAidScheduleData
+          .flatMap { giftAidScheduleData =>
+            form
+              .bindFromRequest()
+              .fold(
+                formWithErrors => {
+                  val paginationResult = PaginationService.paginateDonations(
+                    allDonations = giftAidScheduleData.donations,
+                    currentPage = 1,
+                    baseUrl = routes.CheckYourGiftAidScheduleController.onPageLoad.url
                   )
-                )
-              )
-            },
-            answer =>
-              answer match {
-                case true =>
-                  Future.successful(Redirect(routes.UpdateGiftAidScheduleController.onPageLoad))
 
-                case false =>
-                  if request.sessionData.giftAidScheduleCompleted
-                  then {
-                    Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
-                  } else {
-                    for {
-                      _ <- saveService.save(
-                             request.sessionData.copy(
-                               giftAidScheduleCompleted = true,
-                               giftAidScheduleData = None
-                             )
-                           )
-                      _ <- claimsService.save
-                    } yield Redirect(routes.GiftAidScheduleUploadSuccessfulController.onPageLoad)
+                  Future.successful(
+                    BadRequest(
+                      view(
+                        form = formWithErrors,
+                        giftAidScheduleData = giftAidScheduleData,
+                        donations = paginationResult.paginatedData,
+                        paginationViewModel = paginationResult.paginationViewModel,
+                        paginationStatus = paginationResult
+                      )
+                    )
+                  )
+                },
+                answer =>
+                  answer match {
+                    case true =>
+                      Future.successful(Redirect(routes.UpdateGiftAidScheduleController.onPageLoad))
+
+                    case false =>
+                      if request.sessionData.giftAidScheduleCompleted
+                      then {
+                        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+                      } else {
+                        for {
+                          _ <- saveService.save(
+                                 request.sessionData.copy(
+                                   giftAidScheduleCompleted = true,
+                                   giftAidScheduleData = None
+                                 )
+                               )
+                          _ <- claimsService.save
+                        } yield Redirect(routes.GiftAidScheduleUploadSuccessfulController.onPageLoad)
+                      }
                   }
-              }
-          )
+              )
 
+          }
       }
-  }
 
 }

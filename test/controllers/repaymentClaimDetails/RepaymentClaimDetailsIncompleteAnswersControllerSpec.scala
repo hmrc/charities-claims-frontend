@@ -21,12 +21,9 @@ import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
 import views.html.RepaymentClaimDetailsIncompleteAnswersView
 import play.api.Application
-import models.{RepaymentClaimDetailsAnswers, RepaymentClaimDetailsAnswersOld, SessionData}
+import models.{RepaymentClaimDetailsAnswers, SessionData}
 
 class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpec {
-
-  // TODO: MIGRATION - DELETE val scaffoldingForTest below when migrating to new R flow
-  val scaffoldingForTest = RepaymentClaimDetailsAnswersOld()
 
   "RepaymentClaimDetailsIncompleteAnswersController" - {
     "onPageLoad" - {
@@ -59,7 +56,6 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = scaffoldingForTest, // TODO: MIGRATION - DELETE this line
           repaymentClaimDetailsAnswers =
             Some(incompleteAnswers) // TODO: MIGRATION - change to: repaymentClaimDetailsAnswers = incompleteAnswers
         )
@@ -99,7 +95,6 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = scaffoldingForTest, // TODO: MIGRATION - DELETE this line
           repaymentClaimDetailsAnswers =
             Some(completeAnswers) // TODO: MIGRATION - change to: repaymentClaimDetailsAnswers = completeAnswers
         )
@@ -138,7 +133,6 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = scaffoldingForTest, // TODO: MIGRATION - DELETE this line
           repaymentClaimDetailsAnswers =
             Some(completeAnswers) // TODO: MIGRATION - change to: repaymentClaimDetailsAnswers = completeAnswers
         )
@@ -173,7 +167,6 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           unsubmittedClaimId = Some("123"),
           charitiesReference = testCharitiesReference,
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = scaffoldingForTest, // TODO: MIGRATION - DELETE this line
           repaymentClaimDetailsAnswers =
             Some(incompleteAnswers) // TODO: MIGRATION - change to: repaymentClaimDetailsAnswers = incompleteAnswers
         )
@@ -213,7 +206,6 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           unsubmittedClaimId = Some("123"),
           charitiesReference = testCharitiesReference,
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = scaffoldingForTest, // TODO: MIGRATION - DELETE this line
           repaymentClaimDetailsAnswers =
             Some(incompleteAnswers) // TODO: MIGRATION - change to: repaymentClaimDetailsAnswers = incompleteAnswers
         )
@@ -253,7 +245,6 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           unsubmittedClaimId = Some("123"),
           charitiesReference = testCharitiesReference,
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = scaffoldingForTest, // TODO: MIGRATION - DELETE this line
           repaymentClaimDetailsAnswers =
             Some(incompleteAnswers) // TODO: MIGRATION - change to: repaymentClaimDetailsAnswers = incompleteAnswers
         )

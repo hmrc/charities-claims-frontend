@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.giftAidSchedule
+package controllers.otherIncomeSchedule
 
 import com.google.inject.Inject
 import controllers.BaseController
@@ -23,15 +23,15 @@ import forms.YesNoFormProvider
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ClaimsValidationService
-import views.html.UpdateGiftAidScheduleView
+import views.html.UpdateOtherIncomeScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
 import services.ClaimsService
 import models.SessionData
 
-class UpdateGiftAidScheduleController @Inject() (
+class UpdateOtherIncomeScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: UpdateGiftAidScheduleView,
+  view: UpdateOtherIncomeScheduleView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   claimsValidationService: ClaimsValidationService,
@@ -39,16 +39,16 @@ class UpdateGiftAidScheduleController @Inject() (
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[Boolean] = formProvider("updateGiftAidSchedule.error.required")
+  val form: Form[Boolean] = formProvider("updateOtherIncomeSchedule.error.required")
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule) {
-    implicit request =>
+  def onPageLoad: Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule) { implicit request =>
       Ok(view(form))
-  }
+    }
 
   def onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
         form
           .bindFromRequest()
@@ -58,11 +58,11 @@ class UpdateGiftAidScheduleController @Inject() (
               if value
               then {
                 for {
-                  _ <- claimsValidationService.deleteGiftAidSchedule
+                  _ <- claimsValidationService.deleteOtherIncomeSchedule
                   _ <- claimsService.save
-                } yield Redirect(routes.UploadGiftAidScheduleController.onPageLoad)
+                } yield Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad)
               } else {
-                Future.successful(Redirect(routes.CheckYourGiftAidScheduleController.onPageLoad))
+                Future.successful(Redirect(routes.CheckYourOtherIncomeScheduleController.onPageLoad))
               }
           )
       }

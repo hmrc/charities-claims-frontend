@@ -142,13 +142,15 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad.url
+            controllers.routes.PageNotFoundController.onPageLoad.url
           )
         }
       }
 
       "should render Page Not Found if setClaimingTaxDeducted is true && unsubmittedClaimId is None" in {
-        val sessionData  = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+
         val customConfig = Map(
           "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
         )
@@ -163,7 +165,7 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad.url
+            controllers.routes.PageNotFoundController.onPageLoad.url
           )
         }
       }

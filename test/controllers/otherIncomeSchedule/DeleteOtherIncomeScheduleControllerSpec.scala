@@ -29,6 +29,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import views.html.DeleteOtherIncomeScheduleView
 
 import scala.concurrent.Future
+import models.RepaymentClaimDetailsAnswers
 
 class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
@@ -39,8 +40,9 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
   "DeleteOtherIncomeScheduleController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-
-        given application: Application = applicationBuilder()
+        val sessionData                =
+          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
+        given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -61,7 +63,9 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should reload the page with errors when a required field is missing" in {
-        given application: Application = applicationBuilder()
+        val sessionData                =
+          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
+        given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -76,9 +80,10 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      // TODO: Update test when G2 screen route is completed (currently redirects to placeholder /add-schedule)
       "should redirect to G2 screen when no is selected" in {
-        given application: Application = applicationBuilder()
+        val sessionData                =
+          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
+        given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -90,12 +95,14 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some("/problem-with-other-income-schedule")
+          redirectLocation(result) shouldBe Some(routes.ProblemWithOtherIncomeScheduleController.onPageLoad.url)
         }
       }
 
       "should call backend deletion endpoint and redirect to R2 when yes is selected" in {
-        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(unsubmittedClaimId = Some("test-claim-123"))
 
         (mockClaimsValidationService
           .deleteOtherIncomeSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
@@ -119,7 +126,10 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should handle case when no OtherIncome upload data is found" in {
-        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
+        val sessionData =
+          RepaymentClaimDetailsAnswers
+            .setClaimingTaxDeducted(true)
+            .copy(unsubmittedClaimId = Some("test-claim-123"))
 
         (mockClaimsValidationService
           .deleteOtherIncomeSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
@@ -144,14 +154,9 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should handle case when no claimId is in session data" in {
-        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
-
-        (mockClaimsValidationService
-          .deleteOtherIncomeSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(
-            Future.failed(new RuntimeException("No claimId found when attempting to delete OtherIncome schedule"))
-          )
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(unsubmittedClaimId = None)
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
@@ -163,8 +168,10 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
-
-          a[RuntimeException] should be thrownBy result.futureValue
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(
+            controllers.routes.PageNotFoundController.onPageLoad.url
+          )
         }
       }
     }

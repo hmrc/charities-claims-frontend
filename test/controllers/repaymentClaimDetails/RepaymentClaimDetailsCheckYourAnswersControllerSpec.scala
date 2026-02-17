@@ -26,13 +26,6 @@ import models.RepaymentClaimDetailsAnswers
 import models.*
 
 class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
-  val repaymentClaimDetailsDefaultAnswersOld = RepaymentClaimDetailsAnswersOld(
-    claimingGiftAid = Some(true),
-    claimingTaxDeducted = Some(false),
-    claimingUnderGiftAidSmallDonationsScheme = Some(true),
-    claimingReferenceNumber = Some(true),
-    claimReferenceNumber = Some("12345678AB")
-  )
 
   "RepaymentClaimDetailsCheckYourAnswersController" - {
     "onPageLoad" - {
@@ -41,7 +34,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
-            repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
             repaymentClaimDetailsAnswers = Some(
               RepaymentClaimDetailsAnswers(
                 claimingGiftAid = Some(false),
@@ -77,7 +69,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
-            repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
             repaymentClaimDetailsAnswers = Some(
               RepaymentClaimDetailsAnswers(
                 claimingGiftAid = Some(true),
@@ -112,7 +103,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
-            repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
             repaymentClaimDetailsAnswers = Some(
               RepaymentClaimDetailsAnswers(
                 claimingGiftAid = Some(false),
@@ -148,7 +138,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
-            repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
             repaymentClaimDetailsAnswers = Some(
               RepaymentClaimDetailsAnswers(
                 claimingGiftAid = Some(true),
@@ -184,7 +173,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
-            repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
             repaymentClaimDetailsAnswers = Some(
               RepaymentClaimDetailsAnswers(
                 claimingGiftAid = Some(true),
@@ -220,7 +208,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
-            repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
             repaymentClaimDetailsAnswers = Some(
               RepaymentClaimDetailsAnswers(
                 claimingGiftAid = Some(true),
@@ -258,7 +245,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
-            repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
             repaymentClaimDetailsAnswers = Some(
               RepaymentClaimDetailsAnswers(
                 claimingGiftAid = Some(true),
@@ -293,7 +279,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
-            repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
             repaymentClaimDetailsAnswers = Some(
               RepaymentClaimDetailsAnswers(
                 claimingGiftAid = Some(true),
@@ -330,7 +315,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
           repaymentClaimDetailsAnswers = Some(
             RepaymentClaimDetailsAnswers(
               claimingGiftAid = Some(true),
@@ -367,7 +351,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
           repaymentClaimDetailsAnswers = Some(
             RepaymentClaimDetailsAnswers(
               claimingGiftAid = None,
@@ -403,7 +386,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
           repaymentClaimDetailsAnswers = Some(
             RepaymentClaimDetailsAnswers(
               claimingGiftAid = None,
@@ -440,7 +422,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
           repaymentClaimDetailsAnswers = Some(
             RepaymentClaimDetailsAnswers(
               claimingGiftAid = None,
@@ -477,7 +458,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
           repaymentClaimDetailsAnswers = Some(
             RepaymentClaimDetailsAnswers(
               claimingGiftAid = None,
@@ -518,7 +498,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
       val sessionData = SessionData(
         charitiesReference = testCharitiesReference,
-        repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
         repaymentClaimDetailsAnswers = Some(
           RepaymentClaimDetailsAnswers(
             claimingGiftAid = Some(true),
@@ -556,7 +535,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
       val sessionData = SessionData(
         charitiesReference = testCharitiesReference,
-        repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
         repaymentClaimDetailsAnswers = Some(
           RepaymentClaimDetailsAnswers(
             claimingGiftAid = Some(true),
@@ -594,7 +572,6 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
       val sessionData = SessionData(
         charitiesReference = testCharitiesReference,
-        repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswersOld,
         repaymentClaimDetailsAnswers = Some(
           RepaymentClaimDetailsAnswers(
             claimingGiftAid = Some(true),

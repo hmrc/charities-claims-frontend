@@ -88,30 +88,30 @@ class ClaimsValidationServiceImpl @Inject() (
 
   private def geUpscanInitializationFromSession(validationType: ValidationType)(using
     request: DataRequest[?]
-  ): Future[Option[UpscanInitiateResponse]] =
+  ): Option[UpscanInitiateResponse] =
     validationType match {
       case ValidationType.GiftAid            =>
-        Future.successful(request.sessionData.giftAidScheduleUpscanInitialization)
+        request.sessionData.giftAidScheduleUpscanInitialization
       case ValidationType.OtherIncome        =>
-        Future.successful(request.sessionData.otherIncomeScheduleUpscanInitialization)
+        request.sessionData.otherIncomeScheduleUpscanInitialization
       case ValidationType.CommunityBuildings =>
-        Future.successful(request.sessionData.communityBuildingsScheduleUpscanInitialization)
+        request.sessionData.communityBuildingsScheduleUpscanInitialization
       case ValidationType.ConnectedCharities =>
-        Future.successful(request.sessionData.connectedCharitiesScheduleUpscanInitialization)
+        request.sessionData.connectedCharitiesScheduleUpscanInitialization
     }
 
   private def getFileUploadReferenceFromSession(validationType: ValidationType)(using
     request: DataRequest[?]
-  ): Future[Option[FileUploadReference]] =
+  ): Option[FileUploadReference] =
     validationType match {
       case ValidationType.GiftAid            =>
-        Future.successful(request.sessionData.giftAidScheduleFileUploadReference)
+        request.sessionData.giftAidScheduleFileUploadReference
       case ValidationType.OtherIncome        =>
-        Future.successful(request.sessionData.otherIncomeScheduleFileUploadReference)
+        request.sessionData.otherIncomeScheduleFileUploadReference
       case ValidationType.CommunityBuildings =>
-        Future.successful(request.sessionData.communityBuildingsScheduleFileUploadReference)
+        request.sessionData.communityBuildingsScheduleFileUploadReference
       case ValidationType.ConnectedCharities =>
-        Future.successful(request.sessionData.connectedCharitiesScheduleFileUploadReference)
+        request.sessionData.connectedCharitiesScheduleFileUploadReference
     }
 
   override def getFileUploadReference(
@@ -121,46 +121,47 @@ class ClaimsValidationServiceImpl @Inject() (
     request: DataRequest[?],
     hc: HeaderCarrier
   ): Future[Option[FileUploadReference]] =
-    getFileUploadReferenceFromSession(validationType)
-      .flatMap {
-        case Some(reference) => Future.successful(Some(reference))
-        case None            =>
-          claimsValidationConnector
-            .getUploadSummary(request.sessionData.unsubmittedClaimId.get)
-            .flatMap { summaryResponse =>
-              summaryResponse.uploads.find(_.validationType == validationType) match {
-                case None         => Future.successful(None)
-                case Some(upload) =>
-                  if acceptAwaitingUpload || upload.fileStatus != FileStatus.AWAITING_UPLOAD
-                  then
-                    saveService
-                      .save(validationType match {
-                        case ValidationType.GiftAid            =>
-                          request.sessionData.copy(giftAidScheduleFileUploadReference = Some(upload.reference))
-                        case ValidationType.OtherIncome        =>
-                          request.sessionData.copy(otherIncomeScheduleFileUploadReference = Some(upload.reference))
-                        case ValidationType.CommunityBuildings =>
-                          request.sessionData
-                            .copy(communityBuildingsScheduleFileUploadReference = Some(upload.reference))
-                        case ValidationType.ConnectedCharities =>
-                          request.sessionData
-                            .copy(connectedCharitiesScheduleFileUploadReference = Some(upload.reference))
-                      })
-                      .map(_ => Some(upload.reference))
-                  else Future.successful(None)
+    getFileUploadReferenceFromSession(validationType).match {
+      case Some(reference) =>
+        if acceptAwaitingUpload || geUpscanInitializationFromSession(validationType).isEmpty
+        then Future.successful(Some(reference))
+        else Future.successful(None)
+      case None            =>
+        claimsValidationConnector
+          .getUploadSummary(request.sessionData.unsubmittedClaimId.get)
+          .flatMap { summaryResponse =>
+            summaryResponse.uploads.find(_.validationType == validationType) match {
+              case None         => Future.successful(None)
+              case Some(upload) =>
+                if acceptAwaitingUpload || upload.fileStatus != FileStatus.AWAITING_UPLOAD
+                then
+                  saveService
+                    .save(validationType match {
+                      case ValidationType.GiftAid            =>
+                        request.sessionData.copy(giftAidScheduleFileUploadReference = Some(upload.reference))
+                      case ValidationType.OtherIncome        =>
+                        request.sessionData.copy(otherIncomeScheduleFileUploadReference = Some(upload.reference))
+                      case ValidationType.CommunityBuildings =>
+                        request.sessionData
+                          .copy(communityBuildingsScheduleFileUploadReference = Some(upload.reference))
+                      case ValidationType.ConnectedCharities =>
+                        request.sessionData
+                          .copy(connectedCharitiesScheduleFileUploadReference = Some(upload.reference))
+                    })
+                    .map(_ => Some(upload.reference))
+                else Future.successful(None)
+            }
+          }
+          .recoverWith {
+            case e: Exception if e.getMessage.contains("CLAIM_DOES_NOT_EXIST") =>
+              geUpscanInitializationFromSession(validationType).match {
+                case Some(upscanInitiateResponse) =>
+                  Future.successful(Some(FileUploadReference(upscanInitiateResponse.reference)))
+                case None                         =>
+                  Future.successful(None)
               }
-            }
-            .recoverWith {
-              case e: Exception if e.getMessage.contains("CLAIM_DOES_NOT_EXIST") =>
-                geUpscanInitializationFromSession(validationType)
-                  .flatMap {
-                    case Some(upscanInitiateResponse) =>
-                      Future.successful(Some(FileUploadReference(upscanInitiateResponse.reference)))
-                    case None                         =>
-                      Future.successful(None)
-                  }
-            }
-      }
+          }
+    }
 
   override def getGiftAidScheduleData(using request: DataRequest[?], hc: HeaderCarrier): Future[GiftAidScheduleData] =
     request.sessionData.giftAidScheduleData match {
@@ -185,11 +186,9 @@ class ClaimsValidationServiceImpl @Inject() (
                           .save(request.sessionData.copy(giftAidScheduleData = Some(data)))
                           .map(_ => data)
 
-                      case other =>
+                      case _ =>
                         Future.failed(
-                          new RuntimeException(
-                            s"No Gift Aid schedule data found, upload file status is ${other.fileStatus}"
-                          )
+                          new ScheduleUploadNotFoundException(ValidationType.GiftAid)
                         )
                     }
               }
@@ -221,12 +220,8 @@ class ClaimsValidationServiceImpl @Inject() (
                         .save(request.sessionData.copy(otherIncomeScheduleData = Some(data)))
                         .map(_ => data)
 
-                    case other =>
-                      Future.failed(
-                        new RuntimeException(
-                          s"No Other Income schedule data found, upload file status is ${other.fileStatus}"
-                        )
-                      )
+                    case _ =>
+                      Future.failed(new ScheduleUploadNotFoundException(ValidationType.OtherIncome))
                   }
             }
         }
@@ -261,12 +256,8 @@ class ClaimsValidationServiceImpl @Inject() (
                           .save(request.sessionData.copy(communityBuildingsScheduleData = Some(data)))
                           .map(_ => data)
 
-                      case other =>
-                        Future.failed(
-                          new RuntimeException(
-                            s"No Community Buildings schedule data found, upload file status is ${other.fileStatus}"
-                          )
-                        )
+                      case _ =>
+                        Future.failed(new ScheduleUploadNotFoundException(ValidationType.OtherIncome))
                     }
               }
         }
@@ -300,12 +291,8 @@ class ClaimsValidationServiceImpl @Inject() (
                           .save(request.sessionData.copy(connectedCharitiesScheduleData = Some(data)))
                           .map(_ => data)
 
-                      case other =>
-                        Future.failed(
-                          new RuntimeException(
-                            s"No Connected Charities schedule data found, upload file status is ${other.fileStatus}"
-                          )
-                        )
+                      case _ =>
+                        Future.failed(new ScheduleUploadNotFoundException(ValidationType.OtherIncome))
                     }
               }
         }
