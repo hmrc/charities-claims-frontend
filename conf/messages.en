@@ -507,7 +507,7 @@ uploadOtherIncomeSchedule.caption = Add Other Income schedule
 uploadOtherIncomeSchedule.title = Upload an Other Income schedule
 uploadOtherIncomeSchedule.heading = Upload an Other Income schedule
 uploadOtherIncomeSchedule.paragraph.one = To claim Other Income, you need to upload a completed Other Income schedule with details of your donors and donations. You can save your claim without uploading the Other Income schedule, but you need to upload a Other Income schedule before submitting your claim.
-uploadOtherIncomeSchedule.paragraph.url = If you have not completed a Other Income schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Other Income schedule here (opens in a new tab)</a>.
+uploadOtherIncomeSchedule.paragraph.url = If you have not completed an Other Income schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download an Other Income schedule here (opens in new tab)</a>.
 uploadOtherIncomeSchedule.input.label = Upload a file
 uploadOtherIncomeSchedule.form.upload-file.submit = Continue
 uploadOtherIncomeSchedule.error.file-upload.InvalidArgument = Select an Other Income schedule
