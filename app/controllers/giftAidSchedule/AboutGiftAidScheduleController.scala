@@ -44,7 +44,7 @@ class AboutGiftAidScheduleController @Inject() (
           then {
             Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
           } else {
-            Future.successful(Ok(view(appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl)))
+            Future.successful(Ok(view(appConfig.giftAidScheduleSpreadsheetGuidanceUrl)))
           }
         } else {
           Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))

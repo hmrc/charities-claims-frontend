@@ -60,7 +60,7 @@ class UploadGiftAidScheduleController @Inject() (
                 Future.successful(
                   Ok(
                     view(
-                      appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl,
+                      appConfig.giftAidScheduleSpreadsheetGuidanceUrl,
                       claimId = claimId,
                       upscanInitiateResponse = upscanInitiateResponse,
                       allowedFileTypesHint = appConfig.allowedFileTypesHint,
@@ -83,7 +83,7 @@ class UploadGiftAidScheduleController @Inject() (
                         upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
                       } yield Ok(
                         view(
-                          appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl,
+                          appConfig.giftAidScheduleSpreadsheetGuidanceUrl,
                           claimId = claimId,
                           upscanInitiateResponse = upscanInitiateResponse,
                           allowedFileTypesHint = appConfig.allowedFileTypesHint,
@@ -167,7 +167,7 @@ class UploadGiftAidScheduleController @Inject() (
             Future.successful(
               BadRequest(
                 view(
-                  appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl,
+                  appConfig.giftAidScheduleSpreadsheetGuidanceUrl,
                   claimId = request.sessionData.unsubmittedClaimId.get,
                   upscanInitiateResponse = upscanInitiateResponse,
                   allowedFileTypesHint = appConfig.allowedFileTypesHint,

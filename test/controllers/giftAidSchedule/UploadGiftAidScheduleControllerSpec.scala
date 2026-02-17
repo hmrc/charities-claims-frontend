@@ -121,7 +121,7 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
       "should render Page Not Found if setClaimingGiftAid is false" in {
         val sessionData  = RepaymentClaimDetailsAnswers.setClaimingGiftAid(false)
         val customConfig = Map(
-          "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
+          "urls.giftAidScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/charity-repayment-claim"
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).configure(customConfig).build()
@@ -144,7 +144,7 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
           .setClaimingGiftAid(true)
 
         val customConfig = Map(
-          "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
+          "urls.giftAidScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/charity-repayment-claim"
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).configure(customConfig).build()
