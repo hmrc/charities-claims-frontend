@@ -26,7 +26,7 @@ import views.html.OrganisationDetailsCheckYourAnswersView
 
 class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
   "OrganisationDetailsCheckYourAnswersController" - {
-    val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswersOld(
+    val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
       claimingGiftAid = Some(true),
       claimingTaxDeducted = Some(false),
       claimingUnderGiftAidSmallDonationsScheme = Some(true),
@@ -41,7 +41,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers)
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -66,7 +66,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales),
@@ -103,7 +103,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               charityRegistrationNumber = Some("123"),
@@ -139,7 +139,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.NorthernIreland),
@@ -175,7 +175,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -211,7 +211,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -247,7 +247,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -283,7 +283,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -319,7 +319,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -354,7 +354,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -389,7 +389,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -424,7 +424,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -457,7 +457,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -490,7 +490,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -530,7 +530,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -576,7 +576,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -611,7 +611,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -646,7 +646,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -688,7 +688,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
           organisationDetailsAnswers = Some(
             OrganisationDetailsAnswers(
               nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -732,7 +732,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswersOld = repaymentClaimDetailsDefaultAnswers
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers)
         )
 
         given application: Application =

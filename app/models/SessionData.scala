@@ -29,7 +29,6 @@ final case class SessionData(
   // lastUpdatedReference of the claim stored in the backend,
   // if empty, the user has started a new claim
   lastUpdatedReference: Option[String] = None,
-  repaymentClaimDetailsAnswersOld: RepaymentClaimDetailsAnswersOld,
   repaymentClaimDetailsAnswers: Option[RepaymentClaimDetailsAnswers] = None,
   organisationDetailsAnswers: Option[OrganisationDetailsAnswers] = None,
   declarationDetailsAnswers: Option[DeclarationDetailsAnswers] = None,
@@ -62,8 +61,7 @@ object SessionData {
   extension (sd: SessionData) def and(f: SessionData ?=> SessionData): SessionData = f(using sd)
 
   def empty(charitiesRef: String): SessionData = SessionData(
-    charitiesReference = charitiesRef,
-    repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld()
+    charitiesReference = charitiesRef
   )
 
   def from(claim: Claim, charitiesRef: String): SessionData =
@@ -71,7 +69,6 @@ object SessionData {
       unsubmittedClaimId = Some(claim.claimId),
       charitiesReference = charitiesRef,
       lastUpdatedReference = Some(claim.lastUpdatedReference),
-      repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld.from(claim.claimData.repaymentClaimDetails),
       repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers.from(claim.claimData.repaymentClaimDetails)),
       organisationDetailsAnswers = claim.claimData.organisationDetails.map(OrganisationDetailsAnswers.from),
       declarationDetailsAnswers = claim.claimData.declarationDetails.map(DeclarationDetailsAnswers.from),

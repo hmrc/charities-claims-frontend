@@ -21,7 +21,7 @@ import controllers.ControllerSpec
 import views.html.ClaimReferenceNumberInputView
 import play.api.Application
 import forms.TextInputFormProvider
-import models.{RepaymentClaimDetailsAnswers, RepaymentClaimDetailsAnswersOld, SessionData}
+import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
 import play.api.test.FakeRequest
 import models.Mode.*
@@ -73,7 +73,6 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
         // Must provide 'old' answers to satisfy the case class, even if empty - this needs to be removed when the other pages are created
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(),
           repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers(claimReferenceNumber = Some("123456")))
         )
 
@@ -93,7 +92,6 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
       "should render the page and pre-populate correctly" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(),
           repaymentClaimDetailsAnswers = Some(
             RepaymentClaimDetailsAnswers(claimingReferenceNumber = Some(true), claimReferenceNumber = Some("123456"))
           )
@@ -116,7 +114,6 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
       "should render the page not found and incorrectly pre-populate data" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(),
           repaymentClaimDetailsAnswers = Some(
             RepaymentClaimDetailsAnswers(
               claimingReferenceNumber = Some(false),
