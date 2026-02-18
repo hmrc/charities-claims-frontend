@@ -24,7 +24,7 @@ import controllers.actions.Actions
 import forms.YesNoFormProvider
 import play.api.data.Form
 import models.SessionData
-import services.{ClaimsService, ClaimsValidationService, PaginationService}
+import services.{ClaimsService, ClaimsValidationService, PaginationService, SaveService}
 import controllers.otherIncomeSchedule.routes
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,7 +35,8 @@ class CheckYourOtherIncomeScheduleController @Inject() (
   actions: Actions,
   claimsValidationService: ClaimsValidationService,
   formProvider: YesNoFormProvider,
-  claimsService: ClaimsService
+  claimsService: ClaimsService,
+  saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -95,14 +96,27 @@ class CheckYourOtherIncomeScheduleController @Inject() (
                     )
                   )
                 },
-                {
-                  case true =>
-                    Future.successful(Redirect(routes.UpdateOtherIncomeScheduleController.onPageLoad))
+                answer =>
+                  answer match {
+                    case true =>
+                      Future.successful(Redirect(routes.UpdateOtherIncomeScheduleController.onPageLoad))
 
-                  case false =>
-                    claimsService.save
-                      .map(_ => Redirect(routes.OtherIncomeScheduleUploadSuccessfulController.onPageLoad))
-                }
+                    case false =>
+                      if request.sessionData.otherIncomeScheduleCompleted
+                      then {
+                        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+                      } else {
+                        for {
+                          _ <- saveService.save(
+                                 request.sessionData.copy(
+                                   otherIncomeScheduleCompleted = true,
+                                   otherIncomeScheduleData = None
+                                 )
+                               )
+                          _ <- claimsService.save
+                        } yield Redirect(routes.OtherIncomeScheduleUploadSuccessfulController.onPageLoad)
+                      }
+                  }
               )
 
           }
