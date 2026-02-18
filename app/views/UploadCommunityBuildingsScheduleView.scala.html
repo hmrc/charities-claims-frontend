@@ -25,6 +25,7 @@
 )
 
 @(
+    communityBuildingsScheduleSpreadsheetGuidancesUrl: String,
     claimId: String,
     upscanInitiateResponse: UpscanInitiateResponse,
     allowedFileTypesHint: String,
@@ -51,6 +52,8 @@
     <h1 class="govuk-heading-l">@messages("uploadCommunityBuildingsSchedule.heading")</h1>
 
     <p class="govuk-body">@messages("uploadCommunityBuildingsSchedule.paragraph.one")</p>
+    <p class="govuk-body">@Html(messages("uploadCommunityBuildingsSchedule.paragraph.url", giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl))</p>
+
 
     <form action="@upscanInitiateResponse.uploadRequest.href" method="POST" enctype="multipart/form-data" class="js-form file-upload" novalidate>
 
