@@ -187,8 +187,5 @@ GET         /problem-updating-gift-aid-schedule-rejected          controllers.gi
 POST        /problem-updating-gift-aid-schedule-rejected          controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onSubmit
 GET         /problem-updating-gift-aid-schedule-unknown-error     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleUnknownErrorController.onPageLoad
 POST        /problem-updating-gift-aid-schedule-unknown-error     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleUnknownErrorController.onSubmit
-GET         /problem-updating-gift-aid-schedule-rejected     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onPageLoad
-POST        /problem-updating-gift-aid-schedule-rejected     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onSubmit
-
-GET         /problem-updating-gift-aid-schedule-quarantine   controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onPageLoad
-POST        /problem-updating-gift-aid-schedule-quarantine   controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onSubmit
+GET         /problem-updating-gift-aid-schedule-quarantine        controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onPageLoad
+POST        /problem-updating-gift-aid-schedule-quarantine        controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onSubmit
