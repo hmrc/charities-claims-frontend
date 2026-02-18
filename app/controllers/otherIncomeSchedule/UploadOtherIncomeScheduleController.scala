@@ -107,7 +107,8 @@ class UploadOtherIncomeScheduleController @Inject() (
               request = UpscanInitiateRequest(
                 successRedirect = baseUrl + routes.UploadOtherIncomeScheduleController.onUploadSuccess.url,
                 errorRedirect = baseUrl + routes.UploadOtherIncomeScheduleController.onUploadError.url,
-                maximumFileSize = Some(appConfig.maxOtherIncomeScheduleUploadSize)
+                maximumFileSize = Some(appConfig.maxOtherIncomeScheduleUploadSize),
+                minimumFileSize = Some(1)
               )
             )
           _                      <-
