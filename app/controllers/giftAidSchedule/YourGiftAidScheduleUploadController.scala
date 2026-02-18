@@ -154,7 +154,7 @@ class YourGiftAidScheduleUploadController @Inject() (
                               case FailureReason.REJECTED   =>
                                 routes.ProblemUpdatingGiftAidScheduleRejectedController.onPageLoad
                               case FailureReason.QUARANTINE =>
-                                routes.UploadGiftAidScheduleController.onPageLoad // TODO: Add quarantine page
+                                routes.ProblemUpdatingGiftAidScheduleQuarantineController.onPageLoad
                               case _                        =>
                                 routes.UploadGiftAidScheduleController.onPageLoad // TODO: Add other failure reasons page
                             }

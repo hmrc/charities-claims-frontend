@@ -422,7 +422,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.UploadGiftAidScheduleController.onPageLoad.url
+            routes.ProblemUpdatingGiftAidScheduleQuarantineController.onPageLoad.url
           )
         }
       }
