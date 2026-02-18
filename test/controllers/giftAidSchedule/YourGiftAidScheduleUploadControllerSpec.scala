@@ -68,6 +68,10 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
     readJson("/test-get-upload-result-verification-failed-gift-aid-quarantine.json")
       .as[GetUploadResultVeryficationFailed]
 
+  lazy val testVerificationFailedUnknownResponse: GetUploadResultVeryficationFailed =
+    readJson("/test-get-upload-result-verification-failed-gift-aid-unknown-error.json")
+      .as[GetUploadResultVeryficationFailed]
+
   "YourGiftAidScheduleUploadControllerSpec" - {
 
     "onPageLoad" - {
@@ -423,6 +427,42 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
             routes.ProblemUpdatingGiftAidScheduleQuarantineController.onPageLoad.url
+          )
+        }
+      }
+
+      "unsubmitted Claim ID & file reference are defined - result = Verification Failed - UNKNOWN" in {
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .copy(
+            unsubmittedClaimId = Some(claimId),
+            giftAidScheduleFileUploadReference = Some(fileUploadReference)
+          )
+
+        (mockConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(claimId, fileUploadReference, *)
+          .returning(Future.successful(testVerificationFailedUnknownResponse))
+
+        (mockService
+          .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(()))
+
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+          .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
+          .build()
+
+        running(application) {
+          val request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.YourGiftAidScheduleUploadController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ProblemUpdatingGiftAidScheduleUnknownErrorController.onPageLoad.url
           )
         }
       }
