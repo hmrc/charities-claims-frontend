@@ -392,7 +392,7 @@ otherIncomeScheduleUploadSuccessful.message.1 = Upload successful
 otherIncomeScheduleUploadSuccessful.message.2 = You have successfully attached your Other Income schedule.
 otherIncomeScheduleUploadSuccessful.title = Upload successful
 
-phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in a new tab)</a> will help us to improve it.
+phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in new tab)</a> will help us to improve it.
 phasebanner.phase=Beta
 
 problemUpdatingGiftAidScheduleQuarantine.heading = There is a problem uploading your schedule
@@ -407,7 +407,7 @@ problemWithGiftAidSchedule.caption = Add Gift Aid schedule
 problemWithGiftAidSchedule.heading = There is a problem with the data in your Gift Aid schedule
 problemWithGiftAidSchedule.link.attachUpdatedSchedule = Attach an updated Gift Aid schedule
 problemWithGiftAidSchedule.link.deleteSchedule = Delete schedule
-problemWithGiftAidSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Gift Aid donations (opens in a new tab)</a>.
+problemWithGiftAidSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Gift Aid donations (opens in new tab)</a>.
 problemWithGiftAidSchedule.list.item.2 = Delete this Gift Aid schedule.
 problemWithGiftAidSchedule.list.item.3 = Update your spreadsheet.
 problemWithGiftAidSchedule.list.item.4 = Upload the updated spreadsheet.
@@ -422,7 +422,7 @@ problemWithOtherIncomeSchedule.caption = Add Other Income schedule
 problemWithOtherIncomeSchedule.heading = There is a problem with the data in your Other Income schedule
 problemWithOtherIncomeSchedule.link.attachUpdatedSchedule = Attach an updated Other Income schedule
 problemWithOtherIncomeSchedule.link.deleteSchedule = Delete schedule
-problemWithOtherIncomeSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Other Income donations (opens in a new tab)</a>.
+problemWithOtherIncomeSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Other Income donations (opens in new tab)</a>.
 problemWithOtherIncomeSchedule.list.item.2 = Delete this Other Income schedule.
 problemWithOtherIncomeSchedule.list.item.3 = Update your spreadsheet.
 problemWithOtherIncomeSchedule.list.item.4 = Upload the updated spreadsheet.
