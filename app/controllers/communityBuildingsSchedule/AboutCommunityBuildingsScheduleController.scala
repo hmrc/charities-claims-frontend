@@ -64,8 +64,6 @@ class AboutCommunityBuildingsScheduleController @Inject() (
 
   def onSubmit: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
-      // TODO: when controller available
-      // Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
-      Future.successful(Redirect(routes.AboutCommunityBuildingsScheduleController.onPageLoad))
+      Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
     }
 }

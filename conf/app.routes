@@ -129,6 +129,9 @@ GET         /declaration-details-confirmation               controllers.Declarat
 
 GET         /about-community-buildings-schedule             controllers.communityBuildingsSchedule.AboutCommunityBuildingsScheduleController.onPageLoad
 POST        /about-community-buildings-schedule             controllers.communityBuildingsSchedule.AboutCommunityBuildingsScheduleController.onSubmit
+GET         /upload-community-buildings-schedule            controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onPageLoad
+GET         /upload-community-buildings-schedule/success    controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onUploadSuccess
+GET         /upload-community-buildings-schedule/error      controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onUploadError
 
 GET         /about-gift-aid-schedule                        controllers.giftAidSchedule.AboutGiftAidScheduleController.onPageLoad
 POST        /about-gift-aid-schedule                        controllers.giftAidSchedule.AboutGiftAidScheduleController.onSubmit

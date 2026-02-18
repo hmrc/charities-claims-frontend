@@ -6,6 +6,16 @@ aboutCommunityBuildingsSchedule.paragraph.two = You can upload a Community Build
 aboutCommunityBuildingsSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Community Buildings schedule here (opens in new tab)</a>. You can submit 1 file at a time, and each file can be up to 250KB.
 aboutCommunityBuildingsSchedule.title = About Community Buildings schedule
 
+uploadCommunityBuildingsSchedule.caption = Add Community Buildings schedule
+uploadCommunityBuildingsSchedule.title = Upload a Community Buildings schedule
+uploadCommunityBuildingsSchedule.heading = Upload a Community Buildings schedule
+uploadCommunityBuildingsSchedule.paragraph.one = To claim Community Buildings top-up payment, you need to upload a completed Community Buildings schedule with details of the community building(s) where donations were collected and amounts received. You can save your claim without uploading the Community Buildings schedule, but you need to upload a Community Buildings schedule before submitting your claim.
+uploadCommunityBuildingsSchedule.paragraph.url = If you have not completed a Community Buildings schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Community Buildings schedule here (opens in new tab)</a>.
+uploadCommunityBuildingsSchedule.input.label = Upload a file
+uploadCommunityBuildingsSchedule.form.upload-file.submit = Continue
+uploadCommunityBuildingsSchedule.error.file-upload.InvalidArgument = Select a Community Buildings schedule
+uploadCommunityBuildingsSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250KB
+
 aboutGiftAidSchedule.caption = Add Gift Aid schedule
 aboutGiftAidSchedule.heading = About Gift Aid schedule
 aboutGiftAidSchedule.paragraph.one = Use this service to add a Gift Aid schedule.

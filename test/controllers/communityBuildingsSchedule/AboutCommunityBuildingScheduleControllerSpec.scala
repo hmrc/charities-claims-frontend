@@ -139,7 +139,7 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(routes.UploadCommunityBuildingsScheduleController.onPageLoad.url)
         }
       }
     }
