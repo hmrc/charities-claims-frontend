@@ -109,7 +109,8 @@ class UploadGiftAidScheduleController @Inject() (
               request = UpscanInitiateRequest(
                 successRedirect = baseUrl + routes.UploadGiftAidScheduleController.onUploadSuccess.url,
                 errorRedirect = baseUrl + routes.UploadGiftAidScheduleController.onUploadError.url,
-                maximumFileSize = Some(appConfig.maxGifAidScheduleUploadSize)
+                maximumFileSize = Some(appConfig.maxGifAidScheduleUploadSize),
+                minimumFileSize = Some(1)
               )
             )
           _                      <-
