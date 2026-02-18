@@ -44,60 +44,57 @@ class UploadCommunityBuildingsScheduleController @Inject() (
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-//    if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme
-//        .contains(true) && RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings.contains(true)
-//    then {
-    request.sessionData.unsubmittedClaimId match {
-      case None =>
-        // if the claim id is not found, we need to redirect to the repayment claim details page
-        Future
-          .successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+  val onPageLoad: Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
+      request.sessionData.unsubmittedClaimId match {
+        case None =>
+          // if the claim id is not found, we need to redirect to the repayment claim details page
+          Future
+            .successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
 
-      case Some(claimId) =>
-        request.sessionData.communityBuildingsScheduleUpscanInitialization match {
-          case Some(upscanInitiateResponse) =>
-            Future.successful(
-              Ok(
-                view(
-                  appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl,
-                  claimId = claimId,
-                  upscanInitiateResponse = upscanInitiateResponse,
-                  allowedFileTypesHint = appConfig.allowedFileTypesHint,
-                  filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-                  errorCode = None
+        case Some(claimId) =>
+          request.sessionData.communityBuildingsScheduleUpscanInitialization match {
+            case Some(upscanInitiateResponse) =>
+              Future.successful(
+                Ok(
+                  view(
+                    appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl,
+                    claimId = claimId,
+                    upscanInitiateResponse = upscanInitiateResponse,
+                    allowedFileTypesHint = appConfig.allowedFileTypesHint,
+                    filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
+                    errorCode = None
+                  )
                 )
               )
-            )
 
-          case None =>
-            claimsValidationService
-              .getFileUploadReference(ValidationType.CommunityBuildings)
-              .flatMap {
-                case Some(_) =>
-                  // if the file upload reference is found, we need to redirect to your Community Buildings schedule upload page
-                  // TODO: redirect when available
-                  // Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
-                  Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
+            case None =>
+              claimsValidationService
+                .getFileUploadReference(ValidationType.CommunityBuildings)
+                .flatMap {
+                  case Some(_) =>
+                    // if the file upload reference is found, we need to redirect to your Community Buildings schedule upload page
+                    // TODO: redirect when available
+                    // Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
+                    Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
 
-                case None =>
-                  for {
-                    upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
-                  } yield Ok(
-                    view(
-                      appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl,
-                      claimId = claimId,
-                      upscanInitiateResponse = upscanInitiateResponse,
-                      allowedFileTypesHint = appConfig.allowedFileTypesHint,
-                      filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-                      errorCode = None
+                  case None =>
+                    for {
+                      upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
+                    } yield Ok(
+                      view(
+                        appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl,
+                        claimId = claimId,
+                        upscanInitiateResponse = upscanInitiateResponse,
+                        allowedFileTypesHint = appConfig.allowedFileTypesHint,
+                        filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
+                        errorCode = None
+                      )
                     )
-                  )
-              }
-        }
+                }
+          }
+      }
     }
-    // } else Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
-  }
 
   private def getUpscanInitiateResponse(
     claimId: String,
@@ -139,28 +136,29 @@ class UploadCommunityBuildingsScheduleController @Inject() (
         )
     } yield upscanInitiateResponse
 
-  val onUploadSuccess: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    claimsValidationService
-      .getFileUploadReference(ValidationType.CommunityBuildings, acceptAwaitingUpload = true)
-      .flatMap {
-        case Some(fileUploadReference) =>
-          claimsValidationService
-            .updateUploadStatus(
-              claimId = request.sessionData.unsubmittedClaimId.get,
-              reference = fileUploadReference,
-              CommunityBuildings
-            )
-            .map(_ =>
-              // TODO: when available
-              // Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad)
-              Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad)
-            )
+  val onUploadSuccess: Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
+      claimsValidationService
+        .getFileUploadReference(ValidationType.CommunityBuildings, acceptAwaitingUpload = true)
+        .flatMap {
+          case Some(fileUploadReference) =>
+            claimsValidationService
+              .updateUploadStatus(
+                claimId = request.sessionData.unsubmittedClaimId.get,
+                reference = fileUploadReference,
+                CommunityBuildings
+              )
+              .map(_ =>
+                // TODO: when available
+                // Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad)
+                Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad)
+              )
 
-        case None =>
-          Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
+          case None =>
+            Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
 
-      }
-  }
+        }
+    }
 
   val onUploadError: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     val errorCode = request.getQueryString("errorCode")

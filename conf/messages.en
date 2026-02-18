@@ -3,14 +3,14 @@ aboutGiftAidSchedule.caption = Add Gift Aid schedule
 aboutGiftAidSchedule.heading = About Gift Aid schedule
 aboutGiftAidSchedule.paragraph.one = Use this service to add a Gift Aid schedule.
 aboutGiftAidSchedule.paragraph.two = You can upload a Gift Aid schedule in a .ods format.
-aboutGiftAidSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Gift Aid schedule here (opens in new tab)</a>. You can submit 1 file at a time, and each file can be up to 2.5MB.
+aboutGiftAidSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Gift Aid schedule here (opens in new tab)</a>. You can submit 1 file at a time, and each file can be up to 250 KB.
 aboutGiftAidSchedule.title = About Gift Aid schedule
 
 aboutOtherIncomeSchedule.caption = Add Other Income schedule
 aboutOtherIncomeSchedule.heading = About Other Income schedule
 aboutOtherIncomeSchedule.paragraph.one = Use this service to add an Other Income schedule.
 aboutOtherIncomeSchedule.paragraph.two = You can upload an Other Income schedule in a .ods format.
-aboutOtherIncomeSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download an Other Income schedule here (opens in new tab)</a>. You can submit 1 file at a time, and each file can be up to 2.5MB.
+aboutOtherIncomeSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download an Other Income schedule here (opens in new tab)</a>. You can submit 1 file at a time, and each file can be up to 250 KB.
 aboutOtherIncomeSchedule.title = About Other Income schedule
 
 aboutTheOrganisation.caption = Provide organisation details
@@ -386,7 +386,7 @@ problemWithGiftAidSchedule.caption = Add Gift Aid schedule
 problemWithGiftAidSchedule.heading = There is a problem with the data in your Gift Aid schedule
 problemWithGiftAidSchedule.link.attachUpdatedSchedule = Attach an updated Gift Aid schedule
 problemWithGiftAidSchedule.link.deleteSchedule = Delete schedule
-problemWithGiftAidSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Gift Aid donations (opens in new tab)</a>.
+problemWithGiftAidSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Gift Aid donations (opens in a new tab)</a>.
 problemWithGiftAidSchedule.list.item.2 = Delete this Gift Aid schedule.
 problemWithGiftAidSchedule.list.item.3 = Update your spreadsheet.
 problemWithGiftAidSchedule.list.item.4 = Upload the updated spreadsheet.
@@ -401,7 +401,7 @@ problemWithOtherIncomeSchedule.caption = Add Other Income schedule
 problemWithOtherIncomeSchedule.heading = There is a problem with the data in your Other Income schedule
 problemWithOtherIncomeSchedule.link.attachUpdatedSchedule = Attach an updated Other Income schedule
 problemWithOtherIncomeSchedule.link.deleteSchedule = Delete schedule
-problemWithOtherIncomeSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Other Income donations</a>.
+problemWithOtherIncomeSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Other Income donations (opens in a new tab)</a>.
 problemWithOtherIncomeSchedule.list.item.2 = Delete this Other Income schedule.
 problemWithOtherIncomeSchedule.list.item.3 = Update your spreadsheet.
 problemWithOtherIncomeSchedule.list.item.4 = Upload the updated spreadsheet.
@@ -508,6 +508,13 @@ updateRepaymentClaim.heading = Do you want to update this repayment claim?
 updateRepaymentClaim.hint = If you change this claim, you’ll lose any data you’ve already given or attached.
 updateRepaymentClaim.title = Do you want to update this repayment claim?
 
+aboutCommunityBuildingsSchedule.caption = Add Community Buildings schedule
+aboutCommunityBuildingsSchedule.heading = About Community Buildings schedule
+aboutCommunityBuildingsSchedule.paragraph.one = Use this service to add a Community Buildings schedule.
+aboutCommunityBuildingsSchedule.paragraph.two = You can upload a Community Buildings schedule in a .ods format.
+aboutCommunityBuildingsSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Community Buildings schedule here (opens in new tab)</a>. You can submit 1 file at a time, and each file can be up to 250KB.
+aboutCommunityBuildingsSchedule.title = About Community Buildings schedule
+
 uploadCommunityBuildingsSchedule.caption = Add Community Buildings schedule
 uploadCommunityBuildingsSchedule.title = Upload a Community Buildings schedule
 uploadCommunityBuildingsSchedule.heading = Upload a Community Buildings schedule
@@ -516,10 +523,10 @@ uploadGiftAidSchedule.paragraph.url = If you have not completed a Community Buil
 uploadCommunityBuildingsSchedule.input.label = Upload a file
 uploadCommunityBuildingsSchedule.form.upload-file.submit = Continue
 uploadCommunityBuildingsSchedule.error.file-upload.InvalidArgument = Select a Community Buildings schedule
-uploadCommunityBuildingsSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 2.5 MB
+uploadCommunityBuildingsSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250KB
 
 uploadGiftAidSchedule.caption = Add Gift Aid schedule
-uploadGiftAidSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 2.5 MB
+uploadGiftAidSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250 KB
 uploadGiftAidSchedule.error.file-upload.InvalidArgument = Select a Gift Aid schedule
 uploadGiftAidSchedule.form.upload-file.submit = Continue
 uploadGiftAidSchedule.heading = Upload a Gift Aid schedule
@@ -529,9 +536,9 @@ uploadGiftAidSchedule.paragraph.url = If you have not completed a Gift Aid sched
 uploadGiftAidSchedule.title = Upload a Gift Aid schedule
 
 uploadOtherIncomeSchedule.caption = Add Other Income schedule
-uploadOtherIncomeSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 2.5 MB
+uploadOtherIncomeSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250 KB
 uploadOtherIncomeSchedule.error.file-upload.InvalidArgument = Select an Other Income schedule
-uploadOtherIncomeSchedule.error.file-upload.invalid-size-large = File can be up to 2.5MB
+uploadOtherIncomeSchedule.error.file-upload.invalid-size-large = File can be up to 250 KB
 uploadOtherIncomeSchedule.error.file-upload.other = Some other error message to be put here
 uploadOtherIncomeSchedule.error.file-upload.required = Select an Other Income schedule
 uploadOtherIncomeSchedule.form.upload-file.submit = Continue
@@ -545,11 +552,11 @@ warning.text = Warning
 yourGiftAidScheduleUpload.caption = Add Gift Aid schedule
 yourGiftAidScheduleUpload.file = Gift Aid Schedule
 yourGiftAidScheduleUpload.heading = Your Gift Aid schedule upload
-yourGiftAidScheduleUpload.paragraph.one = You can upload your Gift Aid schedule as a spreadsheet. The selected file must be smaller than 2.5 MB.
+yourGiftAidScheduleUpload.paragraph.one = You can upload your Gift Aid schedule as a spreadsheet. The selected file must be smaller than 250 KB.
 yourGiftAidScheduleUpload.title = Your Gift Aid schedule upload
 
 yourOtherIncomeScheduleUpload.caption = Add Other Income schedule
 yourOtherIncomeScheduleUpload.heading = Your Other Income schedule upload
-yourOtherIncomeScheduleUpload.paragraph.one = You can upload your Other Income schedule as a spreadsheet. The selected file must be smaller than 2.5MB.
+yourOtherIncomeScheduleUpload.paragraph.one = You can upload your Other Income schedule as a spreadsheet. The selected file must be smaller than 250 KB.
 yourOtherIncomeScheduleUpload.table.key = Other Income Schedule
 yourOtherIncomeScheduleUpload.title = Your Other Income schedule upload

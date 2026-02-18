@@ -132,7 +132,7 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad.url
+            controllers.routes.PageNotFoundController.onPageLoad.url
           )
         }
       }
@@ -151,7 +151,7 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad.url
+            controllers.routes.PageNotFoundController.onPageLoad.url
           )
         }
       }
@@ -162,7 +162,8 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
 
         val sessionData =
           RepaymentClaimDetailsAnswers
-            .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
+            .setClaimingUnderGiftAidSmallDonationsScheme(true)
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
             .copy(
               unsubmittedClaimId = Some("claim-123"),
               communityBuildingsScheduleUpscanInitialization = Some(upscan)
@@ -185,7 +186,8 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
 
         val sessionData =
           RepaymentClaimDetailsAnswers
-            .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
+            .setClaimingUnderGiftAidSmallDonationsScheme(true)
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
             .copy(unsubmittedClaimId = Some("claim-123"))
 
         (mockClaimsValidationService
@@ -217,7 +219,8 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
 
         val sessionData =
           RepaymentClaimDetailsAnswers
-            .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
+            .setClaimingUnderGiftAidSmallDonationsScheme(true)
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
             .copy(unsubmittedClaimId = Some("claim-123"))
 
         (mockClaimsValidationService
@@ -265,7 +268,8 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
 
         val sessionData =
           RepaymentClaimDetailsAnswers
-            .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
+            .setClaimingUnderGiftAidSmallDonationsScheme(true)
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
             .copy(unsubmittedClaimId = Some("claim-123"))
 
         (mockClaimsValidationService
@@ -305,7 +309,8 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
 
         val sessionData =
           RepaymentClaimDetailsAnswers
-            .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
+            .setClaimingUnderGiftAidSmallDonationsScheme(true)
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
             .copy(unsubmittedClaimId = Some("claim-123"))
 
         (mockClaimsValidationService

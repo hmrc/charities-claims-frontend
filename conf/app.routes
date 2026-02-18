@@ -127,6 +127,8 @@ GET         /cannot-set-up-repayment-claim                  controllers.repaymen
 # TODO: Placeholder screen for D3 - route will be updated in future
 GET         /declaration-details-confirmation               controllers.DeclarationDetailsConfirmationController.onPageLoad
 
+GET         /about-community-buildings-schedule             controllers.communityBuildingsSchedule.AboutCommunityBuildingsScheduleController.onPageLoad
+POST        /about-community-buildings-schedule             controllers.communityBuildingsSchedule.AboutCommunityBuildingsScheduleController.onSubmit
 GET         /upload-community-buildings-schedule            controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onPageLoad
 GET         /upload-community-buildings-schedule/success    controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onUploadSuccess
 GET         /upload-community-buildings-schedule/error      controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onUploadError

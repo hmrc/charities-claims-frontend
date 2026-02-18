@@ -26,7 +26,6 @@ import services.ClaimsValidationService
 import views.html.DeleteOtherIncomeScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
-import play.api.mvc.Call
 import models.SessionData
 
 class DeleteOtherIncomeScheduleController @Inject() (
