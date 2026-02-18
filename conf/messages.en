@@ -395,6 +395,14 @@ otherIncomeScheduleUploadSuccessful.title = Upload successful
 phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in a new tab)</a> will help us to improve it.
 phasebanner.phase=Beta
 
+problemUpdatingGiftAidScheduleRejected.heading = There is a problem uploading your schedule
+problemUpdatingGiftAidScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
+problemUpdatingGiftAidScheduleRejected.title = There is a problem uploading your schedule
+
+problemUpdatingGiftAidScheduleUnknownError.heading = There is a problem uploading your schedule
+problemUpdatingGiftAidScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
+problemUpdatingGiftAidScheduleUnknownError.title = There is a problem uploading your schedule
+
 problemUpdatingGiftAidScheduleQuarantine.heading = There is a problem uploading your schedule
 problemUpdatingGiftAidScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
 problemUpdatingGiftAidScheduleQuarantine.title = There is a problem uploading your schedule

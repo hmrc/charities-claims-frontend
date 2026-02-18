@@ -183,6 +183,10 @@ POST        /delete-gasds-connected-charities-schedule       controllers.connect
 GET         /check-your-other-income-schedule                controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onPageLoad
 POST        /check-your-other-income-schedule                controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onSubmit
 
+GET         /problem-updating-gift-aid-schedule-rejected          controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onPageLoad
+POST        /problem-updating-gift-aid-schedule-rejected          controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onSubmit
+GET         /problem-updating-gift-aid-schedule-unknown-error     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleUnknownErrorController.onPageLoad
+POST        /problem-updating-gift-aid-schedule-unknown-error     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleUnknownErrorController.onSubmit
 GET         /problem-updating-gift-aid-schedule-rejected     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onPageLoad
 POST        /problem-updating-gift-aid-schedule-rejected     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onSubmit
 
