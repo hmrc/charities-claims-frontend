@@ -382,6 +382,10 @@ problemUpdatingGiftAidScheduleRejected.heading = There is a problem uploading yo
 problemUpdatingGiftAidScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
 problemUpdatingGiftAidScheduleRejected.title = There is a problem uploading your schedule
 
+problemUpdatingGiftAidScheduleQuarantine.heading = There is a problem uploading your schedule
+problemUpdatingGiftAidScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
+problemUpdatingGiftAidScheduleQuarantine.title = There is a problem uploading your schedule
+
 problemWithGiftAidSchedule.caption = Add Gift Aid schedule
 problemWithGiftAidSchedule.heading = There is a problem with the data in your Gift Aid schedule
 problemWithGiftAidSchedule.link.attachUpdatedSchedule = Attach an updated Gift Aid schedule

@@ -185,3 +185,6 @@ POST        /check-your-other-income-schedule                controllers.otherIn
 
 GET         /problem-updating-gift-aid-schedule-rejected     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onPageLoad
 POST        /problem-updating-gift-aid-schedule-rejected     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onSubmit
+
+GET         /problem-updating-gift-aid-schedule-quarantine   controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onPageLoad
+POST        /problem-updating-gift-aid-schedule-quarantine   controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onSubmit

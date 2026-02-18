@@ -26,7 +26,7 @@ import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
-import services.{ClaimsService, ClaimsValidationService}
+import services.{ClaimsService, ClaimsValidationService, SaveService}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
@@ -167,14 +167,48 @@ class CheckYourOtherIncomeScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      "should save and redirect to success page when No is selected" in {
+      "should redirect to claims task list when No is selected and schedule is already completed" in {
         val mockClaimsValidationService: ClaimsValidationService = mock[ClaimsValidationService]
-        val mockClaimsService: ClaimsService                     = mock[ClaimsService]
+
+        val completedSessionData = sessionData.copy(otherIncomeScheduleCompleted = true)
 
         (mockClaimsValidationService
           .getOtherIncomeScheduleData(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
           .returning(Future.successful(testOtherIncomeScheduleData))
+
+        given application: Application = applicationBuilder(sessionData = completedSessionData)
+          .overrides(
+            bind[ClaimsValidationService].toInstance(mockClaimsValidationService)
+          )
+          .build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.CheckYourOtherIncomeScheduleController.onSubmit.url)
+              .withFormUrlEncodedBody("value" -> "false")
+
+          val result = route(application, request).value
+
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
+
+      "should save and redirect to success page when No is selected and schedule is not yet completed" in {
+        val mockClaimsValidationService: ClaimsValidationService = mock[ClaimsValidationService]
+        val mockClaimsService: ClaimsService                     = mock[ClaimsService]
+        val mockSaveService: SaveService                         = mock[SaveService]
+
+        (mockClaimsValidationService
+          .getOtherIncomeScheduleData(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(testOtherIncomeScheduleData))
+
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(()))
 
         (mockClaimsService
           .save(using _: HeaderCarrier))
@@ -184,7 +218,8 @@ class CheckYourOtherIncomeScheduleControllerSpec extends ControllerSpec {
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(
             bind[ClaimsValidationService].toInstance(mockClaimsValidationService),
-            bind[ClaimsService].toInstance(mockClaimsService)
+            bind[ClaimsService].toInstance(mockClaimsService),
+            bind[SaveService].toInstance(mockSaveService)
           )
           .build()
 
