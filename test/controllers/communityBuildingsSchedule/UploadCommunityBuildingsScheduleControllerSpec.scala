@@ -156,6 +156,7 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
         }
       }
 
+      // TODO: when redirection available
       "should render page when upscan initiation exists in session" in {
 
         val upscan = response
@@ -211,7 +212,7 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
           redirectLocation(result) shouldEqual
             // TODO - when available
             // Some(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad.url)
-            Some(routes.UploadCommunityBuildingsScheduleController.onPageLoad.url)
+            Some(controllers.routes.PageNotFoundController.onPageLoad.url)
         }
       }
 
@@ -344,7 +345,8 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
 
         val sessionData =
           RepaymentClaimDetailsAnswers
-            .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
+            .setClaimingUnderGiftAidSmallDonationsScheme(true)
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
             .copy(
               unsubmittedClaimId = Some("claim-123"),
               communityBuildingsScheduleUpscanInitialization = Some(response)
@@ -370,7 +372,8 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
 
         val sessionData =
           RepaymentClaimDetailsAnswers
-            .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
+            .setClaimingUnderGiftAidSmallDonationsScheme(true)
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
             .copy(
               unsubmittedClaimId = Some("claim-123")
             )
