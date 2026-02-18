@@ -498,6 +498,27 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         }
       }
 
+      "should not display post create claim sections when answers complete but unsubmittedClaimId is None" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers()),
+          unsubmittedClaimId = None
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          content should include(messages("claimsTaskList.task.repaymentClaimDetails"))
+          content shouldNot include(messages("claimsTaskList.task.organisationDetails"))
+          content shouldNot include(messages("claimsTaskList.link.deleteClaim"))
+          content should include(messages("claimsTaskList.status.cannotStartYet"))
+        }
+      }
+
       "should have unique IDs for task list status elements" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
