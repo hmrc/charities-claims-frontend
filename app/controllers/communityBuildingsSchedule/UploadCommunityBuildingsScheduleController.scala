@@ -46,17 +46,44 @@ class UploadCommunityBuildingsScheduleController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
-      request.sessionData.unsubmittedClaimId match {
-        case None =>
-          // if the claim id is not found, we need to redirect to the repayment claim details page
-          Future
-            .successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+//      request.sessionData.unsubmittedClaimId match {
+//        case None =>
+//          // if the claim id is not found, we need to redirect to the repayment claim details page
+//          Future
+//            .successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+//
+//        case Some(claimId) =>
+      // else is never going to happen since the dataguard prevents coming into here
+      val claimId = request.sessionData.unsubmittedClaimId.getOrElse("")
+      request.sessionData.communityBuildingsScheduleUpscanInitialization match {
+        case Some(upscanInitiateResponse) =>
+          Future.successful(
+            Ok(
+              view(
+                appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl,
+                claimId = claimId,
+                upscanInitiateResponse = upscanInitiateResponse,
+                allowedFileTypesHint = appConfig.allowedFileTypesHint,
+                filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
+                errorCode = None
+              )
+            )
+          )
 
-        case Some(claimId) =>
-          request.sessionData.communityBuildingsScheduleUpscanInitialization match {
-            case Some(upscanInitiateResponse) =>
-              Future.successful(
-                Ok(
+        case None =>
+          claimsValidationService
+            .getFileUploadReference(ValidationType.CommunityBuildings)
+            .flatMap {
+              case Some(_) =>
+                // if the file upload reference is found, we need to redirect to your Community Buildings schedule upload page
+                // TODO: redirect when available
+                // Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
+                Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+
+              case None =>
+                for {
+                  upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
+                } yield Ok(
                   view(
                     appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl,
                     claimId = claimId,
@@ -66,34 +93,9 @@ class UploadCommunityBuildingsScheduleController @Inject() (
                     errorCode = None
                   )
                 )
-              )
-
-            case None =>
-              claimsValidationService
-                .getFileUploadReference(ValidationType.CommunityBuildings)
-                .flatMap {
-                  case Some(_) =>
-                    // if the file upload reference is found, we need to redirect to your Community Buildings schedule upload page
-                    // TODO: redirect when available
-                    // Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
-                    Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
-
-                  case None =>
-                    for {
-                      upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
-                    } yield Ok(
-                      view(
-                        appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl,
-                        claimId = claimId,
-                        upscanInitiateResponse = upscanInitiateResponse,
-                        allowedFileTypesHint = appConfig.allowedFileTypesHint,
-                        filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-                        errorCode = None
-                      )
-                    )
-                }
-          }
+            }
       }
+//      }
     }
 
   private def getUpscanInitiateResponse(
@@ -151,7 +153,7 @@ class UploadCommunityBuildingsScheduleController @Inject() (
               .map(_ =>
                 // TODO: when available
                 // Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad)
-                Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad)
+                Redirect(controllers.routes.PageNotFoundController.onPageLoad)
               )
 
           case None =>
@@ -160,28 +162,29 @@ class UploadCommunityBuildingsScheduleController @Inject() (
         }
     }
 
-  val onUploadError: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val errorCode = request.getQueryString("errorCode")
-    request.sessionData.communityBuildingsScheduleUpscanInitialization match {
-      case Some(upscanInitiateResponse) =>
-        Future.successful(
-          BadRequest(
-            view(
-              appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl,
-              claimId = request.sessionData.unsubmittedClaimId.get,
-              upscanInitiateResponse = upscanInitiateResponse,
-              allowedFileTypesHint = appConfig.allowedFileTypesHint,
-              filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-              errorCode = errorCode
+  val onUploadError: Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
+      val errorCode = request.getQueryString("errorCode")
+      request.sessionData.communityBuildingsScheduleUpscanInitialization match {
+        case Some(upscanInitiateResponse) =>
+          Future.successful(
+            BadRequest(
+              view(
+                appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl,
+                claimId = request.sessionData.unsubmittedClaimId.get,
+                upscanInitiateResponse = upscanInitiateResponse,
+                allowedFileTypesHint = appConfig.allowedFileTypesHint,
+                filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
+                errorCode = errorCode
+              )
             )
           )
-        )
 
-      case None =>
-        // if the upscan initiate response is not found, we need to redirect to the upload page to start a new upload
-        Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
+        case None =>
+          // if the upscan initiate response is not found, we need to redirect to the upload page to start a new upload
+          Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
+      }
+
     }
-
-  }
 
 }
