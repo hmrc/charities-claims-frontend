@@ -189,5 +189,7 @@ POST        /problem-updating-gift-aid-schedule-unknown-error     controllers.gi
 GET         /problem-updating-gift-aid-schedule-quarantine        controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onPageLoad
 POST        /problem-updating-gift-aid-schedule-quarantine        controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onSubmit
 
-GET         /problem-updating-community-buildings-schedule-quarantine        controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onPageLoad
-POST        /problem-updating-community-buildings-schedule-quarantine        controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onSubmit
+GET         /problem-updating-community-buildings-schedule-rejected         controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onPageLoad
+POST        /problem-updating-community-buildings-schedule-rejected         controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onSubmit
+GET         /problem-updating-community-buildings-schedule-quarantine       controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onPageLoad
+POST        /problem-updating-community-buildings-schedule-quarantine       controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onSubmit
