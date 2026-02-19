@@ -411,6 +411,21 @@ problemUpdatingGiftAidScheduleRejected.heading = There is a problem uploading yo
 problemUpdatingGiftAidScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
 problemUpdatingGiftAidScheduleRejected.title = There is a problem uploading your Gift Aid schedule
 
+problemWithCommunityBuildingsSchedule.caption = Add Community Buildings schedule
+problemWithCommunityBuildingsSchedule.heading = There is a problem with the data in your Community Buildings schedule
+problemWithCommunityBuildingsSchedule.link.attachUpdatedSchedule = Attach an updated Community Buildings schedule
+problemWithCommunityBuildingsSchedule.link.deleteSchedule = Delete schedule
+problemWithCommunityBuildingsSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Community Buildings donations (opens in new tab)</a>.
+problemWithCommunityBuildingsSchedule.list.item.2 = Delete this Community Buildings schedule.
+problemWithCommunityBuildingsSchedule.list.item.3 = Update your spreadsheet.
+problemWithCommunityBuildingsSchedule.list.item.4 = Upload the updated spreadsheet.
+problemWithCommunityBuildingsSchedule.subheading.1 = What you can do next
+problemWithCommunityBuildingsSchedule.subheading.2 = Summary of errors
+problemWithCommunityBuildingsSchedule.table.column.1 = Row
+problemWithCommunityBuildingsSchedule.table.column.2 = Error
+problemWithCommunityBuildingsSchedule.title = There is a problem with the data in your Community Buildings schedule
+problemWithCommunityBuildingsSchedule.warning = We cannot accept the file because it has errors. You must fix these errors and upload the updated file before you can continue.
+
 problemWithGiftAidSchedule.caption = Add Gift Aid schedule
 problemWithGiftAidSchedule.heading = There is a problem with the data in your Gift Aid schedule
 problemWithGiftAidSchedule.link.attachUpdatedSchedule = Attach an updated Gift Aid schedule
@@ -558,6 +573,7 @@ uploadOtherIncomeSchedule.input.label = Upload a file
 uploadOtherIncomeSchedule.paragraph.one = To claim Other Income, you need to upload a completed Other Income schedule with details of your donors and donations. You can save your claim without uploading the Other Income schedule, but you need to upload an Other Income schedule before submitting your claim.
 uploadOtherIncomeSchedule.paragraph.url = If you have not completed an Other Income schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download an Other Income schedule here (opens in new tab)</a>.
 uploadOtherIncomeSchedule.title = Upload an Other Income schedule
+
 warning.text = Warning
 
 yourGiftAidScheduleUpload.caption = Add Gift Aid schedule
