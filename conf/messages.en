@@ -395,6 +395,10 @@ otherIncomeScheduleUploadSuccessful.title = Upload successful
 phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in new tab)</a> will help us to improve it.
 phasebanner.phase=Beta
 
+problemUpdatingCommunityBuildingsScheduleUnknownError.heading = There is a problem uploading your Community Buildings schedule
+problemUpdatingCommunityBuildingsScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
+problemUpdatingCommunityBuildingsScheduleUnknownError.title = There is a problem uploading your Community Buildings schedule
+
 problemUpdatingCommunityBuildingsScheduleQuarantine.heading = There is a problem uploading your Community Buildings schedule
 problemUpdatingCommunityBuildingsScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
 problemUpdatingCommunityBuildingsScheduleQuarantine.title = There is a problem uploading your Community Buildings schedule
