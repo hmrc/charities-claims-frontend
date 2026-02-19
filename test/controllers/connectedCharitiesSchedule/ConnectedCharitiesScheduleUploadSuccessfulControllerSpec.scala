@@ -34,6 +34,7 @@ class ConnectedCharitiesScheduleUploadSuccessfulControllerSpec extends Controlle
         val sessionData = RepaymentClaimDetailsAnswers
           .setClaimingConnectedCharities(true)
           .copy(
+            unsubmittedClaimId = Some("claim-123"),
             connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
             connectedCharitiesScheduleData = Some(TestScheduleData.exampleConnectedCharitiesScheduleData)
           )
@@ -58,6 +59,7 @@ class ConnectedCharitiesScheduleUploadSuccessfulControllerSpec extends Controlle
         val sessionData              = RepaymentClaimDetailsAnswers
           .setClaimingConnectedCharities(true)
           .copy(
+            unsubmittedClaimId = Some("claim-123"),
             connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference"))
           )
         val application: Application = applicationBuilder(sessionData = sessionData).build()
