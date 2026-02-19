@@ -71,6 +71,7 @@ class ProblemWithOtherIncomeScheduleController @Inject() (
                           claimId = claimId,
                           errors = paginationResult.paginatedData,
                           paginationViewModel = paginationResult.paginationViewModel,
+                          paginationStatus = paginationResult,
                           otherIncomeScheduleSpreadsheetGuidanceUrl =
                             appConfig.otherIncomeScheduleSpreadsheetGuidanceUrl
                         )

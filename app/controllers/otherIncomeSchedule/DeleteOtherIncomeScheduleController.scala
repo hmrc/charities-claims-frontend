@@ -26,7 +26,6 @@ import services.ClaimsValidationService
 import views.html.DeleteOtherIncomeScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
-import play.api.mvc.Call
 import models.SessionData
 
 class DeleteOtherIncomeScheduleController @Inject() (
@@ -59,8 +58,7 @@ class DeleteOtherIncomeScheduleController @Inject() (
                   Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
                 }
               } else {
-                // FIXME: replace with proper route
-                Future.successful(Redirect(Call("GET", "/problem-with-other-income-schedule")))
+                Future.successful(Redirect(routes.ProblemWithOtherIncomeScheduleController.onPageLoad))
               }
           )
       }

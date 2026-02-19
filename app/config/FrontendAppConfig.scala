@@ -26,25 +26,25 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
   lazy val appName: String      = config.get[String]("appName")
   lazy val mongoDbTTL: Duration = config.get[Duration]("mongodb.ttl")
 
-  lazy val baseUrl: String                                                 = config.get[String]("urls.baseUrl")
-  lazy val loginUrl: String                                                = config.get[String]("urls.login")
-  lazy val loginContinueUrl: String                                        = config.get[String]("urls.loginContinue")
-  lazy val signOutUrl: String                                              = config.get[String]("urls.signOut")
-  lazy val homePageUrl: String                                             = config.get[String]("urls.homePageUrl")
-  lazy val accessibilityStatementUrl: String                               = config.get[String]("urls.accessibilityStatementUrl")
-  lazy val betaFeedbackUrl: String                                         = config.get[String]("urls.betaFeedbackUrl")
-  lazy val researchUrl: String                                             = config.get[String]("urls.researchUrl")
-  lazy val authLoginStubSignInUrl: String                                  = config.get[String]("urls.authLoginStubSignInUrl")
-  lazy val charityRepaymentDashboardUrl: String                            = config.get[String]("urls.charityRepaymentDashboardUrl")
-  lazy val accountUrl: String                                              = config.get[String]("urls.accountUrl")
-  lazy val makeCharityRepaymentClaimUrl: String                            = config.get[String]("urls.makeCharityRepaymentClaimUrl")
-  lazy val registerCharityWithARegulatorUrl: String                        = config.get[String]("urls.registerCharityWithARegulatorUrl")
-  lazy val giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl: String =
-    config.get[String]("urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl")
-  lazy val otherIncomeScheduleSpreadsheetGuidanceUrl: String               =
+  lazy val baseUrl: String                                          = config.get[String]("urls.baseUrl")
+  lazy val loginUrl: String                                         = config.get[String]("urls.login")
+  lazy val loginContinueUrl: String                                 = config.get[String]("urls.loginContinue")
+  lazy val signOutUrl: String                                       = config.get[String]("urls.signOut")
+  lazy val homePageUrl: String                                      = config.get[String]("urls.homePageUrl")
+  lazy val accessibilityStatementUrl: String                        = config.get[String]("urls.accessibilityStatementUrl")
+  lazy val betaFeedbackUrl: String                                  = config.get[String]("urls.betaFeedbackUrl")
+  lazy val researchUrl: String                                      = config.get[String]("urls.researchUrl")
+  lazy val authLoginStubSignInUrl: String                           = config.get[String]("urls.authLoginStubSignInUrl")
+  lazy val charityRepaymentDashboardUrl: String                     = config.get[String]("urls.charityRepaymentDashboardUrl")
+  lazy val accountUrl: String                                       = config.get[String]("urls.accountUrl")
+  lazy val makeCharityRepaymentClaimUrl: String                     = config.get[String]("urls.makeCharityRepaymentClaimUrl")
+  lazy val registerCharityWithARegulatorUrl: String                 = config.get[String]("urls.registerCharityWithARegulatorUrl")
+  lazy val otherIncomeScheduleSpreadsheetGuidanceUrl: String        =
     config.get[String]("urls.otherIncomeScheduleSpreadsheetGuidanceUrl")
-  lazy val giftAidScheduleSpreadsheetGuidanceUrl: String                   =
+  lazy val giftAidScheduleSpreadsheetGuidanceUrl: String            =
     config.get[String]("urls.giftAidScheduleSpreadsheetGuidanceUrl")
+  lazy val communityBuildingsScheduleSpreadsheetGuidanceUrl: String =
+    config.get[String]("urls.communityBuildingsScheduleSpreadsheetGuidanceUrl")
 
   lazy val enableLanguageSwitching: Boolean = config.get[Boolean]("enableLanguageSwitching")
   lazy val timeoutInSeconds: Int            = config.get[Int]("timeout-dialog.timeout")
@@ -53,8 +53,9 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
   lazy val exceptedLimit: Int               = config.get[Int]("unregulated-limits.exceptedLimit")
   lazy val lowIncomeLimit: Int              = config.get[Int]("unregulated-limits.lowIncomeLimit")
 
-  lazy val maxGifAidScheduleUploadSize: Int      = config.get[Int]("scheduleUpload.gifAid.maxSize")
-  lazy val maxOtherIncomeScheduleUploadSize: Int = config.get[Int]("scheduleUpload.otherIncome.maxSize")
+  lazy val maxGifAidScheduleUploadSize: Int             = config.get[Int]("scheduleUpload.gifAid.maxSize")
+  lazy val maxOtherIncomeScheduleUploadSize: Int        = config.get[Int]("scheduleUpload.otherIncome.maxSize")
+  lazy val maxCommunityBuildingsScheduleUploadSize: Int = config.get[Int]("scheduleUpload.communityBuildings.maxSize")
 
   lazy val allowedFileTypesHint: String   = config.get[String]("scheduleUpload.allowedFileTypesHint")
   lazy val filePickerAcceptFilter: String = config.get[String]("scheduleUpload.filePickerAcceptFilter")

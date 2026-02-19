@@ -1,0 +1,101 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.otherIncomeSchedule.routes
+@import models.*
+@import views.html.components.*
+@import viewmodels.govuk.PaginationFluency.*
+@import utils.FormatUtils.*
+@import services.PaginationStatus
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukButton: GovukButton,
+    govukErrorSummary: GovukErrorSummary,
+    govukSummaryList: GovukSummaryList,
+    govukRadios: GovukRadios,
+    pageNavigator: PageNavigator,
+    otherIncomesTable: OtherIncomesTable
+)
+
+@(
+    form: Form[?],
+    otherIncomeScheduleData: OtherIncomeScheduleData,
+    otherIncomes: Seq[OtherIncome],
+    paginationViewModel: PaginationViewModel,
+    paginationStatus: PaginationStatus
+)(implicit request: Request[?], messages: Messages)
+
+@layout(
+    pageTitle = titleWithPagination(form, messages("checkYourOtherIncomeSchedule.title"), paginationStatus),
+    showBackLink = true
+) {
+
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+
+    <span class="govuk-caption-l">@messages("checkYourOtherIncomeSchedule.caption")</span>
+    <h1 class="govuk-heading-l">@messages("checkYourOtherIncomeSchedule.heading")</h1>
+
+    @govukSummaryList(SummaryList(
+        card = Some(Card(
+            title = Some(CardTitle(
+                content = Text(messages("checkYourOtherIncomeSchedule.summary.title")),
+                headingLevel = Some(2)
+            ))
+        )),
+        rows = Seq(
+            SummaryListRow(
+                key = Key(content = Text(messages("checkYourOtherIncomeSchedule.summary.item.1"))),
+                value = Value(content = Text(otherIncomeScheduleData.adjustmentForOtherIncomePreviousOverClaimed.toAmountString)),
+                classes = "custom-summary-list"
+            ),
+            SummaryListRow(
+                key = Key(content = Text(messages("checkYourOtherIncomeSchedule.summary.item.2"))),
+                value = Value(content = Text(otherIncomeScheduleData.totalOfGrossPayments.toAmountString)),
+                classes = "custom-summary-list"
+            ),
+            SummaryListRow(
+                key = Key(content = Text(messages("checkYourOtherIncomeSchedule.summary.item.3"))),
+                value = Value(content = Text(otherIncomeScheduleData.totalOfTaxDeducted.toAmountString)),
+                classes = "custom-summary-list"
+            )
+        )
+    ))
+
+    <div class="govuk-!-margin-bottom-9"></div>
+
+    @otherIncomesTable(otherIncomes)
+
+    @pageNavigator(paginationViewModel)
+
+    @formHelper(action = routes.CheckYourOtherIncomeScheduleController.onSubmit, Symbol("autoComplete") -> "off") {
+
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                fieldset = FieldsetViewModel(LegendViewModel(messages("checkYourOtherIncomeSchedule.hint")).bold),
+                yesMessageKey = "site.yes",
+                noMessageKey = "checkYourOtherIncomeSchedule.radios.no"
+            )
+        )
+
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+    }
+
+}

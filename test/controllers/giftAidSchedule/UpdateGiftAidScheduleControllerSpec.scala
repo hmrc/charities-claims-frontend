@@ -44,7 +44,9 @@ class UpdateGiftAidScheduleControllerSpec extends ControllerSpec {
     "onPageLoad" - {
       "should render the page correctly" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .and(SessionData.setUnsubmittedClaimId("claim-123"))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
@@ -67,7 +69,9 @@ class UpdateGiftAidScheduleControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should reload the page with errors when a required field is missing" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
+        val sessionData                = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .and(SessionData.setUnsubmittedClaimId("claim-123"))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -84,7 +88,9 @@ class UpdateGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should redirect to G1.3 screen when no is selected" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
+        val sessionData                = RepaymentClaimDetailsAnswers
+          .setClaimingGiftAid(true)
+          .and(SessionData.setUnsubmittedClaimId("claim-123"))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -165,11 +171,6 @@ class UpdateGiftAidScheduleControllerSpec extends ControllerSpec {
           .setClaimingGiftAid(true)
           .copy(unsubmittedClaimId = None)
 
-        (mockClaimsValidationService
-          .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.failed(new RuntimeException("No claimId found")))
-
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -180,8 +181,10 @@ class UpdateGiftAidScheduleControllerSpec extends ControllerSpec {
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
-
-          a[RuntimeException] should be thrownBy result.futureValue
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(
+            controllers.routes.PageNotFoundController.onPageLoad.url
+          )
         }
       }
     }

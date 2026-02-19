@@ -65,7 +65,7 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
       // Redirect Tests:
 
-      "should redirect to RepaymentClaimDetailsController when no claimId in session" in {
+      "should decline when no claim id in session" in {
         val sessionData = RepaymentClaimDetailsAnswers
           .setClaimingTaxDeducted(true)
           .copy(unsubmittedClaimId = None)
@@ -80,7 +80,7 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad.url
+            controllers.routes.PageNotFoundController.onPageLoad.url
           )
         }
       }
@@ -206,7 +206,7 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      "should display number 24 in row column exactly 1 time from FAILED_VALIDATION test data" in {
+      "should display number 25 in row column exactly 1 time from FAILED_VALIDATION test data" in {
         val sessionData = RepaymentClaimDetailsAnswers
           .setClaimingTaxDeducted(true)
           .copy(
@@ -229,12 +229,12 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           val content = contentAsString(result)
 
           status(result) shouldEqual OK
-          val zeroRowPattern = ">24<".r
-          zeroRowPattern.findAllIn(content).length shouldEqual 1
+          val rowPattern = ">25<".r
+          rowPattern.findAllIn(content).length shouldEqual 1
         }
       }
 
-      "should display number 32 in row column exactly 1 time from FAILED_VALIDATION test data" in {
+      "should display number 33 in row column exactly 1 time from FAILED_VALIDATION test data" in {
         val sessionData = RepaymentClaimDetailsAnswers
           .setClaimingTaxDeducted(true)
           .copy(
@@ -257,8 +257,8 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           val content = contentAsString(result)
 
           status(result) shouldEqual OK
-          val zeroRowPattern = ">32<".r
-          zeroRowPattern.findAllIn(content).length shouldEqual 1
+          val rowPattern = ">33<".r
+          rowPattern.findAllIn(content).length shouldEqual 1
         }
       }
 

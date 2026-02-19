@@ -60,7 +60,7 @@ class UploadGiftAidScheduleController @Inject() (
                 Future.successful(
                   Ok(
                     view(
-                      appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl,
+                      appConfig.giftAidScheduleSpreadsheetGuidanceUrl,
                       claimId = claimId,
                       upscanInitiateResponse = upscanInitiateResponse,
                       allowedFileTypesHint = appConfig.allowedFileTypesHint,
@@ -83,7 +83,7 @@ class UploadGiftAidScheduleController @Inject() (
                         upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
                       } yield Ok(
                         view(
-                          appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl,
+                          appConfig.giftAidScheduleSpreadsheetGuidanceUrl,
                           claimId = claimId,
                           upscanInitiateResponse = upscanInitiateResponse,
                           allowedFileTypesHint = appConfig.allowedFileTypesHint,
@@ -109,7 +109,8 @@ class UploadGiftAidScheduleController @Inject() (
               request = UpscanInitiateRequest(
                 successRedirect = baseUrl + routes.UploadGiftAidScheduleController.onUploadSuccess.url,
                 errorRedirect = baseUrl + routes.UploadGiftAidScheduleController.onUploadError.url,
-                maximumFileSize = Some(appConfig.maxGifAidScheduleUploadSize)
+                maximumFileSize = Some(appConfig.maxGifAidScheduleUploadSize),
+                minimumFileSize = Some(1)
               )
             )
           _                      <-
@@ -167,7 +168,7 @@ class UploadGiftAidScheduleController @Inject() (
             Future.successful(
               BadRequest(
                 view(
-                  appConfig.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl,
+                  appConfig.giftAidScheduleSpreadsheetGuidanceUrl,
                   claimId = request.sessionData.unsubmittedClaimId.get,
                   upscanInitiateResponse = upscanInitiateResponse,
                   allowedFileTypesHint = appConfig.allowedFileTypesHint,

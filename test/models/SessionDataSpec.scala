@@ -25,12 +25,14 @@ class SessionDataSpec extends BaseSpec {
     "be serializable and deserializable" in {
       val sessionData             = SessionData(
         charitiesReference = testCharitiesReference,
-        repaymentClaimDetailsAnswersOld = RepaymentClaimDetailsAnswersOld(
-          claimingGiftAid = Some(true),
-          claimingTaxDeducted = Some(true),
-          claimingUnderGiftAidSmallDonationsScheme = Some(true),
-          claimingReferenceNumber = Some(true),
-          claimReferenceNumber = Some("1234567890")
+        repaymentClaimDetailsAnswers = Some(
+          RepaymentClaimDetailsAnswers(
+            claimingGiftAid = Some(true),
+            claimingTaxDeducted = Some(true),
+            claimingUnderGiftAidSmallDonationsScheme = Some(true),
+            claimingReferenceNumber = Some(true),
+            claimReferenceNumber = Some("1234567890")
+          )
         ),
         organisationDetailsAnswers = Some(
           OrganisationDetailsAnswers(

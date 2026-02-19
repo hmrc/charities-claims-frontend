@@ -100,7 +100,8 @@ object ClaimsTaskListController {
   }
 
   private def isRepaymentClaimDetailsComplete(using request: DataRequest[?]): Boolean =
-    request.sessionData.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
+    request.sessionData.unsubmittedClaimId.isDefined &&
+      request.sessionData.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
 
   private def buildAboutTheClaimSection(using request: DataRequest[?], messages: Messages): Seq[TaskItem] = {
     val answers         = request.sessionData.repaymentClaimDetailsAnswers
@@ -211,7 +212,7 @@ object ClaimsTaskListController {
 
     TaskItem(
       name = messages("claimsTaskList.task.communityBuildingsSchedule"),
-      href = routes.PageNotFoundController.onPageLoad,
+      href = controllers.communityBuildingsSchedule.routes.AboutCommunityBuildingsScheduleController.onPageLoad,
       status = status
     )
 

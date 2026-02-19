@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,110 @@
 
 package controllers.otherIncomeSchedule
 
+import play.api.mvc.*
 import com.google.inject.Inject
 import controllers.BaseController
+import views.html.CheckYourOtherIncomeScheduleView
 import controllers.actions.Actions
-import play.api.mvc.*
-
-import scala.concurrent.Future
+import forms.YesNoFormProvider
+import play.api.data.Form
 import models.SessionData
+import services.{ClaimsService, ClaimsValidationService, PaginationService, SaveService}
+import controllers.otherIncomeSchedule.routes
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class CheckYourOtherIncomeScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  actions: Actions
-) extends BaseController {
+  view: CheckYourOtherIncomeScheduleView,
+  actions: Actions,
+  claimsValidationService: ClaimsValidationService,
+  formProvider: YesNoFormProvider,
+  claimsService: ClaimsService,
+  saveService: SaveService
+)(using ec: ExecutionContext)
+    extends BaseController {
 
-  def onPageLoad: Action[AnyContent] =
+  val form: Form[Boolean] = formProvider("checkYourOtherIncomeSchedule.error.required")
+
+  val onPageLoad: Action[AnyContent] =
     actions
       .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
-        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+        claimsValidationService.getOtherIncomeScheduleData
+          .map { otherIncomeScheduleData =>
+
+            val currentPage      = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
+            val paginationResult = PaginationService.paginateOtherIncomes(
+              allOtherIncomes = otherIncomeScheduleData.otherIncomes,
+              currentPage = currentPage,
+              baseUrl = routes.CheckYourOtherIncomeScheduleController.onPageLoad.url
+            )
+
+            Ok(
+              view(
+                form = form,
+                otherIncomeScheduleData = otherIncomeScheduleData,
+                otherIncomes = paginationResult.paginatedData,
+                paginationViewModel = paginationResult.paginationViewModel,
+                paginationStatus = paginationResult
+              )
+            )
+          }
       }
+
+  val onSubmit: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .async { implicit request =>
+        claimsValidationService.getOtherIncomeScheduleData
+          .flatMap { otherIncomeScheduleData =>
+            form
+              .bindFromRequest()
+              .fold(
+                formWithErrors => {
+                  val paginationResult = PaginationService.paginateOtherIncomes(
+                    allOtherIncomes = otherIncomeScheduleData.otherIncomes,
+                    currentPage = 1,
+                    baseUrl = routes.CheckYourOtherIncomeScheduleController.onPageLoad.url
+                  )
+
+                  Future.successful(
+                    BadRequest(
+                      view(
+                        form = formWithErrors,
+                        otherIncomeScheduleData = otherIncomeScheduleData,
+                        otherIncomes = paginationResult.paginatedData,
+                        paginationViewModel = paginationResult.paginationViewModel,
+                        paginationStatus = paginationResult
+                      )
+                    )
+                  )
+                },
+                answer =>
+                  answer match {
+                    case true =>
+                      Future.successful(Redirect(routes.UpdateOtherIncomeScheduleController.onPageLoad))
+
+                    case false =>
+                      if request.sessionData.otherIncomeScheduleCompleted
+                      then {
+                        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+                      } else {
+                        for {
+                          _ <- saveService.save(
+                                 request.sessionData.copy(
+                                   otherIncomeScheduleCompleted = true,
+                                   otherIncomeScheduleData = None
+                                 )
+                               )
+                          _ <- claimsService.save
+                        } yield Redirect(routes.OtherIncomeScheduleUploadSuccessfulController.onPageLoad)
+                      }
+                  }
+              )
+
+          }
+      }
+
 }
