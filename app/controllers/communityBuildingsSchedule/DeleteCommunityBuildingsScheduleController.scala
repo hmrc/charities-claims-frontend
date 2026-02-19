@@ -20,13 +20,13 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.YesNoFormProvider
+import models.SessionData
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ClaimsValidationService
 import views.html.DeleteCommunityBuildingsScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
-import play.api.mvc.Call
 
 class DeleteCommunityBuildingsScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -39,24 +39,27 @@ class DeleteCommunityBuildingsScheduleController @Inject() (
 
   val form: Form[Boolean] = formProvider("deleteCommunityBuildingsSchedule.error.required")
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(form))
-  }
+  def onPageLoad: Action[AnyContent] = actions
+    .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule) { implicit request =>
+      Ok(view(form))
+    }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          if value then {
-            claimsValidationService.deleteCommunityBuildingsSchedule.map { _ =>
-              Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
-            }
-          } else {
-            // FIXME: replace with proper route
-            Future.successful(Redirect(Call("GET", "/problem-with-community-buildings-schedule")))
-          }
-      )
-  }
+  def onSubmit: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
+      .async { implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+            value =>
+              if value then {
+                claimsValidationService.deleteCommunityBuildingsSchedule.map { _ =>
+                  Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
+                }
+              } else {
+                Future.successful(Redirect(routes.ProblemWithCommunityBuildingsScheduleController.onPageLoad))
+              }
+          )
+      }
 }

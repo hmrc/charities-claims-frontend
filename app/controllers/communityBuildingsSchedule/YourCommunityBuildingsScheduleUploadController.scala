@@ -171,9 +171,7 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
                       Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
 
                     case _: GetUploadResultValidationFailedCommunityBuildings =>
-                      // TODO: when available replace with commented line
-                      // Future.successful(Redirect(routes.ProblemWithCommunityBuildingsScheduleController.onPageLoad))
-                      Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
+                      Future.successful(Redirect(routes.ProblemWithCommunityBuildingsScheduleController.onPageLoad))
 
                     case _ =>
                       // strange case, but we need to handle it

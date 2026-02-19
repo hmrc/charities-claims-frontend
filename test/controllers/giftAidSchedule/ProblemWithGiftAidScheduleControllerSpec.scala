@@ -274,10 +274,13 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.ProblemWithGiftAidScheduleController.onPageLoad.url + "?page=invalid")
 
-          val result = route(application, request).value
+          val result  = route(application, request).value
+          val content = contentAsString(result)
 
           status(result) shouldEqual OK
-          contentAsString(result) should include("There is a problem with the data in your Gift Aid schedule")
+          content should include("ERROR:")
+          // The first error message should be visible on page 1
+          content should include("Earliest donation date is missing")
         }
       }
 
