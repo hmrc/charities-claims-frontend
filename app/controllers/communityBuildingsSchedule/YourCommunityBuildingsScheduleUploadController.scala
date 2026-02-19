@@ -152,9 +152,7 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
                           Redirect {
                             failure.failureDetails.failureReason match {
                               case FailureReason.REJECTED   =>
-                                // TODO: when available replace with commented line
-                                // routes.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onPageLoad
-                                routes.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onPageLoad
+                                routes.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onPageLoad
                               case FailureReason.QUARANTINE =>
                                 routes.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onPageLoad
                               case _                        =>
