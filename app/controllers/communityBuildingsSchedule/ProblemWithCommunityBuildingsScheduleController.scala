@@ -43,47 +43,41 @@ class ProblemWithCommunityBuildingsScheduleController @Inject() (
     actions
       .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
       .async { implicit request =>
-        request.sessionData.unsubmittedClaimId match {
+        val claimId = request.sessionData.unsubmittedClaimId.get
+
+        request.sessionData.communityBuildingsScheduleFileUploadReference match {
           case None =>
-            // if the claim id is not found, we need to redirect to the repayment claim details page
-            Future
-              .successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+            // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
+            Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
 
-          case Some(claimId) =>
-            request.sessionData.communityBuildingsScheduleFileUploadReference match {
-              case None =>
-                // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
-                Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
+          case Some(fileUploadReference) =>
+            claimsValidationConnector
+              .getUploadResult(claimId, fileUploadReference)
+              .map {
+                case GetUploadResultValidationFailedCommunityBuildings(reference, communityBuildingsData, errors) =>
+                  val currentPage      = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
+                  val paginationResult = PaginationService.paginateValidationErrors(
+                    allErrors = errors,
+                    currentPage = currentPage,
+                    baseUrl = routes.ProblemWithCommunityBuildingsScheduleController.onPageLoad.url
+                  )
+                  Ok(
+                    view(
+                      claimId = claimId,
+                      errors = paginationResult.paginatedData,
+                      paginationViewModel = paginationResult.paginationViewModel,
+                      paginationStatus = paginationResult,
+                      communityBuildingsScheduleSpreadsheetGuidanceUrl =
+                        appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl
+                    )
+                  )
 
-              case Some(fileUploadReference) =>
-                claimsValidationConnector
-                  .getUploadResult(claimId, fileUploadReference)
-                  .map {
-                    case GetUploadResultValidationFailedCommunityBuildings(reference, communityBuildingsData, errors) =>
-                      val currentPage      = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
-                      val paginationResult = PaginationService.paginateValidationErrors(
-                        allErrors = errors,
-                        currentPage = currentPage,
-                        baseUrl = routes.ProblemWithCommunityBuildingsScheduleController.onPageLoad.url
-                      )
-                      Ok(
-                        view(
-                          claimId = claimId,
-                          errors = paginationResult.paginatedData,
-                          paginationViewModel = paginationResult.paginationViewModel,
-                          paginationStatus = paginationResult,
-                          communityBuildingsScheduleSpreadsheetGuidanceUrl =
-                            appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl
-                        )
-                      )
-
-                    case _ =>
-                      // In case of any other upload result, we need to redirect to the /your-community-buildings-schedule-upload page,
-                      // which in turn will redirect to the right page based on the upload result
-                      // TODO: Update route below to point to YourCommunityBuildingsScheduleUploadController once the controller is implemented
-                      Redirect(controllers.routes.PageNotFoundController.onPageLoad)
-                  }
-            }
+                case _ =>
+                  // In case of any other upload result, we need to redirect to the /your-community-buildings-schedule-upload page,
+                  // which in turn will redirect to the right page based on the upload result
+                  // TODO: Update route below to point to YourCommunityBuildingsScheduleUploadController once the controller is implemented
+                  Redirect(controllers.routes.PageNotFoundController.onPageLoad)
+              }
         }
       }
 
