@@ -74,9 +74,7 @@ class UploadCommunityBuildingsScheduleController @Inject() (
                 .flatMap {
                   case Some(_) =>
                     // if the file upload reference is found, we need to redirect to your Community Buildings schedule upload page
-                    // TODO: redirect when available
-                    // Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
-                    Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+                    Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
 
                   case None =>
                     for {
@@ -148,11 +146,7 @@ class UploadCommunityBuildingsScheduleController @Inject() (
                 reference = fileUploadReference,
                 CommunityBuildings
               )
-              .map(_ =>
-                // TODO: when available
-                // Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad)
-                Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad)
-              )
+              .map(_ => Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
 
           case None =>
             Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))

@@ -23,7 +23,7 @@
 @(messagesKeyPrefix: String, submitAction: Call, dashboardLink: Call)(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleNoForm(messages(messagesKeyPrefix + ".title"))
+    pageTitle = titleNoForm(messages(messagesKeyPrefix + ".title")), showBackLink = false
 ) {
     <h1 class="govuk-heading-l">@messages(messagesKeyPrefix + ".heading")</h1>
 

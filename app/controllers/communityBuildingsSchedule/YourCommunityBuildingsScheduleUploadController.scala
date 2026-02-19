@@ -156,9 +156,7 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
                               case FailureReason.QUARANTINE =>
                                 routes.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onPageLoad
                               case _                        =>
-                                // TODO: when available replace with commented line
-                                // routes.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onPageLoad=>
-                                routes.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onPageLoad
+                                routes.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onPageLoad
                             }
                           }
                         )
