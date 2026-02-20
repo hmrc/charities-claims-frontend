@@ -145,9 +145,18 @@ class YourOtherIncomeScheduleUploadController @Inject() (
                 claimsValidationConnector
                   .getUploadResult(claimId, fileUploadReference)
                   .flatMap {
-                    case _: GetUploadResultVeryficationFailed =>
+                    case failure: GetUploadResultVeryficationFailed =>
                       claimsValidationService.deleteOtherIncomeSchedule
-                        .map(_ => Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
+                        .map(_ =>
+                          Redirect {
+                            failure.failureDetails.failureReason match {
+                              case FailureReason.QUARANTINE =>
+                                routes.ProblemUpdatingOtherIncomeScheduleQuarantineController.onPageLoad
+                              case _                        =>
+                                routes.UploadOtherIncomeScheduleController.onPageLoad
+                            }
+                          }
+                        )
 
                     case _: GetUploadResultValidatedOtherIncome =>
                       Future.successful(Redirect(routes.CheckYourOtherIncomeScheduleController.onPageLoad))

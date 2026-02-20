@@ -68,6 +68,18 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
     readJson("/test-get-upload-result-verification-failed-other-income.json")
       .as[GetUploadResultVeryficationFailed]
 
+  lazy val testVerificationFailedQuarantineResponse: GetUploadResultVeryficationFailed =
+    readJson("/test-get-upload-result-verification-failed-other-income-quarantine.json")
+      .as[GetUploadResultVeryficationFailed]
+
+  lazy val testVerificationFailedRejectedResponse: GetUploadResultVeryficationFailed =
+    readJson("/test-get-upload-result-verification-failed-other-income-rejected.json")
+      .as[GetUploadResultVeryficationFailed]
+
+  lazy val testVerificationFailedUnknownResponse: GetUploadResultVeryficationFailed =
+    readJson("/test-get-upload-result-verification-failed-other-income-unknown-error.json")
+      .as[GetUploadResultVeryficationFailed]
+
   private def session(
     id: Option[String] = Some(claimId),
     fileRef: Option[FileUploadReference] = None,
@@ -343,7 +355,7 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
         }
       }
 
-      "unsubmitted Claim ID & file reference are defined - result = Verification Failed" in {
+      "unsubmitted Claim ID & file reference are defined - result = Verification Failed - QUARANTINE" in {
         val sessionData = RepaymentClaimDetailsAnswers
           .setClaimingTaxDeducted(true)
           .copy(
@@ -354,7 +366,79 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
           .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testVerificationFailedResponse))
+          .returning(Future.successful(testVerificationFailedQuarantineResponse))
+
+        (mockService
+          .deleteOtherIncomeSchedule(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(()))
+
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+          .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
+          .build()
+
+        running(application) {
+          val request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.YourOtherIncomeScheduleUploadController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ProblemUpdatingOtherIncomeScheduleQuarantineController.onPageLoad.url
+          )
+        }
+      }
+
+      "unsubmitted Claim ID & file reference are defined - result = Verification Failed - REJECTED" in {
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(
+            unsubmittedClaimId = Some(claimId),
+            otherIncomeScheduleFileUploadReference = Some(fileUploadReference)
+          )
+
+        (mockConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(claimId, fileUploadReference, *)
+          .returning(Future.successful(testVerificationFailedRejectedResponse))
+
+        (mockService
+          .deleteOtherIncomeSchedule(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(()))
+
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+          .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
+          .build()
+
+        running(application) {
+          val request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.YourOtherIncomeScheduleUploadController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.UploadOtherIncomeScheduleController.onPageLoad.url
+          )
+        }
+      }
+
+      "unsubmitted Claim ID & file reference are defined - result = Verification Failed - UNKNOWN" in {
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingTaxDeducted(true)
+          .copy(
+            unsubmittedClaimId = Some(claimId),
+            otherIncomeScheduleFileUploadReference = Some(fileUploadReference)
+          )
+
+        (mockConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(claimId, fileUploadReference, *)
+          .returning(Future.successful(testVerificationFailedUnknownResponse))
 
         (mockService
           .deleteOtherIncomeSchedule(using _: DataRequest[?], _: HeaderCarrier))
