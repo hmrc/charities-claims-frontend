@@ -145,7 +145,7 @@ checkYourGiftAidSchedule.table.column.9 = Donation date
 checkYourGiftAidSchedule.title = Check your Gift Aid schedule
 
 checkYourOtherIncomeSchedule.caption = Add Other Income schedule
-checkYourOtherIncomeSchedule.error.required = Select 'Yes' if you need to update this Other Income schedule
+checkYourOtherIncomeSchedule.error.required = Select ‘Yes’ if you need to update this Other Income schedule
 checkYourOtherIncomeSchedule.heading = Check your Other Income schedule
 checkYourOtherIncomeSchedule.hint = Do you need to update this Other Income schedule?
 checkYourOtherIncomeSchedule.radios.no = No, continue with Other Income schedule
