@@ -21,20 +21,15 @@ import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
 import views.html.ScheduleUploadFailureView
 import play.api.Application
-import models.RepaymentClaimDetailsAnswers
-import models.SessionData
+import models.{RepaymentClaimDetailsAnswers, SessionData}
+import models.SessionData.and
 
 class ProblemUpdatingCommunityBuildingsScheduleRejectedControllerSpec extends ControllerSpec {
 
   "ProblemUpdatingCommunityBuildingsScheduleRejectedController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-        val sessionData                =
-          RepaymentClaimDetailsAnswers
-            .setClaimingUnderGiftAidSmallDonationsScheme(true)
-            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
-            .and(SessionData.setUnsubmittedClaimId("claim-123"))
-        given application: Application = applicationBuilder(sessionData = sessionData)
+        given application: Application = applicationBuilder(sessionData = completeGasdsSession)
           .build()
 
         running(application) {
@@ -92,12 +87,7 @@ class ProblemUpdatingCommunityBuildingsScheduleRejectedControllerSpec extends Co
 
     "onSubmit" - {
       "should redirect to the next page" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingUnderGiftAidSmallDonationsScheme(true)
-          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
-          .and(SessionData.setUnsubmittedClaimId("claim-123"))
-
-        val application: Application = applicationBuilder(sessionData = sessionData).build()
+        val application: Application = applicationBuilder(sessionData = completeGasdsSession).build()
 
         running(application) {
           val request =

@@ -40,7 +40,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
   val mockConnector: ClaimsValidationConnector = mock[ClaimsValidationConnector]
   val mockService: ClaimsValidationService     = mock[ClaimsValidationService]
 
-  private val claimId             = "test-claim-123"
+  private val claimId             = "test-claim-id"
   private val fileUploadReference = FileUploadReference("test-file-upload-reference")
 
   private def readJson(path: String) = Json.parse(TestResources.readTestResource(path))
@@ -94,9 +94,9 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
 
       "unsubmitted Claim ID is defined and file reference is not defined" in {
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
-            .copy(unsubmittedClaimId = Some(claimId), giftAidScheduleFileUploadReference = None)
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+            .copy(giftAidScheduleFileUploadReference = None)
 
         (mockService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
@@ -122,12 +122,9 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
 
       "unsubmitted Claim ID & file reference are defined - result = Awaiting (other) - display the screen" in {
 
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            giftAidScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -157,12 +154,9 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verifying" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            giftAidScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -191,12 +185,9 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Validating" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            giftAidScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -225,12 +216,9 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed - REJECTED" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            giftAidScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -258,12 +246,9 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
         }
       }
       "unsubmitted Claim ID & file reference are defined - recoverWith" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            giftAidScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -290,8 +275,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
 
     "onRemove - delete schedule and redirect" in {
 
-      val sessionData = RepaymentClaimDetailsAnswers
-        .setClaimingGiftAid(true)
+      val sessionData = completeRepaymentDetailsAnswersSession
         .copy(
           unsubmittedClaimId = Some(claimId),
           giftAidScheduleFileUploadReference = Some(fileUploadReference)
@@ -341,9 +325,8 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined" in {
-        val sessionData                = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(unsubmittedClaimId = Some("test-claim-123"))
+        val sessionData                = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
@@ -360,12 +343,9 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed - REJECTED" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            giftAidScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -396,12 +376,9 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed - QUARANTINE" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            giftAidScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -432,12 +409,9 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed - UNKNOWN" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            giftAidScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -468,12 +442,9 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = passed Validation" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            giftAidScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -499,12 +470,9 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = failed Validation" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            giftAidScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -529,12 +497,9 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = other" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            giftAidScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))

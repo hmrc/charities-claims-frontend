@@ -167,12 +167,9 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
         val upscan = response
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
-            .copy(
-              unsubmittedClaimId = Some("claim-123"),
-              giftAidScheduleUpscanInitialization = Some(upscan)
-            )
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+            .copy(giftAidScheduleUpscanInitialization = Some(upscan))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData).build()
@@ -183,16 +180,15 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
           val result = route(application, request).value
 
           status(result) shouldEqual OK
-          contentAsString(result) should include("claim-123")
+          contentAsString(result) should include("claim-1234567890")
         }
       }
 
       "should redirect when file upload reference already exists" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
@@ -220,9 +216,8 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
       "should initiate upscan and store session when no reference exists" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
@@ -268,9 +263,8 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
       "should update status and redirect when reference exists" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
@@ -282,7 +276,7 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
             _: DataRequest[?],
             _: HeaderCarrier
           ))
-          .expects("claim-123", FileUploadReference("ref-123"), ValidationType.GiftAid, *, *)
+          .expects("test-claim-id", FileUploadReference("ref-123"), ValidationType.GiftAid, *, *)
           .returning(Future.successful(true))
 
         given application: Application =
@@ -306,9 +300,8 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
       "should redirect back when no reference found" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
@@ -340,12 +333,9 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
       "should render error page when upscan initialization exists in session" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
-            .copy(
-              unsubmittedClaimId = Some("claim-123"),
-              giftAidScheduleUpscanInitialization = Some(response)
-            )
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+            .copy(giftAidScheduleUpscanInitialization = Some(response))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -366,11 +356,8 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
       "should redirect when no upscan initialization exists in session" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
-            .copy(
-              unsubmittedClaimId = Some("claim-123")
-            )
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)

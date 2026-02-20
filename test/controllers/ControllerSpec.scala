@@ -19,8 +19,6 @@ package controllers
 import com.softwaremill.diffx.scalatest.DiffShouldMatcher
 import controllers.actions.{AuthorisedAction, DataRetrievalAction}
 import models.SessionData
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import play.api.data.Form
 import play.api.http.*
 import play.api.inject.guice.{GuiceApplicationBuilder, GuiceableModule}
@@ -48,9 +46,6 @@ trait ControllerSpec
   val baseUrl = "/charities-claims"
 
   val testOnwardRoute: Call = Call("GET", "/foo")
-
-  given ActorSystem  = ActorSystem("unit-tests")
-  given Materializer = Materializer.createMaterializer(actorSystem)
 
   given defaultSessionData: SessionData = SessionData.empty(testCharitiesReference)
 

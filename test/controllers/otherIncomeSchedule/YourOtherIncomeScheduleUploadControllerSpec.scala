@@ -38,7 +38,7 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
   val mockConnector: ClaimsValidationConnector = mock[ClaimsValidationConnector]
   val mockService: ClaimsValidationService     = mock[ClaimsValidationService]
 
-  private val claimId                                  = "test-claim-123"
+  private val claimId                                  = "test-claim-id"
   private val fileUploadReference: FileUploadReference = FileUploadReference("test-file-upload-reference")
 
   private def readJson(path: String) = Json.parse(TestResources.readTestResource(path))
@@ -81,16 +81,12 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
       .as[GetUploadResultVeryficationFailed]
 
   private def session(
-    id: Option[String] = Some(claimId),
     fileRef: Option[FileUploadReference] = None,
     claimingTax: Boolean = true
   ) =
-    RepaymentClaimDetailsAnswers
-      .setClaimingTaxDeducted(claimingTax)
-      .copy(
-        unsubmittedClaimId = id,
-        otherIncomeScheduleFileUploadReference = fileRef
-      )
+    completeRepaymentDetailsAnswersSession
+      .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(claimingTax))
+      .copy(otherIncomeScheduleFileUploadReference = fileRef)
 
   "YourOtherIncomeScheduleUploadControllerSpec" - {
 
@@ -283,12 +279,9 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
     }
 
     "onRemove - delete schedule and redirect" in {
-      val sessionData = RepaymentClaimDetailsAnswers
-        .setClaimingTaxDeducted(true)
-        .copy(
-          unsubmittedClaimId = Some(claimId),
-          otherIncomeScheduleFileUploadReference = Some(fileUploadReference)
-        )
+      val sessionData = completeRepaymentDetailsAnswersSession
+        .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+        .copy(otherIncomeScheduleFileUploadReference = Some(fileUploadReference))
 
       (mockService
         .deleteOtherIncomeSchedule(using _: DataRequest[?], _: HeaderCarrier))
@@ -336,10 +329,8 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
 
       "unsubmitted Claim ID & file reference are defined" in {
         val sessionData                =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .and(SessionData.setUnsubmittedClaimId("claim-123"))
-            .copy(unsubmittedClaimId = Some("test-claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
@@ -356,12 +347,9 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed - QUARANTINE" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingTaxDeducted(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            otherIncomeScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+          .copy(otherIncomeScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -392,12 +380,9 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed - REJECTED" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingTaxDeducted(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            otherIncomeScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+          .copy(otherIncomeScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -428,12 +413,9 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed - UNKNOWN" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingTaxDeducted(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            otherIncomeScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+          .copy(otherIncomeScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -464,12 +446,9 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = passed Validation" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingTaxDeducted(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            otherIncomeScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+          .copy(otherIncomeScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -495,12 +474,9 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = failed Validation" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingTaxDeducted(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            otherIncomeScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+          .copy(otherIncomeScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -525,12 +501,9 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
       }
 
       "unsubmitted Claim ID & file reference are defined - result = other" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingTaxDeducted(true)
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            otherIncomeScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+          .copy(otherIncomeScheduleFileUploadReference = Some(fileUploadReference))
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))

@@ -75,6 +75,12 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
     readJson("/test-get-upload-result-verification-failed-community-buildings-unknown-error.json")
       .as[GetUploadResultVeryficationFailed]
 
+  private def sessionWithClaimId(id: String): SessionData =
+    completeGasdsSession.copy(unsubmittedClaimId = Some(id))
+
+  private def sessionWithClaimIdAndFileRef(id: String, ref: FileUploadReference): SessionData =
+    completeGasdsSession.copy(unsubmittedClaimId = Some(id), communityBuildingsScheduleFileUploadReference = Some(ref))
+
   "YourCommunityBuildingsScheduleUploadControllerSpec" - {
 
     "onPageLoad" - {
@@ -99,11 +105,8 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       }
 
       "unsubmitted Claim ID is defined and file reference is not defined" in {
-        val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-            .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
-            .copy(unsubmittedClaimId = Some(claimId), communityBuildingsScheduleFileUploadReference = None)
+        val sessionData = sessionWithClaimId(claimId)
+          .copy(communityBuildingsScheduleFileUploadReference = None)
 
         (mockService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
@@ -128,14 +131,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Awaiting (other) - display the screen" in {
-
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-          .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            communityBuildingsScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -165,13 +161,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verifying" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-          .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            communityBuildingsScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -200,13 +190,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Validating" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-          .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            communityBuildingsScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -235,13 +219,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed - REJECTED" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-          .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            communityBuildingsScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -269,13 +247,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
         }
       }
       "unsubmitted Claim ID & file reference are defined - recoverWith" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-          .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            communityBuildingsScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -301,14 +273,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
     }
 
     "onRemove - delete schedule and redirect" in {
-
-      val sessionData = RepaymentClaimDetailsAnswers
-        .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-        .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
-        .copy(
-          unsubmittedClaimId = Some(claimId),
-          communityBuildingsScheduleFileUploadReference = Some(fileUploadReference)
-        )
+      val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
       (mockService
         .deleteCommunityBuildingsSchedule(using _: DataRequest[?], _: HeaderCarrier))
@@ -355,10 +320,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       }
 
       "unsubmitted Claim ID & file reference are defined" in {
-        val sessionData                = RepaymentClaimDetailsAnswers
-          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-          .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
-          .copy(unsubmittedClaimId = Some("test-claim-123"))
+        val sessionData                = sessionWithClaimId("test-claim-123")
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
@@ -375,13 +337,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed - REJECTED" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-          .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            communityBuildingsScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -412,13 +368,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed - QUARANTINE" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-          .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            communityBuildingsScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -449,13 +399,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed - UNKNOWN" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-          .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            communityBuildingsScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -486,13 +430,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       }
 
       "unsubmitted Claim ID & file reference are defined - result = passed Validation" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-          .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            communityBuildingsScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -520,13 +458,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       }
 
       "unsubmitted Claim ID & file reference are defined - result = failed Validation" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-          .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            communityBuildingsScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -551,13 +483,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       }
 
       "unsubmitted Claim ID & file reference are defined - result = other" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-          .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
-          .copy(
-            unsubmittedClaimId = Some(claimId),
-            communityBuildingsScheduleFileUploadReference = Some(fileUploadReference)
-          )
+        val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
