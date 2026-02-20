@@ -57,12 +57,12 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
   lazy val testValidatedResponse: GetUploadResultValidatedCommunityBuildings =
     Json.parse(testValidatedJsonString).as[GetUploadResultValidatedCommunityBuildings]
 
-  // Test session data for shouldUploadCommunityBuildingsSchedule DataGuard
-  def validSessionData: SessionData = RepaymentClaimDetailsAnswers
-    .setClaimingUnderGiftAidSmallDonationsScheme(true)
-    .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
-    .and(SessionData.setUnsubmittedClaimId(testClaimId))
-    .copy(communityBuildingsScheduleFileUploadReference = Some(testFileUploadReference))
+  // test session data that passes DataGuard (shouldUploadCommunityBuildingsSchedule) using completeGasdsSession as base
+  def validSessionData: SessionData = completeGasdsSession
+    .copy(
+      unsubmittedClaimId = Some(testClaimId),
+      communityBuildingsScheduleFileUploadReference = Some(testFileUploadReference)
+    )
 
   def validSessionDataCompleted: SessionData = validSessionData.copy(communityBuildingsScheduleCompleted = true)
 
