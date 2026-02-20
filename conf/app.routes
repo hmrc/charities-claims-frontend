@@ -185,19 +185,19 @@ POST        /delete-gasds-connected-charities-schedule          controllers.conn
 GET         /check-your-other-income-schedule                   controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onPageLoad
 POST        /check-your-other-income-schedule                   controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onSubmit
 
-GET         /problem-updating-gift-aid-schedule-rejected          controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onPageLoad
-POST        /problem-updating-gift-aid-schedule-rejected          controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onSubmit
-GET         /problem-updating-gift-aid-schedule-unknown-error     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleUnknownErrorController.onPageLoad
-POST        /problem-updating-gift-aid-schedule-unknown-error     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleUnknownErrorController.onSubmit
-GET         /problem-updating-gift-aid-schedule-quarantine        controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onPageLoad
-POST        /problem-updating-gift-aid-schedule-quarantine        controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onSubmit
+GET         /problem-uploading-gift-aid-schedule-rejected          controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onPageLoad
+POST        /problem-uploading-gift-aid-schedule-rejected          controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onSubmit
+GET         /problem-uploading-gift-aid-schedule-unknown-error     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleUnknownErrorController.onPageLoad
+POST        /problem-uploading-gift-aid-schedule-unknown-error     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleUnknownErrorController.onSubmit
+GET         /problem-uploading-gift-aid-schedule-quarantine        controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onPageLoad
+POST        /problem-uploading-gift-aid-schedule-quarantine        controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onSubmit
 
-GET         /problem-updating-community-buildings-schedule-rejected             controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onPageLoad
-POST        /problem-updating-community-buildings-schedule-rejected             controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onSubmit
-GET         /problem-updating-community-buildings-schedule-unknown-error        controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onPageLoad
-POST        /problem-updating-community-buildings-schedule-unknown-error        controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onSubmit
-GET         /problem-updating-community-buildings-schedule-quarantine           controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onPageLoad
-POST        /problem-updating-community-buildings-schedule-quarantine           controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onSubmit
+GET         /problem-uploading-community-buildings-schedule-rejected             controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onPageLoad
+POST        /problem-uploading-community-buildings-schedule-rejected             controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onSubmit
+GET         /problem-uploading-community-buildings-schedule-unknown-error        controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onPageLoad
+POST        /problem-uploading-community-buildings-schedule-unknown-error        controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onSubmit
+GET         /problem-uploading-community-buildings-schedule-quarantine           controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onPageLoad
+POST        /problem-uploading-community-buildings-schedule-quarantine           controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onSubmit
 
 GET         /connected-charities-schedule-upload-successful  controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadSuccessfulController.onPageLoad
 POST        /connected-charities-schedule-upload-successful  controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadSuccessfulController.onSubmit
