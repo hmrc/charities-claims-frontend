@@ -1,0 +1,91 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.communityBuildingsSchedule.routes
+@import models.*
+@import views.html.components.*
+@import viewmodels.govuk.PaginationFluency.*
+@import utils.FormatUtils.*
+@import services.PaginationStatus
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukButton: GovukButton,
+    govukErrorSummary: GovukErrorSummary,
+    govukSummaryList: GovukSummaryList,
+    govukRadios: GovukRadios,
+    pageNavigator: PageNavigator,
+    communityBuildingsTable: CommunityBuildingsTable
+)
+
+@(
+    form: Form[?],
+    communityBuildingsScheduleData: CommunityBuildingsScheduleData,
+    communityBuildings: Seq[CommunityBuilding1],
+    paginationViewModel: PaginationViewModel,
+    paginationStatus: PaginationStatus
+)(implicit request: Request[?], messages: Messages)
+
+@layout(
+    pageTitle = titleWithPagination(form, messages("checkYourCommunityBuildingsSchedule.title"), paginationStatus),
+    showBackLink = true
+) {
+
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+
+    <span class="govuk-caption-l">@messages("checkYourCommunityBuildingsSchedule.caption")</span>
+    <h1 class="govuk-heading-l">@messages("checkYourCommunityBuildingsSchedule.heading")</h1>
+
+    @govukSummaryList(SummaryList(
+        card = Some(Card(
+            title = Some(CardTitle(
+                content = Text(messages("checkYourCommunityBuildingsSchedule.summary.title")),
+                headingLevel = Some(2)
+            ))
+        )),
+        rows = Seq(
+            SummaryListRow(
+                key = Key(content = Text(messages("checkYourCommunityBuildingsSchedule.summary.item.1"))),
+                value = Value(content = Text(communityBuildingsScheduleData.totalOfAllAmounts.toAmountString)),
+                classes = "custom-summary-list"
+            )
+        )
+    ))
+
+    <div class="govuk-!-margin-bottom-9"></div>
+
+    @communityBuildingsTable(communityBuildings)
+
+    @pageNavigator(paginationViewModel)
+
+    @formHelper(action = routes.CheckYourCommunityBuildingsScheduleController.onSubmit, Symbol("autoComplete") -> "off") {
+
+        @govukRadios(
+            RadiosViewModel.yesNo(
+                field = form("value"),
+                fieldset = FieldsetViewModel(LegendViewModel(messages("checkYourCommunityBuildingsSchedule.hint")).bold),
+                yesMessageKey = "site.yes",
+                noMessageKey = "checkYourCommunityBuildingsSchedule.radios.no"
+            )
+        )
+
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+    }
+
+}

@@ -135,8 +135,10 @@ GET         /upload-community-buildings-schedule/error          controllers.comm
 GET         /your-community-buildings-schedule-upload           controllers.communityBuildingsSchedule.YourCommunityBuildingsScheduleUploadController.onPageLoad
 POST        /your-community-buildings-schedule-upload           controllers.communityBuildingsSchedule.YourCommunityBuildingsScheduleUploadController.onSubmit
 GET         /your-community-buildings-schedule-upload/remove    controllers.communityBuildingsSchedule.YourCommunityBuildingsScheduleUploadController.onRemove
-GET         /problem-with-community-buildings-schedule      controllers.communityBuildingsSchedule.ProblemWithCommunityBuildingsScheduleController.onPageLoad
-POST        /problem-with-community-buildings-schedule      controllers.communityBuildingsSchedule.ProblemWithCommunityBuildingsScheduleController.onSubmit
+GET         /problem-with-community-buildings-schedule          controllers.communityBuildingsSchedule.ProblemWithCommunityBuildingsScheduleController.onPageLoad
+POST        /problem-with-community-buildings-schedule          controllers.communityBuildingsSchedule.ProblemWithCommunityBuildingsScheduleController.onSubmit
+GET         /check-your-community-buildings-schedule            controllers.communityBuildingsSchedule.CheckYourCommunityBuildingsScheduleController.onPageLoad
+POST        /check-your-community-buildings-schedule            controllers.communityBuildingsSchedule.CheckYourCommunityBuildingsScheduleController.onSubmit
 
 GET         /about-gift-aid-schedule                        controllers.giftAidSchedule.AboutGiftAidScheduleController.onPageLoad
 POST        /about-gift-aid-schedule                        controllers.giftAidSchedule.AboutGiftAidScheduleController.onSubmit
