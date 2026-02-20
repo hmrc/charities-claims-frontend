@@ -75,8 +75,7 @@ class ProblemWithCommunityBuildingsScheduleController @Inject() (
                 case _ =>
                   // In case of any other upload result, we need to redirect to the /your-community-buildings-schedule-upload page,
                   // which in turn will redirect to the right page based on the upload result
-                  // TODO: Update route below to point to YourCommunityBuildingsScheduleUploadController once the controller is implemented
-                  Redirect(controllers.routes.PageNotFoundController.onPageLoad)
+                  Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad)
               }
         }
       }

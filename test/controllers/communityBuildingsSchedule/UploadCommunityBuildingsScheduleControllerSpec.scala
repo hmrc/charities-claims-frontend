@@ -156,7 +156,6 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
         }
       }
 
-      // TODO: when redirection available
       "should render page when upscan initiation exists in session" in {
 
         val upscan = response
@@ -210,9 +209,8 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            // TODO - when available
-            // Some(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad.url)
-            Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+            Some(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad.url)
+
         }
       }
 
@@ -300,9 +298,7 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            // TODO: when available
-            // Some(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad.url)
-            Some(routes.UploadCommunityBuildingsScheduleController.onPageLoad.url)
+            Some(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad.url)
         }
       }
 

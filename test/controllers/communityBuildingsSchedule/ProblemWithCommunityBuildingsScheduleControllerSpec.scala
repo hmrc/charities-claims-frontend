@@ -263,7 +263,7 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
         }
       }
 
-      "should redirect to PageNotFound when upload result is VALIDATED (fallback case)" in {
+      "should redirect to YourCommunityBuildingsScheduleUploadController when upload result is VALIDATED (fallback case)" in {
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
           .expects(testClaimId, testFileUploadReference, *)
@@ -279,7 +279,7 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            routes.YourCommunityBuildingsScheduleUploadController.onPageLoad.url
           )
         }
       }

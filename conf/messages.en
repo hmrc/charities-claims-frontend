@@ -9,7 +9,7 @@ aboutCommunityBuildingsSchedule.title = About Community Buildings schedule
 uploadCommunityBuildingsSchedule.caption = Add Community Buildings schedule
 uploadCommunityBuildingsSchedule.title = Upload a Community Buildings schedule
 uploadCommunityBuildingsSchedule.heading = Upload a Community Buildings schedule
-uploadCommunityBuildingsSchedule.paragraph.one = To claim Community Buildings top-up payment, you need to upload a completed Community Buildings schedule with details of the community building(s) where donations were collected and amounts received. You can save your claim without uploading the Community Buildings schedule, but you need to upload a Community Buildings schedule before submitting your claim.
+uploadCommunityBuildingsSchedule.paragraph.one = To claim Community Buildings top-up payment, upload a completed Community Buildings schedule with details of the community building(s) where donations were collected and amounts received. You can save your claim without uploading the Community Buildings schedule, but you need to upload a Community Buildings schedule before submitting your claim.
 uploadCommunityBuildingsSchedule.paragraph.url = If you have not completed a Community Buildings schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Community Buildings schedule here (opens in new tab)</a>.
 uploadCommunityBuildingsSchedule.input.label = Upload a file
 uploadCommunityBuildingsSchedule.form.upload-file.submit = Continue
@@ -589,6 +589,12 @@ yourGiftAidScheduleUpload.file = Gift Aid Schedule
 yourGiftAidScheduleUpload.heading = Your Gift Aid schedule upload
 yourGiftAidScheduleUpload.paragraph.one = You can upload your Gift Aid schedule as a spreadsheet. The selected file must be smaller than 250KB.
 yourGiftAidScheduleUpload.title = Your Gift Aid schedule upload
+
+yourCommunityBuildingsScheduleUpload.caption = Add Community Buildings schedule
+yourCommunityBuildingsScheduleUpload.file = Community Buildings Schedule
+yourCommunityBuildingsScheduleUpload.heading = Your Community Buildings schedule upload
+yourCommunityBuildingsScheduleUpload.paragraph.one = You can upload your Community Buildings schedule as a spreadsheet. The selected file must be smaller than 250KB.
+yourCommunityBuildingsScheduleUpload.title = Your Community Buildings schedule upload
 
 yourOtherIncomeScheduleUpload.caption = Add Other Income schedule
 yourOtherIncomeScheduleUpload.heading = Your Other Income schedule upload

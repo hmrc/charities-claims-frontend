@@ -127,11 +127,14 @@ GET         /cannot-set-up-repayment-claim                  controllers.repaymen
 # TODO: Placeholder screen for D3 - route will be updated in future
 GET         /declaration-details-confirmation               controllers.DeclarationDetailsConfirmationController.onPageLoad
 
-GET         /about-community-buildings-schedule             controllers.communityBuildingsSchedule.AboutCommunityBuildingsScheduleController.onPageLoad
-POST        /about-community-buildings-schedule             controllers.communityBuildingsSchedule.AboutCommunityBuildingsScheduleController.onSubmit
-GET         /upload-community-buildings-schedule            controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onPageLoad
-GET         /upload-community-buildings-schedule/success    controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onUploadSuccess
-GET         /upload-community-buildings-schedule/error      controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onUploadError
+GET         /about-community-buildings-schedule                 controllers.communityBuildingsSchedule.AboutCommunityBuildingsScheduleController.onPageLoad
+POST        /about-community-buildings-schedule                 controllers.communityBuildingsSchedule.AboutCommunityBuildingsScheduleController.onSubmit
+GET         /upload-community-buildings-schedule                controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onPageLoad
+GET         /upload-community-buildings-schedule/success        controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onUploadSuccess
+GET         /upload-community-buildings-schedule/error          controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onUploadError
+GET         /your-community-buildings-schedule-upload           controllers.communityBuildingsSchedule.YourCommunityBuildingsScheduleUploadController.onPageLoad
+POST        /your-community-buildings-schedule-upload           controllers.communityBuildingsSchedule.YourCommunityBuildingsScheduleUploadController.onSubmit
+GET         /your-community-buildings-schedule-upload/remove    controllers.communityBuildingsSchedule.YourCommunityBuildingsScheduleUploadController.onRemove
 GET         /problem-with-community-buildings-schedule      controllers.communityBuildingsSchedule.ProblemWithCommunityBuildingsScheduleController.onPageLoad
 POST        /problem-with-community-buildings-schedule      controllers.communityBuildingsSchedule.ProblemWithCommunityBuildingsScheduleController.onSubmit
 
@@ -168,10 +171,13 @@ GET         /your-other-income-schedule-upload                  controllers.othe
 POST        /your-other-income-schedule-upload                  controllers.otherIncomeSchedule.YourOtherIncomeScheduleUploadController.onSubmit
 GET         /your-other-income-schedule-upload/remove           controllers.otherIncomeSchedule.YourOtherIncomeScheduleUploadController.onRemove
 
-GET         /delete-other-income-schedule                    controllers.otherIncomeSchedule.DeleteOtherIncomeScheduleController.onPageLoad
-POST        /delete-other-income-schedule                    controllers.otherIncomeSchedule.DeleteOtherIncomeScheduleController.onSubmit
-GET         /update-other-income-schedule                    controllers.otherIncomeSchedule.UpdateOtherIncomeScheduleController.onPageLoad
-POST        /update-other-income-schedule                    controllers.otherIncomeSchedule.UpdateOtherIncomeScheduleController.onSubmit
+# TODO: Placeholder screen for O1.4 - to be updated in future
+GET         /problem-with-other-income-schedule                 controllers.otherIncomeSchedule.ProblemWithOtherIncomeScheduleController.onPageLoad
+
+GET         /delete-other-income-schedule                       controllers.otherIncomeSchedule.DeleteOtherIncomeScheduleController.onPageLoad
+POST        /delete-other-income-schedule                       controllers.otherIncomeSchedule.DeleteOtherIncomeScheduleController.onSubmit
+GET         /update-other-income-schedule                       controllers.otherIncomeSchedule.UpdateOtherIncomeScheduleController.onPageLoad
+POST        /update-other-income-schedule                       controllers.otherIncomeSchedule.UpdateOtherIncomeScheduleController.onSubmit
 
 GET         /delete-gasds-community-buildings-schedule          controllers.communityBuildingsSchedule.DeleteCommunityBuildingsScheduleController.onPageLoad
 POST        /delete-gasds-community-buildings-schedule          controllers.communityBuildingsSchedule.DeleteCommunityBuildingsScheduleController.onSubmit
