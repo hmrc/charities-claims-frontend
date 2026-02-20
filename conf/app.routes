@@ -127,11 +127,16 @@ GET         /cannot-set-up-repayment-claim                  controllers.repaymen
 # TODO: Placeholder screen for D3 - route will be updated in future
 GET         /declaration-details-confirmation               controllers.DeclarationDetailsConfirmationController.onPageLoad
 
-GET         /about-community-buildings-schedule             controllers.communityBuildingsSchedule.AboutCommunityBuildingsScheduleController.onPageLoad
-POST        /about-community-buildings-schedule             controllers.communityBuildingsSchedule.AboutCommunityBuildingsScheduleController.onSubmit
-GET         /upload-community-buildings-schedule            controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onPageLoad
-GET         /upload-community-buildings-schedule/success    controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onUploadSuccess
-GET         /upload-community-buildings-schedule/error      controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onUploadError
+GET         /about-community-buildings-schedule                 controllers.communityBuildingsSchedule.AboutCommunityBuildingsScheduleController.onPageLoad
+POST        /about-community-buildings-schedule                 controllers.communityBuildingsSchedule.AboutCommunityBuildingsScheduleController.onSubmit
+GET         /upload-community-buildings-schedule                controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onPageLoad
+GET         /upload-community-buildings-schedule/success        controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onUploadSuccess
+GET         /upload-community-buildings-schedule/error          controllers.communityBuildingsSchedule.UploadCommunityBuildingsScheduleController.onUploadError
+GET         /your-community-buildings-schedule-upload           controllers.communityBuildingsSchedule.YourCommunityBuildingsScheduleUploadController.onPageLoad
+POST        /your-community-buildings-schedule-upload           controllers.communityBuildingsSchedule.YourCommunityBuildingsScheduleUploadController.onSubmit
+GET         /your-community-buildings-schedule-upload/remove    controllers.communityBuildingsSchedule.YourCommunityBuildingsScheduleUploadController.onRemove
+GET         /problem-with-community-buildings-schedule      controllers.communityBuildingsSchedule.ProblemWithCommunityBuildingsScheduleController.onPageLoad
+POST        /problem-with-community-buildings-schedule      controllers.communityBuildingsSchedule.ProblemWithCommunityBuildingsScheduleController.onSubmit
 
 GET         /about-gift-aid-schedule                        controllers.giftAidSchedule.AboutGiftAidScheduleController.onPageLoad
 POST        /about-gift-aid-schedule                        controllers.giftAidSchedule.AboutGiftAidScheduleController.onSubmit
@@ -190,8 +195,12 @@ POST        /problem-updating-gift-aid-schedule-unknown-error     controllers.gi
 GET         /problem-updating-gift-aid-schedule-quarantine        controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onPageLoad
 POST        /problem-updating-gift-aid-schedule-quarantine        controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onSubmit
 
-GET         /problem-updating-community-buildings-schedule-quarantine        controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onPageLoad
-POST        /problem-updating-community-buildings-schedule-quarantine        controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onSubmit
+GET         /problem-updating-community-buildings-schedule-rejected             controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onPageLoad
+POST        /problem-updating-community-buildings-schedule-rejected             controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onSubmit
+GET         /problem-updating-community-buildings-schedule-unknown-error        controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onPageLoad
+POST        /problem-updating-community-buildings-schedule-unknown-error        controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onSubmit
+GET         /problem-updating-community-buildings-schedule-quarantine           controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onPageLoad
+POST        /problem-updating-community-buildings-schedule-quarantine           controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onSubmit
 
 GET         /connected-charities-schedule-upload-successful  controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadSuccessfulController.onPageLoad
 POST        /connected-charities-schedule-upload-successful  controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadSuccessfulController.onSubmit

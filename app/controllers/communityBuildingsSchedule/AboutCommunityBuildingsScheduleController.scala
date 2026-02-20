@@ -54,9 +54,7 @@ class AboutCommunityBuildingsScheduleController @Inject() (
     actions.authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
       if request.sessionData.communityBuildingsScheduleCompleted
       then {
-        Future.successful(Redirect(routes.AboutCommunityBuildingsScheduleController.onPageLoad))
-        // TODO when available
-        // Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
+        Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
       } else {
         Future.successful(Ok(view(appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl)))
       }

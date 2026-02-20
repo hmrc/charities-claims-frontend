@@ -97,7 +97,6 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      // TODO when redirect available
       "should redirect to the next page if the communityBuildingsScheduleCompleted is true" in {
         val sessionDataDonations = RepaymentClaimDetailsAnswers
           .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
@@ -115,13 +114,12 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.AboutCommunityBuildingsScheduleController.onPageLoad.url
+            routes.YourCommunityBuildingsScheduleUploadController.onPageLoad.url
           )
         }
       }
     }
 
-    // TODO when redirect available
     "onSubmit" - {
       "should redirect to the next page" in {
         val sessionDataDonations       = RepaymentClaimDetailsAnswers

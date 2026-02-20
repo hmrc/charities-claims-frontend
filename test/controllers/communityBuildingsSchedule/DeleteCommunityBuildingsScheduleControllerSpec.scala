@@ -18,7 +18,8 @@ package controllers.communityBuildingsSchedule
 
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
-import models.SessionData
+import models.{RepaymentClaimDetailsAnswers, SessionData}
+import models.requests.DataRequest
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
@@ -36,11 +37,16 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
   val mockClaimsValidationService: ClaimsValidationService = mock[ClaimsValidationService]
 
+  def validSessionData: SessionData = RepaymentClaimDetailsAnswers
+    .setClaimingUnderGiftAidSmallDonationsScheme(true)
+    .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
+    .and(SessionData.setUnsubmittedClaimId("claim-123"))
+
   "DeleteCommunityBuildingsScheduleController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
 
-        given application: Application = applicationBuilder()
+        given application: Application = applicationBuilder(sessionData = validSessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -61,7 +67,7 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should reload the page with errors when a required field is missing" in {
-        given application: Application = applicationBuilder()
+        given application: Application = applicationBuilder(sessionData = validSessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -76,9 +82,8 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      // TODO: Update test when G2 screen route is completed (currently redirects to placeholder /add-schedule)
-      "should redirect to G2 screen when no is selected" in {
-        given application: Application = applicationBuilder()
+      "should redirect to ProblemWithCommunityBuildingsScheduleController when no is selected" in {
+        given application: Application = applicationBuilder(sessionData = validSessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -90,19 +95,19 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some("/problem-with-community-buildings-schedule")
+          redirectLocation(result) shouldBe Some(
+            controllers.communityBuildingsSchedule.routes.ProblemWithCommunityBuildingsScheduleController.onPageLoad.url
+          )
         }
       }
 
       "should call backend deletion endpoint and redirect to R2 when yes is selected" in {
-        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
-
         (mockClaimsValidationService
-          .deleteCommunityBuildingsSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
+          .deleteCommunityBuildingsSchedule(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
           .returning(Future.successful(()))
 
-        given application: Application = applicationBuilder(sessionData = sessionData)
+        given application: Application = applicationBuilder(sessionData = validSessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -119,18 +124,16 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
       }
 
       "should handle case when no CommunityBuildings upload data is found" in {
-        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
-
         (mockClaimsValidationService
-          .deleteCommunityBuildingsSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
+          .deleteCommunityBuildingsSchedule(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
           .returning(
             Future.failed(
-              new RuntimeException("No CommunityBuildings schedule upload found for claimId: test-claim-123")
+              new RuntimeException("No CommunityBuildings schedule upload found for claimId: claim-123")
             )
           )
 
-        given application: Application = applicationBuilder(sessionData = sessionData)
+        given application: Application = applicationBuilder(sessionData = validSessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -145,21 +148,13 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      "should handle case when no claimId is in session data" in {
-        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
+      "should redirect to PageNotFound when data guard fails" in {
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingUnderGiftAidSmallDonationsScheme(true)
+          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, None))
+          .and(SessionData.setUnsubmittedClaimId("claim-123"))
 
-        (mockClaimsValidationService
-          .deleteCommunityBuildingsSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(
-            Future.failed(
-              new RuntimeException("No claimId found when attempting to delete CommunityBuildings schedule")
-            )
-          )
-
-        given application: Application = applicationBuilder(sessionData = sessionData)
-          .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
-          .build()
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -167,8 +162,10 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
-
-          a[RuntimeException] should be thrownBy result.futureValue
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(
+            controllers.routes.PageNotFoundController.onPageLoad.url
+          )
         }
       }
     }
