@@ -30,7 +30,6 @@ import models.requests.DataRequest
 import play.api.data.Form
 
 import scala.concurrent.Future
-import models.SessionData
 
 class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
 
@@ -41,9 +40,8 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
   "DeleteGiftAidScheduleController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-        val sessionData                = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .and(SessionData.setUnsubmittedClaimId("claim-123"))
+        val sessionData                = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -65,9 +63,8 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should reload the page with errors when a required field is missing" in {
-        val sessionData                = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .and(SessionData.setUnsubmittedClaimId("claim-123"))
+        val sessionData                = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -84,9 +81,8 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should redirect to ProblemWithGiftAidScheduleController (G1.4) when no is selected" in {
-        val sessionData                = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .and(SessionData.setUnsubmittedClaimId("claim-123"))
+        val sessionData                = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -106,9 +102,8 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should call backend deletion endpoint and redirect to R2 when yes is selected" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .and(SessionData.setUnsubmittedClaimId("claim-123"))
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
 
         (mockClaimsValidationService
           .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
@@ -132,9 +127,8 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should handle case when no GiftAid upload data is found" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .and(SessionData.setUnsubmittedClaimId("claim-123"))
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
 
         (mockClaimsValidationService
           .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))

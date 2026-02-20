@@ -60,18 +60,14 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
   lazy val testValidatedResponse: GetUploadResultValidatedCommunityBuildings =
     Json.parse(testValidatedJsonString).as[GetUploadResultValidatedCommunityBuildings]
 
-  // Test session data that satisfies shouldUploadCommunityBuildingsSchedule DataGuard
-  def validSessionData: SessionData = RepaymentClaimDetailsAnswers
-    .setClaimingUnderGiftAidSmallDonationsScheme(true)
-    .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
-    .and(SessionData.setUnsubmittedClaimId(testClaimId))
-    .copy(communityBuildingsScheduleFileUploadReference = Some(testFileUploadReference))
+  def validSessionData: SessionData = completeGasdsSession
+    .copy(
+      unsubmittedClaimId = Some(testClaimId),
+      communityBuildingsScheduleFileUploadReference = Some(testFileUploadReference)
+    )
 
-  def validSessionDataWithoutFileRef: SessionData = RepaymentClaimDetailsAnswers
-    .setClaimingUnderGiftAidSmallDonationsScheme(true)
-    .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
-    .and(SessionData.setUnsubmittedClaimId(testClaimId))
-    .copy(communityBuildingsScheduleFileUploadReference = None)
+  def validSessionDataWithoutFileRef: SessionData = completeGasdsSession
+    .copy(unsubmittedClaimId = Some(testClaimId))
 
   def sessionDataFailingGuard: SessionData = RepaymentClaimDetailsAnswers
     .setClaimingUnderGiftAidSmallDonationsScheme(true)

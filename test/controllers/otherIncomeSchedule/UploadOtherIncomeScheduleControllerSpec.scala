@@ -175,12 +175,9 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
         val upscan = response
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(
-              unsubmittedClaimId = Some("claim-123"),
-              otherIncomeScheduleUpscanInitialization = Some(upscan)
-            )
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+            .copy(otherIncomeScheduleUpscanInitialization = Some(upscan))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData).build()
@@ -191,16 +188,15 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
           val result = route(application, request).value
 
           status(result) shouldEqual OK
-          contentAsString(result) should include("claim-123")
+          contentAsString(result) should include("claim-1234567890")
         }
       }
 
       "should redirect when file upload reference already exists" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
@@ -228,9 +224,8 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
       "should initiate upscan and store session when no reference exists" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
@@ -276,9 +271,8 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
       "should update status and redirect when reference exists" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
@@ -290,7 +284,7 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
             _: DataRequest[?],
             _: HeaderCarrier
           ))
-          .expects("claim-123", FileUploadReference("ref-123"), ValidationType.OtherIncome, *, *)
+          .expects("test-claim-id", FileUploadReference("ref-123"), ValidationType.OtherIncome, *, *)
           .returning(Future.successful(true))
 
         given application: Application =
@@ -314,9 +308,8 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
       "should redirect back when no reference found" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
@@ -348,9 +341,8 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
       "should redirect when upscan initialization does not exist in session" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -373,12 +365,9 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
       "should render error page when upscan exists in session" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(
-              unsubmittedClaimId = Some("claim-123"),
-              otherIncomeScheduleUpscanInitialization = Some(response)
-            )
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+            .copy(otherIncomeScheduleUpscanInitialization = Some(response))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -399,9 +388,8 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
       "should redirect when no upscan and no reference" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)

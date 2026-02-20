@@ -36,7 +36,7 @@ class CheckYourOtherIncomeScheduleControllerSpec extends ControllerSpec {
   val form: Form[Boolean] = new YesNoFormProvider()("checkYourOtherIncomeSchedule.error.required")
 
   val sessionData: SessionData =
-    RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
+    completeRepaymentDetailsAnswersSession.and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
   val testOtherIncomeScheduleData: OtherIncomeScheduleData = OtherIncomeScheduleData(
     adjustmentForOtherIncomePreviousOverClaimed = BigDecimal(0.00),

@@ -22,8 +22,6 @@ import models.RepaymentClaimDetailsAnswers
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import models.SessionData
-
 class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
   "AboutOtherIncomeScheduleController" - {
     "onPageLoad" - {
@@ -48,7 +46,7 @@ class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
       "should return OK if setClaimingTaxDeducted is true" in {
         val sessionData  =
-          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
+          completeRepaymentDetailsAnswersSession.and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
         val customConfig = Map(
           "urls.otherIncomeScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/other-income-schedule"
         )
@@ -69,12 +67,9 @@ class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
       "should redirect to the next page if the otherIncomeScheduleCompleted is true" in {
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(
-              unsubmittedClaimId = Some("claim-123"),
-              otherIncomeScheduleCompleted = true
-            )
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+            .copy(otherIncomeScheduleCompleted = true)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -92,7 +87,7 @@ class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
     "onSubmit" - {
       "should redirect to the next page" in {
         val sessionData                =
-          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
+          completeRepaymentDetailsAnswersSession.and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {

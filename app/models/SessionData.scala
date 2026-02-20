@@ -131,20 +131,27 @@ object SessionData {
   def setUnsubmittedClaimId(unsubmittedClaimId: String)(using session: SessionData): SessionData =
     session.copy(unsubmittedClaimId = Some(unsubmittedClaimId))
 
+  def setCommunityBuildingsScheduleCompleted(value: Boolean)(using session: SessionData): SessionData =
+    session.copy(communityBuildingsScheduleCompleted = value)
+
+  def isRepaymentClaimDetailsComplete(using session: SessionData): Boolean =
+    session.unsubmittedClaimId.isDefined
+      && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
+
   def shouldUploadGiftAidSchedule(using session: SessionData): Boolean =
     RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true)
-      && session.unsubmittedClaimId.isDefined
+      && isRepaymentClaimDetailsComplete
 
   def shouldUploadOtherIncomeSchedule(using session: SessionData): Boolean =
     RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true)
-      && session.unsubmittedClaimId.isDefined
+      && isRepaymentClaimDetailsComplete
 
   def shouldUploadCommunityBuildingsSchedule(using session: SessionData): Boolean =
     RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings.contains(true)
       && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
-      && session.unsubmittedClaimId.isDefined
+      && isRepaymentClaimDetailsComplete
 
   def shouldUploadConnectedCharitiesSchedule(using session: SessionData): Boolean =
     RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities.contains(true)
-      && session.unsubmittedClaimId.isDefined
+      && isRepaymentClaimDetailsComplete
 }

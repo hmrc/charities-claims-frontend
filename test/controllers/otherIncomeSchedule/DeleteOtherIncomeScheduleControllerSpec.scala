@@ -18,7 +18,6 @@ package controllers.otherIncomeSchedule
 
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
-import models.SessionData
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
@@ -41,7 +40,7 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
     "onPageLoad" - {
       "should render the page correctly" in {
         val sessionData                =
-          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
+          completeRepaymentDetailsAnswersSession.and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -64,7 +63,7 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
     "onSubmit" - {
       "should reload the page with errors when a required field is missing" in {
         val sessionData                =
-          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
+          completeRepaymentDetailsAnswersSession.and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -82,7 +81,7 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
       "should redirect to G2 screen when no is selected" in {
         val sessionData                =
-          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
+          completeRepaymentDetailsAnswersSession.and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -100,9 +99,8 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
       }
 
       "should call backend deletion endpoint and redirect to R2 when yes is selected" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingTaxDeducted(true)
-          .copy(unsubmittedClaimId = Some("test-claim-123"))
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         (mockClaimsValidationService
           .deleteOtherIncomeSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
@@ -127,9 +125,8 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
       "should handle case when no OtherIncome upload data is found" in {
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(unsubmittedClaimId = Some("test-claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         (mockClaimsValidationService
           .deleteOtherIncomeSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
