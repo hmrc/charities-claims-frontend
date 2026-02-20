@@ -137,6 +137,14 @@ object RepaymentClaimDetailsAnswers {
         giftAidScheduleFileUploadReference = if (value) session.giftAidScheduleFileUploadReference else None
       )
 
+  def setClaimingConnectedCharities(value: Boolean)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(connectedToAnyOtherCharities = Some(v)))
+      .copy(
+        connectedCharitiesScheduleData = if (value) session.connectedCharitiesScheduleData else None,
+        connectedCharitiesScheduleFileUploadReference =
+          if (value) session.connectedCharitiesScheduleFileUploadReference else None
+      )
+
   def getRepaymentClaimType(using session: SessionData): Option[RepaymentClaimType] = get(answers =>
     for
       claimingGiftAid                          <- answers.claimingGiftAid

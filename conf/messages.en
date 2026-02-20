@@ -601,3 +601,7 @@ yourOtherIncomeScheduleUpload.heading = Your Other Income schedule upload
 yourOtherIncomeScheduleUpload.paragraph.one = You can upload your Other Income schedule as a spreadsheet. The selected file must be smaller than 250KB.
 yourOtherIncomeScheduleUpload.table.key = Other Income Schedule
 yourOtherIncomeScheduleUpload.title = Your Other Income schedule upload
+
+connectedCharitiesScheduleUploadSuccessful.title = Upload successful
+connectedCharitiesScheduleUploadSuccessful.message.1 = Upload successful
+connectedCharitiesScheduleUploadSuccessful.message.2 = You have successfully attached your Connected Charities schedule.

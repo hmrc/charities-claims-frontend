@@ -201,3 +201,6 @@ GET         /problem-updating-community-buildings-schedule-unknown-error        
 POST        /problem-updating-community-buildings-schedule-unknown-error        controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onSubmit
 GET         /problem-updating-community-buildings-schedule-quarantine           controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onPageLoad
 POST        /problem-updating-community-buildings-schedule-quarantine           controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onSubmit
+
+GET         /connected-charities-schedule-upload-successful  controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadSuccessfulController.onPageLoad
+POST        /connected-charities-schedule-upload-successful  controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadSuccessfulController.onSubmit
