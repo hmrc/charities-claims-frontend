@@ -449,9 +449,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            // TODO: to replace when available
-            // routes.CheckYourCommunitybuildingsScheduleController.onPageLoad.url
-            routes.YourCommunityBuildingsScheduleUploadController.onPageLoad.url
+            routes.CheckYourCommunityBuildingsScheduleController.onPageLoad.url
           )
         }
 

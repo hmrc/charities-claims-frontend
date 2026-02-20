@@ -101,7 +101,6 @@ class CheckYourCommunityBuildingsScheduleController @Inject() (
                   answer match {
                     case true =>
                       // TODO: UpdateCommunityBuildingsScheduleController to be added here
-                      // Gift Aid equivalent: routes.UpdateGiftAidScheduleController.onPageLoad
                       Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
 
                     case false =>
@@ -118,13 +117,10 @@ class CheckYourCommunityBuildingsScheduleController @Inject() (
                                )
                           _ <- claimsService.save
                         } yield Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
-                        // TODO: CommunityBuildingsScheduleUploadSuccessfulController to be added here
-                        // Gift Aid equivalent: routes.GiftAidScheduleUploadSuccessfulController.onPageLoad
+                        // TODO: CommunityBuildingsScheduleUploadSuccessfulController to be added above
                       }
                   }
               )
-
           }
       }
-
 }

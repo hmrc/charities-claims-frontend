@@ -91,7 +91,7 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render the page correctly when schedule data is available" in {
+      "should render the page when schedule data is available" in {
         (mockClaimsValidationService
           .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
@@ -129,11 +129,32 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
           content should include("The Vault")
         }
       }
+
+      "should default to page 1 when page query parameter is not a valid integer" in {
+        (mockClaimsValidationService
+          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+
+        given application: Application = applicationBuilder(sessionData = validSessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CheckYourCommunityBuildingsScheduleController.onPageLoad.url + "?page=invalid")
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          // the first community building from test json file should be visible on page 1
+          content should include("The Vault")
+        }
+      }
     }
 
     "onSubmit" - {
-    // TODO: content check TBC
-      "should return BadRequest when form onSubmit has errors" in {
+
+      "should return BadRequest when form onSubmit has errors and display error message" in {
         (mockClaimsValidationService
           .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
@@ -146,14 +167,17 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
             FakeRequest(POST, routes.CheckYourCommunityBuildingsScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("other" -> "field")
 
-          val result = route(application, request).value
+          val result  = route(application, request).value
+          val content = contentAsString(result)
 
           status(result) shouldEqual BAD_REQUEST
-          contentAsString(result) should include("Check your Community Buildings schedule")
+          content should include("Check your Community Buildings schedule")
+          content should include("Select ‘Yes’ if you need to update this Community Buildings schedule")
         }
       }
 
-      "should redirect to upload page when Yes is selected" in {
+      // TODO: redirect should be updated to UpdateCommunityBuildingsScheduleController when it is added
+      "should redirect to update screen when Yes is selected" in {
         (mockClaimsValidationService
           .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
@@ -170,12 +194,13 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
+            // TODO: UpdateCommunityBuildingsScheduleController to be added in the below route
             routes.UploadCommunityBuildingsScheduleController.onPageLoad.url
           )
         }
       }
-// TODO: this is to be updated with correct route
-      "should redirect correctly when No is selected and schedule is already completed" in {
+
+      "should redirect to Task List when No is selected and schedule is already completed previously" in {
         (mockClaimsValidationService
           .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
@@ -196,8 +221,8 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
           )
         }
       }
-// TODO: this is to be updated
-      "should save and redirect when No is selected and schedule is not yet completed" in {
+// TODO: redirect should be updated to CommunityBuildingsScheduleUploadSuccessfulController when it is added
+      "should save and redirect to UploadSuccessful when No is selected and schedule not yet completed before" in {
         (mockClaimsValidationService
           .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
@@ -224,6 +249,7 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
+            // TODO: CommunityBuildingsScheduleUploadSuccessfulController to be added in the below route
             controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
