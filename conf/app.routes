@@ -202,5 +202,5 @@ POST        /problem-uploading-community-buildings-schedule-quarantine          
 GET         /connected-charities-schedule-upload-successful  controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadSuccessfulController.onPageLoad
 POST        /connected-charities-schedule-upload-successful  controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadSuccessfulController.onSubmit
 
-GET         /problem-updating-other-income-schedule-quarantine                controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleQuarantineController.onPageLoad
-POST        /problem-updating-other-income-schedule-quarantine                controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleQuarantineController.onSubmit
+GET         /problem-uploading-other-income-schedule-quarantine                controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleQuarantineController.onPageLoad
+POST        /problem-uploading-other-income-schedule-quarantine                controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleQuarantineController.onSubmit
