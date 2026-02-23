@@ -29,9 +29,8 @@ class ProblemUpdatingOtherIncomeScheduleRejectedControllerSpec extends Controlle
     "onPageLoad" - {
       "should render the page correctly" in {
         val sessionData                =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .and(SessionData.setUnsubmittedClaimId("claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .build()
 
@@ -87,9 +86,8 @@ class ProblemUpdatingOtherIncomeScheduleRejectedControllerSpec extends Controlle
 
     "onSubmit" - {
       "should redirect to the next page" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingTaxDeducted(true)
-          .and(SessionData.setUnsubmittedClaimId("claim-123"))
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         val application: Application = applicationBuilder(sessionData = sessionData).build()
 
