@@ -219,7 +219,6 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
           )
         }
       }
-// TODO: redirect should be updated to CommunityBuildingsScheduleUploadSuccessfulController when it is added
       "should save and redirect to UploadSuccessful when No is selected and schedule not yet completed before" in {
         (mockClaimsValidationService
           .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
@@ -247,8 +246,7 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            // TODO: CommunityBuildingsScheduleUploadSuccessfulController to be added in the below route
-            controllers.routes.ClaimsTaskListController.onPageLoad.url
+            routes.CommunityBuildingsScheduleUploadSuccessfulController.onPageLoad.url
           )
         }
       }

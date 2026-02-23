@@ -152,6 +152,8 @@ class YourOtherIncomeScheduleUploadController @Inject() (
                             failure.failureDetails.failureReason match {
                               case FailureReason.QUARANTINE =>
                                 routes.ProblemUpdatingOtherIncomeScheduleQuarantineController.onPageLoad
+                              case FailureReason.REJECTED   =>
+                                routes.ProblemUpdatingOtherIncomeScheduleRejectedController.onPageLoad
                               case _                        =>
                                 routes.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onPageLoad
                             }

@@ -34,7 +34,8 @@ final case class CreateUploadTrackingRequest(
   reference: UpscanReference,
   validationType: ValidationType,
   uploadUrl: String,
-  initiateTimestamp: String
+  initiateTimestamp: String,
+  fields: Map[String, String]
 )
 
 object CreateUploadTrackingRequest {

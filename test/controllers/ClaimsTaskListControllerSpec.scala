@@ -100,6 +100,53 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         }
       }
 
+      "should not display GASDS task when GASDS is true but all sub-fields are NO" in {
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(false)
+        )
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswers = Some(answers)
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
+          contentAsString(result) shouldNot include("Gift Aid Small Donations Scheme details")
+        }
+      }
+
+      "should display GASDS task when makingAdjustmentToPreviousClaim is true" in {
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(true),
+          connectedToAnyOtherCharities = Some(false),
+          makingAdjustmentToPreviousClaim = Some(true)
+        )
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswers = Some(answers)
+        )
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+
+          contentAsString(result) should include("Gift Aid Small Donations Scheme details")
+        }
+      }
+
       "should not display GASDS task when claimingUnderGiftAidSmallDonationsScheme is false" in {
         given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
 

@@ -16,19 +16,20 @@
 
 package controllers.actions
 
-import com.google.inject.ImplementedBy
-import config.FrontendAppConfig
-import models.SessionData
-import models.requests.{AuthorisedRequest, DataRequest}
 import play.api.mvc.{ActionRefiner, Result, Results}
+import com.google.inject.ImplementedBy
+import connectors.{ClaimsConnector, ClaimsValidationConnector}
+import config.FrontendAppConfig
+import uk.gov.hmrc.auth.core.AffinityGroup
+import models.SessionData
 import repositories.SessionCache
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import models.requests.{AuthorisedRequest, DataRequest}
+
+import scala.concurrent.{ExecutionContext, Future}
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
-import connectors.ClaimsConnector
-import uk.gov.hmrc.auth.core.AffinityGroup
 
 @ImplementedBy(classOf[DefaultDataRetrievalAction])
 trait DataRetrievalAction extends ActionRefiner[AuthorisedRequest, DataRequest]
@@ -36,6 +37,7 @@ trait DataRetrievalAction extends ActionRefiner[AuthorisedRequest, DataRequest]
 class DefaultDataRetrievalAction @Inject() (
   cache: SessionCache,
   claimsConnector: ClaimsConnector,
+  claimsValidationConnector: ClaimsValidationConnector,
   config: FrontendAppConfig
 )(using val executionContext: ExecutionContext)
     extends DataRetrievalAction {
@@ -56,10 +58,15 @@ class DefaultDataRetrievalAction @Inject() (
                     case claimInfo :: _ =>
                       claimsConnector.getClaim(claimInfo.claimId).flatMap {
                         case Some(claim) =>
-                          val sessionData = SessionData.from(claim, request.charitiesReference)
-                          cache
-                            .store(sessionData)
-                            .map(_ => Right(DataRequest(request, sessionData)))
+                          claimsValidationConnector
+                            .getUploadSummary(claim.claimId)
+                            .flatMap { uploadsSummary =>
+                              val sessionData =
+                                SessionData.from(claim, request.charitiesReference, Some(uploadsSummary))
+                              cache
+                                .store(sessionData)
+                                .map(_ => Right(DataRequest(request, sessionData)))
+                            }
                         case None        =>
                           Future
                             .failed(new RuntimeException(s"claimId $claimInfo.claimId could not be found in backend"))

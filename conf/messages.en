@@ -14,6 +14,7 @@ uploadCommunityBuildingsSchedule.paragraph.url = If you have not completed a Com
 uploadCommunityBuildingsSchedule.input.label = Upload a file
 uploadCommunityBuildingsSchedule.form.upload-file.submit = Continue
 uploadCommunityBuildingsSchedule.error.file-upload.InvalidArgument = Select a Community Buildings schedule
+uploadCommunityBuildingsSchedule.error.file-upload.EntityTooSmall = Select a Community Buildings schedule
 uploadCommunityBuildingsSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250KB
 
 aboutGiftAidSchedule.caption = Add Gift Aid schedule
@@ -570,6 +571,10 @@ site.pagination.page = page
 site.pagination.previous = Previous
 site.yes = Yes
 
+communityBuildingsScheduleUploadSuccessful.message.1 = Upload successful
+communityBuildingsScheduleUploadSuccessful.message.2 = You have successfully attached your Community Buildings schedule.
+communityBuildingsScheduleUploadSuccessful.title = Upload successful
+
 updateCommunityBuildingsSchedule.error.required = Select ‘Yes’ if you want to update this Community Buildings schedule
 updateCommunityBuildingsSchedule.heading = Are you sure you want to update this Community Buildings schedule?
 updateCommunityBuildingsSchedule.hint = By updating this file, you will lose any Community Buildings schedule data you have previously attached.
@@ -592,8 +597,8 @@ updateRepaymentClaim.title = Do you want to update this repayment claim?
 
 uploadGiftAidSchedule.caption = Add Gift Aid schedule
 uploadGiftAidSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250KB
-uploadGiftAidSchedule.error.file-upload.EntityTooSmall = EntityTooSmall : Select a Gift Aid schedule
-uploadGiftAidSchedule.error.file-upload.InvalidArgument = InvalidArgument : Select a Gift Aid schedule
+uploadGiftAidSchedule.error.file-upload.EntityTooSmall = Select a Gift Aid schedule
+uploadGiftAidSchedule.error.file-upload.InvalidArgument = Select a Gift Aid schedule
 uploadGiftAidSchedule.form.upload-file.submit = Continue
 uploadGiftAidSchedule.heading = Upload a Gift Aid schedule
 uploadGiftAidSchedule.input.label = Upload a file
@@ -603,8 +608,8 @@ uploadGiftAidSchedule.title = Upload a Gift Aid schedule
 
 uploadOtherIncomeSchedule.caption = Add Other Income schedule
 uploadOtherIncomeSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250KB
-uploadOtherIncomeSchedule.error.file-upload.EntityTooSmall = EntityTooSmall : Select an Other Income schedule
-uploadOtherIncomeSchedule.error.file-upload.InvalidArgument = InvalidArgument : Select an Other Income schedule
+uploadOtherIncomeSchedule.error.file-upload.EntityTooSmall = Select an Other Income schedule
+uploadOtherIncomeSchedule.error.file-upload.InvalidArgument = Select an Other Income schedule
 uploadOtherIncomeSchedule.form.upload-file.submit = Continue
 uploadOtherIncomeSchedule.heading = Upload an Other Income schedule
 uploadOtherIncomeSchedule.input.label = Upload a file
@@ -632,6 +637,9 @@ yourOtherIncomeScheduleUpload.paragraph.one = You can upload your Other Income s
 yourOtherIncomeScheduleUpload.table.key = Other Income Schedule
 yourOtherIncomeScheduleUpload.title = Your Other Income schedule upload
 
+problemUpdatingOtherIncomeScheduleRejected.heading = There is a problem uploading your Other Income schedule
+problemUpdatingOtherIncomeScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
+problemUpdatingOtherIncomeScheduleRejected.title = There is a problem uploading your Other Income schedule
 connectedCharitiesScheduleUploadSuccessful.title = Upload successful
 connectedCharitiesScheduleUploadSuccessful.message.1 = Upload successful
 connectedCharitiesScheduleUploadSuccessful.message.2 = You have successfully attached your Connected Charities schedule.
