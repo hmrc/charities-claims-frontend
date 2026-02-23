@@ -105,7 +105,10 @@ object ClaimsTaskListController {
 
   private def buildAboutTheClaimSection(using request: DataRequest[?], messages: Messages): Seq[TaskItem] = {
     val answers         = request.sessionData.repaymentClaimDetailsAnswers
-    val isClaimingGasds = answers.exists(_.claimingUnderGiftAidSmallDonationsScheme.contains(true))
+    val isClaimingGasds = answers.exists(a =>
+      a.claimingDonationsNotFromCommunityBuilding.contains(true) ||
+        a.makingAdjustmentToPreviousClaim.contains(true)
+    )
 
     Seq(
       Some(buildRepaymentClaimDetailsTask),
