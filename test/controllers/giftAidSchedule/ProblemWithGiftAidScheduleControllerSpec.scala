@@ -44,7 +44,7 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
     bind[ClaimsValidationService].toInstance(mockClaimsValidationService)
   )
 
-  val testClaimId: String                          = "test-claim-id-123"
+  val testClaimId: String                          = "test-claim-id"
   val testFileUploadReference: FileUploadReference = FileUploadReference("test-file-upload-ref")
 
   lazy val testValidationFailedJsonString: String =
@@ -87,12 +87,9 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should redirect to UploadGiftAidScheduleController when no file upload reference in session" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(testClaimId),
-            giftAidScheduleFileUploadReference = None
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = None)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -112,12 +109,9 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
       // Page Render Tests:
 
       "should render page with validation errors when upload has VALIDATION_FAILED status" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(testClaimId),
-            giftAidScheduleFileUploadReference = Some(testFileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -138,12 +132,9 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should display error messages in the table" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(testClaimId),
-            giftAidScheduleFileUploadReference = Some(testFileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -169,12 +160,9 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should display all 5 errors from test schedule data" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(testClaimId),
-            giftAidScheduleFileUploadReference = Some(testFileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -200,12 +188,9 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should display number 0 in row column for earliestDonationDate error (string field defaults to 0)" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(testClaimId),
-            giftAidScheduleFileUploadReference = Some(testFileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -228,12 +213,9 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should display row column with number 3 at least 3 occurrences using test data" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(testClaimId),
-            giftAidScheduleFileUploadReference = Some(testFileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -256,12 +238,9 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should default to page 1 of pagination when page query parameter is not a valid integer" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(testClaimId),
-            giftAidScheduleFileUploadReference = Some(testFileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -285,12 +264,9 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should include the giftAidScheduleSpreadsheetGuidanceUrl link" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(testClaimId),
-            giftAidScheduleFileUploadReference = Some(testFileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -312,12 +288,9 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should include the (attach updated schedule) button" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(testClaimId),
-            giftAidScheduleFileUploadReference = Some(testFileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -339,12 +312,9 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should include the delete schedule link" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(testClaimId),
-            giftAidScheduleFileUploadReference = Some(testFileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -367,12 +337,9 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should redirect to YourGiftAidScheduleUploadController when upload result is VALIDATED" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(testClaimId),
-            giftAidScheduleFileUploadReference = Some(testFileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -395,12 +362,9 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should NOT render problem page when upload has VALIDATED status (should redirect)" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(testClaimId),
-            giftAidScheduleFileUploadReference = Some(testFileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
         (mockClaimsValidationConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -425,12 +389,9 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
     "onSubmit" - {
 
       "should delete the schedule and redirect to UploadGiftAidScheduleController in Attach updated schedule path" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(testClaimId),
-            giftAidScheduleFileUploadReference = Some(testFileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
         (mockClaimsValidationService
           .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
@@ -453,12 +414,9 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should handle when delete fails" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some(testClaimId),
-            giftAidScheduleFileUploadReference = Some(testFileUploadReference)
-          )
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
         (mockClaimsValidationService
           .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))

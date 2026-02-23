@@ -14,44 +14,47 @@
  * limitations under the License.
  */
 
-package controllers.giftAidSchedule
+package controllers.communityBuildingsSchedule
 
+import controllers.ControllerSpec
+import forms.YesNoFormProvider
+import models.*
+import models.requests.DataRequest
+import play.api.Application
+import play.api.data.Form
+import play.api.inject.bind
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import services.ClaimsValidationService
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
-import controllers.ControllerSpec
-import play.api.inject.bind
-import views.html.DeleteGiftAidScheduleView
-import play.api.Application
-import models.RepaymentClaimDetailsAnswers
-import forms.YesNoFormProvider
 import uk.gov.hmrc.http.HeaderCarrier
-import models.requests.DataRequest
-import play.api.data.Form
+import views.html.UpdateCommunityBuildingsScheduleView
 
 import scala.concurrent.Future
+import services.ClaimsService
 
-class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
+class UpdateCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
   val form: Form[Boolean] = new YesNoFormProvider()()
 
   val mockClaimsValidationService: ClaimsValidationService = mock[ClaimsValidationService]
+  val mockClaimsService: ClaimsService                     = mock[ClaimsService]
 
-  "DeleteGiftAidScheduleController" - {
+  // Session data that passes DataGuard (shouldUploadCommunityBuildingsSchedule) - uses completeGasdsSession
+  def validSessionData: SessionData = completeGasdsSession
+
+  "UpdateCommunityBuildingsScheduleController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-        val sessionData                = completeRepaymentDetailsAnswersSession
-          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
-        given application: Application = applicationBuilder(sessionData = sessionData)
+        given application: Application = applicationBuilder(sessionData = validSessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DeleteGiftAidScheduleController.onPageLoad.url)
+            FakeRequest(GET, routes.UpdateCommunityBuildingsScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[DeleteGiftAidScheduleView]
+          val view   = application.injector.instanceOf[UpdateCommunityBuildingsScheduleView]
           val msgs   = application.injector.instanceOf[play.api.i18n.MessagesApi].preferred(request)
 
           status(result)                        shouldBe OK
@@ -63,15 +66,13 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should reload the page with errors when a required field is missing" in {
-        val sessionData                = completeRepaymentDetailsAnswersSession
-          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
-        given application: Application = applicationBuilder(sessionData = sessionData)
+        given application: Application = applicationBuilder(sessionData = validSessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteGiftAidScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.UpdateCommunityBuildingsScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value
@@ -80,68 +81,66 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to ProblemWithGiftAidScheduleController (G1.4) when no is selected" in {
-        val sessionData                = completeRepaymentDetailsAnswersSession
-          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
-        given application: Application = applicationBuilder(sessionData = sessionData)
+      "should redirect to CheckYourCommunityBuildingsSchedule screen when no is selected" in {
+        given application: Application = applicationBuilder(sessionData = validSessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteGiftAidScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.UpdateCommunityBuildingsScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
 
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(
-            controllers.giftAidSchedule.routes.ProblemWithGiftAidScheduleController.onPageLoad.url
+            routes.CheckYourCommunityBuildingsScheduleController.onPageLoad.url
           )
         }
       }
 
-      "should call backend deletion endpoint and redirect to R2 when yes is selected" in {
-        val sessionData = completeRepaymentDetailsAnswersSession
-          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
-
+      "should call backend deletion endpoint and redirect to UploadCommunityBuildingsSchedule when yes is selected" in {
         (mockClaimsValidationService
-          .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
+          .deleteCommunityBuildingsSchedule(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
           .returning(Future.successful(()))
 
-        given application: Application = applicationBuilder(sessionData = sessionData)
+        (mockClaimsService
+          .save(using _: HeaderCarrier))
+          .expects(*)
+          .returning(Future.successful(()))
+
+        given application: Application = applicationBuilder(sessionData = validSessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
+          .overrides(bind[ClaimsService].toInstance(mockClaimsService))
           .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteGiftAidScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.UpdateCommunityBuildingsScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(routes.UploadCommunityBuildingsScheduleController.onPageLoad.url)
         }
       }
 
-      "should handle case when no GiftAid upload data is found" in {
-        val sessionData = completeRepaymentDetailsAnswersSession
-          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
-
+      "should handle case when no CommunityBuildings upload data is found" in {
         (mockClaimsValidationService
-          .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
+          .deleteCommunityBuildingsSchedule(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
-          .returning(Future.failed(new RuntimeException("No GiftAid schedule upload found")))
+          .returning(Future.failed(new RuntimeException("No CommunityBuildings schedule upload found")))
 
-        given application: Application = applicationBuilder(sessionData = sessionData)
+        given application: Application = applicationBuilder(sessionData = validSessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteGiftAidScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.UpdateCommunityBuildingsScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
@@ -150,13 +149,19 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      "should handle case when gift aid upload is not expected" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingGiftAid(false)
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+      "should redirect to PageNotFound when data guard is triggered" in {
+        val sessionDataFailingGuard = RepaymentClaimDetailsAnswers
+          .setClaimingUnderGiftAidSmallDonationsScheme(true)
+          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
+          .copy(unsubmittedClaimId = None)
+
+        given application: Application = applicationBuilder(sessionData = sessionDataFailingGuard)
+          .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
+          .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteGiftAidScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.UpdateCommunityBuildingsScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value

@@ -19,6 +19,7 @@ package controllers.communityBuildingsSchedule
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
 import models.{RepaymentClaimDetailsAnswers, SessionData}
+import models.SessionData.and
 import models.requests.DataRequest
 import play.api.Application
 import play.api.data.Form
@@ -37,16 +38,11 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
   val mockClaimsValidationService: ClaimsValidationService = mock[ClaimsValidationService]
 
-  def validSessionData: SessionData = RepaymentClaimDetailsAnswers
-    .setClaimingUnderGiftAidSmallDonationsScheme(true)
-    .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
-    .and(SessionData.setUnsubmittedClaimId("claim-123"))
-
   "DeleteCommunityBuildingsScheduleController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
 
-        given application: Application = applicationBuilder(sessionData = validSessionData)
+        given application: Application = applicationBuilder(sessionData = completeGasdsSession)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -67,7 +63,7 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should reload the page with errors when a required field is missing" in {
-        given application: Application = applicationBuilder(sessionData = validSessionData)
+        given application: Application = applicationBuilder(sessionData = completeGasdsSession)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -83,7 +79,7 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
       }
 
       "should redirect to ProblemWithCommunityBuildingsScheduleController when no is selected" in {
-        given application: Application = applicationBuilder(sessionData = validSessionData)
+        given application: Application = applicationBuilder(sessionData = completeGasdsSession)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -107,7 +103,7 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
           .expects(*, *)
           .returning(Future.successful(()))
 
-        given application: Application = applicationBuilder(sessionData = validSessionData)
+        given application: Application = applicationBuilder(sessionData = completeGasdsSession)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -133,7 +129,7 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
             )
           )
 
-        given application: Application = applicationBuilder(sessionData = validSessionData)
+        given application: Application = applicationBuilder(sessionData = completeGasdsSession)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 

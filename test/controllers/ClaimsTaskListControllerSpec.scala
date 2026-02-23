@@ -26,7 +26,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
 
   val testClaimId = "claim-123"
 
-  def completeRepaymentClaimDetailsAnswers(): RepaymentClaimDetailsAnswers =
+  val repaymentClaimDetailsAnswersCompleted: RepaymentClaimDetailsAnswers =
     RepaymentClaimDetailsAnswers(
       claimingGiftAid = Some(false),
       claimingTaxDeducted = Some(false),
@@ -43,7 +43,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
   def sessionDataWithCompleteRcd(): SessionData =
     SessionData(
       charitiesReference = testCharitiesReference,
-      repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers()),
+      repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsAnswersCompleted),
       unsubmittedClaimId = Some(testClaimId)
     )
 
@@ -77,7 +77,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display GASDS task when claimingUnderGiftAidSmallDonationsScheme is true" in {
-        val answers     = completeRepaymentClaimDetailsAnswers().copy(
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
           claimingUnderGiftAidSmallDonationsScheme = Some(true),
           claimingDonationsNotFromCommunityBuilding = Some(true),
           claimingDonationsCollectedInCommunityBuildings = Some(false),
@@ -112,7 +112,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display Gift Aid schedule task when claimingGiftAid is true" in {
-        val answers     = completeRepaymentClaimDetailsAnswers().copy(claimingGiftAid = Some(true))
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(claimingGiftAid = Some(true))
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
@@ -141,7 +141,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display Other income schedule task when claimingTaxDeducted is true" in {
-        val answers     = completeRepaymentClaimDetailsAnswers().copy(claimingTaxDeducted = Some(true))
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(claimingTaxDeducted = Some(true))
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
@@ -170,7 +170,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display Community buildings schedule task when claimingDonationsCollectedInCommunityBuildings is true" in {
-        val answers     = completeRepaymentClaimDetailsAnswers().copy(
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
           claimingUnderGiftAidSmallDonationsScheme = Some(true),
           claimingDonationsCollectedInCommunityBuildings = Some(true),
           claimingDonationsNotFromCommunityBuilding = Some(true),
@@ -205,7 +205,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display Connected charities schedule task when connectedToAnyOtherCharities is true" in {
-        val answers     = completeRepaymentClaimDetailsAnswers().copy(
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
           claimingUnderGiftAidSmallDonationsScheme = Some(true),
           connectedToAnyOtherCharities = Some(true),
           claimingDonationsNotFromCommunityBuilding = Some(true),
@@ -251,7 +251,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display Upload documents section when at least one upload task is visible" in {
-        val answers     = completeRepaymentClaimDetailsAnswers().copy(claimingGiftAid = Some(true))
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(claimingGiftAid = Some(true))
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
@@ -269,7 +269,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should show Gift Aid schedule as Incomplete when not completed" in {
-        val answers     = completeRepaymentClaimDetailsAnswers().copy(claimingGiftAid = Some(true))
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(claimingGiftAid = Some(true))
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
@@ -287,7 +287,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should show Gift Aid schedule as Completed when giftAidScheduleCompleted is true" in {
-        val answers     = completeRepaymentClaimDetailsAnswers().copy(claimingGiftAid = Some(true))
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(claimingGiftAid = Some(true))
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
@@ -308,7 +308,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should show Other income schedule as Incomplete when not completed" in {
-        val answers     = completeRepaymentClaimDetailsAnswers().copy(claimingTaxDeducted = Some(true))
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(claimingTaxDeducted = Some(true))
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
@@ -326,7 +326,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should show Other income schedule as Completed when otherIncomeScheduleCompleted is true" in {
-        val answers     = completeRepaymentClaimDetailsAnswers().copy(claimingTaxDeducted = Some(true))
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(claimingTaxDeducted = Some(true))
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
@@ -347,7 +347,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should show Declaration as CannotStartYet when upload tasks are incomplete" in {
-        val answers     = completeRepaymentClaimDetailsAnswers().copy(claimingGiftAid = Some(true))
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(claimingGiftAid = Some(true))
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
@@ -501,7 +501,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       "should not display post create claim sections when answers complete but unsubmittedClaimId is None" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers()),
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsAnswersCompleted),
           unsubmittedClaimId = None
         )
 

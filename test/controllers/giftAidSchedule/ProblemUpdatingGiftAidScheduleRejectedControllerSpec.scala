@@ -30,9 +30,8 @@ class ProblemUpdatingGiftAidScheduleRejectedControllerSpec extends ControllerSpe
     "onPageLoad" - {
       "should render the page correctly" in {
         val sessionData                =
-          RepaymentClaimDetailsAnswers
-            .setClaimingGiftAid(true)
-            .and(SessionData.setUnsubmittedClaimId("claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .build()
 
@@ -88,9 +87,8 @@ class ProblemUpdatingGiftAidScheduleRejectedControllerSpec extends ControllerSpe
 
     "onSubmit" - {
       "should redirect to the next page" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .and(SessionData.setUnsubmittedClaimId("claim-123"))
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
 
         val application: Application = applicationBuilder(sessionData = sessionData).build()
 

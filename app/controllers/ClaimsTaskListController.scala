@@ -19,6 +19,7 @@ package controllers
 import com.google.inject.Inject
 import config.FrontendAppConfig
 import controllers.actions.Actions
+import models.SessionData
 import models.requests.DataRequest
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -100,8 +101,7 @@ object ClaimsTaskListController {
   }
 
   private def isRepaymentClaimDetailsComplete(using request: DataRequest[?]): Boolean =
-    request.sessionData.unsubmittedClaimId.isDefined &&
-      request.sessionData.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
+    SessionData.isRepaymentClaimDetailsComplete(using request.sessionData)
 
   private def buildAboutTheClaimSection(using request: DataRequest[?], messages: Messages): Seq[TaskItem] = {
     val answers         = request.sessionData.repaymentClaimDetailsAnswers

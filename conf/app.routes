@@ -135,8 +135,12 @@ GET         /upload-community-buildings-schedule/error          controllers.comm
 GET         /your-community-buildings-schedule-upload           controllers.communityBuildingsSchedule.YourCommunityBuildingsScheduleUploadController.onPageLoad
 POST        /your-community-buildings-schedule-upload           controllers.communityBuildingsSchedule.YourCommunityBuildingsScheduleUploadController.onSubmit
 GET         /your-community-buildings-schedule-upload/remove    controllers.communityBuildingsSchedule.YourCommunityBuildingsScheduleUploadController.onRemove
-GET         /problem-with-community-buildings-schedule      controllers.communityBuildingsSchedule.ProblemWithCommunityBuildingsScheduleController.onPageLoad
-POST        /problem-with-community-buildings-schedule      controllers.communityBuildingsSchedule.ProblemWithCommunityBuildingsScheduleController.onSubmit
+GET         /problem-with-community-buildings-schedule          controllers.communityBuildingsSchedule.ProblemWithCommunityBuildingsScheduleController.onPageLoad
+POST        /problem-with-community-buildings-schedule          controllers.communityBuildingsSchedule.ProblemWithCommunityBuildingsScheduleController.onSubmit
+GET         /check-your-community-buildings-schedule            controllers.communityBuildingsSchedule.CheckYourCommunityBuildingsScheduleController.onPageLoad
+POST        /check-your-community-buildings-schedule            controllers.communityBuildingsSchedule.CheckYourCommunityBuildingsScheduleController.onSubmit
+GET         /update-community-buildings-schedule                controllers.communityBuildingsSchedule.UpdateCommunityBuildingsScheduleController.onPageLoad
+POST        /update-community-buildings-schedule                controllers.communityBuildingsSchedule.UpdateCommunityBuildingsScheduleController.onSubmit
 
 GET         /about-gift-aid-schedule                        controllers.giftAidSchedule.AboutGiftAidScheduleController.onPageLoad
 POST        /about-gift-aid-schedule                        controllers.giftAidSchedule.AboutGiftAidScheduleController.onSubmit
@@ -202,7 +206,7 @@ POST        /problem-uploading-community-buildings-schedule-quarantine          
 GET         /connected-charities-schedule-upload-successful  controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadSuccessfulController.onPageLoad
 POST        /connected-charities-schedule-upload-successful  controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadSuccessfulController.onSubmit
 
-GET         /problem-updating-other-income-schedule-quarantine                controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleQuarantineController.onPageLoad
-POST        /problem-updating-other-income-schedule-quarantine                controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleQuarantineController.onSubmit
+GET         /problem-uploading-other-income-schedule-quarantine                controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleQuarantineController.onPageLoad
+POST        /problem-uploading-other-income-schedule-quarantine                controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleQuarantineController.onSubmit
 GET         /problem-updating-other-income-schedule-unknown-error             controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onPageLoad
 POST        /problem-updating-other-income-schedule-unknown-error             controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onSubmit

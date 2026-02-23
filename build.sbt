@@ -47,7 +47,7 @@ lazy val root = Project(appName, file("."))
   .settings(CodeCoverageSettings.settings*)
 
 lazy val testSettings: Seq[Def.Setting[?]] = Seq(
-  fork := true,
+  fork := false,
   unmanagedSourceDirectories += baseDirectory.value / "test-utils"
 )
 

@@ -22,6 +22,7 @@ import org.scalamock.scalatest.MockFactory
 import org.apache.pekko.stream.Materializer
 import config.FrontendAppConfig
 import generators.Generators
+import models.{RepaymentClaimDetailsAnswers, SessionData}
 import org.apache.pekko.actor.ActorSystem
 import play.api.i18n.{Messages, MessagesApi}
 import org.scalatest.freespec.AnyFreeSpec
@@ -45,6 +46,36 @@ abstract class BaseSpec
   implicit val mat: Materializer        = Materializer.createMaterializer(actorSystem)
 
   val testCharitiesReference: String = "test-charities-ref"
+
+  val completeRepaymentClaimDetailsAnswers: RepaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
+    claimingGiftAid = Some(true),
+    claimingTaxDeducted = Some(true),
+    claimingUnderGiftAidSmallDonationsScheme = Some(false),
+    claimingReferenceNumber = Some(false)
+  )
+
+  val completeRepaymentDetailsAnswersSession: SessionData = SessionData(
+    charitiesReference = testCharitiesReference,
+    unsubmittedClaimId = Some("test-claim-id"),
+    repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers)
+  )
+
+  val completeGasdsAnswers: RepaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
+    claimingGiftAid = Some(true),
+    claimingTaxDeducted = Some(true),
+    claimingUnderGiftAidSmallDonationsScheme = Some(true),
+    claimingDonationsNotFromCommunityBuilding = Some(true),
+    claimingDonationsCollectedInCommunityBuildings = Some(true),
+    makingAdjustmentToPreviousClaim = Some(false),
+    connectedToAnyOtherCharities = Some(false),
+    claimingReferenceNumber = Some(false)
+  )
+
+  val completeGasdsSession: SessionData = SessionData(
+    charitiesReference = testCharitiesReference,
+    unsubmittedClaimId = Some("test-claim-id"),
+    repaymentClaimDetailsAnswers = Some(completeGasdsAnswers)
+  )
 
   override protected def afterAll(): Unit =
     actorSystem.terminate()
