@@ -72,6 +72,36 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
       )
     }
 
+    "missingFields" - {
+      "should return empty when GASDS is true but all sub-fields are false" in {
+        val answers = RepaymentClaimDetailsAnswers(
+          claimingGiftAid = Some(false),
+          claimingTaxDeducted = Some(false),
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(false),
+          claimingReferenceNumber = Some(false)
+        )
+
+        answers.missingFields shouldBe empty
+      }
+
+      "should return true for hasRepaymentClaimDetailsCompleteAnswers when GASDS is true but all sub-fields are false" in {
+        val answers = RepaymentClaimDetailsAnswers(
+          claimingGiftAid = Some(false),
+          claimingTaxDeducted = Some(false),
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(false),
+          claimingReferenceNumber = Some(false)
+        )
+
+        answers.hasRepaymentClaimDetailsCompleteAnswers shouldBe true
+      }
+    }
+
     "setClaimingGiftAid" - {
       "should delete giftAidScheduleDataAnswers when changing to false" in {
         given session: SessionData = SessionData
