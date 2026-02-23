@@ -566,6 +566,10 @@ site.pagination.page = page
 site.pagination.previous = Previous
 site.yes = Yes
 
+communityBuildingsScheduleUploadSuccessful.message.1 = Upload successful
+communityBuildingsScheduleUploadSuccessful.message.2 = You have successfully attached your Community Buildings schedule.
+communityBuildingsScheduleUploadSuccessful.title = Upload successful
+
 updateCommunityBuildingsSchedule.error.required = Select ‘Yes’ if you want to update this Community Buildings schedule
 updateCommunityBuildingsSchedule.heading = Are you sure you want to update this Community Buildings schedule?
 updateCommunityBuildingsSchedule.hint = By updating this file, you will lose any Community Buildings schedule data you have previously attached.

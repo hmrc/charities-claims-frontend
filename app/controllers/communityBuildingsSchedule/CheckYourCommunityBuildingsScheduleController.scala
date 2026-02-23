@@ -115,8 +115,7 @@ class CheckYourCommunityBuildingsScheduleController @Inject() (
                                  )
                                )
                           _ <- claimsService.save
-                        } yield Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
-                        // TODO: CommunityBuildingsScheduleUploadSuccessfulController to be added above
+                        } yield Redirect(routes.CommunityBuildingsScheduleUploadSuccessfulController.onPageLoad)
                       }
                   }
               )
