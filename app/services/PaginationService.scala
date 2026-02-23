@@ -55,6 +55,14 @@ case class ValidationErrorsPaginationResult(
   totalPages: Int
 ) extends PaginationStatus
 
+case class CommunityBuildingsPaginationResult(
+  paginatedData: Seq[CommunityBuilding1],
+  paginationViewModel: PaginationViewModel,
+  totalRecords: Int,
+  currentPage: Int,
+  totalPages: Int
+) extends PaginationStatus
+
 object PaginationService {
 
   private val config = PaginationConfig()
@@ -142,6 +150,35 @@ object PaginationService {
     )
 
     ValidationErrorsPaginationResult(
+      paginatedData = paginatedData,
+      paginationViewModel = paginationViewModel,
+      totalRecords = totalRecords,
+      currentPage = validCurrentPage,
+      totalPages = totalPages
+    )
+  }
+
+  def paginateCommunityBuildings(
+    allCommunityBuildings: Seq[CommunityBuilding1],
+    currentPage: Int = 1,
+    baseUrl: String
+  ): CommunityBuildingsPaginationResult = {
+
+    val totalRecords     = allCommunityBuildings.length
+    val totalPages       = calculateTotalPages(totalRecords)
+    val validCurrentPage = validateCurrentPage(currentPage, totalPages)
+
+    val (startIndex, endIndex) = calculatePageIndices(validCurrentPage, totalRecords)
+
+    val paginatedData = allCommunityBuildings.slice(startIndex, endIndex)
+
+    val paginationViewModel = createPaginationViewModel(
+      currentPage = validCurrentPage,
+      totalPages = totalPages,
+      baseUrl = baseUrl
+    )
+
+    CommunityBuildingsPaginationResult(
       paginatedData = paginatedData,
       paginationViewModel = paginationViewModel,
       totalRecords = totalRecords,

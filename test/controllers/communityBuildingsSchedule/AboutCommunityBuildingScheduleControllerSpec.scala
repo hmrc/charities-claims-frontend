@@ -18,11 +18,11 @@ package controllers.communityBuildingsSchedule
 
 import controllers.ControllerSpec
 import models.RepaymentClaimDetailsAnswers
+import models.SessionData
+import models.SessionData.and
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import models.SessionData
-
 class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
   "AboutCommunityBuildingsScheduleController" - {
     "onPageLoad" - {
@@ -71,19 +71,11 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
       }
 
       "should use the correct configured communityBuildingsScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl in the message" in {
-        val sessionDataGASDS =
-          RepaymentClaimDetailsAnswers
-            .setClaimingUnderGiftAidSmallDonationsScheme(true)
-            .and(SessionData.setUnsubmittedClaimId("claim-123"))
-        val sessionData      =
-          RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))(using
-            sessionDataGASDS
-          )
-        val customConfig     = Map(
+        val customConfig = Map(
           "urls.communityBuildingsScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/charity-repayment-claim"
         )
 
-        given application: Application = applicationBuilder(sessionData = sessionData)
+        given application: Application = applicationBuilder(sessionData = completeGasdsSession)
           .configure(customConfig)
           .build()
 
@@ -98,13 +90,8 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
       }
 
       "should redirect to the next page if the communityBuildingsScheduleCompleted is true" in {
-        val sessionDataDonations = RepaymentClaimDetailsAnswers
-          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-          .and(SessionData.setUnsubmittedClaimId("claim-123"))
-          .copy(communityBuildingsScheduleCompleted = true)
-
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingUnderGiftAidSmallDonationsScheme(true)(using sessionDataDonations)
+        val sessionData = completeGasdsSession
+          .and(SessionData.setCommunityBuildingsScheduleCompleted(true))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
         running(application) {
@@ -122,12 +109,8 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should redirect to the next page" in {
-        val sessionDataDonations       = RepaymentClaimDetailsAnswers
-          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
-          .and(SessionData.setUnsubmittedClaimId("claim-123"))
-          .copy(communityBuildingsScheduleCompleted = true)
-        val sessionData                = RepaymentClaimDetailsAnswers
-          .setClaimingUnderGiftAidSmallDonationsScheme(true)(using sessionDataDonations)
+        val sessionData                = completeGasdsSession
+          .and(SessionData.setCommunityBuildingsScheduleCompleted(true))
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {

@@ -33,10 +33,9 @@ class GiftAidScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
     "onPageLoad" - {
 
       "should render page successfully" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
           .copy(
-            unsubmittedClaimId = Some("claim-123"),
             giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
             giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
           )
@@ -58,12 +57,9 @@ class GiftAidScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should redirect to the next page" in {
-        val sessionData              = RepaymentClaimDetailsAnswers
-          .setClaimingGiftAid(true)
-          .copy(
-            unsubmittedClaimId = Some("claim-123"),
-            giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference"))
-          )
+        val sessionData              = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")))
         val application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {

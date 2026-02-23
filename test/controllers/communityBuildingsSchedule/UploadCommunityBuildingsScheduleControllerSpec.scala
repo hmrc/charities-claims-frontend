@@ -161,13 +161,8 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
         val upscan = response
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingUnderGiftAidSmallDonationsScheme(true)
-            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
-            .copy(
-              unsubmittedClaimId = Some("claim-123"),
-              communityBuildingsScheduleUpscanInitialization = Some(upscan)
-            )
+          completeGasdsSession
+            .copy(communityBuildingsScheduleUpscanInitialization = Some(upscan))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData).build()
@@ -178,17 +173,14 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
           val result = route(application, request).value
 
           status(result) shouldEqual OK
-          contentAsString(result) should include("claim-123")
+          contentAsString(result) should include("claim-1234567890")
         }
       }
 
       "should redirect when file upload reference already exists" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingUnderGiftAidSmallDonationsScheme(true)
-            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeGasdsSession
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
@@ -217,10 +209,7 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
       "should initiate upscan and store session when no reference exists" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingUnderGiftAidSmallDonationsScheme(true)
-            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeGasdsSession
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
@@ -266,10 +255,7 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
       "should update status and redirect when reference exists" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingUnderGiftAidSmallDonationsScheme(true)
-            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeGasdsSession
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
@@ -281,7 +267,7 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
             _: DataRequest[?],
             _: HeaderCarrier
           ))
-          .expects("claim-123", FileUploadReference("ref-123"), ValidationType.CommunityBuildings, *, *)
+          .expects("test-claim-id", FileUploadReference("ref-123"), ValidationType.CommunityBuildings, *, *)
           .returning(Future.successful(true))
 
         given application: Application =
@@ -305,10 +291,7 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
       "should redirect back when no reference found" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingUnderGiftAidSmallDonationsScheme(true)
-            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeGasdsSession
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
@@ -340,13 +323,8 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
       "should render error page when upscan initialization exists in session" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingUnderGiftAidSmallDonationsScheme(true)
-            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
-            .copy(
-              unsubmittedClaimId = Some("claim-123"),
-              communityBuildingsScheduleUpscanInitialization = Some(response)
-            )
+          completeGasdsSession
+            .copy(communityBuildingsScheduleUpscanInitialization = Some(response))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -367,12 +345,7 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
       "should redirect when no upscan initialization exists in session" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingUnderGiftAidSmallDonationsScheme(true)
-            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
-            .copy(
-              unsubmittedClaimId = Some("claim-123")
-            )
+          completeGasdsSession
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)

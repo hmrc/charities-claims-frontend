@@ -18,7 +18,6 @@ package controllers.otherIncomeSchedule
 
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
-import models.SessionData
 import models.requests.DataRequest
 import play.api.Application
 import play.api.data.Form
@@ -44,7 +43,7 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
     "onPageLoad" - {
       "should render the page correctly" in {
         val sessionData                =
-          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
+          completeRepaymentDetailsAnswersSession.and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -67,7 +66,7 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
     "onSubmit" - {
       "should reload the page with errors when a required field is missing" in {
         val sessionData                =
-          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
+          completeRepaymentDetailsAnswersSession.and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -85,7 +84,7 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
       "should redirect to CheckYourOtherIncomeSchedule screen when no is selected" in {
         val sessionData                =
-          RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
+          completeRepaymentDetailsAnswersSession.and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -106,9 +105,8 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
       "should call backend deletion endpoint and redirect to UploadOtherIncomeSchedule when yes is selected" in {
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(unsubmittedClaimId = Some("test-claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         (mockClaimsValidationService
           .deleteOtherIncomeSchedule(using _: DataRequest[?], _: HeaderCarrier))
@@ -139,9 +137,8 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
       "should handle case when no OtherIncome upload data is found" in {
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(unsubmittedClaimId = Some("test-claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         (mockClaimsValidationService
           .deleteOtherIncomeSchedule(using _: DataRequest[?], _: HeaderCarrier))

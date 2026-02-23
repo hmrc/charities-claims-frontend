@@ -113,7 +113,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should redirect to the next page when valid data is submitted" in {
-        given application: Application = applicationBuilder().build()
+        given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
           val request = FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit(NormalMode).url)
@@ -127,7 +127,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
       }
 
       "should redirect to CYA when valid data is submitted" in {
-        given application: Application = applicationBuilder().build()
+        given application: Application = applicationBuilder().mockSaveSession.build()
 
         running(application) {
           val request = FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit(CheckMode).url)
