@@ -100,8 +100,7 @@ class CheckYourCommunityBuildingsScheduleController @Inject() (
                 answer =>
                   answer match {
                     case true =>
-                      // TODO: UpdateCommunityBuildingsScheduleController to be added here
-                      Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
+                      Future.successful(Redirect(routes.UpdateCommunityBuildingsScheduleController.onPageLoad))
 
                     case false =>
                       if request.sessionData.communityBuildingsScheduleCompleted
