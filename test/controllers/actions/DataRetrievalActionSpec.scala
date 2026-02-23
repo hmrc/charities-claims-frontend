@@ -29,20 +29,27 @@ import util.{BaseSpec, TestClaims}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
+import connectors.ClaimsValidationConnector
 
 class DataRetrievalActionSpec extends BaseSpec {
 
-  val request                      = FakeRequest("GET", "/test")
-  val authorisedRequestOrgnisation = AuthorisedRequest(request, AffinityGroup.Organisation, testCharitiesReference)
-  val authorisedRequestAgent       = AuthorisedRequest(request, AffinityGroup.Agent, testCharitiesReference)
+  val request                       = FakeRequest("GET", "/test")
+  val authorisedRequestOrganisation = AuthorisedRequest(request, AffinityGroup.Organisation, testCharitiesReference)
+  val authorisedRequestAgent        = AuthorisedRequest(request, AffinityGroup.Agent, testCharitiesReference)
 
   given SessionData = SessionData.empty(testCharitiesReference)
 
   "DataRetrievalAction" - {
     "refines AuthorisedRequest into a DataRequest when session data exists" in {
-      val mockSessionCache    = mock[SessionCache]
-      val mockClaimsConnector = mock[ClaimsConnector]
-      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
+      val mockSessionCache              = mock[SessionCache]
+      val mockClaimsConnector           = mock[ClaimsConnector]
+      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+      val action                        = new DefaultDataRetrievalAction(
+        mockSessionCache,
+        mockClaimsConnector,
+        mockClaimsValidationConnector,
+        testFrontendAppConfig
+      )
 
       val sessionData =
         RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
@@ -53,7 +60,7 @@ class DataRetrievalActionSpec extends BaseSpec {
         .returning(Future.successful(Some(sessionData)))
 
       val result = action.invokeBlock(
-        authorisedRequestOrgnisation,
+        authorisedRequestOrganisation,
         (req: DataRequest[?]) =>
           req.sessionData shouldBe sessionData
           Future.successful(Ok)
@@ -62,9 +69,15 @@ class DataRetrievalActionSpec extends BaseSpec {
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and no claims are retrieved from backend" in {
-      val mockSessionCache    = mock[SessionCache]
-      val mockClaimsConnector = mock[ClaimsConnector]
-      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
+      val mockSessionCache              = mock[SessionCache]
+      val mockClaimsConnector           = mock[ClaimsConnector]
+      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+      val action                        = new DefaultDataRetrievalAction(
+        mockSessionCache,
+        mockClaimsConnector,
+        mockClaimsValidationConnector,
+        testFrontendAppConfig
+      )
 
       (mockSessionCache
         .get()(using _: HeaderCarrier))
@@ -82,7 +95,7 @@ class DataRetrievalActionSpec extends BaseSpec {
         .returning(Future.successful(GetClaimsResponse(claimsCount = 0, claimsList = Nil)))
 
       val result = action.invokeBlock(
-        authorisedRequestOrgnisation,
+        authorisedRequestOrganisation,
         (req: DataRequest[?]) =>
           req.sessionData shouldBe SessionData.empty(testCharitiesReference)
           Future.successful(Ok)
@@ -91,9 +104,15 @@ class DataRetrievalActionSpec extends BaseSpec {
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and some claims are retrieved from backend" in {
-      val mockSessionCache    = mock[SessionCache]
-      val mockClaimsConnector = mock[ClaimsConnector]
-      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
+      val mockSessionCache              = mock[SessionCache]
+      val mockClaimsConnector           = mock[ClaimsConnector]
+      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+      val action                        = new DefaultDataRetrievalAction(
+        mockSessionCache,
+        mockClaimsConnector,
+        mockClaimsValidationConnector,
+        testFrontendAppConfig
+      )
 
       (mockSessionCache
         .get()(using _: HeaderCarrier))
@@ -117,6 +136,11 @@ class DataRetrievalActionSpec extends BaseSpec {
           )
         )
 
+      (mockClaimsValidationConnector
+        .getUploadSummary(_: String)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(Future.successful(GetUploadSummaryResponse(uploads = Nil)))
+
       val claim = TestClaims.testClaimWithRepaymentClaimDetailsOnly()
 
       (mockClaimsConnector
@@ -125,7 +149,7 @@ class DataRetrievalActionSpec extends BaseSpec {
         .returning(Future.successful(Some(claim)))
 
       val result = action.invokeBlock(
-        authorisedRequestOrgnisation,
+        authorisedRequestOrganisation,
         (req: DataRequest[?]) =>
           req.sessionData shouldBe
             SessionData.from(claim, testCharitiesReference)
@@ -146,10 +170,107 @@ class DataRetrievalActionSpec extends BaseSpec {
       status(result) shouldBe OK
     }
 
+    "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and some claims and uploads summary are retrieved from backend" in {
+      val mockSessionCache              = mock[SessionCache]
+      val mockClaimsConnector           = mock[ClaimsConnector]
+      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+      val action                        = new DefaultDataRetrievalAction(
+        mockSessionCache,
+        mockClaimsConnector,
+        mockClaimsValidationConnector,
+        testFrontendAppConfig
+      )
+
+      (mockSessionCache
+        .get()(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(None))
+
+      (mockSessionCache
+        .store(_: SessionData)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(Future.successful(()))
+
+      (mockClaimsConnector
+        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
+        .expects(*)
+        .returning(
+          Future.successful(
+            GetClaimsResponse(
+              claimsCount = 1,
+              claimsList = List(TestClaims.testClaimInfo())
+            )
+          )
+        )
+
+      val getUploadSummaryResponseWithGiftAidAwaitingUpload =
+        GetUploadSummaryResponse(uploads =
+          Seq(
+            UploadSummary(
+              reference = FileUploadReference("gift-aid-ref-123"),
+              validationType = ValidationType.GiftAid,
+              fileStatus = FileStatus.AWAITING_UPLOAD,
+              uploadUrl = Some("https://www.foo.bar.com"),
+              fields = Some(Map("key" -> "value"))
+            )
+          )
+        )
+
+      (mockClaimsValidationConnector
+        .getUploadSummary(_: String)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(
+          Future.successful(getUploadSummaryResponseWithGiftAidAwaitingUpload)
+        )
+
+      val claim = TestClaims.testClaimWithRepaymentClaimDetailsOnly()
+
+      (mockClaimsConnector
+        .getClaim(_: String)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(Future.successful(Some(claim)))
+
+      val result = action.invokeBlock(
+        authorisedRequestOrganisation,
+        (req: DataRequest[?]) =>
+          req.sessionData shouldBe
+            SessionData.from(claim, testCharitiesReference, Some(getUploadSummaryResponseWithGiftAidAwaitingUpload))
+
+          req.sessionData.organisationDetailsAnswers                        shouldBe None
+          req.sessionData.giftAidScheduleData                               shouldBe None
+          req.sessionData.giftAidScheduleFileUploadReference                shouldBe Some(FileUploadReference("gift-aid-ref-123"))
+          req.sessionData.giftAidScheduleUpscanInitialization               shouldBe Some(
+            UpscanInitiateResponse(
+              reference = UpscanReference("gift-aid-ref-123"),
+              uploadRequest = UploadRequest(
+                href = "https://www.foo.bar.com",
+                fields = Map("key" -> "value")
+              )
+            )
+          )
+          req.sessionData.declarationDetailsAnswers                         shouldBe None
+          req.sessionData.otherIncomeScheduleData                           shouldBe None
+          req.sessionData.otherIncomeScheduleFileUploadReference            shouldBe None
+          req.sessionData.communityBuildingsScheduleData                    shouldBe None
+          req.sessionData.communityBuildingsScheduleFileUploadReference     shouldBe None
+          req.sessionData.connectedCharitiesScheduleData                    shouldBe None
+          req.sessionData.connectedCharitiesScheduleFileUploadReference     shouldBe None
+          req.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers shouldBe None
+          Future.successful(Ok)
+      )
+      status(result) shouldBe OK
+    }
+
     "refines AuthorisedRequest into a DataRequest when session data exists when user is agent" in {
-      val mockSessionCache    = mock[SessionCache]
-      val mockClaimsConnector = mock[ClaimsConnector]
-      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
+      val mockSessionCache              = mock[SessionCache]
+      val mockClaimsConnector           = mock[ClaimsConnector]
+      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+      val action                        = new DefaultDataRetrievalAction(
+        mockSessionCache,
+        mockClaimsConnector,
+        mockClaimsValidationConnector,
+        testFrontendAppConfig
+      )
 
       val sessionData =
         RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
@@ -169,9 +290,15 @@ class DataRetrievalActionSpec extends BaseSpec {
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and no claims are retrieved from backend for agent" in {
-      val mockSessionCache    = mock[SessionCache]
-      val mockClaimsConnector = mock[ClaimsConnector]
-      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
+      val mockSessionCache              = mock[SessionCache]
+      val mockClaimsConnector           = mock[ClaimsConnector]
+      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+      val action                        = new DefaultDataRetrievalAction(
+        mockSessionCache,
+        mockClaimsConnector,
+        mockClaimsValidationConnector,
+        testFrontendAppConfig
+      )
 
       (mockSessionCache
         .get()(using _: HeaderCarrier))
@@ -198,9 +325,16 @@ class DataRetrievalActionSpec extends BaseSpec {
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and no claims are retrieved from backend less than limit for agent" in {
-      val mockSessionCache    = mock[SessionCache]
-      val mockClaimsConnector = mock[ClaimsConnector]
-      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
+      val mockSessionCache              = mock[SessionCache]
+      val mockClaimsConnector           = mock[ClaimsConnector]
+      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+
+      val action = new DefaultDataRetrievalAction(
+        mockSessionCache,
+        mockClaimsConnector,
+        mockClaimsValidationConnector,
+        testFrontendAppConfig
+      )
 
       (mockSessionCache
         .get()(using _: HeaderCarrier))
@@ -219,9 +353,16 @@ class DataRetrievalActionSpec extends BaseSpec {
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and no claims are retrieved from backend and equal to limit for agent" in {
-      val mockSessionCache    = mock[SessionCache]
-      val mockClaimsConnector = mock[ClaimsConnector]
-      val action              = new DefaultDataRetrievalAction(mockSessionCache, mockClaimsConnector, testFrontendAppConfig)
+      val mockSessionCache              = mock[SessionCache]
+      val mockClaimsConnector           = mock[ClaimsConnector]
+      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+
+      val action = new DefaultDataRetrievalAction(
+        mockSessionCache,
+        mockClaimsConnector,
+        mockClaimsValidationConnector,
+        testFrontendAppConfig
+      )
 
       (mockSessionCache
         .get()(using _: HeaderCarrier))

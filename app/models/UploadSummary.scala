@@ -34,8 +34,24 @@ final case class UploadSummary(
   reference: FileUploadReference,
   validationType: ValidationType,
   fileStatus: FileStatus,
-  uploadUrl: Option[String] = None
-)
+  uploadUrl: Option[String] = None,
+  fields: Option[Map[String, String]] = None
+) {
+  def asUpscanInitiateResponse: Option[UpscanInitiateResponse] =
+    if fileStatus == FileStatus.AWAITING_UPLOAD
+    then
+      for {
+        uploadUrl <- uploadUrl
+        fields    <- fields
+      } yield UpscanInitiateResponse(
+        reference = UpscanReference(reference),
+        uploadRequest = UploadRequest(
+          href = uploadUrl,
+          fields = fields
+        )
+      )
+    else None
+}
 
 object UploadSummary {
   given Format[UploadSummary] = Json.format[UploadSummary]

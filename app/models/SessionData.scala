@@ -64,7 +64,11 @@ object SessionData {
     charitiesReference = charitiesRef
   )
 
-  def from(claim: Claim, charitiesRef: String): SessionData =
+  def from(
+    claim: Claim,
+    charitiesRef: String,
+    uploadsSummaryOpt: Option[GetUploadSummaryResponse] = None
+  ): SessionData =
     SessionData(
       unsubmittedClaimId = Some(claim.claimId),
       charitiesReference = charitiesRef,
@@ -76,13 +80,29 @@ object SessionData {
         claim.claimData.giftAidSmallDonationsSchemeDonationDetails.map(
           GiftAidSmallDonationsSchemeDonationDetailsAnswers.from
         ),
-      giftAidScheduleFileUploadReference = claim.claimData.giftAidScheduleFileUploadReference,
+      giftAidScheduleFileUploadReference = claim.claimData.giftAidScheduleFileUploadReference
+        .orElse(uploadsSummaryOpt.flatMap(_.findUpload(ValidationType.GiftAid)).map(_.reference)),
+      giftAidScheduleUpscanInitialization = uploadsSummaryOpt
+        .flatMap(_.findUpload(ValidationType.GiftAid))
+        .flatMap(_.asUpscanInitiateResponse),
       giftAidScheduleCompleted = claim.claimData.giftAidScheduleFileUploadReference.isDefined,
-      otherIncomeScheduleFileUploadReference = claim.claimData.otherIncomeScheduleFileUploadReference,
+      otherIncomeScheduleFileUploadReference = claim.claimData.otherIncomeScheduleFileUploadReference
+        .orElse(uploadsSummaryOpt.flatMap(_.findUpload(ValidationType.OtherIncome)).map(_.reference)),
+      otherIncomeScheduleUpscanInitialization = uploadsSummaryOpt
+        .flatMap(_.findUpload(ValidationType.OtherIncome))
+        .flatMap(_.asUpscanInitiateResponse),
       otherIncomeScheduleCompleted = claim.claimData.otherIncomeScheduleFileUploadReference.isDefined,
-      communityBuildingsScheduleFileUploadReference = claim.claimData.communityBuildingsScheduleFileUploadReference,
+      communityBuildingsScheduleFileUploadReference = claim.claimData.communityBuildingsScheduleFileUploadReference
+        .orElse(uploadsSummaryOpt.flatMap(_.findUpload(ValidationType.CommunityBuildings)).map(_.reference)),
       communityBuildingsScheduleCompleted = claim.claimData.communityBuildingsScheduleFileUploadReference.isDefined,
-      connectedCharitiesScheduleFileUploadReference = claim.claimData.connectedCharitiesScheduleFileUploadReference,
+      communityBuildingsScheduleUpscanInitialization = uploadsSummaryOpt
+        .flatMap(_.findUpload(ValidationType.CommunityBuildings))
+        .flatMap(_.asUpscanInitiateResponse),
+      connectedCharitiesScheduleFileUploadReference = claim.claimData.connectedCharitiesScheduleFileUploadReference
+        .orElse(uploadsSummaryOpt.flatMap(_.findUpload(ValidationType.ConnectedCharities)).map(_.reference)),
+      connectedCharitiesScheduleUpscanInitialization = uploadsSummaryOpt
+        .flatMap(_.findUpload(ValidationType.ConnectedCharities))
+        .flatMap(_.asUpscanInitiateResponse),
       connectedCharitiesScheduleCompleted = claim.claimData.connectedCharitiesScheduleFileUploadReference.isDefined
     )
 

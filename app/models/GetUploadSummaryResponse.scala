@@ -20,7 +20,10 @@ import play.api.libs.json.{Format, Json}
 
 final case class GetUploadSummaryResponse(
   uploads: Seq[UploadSummary]
-)
+) {
+  def findUpload(validationType: ValidationType): Option[UploadSummary] =
+    uploads.find(_.validationType == validationType)
+}
 
 object GetUploadSummaryResponse {
   given Format[GetUploadSummaryResponse] = Json.format[GetUploadSummaryResponse]

@@ -118,7 +118,8 @@ class UploadCommunityBuildingsScheduleController @Inject() (
                   reference = upscanInitiateResponse.reference,
                   validationType = ValidationType.CommunityBuildings,
                   uploadUrl = upscanInitiateResponse.uploadRequest.href,
-                  initiateTimestamp = ISODateTime.timestampNow()
+                  initiateTimestamp = ISODateTime.timestampNow(),
+                  fields = upscanInitiateResponse.uploadRequest.fields
                 )
               )
         } yield upscanInitiateResponse
