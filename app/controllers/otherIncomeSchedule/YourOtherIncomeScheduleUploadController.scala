@@ -153,7 +153,7 @@ class YourOtherIncomeScheduleUploadController @Inject() (
                               case FailureReason.QUARANTINE =>
                                 routes.ProblemUpdatingOtherIncomeScheduleQuarantineController.onPageLoad
                               case _                        =>
-                                routes.UploadOtherIncomeScheduleController.onPageLoad
+                                routes.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onPageLoad
                             }
                           }
                         )

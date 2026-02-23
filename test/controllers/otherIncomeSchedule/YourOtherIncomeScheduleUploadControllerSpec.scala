@@ -440,7 +440,7 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.UploadOtherIncomeScheduleController.onPageLoad.url
+            routes.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onPageLoad.url
           )
         }
       }

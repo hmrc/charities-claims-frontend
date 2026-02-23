@@ -29,9 +29,8 @@ class ProblemUpdatingOtherIncomeScheduleUnknownErrorControllerSpec extends Contr
     "onPageLoad" - {
       "should render the page correctly" in {
         val sessionData                =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .and(SessionData.setUnsubmittedClaimId("claim-123"))
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
         given application: Application = applicationBuilder(sessionData = sessionData)
           .build()
 
@@ -89,9 +88,8 @@ class ProblemUpdatingOtherIncomeScheduleUnknownErrorControllerSpec extends Contr
 
     "onSubmit" - {
       "should redirect to the next page" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingTaxDeducted(true)
-          .and(SessionData.setUnsubmittedClaimId("claim-123"))
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         val application: Application = applicationBuilder(sessionData = sessionData).build()
 
