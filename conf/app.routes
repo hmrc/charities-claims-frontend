@@ -139,6 +139,8 @@ GET         /problem-with-community-buildings-schedule          controllers.comm
 POST        /problem-with-community-buildings-schedule          controllers.communityBuildingsSchedule.ProblemWithCommunityBuildingsScheduleController.onSubmit
 GET         /check-your-community-buildings-schedule            controllers.communityBuildingsSchedule.CheckYourCommunityBuildingsScheduleController.onPageLoad
 POST        /check-your-community-buildings-schedule            controllers.communityBuildingsSchedule.CheckYourCommunityBuildingsScheduleController.onSubmit
+GET         /update-community-buildings-schedule                controllers.communityBuildingsSchedule.UpdateCommunityBuildingsScheduleController.onPageLoad
+POST        /update-community-buildings-schedule                controllers.communityBuildingsSchedule.UpdateCommunityBuildingsScheduleController.onSubmit
 
 GET         /about-gift-aid-schedule                        controllers.giftAidSchedule.AboutGiftAidScheduleController.onPageLoad
 POST        /about-gift-aid-schedule                        controllers.giftAidSchedule.AboutGiftAidScheduleController.onSubmit

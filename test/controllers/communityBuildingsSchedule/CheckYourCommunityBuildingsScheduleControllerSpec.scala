@@ -176,7 +176,6 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      // TODO: redirect should be updated to UpdateCommunityBuildingsScheduleController when it is added
       "should redirect to update screen when Yes is selected" in {
         (mockClaimsValidationService
           .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
@@ -194,8 +193,7 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            // TODO: UpdateCommunityBuildingsScheduleController to be added in the below route
-            routes.UploadCommunityBuildingsScheduleController.onPageLoad.url
+            routes.UpdateCommunityBuildingsScheduleController.onPageLoad.url
           )
         }
       }

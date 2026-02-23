@@ -566,6 +566,11 @@ site.pagination.page = page
 site.pagination.previous = Previous
 site.yes = Yes
 
+updateCommunityBuildingsSchedule.error.required = Select ‘Yes’ if you want to update this Community Buildings schedule
+updateCommunityBuildingsSchedule.heading = Are you sure you want to update this Community Buildings schedule?
+updateCommunityBuildingsSchedule.hint = By updating this file, you will lose any Community Buildings schedule data you have previously attached.
+updateCommunityBuildingsSchedule.title = Are you sure you want to update this Community Buildings schedule?
+
 updateGiftAidSchedule.error.required = Select ‘Yes’ if you want to update this Gift Aid schedule
 updateGiftAidSchedule.heading = Are you sure you want to update this Gift Aid schedule?
 updateGiftAidSchedule.hint = By updating this file, you will lose any Gift Aid schedule data you have previously attached.
