@@ -205,6 +205,9 @@ POST        /problem-uploading-community-buildings-schedule-unknown-error       
 GET         /problem-uploading-community-buildings-schedule-quarantine           controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onPageLoad
 POST        /problem-uploading-community-buildings-schedule-quarantine           controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onSubmit
 
+GET         /problem-uploading-other-income-schedule-rejected          controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleRejectedController.onPageLoad
+POST        /problem-uploading-other-income-schedule-rejected          controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleRejectedController.onSubmit
+
 GET         /connected-charities-schedule-upload-successful  controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadSuccessfulController.onPageLoad
 POST        /connected-charities-schedule-upload-successful  controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadSuccessfulController.onSubmit
 

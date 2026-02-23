@@ -633,6 +633,9 @@ yourOtherIncomeScheduleUpload.paragraph.one = You can upload your Other Income s
 yourOtherIncomeScheduleUpload.table.key = Other Income Schedule
 yourOtherIncomeScheduleUpload.title = Your Other Income schedule upload
 
+problemUpdatingOtherIncomeScheduleRejected.heading = There is a problem uploading your Other Income schedule
+problemUpdatingOtherIncomeScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
+problemUpdatingOtherIncomeScheduleRejected.title = There is a problem uploading your Other Income schedule
 connectedCharitiesScheduleUploadSuccessful.title = Upload successful
 connectedCharitiesScheduleUploadSuccessful.message.1 = Upload successful
 connectedCharitiesScheduleUploadSuccessful.message.2 = You have successfully attached your Connected Charities schedule.
