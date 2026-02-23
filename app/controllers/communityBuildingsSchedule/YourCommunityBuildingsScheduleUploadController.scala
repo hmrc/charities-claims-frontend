@@ -43,78 +43,71 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
     actions
       .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
       .async { implicit request =>
-        request.sessionData.unsubmittedClaimId match {
-          case None =>
-            // if the claim id is not found, we need to redirect to the repayment claim details page
-            Future
-              .successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+        val claimId = request.sessionData.unsubmittedClaimId.get
 
-          case Some(claimId) =>
-            claimsValidationService
-              .getFileUploadReference(ValidationType.CommunityBuildings, acceptAwaitingUpload = false)
-              .flatMap {
-                case None =>
-                  // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
-                  Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
+        claimsValidationService
+          .getFileUploadReference(ValidationType.CommunityBuildings, acceptAwaitingUpload = false)
+          .flatMap {
+            case None =>
+              // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
+              Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
 
-                case Some(fileUploadReference) =>
-                  claimsValidationConnector
-                    .getUploadResult(claimId, fileUploadReference)
-                    .map {
-                      case uploadResult: GetUploadResultVeryfying =>
-                        Ok(
-                          view(
-                            claimId = claimId,
-                            uploadResult = uploadResult,
-                            failureDetails = None,
-                            screenLocked = true
-                          )
-                        )
+            case Some(fileUploadReference) =>
+              claimsValidationConnector
+                .getUploadResult(claimId, fileUploadReference)
+                .map {
+                  case uploadResult: GetUploadResultVeryfying =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = None,
+                        screenLocked = true
+                      )
+                    )
 
-                      case uploadResult: GetUploadResultValidating =>
-                        Ok(
-                          view(
-                            claimId = claimId,
-                            uploadResult = uploadResult,
-                            failureDetails = None,
-                            screenLocked = true
-                          )
-                        )
+                  case uploadResult: GetUploadResultValidating =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = None,
+                        screenLocked = true
+                      )
+                    )
 
-                      case uploadResult @ GetUploadResultVeryficationFailed(
-                            reference,
-                            validationType,
-                            failureDetails
-                          ) =>
-                        Ok(
-                          view(
-                            claimId = claimId,
-                            uploadResult = uploadResult,
-                            failureDetails = Some(failureDetails),
-                            screenLocked = false
-                          )
-                        )
+                  case uploadResult @ GetUploadResultVeryficationFailed(
+                        reference,
+                        validationType,
+                        failureDetails
+                      ) =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = Some(failureDetails),
+                        screenLocked = false
+                      )
+                    )
 
-                      case uploadResult =>
-                        Ok(
-                          view(
-                            claimId = claimId,
-                            uploadResult = uploadResult,
-                            failureDetails = None,
-                            screenLocked = false
-                          )
-                        )
-                    }
-                    .recoverWith {
-                      case e: Exception if e.getMessage.contains("CLAIM_REFERENCE_DOES_NOT_EXIST") =>
-                        saveService
-                          .save(request.sessionData.copy(communityBuildingsScheduleFileUploadReference = None))
-                          .map(_ => Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
+                  case uploadResult =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = None,
+                        screenLocked = false
+                      )
+                    )
+                }
+                .recoverWith {
+                  case e: Exception if e.getMessage.contains("CLAIM_REFERENCE_DOES_NOT_EXIST") =>
+                    saveService
+                      .save(request.sessionData.copy(communityBuildingsScheduleFileUploadReference = None))
+                      .map(_ => Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
 
-                    }
-              }
-        }
-
+                }
+          }
       }
 
   def onRemove: Action[AnyContent] =
@@ -130,48 +123,42 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
     actions
       .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
       .async { implicit request =>
-        request.sessionData.unsubmittedClaimId match {
+        val claimId = request.sessionData.unsubmittedClaimId.get
+
+        request.sessionData.communityBuildingsScheduleFileUploadReference match {
           case None =>
-            // if the claim id is not found, we need to redirect to the repayment claim details page
-            Future
-              .successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+            // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
+            Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
 
-          case Some(claimId) =>
-            request.sessionData.communityBuildingsScheduleFileUploadReference match {
-              case None =>
-                // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
-                Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
+          case Some(fileUploadReference) =>
+            claimsValidationConnector
+              .getUploadResult(claimId, fileUploadReference)
+              .flatMap {
+                case failure: GetUploadResultVeryficationFailed =>
+                  claimsValidationService.deleteCommunityBuildingsSchedule
+                    .map(_ =>
+                      Redirect {
+                        failure.failureDetails.failureReason match {
+                          case FailureReason.REJECTED   =>
+                            routes.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onPageLoad
+                          case FailureReason.QUARANTINE =>
+                            routes.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onPageLoad
+                          case _                        =>
+                            routes.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onPageLoad
+                        }
+                      }
+                    )
 
-              case Some(fileUploadReference) =>
-                claimsValidationConnector
-                  .getUploadResult(claimId, fileUploadReference)
-                  .flatMap {
-                    case failure: GetUploadResultVeryficationFailed =>
-                      claimsValidationService.deleteCommunityBuildingsSchedule
-                        .map(_ =>
-                          Redirect {
-                            failure.failureDetails.failureReason match {
-                              case FailureReason.REJECTED   =>
-                                routes.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onPageLoad
-                              case FailureReason.QUARANTINE =>
-                                routes.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onPageLoad
-                              case _                        =>
-                                routes.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onPageLoad
-                            }
-                          }
-                        )
+                case _: GetUploadResultValidatedCommunityBuildings =>
+                  Future.successful(Redirect(routes.CheckYourCommunityBuildingsScheduleController.onPageLoad))
 
-                    case _: GetUploadResultValidatedCommunityBuildings =>
-                      Future.successful(Redirect(routes.CheckYourCommunityBuildingsScheduleController.onPageLoad))
+                case _: GetUploadResultValidationFailedCommunityBuildings =>
+                  Future.successful(Redirect(routes.ProblemWithCommunityBuildingsScheduleController.onPageLoad))
 
-                    case _: GetUploadResultValidationFailedCommunityBuildings =>
-                      Future.successful(Redirect(routes.ProblemWithCommunityBuildingsScheduleController.onPageLoad))
-
-                    case _ =>
-                      // strange case, but we need to handle it
-                      Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
-                  }
-            }
+                case _ =>
+                  // strange case, but we need to handle it
+                  Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
+              }
         }
       }
 }

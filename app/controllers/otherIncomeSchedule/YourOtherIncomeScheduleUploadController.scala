@@ -42,78 +42,70 @@ class YourOtherIncomeScheduleUploadController @Inject() (
     actions
       .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
-        request.sessionData.unsubmittedClaimId match {
-          case None =>
-            // if the claim id is not found, we need to redirect to the repayment claim details page
-            Future
-              .successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+        val claimId = request.sessionData.unsubmittedClaimId.get
 
-          case Some(claimId) =>
-            claimsValidationService
-              .getFileUploadReference(ValidationType.OtherIncome, acceptAwaitingUpload = false)
-              .flatMap {
-                case None =>
-                  // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
-                  Future.successful(Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
+        claimsValidationService
+          .getFileUploadReference(ValidationType.OtherIncome, acceptAwaitingUpload = false)
+          .flatMap {
+            case None =>
+              // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
+              Future.successful(Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
 
-                case Some(fileUploadReference) =>
-                  claimsValidationConnector
-                    .getUploadResult(claimId, fileUploadReference)
-                    .map {
-                      case uploadResult: GetUploadResultVeryfying =>
-                        Ok(
-                          view(
-                            claimId = claimId,
-                            uploadResult = uploadResult,
-                            failureDetails = None,
-                            screenLocked = true
-                          )
-                        )
+            case Some(fileUploadReference) =>
+              claimsValidationConnector
+                .getUploadResult(claimId, fileUploadReference)
+                .map {
+                  case uploadResult: GetUploadResultVeryfying =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = None,
+                        screenLocked = true
+                      )
+                    )
 
-                      case uploadResult: GetUploadResultValidating =>
-                        Ok(
-                          view(
-                            claimId = claimId,
-                            uploadResult = uploadResult,
-                            failureDetails = None,
-                            screenLocked = true
-                          )
-                        )
+                  case uploadResult: GetUploadResultValidating =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = None,
+                        screenLocked = true
+                      )
+                    )
 
-                      case uploadResult @ GetUploadResultVeryficationFailed(
-                            reference,
-                            validationType,
-                            failureDetails
-                          ) =>
-                        Ok(
-                          view(
-                            claimId = claimId,
-                            uploadResult = uploadResult,
-                            failureDetails = Some(failureDetails),
-                            screenLocked = false
-                          )
-                        )
+                  case uploadResult @ GetUploadResultVeryficationFailed(
+                        reference,
+                        validationType,
+                        failureDetails
+                      ) =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = Some(failureDetails),
+                        screenLocked = false
+                      )
+                    )
 
-                      case uploadResult =>
-                        Ok(
-                          view(
-                            claimId = claimId,
-                            uploadResult = uploadResult,
-                            failureDetails = None,
-                            screenLocked = false
-                          )
-                        )
-                    }
-                    .recoverWith {
-                      case e: Exception if e.getMessage.contains("CLAIM_REFERENCE_DOES_NOT_EXIST") =>
-                        saveService
-                          .save(request.sessionData.copy(otherIncomeScheduleFileUploadReference = None))
-                          .map(_ => Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
-
-                    }
-              }
-        }
-
+                  case uploadResult =>
+                    Ok(
+                      view(
+                        claimId = claimId,
+                        uploadResult = uploadResult,
+                        failureDetails = None,
+                        screenLocked = false
+                      )
+                    )
+                }
+                .recoverWith {
+                  case e: Exception if e.getMessage.contains("CLAIM_REFERENCE_DOES_NOT_EXIST") =>
+                    saveService
+                      .save(request.sessionData.copy(otherIncomeScheduleFileUploadReference = None))
+                      .map(_ => Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
+                }
+          }
       }
 
   def onRemove: Action[AnyContent] =
@@ -129,17 +121,12 @@ class YourOtherIncomeScheduleUploadController @Inject() (
     actions
       .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
-        request.sessionData.unsubmittedClaimId match {
-          case None =>
-            // if the claim id is not found, we need to redirect to the repayment claim details page
-            Future
-              .successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+        val claimId = request.sessionData.unsubmittedClaimId.get
 
-          case Some(claimId) =>
-            request.sessionData.otherIncomeScheduleFileUploadReference match {
-              case None =>
-                // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
-                Future.successful(Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
+        request.sessionData.otherIncomeScheduleFileUploadReference match {
+          case None =>
+            // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
+            Future.successful(Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
 
               case Some(fileUploadReference) =>
                 claimsValidationConnector
@@ -160,18 +147,16 @@ class YourOtherIncomeScheduleUploadController @Inject() (
                           }
                         )
 
-                    case _: GetUploadResultValidatedOtherIncome =>
-                      Future.successful(Redirect(routes.CheckYourOtherIncomeScheduleController.onPageLoad))
+                case _: GetUploadResultValidatedOtherIncome =>
+                  Future.successful(Redirect(routes.CheckYourOtherIncomeScheduleController.onPageLoad))
 
-                    case _: GetUploadResultValidationFailedOtherIncome =>
-                      Future.successful(Redirect(routes.ProblemWithOtherIncomeScheduleController.onPageLoad))
+                case _: GetUploadResultValidationFailedOtherIncome =>
+                  Future.successful(Redirect(routes.ProblemWithOtherIncomeScheduleController.onPageLoad))
 
-                    case _ =>
-                      // strange case, but we need to handle it
-                      Future.successful(Redirect(routes.YourOtherIncomeScheduleUploadController.onPageLoad))
-                  }
-            }
+                case _ =>
+                  // strange case, but we need to handle it
+                  Future.successful(Redirect(routes.YourOtherIncomeScheduleUploadController.onPageLoad))
+              }
         }
       }
-
 }
