@@ -46,17 +46,35 @@ class UploadCommunityBuildingsScheduleController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
-      request.sessionData.unsubmittedClaimId match {
-        case None =>
-          // if the claim id is not found, we need to redirect to the repayment claim details page
-          Future
-            .successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+      val claimId = request.sessionData.unsubmittedClaimId.get
 
-        case Some(claimId) =>
-          request.sessionData.communityBuildingsScheduleUpscanInitialization match {
-            case Some(upscanInitiateResponse) =>
-              Future.successful(
-                Ok(
+      request.sessionData.communityBuildingsScheduleUpscanInitialization match {
+        case Some(upscanInitiateResponse) =>
+          Future.successful(
+            Ok(
+              view(
+                appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl,
+                claimId = claimId,
+                upscanInitiateResponse = upscanInitiateResponse,
+                allowedFileTypesHint = appConfig.allowedFileTypesHint,
+                filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
+                errorCode = None
+              )
+            )
+          )
+
+        case None =>
+          claimsValidationService
+            .getFileUploadReference(ValidationType.CommunityBuildings)
+            .flatMap {
+              case Some(_) =>
+                // if the file upload reference is found, we need to redirect to your Community Buildings schedule upload page
+                Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
+
+              case None =>
+                for {
+                  upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
+                } yield Ok(
                   view(
                     appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl,
                     claimId = claimId,
@@ -66,31 +84,7 @@ class UploadCommunityBuildingsScheduleController @Inject() (
                     errorCode = None
                   )
                 )
-              )
-
-            case None =>
-              claimsValidationService
-                .getFileUploadReference(ValidationType.CommunityBuildings)
-                .flatMap {
-                  case Some(_) =>
-                    // if the file upload reference is found, we need to redirect to your Community Buildings schedule upload page
-                    Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
-
-                  case None =>
-                    for {
-                      upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
-                    } yield Ok(
-                      view(
-                        appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl,
-                        claimId = claimId,
-                        upscanInitiateResponse = upscanInitiateResponse,
-                        allowedFileTypesHint = appConfig.allowedFileTypesHint,
-                        filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-                        errorCode = None
-                      )
-                    )
-                }
-          }
+            }
       }
     }
 
@@ -151,7 +145,6 @@ class UploadCommunityBuildingsScheduleController @Inject() (
 
           case None =>
             Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
-
         }
     }
 
@@ -177,7 +170,5 @@ class UploadCommunityBuildingsScheduleController @Inject() (
           // if the upscan initiate response is not found, we need to redirect to the upload page to start a new upload
           Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
       }
-
     }
-
 }

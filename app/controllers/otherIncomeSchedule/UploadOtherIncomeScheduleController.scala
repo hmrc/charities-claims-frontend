@@ -46,17 +46,35 @@ class UploadOtherIncomeScheduleController @Inject() (
     actions
       .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
-        request.sessionData.unsubmittedClaimId match {
-          case None =>
-            // if the claim id is not found, we need to redirect to the repayment claim details page
-            Future
-              .successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+        val claimId = request.sessionData.unsubmittedClaimId.get
 
-          case Some(claimId) =>
-            request.sessionData.otherIncomeScheduleUpscanInitialization match {
-              case Some(upscanInitiateResponse) =>
-                Future.successful(
-                  Ok(
+        request.sessionData.otherIncomeScheduleUpscanInitialization match {
+          case Some(upscanInitiateResponse) =>
+            Future.successful(
+              Ok(
+                view(
+                  appConfig.otherIncomeScheduleSpreadsheetGuidanceUrl,
+                  claimId = claimId,
+                  upscanInitiateResponse = upscanInitiateResponse,
+                  allowedFileTypesHint = appConfig.allowedFileTypesHint,
+                  filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
+                  errorCode = None
+                )
+              )
+            )
+
+          case None =>
+            claimsValidationService
+              .getFileUploadReference(ValidationType.OtherIncome)
+              .flatMap {
+                case Some(_) =>
+                  // if the file upload reference is found, we need to redirect to your other income schedule upload page
+                  Future.successful(Redirect(routes.YourOtherIncomeScheduleUploadController.onPageLoad))
+
+                case None =>
+                  for {
+                    upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
+                  } yield Ok(
                     view(
                       appConfig.otherIncomeScheduleSpreadsheetGuidanceUrl,
                       claimId = claimId,
@@ -66,31 +84,7 @@ class UploadOtherIncomeScheduleController @Inject() (
                       errorCode = None
                     )
                   )
-                )
-
-              case None =>
-                claimsValidationService
-                  .getFileUploadReference(ValidationType.OtherIncome)
-                  .flatMap {
-                    case Some(_) =>
-                      // if the file upload reference is found, we need to redirect to your other income schedule upload page
-                      Future.successful(Redirect(routes.YourOtherIncomeScheduleUploadController.onPageLoad))
-
-                    case None =>
-                      for {
-                        upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
-                      } yield Ok(
-                        view(
-                          appConfig.otherIncomeScheduleSpreadsheetGuidanceUrl,
-                          claimId = claimId,
-                          upscanInitiateResponse = upscanInitiateResponse,
-                          allowedFileTypesHint = appConfig.allowedFileTypesHint,
-                          filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-                          errorCode = None
-                        )
-                      )
-                  }
-            }
+              }
         }
       }
 

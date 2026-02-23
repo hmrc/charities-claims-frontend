@@ -43,45 +43,39 @@ class ProblemWithGiftAidScheduleController @Inject() (
     actions
       .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
       .async { implicit request =>
-        request.sessionData.unsubmittedClaimId match {
+        val claimId = request.sessionData.unsubmittedClaimId.get
+
+        request.sessionData.giftAidScheduleFileUploadReference match {
           case None =>
-            // if the claim id is not found, we need to redirect to the repayment claim details page
-            Future
-              .successful(Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad))
+            // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
+            Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
 
-          case Some(claimId) =>
-            request.sessionData.giftAidScheduleFileUploadReference match {
-              case None =>
-                // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
-                Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
+          case Some(fileUploadReference) =>
+            claimsValidationConnector
+              .getUploadResult(claimId, fileUploadReference)
+              .map {
+                case GetUploadResultValidationFailedGiftAid(reference, giftAidScheduleData, errors) =>
+                  val currentPage      = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
+                  val paginationResult = PaginationService.paginateValidationErrors(
+                    allErrors = errors,
+                    currentPage = currentPage,
+                    baseUrl = routes.ProblemWithGiftAidScheduleController.onPageLoad.url
+                  )
+                  Ok(
+                    view(
+                      claimId = claimId,
+                      errors = paginationResult.paginatedData,
+                      paginationViewModel = paginationResult.paginationViewModel,
+                      paginationStatus = paginationResult,
+                      giftAidScheduleSpreadsheetGuidanceUrl = appConfig.giftAidScheduleSpreadsheetGuidanceUrl
+                    )
+                  )
 
-              case Some(fileUploadReference) =>
-                claimsValidationConnector
-                  .getUploadResult(claimId, fileUploadReference)
-                  .map {
-                    case GetUploadResultValidationFailedGiftAid(reference, giftAidScheduleData, errors) =>
-                      val currentPage      = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
-                      val paginationResult = PaginationService.paginateValidationErrors(
-                        allErrors = errors,
-                        currentPage = currentPage,
-                        baseUrl = routes.ProblemWithGiftAidScheduleController.onPageLoad.url
-                      )
-                      Ok(
-                        view(
-                          claimId = claimId,
-                          errors = paginationResult.paginatedData,
-                          paginationViewModel = paginationResult.paginationViewModel,
-                          paginationStatus = paginationResult,
-                          giftAidScheduleSpreadsheetGuidanceUrl = appConfig.giftAidScheduleSpreadsheetGuidanceUrl
-                        )
-                      )
-
-                    case _ =>
-                      // In case of any other upload result, we need to redirect to the /your-gift-aid-schedule-upload page,
-                      // which in turn will redirect to the right page based on the upload result
-                      Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad)
-                  }
-            }
+                case _ =>
+                  // In case of any other upload result, we need to redirect to the /your-gift-aid-schedule-upload page,
+                  // which in turn will redirect to the right page based on the upload result
+                  Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad)
+              }
         }
       }
 
