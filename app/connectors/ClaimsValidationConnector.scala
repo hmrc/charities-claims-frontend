@@ -89,6 +89,10 @@ class ClaimsValidationConnectorImpl @Inject() (
       method = "GET",
       url = s"$baseUrl$contextPath/$claimId/upload-results"
     )
+      .recover {
+        case e: Exception if e.getMessage.contains("CLAIM_DOES_NOT_EXIST") =>
+          GetUploadSummaryResponse(uploads = Nil)
+      }
 
   final def getUploadResult(claimId: String, reference: FileUploadReference)(using
     hc: HeaderCarrier

@@ -86,7 +86,7 @@ class ClaimsValidationServiceImpl @Inject() (
         claimsValidationConnector.updateUploadStatus(claimId, reference, FileStatus.VERIFYING)
       }
 
-  private def geUpscanInitializationFromSession(validationType: ValidationType)(using
+  private def getUpscanInitializationFromSession(validationType: ValidationType)(using
     request: DataRequest[?]
   ): Option[UpscanInitiateResponse] =
     validationType match {
@@ -123,14 +123,15 @@ class ClaimsValidationServiceImpl @Inject() (
   ): Future[Option[FileUploadReference]] =
     getFileUploadReferenceFromSession(validationType).match {
       case Some(reference) =>
-        if acceptAwaitingUpload || geUpscanInitializationFromSession(validationType).isEmpty
+        if acceptAwaitingUpload || getUpscanInitializationFromSession(validationType).isEmpty
         then Future.successful(Some(reference))
         else Future.successful(None)
-      case None            =>
+
+      case None =>
         claimsValidationConnector
           .getUploadSummary(request.sessionData.unsubmittedClaimId.get)
           .flatMap { summaryResponse =>
-            summaryResponse.uploads.find(_.validationType == validationType) match {
+            summaryResponse.findUpload(validationType) match {
               case None         => Future.successful(None)
               case Some(upload) =>
                 if acceptAwaitingUpload || upload.fileStatus != FileStatus.AWAITING_UPLOAD
@@ -149,17 +150,40 @@ class ClaimsValidationServiceImpl @Inject() (
                           .copy(connectedCharitiesScheduleFileUploadReference = Some(upload.reference))
                     })
                     .map(_ => Some(upload.reference))
-                else Future.successful(None)
+                else
+                  upload.asUpscanInitiateResponse match {
+                    // restore upscan initiate response from upload summary
+                    case Some(upscanInitiateResponse) =>
+                      saveService
+                        .save(validationType match {
+                          case ValidationType.GiftAid            =>
+                            request.sessionData.copy(
+                              giftAidScheduleFileUploadReference = Some(upload.reference),
+                              giftAidScheduleUpscanInitialization = Some(upscanInitiateResponse)
+                            )
+                          case ValidationType.OtherIncome        =>
+                            request.sessionData.copy(
+                              otherIncomeScheduleFileUploadReference = Some(upload.reference),
+                              otherIncomeScheduleUpscanInitialization = Some(upscanInitiateResponse)
+                            )
+                          case ValidationType.CommunityBuildings =>
+                            request.sessionData.copy(
+                              communityBuildingsScheduleFileUploadReference = Some(upload.reference),
+                              giftAidScheduleUpscanInitialization = Some(upscanInitiateResponse)
+                            )
+                          case ValidationType.ConnectedCharities =>
+                            request.sessionData
+                              .copy(
+                                connectedCharitiesScheduleFileUploadReference = Some(upload.reference),
+                                connectedCharitiesScheduleUpscanInitialization = Some(upscanInitiateResponse)
+                              )
+                        })
+                        .map(_ => Some(upload.reference))
+
+                    case None =>
+                      Future.successful(None)
+                  }
             }
-          }
-          .recoverWith {
-            case e: Exception if e.getMessage.contains("CLAIM_DOES_NOT_EXIST") =>
-              geUpscanInitializationFromSession(validationType).match {
-                case Some(upscanInitiateResponse) =>
-                  Future.successful(Some(FileUploadReference(upscanInitiateResponse.reference)))
-                case None                         =>
-                  Future.successful(None)
-              }
           }
     }
 

@@ -121,13 +121,14 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
 
   "ClaimsValidationConnector" - {
 
-    "createUpoloadTracking" - {
+    "createUploadTracking" - {
 
       val createUploadTrackingRequest = CreateUploadTrackingRequest(
         reference = UpscanReference("reference-123"),
         validationType = ValidationType.GiftAid,
         uploadUrl = "upload-url-123",
-        initiateTimestamp = "initate-timestamp-123"
+        initiateTimestamp = "initate-timestamp-123",
+        fields = Map("key" -> "value")
       )
 
       "should return true when service returns 200 status" in {
@@ -156,6 +157,12 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         givenGetUploadSummaryEndpointReturns(HttpResponse(200, testUploadSummaryResponseJsonString)).once()
 
         await(connector.getUploadSummary("123")) shouldEqual testUploadSummaryResponse
+      }
+
+      "should return empty upload summary when service returns CLAIM_DOES_NOT_EXIST" in {
+        givenGetUploadSummaryEndpointReturns(HttpResponse(404, "CLAIM_DOES_NOT_EXIST")).once()
+
+        await(connector.getUploadSummary("123")) shouldEqual GetUploadSummaryResponse(uploads = Nil)
       }
 
       "throw an exception if the service returns malformed JSON" in {

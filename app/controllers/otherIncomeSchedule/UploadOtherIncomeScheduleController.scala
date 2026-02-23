@@ -119,7 +119,8 @@ class UploadOtherIncomeScheduleController @Inject() (
                   reference = upscanInitiateResponse.reference,
                   validationType = ValidationType.OtherIncome,
                   uploadUrl = upscanInitiateResponse.uploadRequest.href,
-                  initiateTimestamp = ISODateTime.timestampNow()
+                  initiateTimestamp = ISODateTime.timestampNow(),
+                  fields = upscanInitiateResponse.uploadRequest.fields
                 )
               )
         } yield upscanInitiateResponse
