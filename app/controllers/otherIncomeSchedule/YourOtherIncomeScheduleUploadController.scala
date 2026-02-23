@@ -128,24 +128,24 @@ class YourOtherIncomeScheduleUploadController @Inject() (
             // if the file upload reference is not found, we need to redirect to the upload page to start a new upload
             Future.successful(Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
 
-              case Some(fileUploadReference) =>
-                claimsValidationConnector
-                  .getUploadResult(claimId, fileUploadReference)
-                  .flatMap {
-                    case failure: GetUploadResultVeryficationFailed =>
-                      claimsValidationService.deleteOtherIncomeSchedule
-                        .map(_ =>
-                          Redirect {
-                            failure.failureDetails.failureReason match {
-                              case FailureReason.QUARANTINE =>
-                                routes.ProblemUpdatingOtherIncomeScheduleQuarantineController.onPageLoad
-                              case FailureReason.REJECTED   =>
-                                routes.ProblemUpdatingOtherIncomeScheduleRejectedController.onPageLoad
-                              case _                        =>
-                                routes.UploadOtherIncomeScheduleController.onPageLoad
-                            }
-                          }
-                        )
+          case Some(fileUploadReference) =>
+            claimsValidationConnector
+              .getUploadResult(claimId, fileUploadReference)
+              .flatMap {
+                case failure: GetUploadResultVeryficationFailed =>
+                  claimsValidationService.deleteOtherIncomeSchedule
+                    .map(_ =>
+                      Redirect {
+                        failure.failureDetails.failureReason match {
+                          case FailureReason.QUARANTINE =>
+                            routes.ProblemUpdatingOtherIncomeScheduleQuarantineController.onPageLoad
+                          case FailureReason.REJECTED   =>
+                            routes.ProblemUpdatingOtherIncomeScheduleRejectedController.onPageLoad
+                          case _                        =>
+                            routes.UploadOtherIncomeScheduleController.onPageLoad
+                        }
+                      }
+                    )
 
                 case _: GetUploadResultValidatedOtherIncome =>
                   Future.successful(Redirect(routes.CheckYourOtherIncomeScheduleController.onPageLoad))
