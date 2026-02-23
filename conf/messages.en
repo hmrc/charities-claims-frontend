@@ -14,6 +14,7 @@ uploadCommunityBuildingsSchedule.paragraph.url = If you have not completed a Com
 uploadCommunityBuildingsSchedule.input.label = Upload a file
 uploadCommunityBuildingsSchedule.form.upload-file.submit = Continue
 uploadCommunityBuildingsSchedule.error.file-upload.InvalidArgument = Select a Community Buildings schedule
+uploadCommunityBuildingsSchedule.error.file-upload.EntityTooSmall = Select a Community Buildings schedule
 uploadCommunityBuildingsSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250KB
 
 aboutGiftAidSchedule.caption = Add Gift Aid schedule
@@ -592,8 +593,8 @@ updateRepaymentClaim.title = Do you want to update this repayment claim?
 
 uploadGiftAidSchedule.caption = Add Gift Aid schedule
 uploadGiftAidSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250KB
-uploadGiftAidSchedule.error.file-upload.EntityTooSmall = EntityTooSmall : Select a Gift Aid schedule
-uploadGiftAidSchedule.error.file-upload.InvalidArgument = InvalidArgument : Select a Gift Aid schedule
+uploadGiftAidSchedule.error.file-upload.EntityTooSmall = Select a Gift Aid schedule
+uploadGiftAidSchedule.error.file-upload.InvalidArgument = Select a Gift Aid schedule
 uploadGiftAidSchedule.form.upload-file.submit = Continue
 uploadGiftAidSchedule.heading = Upload a Gift Aid schedule
 uploadGiftAidSchedule.input.label = Upload a file
@@ -603,8 +604,8 @@ uploadGiftAidSchedule.title = Upload a Gift Aid schedule
 
 uploadOtherIncomeSchedule.caption = Add Other Income schedule
 uploadOtherIncomeSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250KB
-uploadOtherIncomeSchedule.error.file-upload.EntityTooSmall = EntityTooSmall : Select an Other Income schedule
-uploadOtherIncomeSchedule.error.file-upload.InvalidArgument = InvalidArgument : Select an Other Income schedule
+uploadOtherIncomeSchedule.error.file-upload.EntityTooSmall = Select an Other Income schedule
+uploadOtherIncomeSchedule.error.file-upload.InvalidArgument = Select an Other Income schedule
 uploadOtherIncomeSchedule.form.upload-file.submit = Continue
 uploadOtherIncomeSchedule.heading = Upload an Other Income schedule
 uploadOtherIncomeSchedule.input.label = Upload a file
