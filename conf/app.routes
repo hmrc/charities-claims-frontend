@@ -213,3 +213,5 @@ POST        /connected-charities-schedule-upload-successful  controllers.connect
 
 GET         /problem-uploading-other-income-schedule-quarantine                controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleQuarantineController.onPageLoad
 POST        /problem-uploading-other-income-schedule-quarantine                controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleQuarantineController.onSubmit
+GET         /problem-updating-other-income-schedule-unknown-error             controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onPageLoad
+POST        /problem-updating-other-income-schedule-unknown-error             controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onSubmit

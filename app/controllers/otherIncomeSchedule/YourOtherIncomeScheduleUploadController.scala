@@ -142,7 +142,7 @@ class YourOtherIncomeScheduleUploadController @Inject() (
                           case FailureReason.REJECTED   =>
                             routes.ProblemUpdatingOtherIncomeScheduleRejectedController.onPageLoad
                           case _                        =>
-                            routes.UploadOtherIncomeScheduleController.onPageLoad
+                            routes.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onPageLoad
                         }
                       }
                     )
