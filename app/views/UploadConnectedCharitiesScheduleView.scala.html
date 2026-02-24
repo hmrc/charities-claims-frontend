@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import controllers.otherIncomeSchedule.routes
+@import controllers.connectedCharitiesSchedule.routes
 @import models.UpscanInitiateResponse
 
 @this(
@@ -25,7 +25,7 @@
 )
 
 @(
-    otherIncomeScheduleSpreadsheetGuidanceUrl: String,
+    connectedCharitiesScheduleSpreadsheetGuidanceUrl: String,
     claimId: String, 
     upscanInitiateResponse: UpscanInitiateResponse, 
     allowedFileTypesHint: String, 
@@ -34,24 +34,24 @@
 )(using request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleWithErrorOpt(errorCode, messages("uploadOtherIncomeSchedule.title")), showBackLink = true
+    pageTitle = titleWithErrorOpt(errorCode, messages("uploadConnectedCharitiesSchedule.title")), showBackLink = true
 ) {
 
     @if(errorCode.nonEmpty) {
         @govukErrorSummary(ErrorSummary(
             errorList = errorCode.map(error => ErrorLink(
                 href = Some(s"#file"),
-                content = Text(messages(s"uploadOtherIncomeSchedule.error.file-upload.$error"))
+                content = Text(messages(s"uploadConnectedCharitiesSchedule.error.file-upload.$error"))
             )).toList,
             title = Text(messages("error.summary.title"))
         ))
     }
     
-    <span class="govuk-caption-l">@messages("uploadOtherIncomeSchedule.caption")</span>
-    <h1 class="govuk-heading-l">@messages("uploadOtherIncomeSchedule.heading")</h1>
+    <span class="govuk-caption-l">@messages("uploadConnectedCharitiesSchedule.caption")</span>
+    <h1 class="govuk-heading-l">@messages("uploadConnectedCharitiesSchedule.heading")</h1>
 
-    <p class="govuk-body">@messages("uploadOtherIncomeSchedule.paragraph.one")</p>
-    <p class="govuk-body">@Html(messages("uploadOtherIncomeSchedule.paragraph.url", otherIncomeScheduleSpreadsheetGuidanceUrl))</p>
+    <p class="govuk-body">@messages("uploadConnectedCharitiesSchedule.paragraph.one")</p>
+    <p class="govuk-body">@Html(messages("uploadConnectedCharitiesSchedule.paragraph.url", connectedCharitiesScheduleSpreadsheetGuidanceUrl))</p>
 
     <form action="@upscanInitiateResponse.uploadRequest.href" method="POST" enctype="multipart/form-data" class="js-form file-upload" novalidate>
 
@@ -67,7 +67,7 @@
                     describedBy = None,
                     label = Label(
                         content = Text(
-                            messages("uploadOtherIncomeSchedule.input.label")
+                            messages("uploadConnectedCharitiesSchedule.input.label")
                         )
                     ),
                     hint = None,
@@ -75,17 +75,17 @@
                     classes = "govuk-file-upload--error",
                     attributes = Map(
                         "accept" -> filePickerAcceptFilter,
-                        "data-msg-required" -> messages("uploadOtherIncomeSchedule.error.file-upload.required"),
-                        "data-msg-filesize" -> messages("uploadOtherIncomeSchedule.error.file-upload.invalid-size-large"),
-                        "data-msg-accept" -> messages("uploadOtherIncomeSchedule.error.file-upload.other", allowedFileTypesHint)
+                        "data-msg-required" -> messages("uploadConnectedCharitiesSchedule.error.file-upload.required"),
+                        "data-msg-filesize" -> messages("uploadConnectedCharitiesSchedule.error.file-upload.invalid-size-large"),
+                        "data-msg-accept" -> messages("uploadConnectedCharitiesSchedule.error.file-upload.other", allowedFileTypesHint)
                     ),
-                    errorMessage = errorCode.map(error => ErrorMessage(content = Text(messages(s"uploadOtherIncomeSchedule.error.file-upload.$error"))))
+                    errorMessage = errorCode.map(error => ErrorMessage(content = Text(messages(s"uploadConnectedCharitiesSchedule.error.file-upload.$error"))))
                 )
             )
 
             <div>
                 @govukButton(Button(
-                    content = Text(messages("uploadOtherIncomeSchedule.form.upload-file.submit")),
+                    content = Text(messages("uploadConnectedCharitiesSchedule.form.upload-file.submit")),
                     preventDoubleClick = Some(true),
                     classes = "file-upload__submit"
                 ))

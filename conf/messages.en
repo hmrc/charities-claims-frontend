@@ -650,3 +650,14 @@ problemUpdatingOtherIncomeScheduleRejected.title = There is a problem uploading 
 connectedCharitiesScheduleUploadSuccessful.title = Upload successful
 connectedCharitiesScheduleUploadSuccessful.message.1 = Upload successful
 connectedCharitiesScheduleUploadSuccessful.message.2 = You have successfully attached your Connected Charities schedule.
+
+uploadConnectedCharitiesSchedule.caption = Add Connected Charities schedule
+uploadConnectedCharitiesSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250KB
+uploadConnectedCharitiesSchedule.error.file-upload.EntityTooSmall = Select a Connected Charities schedule
+uploadConnectedCharitiesSchedule.error.file-upload.InvalidArgument = Select a Connected Charities schedule
+uploadConnectedCharitiesSchedule.form.upload-file.submit = Continue
+uploadConnectedCharitiesSchedule.heading = Upload a Connected Charities schedule
+uploadConnectedCharitiesSchedule.input.label = Upload a file
+uploadConnectedCharitiesSchedule.paragraph.one = To claim Connected Charities, upload a completed Connected Charities schedule with details of your connected charities or Community Amateur Sports Clubs (CASC). You can save your claim without uploading the Connected Charities schedule, but you need to upload a Connected Charities schedule before submitting your claim.
+uploadConnectedCharitiesSchedule.paragraph.url = If you have not completed a Connected Charities schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Connected Charities schedule here (opens in new tab)</a>.
+uploadConnectedCharitiesSchedule.title = Upload a Connected Charities schedule
