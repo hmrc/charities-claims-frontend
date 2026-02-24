@@ -595,6 +595,13 @@ updateRepaymentClaim.heading = Do you want to update this repayment claim?
 updateRepaymentClaim.hint = If you change this claim, you’ll lose any data you’ve already given or attached.
 updateRepaymentClaim.title = Do you want to update this repayment claim?
 
+aboutConnectedCharitiesSchedule.caption = Add Connected Charities schedule
+aboutConnectedCharitiesSchedule.heading = About Connected Charities
+aboutConnectedCharitiesSchedule.paragraph.one = Use this service to add a Connected Charities schedule.
+aboutConnectedCharitiesSchedule.paragraph.two = You can upload a Connected Charities schedule in a .ods format.
+aboutConnectedCharitiesSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Connected Charities schedule here (opens in new tab)</a>. You can submit up to 1 file at a time, and each file can be up to 2.5 MB.
+aboutConnectedCharitiesSchedule.title = About Connected Charities
+
 uploadGiftAidSchedule.caption = Add Gift Aid schedule
 uploadGiftAidSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250KB
 uploadGiftAidSchedule.error.file-upload.EntityTooSmall = Select a Gift Aid schedule
