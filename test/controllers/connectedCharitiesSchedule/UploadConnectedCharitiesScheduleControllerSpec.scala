@@ -34,7 +34,7 @@ import util.HttpV2Support
 
 import scala.concurrent.Future
 
-/*class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with HttpV2Support {
+class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with HttpV2Support {
   val config: Configuration = Configuration(
     ConfigFactory.parseString(
       """
@@ -114,21 +114,21 @@ import scala.concurrent.Future
   val mockUpscanInitiateConnector: UpscanInitiateConnector = mock[UpscanInitiateConnector]
   val mockSaveService: SaveService                         = mock[SaveService]
 
-  "UploadConnectedCharitiesScheduleController" - {
+  "UploadOtherIncomeScheduleController" - {
 
     "onPageLoad" - {
 
       "should render Page Not Found if setClaimingTaxDeducted is false" in {
         val sessionData  = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false)
         val customConfig = Map(
-          "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
+          "urls.connectedCharitiesScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/charity-repayment-claim"
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).configure(customConfig).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onPageLoad.url)
+            FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -151,7 +151,7 @@ import scala.concurrent.Future
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onPageLoad.url)
+            FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -167,36 +167,32 @@ import scala.concurrent.Future
         val upscan = response
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(
-              unsubmittedClaimId = Some("claim-123"),
-              otherIncomeScheduleUpscanInitialization = Some(upscan)
-            )
+          completeGasdsSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+            .copy(connectedCharitiesScheduleUpscanInitialization = Some(upscan))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onPageLoad.url)
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual OK
-          contentAsString(result) should include("claim-123")
+          contentAsString(result) should include("claim-1234567890")
         }
       }
 
       "should redirect when file upload reference already exists" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeGasdsSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.OtherIncome, false, *, *)
+          .expects(ValidationType.ConnectedCharities, false, *, *)
           .returning(Future.successful(Some(FileUploadReference("ref-123"))))
 
         given application: Application =
@@ -207,26 +203,25 @@ import scala.concurrent.Future
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onPageLoad.url)
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            Some(routes.YourOtherIncomeScheduleUploadController.onPageLoad.url)
+            Some(routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
         }
       }
 
       "should initiate upscan and store session when no reference exists" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeGasdsSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.OtherIncome, false, *, *)
+          .expects(ValidationType.ConnectedCharities, false, *, *)
           .returning(Future.successful(None))
 
         (mockUpscanInitiateConnector
@@ -254,7 +249,7 @@ import scala.concurrent.Future
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onPageLoad.url)
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -268,13 +263,12 @@ import scala.concurrent.Future
       "should update status and redirect when reference exists" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeGasdsSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.OtherIncome, true, *, *)
+          .expects(ValidationType.ConnectedCharities, true, *, *)
           .returning(Future.successful(Some(FileUploadReference("ref-123"))))
 
         (mockClaimsValidationService
@@ -282,7 +276,7 @@ import scala.concurrent.Future
             _: DataRequest[?],
             _: HeaderCarrier
           ))
-          .expects("claim-123", FileUploadReference("ref-123"), ValidationType.OtherIncome, *, *)
+          .expects("test-claim-id", FileUploadReference("ref-123"), ValidationType.ConnectedCharities, *, *)
           .returning(Future.successful(true))
 
         given application: Application =
@@ -293,26 +287,25 @@ import scala.concurrent.Future
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onUploadSuccess.url)
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onUploadSuccess.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            Some(routes.YourOtherIncomeScheduleUploadController.onPageLoad.url)
+            Some(routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
         }
       }
 
       "should redirect back when no reference found" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeGasdsSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.OtherIncome, true, *, *)
+          .expects(ValidationType.ConnectedCharities, true, *, *)
           .returning(Future.successful(None))
 
         given application: Application =
@@ -323,13 +316,13 @@ import scala.concurrent.Future
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onUploadSuccess.url)
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onUploadSuccess.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            Some(routes.UploadOtherIncomeScheduleController.onPageLoad.url)
+            Some(routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
         }
       }
 
@@ -340,9 +333,8 @@ import scala.concurrent.Future
       "should redirect when upscan initialization does not exist in session" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeGasdsSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -352,25 +344,22 @@ import scala.concurrent.Future
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onUploadError.url)
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onUploadError.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            Some(routes.UploadOtherIncomeScheduleController.onPageLoad.url)
+            Some(routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
         }
       }
 
       "should render error page when upscan exists in session" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(
-              unsubmittedClaimId = Some("claim-123"),
-              otherIncomeScheduleUpscanInitialization = Some(response)
-            )
+          completeGasdsSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+            .copy(connectedCharitiesScheduleUpscanInitialization = Some(response))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -380,7 +369,7 @@ import scala.concurrent.Future
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onUploadError.url)
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onUploadError.url)
 
           val result = route(application, request).value
 
@@ -391,9 +380,8 @@ import scala.concurrent.Future
       "should redirect when no upscan and no reference" in {
 
         val sessionData =
-          RepaymentClaimDetailsAnswers
-            .setClaimingTaxDeducted(true)
-            .copy(unsubmittedClaimId = Some("claim-123"))
+          completeGasdsSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -403,13 +391,13 @@ import scala.concurrent.Future
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onUploadError.url)
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onUploadError.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            Some(routes.UploadOtherIncomeScheduleController.onPageLoad.url)
+            Some(routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
         }
       }
 
@@ -417,4 +405,4 @@ import scala.concurrent.Future
 
   }
 
-}*/
+}

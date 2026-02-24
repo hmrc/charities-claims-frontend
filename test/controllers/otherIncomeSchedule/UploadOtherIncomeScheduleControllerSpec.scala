@@ -129,7 +129,7 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
       "should render Page Not Found if setClaimingTaxDeducted is false" in {
         val sessionData  = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false)
         val customConfig = Map(
-          "urls.giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl" -> "https://test.example.com/charity-repayment-claim"
+          "urls.otherIncomeScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/charity-repayment-claim"
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).configure(customConfig).build()
