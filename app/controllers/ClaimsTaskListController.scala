@@ -227,7 +227,7 @@ object ClaimsTaskListController {
 
     TaskItem(
       name = messages("claimsTaskList.task.connectedCharitiesSchedule"),
-      href = routes.PageNotFoundController.onPageLoad,
+      href = connectedCharitiesSchedule.routes.AboutConnectedCharitiesScheduleController.onPageLoad,
       status = status
     )
 }
