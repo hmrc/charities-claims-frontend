@@ -44,7 +44,7 @@ class GiftAidScheduleUploadStatusController @Inject() (
             claimId             <- request.sessionData.unsubmittedClaimId
             _                   <- request.sessionData.repaymentClaimDetailsAnswers
                                      .flatMap(_.claimingGiftAid)
-                                     .flatMap(checkbox => if (checkbox) Some(()) else None)
+                                     .flatMap(Option.when(_)(()))
             fileUploadReference <- request.sessionData.giftAidScheduleFileUploadReference
           } yield claimsValidationService
             .getUploadResult(claimId, fileUploadReference)

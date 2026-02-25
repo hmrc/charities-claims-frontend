@@ -20,7 +20,7 @@
 
 @(uploadStatusCall: Call, refreshIntervalSeconds: Int)(implicit request: Request[?])
 <script @{CSPNonce.attr}>
-    var refershLink = document.getElementById('refreshLink')
+    var refreshLink = document.getElementById('refreshLink')
     if(refreshLink){
         refreshLink.remove();
     }
