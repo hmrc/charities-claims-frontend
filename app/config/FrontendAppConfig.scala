@@ -63,6 +63,8 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
   lazy val allowedFileTypesHint: String   = config.get[String]("scheduleUpload.allowedFileTypesHint")
   lazy val filePickerAcceptFilter: String = config.get[String]("scheduleUpload.filePickerAcceptFilter")
 
+  lazy val uploadStatusRefreshIntervalSeconds: Int = config.get[Int]("uploadStatusRefreshIntervalSeconds")
+
   def pageTitleWithServiceName(
     pageTitle: String,
     serviceName: String

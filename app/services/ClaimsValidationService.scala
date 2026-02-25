@@ -34,6 +34,9 @@ trait ClaimsValidationService {
 
   def createUploadTracking(claimId: String, request: CreateUploadTrackingRequest)(using HeaderCarrier): Future[Boolean]
   def getUploadSummary(claimId: String)(using HeaderCarrier): Future[GetUploadSummaryResponse]
+  def getUploadResult(claimId: String, reference: FileUploadReference)(using
+    hc: HeaderCarrier
+  ): Future[GetUploadResultResponse]
   def updateUploadStatus(claimId: String, reference: FileUploadReference, validationType: ValidationType)(using
     request: DataRequest[?],
     hc: HeaderCarrier
@@ -64,6 +67,11 @@ class ClaimsValidationServiceImpl @Inject() (
 
   override def getUploadSummary(claimId: String)(using HeaderCarrier): Future[GetUploadSummaryResponse] =
     claimsValidationConnector.getUploadSummary(claimId)
+
+  override def getUploadResult(claimId: String, reference: FileUploadReference)(using
+    hc: HeaderCarrier
+  ): Future[GetUploadResultResponse] =
+    claimsValidationConnector.getUploadResult(claimId, reference)
 
   override def updateUploadStatus(claimId: String, reference: FileUploadReference, validationType: ValidationType)(using
     request: DataRequest[?],

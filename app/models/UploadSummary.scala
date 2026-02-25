@@ -81,6 +81,13 @@ enum FileStatus {
 object FileStatus extends Enumerable.Implicits {
   given Enumerable[FileStatus] =
     Enumerable[FileStatus](str => scala.util.Try(FileStatus.valueOf(str)).toOption)
+
+  extension (fileStatus: FileStatus)
+    def isFinal: Boolean =
+      fileStatus match {
+        case FileStatus.VALIDATED | FileStatus.VALIDATION_FAILED | FileStatus.VERIFICATION_FAILED => true
+        case _                                                                                    => false
+      }
 }
 
 enum ValidationType {
