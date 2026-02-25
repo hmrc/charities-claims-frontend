@@ -230,7 +230,7 @@ object CommunityBuilding {
 }
 
 case class CommunityBuildingsScheduleData(
-  totalOfAllAmounts: BigDecimal,
+  totalOfAllAmounts: Option[BigDecimal] = None,
   communityBuildings: Seq[CommunityBuilding1]
 )
 

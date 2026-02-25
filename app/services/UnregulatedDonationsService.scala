@@ -53,7 +53,7 @@ object UnregulatedDonationsService {
     val giftAidTotal            = sessionData.giftAidScheduleData.flatMap(_.totalDonations).getOrElse(BigDecimal(0))
     val otherIncomeTotal        = sessionData.otherIncomeScheduleData.map(_.totalOfGrossPayments).getOrElse(BigDecimal(0))
     val communityBuildingsTotal =
-      sessionData.communityBuildingsScheduleData.map(_.totalOfAllAmounts).getOrElse(BigDecimal(0))
+      sessionData.communityBuildingsScheduleData.flatMap(_.totalOfAllAmounts).getOrElse(BigDecimal(0))
 
     giftAidTotal + otherIncomeTotal + communityBuildingsTotal
   }

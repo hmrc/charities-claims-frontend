@@ -54,7 +54,7 @@ object TestScheduleData {
   )
 
   val exampleCommunityBuildingsScheduleData: CommunityBuildingsScheduleData = CommunityBuildingsScheduleData(
-    totalOfAllAmounts = 1000.00,
+    totalOfAllAmounts = Some(1000.00),
     communityBuildings = Seq(
       CommunityBuilding1(
         communityBuildingItem = 1,
