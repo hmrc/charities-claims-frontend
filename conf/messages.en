@@ -433,6 +433,10 @@ problemUpdatingOtherIncomeScheduleUnknownError.heading = There is a problem uplo
 problemUpdatingOtherIncomeScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
 problemUpdatingOtherIncomeScheduleUnknownError.title = There is a problem uploading your Other Income schedule
 
+problemUpdatingConnectedCharitiesScheduleUnknownError.heading = There is a problem uploading your Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
+problemUpdatingConnectedCharitiesScheduleUnknownError.title = There is a problem uploading your Connected Charities schedule
+
 problemUpdatingGiftAidScheduleUnknownError.heading = There is a problem uploading your Gift Aid schedule
 problemUpdatingGiftAidScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
 problemUpdatingGiftAidScheduleUnknownError.title = There is a problem uploading your Gift Aid schedule
