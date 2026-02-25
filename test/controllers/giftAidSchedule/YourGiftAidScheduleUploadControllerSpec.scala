@@ -147,7 +147,10 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
             claimId,
             testAwaitingResponse,
             None,
-            false
+            false,
+            routes.GiftAidScheduleUploadStatusController.status,
+            3,
+            routes.YourGiftAidScheduleUploadController.onPageLoad
           ).body
 
         }
@@ -179,7 +182,10 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
             claimId,
             testVerifyingResponse,
             None,
-            true
+            true,
+            routes.GiftAidScheduleUploadStatusController.status,
+            3,
+            routes.YourGiftAidScheduleUploadController.onPageLoad
           ).body
         }
       }
@@ -210,7 +216,10 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
             claimId,
             testValidatingResponse,
             None,
-            true
+            true,
+            routes.GiftAidScheduleUploadStatusController.status,
+            3,
+            routes.YourGiftAidScheduleUploadController.onPageLoad
           ).body
         }
       }
@@ -241,7 +250,10 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
             claimId,
             testVerificationFailedRejectedResponse,
             None,
-            false
+            false,
+            routes.GiftAidScheduleUploadStatusController.status,
+            3,
+            routes.YourGiftAidScheduleUploadController.onPageLoad
           ).body
         }
       }

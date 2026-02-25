@@ -28,6 +28,7 @@ import controllers.giftAidSchedule.routes
 
 import scala.concurrent.{ExecutionContext, Future}
 import services.SaveService
+import config.FrontendAppConfig
 
 class YourGiftAidScheduleUploadController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -35,7 +36,8 @@ class YourGiftAidScheduleUploadController @Inject() (
   actions: Actions,
   claimsValidationConnector: ClaimsValidationConnector,
   claimsValidationService: ClaimsValidationService,
-  saveService: SaveService
+  saveService: SaveService,
+  appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -62,7 +64,10 @@ class YourGiftAidScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = None,
-                        screenLocked = true
+                        screenLocked = true,
+                        uploadStatusCall = routes.GiftAidScheduleUploadStatusController.status,
+                        refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
+                        reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad
                       )
                     )
 
@@ -72,7 +77,10 @@ class YourGiftAidScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = None,
-                        screenLocked = true
+                        screenLocked = true,
+                        uploadStatusCall = routes.GiftAidScheduleUploadStatusController.status,
+                        refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
+                        reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad
                       )
                     )
 
@@ -86,7 +94,10 @@ class YourGiftAidScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = Some(failureDetails),
-                        screenLocked = false
+                        screenLocked = false,
+                        uploadStatusCall = routes.GiftAidScheduleUploadStatusController.status,
+                        refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
+                        reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad
                       )
                     )
 
@@ -96,7 +107,10 @@ class YourGiftAidScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = None,
-                        screenLocked = false
+                        screenLocked = false,
+                        uploadStatusCall = routes.GiftAidScheduleUploadStatusController.status,
+                        refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
+                        reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad
                       )
                     )
                 }
