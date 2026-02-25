@@ -62,7 +62,7 @@
         rows = Seq(
             SummaryListRow(
                 key = Key(content = Text(messages("checkYourCommunityBuildingsSchedule.summary.item.1"))),
-                value = Value(content = Text(communityBuildingsScheduleData.totalOfAllAmounts.toAmountString)),
+                value = Value(content = Text(communityBuildingsScheduleData.totalOfAllAmounts.map(_.toAmountString).getOrElse(messages("data.notApplicable")))),
                 classes = "custom-summary-list"
             )
         )
