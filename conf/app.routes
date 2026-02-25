@@ -222,3 +222,10 @@ GET         /problem-uploading-other-income-schedule-quarantine                c
 POST        /problem-uploading-other-income-schedule-quarantine                controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleQuarantineController.onSubmit
 GET         /problem-updating-other-income-schedule-unknown-error             controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onPageLoad
 POST        /problem-updating-other-income-schedule-unknown-error             controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onSubmit
+
+GET         /upload-connected-charities-schedule                    controllers.connectedCharitiesSchedule.UploadConnectedCharitiesScheduleController.onPageLoad
+GET         /upload-connected-charities-schedule/success            controllers.connectedCharitiesSchedule.UploadConnectedCharitiesScheduleController.onUploadSuccess
+GET         /upload-connected-charities-schedule/error              controllers.connectedCharitiesSchedule.UploadConnectedCharitiesScheduleController.onUploadError
+
+# TODO: Placeholder route for CC1.2 - to be implemented in future ticket
+GET         /your-connected-charities-schedule-upload               controllers.connectedCharitiesSchedule.YourConnectedCharitiesScheduleUploadController.onPageLoad

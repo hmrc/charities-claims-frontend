@@ -67,7 +67,7 @@ abstract class BaseSpec
     claimingDonationsNotFromCommunityBuilding = Some(true),
     claimingDonationsCollectedInCommunityBuildings = Some(true),
     makingAdjustmentToPreviousClaim = Some(false),
-    connectedToAnyOtherCharities = Some(false),
+    connectedToAnyOtherCharities = Some(true),
     claimingReferenceNumber = Some(false)
   )
 
