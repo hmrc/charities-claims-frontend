@@ -14,35 +14,27 @@
  * limitations under the License.
  */
 
-package controllers.otherIncomeSchedule
+package controllers.connectedCharitiesSchedule
 
 import com.typesafe.config.ConfigFactory
 import connectors.UpscanInitiateConnector
-import controllers.otherIncomeSchedule.routes
 import controllers.ControllerSpec
+import controllers.connectedCharitiesSchedule.routes
 import models.requests.DataRequest
-import models.{
-  CreateUploadTrackingRequest,
-  FileUploadReference,
-  RepaymentClaimDetailsAnswers,
-  SessionData,
-  UpscanInitiateRequest,
-  UpscanInitiateResponse,
-  ValidationType
-}
-import play.api.{inject, Application, Configuration}
-import play.api.mvc.AnyContentAsEmpty
-import play.api.test.FakeRequest
-import play.api.libs.json.Json
-import util.HttpV2Support
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import models.*
 import org.scalamock.handlers.CallHandler
 import play.api.inject.guice.GuiceableModule
+import play.api.libs.json.Json
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
+import play.api.{inject, Application, Configuration}
 import services.{ClaimsValidationService, SaveService}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import util.HttpV2Support
 
 import scala.concurrent.Future
 
-class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2Support {
+class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with HttpV2Support {
   val config: Configuration = Configuration(
     ConfigFactory.parseString(
       """
@@ -129,14 +121,14 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
       "should render Page Not Found if setClaimingTaxDeducted is false" in {
         val sessionData  = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false)
         val customConfig = Map(
-          "urls.otherIncomeScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/charity-repayment-claim"
+          "urls.connectedCharitiesScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/charity-repayment-claim"
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).configure(customConfig).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onPageLoad.url)
+            FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -159,7 +151,7 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onPageLoad.url)
+            FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -175,15 +167,15 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
         val upscan = response
 
         val sessionData =
-          completeRepaymentDetailsAnswersSession
+          completeGasdsSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
-            .copy(otherIncomeScheduleUpscanInitialization = Some(upscan))
+            .copy(connectedCharitiesScheduleUpscanInitialization = Some(upscan))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onPageLoad.url)
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -195,12 +187,12 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
       "should redirect when file upload reference already exists" in {
 
         val sessionData =
-          completeRepaymentDetailsAnswersSession
+          completeGasdsSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.OtherIncome, false, *, *)
+          .expects(ValidationType.ConnectedCharities, false, *, *)
           .returning(Future.successful(Some(FileUploadReference("ref-123"))))
 
         given application: Application =
@@ -211,25 +203,25 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onPageLoad.url)
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            Some(routes.YourOtherIncomeScheduleUploadController.onPageLoad.url)
+            Some(routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
         }
       }
 
       "should initiate upscan and store session when no reference exists" in {
 
         val sessionData =
-          completeRepaymentDetailsAnswersSession
+          completeGasdsSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.OtherIncome, false, *, *)
+          .expects(ValidationType.ConnectedCharities, false, *, *)
           .returning(Future.successful(None))
 
         (mockUpscanInitiateConnector
@@ -257,7 +249,7 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onPageLoad.url)
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -271,12 +263,12 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
       "should update status and redirect when reference exists" in {
 
         val sessionData =
-          completeRepaymentDetailsAnswersSession
+          completeGasdsSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.OtherIncome, true, *, *)
+          .expects(ValidationType.ConnectedCharities, true, *, *)
           .returning(Future.successful(Some(FileUploadReference("ref-123"))))
 
         (mockClaimsValidationService
@@ -284,7 +276,7 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
             _: DataRequest[?],
             _: HeaderCarrier
           ))
-          .expects("test-claim-id", FileUploadReference("ref-123"), ValidationType.OtherIncome, *, *)
+          .expects("test-claim-id", FileUploadReference("ref-123"), ValidationType.ConnectedCharities, *, *)
           .returning(Future.successful(true))
 
         given application: Application =
@@ -295,25 +287,25 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onUploadSuccess.url)
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onUploadSuccess.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            Some(routes.YourOtherIncomeScheduleUploadController.onPageLoad.url)
+            Some(routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
         }
       }
 
       "should redirect back when no reference found" in {
 
         val sessionData =
-          completeRepaymentDetailsAnswersSession
+          completeGasdsSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         (mockClaimsValidationService
           .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.OtherIncome, true, *, *)
+          .expects(ValidationType.ConnectedCharities, true, *, *)
           .returning(Future.successful(None))
 
         given application: Application =
@@ -324,13 +316,13 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onUploadSuccess.url)
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onUploadSuccess.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            Some(routes.UploadOtherIncomeScheduleController.onPageLoad.url)
+            Some(routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
         }
       }
 
@@ -341,7 +333,7 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
       "should redirect when upscan initialization does not exist in session" in {
 
         val sessionData =
-          completeRepaymentDetailsAnswersSession
+          completeGasdsSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         given application: Application =
@@ -352,22 +344,22 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onUploadError.url)
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onUploadError.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            Some(routes.UploadOtherIncomeScheduleController.onPageLoad.url)
+            Some(routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
         }
       }
 
       "should render error page when upscan exists in session" in {
 
         val sessionData =
-          completeRepaymentDetailsAnswersSession
+          completeGasdsSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
-            .copy(otherIncomeScheduleUpscanInitialization = Some(response))
+            .copy(connectedCharitiesScheduleUpscanInitialization = Some(response))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -377,7 +369,7 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onUploadError.url)
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onUploadError.url)
 
           val result = route(application, request).value
 
@@ -388,7 +380,7 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
       "should redirect when no upscan and no reference" in {
 
         val sessionData =
-          completeRepaymentDetailsAnswersSession
+          completeGasdsSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
         given application: Application =
@@ -399,13 +391,13 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
             .build()
 
         running(application) {
-          val request = FakeRequest(GET, routes.UploadOtherIncomeScheduleController.onUploadError.url)
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onUploadError.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual
-            Some(routes.UploadOtherIncomeScheduleController.onPageLoad.url)
+            Some(routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
         }
       }
 

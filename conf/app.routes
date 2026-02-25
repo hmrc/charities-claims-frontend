@@ -187,6 +187,13 @@ POST        /delete-gasds-community-buildings-schedule          controllers.comm
 
 GET         /delete-gasds-connected-charities-schedule          controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onPageLoad
 POST        /delete-gasds-connected-charities-schedule          controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onSubmit
+GET         /about-connected-charities-schedule              controllers.connectedCharitiesSchedule.AboutConnectedCharitiesScheduleController.onPageLoad
+POST        /about-connected-charities-schedule              controllers.connectedCharitiesSchedule.AboutConnectedCharitiesScheduleController.onSubmit
+GET         /upload-connected-charities-schedule             controllers.connectedCharitiesSchedule.UploadConnectedCharitiesScheduleController.onPageLoad
+GET         /your-connected-charities-schedule-upload        controllers.connectedCharitiesSchedule.YourConnectedCharitiesScheduleUploadController.onPageLoad
+
+GET         /delete-gasds-connected-charities-schedule       controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onPageLoad
+POST        /delete-gasds-connected-charities-schedule       controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onSubmit
 
 GET         /check-your-other-income-schedule                   controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onPageLoad
 POST        /check-your-other-income-schedule                   controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onSubmit
@@ -216,5 +223,12 @@ POST        /problem-uploading-other-income-schedule-quarantine                c
 GET         /problem-uploading-other-income-schedule-unknown-error             controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onPageLoad
 POST        /problem-uploading-other-income-schedule-unknown-error             controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onSubmit
 
+GET         /upload-connected-charities-schedule                    controllers.connectedCharitiesSchedule.UploadConnectedCharitiesScheduleController.onPageLoad
+GET         /upload-connected-charities-schedule/success            controllers.connectedCharitiesSchedule.UploadConnectedCharitiesScheduleController.onUploadSuccess
+GET         /upload-connected-charities-schedule/error              controllers.connectedCharitiesSchedule.UploadConnectedCharitiesScheduleController.onUploadError
+
 GET         /problem-uploading-connected-charities-schedule-unknown-error     controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleUnknownErrorController.onPageLoad
 POST        /problem-uploading-connected-charities-schedule-unknown-error     controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleUnknownErrorController.onSubmit
+
+# TODO: Placeholder route for CC1.2 - to be implemented in future ticket
+GET         /your-connected-charities-schedule-upload               controllers.connectedCharitiesSchedule.YourConnectedCharitiesScheduleUploadController.onPageLoad

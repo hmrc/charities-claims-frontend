@@ -45,6 +45,8 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
     config.get[String]("urls.giftAidScheduleSpreadsheetGuidanceUrl")
   lazy val communityBuildingsScheduleSpreadsheetGuidanceUrl: String =
     config.get[String]("urls.communityBuildingsScheduleSpreadsheetGuidanceUrl")
+  lazy val connectedCharitiesScheduleSpreadsheetGuidanceUrl: String =
+    config.get[String]("urls.connectedCharitiesScheduleSpreadsheetGuidanceUrl")
 
   lazy val enableLanguageSwitching: Boolean = config.get[Boolean]("enableLanguageSwitching")
   lazy val timeoutInSeconds: Int            = config.get[Int]("timeout-dialog.timeout")
@@ -56,6 +58,7 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
   lazy val maxGifAidScheduleUploadSize: Int             = config.get[Int]("scheduleUpload.gifAid.maxSize")
   lazy val maxOtherIncomeScheduleUploadSize: Int        = config.get[Int]("scheduleUpload.otherIncome.maxSize")
   lazy val maxCommunityBuildingsScheduleUploadSize: Int = config.get[Int]("scheduleUpload.communityBuildings.maxSize")
+  lazy val maxConnectedCharitiesScheduleUploadSize: Int = config.get[Int]("scheduleUpload.connectedCharities.maxSize")
 
   lazy val allowedFileTypesHint: String   = config.get[String]("scheduleUpload.allowedFileTypesHint")
   lazy val filePickerAcceptFilter: String = config.get[String]("scheduleUpload.filePickerAcceptFilter")
