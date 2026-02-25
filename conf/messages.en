@@ -647,6 +647,7 @@ yourOtherIncomeScheduleUpload.title = Your Other Income schedule upload
 problemUpdatingOtherIncomeScheduleRejected.heading = There is a problem uploading your Other Income schedule
 problemUpdatingOtherIncomeScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
 problemUpdatingOtherIncomeScheduleRejected.title = There is a problem uploading your Other Income schedule
+
 connectedCharitiesScheduleUploadSuccessful.title = Upload successful
 connectedCharitiesScheduleUploadSuccessful.message.1 = Upload successful
 connectedCharitiesScheduleUploadSuccessful.message.2 = You have successfully attached your Connected Charities schedule.
@@ -661,3 +662,14 @@ uploadConnectedCharitiesSchedule.input.label = Upload a file
 uploadConnectedCharitiesSchedule.paragraph.one = To claim Connected Charities, upload a completed Connected Charities schedule with details of your connected charities or Community Amateur Sports Clubs (CASC). You can save your claim without uploading the Connected Charities schedule, but you need to upload a Connected Charities schedule before submitting your claim.
 uploadConnectedCharitiesSchedule.paragraph.url = If you have not completed a Connected Charities schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Connected Charities schedule here (opens in new tab)</a>.
 uploadConnectedCharitiesSchedule.title = Upload a Connected Charities schedule
+
+yourConnectedCharitiesScheduleUpload.caption = Add Connected Charities schedule
+yourConnectedCharitiesScheduleUpload.heading = Your Connected Charities schedule upload
+yourConnectedCharitiesScheduleUpload.paragraph.one = You can upload your Connected Charities schedule as a spreadsheet. The selected file must be smaller than 250KB.
+yourConnectedCharitiesScheduleUpload.table.key = Connected Charities Schedule
+yourConnectedCharitiesScheduleUpload.title = Your Connected Charities schedule upload
+
+problemUpdatingConnectedCharitiesScheduleRejected.heading = There is a problem uploading your Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
+problemUpdatingConnectedCharitiesScheduleRejected.title = There is a problem uploading your Connected Charities schedule
+
