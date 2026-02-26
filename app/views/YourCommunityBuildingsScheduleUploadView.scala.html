@@ -21,25 +21,35 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukButton: GovukButton,
-    govukErrorSummary: GovukErrorSummary
+    govukErrorSummary: GovukErrorSummary,
+    checkUploadStatusScript: CheckUploadStatusScript
 )
 
 @(
     claimId: String,
     uploadResult: GetUploadResultResponse,
     failureDetails: Option[GetUploadResultFailureDetails],
-    screenLocked: Boolean
+    screenLocked: Boolean,
+    uploadStatusCall: Call,
+    refreshIntervalSeconds: Int,
+    reloadPageCall: Call
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("yourCommunityBuildingsScheduleUpload.title")),
     showBackLink = false,
-    refreshPageSeconds = if (screenLocked) Some(3) else None
+    scriptsBlock = if (screenLocked) Some(checkUploadStatusScript(uploadStatusCall, refreshIntervalSeconds)) else None
 ) {
 
     <span class="govuk-caption-l">@messages("yourCommunityBuildingsScheduleUpload.caption")</span>
     <h1 class="govuk-heading-l">@messages("yourCommunityBuildingsScheduleUpload.heading")</h1>
     <p class="govuk-body">@messages("yourCommunityBuildingsScheduleUpload.paragraph.one")</p>
+
+    @if(screenLocked) {
+        <p class="govuk-body" id="refreshLink">
+            <a href="@reloadPageCall.url" class="govuk-link">@messages("fileUpload.refreshPageLink")</a>
+        </p>
+    }
 
     @formHelper(action = routes.YourCommunityBuildingsScheduleUploadController.onSubmit) {
 
@@ -58,7 +68,7 @@
                     "govuk-tag--yellow"
                 ) { tagColour =>
 
-                    <strong class="govuk-tag @tagColour">
+                    <strong id="upload-status-tag" class="govuk-tag @tagColour" aria-live="polite">
                         @messages(s"fileUpload.status.${uploadResult.fileStatus.toString}")
                     </strong>
                 }
@@ -71,6 +81,6 @@
 
     <div></div>
     <div></div>
-    @if(screenLocked) { @govukButton(ButtonViewModel(Text(messages("site.continue"))).disabled()) } else { @govukButton(ButtonViewModel(Text(messages("site.continue")))) }
+    @if(screenLocked) { @govukButton(ButtonViewModel(Text(messages("site.continue"))).disabled().withAttribute("id" -> "continueButton")) } else { @govukButton(ButtonViewModel(Text(messages("site.continue")))) }
     }
 }

@@ -239,4 +239,6 @@ GET         /your-charities-charities-schedule-upload/remove           controlle
 GET         /problem-uploading-connected-charities-schedule-rejected          controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onPageLoad
 POST        /problem-uploading-connected-charities-schedule-rejected          controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onSubmit
 
-GET         /gift-aid-schedule-upload-status                                   controllers.giftAidSchedule.GiftAidScheduleUploadStatusController.status
+GET         /gift-aid-schedule-upload-status                                  controllers.giftAidSchedule.GiftAidScheduleUploadStatusController.status
+
+GET         /community-buildings-schedule-upload-status                       controllers.communityBuildingsSchedule.CommunityBuildingsScheduleUploadStatusController.status
