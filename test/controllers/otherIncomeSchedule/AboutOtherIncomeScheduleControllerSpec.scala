@@ -26,7 +26,7 @@ class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
   "AboutOtherIncomeScheduleController" - {
     "onPageLoad" - {
 
-      "should return Page Not Found if setClaimingTaxDeducted is false" in {
+      "should return ClaimsTaskListController if setClaimingTaxDeducted is false" in {
         val sessionData                = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false)
         val customConfig               = Map(
           "urls.otherIncomeScheduleSpreadsheetGuidancesUrl" -> "https://test.example.com/other-income-schedule"
@@ -40,7 +40,7 @@ class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 

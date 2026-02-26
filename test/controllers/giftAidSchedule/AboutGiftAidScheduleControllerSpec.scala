@@ -26,7 +26,7 @@ class AboutGiftAidScheduleControllerSpec extends ControllerSpec {
   "AboutGiftAidScheduleController" - {
     "onPageLoad" - {
 
-      "should render Page Not Found if setClaimingGiftAid is false" in {
+      "should render ClaimsTaskListController if setClaimingGiftAid is false" in {
         val sessionData                = RepaymentClaimDetailsAnswers.setClaimingGiftAid(false)
         val customConfig               = Map(
           "urls.giftAidScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/charity-repayment-claim"
@@ -40,7 +40,7 @@ class AboutGiftAidScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 

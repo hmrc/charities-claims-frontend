@@ -144,7 +144,7 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to PageNotFound when data guard fails" in {
+      "should redirect to ClaimsTaskListController when data guard fails" in {
         val sessionData = RepaymentClaimDetailsAnswers
           .setClaimingUnderGiftAidSmallDonationsScheme(true)
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, None))
@@ -160,7 +160,7 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }

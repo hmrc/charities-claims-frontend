@@ -64,7 +64,7 @@ class ProblemUpdatingOtherIncomeScheduleRejectedControllerSpec extends Controlle
           val request = FakeRequest(GET, routes.ProblemUpdatingOtherIncomeScheduleRejectedController.onPageLoad.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
@@ -79,7 +79,7 @@ class ProblemUpdatingOtherIncomeScheduleRejectedControllerSpec extends Controlle
           val request = FakeRequest(GET, routes.ProblemUpdatingOtherIncomeScheduleRejectedController.onPageLoad.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }
@@ -111,7 +111,7 @@ class ProblemUpdatingOtherIncomeScheduleRejectedControllerSpec extends Controlle
           val request = FakeRequest(POST, routes.ProblemUpdatingOtherIncomeScheduleRejectedController.onSubmit.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
@@ -126,7 +126,7 @@ class ProblemUpdatingOtherIncomeScheduleRejectedControllerSpec extends Controlle
           val request = FakeRequest(POST, routes.ProblemUpdatingOtherIncomeScheduleRejectedController.onSubmit.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }

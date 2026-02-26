@@ -80,7 +80,7 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
 
       // Redirect Tests:
 
-      "should redirect to PageNotFound when data guard fails" in {
+      "should redirect to ClaimsTaskListController when data guard fails" in {
         given application: Application = applicationBuilder(sessionData = sessionDataFailingGuard).build()
 
         running(application) {
@@ -91,7 +91,7 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }

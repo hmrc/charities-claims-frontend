@@ -55,7 +55,7 @@ class CheckYourOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
   "CheckYourOtherIncomeScheduleController" - {
     "onPageLoad" - {
-      "should redirect to Page Not Found when data guard fails" in {
+      "should redirect to ClaimsTaskListController when data guard fails" in {
         val guardFailSessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false)
 
         given application: Application = applicationBuilder(sessionData = guardFailSessionData).build()
@@ -67,7 +67,7 @@ class CheckYourOtherIncomeScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 

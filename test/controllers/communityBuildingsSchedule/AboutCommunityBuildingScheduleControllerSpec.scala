@@ -27,7 +27,7 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
   "AboutCommunityBuildingsScheduleController" - {
     "onPageLoad" - {
 
-      "should render Page Not Found if setClaimingCommunityBuildings is false" in {
+      "should render ClaimsTaskListController if setClaimingCommunityBuildings is false" in {
         val sessionData                =
           RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, Some(true))
         val customConfig               = Map(
@@ -42,11 +42,11 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
-      "should render Page Not Found if setClaimingUnderGiftAidSmallDonationsScheme is false & setClaimingDonationsCollectedInCommunityBuildings is true" in {
+      "should render ClaimsTaskListController if setClaimingUnderGiftAidSmallDonationsScheme is false & setClaimingDonationsCollectedInCommunityBuildings is true" in {
         val sessionDataGASDS =
           RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
         val sessionData      =
@@ -66,7 +66,7 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 

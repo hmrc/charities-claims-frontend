@@ -33,7 +33,7 @@ class GuardAction @Inject() ()(using ec: ExecutionContext) {
         given SessionData = request.sessionData
         Future.successful {
           if predicate then None
-          else Some(Results.Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+          else Some(Results.Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
         }
       }
     }

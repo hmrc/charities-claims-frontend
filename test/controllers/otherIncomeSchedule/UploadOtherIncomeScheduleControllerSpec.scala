@@ -126,7 +126,7 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
 
     "onPageLoad" - {
 
-      "should render Page Not Found if setClaimingTaxDeducted is false" in {
+      "should render ClaimsTaskListController if setClaimingTaxDeducted is false" in {
         val sessionData  = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false)
         val customConfig = Map(
           "urls.otherIncomeScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/charity-repayment-claim"
@@ -142,12 +142,12 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }
 
-      "should render Page Not Found if setClaimingTaxDeducted is true && unsubmittedClaimId is None" in {
+      "should render ClaimsTaskListController if setClaimingTaxDeducted is true && unsubmittedClaimId is None" in {
         val sessionData =
           RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
 
@@ -165,7 +165,7 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }

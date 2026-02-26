@@ -64,7 +64,7 @@ class ProblemUpdatingCommunityBuildingsScheduleUnknownErrorControllerSpec extend
             FakeRequest(GET, routes.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onPageLoad.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
@@ -80,7 +80,7 @@ class ProblemUpdatingCommunityBuildingsScheduleUnknownErrorControllerSpec extend
             FakeRequest(GET, routes.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onPageLoad.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }
@@ -111,7 +111,7 @@ class ProblemUpdatingCommunityBuildingsScheduleUnknownErrorControllerSpec extend
             FakeRequest(POST, routes.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onSubmit.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
@@ -127,7 +127,7 @@ class ProblemUpdatingCommunityBuildingsScheduleUnknownErrorControllerSpec extend
             FakeRequest(POST, routes.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onSubmit.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }

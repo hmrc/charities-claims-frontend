@@ -118,7 +118,7 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
 
     "onPageLoad" - {
 
-      "should render Page Not Found if setClaimingDonationsCollectedInCommunityBuildings is false" in {
+      "should render ClaimsTaskListController if setClaimingDonationsCollectedInCommunityBuildings is false" in {
         val sessionData =
           RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, Some(true))
 
@@ -132,12 +132,12 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }
 
-      "should render Page Not Found if setClaimingDonationsCollectedInCommunityBuildings is true && unsubmittedClaimId is None" in {
+      "should render ClaimsTaskListController if setClaimingDonationsCollectedInCommunityBuildings is true && unsubmittedClaimId is None" in {
         val sessionData =
           RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
 
@@ -151,7 +151,7 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }

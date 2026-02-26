@@ -52,13 +52,13 @@ class GuardActionSpec extends BaseSpec {
       status(result) shouldEqual OK
     }
 
-    "should redirect to PageNotFoundController when predicate returns false" in {
+    "should redirect to ClaimsTaskListController when predicate returns false" in {
       val action =
         fakeActionBuilder.andThen(guardAction(_ ?=> false)).apply((_: DataRequest[AnyContent]) => Results.Ok)
       val result = action(FakeRequest())
 
       status(result) shouldEqual SEE_OTHER
-      redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+      redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
     }
   }
 }
