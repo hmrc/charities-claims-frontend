@@ -28,6 +28,7 @@ import controllers.communityBuildingsSchedule.routes
 
 import scala.concurrent.{ExecutionContext, Future}
 import services.SaveService
+import config.FrontendAppConfig
 
 class YourCommunityBuildingsScheduleUploadController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -35,7 +36,8 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
   actions: Actions,
   claimsValidationConnector: ClaimsValidationConnector,
   claimsValidationService: ClaimsValidationService,
-  saveService: SaveService
+  saveService: SaveService,
+  appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -62,7 +64,10 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = None,
-                        screenLocked = true
+                        screenLocked = true,
+                        uploadStatusCall = routes.CommunityBuildingsScheduleUploadStatusController.status,
+                        refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
+                        reloadPageCall = routes.YourCommunityBuildingsScheduleUploadController.onPageLoad
                       )
                     )
 
@@ -72,7 +77,10 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = None,
-                        screenLocked = true
+                        screenLocked = true,
+                        uploadStatusCall = routes.CommunityBuildingsScheduleUploadStatusController.status,
+                        refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
+                        reloadPageCall = routes.YourCommunityBuildingsScheduleUploadController.onPageLoad
                       )
                     )
 
@@ -86,7 +94,10 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = Some(failureDetails),
-                        screenLocked = false
+                        screenLocked = false,
+                        uploadStatusCall = routes.CommunityBuildingsScheduleUploadStatusController.status,
+                        refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
+                        reloadPageCall = routes.YourCommunityBuildingsScheduleUploadController.onPageLoad
                       )
                     )
 
@@ -96,7 +107,10 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = None,
-                        screenLocked = false
+                        screenLocked = false,
+                        uploadStatusCall = routes.CommunityBuildingsScheduleUploadStatusController.status,
+                        refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
+                        reloadPageCall = routes.YourCommunityBuildingsScheduleUploadController.onPageLoad
                       )
                     )
                 }

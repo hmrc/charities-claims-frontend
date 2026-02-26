@@ -154,7 +154,10 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
             claimId,
             testAwaitingResponse,
             None,
-            false
+            false,
+            routes.CommunityBuildingsScheduleUploadStatusController.status,
+            3,
+            routes.YourCommunityBuildingsScheduleUploadController.onPageLoad
           ).body
 
         }
@@ -184,7 +187,10 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
             claimId,
             testVerifyingResponse,
             None,
-            true
+            true,
+            routes.CommunityBuildingsScheduleUploadStatusController.status,
+            3,
+            routes.YourCommunityBuildingsScheduleUploadController.onPageLoad
           ).body
         }
       }
@@ -213,7 +219,10 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
             claimId,
             testValidatingResponse,
             None,
-            true
+            true,
+            routes.CommunityBuildingsScheduleUploadStatusController.status,
+            3,
+            routes.YourCommunityBuildingsScheduleUploadController.onPageLoad
           ).body
         }
       }
@@ -242,7 +251,10 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
             claimId,
             testVerificationFailedRejectedResponse,
             None,
-            false
+            false,
+            routes.CommunityBuildingsScheduleUploadStatusController.status,
+            3,
+            routes.YourCommunityBuildingsScheduleUploadController.onPageLoad
           ).body
         }
       }
