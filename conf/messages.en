@@ -678,3 +678,18 @@ problemUpdatingConnectedCharitiesScheduleRejected.heading = There is a problem u
 problemUpdatingConnectedCharitiesScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
 problemUpdatingConnectedCharitiesScheduleRejected.title = There is a problem uploading your Connected Charities schedule
 
+problemWithConnectedCharitiesSchedule.title = There is a problem with the data in your Connected Charities schedule
+problemWithConnectedCharitiesSchedule.caption = Add Connected Charities schedule
+problemWithConnectedCharitiesSchedule.heading = There is a problem with the data in your Connected Charities schedule
+problemWithConnectedCharitiesSchedule.warning = We cannot accept the file because it has errors. You must fix these errors and upload the updated file before you can continue.
+problemWithConnectedCharitiesSchedule.subheading.1 = What you can do next
+problemWithConnectedCharitiesSchedule.subheading.2 = Summary of errors
+problemWithConnectedCharitiesSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Connected Charities donations (opens in new tab)</a>.
+problemWithConnectedCharitiesSchedule.list.item.2 = Delete this Connected Charities schedule.
+problemWithConnectedCharitiesSchedule.list.item.3 = Update your spreadsheet.
+problemWithConnectedCharitiesSchedule.list.item.4 = Upload the updated spreadsheet.
+problemWithConnectedCharitiesSchedule.table.column.1 = Row
+problemWithConnectedCharitiesSchedule.table.column.2 = Error
+problemWithConnectedCharitiesSchedule.link.attachUpdatedSchedule = Attach an updated Connected Charities schedule
+problemWithConnectedCharitiesSchedule.link.deleteSchedule = Delete schedule
+
