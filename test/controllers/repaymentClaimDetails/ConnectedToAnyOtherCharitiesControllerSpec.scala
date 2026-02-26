@@ -49,7 +49,7 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render page not found if setClaimingUnderGiftAidSmallDonationsScheme is false" in {
+      "should render ClaimsTaskListController if setClaimingUnderGiftAidSmallDonationsScheme is false" in {
         val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -61,7 +61,7 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
@@ -425,7 +425,7 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to page not found when claimingUnderGiftAidSmallDonationsScheme is false" in {
+      "should redirect to ClaimsTaskListController when claimingUnderGiftAidSmallDonationsScheme is false" in {
         val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -438,12 +438,12 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }
 
-      "should redirect to page not found when claimingUnderGiftAidSmallDonationsScheme is None" in {
+      "should redirect to ClaimsTaskListController when claimingUnderGiftAidSmallDonationsScheme is None" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -455,7 +455,7 @@ class ConnectedToAnyOtherCharitiesControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }

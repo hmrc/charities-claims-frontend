@@ -162,7 +162,7 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }

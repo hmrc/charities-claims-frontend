@@ -27,7 +27,7 @@ class AboutConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
   "AboutConnectedCharitiesScheduleController" - {
     "onPageLoad" - {
 
-      "should return Page Not Found if setConnectedToAnyOtherCharities is false" in {
+      "should return ClaimsTaskListController if setConnectedToAnyOtherCharities is false" in {
         val sessionData                = RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(false)
         val customConfig               = Map(
           "urls.connectedCharitiesScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/connected-charities-schedule"
@@ -41,7 +41,7 @@ class AboutConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 

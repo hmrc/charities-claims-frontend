@@ -87,7 +87,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }
@@ -331,7 +331,7 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }

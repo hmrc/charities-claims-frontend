@@ -53,7 +53,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render Page Not Found if claimingReferenceNumber is false" in {
+      "should render ClaimsTaskListController if claimingReferenceNumber is false" in {
         val sessionData = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(false)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -65,11 +65,11 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
-      "should render Page Not Found if claimingReferenceNumber is empty (None)" in {
+      "should render ClaimsTaskListController if claimingReferenceNumber is empty (None)" in {
         // Must provide 'old' answers to satisfy the case class, even if empty - this needs to be removed when the other pages are created
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
@@ -85,7 +85,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
@@ -111,7 +111,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render the page not found and incorrectly pre-populate data" in {
+      "should render the ClaimsTaskListController and incorrectly pre-populate data" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           repaymentClaimDetailsAnswers = Some(
@@ -131,7 +131,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }
@@ -188,7 +188,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to page not found when claimingReferenceNumber is false" in {
+      "should redirect to ClaimsTaskListController when claimingReferenceNumber is false" in {
         val sessionData                = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(false)
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -201,12 +201,12 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }
 
-      "should redirect to page not found when claimingReferenceNumber is None" in {
+      "should redirect to ClaimsTaskListController when claimingReferenceNumber is None" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -218,7 +218,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }
