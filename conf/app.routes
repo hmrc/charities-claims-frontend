@@ -228,6 +228,9 @@ GET         /upload-connected-charities-schedule/error              controllers.
 GET         /problem-uploading-connected-charities-schedule-unknown-error     controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleUnknownErrorController.onPageLoad
 POST        /problem-uploading-connected-charities-schedule-unknown-error     controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleUnknownErrorController.onSubmit
 
+GET         /update-connected-charities-schedule                controllers.connectedCharitiesSchedule.UpdateConnectedCharitiesScheduleController.onPageLoad
+POST        /update-connected-charities-schedule                controllers.connectedCharitiesSchedule.UpdateConnectedCharitiesScheduleController.onSubmit
+
 # TODO: Placeholder screen for connected charities will be updated in future
 GET         /problem-with-connected-charities-schedule             controllers.connectedCharitiesSchedule.ProblemWithConnectedCharitiesScheduleController.onPageLoad
 GET         /check-your-connected-charities-schedule                   controllers.connectedCharitiesSchedule.CheckYourConnectedCharitiesScheduleController.onPageLoad
