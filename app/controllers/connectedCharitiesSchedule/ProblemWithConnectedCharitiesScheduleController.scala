@@ -17,14 +17,71 @@
 package controllers.connectedCharitiesSchedule
 
 import com.google.inject.Inject
+import config.FrontendAppConfig
+import connectors.ClaimsValidationConnector
 import controllers.BaseController
+import controllers.actions.Actions
+import controllers.connectedCharitiesSchedule.routes
+import models.*
 import play.api.mvc.*
+import services.{ClaimsValidationService, PaginationService}
+import views.html.ProblemWithConnectedCharitiesScheduleView
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class ProblemWithConnectedCharitiesScheduleController @Inject() (
-  val controllerComponents: MessagesControllerComponents
-) extends BaseController {
+  val controllerComponents: MessagesControllerComponents,
+  view: ProblemWithConnectedCharitiesScheduleView,
+  actions: Actions,
+  claimsValidationConnector: ClaimsValidationConnector,
+  claimsValidationService: ClaimsValidationService,
+  appConfig: FrontendAppConfig
+)(using ec: ExecutionContext)
+    extends BaseController {
 
-  val onPageLoad: Action[AnyContent] = Action {
-    Redirect(controllers.repaymentClaimDetails.routes.RepaymentClaimDetailsController.onPageLoad)
-  }
+  val onPageLoad: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
+      .async { implicit request =>
+        val claimId = request.sessionData.unsubmittedClaimId.get
+
+        request.sessionData.connectedCharitiesScheduleFileUploadReference match {
+          case None =>
+            Future.successful(Redirect(routes.UploadConnectedCharitiesScheduleController.onPageLoad))
+
+          case Some(fileUploadReference) =>
+            claimsValidationConnector
+              .getUploadResult(claimId, fileUploadReference)
+              .map {
+                case GetUploadResultValidationFailedConnectedCharities(reference, connectedCharitiesData, errors) =>
+                  val currentPage      = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
+                  val paginationResult = PaginationService.paginateValidationErrors(
+                    allErrors = errors,
+                    currentPage = currentPage,
+                    baseUrl = routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url
+                  )
+                  Ok(
+                    view(
+                      claimId = claimId,
+                      errors = paginationResult.paginatedData,
+                      paginationViewModel = paginationResult.paginationViewModel,
+                      paginationStatus = paginationResult,
+                      connectedCharitiesScheduleSpreadsheetGuidanceUrl =
+                        appConfig.connectedCharitiesScheduleSpreadsheetGuidanceUrl
+                    )
+                  )
+
+                case _ =>
+                  Redirect(routes.YourConnectedCharitiesScheduleUploadController.onPageLoad)
+              }
+        }
+      }
+
+  val onSubmit: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
+      .async { implicit request =>
+        claimsValidationService.deleteConnectedCharitiesSchedule
+          .map(_ => Redirect(routes.UploadConnectedCharitiesScheduleController.onPageLoad))
+      }
 }

@@ -110,7 +110,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render page not found if setClaimingUnderGiftAidSmallDonationsScheme is false" in {
+      "should render ClaimsTaskListController if setClaimingUnderGiftAidSmallDonationsScheme is false" in {
         val sessionData = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -122,7 +122,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }
@@ -471,7 +471,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to page not found when claimingUnderGiftAidSmallDonationsScheme is false" in {
+      "should redirect to ClaimsTaskListController when claimingUnderGiftAidSmallDonationsScheme is false" in {
         val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -484,12 +484,12 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }
 
-      "should redirect to page not found when GASDS is true but neither donation type is true" in {
+      "should redirect to ClaimsTaskListController when GASDS is true but neither donation type is true" in {
         val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true)
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -502,12 +502,12 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }
 
-      "should redirect to page not found when session data is empty" in {
+      "should redirect to ClaimsTaskListController when session data is empty" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -519,7 +519,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }

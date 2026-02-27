@@ -65,7 +65,7 @@ class ProblemUpdatingOtherIncomeScheduleQuarantineControllerSpec extends Control
           val request = FakeRequest(GET, routes.ProblemUpdatingOtherIncomeScheduleQuarantineController.onPageLoad.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
@@ -80,7 +80,7 @@ class ProblemUpdatingOtherIncomeScheduleQuarantineControllerSpec extends Control
           val request = FakeRequest(GET, routes.ProblemUpdatingOtherIncomeScheduleQuarantineController.onPageLoad.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }
@@ -112,7 +112,7 @@ class ProblemUpdatingOtherIncomeScheduleQuarantineControllerSpec extends Control
           val request = FakeRequest(POST, routes.ProblemUpdatingOtherIncomeScheduleQuarantineController.onSubmit.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
@@ -127,7 +127,7 @@ class ProblemUpdatingOtherIncomeScheduleQuarantineControllerSpec extends Control
           val request = FakeRequest(POST, routes.ProblemUpdatingOtherIncomeScheduleQuarantineController.onSubmit.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }

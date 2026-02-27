@@ -118,7 +118,7 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
 
     "onPageLoad" - {
 
-      "should render Page Not Found if setClaimingTaxDeducted is false" in {
+      "should render ClaimsTaskListController if setClaimingTaxDeducted is false" in {
         val sessionData  = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false)
         val customConfig = Map(
           "urls.connectedCharitiesScheduleSpreadsheetGuidanceUrl" -> "https://test.example.com/charity-repayment-claim"
@@ -134,12 +134,12 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }
 
-      "should render Page Not Found if setClaimingTaxDeducted is true && unsubmittedClaimId is None" in {
+      "should render ClaimsTaskListController if setClaimingTaxDeducted is true && unsubmittedClaimId is None" in {
         val sessionData =
           RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
 
@@ -157,7 +157,7 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }

@@ -107,7 +107,7 @@ class YourConnectedCharitiesScheduleUploadControllerSpec extends ControllerSpec 
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }
@@ -322,7 +322,7 @@ class YourConnectedCharitiesScheduleUploadControllerSpec extends ControllerSpec 
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }
@@ -375,7 +375,7 @@ class YourConnectedCharitiesScheduleUploadControllerSpec extends ControllerSpec 
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.UploadConnectedCharitiesScheduleController.onPageLoad.url
+            routes.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onPageLoad.url
           )
         }
       }

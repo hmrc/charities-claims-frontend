@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package controllers.communityBuildingsSchedule
+package controllers.connectedCharitiesSchedule
 
 import connectors.ClaimsValidationConnector
 import controllers.ControllerSpec
-import controllers.communityBuildingsSchedule.routes
+import controllers.connectedCharitiesSchedule.routes
 import models.*
 import models.requests.DataRequest
 import play.api.Application
@@ -33,7 +33,7 @@ import util.TestResources
 
 import scala.concurrent.Future
 
-class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
+class CheckYourConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
 
   val mockClaimsValidationConnector: ClaimsValidationConnector = mock[ClaimsValidationConnector]
   val mockClaimsValidationService: ClaimsValidationService     = mock[ClaimsValidationService]
@@ -51,27 +51,25 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
   val testFileUploadReference: FileUploadReference = FileUploadReference("test-file-upload-ref")
 
   lazy val testValidatedJsonString: String =
-    TestResources.readTestResource("/test-get-upload-result-validated-community-buildings.json")
+    TestResources.readTestResource("/test-get-upload-result-validated-connected-charities.json")
 
-  // parse JSON into model objects
-  lazy val testValidatedResponse: GetUploadResultValidatedCommunityBuildings =
-    Json.parse(testValidatedJsonString).as[GetUploadResultValidatedCommunityBuildings]
+  lazy val testValidatedResponse: GetUploadResultValidatedConnectedCharities =
+    Json.parse(testValidatedJsonString).as[GetUploadResultValidatedConnectedCharities]
 
-  // test session data that passes DataGuard (shouldUploadCommunityBuildingsSchedule) using completeGasdsSession as base
   def validSessionData: SessionData = completeGasdsSession
     .copy(
       unsubmittedClaimId = Some(testClaimId),
-      communityBuildingsScheduleFileUploadReference = Some(testFileUploadReference)
+      connectedCharitiesScheduleFileUploadReference = Some(testFileUploadReference)
     )
 
-  def validSessionDataCompleted: SessionData = validSessionData.copy(communityBuildingsScheduleCompleted = true)
+  def validSessionDataCompleted: SessionData = validSessionData.copy(connectedCharitiesScheduleCompleted = true)
 
   def sessionDataFailingGuard: SessionData = RepaymentClaimDetailsAnswers
     .setClaimingUnderGiftAidSmallDonationsScheme(true)
-    .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, None))
+    .and(RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(false))
     .and(SessionData.setUnsubmittedClaimId(testClaimId))
 
-  "CheckYourCommunityBuildingsScheduleController" - {
+  "CheckYourConnectedCharitiesScheduleController" - {
 
     "onPageLoad" - {
 
@@ -80,7 +78,7 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CheckYourCommunityBuildingsScheduleController.onPageLoad.url)
+            FakeRequest(GET, routes.CheckYourConnectedCharitiesScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -93,61 +91,61 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
       "should render the page when schedule data is available" in {
         (mockClaimsValidationService
-          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
+          .getConnectedCharitiesScheduleData(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+          .returning(Future.successful(testValidatedResponse.connectedCharitiesData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CheckYourCommunityBuildingsScheduleController.onPageLoad.url)
+            FakeRequest(GET, routes.CheckYourConnectedCharitiesScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual OK
-          contentAsString(result) should include("Check your Community Buildings schedule")
+          contentAsString(result) should include("Check your Connected Charities schedule")
         }
       }
 
-      "should display community buildings data in the table" in {
+      "should display connected charities data in the table" in {
         (mockClaimsValidationService
-          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
+          .getConnectedCharitiesScheduleData(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+          .returning(Future.successful(testValidatedResponse.connectedCharitiesData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CheckYourCommunityBuildingsScheduleController.onPageLoad.url)
+            FakeRequest(GET, routes.CheckYourConnectedCharitiesScheduleController.onPageLoad.url)
 
           val result  = route(application, request).value
           val content = contentAsString(result)
 
           status(result) shouldEqual OK
-          content should include("The Vault")
+          content should include("Charity of the 501st Legion")
+          content should include("CW501")
         }
       }
 
       "should default to page 1 when page query parameter is not a valid integer" in {
         (mockClaimsValidationService
-          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
+          .getConnectedCharitiesScheduleData(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+          .returning(Future.successful(testValidatedResponse.connectedCharitiesData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CheckYourCommunityBuildingsScheduleController.onPageLoad.url + "?page=invalid")
+            FakeRequest(GET, routes.CheckYourConnectedCharitiesScheduleController.onPageLoad.url + "?page=invalid")
 
           val result  = route(application, request).value
           val content = contentAsString(result)
 
           status(result) shouldEqual OK
-          // the first community building from test json file should be visible on page 1
-          content should include("The Vault")
+          content should include("Charity of the 501st Legion")
         }
       }
     }
@@ -156,59 +154,59 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
       "should return BadRequest when form onSubmit has errors and display error message" in {
         (mockClaimsValidationService
-          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
+          .getConnectedCharitiesScheduleData(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+          .returning(Future.successful(testValidatedResponse.connectedCharitiesData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.CheckYourCommunityBuildingsScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.CheckYourConnectedCharitiesScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result  = route(application, request).value
           val content = contentAsString(result)
 
           status(result) shouldEqual BAD_REQUEST
-          content should include("Check your Community Buildings schedule")
-          content should include("Select ‘Yes’ if you need to update this Community Buildings schedule")
+          content should include("Check your Connected Charities schedule")
+          content should include("Select Yes if you need to update this Connected Charities schedule")
         }
       }
 
       "should redirect to update screen when Yes is selected" in {
         (mockClaimsValidationService
-          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
+          .getConnectedCharitiesScheduleData(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+          .returning(Future.successful(testValidatedResponse.connectedCharitiesData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.CheckYourCommunityBuildingsScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.CheckYourConnectedCharitiesScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.UpdateCommunityBuildingsScheduleController.onPageLoad.url
+            routes.UpdateConnectedCharitiesScheduleController.onPageLoad.url
           )
         }
       }
 
       "should redirect to Task List when No is selected and schedule is already completed previously" in {
         (mockClaimsValidationService
-          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
+          .getConnectedCharitiesScheduleData(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+          .returning(Future.successful(testValidatedResponse.connectedCharitiesData))
 
         given application: Application = applicationBuilder(sessionData = validSessionDataCompleted).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.CheckYourCommunityBuildingsScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.CheckYourConnectedCharitiesScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
@@ -219,11 +217,12 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
           )
         }
       }
+
       "should save and redirect to UploadSuccessful when No is selected and schedule not yet completed before" in {
         (mockClaimsValidationService
-          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
+          .getConnectedCharitiesScheduleData(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+          .returning(Future.successful(testValidatedResponse.connectedCharitiesData))
 
         (mockSaveService
           .save(_: SessionData)(using _: HeaderCarrier))
@@ -239,14 +238,14 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.CheckYourCommunityBuildingsScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.CheckYourConnectedCharitiesScheduleController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.CommunityBuildingsScheduleUploadSuccessfulController.onPageLoad.url
+            routes.ConnectedCharitiesScheduleUploadSuccessfulController.onPageLoad.url
           )
         }
       }

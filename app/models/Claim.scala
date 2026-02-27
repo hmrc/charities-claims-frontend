@@ -155,18 +155,6 @@ object OtherIncome {
   given Format[OtherIncome] = Json.format[OtherIncome]
 }
 
-final case class Payment(
-  paymentItem: Int,
-  nameOfPayer: String,
-  dateOfPayment: String,
-  grossPayment: BigDecimal,
-  taxDeducted: BigDecimal
-)
-
-object Payment {
-  given Format[Payment] = Json.format[Payment]
-}
-
 final case class GiftAidSmallDonationsSchemeDonationDetails(
   adjustmentForGiftAidOverClaimed: BigDecimal,
   claims: Seq[GiftAidSmallDonationsSchemeClaim],

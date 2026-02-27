@@ -50,7 +50,7 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
         }
       }
 
-      "should render page not found when setClaimingUnderGiftAidSmallDonationsScheme = false" in {
+      "should render ClaimsTaskListController when setClaimingUnderGiftAidSmallDonationsScheme = false" in {
         val sessionData = completeRepaymentDetailsAnswersSession
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false))
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
@@ -66,11 +66,11 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
 
           val result = route(application, request).value
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
-      "should render page not found when setClaimingDonationsCollectedInCommunityBuildings = false" in {
+      "should render ClaimsTaskListController when setClaimingDonationsCollectedInCommunityBuildings = false" in {
         val sessionData              = completeRepaymentDetailsAnswersSession
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, Some(true)))
@@ -85,7 +85,7 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
 
           val result = route(application, request).value
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }
@@ -108,7 +108,7 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
         }
       }
 
-      "should redirect to page not found when setClaimingUnderGiftAidSmallDonationsScheme= false" in {
+      "should redirect to ClaimsTaskListController when setClaimingUnderGiftAidSmallDonationsScheme= false" in {
         val sessionData              = completeRepaymentDetailsAnswersSession
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false))
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
@@ -122,11 +122,11 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
 
           val result = route(application, request).value
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
-      "should redirect to page not found when setClaimingDonationsCollectedInCommunityBuildings= false" in {
+      "should redirect to ClaimsTaskListController when setClaimingDonationsCollectedInCommunityBuildings= false" in {
         val sessionData              = completeRepaymentDetailsAnswersSession
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, Some(true)))
@@ -140,7 +140,7 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
 
           val result = route(application, request).value
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }

@@ -17,15 +17,16 @@
 package controllers.connectedCharitiesSchedule
 
 import controllers.ControllerSpec
+import models.SessionData.and
 import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.ScheduleUploadFailureView
 
-class ProblemUpdatingConnectedCharitiesScheduleRejectedControllerSpec extends ControllerSpec {
+class ProblemUpdatingConnectedCharitiesScheduleQuarantineControllerSpec extends ControllerSpec {
 
-  "ProblemUpdatingConnectedCharitiesScheduleRejectedController" - {
+  "ProblemUpdatingConnectedCharitiesScheduleQuarantineController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
         val sessionData                =
@@ -36,7 +37,7 @@ class ProblemUpdatingConnectedCharitiesScheduleRejectedControllerSpec extends Co
 
         running(application) {
           val request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onPageLoad.url)
+            FakeRequest(GET, routes.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onPageLoad.url)
 
           val result = route(application, request).value
           val view   = application.injector.instanceOf[ScheduleUploadFailureView]
@@ -45,8 +46,8 @@ class ProblemUpdatingConnectedCharitiesScheduleRejectedControllerSpec extends Co
           status(result) shouldBe OK
 
           contentAsString(result) shouldBe view(
-            messagesKeyPrefix = "problemUpdatingConnectedCharitiesScheduleRejected",
-            submitAction = routes.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onSubmit,
+            messagesKeyPrefix = "problemUpdatingConnectedCharitiesScheduleQuarantine",
+            submitAction = routes.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onSubmit,
             dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad
           )(using request, msgs).body
         }
@@ -62,7 +63,7 @@ class ProblemUpdatingConnectedCharitiesScheduleRejectedControllerSpec extends Co
 
         running(application) {
           val request =
-            FakeRequest(GET, routes.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onPageLoad.url)
+            FakeRequest(GET, routes.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onPageLoad.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
@@ -78,7 +79,7 @@ class ProblemUpdatingConnectedCharitiesScheduleRejectedControllerSpec extends Co
 
         running(application) {
           val request =
-            FakeRequest(GET, routes.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onPageLoad.url)
+            FakeRequest(GET, routes.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onPageLoad.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
@@ -95,7 +96,7 @@ class ProblemUpdatingConnectedCharitiesScheduleRejectedControllerSpec extends Co
 
         running(application) {
           val request =
-            FakeRequest(POST, routes.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onSubmit.url)
+            FakeRequest(POST, routes.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onSubmit.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
@@ -112,7 +113,7 @@ class ProblemUpdatingConnectedCharitiesScheduleRejectedControllerSpec extends Co
 
         running(application) {
           val request =
-            FakeRequest(POST, routes.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onSubmit.url)
+            FakeRequest(POST, routes.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onSubmit.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
@@ -128,7 +129,7 @@ class ProblemUpdatingConnectedCharitiesScheduleRejectedControllerSpec extends Co
 
         running(application) {
           val request =
-            FakeRequest(POST, routes.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onSubmit.url)
+            FakeRequest(POST, routes.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onSubmit.url)
           val result  = route(application, request).value
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)

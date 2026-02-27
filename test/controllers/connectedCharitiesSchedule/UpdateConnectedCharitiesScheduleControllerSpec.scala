@@ -39,9 +39,7 @@ class UpdateConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
   val mockClaimsValidationService: ClaimsValidationService = mock[ClaimsValidationService]
   val mockClaimsService: ClaimsService                     = mock[ClaimsService]
 
-  // Session data that passes DataGuard (shouldUploadConnectedCharitiesSchedule)
-  def validSessionData: SessionData = completeRepaymentDetailsAnswersSession
-    .and(RepaymentClaimDetailsAnswers.setClaimingConnectedCharities(true))
+  def validSessionData: SessionData = completeGasdsSession
 
   "UpdateConnectedCharitiesScheduleController" - {
     "onPageLoad" - {
@@ -150,9 +148,10 @@ class UpdateConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to PageNotFound when data guard is triggered" in {
+      "should redirect to ClaimsTaskListController when data guard is triggered" in {
         val sessionDataFailingGuard = RepaymentClaimDetailsAnswers
-          .setClaimingConnectedCharities(true)
+          .setClaimingUnderGiftAidSmallDonationsScheme(true)
+          .and(RepaymentClaimDetailsAnswers.setConnectedToAnyOtherCharities(false))
           .copy(unsubmittedClaimId = None)
 
         given application: Application = applicationBuilder(sessionData = sessionDataFailingGuard)
@@ -167,7 +166,7 @@ class UpdateConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }

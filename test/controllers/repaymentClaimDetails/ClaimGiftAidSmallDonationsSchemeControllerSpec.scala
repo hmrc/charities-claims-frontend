@@ -48,7 +48,7 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render page not found if claimingDonationsNotFromCommunityBuilding is false" in {
+      "should render ClaimsTaskListController if claimingDonationsNotFromCommunityBuilding is false" in {
         val sessionData = RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(false)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -61,12 +61,12 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }
 
-      "should render page not found if sessionData is empty" in {
+      "should render ClaimsTaskListController if sessionData is empty" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -77,7 +77,7 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }
@@ -386,7 +386,7 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to page not found when claimingUnderGiftAidSmallDonationsScheme is false" in {
+      "should redirect to ClaimsTaskListController when claimingUnderGiftAidSmallDonationsScheme is false" in {
         val sessionData                = RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false)
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -399,12 +399,12 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }
 
-      "should redirect to page not found when claimingUnderGiftAidSmallDonationsScheme is None" in {
+      "should redirect to ClaimsTaskListController when claimingUnderGiftAidSmallDonationsScheme is None" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -416,7 +416,7 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }

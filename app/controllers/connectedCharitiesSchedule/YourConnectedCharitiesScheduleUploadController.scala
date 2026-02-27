@@ -138,7 +138,7 @@ class YourConnectedCharitiesScheduleUploadController @Inject() (
                       Redirect {
                         failure.failureDetails.failureReason match {
                           case FailureReason.QUARANTINE =>
-                            routes.UploadConnectedCharitiesScheduleController.onPageLoad
+                            routes.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onPageLoad
                           case FailureReason.REJECTED   =>
                             routes.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onPageLoad
                           case _                        =>
