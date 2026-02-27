@@ -693,3 +693,6 @@ problemWithConnectedCharitiesSchedule.table.column.2 = Error
 problemWithConnectedCharitiesSchedule.link.attachUpdatedSchedule = Attach an updated Connected Charities schedule
 problemWithConnectedCharitiesSchedule.link.deleteSchedule = Delete schedule
 
+problemUpdatingConnectedCharitiesScheduleQuarantine.heading = There is a problem uploading your Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
+problemUpdatingConnectedCharitiesScheduleQuarantine.title = There is a problem uploading your Connected Charities schedule
