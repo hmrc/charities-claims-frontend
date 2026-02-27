@@ -242,3 +242,6 @@ POST        /problem-uploading-connected-charities-schedule-rejected          co
 GET         /gift-aid-schedule-upload-status                                  controllers.giftAidSchedule.GiftAidScheduleUploadStatusController.status
 
 GET         /community-buildings-schedule-upload-status                       controllers.communityBuildingsSchedule.CommunityBuildingsScheduleUploadStatusController.status
+
+GET         /problem-uploading-connected-charities-schedule-quarantine                controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onPageLoad
+POST        /problem-uploading-connected-charities-schedule-quarantine                controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onSubmit
