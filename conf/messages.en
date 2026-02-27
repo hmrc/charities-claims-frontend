@@ -610,7 +610,12 @@ updateOtherIncomeSchedule.heading = Are you sure you want to update this Other I
 updateOtherIncomeSchedule.hint = By updating this file, you will lose any Other Income schedule data you have previously attached.
 updateOtherIncomeSchedule.title = Are you sure you want to update this Other Income schedule?
 
-updateRepaymentClaim.error.required = Select ‘Yes’ if you want to update this repayment claim
+updateConnectedCharitiesSchedule.error.required = Select 'Yes' if you want to update this Connected Charities schedule
+updateConnectedCharitiesSchedule.heading = Are you sure you want to update this Connected Charities schedule?
+updateConnectedCharitiesSchedule.hint = By updating this file, you will lose any Connected Charities schedule data you have previously attached.
+updateConnectedCharitiesSchedule.title = Are you sure you want to update this Connected Charities schedule?
+
+updateRepaymentClaim.error.required = Select 'Yes' if you want to update this repayment claim
 updateRepaymentClaim.heading = Do you want to update this repayment claim?
 updateRepaymentClaim.hint = If you change this claim, you’ll lose any data you’ve already given or attached.
 updateRepaymentClaim.title = Do you want to update this repayment claim?
