@@ -35,7 +35,8 @@ class ConnectedCharitiesScheduleUploadSuccessfulControllerSpec extends Controlle
           .and(RepaymentClaimDetailsAnswers.setClaimingConnectedCharities(true))
           .copy(
             connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-            connectedCharitiesScheduleData = Some(TestScheduleData.exampleConnectedCharitiesScheduleData)
+            connectedCharitiesScheduleData = Some(TestScheduleData.exampleConnectedCharitiesScheduleData),
+            connectedCharitiesScheduleCompleted = true
           )
 
         val application = applicationBuilder(sessionData = sessionData).build()
@@ -48,6 +49,37 @@ class ConnectedCharitiesScheduleUploadSuccessfulControllerSpec extends Controlle
           val result = route(application, request).value
           status(result) shouldEqual OK
           contentAsString(result) shouldBe view()(using request, messages).body
+        }
+      }
+      "should redirect to ClaimsTaskListController (there is no validated file completion status) " in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingConnectedCharities(true))
+          .copy(
+            connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+            connectedCharitiesScheduleData = Some(TestScheduleData.exampleConnectedCharitiesScheduleData)
+          )
+
+        val application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.ConnectedCharitiesScheduleUploadSuccessfulController.onPageLoad.url)
+
+          val result = route(application, request).value
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
+
+      "should redirect to ClaimsTaskListController (does not pass data guard controls) " in {
+
+        val application = applicationBuilder().build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.ConnectedCharitiesScheduleUploadSuccessfulController.onPageLoad.url)
+
+          val result = route(application, request).value
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
