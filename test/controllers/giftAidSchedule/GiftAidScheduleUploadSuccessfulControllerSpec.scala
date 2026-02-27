@@ -37,7 +37,8 @@ class GiftAidScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
           .copy(
             giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-            giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
+            giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData),
+            giftAidScheduleCompleted = true
           )
 
         val application = applicationBuilder(sessionData = sessionData).build()
@@ -53,6 +54,37 @@ class GiftAidScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
         }
       }
 
+      "should redirect to ClaimsTaskListController (there is no validated file completion status) " in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
+          .copy(
+            giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+            giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
+          )
+
+        val application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.GiftAidScheduleUploadSuccessfulController.onPageLoad.url)
+
+          val result = route(application, request).value
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
+
+      "should redirect to ClaimsTaskListController (does not pass data guard controls) " in {
+
+        val application = applicationBuilder().build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.GiftAidScheduleUploadSuccessfulController.onPageLoad.url)
+
+          val result = route(application, request).value
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
     }
 
     "onSubmit" - {

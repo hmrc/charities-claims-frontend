@@ -35,7 +35,8 @@ class ConnectedCharitiesScheduleUploadSuccessfulController @Inject() (
     actions
       .authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
       .async { implicit request =>
-        Future.successful(Ok(view()))
+        if request.sessionData.connectedCharitiesScheduleCompleted then Future.successful(Ok(view()))
+        else Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
 
       }
 
