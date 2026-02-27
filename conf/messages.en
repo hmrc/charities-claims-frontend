@@ -337,7 +337,7 @@ fileUpload.status.VALIDATING = Uploading
 fileUpload.status.VALIDATION_FAILED = Uploaded
 fileUpload.status.VERIFICATION_FAILED = Failed
 fileUpload.status.VERIFYING = Uploading
-fileUpload.refreshPageLink = Refresh page to see update of uploading file.
+fileUpload.refreshPageLink = Refresh page to see update of uploading file
 
 giftAidScheduleUploadSuccessful.message.1 = Upload successful
 giftAidScheduleUploadSuccessful.message.2 = You have successfully attached your Gift Aid schedule.

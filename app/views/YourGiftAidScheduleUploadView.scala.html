@@ -79,8 +79,6 @@
             </div>
         </dl>   
 
-        <div></div>
-        <div></div>
         @if(screenLocked) { @govukButton(ButtonViewModel(Text(messages("site.continue"))).disabled().withAttribute("id" -> "continueButton")) } else { @govukButton(ButtonViewModel(Text(messages("site.continue")))) }
     }
 }
