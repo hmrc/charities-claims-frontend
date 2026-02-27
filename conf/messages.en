@@ -141,6 +141,16 @@ checkYourCommunityBuildingsSchedule.table.column.7 = Tax year 2 ending 5 April
 checkYourCommunityBuildingsSchedule.table.column.8 = Amount of donations received in tax year 2 (£)
 checkYourCommunityBuildingsSchedule.title = Check your Community Buildings schedule
 
+checkYourConnectedCharitiesSchedule.caption = Add Connected Charities schedule
+checkYourConnectedCharitiesSchedule.error.required = Select 'Yes' if you need to update this Connected Charities schedule
+checkYourConnectedCharitiesSchedule.heading = Check your Connected Charities schedule
+checkYourConnectedCharitiesSchedule.hint = Do you need to update this Connected Charities schedule?
+checkYourConnectedCharitiesSchedule.radios.no = No, continue with Connected Charities schedule
+checkYourConnectedCharitiesSchedule.table.column.1 = Item
+checkYourConnectedCharitiesSchedule.table.column.2 = Name of charity
+checkYourConnectedCharitiesSchedule.table.column.3 = HMRC Charities reference
+checkYourConnectedCharitiesSchedule.title = Check your Connected Charities schedule
+
 checkYourGiftAidSchedule.caption = Add Gift Aid schedule
 checkYourGiftAidSchedule.error.required = Select ‘Yes’ if you need to update this Gift Aid schedule
 checkYourGiftAidSchedule.heading = Check your Gift Aid schedule
@@ -584,6 +594,11 @@ updateCommunityBuildingsSchedule.error.required = Select ‘Yes’ if you want t
 updateCommunityBuildingsSchedule.heading = Are you sure you want to update this Community Buildings schedule?
 updateCommunityBuildingsSchedule.hint = By updating this file, you will lose any Community Buildings schedule data you have previously attached.
 updateCommunityBuildingsSchedule.title = Are you sure you want to update this Community Buildings schedule?
+
+updateConnectedCharitiesSchedule.error.required = Select ‘Yes’ if you want to update this Connected Charities schedule
+updateConnectedCharitiesSchedule.heading = Are you sure you want to update this Connected Charities schedule?
+updateConnectedCharitiesSchedule.hint = By updating this file, you will lose any Connected Charities schedule data you have previously attached.
+updateConnectedCharitiesSchedule.title = Are you sure you want to update this Connected Charities schedule?
 
 updateGiftAidSchedule.error.required = Select ‘Yes’ if you want to update this Gift Aid schedule
 updateGiftAidSchedule.heading = Are you sure you want to update this Gift Aid schedule?

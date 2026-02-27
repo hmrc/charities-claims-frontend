@@ -231,6 +231,10 @@ POST        /problem-uploading-connected-charities-schedule-unknown-error     co
 GET         /problem-with-connected-charities-schedule             controllers.connectedCharitiesSchedule.ProblemWithConnectedCharitiesScheduleController.onPageLoad
 POST        /problem-with-connected-charities-schedule             controllers.connectedCharitiesSchedule.ProblemWithConnectedCharitiesScheduleController.onSubmit
 GET         /check-your-connected-charities-schedule                   controllers.connectedCharitiesSchedule.CheckYourConnectedCharitiesScheduleController.onPageLoad
+POST        /check-your-connected-charities-schedule                   controllers.connectedCharitiesSchedule.CheckYourConnectedCharitiesScheduleController.onSubmit
+
+GET         /update-connected-charities-schedule                       controllers.connectedCharitiesSchedule.UpdateConnectedCharitiesScheduleController.onPageLoad
+POST        /update-connected-charities-schedule                       controllers.connectedCharitiesSchedule.UpdateConnectedCharitiesScheduleController.onSubmit
 
 GET         /your-connected-charities-schedule-upload                  controllers.connectedCharitiesSchedule.YourConnectedCharitiesScheduleUploadController.onPageLoad
 POST        /your-connected-charities-schedule-upload                  controllers.connectedCharitiesSchedule.YourConnectedCharitiesScheduleUploadController.onSubmit
