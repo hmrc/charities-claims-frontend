@@ -44,7 +44,7 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render Page Not Found if completeRepaymentDetailsAnswersSession is false" in {
+      "should render ClaimsTaskListController if completeRepaymentDetailsAnswersSession is false" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -54,7 +54,7 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }
@@ -75,7 +75,7 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to the PageNotFoundController" in {
+      "should redirect to the ClaimsTaskListController" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -86,7 +86,7 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.PageNotFoundController.onPageLoad.url
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
         }
       }

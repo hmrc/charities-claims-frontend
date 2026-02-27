@@ -37,12 +37,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
     "onPageLoad" - {
       "should render the page correctly when organisation details not defined" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers)
-        )
+        val sessionData = completeRepaymentDetailsAnswersSession
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -80,7 +75,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
                 Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -116,7 +111,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
                 Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -151,7 +146,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
                 Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -188,7 +183,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
                 Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -224,7 +219,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
                 Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -260,7 +255,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
                 Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -296,7 +291,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
                 Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -331,7 +326,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
                 Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -365,7 +360,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
                 Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -401,7 +396,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
                 Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -434,7 +429,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
               doYouHaveCorporateTrusteeUKAddress = Some(true)
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -467,7 +462,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
               doYouHaveCorporateTrusteeUKAddress = Some(false)
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -507,7 +502,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
                 Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -537,23 +532,17 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
               reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
               charityRegistrationNumber = Some("123"),
               areYouACorporateTrustee = Some(false),
-              // doYouHaveCorporateTrusteeUKAddress = Some(true),
               doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
-              // nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-              // corporateTrusteePostcode = Some("none"),
-              // corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
               authorisedOfficialTrusteePostcode = Some("none"),
               authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
               authorisedOfficialTrusteeTitle = Some("MR"),
               authorisedOfficialTrusteeFirstName = Some("Jack"),
               authorisedOfficialTrusteeLastName = Some("Smith"),
-              // corporateTrusteeDetails =
-              // Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none"))),
               authorisedOfficialDetails =
                 Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -588,7 +577,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
                 Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -623,7 +612,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
                 Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -662,7 +651,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
                 Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
             )
           )
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -683,36 +672,36 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
 
-      "should save the organisation details answers and redirect to next page" in {
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-              charityRegistrationNumber = None,
-              areYouACorporateTrustee = Some(false),
-              doYouHaveCorporateTrusteeUKAddress = Some(true),
-              nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-              corporateTrusteePostcode = Some("SW1 5TY"),
-              corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
-              authorisedOfficialTrusteePostcode = Some("SW1 5TY"),
-              authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              authorisedOfficialTrusteeTitle = Some("MR"),
-              authorisedOfficialTrusteeFirstName = Some("Jack"),
-              authorisedOfficialTrusteeLastName = Some("Smith"),
-              authorisedOfficialDetails =
-                Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("SW1 5TY")))
+      "should save the organisation details answers and redirect to ClaimsTaskListController when isRepaymentClaimDetailsComplete = false" in {
+        val sessionData =
+          SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some("123"),
+            lastUpdatedReference = Some("123"),
+            organisationDetailsAnswers = Some(
+              OrganisationDetailsAnswers(
+                nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales),
+                reasonNotRegisteredWithRegulator = None,
+                charityRegistrationNumber = Some("1234"),
+                areYouACorporateTrustee = Some(false),
+                doYouHaveCorporateTrusteeUKAddress = Some(true),
+                nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+                corporateTrusteePostcode = Some("SW1 5TY"),
+                corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+                doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
+                authorisedOfficialTrusteePostcode = Some("SW1 5TY"),
+                authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+                authorisedOfficialTrusteeTitle = Some("MR"),
+                authorisedOfficialTrusteeFirstName = Some("Jack"),
+                authorisedOfficialTrusteeLastName = Some("Smith"),
+                authorisedOfficialDetails =
+                  Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("SW1 5TY")))
+              )
             )
           )
-        )
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData).mockSaveClaim.build()
+          applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -721,7 +710,78 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
+          )
+        }
+      }
+
+      "should save the organisation details answers and redirect to ClaimsTaskListController when isRepaymentClaimDetailsComplete is true" in {
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+          charityRegistrationNumber = Some("123"),
+          areYouACorporateTrustee = Some(true),
+          doYouHaveCorporateTrusteeUKAddress = Some(true),
+          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+          corporateTrusteePostcode = Some("SW1 5TY"),
+          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+          doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
+          authorisedOfficialTrusteePostcode = Some("SW1 5TY"),
+          authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+          authorisedOfficialTrusteeTitle = Some("MR"),
+          authorisedOfficialTrusteeFirstName = Some("Jack"),
+          authorisedOfficialTrusteeLastName = Some("Smith"),
+          authorisedOfficialDetails =
+            Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("SW1 5TY")))
+        )
+        val sessionData                =
+          SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some("123"),
+            lastUpdatedReference = Some("123"),
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+            .and(completeRepaymentDetailsAnswersSession)
+            .and(completeGasdsSession)
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData).build()
+
+        val missingFieldsList = sessionData.organisationDetailsAnswers.exists(_.hasOrganisationDetailsCompleteAnswers)
+        val missingOrgList    = OrganisationDetailsAnswers.getMissingFields(sessionData.organisationDetailsAnswers)
+
+        val missingFieldsListRepay =
+          sessionData.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
+
+        println(
+          "********** :::::::::: missingFieldList = " + missingFieldsList + " :::::::::::: ****************"
+        )
+        println(
+          "********** :::::::::: missingOrgList = " + missingOrgList + " :::::::::::: ****************"
+        )
+        println(
+          "********** :::::::::: missingFieldListRepay = " + missingFieldsListRepay + " :::::::::::: ****************"
+        )
+
+        println(
+          "********** :::::::::: organisationDetailsAnswers: " + sessionData.organisationDetailsAnswers + " :::::::::::: ****************"
+        )
+
+        println(
+          "********** :::::::::: repaymentClaimDetailsAnswer: " + sessionData.repaymentClaimDetailsAnswers + " :::::::::::: ****************"
+        )
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.OrganisationDetailsCheckYourAnswersController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
+          )
 
         }
       }
@@ -733,7 +793,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
           repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers)
-        )
+        ).and(completeRepaymentDetailsAnswersSession)
 
         given application: Application =
           applicationBuilder(sessionData = sessionData).build()
