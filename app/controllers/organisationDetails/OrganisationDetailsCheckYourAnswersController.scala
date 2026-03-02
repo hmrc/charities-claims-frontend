@@ -18,6 +18,7 @@ package controllers.organisationDetails
 
 import com.google.inject.Inject
 import controllers.actions.Actions
+import models.SessionData
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ClaimsService
@@ -36,18 +37,20 @@ class OrganisationDetailsCheckYourAnswersController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val previousAnswers = request.sessionData.organisationDetailsAnswers
-    Future.successful(Ok(view(previousAnswers)))
-  }
+  def onPageLoad: Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
+      val previousAnswers = request.sessionData.organisationDetailsAnswers
+      Future.successful(Ok(view(previousAnswers)))
+    }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val checkAnswers = request.sessionData.organisationDetailsAnswers.exists(_.hasOrganisationDetailsCompleteAnswers)
-    if checkAnswers
-    then
-      claimsService.save.map { _ =>
-        Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
-      }
-    else Future.successful(Redirect(routes.OrganisationDetailsIncompleteAnswersController.onPageLoad))
-  }
+  def onSubmit: Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
+      val checkAnswers = request.sessionData.organisationDetailsAnswers.exists(_.hasOrganisationDetailsCompleteAnswers)
+      if checkAnswers
+      then
+        claimsService.save.map { _ =>
+          Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
+        }
+      else Future.successful(Redirect(routes.OrganisationDetailsIncompleteAnswersController.onPageLoad))
+    }
 }

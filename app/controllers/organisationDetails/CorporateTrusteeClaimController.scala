@@ -20,8 +20,7 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.YesNoFormProvider
-import models.OrganisationDetailsAnswers
-import models.Mode
+import models.{Mode, OrganisationDetailsAnswers, SessionData}
 import models.Mode.*
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -42,24 +41,26 @@ class CorporateTrusteeClaimController @Inject() (
 
   val form: Form[Boolean] = formProvider("corporateTrusteeClaim.error.required")
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer = OrganisationDetailsAnswers.getAreYouACorporateTrustee
-    Ok(view(form.withDefault(previousAnswer), mode))
-  }
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete) { implicit request =>
+      val previousAnswer = OrganisationDetailsAnswers.getAreYouACorporateTrustee
+      Ok(view(form.withDefault(previousAnswer), mode))
+    }
 
-  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val previousAnswer: Option[Boolean] = OrganisationDetailsAnswers.getAreYouACorporateTrustee
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
+      val previousAnswer: Option[Boolean] = OrganisationDetailsAnswers.getAreYouACorporateTrustee
 
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveService
-            .save(OrganisationDetailsAnswers.setAreYouACorporateTrustee(value, previousAnswer))
-            .map(_ => Redirect(CorporateTrusteeClaimController.nextPage(value, mode, previousAnswer)))
-      )
-  }
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            saveService
+              .save(OrganisationDetailsAnswers.setAreYouACorporateTrustee(value, previousAnswer))
+              .map(_ => Redirect(CorporateTrusteeClaimController.nextPage(value, mode, previousAnswer)))
+        )
+    }
 }
 
 object CorporateTrusteeClaimController {

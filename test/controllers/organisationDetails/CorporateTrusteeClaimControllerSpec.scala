@@ -31,7 +31,8 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
   "CorporateTrusteeClaimController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -47,7 +48,8 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with true value" in {
 
-        val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(true))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -65,7 +67,8 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with false value" in {
 
-        val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(false))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -84,7 +87,8 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should redirect to the next page when the value is true" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -101,7 +105,8 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
       }
 
       "should redirect to the next page when the value is false" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -120,7 +125,8 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
       "in CheckMode when changing from Yes to No" - {
         "should redirect to AuthorisedOfficialAddressController" in {
           // Previous answer was true (Yes), now changing to false (No)
-          val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(true))
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -142,7 +148,8 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
       "in CheckMode when changing from No to Yes" - {
         "should redirect to CorporateTrusteeAddressController" in {
           // Previous answer was false (No), now changing to true (Yes)
-          val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(false))
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -163,7 +170,8 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
 
       "in CheckMode when answer is unchanged" - {
         "should redirect to CYA when value remains true" in {
-          val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(true))
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -182,7 +190,8 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
         }
 
         "should redirect to CYA when value remains false" in {
-          val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(false))
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -203,7 +212,8 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
 
       "in CheckMode with no previous answer (entering new data)" - {
         "should redirect to CorporateTrusteeAddressController when selecting Yes" in {
-          given application: Application = applicationBuilder().mockSaveSession.build()
+          val sessionData                = completeRepaymentDetailsAnswersSession
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -220,7 +230,8 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
         }
 
         "should redirect to AuthorisedOfficialAddressController when selecting No" in {
-          given application: Application = applicationBuilder().mockSaveSession.build()
+          val sessionData                = completeRepaymentDetailsAnswersSession
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -238,7 +249,8 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
       }
 
       "should reload the page with errors when a required field is missing" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
