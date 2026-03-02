@@ -170,7 +170,7 @@ class CheckYourConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual BAD_REQUEST
           content should include("Check your Connected Charities schedule")
-          content should include("Select Yes if you need to update this Connected Charities schedule")
+          content should include("Select ‘Yes’ if you need to update this Connected Charities schedule")
         }
       }
 
