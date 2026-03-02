@@ -711,3 +711,11 @@ problemWithConnectedCharitiesSchedule.link.deleteSchedule = Delete schedule
 problemUpdatingConnectedCharitiesScheduleQuarantine.heading = There is a problem uploading your Connected Charities schedule
 problemUpdatingConnectedCharitiesScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
 problemUpdatingConnectedCharitiesScheduleQuarantine.title = There is a problem uploading your Connected Charities schedule
+
+claimComplete.title = Claim complete
+claimComplete.message.2 = Your reference number
+claimComplete.subheading = What happens next
+claimComplete.claimRefNumber = {0}
+claimComplete.para.1 = We’ve sent your charity repayment claim to HMRC.
+claimComplete.para.2 = They will contact you to confirm your repayment, or to ask for more information.
+claimComplete.printSummaryLink = <a class="govuk-link" href="{0}">Print a summary of your claim</a>

@@ -249,3 +249,5 @@ GET         /community-buildings-schedule-upload-status                controlle
 
 GET         /problem-uploading-connected-charities-schedule-quarantine   controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onPageLoad
 POST        /problem-uploading-connected-charities-schedule-quarantine   controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onSubmit
+
+GET         /claim-complete             controllers.claimDeclaration.ClaimCompleteController.onPageLoad
