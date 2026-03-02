@@ -142,7 +142,7 @@ class YourConnectedCharitiesScheduleUploadController @Inject() (
                           case FailureReason.REJECTED   =>
                             routes.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onPageLoad
                           case _                        =>
-                            routes.UploadConnectedCharitiesScheduleController.onPageLoad
+                            routes.ProblemUpdatingConnectedCharitiesScheduleUnknownErrorController.onPageLoad
                         }
                       }
                     )
