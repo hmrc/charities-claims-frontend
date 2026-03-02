@@ -590,8 +590,5 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
         result shouldEqual None
       }
     }
-
-    // TODO: recordUnregulatedDonation tests to be added later when F11 is implemented
-
   }
 }

@@ -96,7 +96,8 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to D3 screen when No is selected" in {
+      // TODO: This redirection route needs to be updated when D3 route is confirmed
+      "should redirect to declaration screen when No is selected" in {
         given application: Application = applicationBuilder(sessionData = sessionDataExcepted).build()
 
         running(application) {
@@ -111,7 +112,7 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to R2 (Claims Task List) when Yes is selected" in {
+      "should redirect to (Claims Task List) when Yes is selected" in {
         given application: Application = applicationBuilder(sessionData = sessionDataExcepted).build()
 
         running(application) {

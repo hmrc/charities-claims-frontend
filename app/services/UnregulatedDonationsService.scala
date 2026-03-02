@@ -37,9 +37,6 @@ trait UnregulatedDonationsService {
   def checkUnregulatedLimit(using DataRequest[?], HeaderCarrier): Future[Option[UnregulatedLimitExceeded]]
 
   def getApplicableLimit(using DataRequest[?]): Option[String]
-
-  // TODO: implementation of F11 def recordUnregulatedDonation
-  //  (records unregulated donation in FormP) details to be confirmed
 }
 
 object UnregulatedDonationsService {
@@ -141,7 +138,7 @@ class UnregulatedDonationsServiceImpl @Inject() (
             Future.successful(None)
         }
 
-      // No reason set (charity has regulator) - no limit check required, proceed
+      // No reason set (charity has regulator set) - no limit check required, proceed
       case None         =>
         Future.successful(None)
     }
@@ -153,6 +150,4 @@ class UnregulatedDonationsServiceImpl @Inject() (
 
     getFormattedLimitForReason(reason, appConfig.lowIncomeLimit, appConfig.exceptedLimit)
   }
-
-  // TODO: Implementation of F11 - def recordUnregulatedDonation - details to be confirmed
 }
