@@ -27,6 +27,7 @@ import services.{ClaimsValidationService, SaveService}
 import views.html.YourOtherIncomeScheduleUploadView
 
 import scala.concurrent.{ExecutionContext, Future}
+import config.FrontendAppConfig
 
 class YourOtherIncomeScheduleUploadController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -34,7 +35,8 @@ class YourOtherIncomeScheduleUploadController @Inject() (
   actions: Actions,
   claimsValidationConnector: ClaimsValidationConnector,
   claimsValidationService: ClaimsValidationService,
-  saveService: SaveService
+  saveService: SaveService,
+  appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -61,7 +63,10 @@ class YourOtherIncomeScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = None,
-                        screenLocked = true
+                        screenLocked = true,
+                        uploadStatusCall = routes.OtherIncomeScheduleUploadStatusController.status,
+                        refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
+                        reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad
                       )
                     )
 
@@ -71,7 +76,10 @@ class YourOtherIncomeScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = None,
-                        screenLocked = true
+                        screenLocked = true,
+                        uploadStatusCall = routes.OtherIncomeScheduleUploadStatusController.status,
+                        refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
+                        reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad
                       )
                     )
 
@@ -85,7 +93,10 @@ class YourOtherIncomeScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = Some(failureDetails),
-                        screenLocked = false
+                        screenLocked = false,
+                        uploadStatusCall = routes.OtherIncomeScheduleUploadStatusController.status,
+                        refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
+                        reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad
                       )
                     )
 
@@ -95,7 +106,10 @@ class YourOtherIncomeScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = None,
-                        screenLocked = false
+                        screenLocked = false,
+                        uploadStatusCall = routes.OtherIncomeScheduleUploadStatusController.status,
+                        refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
+                        reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad
                       )
                     )
                 }

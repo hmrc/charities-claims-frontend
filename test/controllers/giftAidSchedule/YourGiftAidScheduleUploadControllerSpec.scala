@@ -179,13 +179,13 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(
-            claimId,
-            testVerifyingResponse,
-            None,
-            true,
-            routes.GiftAidScheduleUploadStatusController.status,
-            3,
-            routes.YourGiftAidScheduleUploadController.onPageLoad
+            claimId = claimId,
+            uploadResult = testVerifyingResponse,
+            failureDetails = None,
+            screenLocked = true,
+            uploadStatusCall = routes.GiftAidScheduleUploadStatusController.status,
+            refreshIntervalSeconds = 3,
+            reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad
           ).body
         }
       }
@@ -247,13 +247,13 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(
-            claimId,
-            testVerificationFailedRejectedResponse,
-            None,
-            false,
-            routes.GiftAidScheduleUploadStatusController.status,
-            3,
-            routes.YourGiftAidScheduleUploadController.onPageLoad
+            claimId = claimId,
+            uploadResult = testVerificationFailedRejectedResponse,
+            failureDetails = None,
+            screenLocked = false,
+            uploadStatusCall = routes.GiftAidScheduleUploadStatusController.status,
+            refreshIntervalSeconds = 3,
+            reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad
           ).body
         }
       }

@@ -60,8 +60,6 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
           )
 
         val application = applicationBuilder(sessionData = sessionData).build()
-        val view        = application.injector.instanceOf[CommunityBuildingsScheduleUploadSuccessfulView]
-        val messages    = application.injector.instanceOf[MessagesApi].preferred(Seq(Lang("en")))
 
         running(application) {
           val request = FakeRequest(GET, routes.CommunityBuildingsScheduleUploadSuccessfulController.onPageLoad.url)

@@ -187,21 +187,21 @@ POST        /delete-gasds-community-buildings-schedule          controllers.comm
 
 GET         /delete-gasds-connected-charities-schedule          controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onPageLoad
 POST        /delete-gasds-connected-charities-schedule          controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onSubmit
-GET         /about-connected-charities-schedule              controllers.connectedCharitiesSchedule.AboutConnectedCharitiesScheduleController.onPageLoad
-POST        /about-connected-charities-schedule              controllers.connectedCharitiesSchedule.AboutConnectedCharitiesScheduleController.onSubmit
+GET         /about-connected-charities-schedule                 controllers.connectedCharitiesSchedule.AboutConnectedCharitiesScheduleController.onPageLoad
+POST        /about-connected-charities-schedule                 controllers.connectedCharitiesSchedule.AboutConnectedCharitiesScheduleController.onSubmit
 
-GET         /delete-gasds-connected-charities-schedule       controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onPageLoad
-POST        /delete-gasds-connected-charities-schedule       controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onSubmit
+GET         /delete-gasds-connected-charities-schedule          controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onPageLoad
+POST        /delete-gasds-connected-charities-schedule          controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onSubmit
 
 GET         /check-your-other-income-schedule                   controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onPageLoad
 POST        /check-your-other-income-schedule                   controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onSubmit
 
-GET         /problem-uploading-gift-aid-schedule-rejected          controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onPageLoad
-POST        /problem-uploading-gift-aid-schedule-rejected          controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onSubmit
-GET         /problem-uploading-gift-aid-schedule-unknown-error     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleUnknownErrorController.onPageLoad
-POST        /problem-uploading-gift-aid-schedule-unknown-error     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleUnknownErrorController.onSubmit
-GET         /problem-uploading-gift-aid-schedule-quarantine        controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onPageLoad
-POST        /problem-uploading-gift-aid-schedule-quarantine        controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onSubmit
+GET         /problem-uploading-gift-aid-schedule-rejected       controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onPageLoad
+POST        /problem-uploading-gift-aid-schedule-rejected       controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleRejectedController.onSubmit
+GET         /problem-uploading-gift-aid-schedule-unknown-error  controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleUnknownErrorController.onPageLoad
+POST        /problem-uploading-gift-aid-schedule-unknown-error  controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleUnknownErrorController.onSubmit
+GET         /problem-uploading-gift-aid-schedule-quarantine     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onPageLoad
+POST        /problem-uploading-gift-aid-schedule-quarantine     controllers.giftAidSchedule.ProblemUpdatingGiftAidScheduleQuarantineController.onSubmit
 
 GET         /problem-uploading-community-buildings-schedule-rejected             controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onPageLoad
 POST        /problem-uploading-community-buildings-schedule-rejected             controllers.communityBuildingsSchedule.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onSubmit
@@ -216,20 +216,20 @@ POST        /problem-uploading-other-income-schedule-rejected          controlle
 GET         /connected-charities-schedule-upload-successful  controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadSuccessfulController.onPageLoad
 POST        /connected-charities-schedule-upload-successful  controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadSuccessfulController.onSubmit
 
-GET         /problem-uploading-other-income-schedule-quarantine                controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleQuarantineController.onPageLoad
-POST        /problem-uploading-other-income-schedule-quarantine                controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleQuarantineController.onSubmit
-GET         /problem-uploading-other-income-schedule-unknown-error             controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onPageLoad
-POST        /problem-uploading-other-income-schedule-unknown-error             controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onSubmit
+GET         /problem-uploading-other-income-schedule-quarantine       controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleQuarantineController.onPageLoad
+POST        /problem-uploading-other-income-schedule-quarantine       controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleQuarantineController.onSubmit
+GET         /problem-uploading-other-income-schedule-unknown-error    controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onPageLoad
+POST        /problem-uploading-other-income-schedule-unknown-error    controllers.otherIncomeSchedule.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onSubmit
 
-GET         /upload-connected-charities-schedule                    controllers.connectedCharitiesSchedule.UploadConnectedCharitiesScheduleController.onPageLoad
-GET         /upload-connected-charities-schedule/success            controllers.connectedCharitiesSchedule.UploadConnectedCharitiesScheduleController.onUploadSuccess
-GET         /upload-connected-charities-schedule/error              controllers.connectedCharitiesSchedule.UploadConnectedCharitiesScheduleController.onUploadError
+GET         /upload-connected-charities-schedule                      controllers.connectedCharitiesSchedule.UploadConnectedCharitiesScheduleController.onPageLoad
+GET         /upload-connected-charities-schedule/success              controllers.connectedCharitiesSchedule.UploadConnectedCharitiesScheduleController.onUploadSuccess
+GET         /upload-connected-charities-schedule/error                controllers.connectedCharitiesSchedule.UploadConnectedCharitiesScheduleController.onUploadError
 
 GET         /problem-uploading-connected-charities-schedule-unknown-error     controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleUnknownErrorController.onPageLoad
 POST        /problem-uploading-connected-charities-schedule-unknown-error     controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleUnknownErrorController.onSubmit
 
-GET         /problem-with-connected-charities-schedule             controllers.connectedCharitiesSchedule.ProblemWithConnectedCharitiesScheduleController.onPageLoad
-POST        /problem-with-connected-charities-schedule             controllers.connectedCharitiesSchedule.ProblemWithConnectedCharitiesScheduleController.onSubmit
+GET         /problem-with-connected-charities-schedule                 controllers.connectedCharitiesSchedule.ProblemWithConnectedCharitiesScheduleController.onPageLoad
+POST        /problem-with-connected-charities-schedule                 controllers.connectedCharitiesSchedule.ProblemWithConnectedCharitiesScheduleController.onSubmit
 GET         /check-your-connected-charities-schedule                   controllers.connectedCharitiesSchedule.CheckYourConnectedCharitiesScheduleController.onPageLoad
 POST        /check-your-connected-charities-schedule                   controllers.connectedCharitiesSchedule.CheckYourConnectedCharitiesScheduleController.onSubmit
 
@@ -240,12 +240,12 @@ GET         /your-connected-charities-schedule-upload                  controlle
 POST        /your-connected-charities-schedule-upload                  controllers.connectedCharitiesSchedule.YourConnectedCharitiesScheduleUploadController.onSubmit
 GET         /your-charities-charities-schedule-upload/remove           controllers.connectedCharitiesSchedule.YourConnectedCharitiesScheduleUploadController.onRemove
 
-GET         /problem-uploading-connected-charities-schedule-rejected          controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onPageLoad
-POST        /problem-uploading-connected-charities-schedule-rejected          controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onSubmit
+GET         /problem-uploading-connected-charities-schedule-rejected   controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onPageLoad
+POST        /problem-uploading-connected-charities-schedule-rejected   controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onSubmit
 
-GET         /gift-aid-schedule-upload-status                                  controllers.giftAidSchedule.GiftAidScheduleUploadStatusController.status
+GET         /gift-aid-schedule-upload-status                           controllers.giftAidSchedule.GiftAidScheduleUploadStatusController.status
+GET         /other-income-schedule-upload-status                       controllers.otherIncomeSchedule.OtherIncomeScheduleUploadStatusController.status
+GET         /community-buildings-schedule-upload-status                controllers.communityBuildingsSchedule.CommunityBuildingsScheduleUploadStatusController.status
 
-GET         /community-buildings-schedule-upload-status                       controllers.communityBuildingsSchedule.CommunityBuildingsScheduleUploadStatusController.status
-
-GET         /problem-uploading-connected-charities-schedule-quarantine                controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onPageLoad
-POST        /problem-uploading-connected-charities-schedule-quarantine                controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onSubmit
+GET         /problem-uploading-connected-charities-schedule-quarantine   controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onPageLoad
+POST        /problem-uploading-connected-charities-schedule-quarantine   controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onSubmit
