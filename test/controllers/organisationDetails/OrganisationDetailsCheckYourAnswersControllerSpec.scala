@@ -22,18 +22,15 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import controllers.ControllerSpec
 import models.*
+import play.api.inject.bind
+import services.ClaimsService
+import uk.gov.hmrc.http.HeaderCarrier
 import views.html.OrganisationDetailsCheckYourAnswersView
+
+import _root_.scala.concurrent.Future
 
 class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
   "OrganisationDetailsCheckYourAnswersController" - {
-    val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
-      claimingGiftAid = Some(true),
-      claimingTaxDeducted = Some(false),
-      claimingUnderGiftAidSmallDonationsScheme = Some(true),
-      claimingReferenceNumber = Some(true),
-      claimReferenceNumber = Some("12345678AB")
-    )
-
     "onPageLoad" - {
       "should render the page correctly when organisation details not defined" in {
 
@@ -56,26 +53,20 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       }
 
       "should render the page correctly when organisation details with  name of charity=EnglandAndWales, Reg Num, both Corporate Trustee & UK Address true" in {
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales),
+          charityRegistrationNumber = Some("123"),
+          areYouACorporateTrustee = Some(true),
+          doYouHaveCorporateTrusteeUKAddress = Some(true),
+          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+          corporateTrusteePostcode = Some("none"),
+          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+          corporateTrusteeDetails =
+            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+        )
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales),
-              charityRegistrationNumber = Some("123"),
-              areYouACorporateTrustee = Some(true),
-              doYouHaveCorporateTrusteeUKAddress = Some(true),
-              nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-              corporateTrusteePostcode = Some("none"),
-              corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              corporateTrusteeDetails =
-                Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-            )
-          )
-        ).and(completeRepaymentDetailsAnswersSession)
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -94,24 +85,19 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       }
       "should render the page correctly when organisation details with  name of charity not defined, Reg Num, both Corporate Trustee & UK Address true" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              charityRegistrationNumber = Some("123"),
-              areYouACorporateTrustee = Some(true),
-              doYouHaveCorporateTrusteeUKAddress = Some(true),
-              nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-              corporateTrusteePostcode = Some("none"),
-              corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              corporateTrusteeDetails =
-                Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-            )
-          )
-        ).and(completeRepaymentDetailsAnswersSession)
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          charityRegistrationNumber = Some("123"),
+          areYouACorporateTrustee = Some(true),
+          doYouHaveCorporateTrusteeUKAddress = Some(true),
+          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+          corporateTrusteePostcode = Some("none"),
+          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+          corporateTrusteeDetails =
+            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+        )
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -130,23 +116,17 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       }
       "should render the page correctly when organisation details with  name of charity=NorthernIreland, Reg Num not defined, both Corporate Trustee is true and not UK Address" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.NorthernIreland),
-              areYouACorporateTrustee = Some(true),
-              doYouHaveCorporateTrusteeUKAddress = Some(false),
-              nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-              corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              corporateTrusteeDetails =
-                Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-            )
-          )
-        ).and(completeRepaymentDetailsAnswersSession)
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.NorthernIreland),
+          areYouACorporateTrustee = Some(true),
+          doYouHaveCorporateTrusteeUKAddress = Some(false),
+          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+          corporateTrusteeDetails =
+            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+        )
+        val sessionData                =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -166,24 +146,19 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
 
       "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Waiting, both Corporate Trustee is true and not UK Address" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-              areYouACorporateTrustee = Some(true),
-              doYouHaveCorporateTrusteeUKAddress = Some(false),
-              nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-              corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              corporateTrusteeDetails =
-                Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-            )
-          )
-        ).and(completeRepaymentDetailsAnswersSession)
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+          areYouACorporateTrustee = Some(true),
+          doYouHaveCorporateTrusteeUKAddress = Some(false),
+          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+          corporateTrusteeDetails =
+            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+        )
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -202,24 +177,19 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       }
       "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Exempt, both Corporate Trustee is true and not UK Address" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Exempt),
-              areYouACorporateTrustee = Some(true),
-              doYouHaveCorporateTrusteeUKAddress = Some(false),
-              nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-              corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              corporateTrusteeDetails =
-                Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-            )
-          )
-        ).and(completeRepaymentDetailsAnswersSession)
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Exempt),
+          areYouACorporateTrustee = Some(true),
+          doYouHaveCorporateTrusteeUKAddress = Some(false),
+          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+          corporateTrusteeDetails =
+            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+        )
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -238,24 +208,19 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       }
       "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Excepted, both Corporate Trustee is true and not UK Address" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Excepted),
-              areYouACorporateTrustee = Some(true),
-              doYouHaveCorporateTrusteeUKAddress = Some(false),
-              nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-              corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              corporateTrusteeDetails =
-                Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-            )
-          )
-        ).and(completeRepaymentDetailsAnswersSession)
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Excepted),
+          areYouACorporateTrustee = Some(true),
+          doYouHaveCorporateTrusteeUKAddress = Some(false),
+          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+          corporateTrusteeDetails =
+            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+        )
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -274,24 +239,19 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       }
       "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and not UK Address" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
-              areYouACorporateTrustee = Some(true),
-              doYouHaveCorporateTrusteeUKAddress = Some(false),
-              nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-              corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              corporateTrusteeDetails =
-                Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-            )
-          )
-        ).and(completeRepaymentDetailsAnswersSession)
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+          areYouACorporateTrustee = Some(true),
+          doYouHaveCorporateTrusteeUKAddress = Some(false),
+          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+          corporateTrusteeDetails =
+            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+        )
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -310,23 +270,18 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       }
       "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and UK Address not defined" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
-              areYouACorporateTrustee = Some(true),
-              nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-              corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              corporateTrusteeDetails =
-                Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-            )
-          )
-        ).and(completeRepaymentDetailsAnswersSession)
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+          areYouACorporateTrustee = Some(true),
+          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+          corporateTrusteeDetails =
+            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+        )
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -345,22 +300,17 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       }
       "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is not defined and UK Address not defined" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
-              nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-              corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              corporateTrusteeDetails =
-                Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-            )
-          )
-        ).and(completeRepaymentDetailsAnswersSession)
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+          corporateTrusteeDetails =
+            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+        )
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -380,23 +330,18 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
 
       "should render the page correctly when organisation details with  name of charity =None, reason for not registered = not defined, both Corporate Trustee is true and not UK Address" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-              areYouACorporateTrustee = Some(true),
-              doYouHaveCorporateTrusteeUKAddress = Some(false),
-              nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-              corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              corporateTrusteeDetails =
-                Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-            )
-          )
-        ).and(completeRepaymentDetailsAnswersSession)
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+          areYouACorporateTrustee = Some(true),
+          doYouHaveCorporateTrusteeUKAddress = Some(false),
+          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+          corporateTrusteeDetails =
+            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+        )
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -415,21 +360,16 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       }
       "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = true and UK address but details not defined" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
-              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-              charityRegistrationNumber = Some("123"),
-              areYouACorporateTrustee = Some(true),
-              doYouHaveCorporateTrusteeUKAddress = Some(true)
-            )
-          )
-        ).and(completeRepaymentDetailsAnswersSession)
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+          charityRegistrationNumber = Some("123"),
+          areYouACorporateTrustee = Some(true),
+          doYouHaveCorporateTrusteeUKAddress = Some(true)
+        )
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -448,21 +388,16 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       }
       "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = true and not UK address but details not defined" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
-              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-              charityRegistrationNumber = Some("123"),
-              areYouACorporateTrustee = Some(true),
-              doYouHaveCorporateTrusteeUKAddress = Some(false)
-            )
-          )
-        ).and(completeRepaymentDetailsAnswersSession)
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+          charityRegistrationNumber = Some("123"),
+          areYouACorporateTrustee = Some(true),
+          doYouHaveCorporateTrusteeUKAddress = Some(false)
+        )
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -481,28 +416,23 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       }
       "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
-              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-              charityRegistrationNumber = Some("123"),
-              areYouACorporateTrustee = Some(false),
-              doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
-              authorisedOfficialTrusteePostcode = Some("none"),
-              authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              authorisedOfficialTrusteeTitle = Some("MR"),
-              authorisedOfficialTrusteeFirstName = Some("Jack"),
-              authorisedOfficialTrusteeLastName = Some("Smith"),
-              authorisedOfficialDetails =
-                Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
-            )
-          )
-        ).and(completeRepaymentDetailsAnswersSession)
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+          charityRegistrationNumber = Some("123"),
+          areYouACorporateTrustee = Some(false),
+          doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
+          authorisedOfficialTrusteePostcode = Some("none"),
+          authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+          authorisedOfficialTrusteeTitle = Some("MR"),
+          authorisedOfficialTrusteeFirstName = Some("Jack"),
+          authorisedOfficialTrusteeLastName = Some("Smith"),
+          authorisedOfficialDetails =
+            Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
+        )
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -521,28 +451,23 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       }
       "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
-              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-              charityRegistrationNumber = Some("123"),
-              areYouACorporateTrustee = Some(false),
-              doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
-              authorisedOfficialTrusteePostcode = Some("none"),
-              authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              authorisedOfficialTrusteeTitle = Some("MR"),
-              authorisedOfficialTrusteeFirstName = Some("Jack"),
-              authorisedOfficialTrusteeLastName = Some("Smith"),
-              authorisedOfficialDetails =
-                Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
-            )
-          )
-        ).and(completeRepaymentDetailsAnswersSession)
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+          charityRegistrationNumber = Some("123"),
+          areYouACorporateTrustee = Some(false),
+          doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
+          authorisedOfficialTrusteePostcode = Some("none"),
+          authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+          authorisedOfficialTrusteeTitle = Some("MR"),
+          authorisedOfficialTrusteeFirstName = Some("Jack"),
+          authorisedOfficialTrusteeLastName = Some("Smith"),
+          authorisedOfficialDetails =
+            Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
+        )
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -561,23 +486,19 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       }
       "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address but details not defined" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
-              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-              charityRegistrationNumber = Some("123"),
-              areYouACorporateTrustee = Some(false),
-              doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
-              authorisedOfficialDetails =
-                Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
-            )
+        val organisationDetailsAnswers =
+          OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+            charityRegistrationNumber = Some("123"),
+            areYouACorporateTrustee = Some(false),
+            doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
+            authorisedOfficialDetails =
+              Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
           )
-        ).and(completeRepaymentDetailsAnswersSession)
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -596,23 +517,18 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       }
       "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address but details not defined" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
-              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-              charityRegistrationNumber = Some("123"),
-              areYouACorporateTrustee = Some(false),
-              doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
-              authorisedOfficialDetails =
-                Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
-            )
-          )
-        ).and(completeRepaymentDetailsAnswersSession)
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+          charityRegistrationNumber = Some("123"),
+          areYouACorporateTrustee = Some(false),
+          doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
+          authorisedOfficialDetails =
+            Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
+        )
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -631,27 +547,22 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       }
       "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address not defined" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
-              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-              charityRegistrationNumber = Some("123"),
-              areYouACorporateTrustee = Some(false),
-              authorisedOfficialTrusteePostcode = Some("none"),
-              authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              authorisedOfficialTrusteeTitle = Some("MR"),
-              authorisedOfficialTrusteeFirstName = Some("Jack"),
-              authorisedOfficialTrusteeLastName = Some("Smith"),
-              authorisedOfficialDetails =
-                Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
-            )
-          )
-        ).and(completeRepaymentDetailsAnswersSession)
+        val organisationDetailsAnswers = OrganisationDetailsAnswers(
+          nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+          charityRegistrationNumber = Some("123"),
+          areYouACorporateTrustee = Some(false),
+          authorisedOfficialTrusteePostcode = Some("none"),
+          authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+          authorisedOfficialTrusteeTitle = Some("MR"),
+          authorisedOfficialTrusteeFirstName = Some("Jack"),
+          authorisedOfficialTrusteeLastName = Some("Smith"),
+          authorisedOfficialDetails =
+            Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
+        )
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -736,41 +647,18 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("SW1 5TY")))
         )
         val sessionData                =
-          SessionData(
-            charitiesReference = testCharitiesReference,
-            unsubmittedClaimId = Some("123"),
-            lastUpdatedReference = Some("123"),
-            organisationDetailsAnswers = Some(organisationDetailsAnswers)
-          )
-            .and(completeRepaymentDetailsAnswersSession)
-            .and(completeGasdsSession)
+          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+        val mockClaimsService: ClaimsService = mock[ClaimsService]
+        (mockClaimsService
+          .save(using _: HeaderCarrier))
+          .expects(*)
+          .returning(Future.successful(()))
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData).build()
-
-        val missingFieldsList = sessionData.organisationDetailsAnswers.exists(_.hasOrganisationDetailsCompleteAnswers)
-        val missingOrgList    = OrganisationDetailsAnswers.getMissingFields(sessionData.organisationDetailsAnswers)
-
-        val missingFieldsListRepay =
-          sessionData.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
-
-        println(
-          "********** :::::::::: missingFieldList = " + missingFieldsList + " :::::::::::: ****************"
-        )
-        println(
-          "********** :::::::::: missingOrgList = " + missingOrgList + " :::::::::::: ****************"
-        )
-        println(
-          "********** :::::::::: missingFieldListRepay = " + missingFieldsListRepay + " :::::::::::: ****************"
-        )
-
-        println(
-          "********** :::::::::: organisationDetailsAnswers: " + sessionData.organisationDetailsAnswers + " :::::::::::: ****************"
-        )
-
-        println(
-          "********** :::::::::: repaymentClaimDetailsAnswer: " + sessionData.repaymentClaimDetailsAnswers + " :::::::::::: ****************"
-        )
+          applicationBuilder(sessionData = sessionData)
+            .overrides(bind[ClaimsService].toInstance(mockClaimsService))
+            .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -788,12 +676,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
 
       "should redirect to the incomplete answers page if the answers are not complete" in {
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers)
-        ).and(completeRepaymentDetailsAnswersSession)
+        val sessionData = completeRepaymentDetailsAnswersSession
 
         given application: Application =
           applicationBuilder(sessionData = sessionData).build()
