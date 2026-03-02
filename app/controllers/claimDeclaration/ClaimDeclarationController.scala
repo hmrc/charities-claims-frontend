@@ -20,14 +20,15 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import views.html.DeclarationView
+import views.html.ClaimDeclarationView
+import controllers.claimDeclaration.routes
 
 import scala.concurrent.Future
 
 class ClaimDeclarationController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
-  view: DeclarationView
+  view: ClaimDeclarationView
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
@@ -35,6 +36,6 @@ class ClaimDeclarationController @Inject() (
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Redirect(routes.DeclarationController.onPageLoad))
+    Future.successful(Redirect(routes.ClaimDeclarationController.onPageLoad))
   }
 }
