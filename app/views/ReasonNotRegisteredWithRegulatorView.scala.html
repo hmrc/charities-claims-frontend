@@ -43,7 +43,7 @@
                 form("value"),
                 items = List(
                     RadioItem(
-                        id = Some(ReasonNotRegisteredWithRegulator.LowIncome.toString),
+                        id = Some(form("value").id),
                         value = Some(ReasonNotRegisteredWithRegulator.LowIncome.toString),
                         content = Text(messages("reasonNotRegisteredWithRegulator.radio.LowIncome")),
                     ),

@@ -142,7 +142,7 @@ checkYourCommunityBuildingsSchedule.table.column.8 = Amount of donations receive
 checkYourCommunityBuildingsSchedule.title = Check your Community Buildings schedule
 
 checkYourConnectedCharitiesSchedule.caption = Add Connected Charities schedule
-checkYourConnectedCharitiesSchedule.error.required = Select 'Yes' if you need to update this Connected Charities schedule
+checkYourConnectedCharitiesSchedule.error.required = Select ‘Yes’ if you need to update this Connected Charities schedule
 checkYourConnectedCharitiesSchedule.heading = Check your Connected Charities schedule
 checkYourConnectedCharitiesSchedule.hint = Do you need to update this Connected Charities schedule?
 checkYourConnectedCharitiesSchedule.radios.no = No, continue with Connected Charities schedule
