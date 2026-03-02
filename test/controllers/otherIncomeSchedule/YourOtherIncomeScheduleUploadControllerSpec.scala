@@ -158,10 +158,13 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(
-            claimId,
-            testAwaitingResponse,
-            None,
-            false
+            claimId = claimId,
+            uploadResult = testAwaitingResponse,
+            failureDetails = None,
+            screenLocked = false,
+            uploadStatusCall = routes.OtherIncomeScheduleUploadStatusController.status,
+            refreshIntervalSeconds = 3,
+            reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad
           ).body
 
         }
@@ -188,10 +191,13 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(
-            claimId,
-            testVerifyingResponse,
-            None,
-            true
+            claimId = claimId,
+            uploadResult = testVerifyingResponse,
+            failureDetails = None,
+            screenLocked = true,
+            uploadStatusCall = routes.OtherIncomeScheduleUploadStatusController.status,
+            refreshIntervalSeconds = 3,
+            reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad
           ).body
         }
       }
@@ -217,10 +223,13 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(
-            claimId,
-            testValidatingResponse,
-            None,
-            true
+            claimId = claimId,
+            uploadResult = testValidatingResponse,
+            failureDetails = None,
+            screenLocked = true,
+            uploadStatusCall = routes.OtherIncomeScheduleUploadStatusController.status,
+            refreshIntervalSeconds = 3,
+            reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad
           ).body
         }
       }
@@ -245,10 +254,13 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(
-            claimId,
-            testVerificationFailedResponse,
-            None,
-            false
+            claimId = claimId,
+            uploadResult = testVerificationFailedResponse,
+            failureDetails = None,
+            screenLocked = false,
+            uploadStatusCall = routes.OtherIncomeScheduleUploadStatusController.status,
+            refreshIntervalSeconds = 3,
+            reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad
           ).body
         }
       }
