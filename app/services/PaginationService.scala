@@ -63,6 +63,14 @@ case class CommunityBuildingsPaginationResult(
   totalPages: Int
 ) extends PaginationStatus
 
+case class ConnectedCharitiesPaginationResult(
+  paginatedData: Seq[ConnectedCharity],
+  paginationViewModel: PaginationViewModel,
+  totalRecords: Int,
+  currentPage: Int,
+  totalPages: Int
+) extends PaginationStatus
+
 object PaginationService {
 
   private val config = PaginationConfig()
@@ -179,6 +187,35 @@ object PaginationService {
     )
 
     CommunityBuildingsPaginationResult(
+      paginatedData = paginatedData,
+      paginationViewModel = paginationViewModel,
+      totalRecords = totalRecords,
+      currentPage = validCurrentPage,
+      totalPages = totalPages
+    )
+  }
+
+  def paginateConnectedCharities(
+    allConnectedCharities: Seq[ConnectedCharity],
+    currentPage: Int = 1,
+    baseUrl: String
+  ): ConnectedCharitiesPaginationResult = {
+
+    val totalRecords     = allConnectedCharities.length
+    val totalPages       = calculateTotalPages(totalRecords)
+    val validCurrentPage = validateCurrentPage(currentPage, totalPages)
+
+    val (startIndex, endIndex) = calculatePageIndices(validCurrentPage, totalRecords)
+
+    val paginatedData = allConnectedCharities.slice(startIndex, endIndex)
+
+    val paginationViewModel = createPaginationViewModel(
+      currentPage = validCurrentPage,
+      totalPages = totalPages,
+      baseUrl = baseUrl
+    )
+
+    ConnectedCharitiesPaginationResult(
       paginatedData = paginatedData,
       paginationViewModel = paginationViewModel,
       totalRecords = totalRecords,

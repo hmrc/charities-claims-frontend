@@ -375,7 +375,7 @@ class YourConnectedCharitiesScheduleUploadControllerSpec extends ControllerSpec 
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.UploadConnectedCharitiesScheduleController.onPageLoad.url
+            routes.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onPageLoad.url
           )
         }
       }

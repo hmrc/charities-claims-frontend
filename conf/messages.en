@@ -141,6 +141,16 @@ checkYourCommunityBuildingsSchedule.table.column.7 = Tax year 2 ending 5 April
 checkYourCommunityBuildingsSchedule.table.column.8 = Amount of donations received in tax year 2 (£)
 checkYourCommunityBuildingsSchedule.title = Check your Community Buildings schedule
 
+checkYourConnectedCharitiesSchedule.caption = Add Connected Charities schedule
+checkYourConnectedCharitiesSchedule.error.required = Select 'Yes' if you need to update this Connected Charities schedule
+checkYourConnectedCharitiesSchedule.heading = Check your Connected Charities schedule
+checkYourConnectedCharitiesSchedule.hint = Do you need to update this Connected Charities schedule?
+checkYourConnectedCharitiesSchedule.radios.no = No, continue with Connected Charities schedule
+checkYourConnectedCharitiesSchedule.table.column.1 = Item
+checkYourConnectedCharitiesSchedule.table.column.2 = Name of charity
+checkYourConnectedCharitiesSchedule.table.column.3 = HMRC Charities reference
+checkYourConnectedCharitiesSchedule.title = Check your Connected Charities schedule
+
 checkYourGiftAidSchedule.caption = Add Gift Aid schedule
 checkYourGiftAidSchedule.error.required = Select ‘Yes’ if you need to update this Gift Aid schedule
 checkYourGiftAidSchedule.heading = Check your Gift Aid schedule
@@ -337,7 +347,7 @@ fileUpload.status.VALIDATING = Uploading
 fileUpload.status.VALIDATION_FAILED = Uploaded
 fileUpload.status.VERIFICATION_FAILED = Failed
 fileUpload.status.VERIFYING = Uploading
-fileUpload.refreshPageLink = Refresh page to see update of uploading file.
+fileUpload.refreshPageLink = Refresh page to see update of uploading file
 
 giftAidScheduleUploadSuccessful.message.1 = Upload successful
 giftAidScheduleUploadSuccessful.message.2 = You have successfully attached your Gift Aid schedule.
@@ -585,6 +595,11 @@ updateCommunityBuildingsSchedule.heading = Are you sure you want to update this 
 updateCommunityBuildingsSchedule.hint = By updating this file, you will lose any Community Buildings schedule data you have previously attached.
 updateCommunityBuildingsSchedule.title = Are you sure you want to update this Community Buildings schedule?
 
+updateConnectedCharitiesSchedule.error.required = Select ‘Yes’ if you want to update this Connected Charities schedule
+updateConnectedCharitiesSchedule.heading = Are you sure you want to update this Connected Charities schedule?
+updateConnectedCharitiesSchedule.hint = By updating this file, you will lose any Connected Charities schedule data you have previously attached.
+updateConnectedCharitiesSchedule.title = Are you sure you want to update this Connected Charities schedule?
+
 updateGiftAidSchedule.error.required = Select ‘Yes’ if you want to update this Gift Aid schedule
 updateGiftAidSchedule.heading = Are you sure you want to update this Gift Aid schedule?
 updateGiftAidSchedule.hint = By updating this file, you will lose any Gift Aid schedule data you have previously attached.
@@ -604,7 +619,7 @@ aboutConnectedCharitiesSchedule.caption = Add Connected Charities schedule
 aboutConnectedCharitiesSchedule.heading = About Connected Charities schedule
 aboutConnectedCharitiesSchedule.paragraph.one = Use this service to add a Connected Charities schedule.
 aboutConnectedCharitiesSchedule.paragraph.two = You can upload a Connected Charities schedule in a .ods format.
-aboutConnectedCharitiesSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Connected Charities schedule here (opens in new tab)</a>. You can submit up to 1 file at a time, and each file can be up to 250KB.
+aboutConnectedCharitiesSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Connected Charities schedule here (opens in new tab)</a>. You can submit 1 file at a time, and each file can be up to 250KB.
 aboutConnectedCharitiesSchedule.title = About Connected Charities schedule
 
 uploadGiftAidSchedule.caption = Add Gift Aid schedule
@@ -678,3 +693,21 @@ problemUpdatingConnectedCharitiesScheduleRejected.heading = There is a problem u
 problemUpdatingConnectedCharitiesScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
 problemUpdatingConnectedCharitiesScheduleRejected.title = There is a problem uploading your Connected Charities schedule
 
+problemWithConnectedCharitiesSchedule.title = There is a problem with the data in your Connected Charities schedule
+problemWithConnectedCharitiesSchedule.caption = Add Connected Charities schedule
+problemWithConnectedCharitiesSchedule.heading = There is a problem with the data in your Connected Charities schedule
+problemWithConnectedCharitiesSchedule.warning = We cannot accept the file because it has errors. You must fix these errors and upload the updated file before you can continue.
+problemWithConnectedCharitiesSchedule.subheading.1 = What you can do next
+problemWithConnectedCharitiesSchedule.subheading.2 = Summary of errors
+problemWithConnectedCharitiesSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Connected Charities donations (opens in new tab)</a>.
+problemWithConnectedCharitiesSchedule.list.item.2 = Delete this Connected Charities schedule.
+problemWithConnectedCharitiesSchedule.list.item.3 = Update your spreadsheet.
+problemWithConnectedCharitiesSchedule.list.item.4 = Upload the updated spreadsheet.
+problemWithConnectedCharitiesSchedule.table.column.1 = Row
+problemWithConnectedCharitiesSchedule.table.column.2 = Error
+problemWithConnectedCharitiesSchedule.link.attachUpdatedSchedule = Attach an updated Connected Charities schedule
+problemWithConnectedCharitiesSchedule.link.deleteSchedule = Delete schedule
+
+problemUpdatingConnectedCharitiesScheduleQuarantine.heading = There is a problem uploading your Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
+problemUpdatingConnectedCharitiesScheduleQuarantine.title = There is a problem uploading your Connected Charities schedule

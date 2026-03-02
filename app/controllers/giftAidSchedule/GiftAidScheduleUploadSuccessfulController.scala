@@ -33,8 +33,8 @@ class GiftAidScheduleUploadSuccessfulController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule).async { implicit request =>
-      Future.successful(Ok(view()))
-
+      if request.sessionData.giftAidScheduleCompleted then Future.successful(Ok(view()))
+      else Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
     }
 
   val onSubmit: Action[AnyContent] =

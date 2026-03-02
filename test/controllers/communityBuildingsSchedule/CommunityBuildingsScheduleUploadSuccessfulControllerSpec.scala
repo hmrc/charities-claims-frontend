@@ -34,7 +34,8 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
         val sessionData = completeGasdsSession
           .copy(
             connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
-            communityBuildingsScheduleData = Some(TestScheduleData.exampleCommunityBuildingsScheduleData)
+            communityBuildingsScheduleData = Some(TestScheduleData.exampleCommunityBuildingsScheduleData),
+            communityBuildingsScheduleCompleted = true
           )
 
         val application = applicationBuilder(sessionData = sessionData).build()
@@ -47,6 +48,27 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
           val result = route(application, request).value
           status(result) shouldEqual OK
           contentAsString(result) shouldBe view()(using request, messages).body
+        }
+      }
+
+      "should render ClaimsTaskListController when communityBuildingsScheduleCompleted = false " in {
+        val sessionData = completeGasdsSession
+          .copy(
+            connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+            communityBuildingsScheduleData = Some(TestScheduleData.exampleCommunityBuildingsScheduleData),
+            communityBuildingsScheduleCompleted = false
+          )
+
+        val application = applicationBuilder(sessionData = sessionData).build()
+        val view        = application.injector.instanceOf[CommunityBuildingsScheduleUploadSuccessfulView]
+        val messages    = application.injector.instanceOf[MessagesApi].preferred(Seq(Lang("en")))
+
+        running(application) {
+          val request = FakeRequest(GET, routes.CommunityBuildingsScheduleUploadSuccessfulController.onPageLoad.url)
+
+          val result = route(application, request).value
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
@@ -79,6 +101,18 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
             communityBuildingsScheduleData = Some(TestScheduleData.exampleCommunityBuildingsScheduleData)
           )
         val application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.CommunityBuildingsScheduleUploadSuccessfulController.onPageLoad.url)
+
+          val result = route(application, request).value
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
+      "should redirect to ClaimsTaskListController (does not pass data guard controls) " in {
+
+        val application = applicationBuilder().build()
 
         running(application) {
           val request = FakeRequest(GET, routes.CommunityBuildingsScheduleUploadSuccessfulController.onPageLoad.url)
