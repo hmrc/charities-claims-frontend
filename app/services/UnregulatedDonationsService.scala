@@ -46,14 +46,9 @@ object UnregulatedDonationsService {
   def getReasonNotRegistered(sessionData: SessionData): Option[ReasonNotRegisteredWithRegulator] =
     OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator(using sessionData)
 
-  def getCurrentClaimDonationsTotal(sessionData: SessionData): BigDecimal = {
-    val giftAidTotal            = sessionData.giftAidScheduleData.flatMap(_.totalDonations).getOrElse(BigDecimal(0))
-    val otherIncomeTotal        = sessionData.otherIncomeScheduleData.map(_.totalOfGrossPayments).getOrElse(BigDecimal(0))
-    val communityBuildingsTotal =
-      sessionData.communityBuildingsScheduleData.flatMap(_.totalOfAllAmounts).getOrElse(BigDecimal(0))
-
-    giftAidTotal + otherIncomeTotal + communityBuildingsTotal
-  }
+  // only the gift aid schedule total is used for the unregulated limit check
+  def getCurrentClaimDonationsTotal(sessionData: SessionData): BigDecimal =
+    sessionData.giftAidScheduleData.flatMap(_.totalDonations).getOrElse(BigDecimal(0))
 
   def getLimitForReason(
     reason: ReasonNotRegisteredWithRegulator,

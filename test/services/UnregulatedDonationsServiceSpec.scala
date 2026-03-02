@@ -105,27 +105,17 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
         result shouldEqual BigDecimal(1000.00)
       }
 
-      "should return otherIncome total of 2000.00 when only otherIncome schedule is present" in {
+      "should return 0 when only otherIncome schedule is present (only giftAid is used)" in {
         val sessionData = SessionData
           .empty(testCharitiesReference)
           .copy(
             otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
           )
         val result      = UnregulatedDonationsService.getCurrentClaimDonationsTotal(sessionData)
-        result shouldEqual BigDecimal(2000.00)
+        result shouldEqual BigDecimal(0)
       }
 
-      "should return communityBuildings total of 1000.00 when only communityBuildings schedule is present" in {
-        val sessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            communityBuildingsScheduleData = Some(TestScheduleData.exampleCommunityBuildingsScheduleData)
-          )
-        val result      = UnregulatedDonationsService.getCurrentClaimDonationsTotal(sessionData)
-        result shouldEqual BigDecimal(1000.00)
-      }
-
-      "should sum all schedule totals to 4000.00 when multiple schedules are present" in {
+      "should return only giftAid total when multiple schedules are present" in {
         val sessionData = SessionData
           .empty(testCharitiesReference)
           .copy(
@@ -133,12 +123,12 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
             otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData),
             communityBuildingsScheduleData = Some(TestScheduleData.exampleCommunityBuildingsScheduleData)
           )
-        // 1000 + 2000 + 1000 = 4000
+        // only giftAid total (1000) is used, other schedules are ignored
         val result      = UnregulatedDonationsService.getCurrentClaimDonationsTotal(sessionData)
-        result shouldEqual BigDecimal(4000.00)
+        result shouldEqual BigDecimal(1000.00)
       }
 
-      "should ignore connectedCharities schedule (has no total donations)" in {
+      "should return 0 when only connectedCharities schedule is present (only giftAid is used)" in {
         val sessionData = SessionData
           .empty(testCharitiesReference)
           .copy(

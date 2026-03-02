@@ -36,6 +36,8 @@ class RegisterCharityWithARegulatorController @Inject() (
   unregulatedDonationsService: UnregulatedDonationsService
 ) extends BaseController {
 
+  // TODO: Data guard to be set up, is unregulated, is Excepted or LowIncome, is over limit. Possibly use flag on F9  to determine this.
+
   val form: Form[Boolean] = formProvider("registerCharityWithARegulator.error.required")
 
   // default is set to Excepted limit - fallback
