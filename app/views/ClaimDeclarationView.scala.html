@@ -30,15 +30,22 @@
 
     <h1 class="govuk-heading-l">@messages("claimDeclaration.heading")</h1>
 
-    <p class="govuk-body">@messages("claimDeclaration.p1")</p>
+    <p class="govuk-body">@messages("claimDeclaration.paragraph")</p>
 
     <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("claimDeclaration.bullet1")</li>
-        <li>@messages("claimDeclaration.bullet2")</li>
-        <li>@messages("claimDeclaration.bullet3")</li>
+        <li>@messages("claimDeclaration.bullet.one")</li>
+        <li>@messages("claimDeclaration.bullet.two")</li>
+        <li>@messages("claimDeclaration.bullet.three")</li>
     </ul>
+    <div class = "govuk-warning-text">
+        <span class = "govuk-warning-text__icon" aria-hidden = "true">!</span>
+        <strong class="govuk-warning-text__text" >
+            <span class="govuk-visually-hidden">Warning</span>
+            @messages("claimDeclaration.warning")
+        </strong>
+    </div>
 
-    @formHelper(action = routes.ClaimDeclaration.onSubmit) {
-    @govukButton(ButtonViewModel(Text(messages("site.continue"))))
-}
+    @formHelper(action = routes.ClaimDeclarationController.onSubmit) {
+        @govukButton(ButtonViewModel(Text("Confirm and Submit claim")))
+    }
 }
