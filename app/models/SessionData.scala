@@ -49,7 +49,8 @@ final case class SessionData(
   connectedCharitiesScheduleUpscanInitialization: Option[UpscanInitiateResponse] = None,
   connectedCharitiesScheduleFileUploadReference: Option[FileUploadReference] = None,
   connectedCharitiesScheduleData: Option[ConnectedCharitiesScheduleData] = None,
-  connectedCharitiesScheduleCompleted: Boolean = false
+  connectedCharitiesScheduleCompleted: Boolean = false,
+  unregulatedLimitExceeded: Boolean = false
 )
 
 object SessionData {
@@ -174,4 +175,10 @@ object SessionData {
   def shouldUploadConnectedCharitiesSchedule(using session: SessionData): Boolean =
     RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities.contains(true)
       && isRepaymentClaimDetailsComplete
+
+  def setUnregulatedLimitExceeded(value: Boolean)(using session: SessionData): SessionData =
+    session.copy(unregulatedLimitExceeded = value)
+
+  def isUnregulatedLimitExceeded(using session: SessionData): Boolean =
+    session.unregulatedLimitExceeded
 }

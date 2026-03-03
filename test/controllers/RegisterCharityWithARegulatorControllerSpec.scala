@@ -21,20 +21,42 @@ import forms.YesNoFormProvider
 import models.{OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator, SessionData}
 import play.api.Application
 import play.api.data.Form
+import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
+import services.SaveService
+import uk.gov.hmrc.http.HeaderCarrier
+
+import scala.concurrent.Future
 
 class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
 
   val form: Form[Boolean] = new YesNoFormProvider()()
 
-  val sessionDataLowIncome: SessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
-    ReasonNotRegisteredWithRegulator.LowIncome
-  )(using SessionData.empty(testCharitiesReference))
+  // session data with unregulatedLimitExceeded = true so the data guard allows access
+  val sessionDataLowIncome: SessionData = OrganisationDetailsAnswers
+    .setReasonNotRegisteredWithRegulator(
+      ReasonNotRegisteredWithRegulator.LowIncome
+    )(using SessionData.empty(testCharitiesReference))
+    .copy(unregulatedLimitExceeded = true)
 
-  val sessionDataExcepted: SessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
-    ReasonNotRegisteredWithRegulator.Excepted
-  )(using SessionData.empty(testCharitiesReference))
+  val sessionDataExcepted: SessionData = OrganisationDetailsAnswers
+    .setReasonNotRegisteredWithRegulator(
+      ReasonNotRegisteredWithRegulator.Excepted
+    )(using SessionData.empty(testCharitiesReference))
+    .copy(unregulatedLimitExceeded = true)
+
+  // session data with flag = false - should be blocked by data guard
+  val sessionDataNotExceeded: SessionData = OrganisationDetailsAnswers
+    .setReasonNotRegisteredWithRegulator(
+      ReasonNotRegisteredWithRegulator.LowIncome
+    )(using SessionData.empty(testCharitiesReference))
+    .copy(unregulatedLimitExceeded = false)
+
+  // session data with defaultFormattedLimit fallback
+  val sessionDataNoReason: SessionData = SessionData
+    .empty(testCharitiesReference)
+    .copy(unregulatedLimitExceeded = true)
 
   "RegisterCharityWithARegulatorController" - {
     "onPageLoad" - {
@@ -66,8 +88,8 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render the page with default limit (£100,000) when charity type is not set" in {
-        given application: Application = applicationBuilder().build()
+      "should render the page with default Excepted limit (£100,000) when charity reason is not set (defaultFormattedLimit fallback)" in {
+        given application: Application = applicationBuilder(sessionData = sessionDataNoReason).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -77,6 +99,20 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
 
           status(result)        shouldBe OK
           contentAsString(result) should include("100,000")
+        }
+      }
+
+      "should redirect to Claims Task List when unregulatedLimitExceeded flag is false (data guard)" in {
+        given application: Application = applicationBuilder(sessionData = sessionDataNotExceeded).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RegisterCharityWithARegulatorController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }
@@ -112,8 +148,19 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to (Claims Task List) when Yes is selected" in {
-        given application: Application = applicationBuilder(sessionData = sessionDataExcepted).build()
+      "should reset flag and redirect to (Claims Task List) when Yes is selected" in {
+        val mockSaveService: SaveService = mock[SaveService]
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(where { (sessionData: SessionData, _: HeaderCarrier) =>
+            !sessionData.unregulatedLimitExceeded
+          })
+          .returning(Future.successful(()))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionDataExcepted)
+            .overrides(bind[SaveService].toInstance(mockSaveService))
+            .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
