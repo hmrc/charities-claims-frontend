@@ -163,12 +163,10 @@ object SessionData {
     session.unsubmittedClaimId.isDefined
       && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
       && session.organisationDetailsAnswers.exists(_.hasOrganisationDetailsCompleteAnswers)
-      && (if shouldUploadConnectedCharitiesSchedule && !session.connectedCharitiesScheduleCompleted then false
-          else true)
-      && (if shouldUploadOtherIncomeSchedule && !session.otherIncomeScheduleCompleted then false else true)
-      && (if shouldUploadCommunityBuildingsSchedule && !session.communityBuildingsScheduleCompleted then false
-          else true)
-      && (if shouldUploadGiftAidSchedule && !session.giftAidScheduleCompleted then false else true)
+      && (!shouldUploadConnectedCharitiesSchedule || session.connectedCharitiesScheduleCompleted)
+      && (!shouldUploadOtherIncomeSchedule || session.otherIncomeScheduleCompleted)
+      && (!shouldUploadCommunityBuildingsSchedule || session.communityBuildingsScheduleCompleted)
+      && (!shouldUploadGiftAidSchedule || session.giftAidScheduleCompleted)
 
   def shouldUploadGiftAidSchedule(using session: SessionData): Boolean =
     RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true)
