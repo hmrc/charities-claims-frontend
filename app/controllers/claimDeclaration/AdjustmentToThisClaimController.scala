@@ -23,7 +23,7 @@ import controllers.BaseController
 import views.html.AdjustmentToThisClaimView
 import controllers.actions.{Actions, GuardAction}
 import forms.AdjustmentToThisClaimFormProvider
-import models.RepaymentClaimDetailsAnswers
+import models.{DeclarationDetailsAnswers, SessionData}
 import play.api.data.Form
 import controllers.claimDeclaration.routes
 
@@ -47,21 +47,15 @@ class AdjustmentToThisClaimController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetData()
-      .andThen(
-        guard(RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true))
-      ) // TODO - get the right dataguards
+      .authAndGetDataWithGuard(SessionData.isClaimDetailsComplete)
       .async { implicit request =>
-        val previousAnswer = RepaymentClaimDetailsAnswers.getClaimReferenceNumber //// TODO - get the previous answer
+        val previousAnswer = DeclarationDetailsAnswers.getIncludedAnyAdjustmentsInClaimPrompt
         Future.successful(Ok(view(form.withDefault(previousAnswer))))
       }
 
   def onSubmit: Action[AnyContent] =
     actions
-      .authAndGetData()
-      .andThen(
-        guard(RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true))
-      ) // TODO - get the right dataguards
+      .authAndGetDataWithGuard(SessionData.isClaimDetailsComplete)
       .async { implicit request =>
         form
           .bindFromRequest()
@@ -70,9 +64,11 @@ class AdjustmentToThisClaimController @Inject() (
             value =>
               saveService
                 .save(
-                  RepaymentClaimDetailsAnswers.setClaimReferenceNumber(value)
-                ) // TODO - store this to the correct field
-                .map(_ => Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+                  DeclarationDetailsAnswers.setIncludedAnyAdjustmentsInClaimPrompt(value)
+                )
+                .map(_ =>
+                  Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
+                ) // TODO - redirect when next page available
           )
       }
 }

@@ -137,7 +137,7 @@ object ClaimsTaskListController {
     Seq(
       TaskItem(
         name = messages("claimsTaskList.task.readDeclaration"),
-        href = routes.DeclarationDetailsConfirmationController.onPageLoad,
+        href = claimDeclaration.routes.AdjustmentToThisClaimController.onPageLoad,
         status = status
       )
     )

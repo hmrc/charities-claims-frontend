@@ -30,11 +30,29 @@ object DeclarationDetailsAnswers {
 
   given Format[DeclarationDetailsAnswers] = Json.format[DeclarationDetailsAnswers]
 
+  private def get[A](f: DeclarationDetailsAnswers => Option[A])(using session: SessionData): Option[A] =
+    session.declarationDetailsAnswers.flatMap(f)
+
+  private def set[A](value: A)(f: (DeclarationDetailsAnswers, A) => DeclarationDetailsAnswers)(using
+    session: SessionData
+  ): SessionData =
+    val updated = session.declarationDetailsAnswers match
+      case Some(existing) => f(existing, value)
+      case None           => f(DeclarationDetailsAnswers(), value)
+    session.copy(declarationDetailsAnswers = Some(updated))
+
   def from(declarationDetails: DeclarationDetails): DeclarationDetailsAnswers =
     DeclarationDetailsAnswers(
       understandFalseStatements = Some(declarationDetails.understandFalseStatements),
       includedAnyAdjustmentsInClaimPrompt = Some(declarationDetails.includedAnyAdjustmentsInClaimPrompt)
     )
+
+  def getIncludedAnyAdjustmentsInClaimPrompt(using session: SessionData): Option[String] = get(
+    _.includedAnyAdjustmentsInClaimPrompt
+  )
+
+  def setIncludedAnyAdjustmentsInClaimPrompt(value: String)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(includedAnyAdjustmentsInClaimPrompt = Some(v)))
 
   def toDeclarationDetails(answers: DeclarationDetailsAnswers): Try[DeclarationDetails] =
     for {

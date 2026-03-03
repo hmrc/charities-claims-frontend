@@ -21,35 +21,35 @@
     formHelper: FormWithCSRF,
     govukButton: GovukButton,
     govukInput: GovukInput,
-    govukErrorSummary: GovukErrorSummary
+    govukErrorSummary: GovukErrorSummary,
+    govukTextareaCharacterCount: GovukTextareaCharacterCount
 )
 
 @(form: Form[?])(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = title(form, messages("adjustmenttoThisClaim.title"))
+    pageTitle = title(form, messages("adjustmentToThisClaim.title"))
 ) {
 
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-
-    <h1 class="govuk-heading-l">@messages("adjustmenttoThisClaim.heading")</h1>
-    <p class="govuk-body">@messages("adjustmenttoThisClaim.para")</p>
+    <h1 class="govuk-heading-l">@messages("adjustmentToThisClaim.heading")</h1>
+    <div class="govuk-hint">@messages("adjustmentToThisClaim.para")</div>
 
     @formHelper(action = routes.AdjustmentToThisClaimController.onSubmit, Symbol("autoComplete") -> "off") {
 
-    @govukInput(
-        InputViewModel(
+    @govukTextareaCharacterCount(
+        CharacterCountViewModel(
             field = form("value"),
-            label = LabelViewModel(messages("adjustmenttoThisClaim.heading")).withCssClass("govuk-visually-hidden")
-            ).withHint(
-                HintViewModel(Text(messages("adjustmenttoThisClaim.hint")))
+            maxLength = 350
+        ).withHint(
+            HintViewModel(Text(messages("adjustmentToThisClaim.hint")))
             .withId("value-hint")
             )
-            .withCssClass("govuk-input--width-350")
-        )
+        .fullWidth()
+    )
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
     }
