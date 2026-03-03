@@ -238,7 +238,7 @@ POST        /update-connected-charities-schedule                       controlle
 
 GET         /your-connected-charities-schedule-upload                  controllers.connectedCharitiesSchedule.YourConnectedCharitiesScheduleUploadController.onPageLoad
 POST        /your-connected-charities-schedule-upload                  controllers.connectedCharitiesSchedule.YourConnectedCharitiesScheduleUploadController.onSubmit
-GET         /your-charities-charities-schedule-upload/remove           controllers.connectedCharitiesSchedule.YourConnectedCharitiesScheduleUploadController.onRemove
+GET         /your-connected-charities-schedule-upload/remove           controllers.connectedCharitiesSchedule.YourConnectedCharitiesScheduleUploadController.onRemove
 
 GET         /problem-uploading-connected-charities-schedule-rejected   controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onPageLoad
 POST        /problem-uploading-connected-charities-schedule-rejected   controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onSubmit

@@ -37,9 +37,6 @@ trait UnregulatedDonationsService {
   def checkUnregulatedLimit(using DataRequest[?], HeaderCarrier): Future[Option[UnregulatedLimitExceeded]]
 
   def getApplicableLimit(using DataRequest[?]): Option[String]
-
-  // TODO: implementation of F11 def recordUnregulatedDonation
-  //  (records unregulated donation in FormP) details to be confirmed
 }
 
 object UnregulatedDonationsService {
@@ -49,14 +46,9 @@ object UnregulatedDonationsService {
   def getReasonNotRegistered(sessionData: SessionData): Option[ReasonNotRegisteredWithRegulator] =
     OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator(using sessionData)
 
-  def getCurrentClaimDonationsTotal(sessionData: SessionData): BigDecimal = {
-    val giftAidTotal            = sessionData.giftAidScheduleData.flatMap(_.totalDonations).getOrElse(BigDecimal(0))
-    val otherIncomeTotal        = sessionData.otherIncomeScheduleData.map(_.totalOfGrossPayments).getOrElse(BigDecimal(0))
-    val communityBuildingsTotal =
-      sessionData.communityBuildingsScheduleData.flatMap(_.totalOfAllAmounts).getOrElse(BigDecimal(0))
-
-    giftAidTotal + otherIncomeTotal + communityBuildingsTotal
-  }
+  // only the gift aid schedule total is used for the unregulated limit check
+  def getCurrentClaimDonationsTotal(sessionData: SessionData): BigDecimal =
+    sessionData.giftAidScheduleData.flatMap(_.totalDonations).getOrElse(BigDecimal(0))
 
   def getLimitForReason(
     reason: ReasonNotRegisteredWithRegulator,
@@ -141,7 +133,7 @@ class UnregulatedDonationsServiceImpl @Inject() (
             Future.successful(None)
         }
 
-      // No reason set (charity has regulator) - no limit check required, proceed
+      // No reason set (charity has regulator set) - no limit check required, proceed
       case None         =>
         Future.successful(None)
     }
@@ -153,6 +145,4 @@ class UnregulatedDonationsServiceImpl @Inject() (
 
     getFormattedLimitForReason(reason, appConfig.lowIncomeLimit, appConfig.exceptedLimit)
   }
-
-  // TODO: Implementation of F11 - def recordUnregulatedDonation - details to be confirmed
 }
