@@ -585,6 +585,7 @@ site.pagination.of = of
 site.pagination.page = page
 site.pagination.previous = Previous
 site.yes = Yes
+site.remove = Remove
 
 communityBuildingsScheduleUploadSuccessful.message.1 = Upload successful
 communityBuildingsScheduleUploadSuccessful.message.2 = You have successfully attached your Community Buildings schedule.
