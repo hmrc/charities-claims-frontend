@@ -159,6 +159,15 @@ object SessionData {
     session.unsubmittedClaimId.isDefined
       && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
 
+  def isClaimDetailsComplete(using session: SessionData): Boolean =
+    session.unsubmittedClaimId.isDefined
+      && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
+      && session.organisationDetailsAnswers.exists(_.hasOrganisationDetailsCompleteAnswers)
+      && (!shouldUploadConnectedCharitiesSchedule || session.connectedCharitiesScheduleCompleted)
+      && (!shouldUploadOtherIncomeSchedule || session.otherIncomeScheduleCompleted)
+      && (!shouldUploadCommunityBuildingsSchedule || session.communityBuildingsScheduleCompleted)
+      && (!shouldUploadGiftAidSchedule || session.giftAidScheduleCompleted)
+
   def shouldUploadGiftAidSchedule(using session: SessionData): Boolean =
     RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true)
       && isRepaymentClaimDetailsComplete
