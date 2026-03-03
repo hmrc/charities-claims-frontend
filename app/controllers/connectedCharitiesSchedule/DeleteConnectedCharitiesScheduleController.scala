@@ -26,7 +26,6 @@ import services.ClaimsValidationService
 import views.html.DeleteConnectedCharitiesScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
-import play.api.mvc.Call
 
 class DeleteConnectedCharitiesScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -54,8 +53,7 @@ class DeleteConnectedCharitiesScheduleController @Inject() (
               Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
             }
           } else {
-            // FIXME: replace with proper route
-            Future.successful(Redirect(Call("GET", "/problem-with-connected-charities-schedule")))
+            Future.successful(Redirect(routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad))
           }
       )
   }
