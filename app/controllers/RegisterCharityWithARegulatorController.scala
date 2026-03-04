@@ -74,9 +74,7 @@ class RegisterCharityWithARegulatorController @Inject() (
               }
 
             case false =>
-              // user selected No, continue with claim - redirect to D3 declaration screen
-              // TODO: route to be updated when D3 route is confirmed
-              Future.successful(Redirect(controllers.routes.DeclarationDetailsConfirmationController.onPageLoad))
+              Future.successful(Redirect(claimDeclaration.routes.AdjustmentToThisClaimController.onPageLoad))
           }
         )
     }

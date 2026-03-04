@@ -132,7 +132,6 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      // TODO: This redirection route needs to be updated when D3 route is confirmed
       "should redirect to declaration screen when No is selected" in {
         given application: Application = applicationBuilder(sessionData = sessionDataExcepted).build()
 
@@ -144,7 +143,7 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.DeclarationDetailsConfirmationController.onPageLoad.url)
+          redirectLocation(result) shouldBe Some(claimDeclaration.routes.AdjustmentToThisClaimController.onPageLoad.url)
         }
       }
 
