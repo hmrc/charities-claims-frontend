@@ -18,11 +18,10 @@ package services
 
 import com.google.inject.{ImplementedBy, Inject, Singleton}
 import config.FrontendAppConfig
-import connectors.UnregulatedDonationsConnector
-import models.{OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator, SessionData}
+import connectors.{ClaimsValidationConnector, UnregulatedDonationsConnector}
+import models.*
 import models.requests.DataRequest
 import uk.gov.hmrc.http.HeaderCarrier
-
 import scala.concurrent.{ExecutionContext, Future}
 import java.text.DecimalFormat
 
@@ -46,9 +45,8 @@ object UnregulatedDonationsService {
   def getReasonNotRegistered(sessionData: SessionData): Option[ReasonNotRegisteredWithRegulator] =
     OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator(using sessionData)
 
-  // only the gift aid schedule total is used for the unregulated limit check
-  def getCurrentClaimDonationsTotal(sessionData: SessionData): BigDecimal =
-    sessionData.giftAidScheduleData.flatMap(_.totalDonations).getOrElse(BigDecimal(0))
+  def getGiftAidTotalDonations(data: GiftAidScheduleData): BigDecimal =
+    data.totalDonations.getOrElse(BigDecimal(0))
 
   def getLimitForReason(
     reason: ReasonNotRegisteredWithRegulator,
@@ -101,11 +99,37 @@ object UnregulatedDonationsService {
 @Singleton
 class UnregulatedDonationsServiceImpl @Inject() (
   unregulatedDonationsConnector: UnregulatedDonationsConnector,
+  claimsValidationConnector: ClaimsValidationConnector,
   appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)
     extends UnregulatedDonationsService {
 
   import UnregulatedDonationsService.*
+
+  private def fetchGiftAidDonationsTotal(using
+    request: DataRequest[?],
+    hc: HeaderCarrier
+  ): Future[BigDecimal] = {
+    val sessionData = request.sessionData
+    val claimIdOpt  = sessionData.unsubmittedClaimId
+    val fileRefOpt  = sessionData.giftAidScheduleFileUploadReference
+
+    (claimIdOpt, fileRefOpt) match {
+      case (Some(claimId), Some(fileRef)) =>
+        claimsValidationConnector
+          .getUploadResult(claimId, fileRef)
+          .map {
+            case GetUploadResultValidatedGiftAid(_, data) =>
+              getGiftAidTotalDonations(data)
+            case _                                        =>
+              BigDecimal(0)
+          }
+          .recover { case _ => BigDecimal(0) }
+
+      case _ =>
+        Future.successful(BigDecimal(0))
+    }
+  }
 
   def checkUnregulatedLimit(using
     request: DataRequest[?],
@@ -120,10 +144,11 @@ class UnregulatedDonationsServiceImpl @Inject() (
         getLimitForReason(reason, appConfig.lowIncomeLimit, appConfig.exceptedLimit) match {
           case Some(limit) =>
             val charityReference = sessionData.charitiesReference
-            unregulatedDonationsConnector.getTotalUnregulatedDonations(charityReference).map { existingDonationsOpt =>
-
+            for {
+              existingDonationsOpt <- unregulatedDonationsConnector.getTotalUnregulatedDonations(charityReference)
+              currentClaimTotal    <- fetchGiftAidDonationsTotal
+            } yield {
               val existingDonations = existingDonationsOpt.getOrElse(BigDecimal(0))
-              val currentClaimTotal = getCurrentClaimDonationsTotal(sessionData)
 
               checkIfOverLimit(currentClaimTotal, existingDonations, limit)
             }

@@ -16,7 +16,7 @@
 
 package controllers.claimDeclaration
 
-import services.SaveService
+import services.{SaveService, UnregulatedDonationsService}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
@@ -26,6 +26,8 @@ import forms.AdjustmentToThisClaimFormProvider
 import models.{DeclarationDetailsAnswers, SessionData}
 import play.api.data.Form
 import controllers.claimDeclaration.routes
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,7 +37,8 @@ class AdjustmentToThisClaimController @Inject() (
   actions: Actions,
   guard: GuardAction,
   formProvider: AdjustmentToThisClaimFormProvider,
-  saveService: SaveService
+  saveService: SaveService,
+  unregulatedDonationsService: UnregulatedDonationsService
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -50,8 +53,25 @@ class AdjustmentToThisClaimController @Inject() (
     actions
       .authAndGetDataWithGuard(SessionData.isClaimDetailsComplete)
       .async { implicit request =>
-        val previousAnswer = DeclarationDetailsAnswers.getIncludedAnyAdjustmentsInClaimPrompt
-        Future.successful(Ok(view(form.withDefault(previousAnswer))))
+        given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+
+        if (request.sessionData.unregulatedLimitExceeded) {
+          // user already saw WRN5 and chose to continue we show the form without re-checking
+          val previousAnswer = DeclarationDetailsAnswers.getIncludedAnyAdjustmentsInClaimPrompt
+          Future.successful(Ok(view(form.withDefault(previousAnswer))))
+        } else {
+          unregulatedDonationsService.checkUnregulatedLimit.flatMap {
+            case Some(_) =>
+              val updatedSession = request.sessionData.copy(unregulatedLimitExceeded = true)
+              saveService.save(updatedSession).map { _ =>
+                Redirect(controllers.routes.RegisterCharityWithARegulatorController.onPageLoad)
+              }
+
+            case None =>
+              val previousAnswer = DeclarationDetailsAnswers.getIncludedAnyAdjustmentsInClaimPrompt
+              Future.successful(Ok(view(form.withDefault(previousAnswer))))
+          }
+        }
       }
 
   def onSubmit: Action[AnyContent] =
