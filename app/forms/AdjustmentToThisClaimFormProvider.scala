@@ -27,18 +27,34 @@ class AdjustmentToThisClaimFormProvider @Inject() extends Mappings {
   def apply(
     errorRequired: String,
     maxInputLengthError: (Int, String),
-    regexPatternError: String
+    regexPatternError: String,
+    optionalFlag: Boolean
   ): Form[String] =
     val (maxInputLength, maxInputLengthErrorMessage) = maxInputLengthError
     Form(
-      single(
-        "value" -> text(errorRequired)
-          .verifying(
-            firstError(
-              maxLength(maxInputLength, maxInputLengthErrorMessage),
-              regexp(Validation.adjustmentToThisClaimPattern, regexPatternError)
+      if !optionalFlag then
+        single(
+          "value" ->
+            text(errorRequired)
+              .verifying(
+                firstError(
+                  maxLength(maxInputLength, maxInputLengthErrorMessage),
+                  regexp(Validation.adjustmentToThisClaimPattern, regexPatternError)
+                )
+              )
+        )
+      else
+        single(
+          "value" ->
+            optional(
+              text("")
+                .verifying(
+                  firstError(
+                    maxLength(maxInputLength, maxInputLengthErrorMessage),
+                    regexp(Validation.adjustmentToThisClaimPattern, regexPatternError)
+                  )
+                )
             )
-          )
-      )
+        )
     )
 }

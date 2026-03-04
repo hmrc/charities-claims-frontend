@@ -42,7 +42,8 @@ class AdjustmentToThisClaimController @Inject() (
   val form: Form[String] = formProvider(
     "adjustmentToThisClaim.error.required",
     (350, "adjustmentToThisClaim.error.length"),
-    "adjustmentToThisClaim.error.regex"
+    "adjustmentToThisClaim.error.regex",
+    optionalFlag = true // TODO - this flag to make the textarea optional or not
   )
 
   def onPageLoad: Action[AnyContent] =
