@@ -29,7 +29,7 @@ class AdjustmentToThisClaimFormProvider @Inject() extends Mappings {
     maxInputLengthError: (Int, String),
     regexPatternError: String,
     optionalFlag: Boolean
-  ): Form[String] =
+  ): Form[Option[String]] =
     val (maxInputLength, maxInputLengthErrorMessage) = maxInputLengthError
     Form(
       if !optionalFlag then
@@ -42,7 +42,7 @@ class AdjustmentToThisClaimFormProvider @Inject() extends Mappings {
                   regexp(Validation.adjustmentToThisClaimPattern, regexPatternError)
                 )
               )
-        )
+        ).transform[Option[String]](Some(_), _.getOrElse(""))
       else
         single(
           "value" ->
