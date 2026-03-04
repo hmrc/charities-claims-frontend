@@ -20,8 +20,7 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.AuthorisedOfficialDetailsFormProvider
-import models.OrganisationDetailsAnswers
-import models.Mode
+import models.{Mode, OrganisationDetailsAnswers, SessionData}
 import models.Mode.*
 import services.SaveService
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -38,45 +37,47 @@ class AuthorisedOfficialDetailsController @Inject() (
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if (
-      OrganisationDetailsAnswers.getAreYouACorporateTrustee
-        .contains(false) && OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress.isDefined
-    ) {
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
+      if (
+        OrganisationDetailsAnswers.getAreYouACorporateTrustee
+          .contains(false) && OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress.isDefined
+      ) {
+        OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress match {
+          case Some(isUkAddress) =>
+            val form           = formProvider(isUkAddress)
+            val previousAnswer = OrganisationDetailsAnswers.getAuthorisedOfficialDetails
+            val preparedForm   = previousAnswer.fold(form)(form.fill)
+
+            Future.successful(Ok(view(preparedForm, isUkAddress, mode)))
+
+          case None =>
+            Future.successful(Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(mode)))
+        }
+      } else {
+        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      }
+    }
+
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
       OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress match {
         case Some(isUkAddress) =>
-          val form           = formProvider(isUkAddress)
-          val previousAnswer = OrganisationDetailsAnswers.getAuthorisedOfficialDetails
-          val preparedForm   = previousAnswer.fold(form)(form.fill)
-
-          Future.successful(Ok(view(preparedForm, isUkAddress, mode)))
+          val form = formProvider(isUkAddress)
+          form
+            .bindFromRequest()
+            .fold(
+              formWithErrors => Future.successful(BadRequest(view(formWithErrors, isUkAddress, mode))),
+              value =>
+                saveService
+                  .save(OrganisationDetailsAnswers.setAuthorisedOfficialDetails(value))
+                  .map { _ =>
+                    Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
+                  }
+            )
 
         case None =>
           Future.successful(Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(mode)))
       }
-    } else {
-      Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
     }
-  }
-
-  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress match {
-      case Some(isUkAddress) =>
-        val form = formProvider(isUkAddress)
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, isUkAddress, mode))),
-            value =>
-              saveService
-                .save(OrganisationDetailsAnswers.setAuthorisedOfficialDetails(value))
-                .map { _ =>
-                  Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
-                }
-          )
-
-      case None =>
-        Future.successful(Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(mode)))
-    }
-  }
 }

@@ -30,7 +30,9 @@ class CharityExemptControllerSpec extends ControllerSpec {
   "CharityExemptController" - {
     "onPageLoad" - {
       "should render the page correctly if exempt" in {
-        val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Exempt)
+        val sessionData = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Exempt)
+        )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -47,7 +49,9 @@ class CharityExemptControllerSpec extends ControllerSpec {
       }
 
       "should render the page not found if ReasonNotRegisteredWithRegulator is excepted" in {
-        val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Excepted)
+        val sessionData = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Excepted)
+        )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -58,12 +62,14 @@ class CharityExemptControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
       "should render the page not found if ReasonNotRegisteredWithRegulator is LowIncome" in {
-        val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(LowIncome)
+        val sessionData = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(LowIncome)
+        )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -74,12 +80,14 @@ class CharityExemptControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
       "should render the page not found if ReasonNotRegisteredWithRegulator is Waiting" in {
-        val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Waiting)
+        val sessionData = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Waiting)
+        )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -90,14 +98,15 @@ class CharityExemptControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }
 
     "onSubmit" - {
       "in NormalMode should redirect to CorporateTrusteeClaimController" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -111,7 +120,8 @@ class CharityExemptControllerSpec extends ControllerSpec {
       }
 
       "in CheckMode should redirect to CYA" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
