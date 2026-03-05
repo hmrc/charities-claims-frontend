@@ -20,14 +20,7 @@ import play.api.test.FakeRequest
 import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
 import views.html.OrganisationDetailsIncompleteAnswersView
-import models.{
-  AuthorisedOfficialDetails,
-  NameOfCharityRegulator,
-  OrganisationDetailsAnswers,
-  ReasonNotRegisteredWithRegulator,
-  RepaymentClaimDetailsAnswers,
-  SessionData
-}
+import models.*
 import play.api.Application
 
 class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec {
@@ -35,8 +28,9 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
   "OrganisationDetailsIncompleteAnswersController" - {
     "onPageLoad" - {
       "should render the page with default missing fields when no session data present" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
 
-        given application: Application = applicationBuilder().build()
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         val defaultMissingFields = OrganisationDetailsAnswers.getMissingFields(None)
 
@@ -61,19 +55,20 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
         val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
-          claimingTaxDeducted = Some(false),
-          claimingUnderGiftAidSmallDonationsScheme = Some(true),
-          claimingReferenceNumber = Some(true),
+          claimingTaxDeducted = Some(true),
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingReferenceNumber = Some(false),
           claimReferenceNumber = Some("12345678AB")
         )
 
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(OrganisationDetailsAnswers())
-        )
+        val sessionData =
+          SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some("123"),
+            lastUpdatedReference = Some("123"),
+            repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
+            organisationDetailsAnswers = Some(OrganisationDetailsAnswers())
+          )
 
         given application: Application = applicationBuilder(sessionData).build()
 
@@ -99,36 +94,37 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
       "should render the page with no missing fields when answers are complete" in {
         val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
-          claimingTaxDeducted = Some(false),
+          claimingTaxDeducted = Some(true),
           claimingUnderGiftAidSmallDonationsScheme = Some(false),
           claimingReferenceNumber = Some(false)
         )
-        val sessionData                         = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some("123"),
-          lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
-          organisationDetailsAnswers = Some(
-            OrganisationDetailsAnswers(
-              nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-              charityRegistrationNumber = None,
-              areYouACorporateTrustee = Some(false),
-              doYouHaveCorporateTrusteeUKAddress = Some(true),
-              nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-              corporateTrusteePostcode = Some("SW1 5TY"),
-              corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
-              authorisedOfficialTrusteePostcode = Some("SW1 5TY"),
-              authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-              authorisedOfficialTrusteeTitle = Some("MR"),
-              authorisedOfficialTrusteeFirstName = Some("Jack"),
-              authorisedOfficialTrusteeLastName = Some("Smith"),
-              authorisedOfficialDetails =
-                Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("SW1 5TY")))
+        val sessionData                         =
+          SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some("123"),
+            lastUpdatedReference = Some("123"),
+            repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
+            organisationDetailsAnswers = Some(
+              OrganisationDetailsAnswers(
+                nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+                reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+                charityRegistrationNumber = None,
+                areYouACorporateTrustee = Some(false),
+                doYouHaveCorporateTrusteeUKAddress = Some(true),
+                nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+                corporateTrusteePostcode = Some("SW1 5TY"),
+                corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+                doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
+                authorisedOfficialTrusteePostcode = Some("SW1 5TY"),
+                authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+                authorisedOfficialTrusteeTitle = Some("MR"),
+                authorisedOfficialTrusteeFirstName = Some("Jack"),
+                authorisedOfficialTrusteeLastName = Some("Smith"),
+                authorisedOfficialDetails =
+                  Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("SW1 5TY")))
+              )
             )
           )
-        )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -152,9 +148,9 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
       "should render the page with charity regulator number missing when regulator is EnglandAndWales" in {
         val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
-          claimingTaxDeducted = Some(false),
-          claimingUnderGiftAidSmallDonationsScheme = Some(true),
-          claimingReferenceNumber = Some(true),
+          claimingTaxDeducted = Some(true),
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingReferenceNumber = Some(false),
           claimReferenceNumber = Some("12345678AB")
         )
 
@@ -194,9 +190,9 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
       "should render the page with reason not registered missing when regulator is None" in {
         val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
-          claimingTaxDeducted = Some(false),
-          claimingUnderGiftAidSmallDonationsScheme = Some(true),
-          claimingReferenceNumber = Some(true),
+          claimingTaxDeducted = Some(true),
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingReferenceNumber = Some(false),
           claimReferenceNumber = Some("12345678AB")
         )
 
@@ -236,9 +232,9 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
       "should render the page with corporate trustee details missing when corporate trustee selected" in {
         val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
-          claimingTaxDeducted = Some(false),
-          claimingUnderGiftAidSmallDonationsScheme = Some(true),
-          claimingReferenceNumber = Some(true),
+          claimingTaxDeducted = Some(true),
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingReferenceNumber = Some(false),
           claimReferenceNumber = Some("12345678AB")
         )
 
@@ -281,9 +277,9 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
       "should render the page with authorised official details missing when not corporate trustee" in {
         val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
-          claimingTaxDeducted = Some(false),
-          claimingUnderGiftAidSmallDonationsScheme = Some(true),
-          claimingReferenceNumber = Some(true),
+          claimingTaxDeducted = Some(true),
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingReferenceNumber = Some(false),
           claimReferenceNumber = Some("12345678AB")
         )
 
@@ -326,9 +322,9 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
       "should render the page with multiple missing fields when only regulator name provided" in {
         val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
-          claimingTaxDeducted = Some(false),
-          claimingUnderGiftAidSmallDonationsScheme = Some(true),
-          claimingReferenceNumber = Some(true),
+          claimingTaxDeducted = Some(true),
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingReferenceNumber = Some(false),
           claimReferenceNumber = Some("12345678AB")
         )
 

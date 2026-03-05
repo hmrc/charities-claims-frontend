@@ -21,7 +21,7 @@ import controllers.actions.Actions
 import forms.CharityRegulatorNumberFormProvider
 import models.Mode.*
 import controllers.BaseController
-import models.{Mode, NameOfCharityRegulator, OrganisationDetailsAnswers}
+import models.{Mode, NameOfCharityRegulator, OrganisationDetailsAnswers, SessionData}
 import services.SaveService
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.CharityRegulatorNumberView
@@ -39,29 +39,31 @@ class CharityRegulatorNumberController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val previousAnswer = OrganisationDetailsAnswers.getCharityRegistrationNumber
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
+      val previousAnswer = OrganisationDetailsAnswers.getCharityRegistrationNumber
 
-    val nameOfCharityAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
-    if nameOfCharityAnswer.isEmpty || nameOfCharityAnswer.contains(NameOfCharityRegulator.None)
-    then Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
-    else Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
-  }
+      val nameOfCharityAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
+      if nameOfCharityAnswer.isEmpty || nameOfCharityAnswer.contains(NameOfCharityRegulator.None)
+      then Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      else Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+    }
 
-  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveService
-            .save(OrganisationDetailsAnswers.setCharityRegistrationNumber(value))
-            .map { _ =>
-              (value, mode) match {
-                case (_, CheckMode)  => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
-                case (_, NormalMode) => Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            saveService
+              .save(OrganisationDetailsAnswers.setCharityRegistrationNumber(value))
+              .map { _ =>
+                (value, mode) match {
+                  case (_, CheckMode)  => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
+                  case (_, NormalMode) => Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
+                }
               }
-            }
-      )
-  }
+        )
+    }
 }
