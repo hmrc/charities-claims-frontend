@@ -42,7 +42,7 @@ class AdjustmentToThisClaimController @Inject() (
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[String] = formProvider(
+  val form: Form[Option[String]] = formProvider(
     "adjustmentToThisClaim.error.required",
     (350, "adjustmentToThisClaim.error.length"),
     "adjustmentToThisClaim.error.regex",
@@ -58,7 +58,7 @@ class AdjustmentToThisClaimController @Inject() (
         if (request.sessionData.unregulatedLimitExceeded) {
           // user already saw WRN5 and chose to continue we show the form without re-checking
           val previousAnswer = DeclarationDetailsAnswers.getIncludedAnyAdjustmentsInClaimPrompt
-          Future.successful(Ok(view(form.withDefault(previousAnswer))))
+          Future.successful(Ok(view(form.withDefault(Some(previousAnswer)))))
         } else {
           unregulatedDonationsService.checkUnregulatedLimit.flatMap {
             case Some(_) =>
@@ -69,7 +69,7 @@ class AdjustmentToThisClaimController @Inject() (
 
             case None =>
               val previousAnswer = DeclarationDetailsAnswers.getIncludedAnyAdjustmentsInClaimPrompt
-              Future.successful(Ok(view(form.withDefault(previousAnswer))))
+              Future.successful(Ok(view(form.withDefault(Some(previousAnswer)))))
           }
         }
       }
@@ -85,7 +85,7 @@ class AdjustmentToThisClaimController @Inject() (
             value =>
               saveService
                 .save(
-                  DeclarationDetailsAnswers.setIncludedAnyAdjustmentsInClaimPrompt(value)
+                  DeclarationDetailsAnswers.setIncludedAnyAdjustmentsInClaimPrompt(Some(value))
                 )
                 .map(_ =>
                   Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
