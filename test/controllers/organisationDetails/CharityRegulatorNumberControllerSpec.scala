@@ -36,7 +36,9 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
 
     "onPageLoad" - {
       "should render the page correctly if name of charity is EnglandAndWales" in {
-        val sessionData                = OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
+        val sessionData                = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
+        )
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
@@ -55,7 +57,9 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
       }
 
       "should render the page correctly if name of charity is NorthernIreland" in {
-        val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(NorthernIreland)
+        val sessionData = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setNameOfCharityRegulator(NorthernIreland)
+        )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -75,7 +79,8 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
       }
 
       "should render the page correctly if name of charity is Scottish" in {
-        val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(Scottish)
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setNameOfCharityRegulator(Scottish))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -95,7 +100,8 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
       }
 
       "should render page not found if name of charity is None" in {
-        val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(None)
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setNameOfCharityRegulator(None))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -106,14 +112,15 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }
 
     "onSubmit" - {
       "should redirect to the next page when valid data is submitted" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           val request = FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit(NormalMode).url)
@@ -127,7 +134,8 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
       }
 
       "should redirect to CYA when valid data is submitted" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           val request = FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit(CheckMode).url)
@@ -141,7 +149,8 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
       }
 
       "should return BadRequest when invalid data (letters) is submitted" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           val request = FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit(NormalMode).url)
@@ -154,7 +163,8 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
       }
 
       "should return BadRequest when empty data is submitted" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           val request = FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit(NormalMode).url)

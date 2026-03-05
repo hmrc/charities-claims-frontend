@@ -37,7 +37,8 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
   "ReasonNotRegisteredWithRegulatorController" - {
     "onPageLoad" - {
       "should render the page correctly if name of charity is None" in {
-        val sessionData                = OrganisationDetailsAnswers.setNameOfCharityRegulator(None)
+        val sessionData                =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setNameOfCharityRegulator(None))
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
@@ -53,7 +54,8 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
       }
 
       "should render page not found if name of charity is Scottish" in {
-        val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(Scottish)
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setNameOfCharityRegulator(Scottish))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -64,12 +66,14 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
       "should render page not found if name of charity is NorthernIreland" in {
-        val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(NorthernIreland)
+        val sessionData = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setNameOfCharityRegulator(NorthernIreland)
+        )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -80,12 +84,14 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
       "should render page not found if name of charity is EnglandAndWales" in {
-        val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
+        val sessionData = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
+        )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -96,13 +102,15 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
       "should render the page and pre-populate correctly with lowIncome value when name of charity is None" in {
 
-        val sessionDataWithLowIncome                        = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(LowIncome)
+        val sessionDataWithLowIncome                        = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(LowIncome)
+        )
         val sessionDataWithLowIncomeAndCharityRegulatorNone =
           OrganisationDetailsAnswers.setNameOfCharityRegulator(None)(using sessionDataWithLowIncome)
 
@@ -126,7 +134,9 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with excepted value when name of charity is None" in {
 
-        val sessionDataWithExcepted                        = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Excepted)
+        val sessionDataWithExcepted                        = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Excepted)
+        )
         val sessionDataWithExceptedAndCharityRegulatorNone =
           OrganisationDetailsAnswers.setNameOfCharityRegulator(None)(using sessionDataWithExcepted)
 
@@ -147,7 +157,9 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with exempted value when name of charity is None" in {
 
-        val sessionDataWithExempt                        = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Exempt)
+        val sessionDataWithExempt                        = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Exempt)
+        )
         val sessionDataWithExemptAndCharityRegulatorNone =
           OrganisationDetailsAnswers.setNameOfCharityRegulator(None)(using sessionDataWithExempt)
 
@@ -168,7 +180,9 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with waiting value when name of charity is None" in {
 
-        val sessionDataWithWaiting                        = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Waiting)
+        val sessionDataWithWaiting                        = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Waiting)
+        )
         val sessionDataWithWaitingAndCharityRegulatorNone =
           OrganisationDetailsAnswers.setNameOfCharityRegulator(None)(using sessionDataWithWaiting)
 
@@ -190,7 +204,8 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should redirect to CharityExceptedController when the value is Excepted in NormalMode" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -207,7 +222,8 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
       }
 
       "should redirect to CharityExemptController when the value is Exempt in NormalMode" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -224,7 +240,8 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
       }
 
       "should redirect to the next page when the value is lowIncome" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -241,7 +258,8 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
       }
 
       "should redirect to the next page when the value is waiting" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -258,7 +276,8 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
       }
 
       "should redirect to CharityExceptedController when the value is Excepted in CheckMode" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -275,7 +294,8 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
       }
 
       "should redirect to CharityExemptController when the value is Exempt in CheckMode" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -292,7 +312,8 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
       }
 
       "should redirect back to CYA when the value is lowIncome" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -309,7 +330,8 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
       }
 
       "should redirect back to CYA when the value is waiting" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -326,7 +348,8 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
       }
 
       "should reload the page with errors when a required field is missing" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
