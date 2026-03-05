@@ -28,11 +28,11 @@ class AdjustmentToThisClaimFormProvider @Inject() extends Mappings {
     errorRequired: String,
     maxInputLengthError: (Int, String),
     regexPatternError: String,
-    optionalFlag: Boolean
+    overPaymentFlag: Boolean
   ): Form[Option[String]] =
     val (maxInputLength, maxInputLengthErrorMessage) = maxInputLengthError
     Form(
-      if !optionalFlag then
+      if overPaymentFlag then
         single(
           "value" ->
             text(errorRequired)
@@ -43,7 +43,8 @@ class AdjustmentToThisClaimFormProvider @Inject() extends Mappings {
                 )
               )
         ).transform[Option[String]](Some(_), _.getOrElse(""))
-      else
+      else {
+        // text input is not mandatory
         single(
           "value" ->
             optional(
@@ -56,5 +57,6 @@ class AdjustmentToThisClaimFormProvider @Inject() extends Mappings {
                 )
             )
         )
+      }
     )
 }

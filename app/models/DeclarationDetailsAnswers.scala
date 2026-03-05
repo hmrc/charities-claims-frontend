@@ -51,8 +51,8 @@ object DeclarationDetailsAnswers {
     _.includedAnyAdjustmentsInClaimPrompt
   )
 
-  def setIncludedAnyAdjustmentsInClaimPrompt(value: String)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(includedAnyAdjustmentsInClaimPrompt = Some(v)))
+  def setIncludedAnyAdjustmentsInClaimPrompt(value: Option[String])(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(includedAnyAdjustmentsInClaimPrompt = v))
 
   def toDeclarationDetails(answers: DeclarationDetailsAnswers): Try[DeclarationDetails] =
     for {

@@ -27,10 +27,11 @@ import play.api.test.FakeRequest
 
 class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
 
-  private val form: Form[String] = new AdjustmentToThisClaimFormProvider()(
+  private val form: Form[Option[String]] = new AdjustmentToThisClaimFormProvider()(
     "adjustmentToThisClaim.error.required",
     (20, "adjustmentToThisClaim.error.length"),
-    "adjustmentToThisClaim.error.regex"
+    "adjustmentToThisClaim.error.regex",
+    true
   )
 
   val testClaimId = "claim-123"
@@ -189,7 +190,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
       }
 
       "should render ClaimsTaskListController if isClaimDetailsComplete is false" in {
-        val sessionData = DeclarationDetailsAnswers.setIncludedAnyAdjustmentsInClaimPrompt("some text ....")
+        val sessionData = DeclarationDetailsAnswers.setIncludedAnyAdjustmentsInClaimPrompt(Some("some text ...."))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -232,7 +233,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill("123456ABC")).body
+          contentAsString(result) shouldEqual view(form.fill(Some("123456ABC"))).body
         }
       }
 

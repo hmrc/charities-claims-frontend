@@ -16,16 +16,18 @@
 
 package controllers.claimDeclaration
 
-import services.{SaveService, UnregulatedDonationsService}
+import services.{ClaimsService, SaveService, UnregulatedDonationsService}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
+import connectors.ClaimsValidationConnector
 import controllers.BaseController
 import views.html.AdjustmentToThisClaimView
 import controllers.actions.{Actions, GuardAction}
 import forms.AdjustmentToThisClaimFormProvider
-import models.{DeclarationDetailsAnswers, SessionData}
+import models.{DeclarationDetailsAnswers, GetUploadResultValidatedGiftAid, GiftAidScheduleData, SessionData}
 import play.api.data.Form
 import controllers.claimDeclaration.routes
+import models.requests.DataRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -35,18 +37,21 @@ class AdjustmentToThisClaimController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: AdjustmentToThisClaimView,
   actions: Actions,
-  guard: GuardAction,
   formProvider: AdjustmentToThisClaimFormProvider,
   saveService: SaveService,
+  claimsValidationConnector: ClaimsValidationConnector,
+  claimsService: ClaimsService,
   unregulatedDonationsService: UnregulatedDonationsService
 )(using ec: ExecutionContext)
     extends BaseController {
+
+  val overPaymentFlag = true
 
   val form: Form[Option[String]] = formProvider(
     "adjustmentToThisClaim.error.required",
     (350, "adjustmentToThisClaim.error.length"),
     "adjustmentToThisClaim.error.regex",
-    optionalFlag = true // TODO - this flag to make the textarea optional or not
+    overPaymentFlag
   )
 
   def onPageLoad: Action[AnyContent] =
@@ -85,11 +90,39 @@ class AdjustmentToThisClaimController @Inject() (
             value =>
               saveService
                 .save(
-                  DeclarationDetailsAnswers.setIncludedAnyAdjustmentsInClaimPrompt(Some(value))
+                  DeclarationDetailsAnswers.setIncludedAnyAdjustmentsInClaimPrompt(value)
                 )
                 .map(_ =>
                   Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
                 ) // TODO - redirect when next page available
           )
       }
+
+  def getGiftAidTotalDonations(data: GiftAidScheduleData): BigDecimal =
+    data.prevOverclaimedGiftAid.getOrElse(BigDecimal(0))
+
+  def fetchGiftAidOverPayment(using
+    request: DataRequest[?],
+    hc: HeaderCarrier
+  ): Future[BigDecimal] = {
+    val sessionData = request.sessionData
+    val claimIdOpt  = sessionData.unsubmittedClaimId
+    val fileRefOpt  = sessionData.giftAidScheduleFileUploadReference
+
+    (claimIdOpt, fileRefOpt) match {
+      case (Some(claimId), Some(fileRef)) =>
+        claimsValidationConnector
+          .getUploadResult(claimId, fileRef)
+          .map {
+            case GetUploadResultValidatedGiftAid(_, data) =>
+              getGiftAidTotalDonations(data)
+            case _                                        =>
+              BigDecimal(0)
+          }
+          .recover { case _ => BigDecimal(0) }
+
+      case _ =>
+        Future.successful(BigDecimal(0))
+    }
+  }
 }
