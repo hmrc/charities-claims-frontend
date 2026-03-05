@@ -16,17 +16,16 @@
 
 package controllers.claimDeclaration
 
-import services.{ClaimsService, SaveService, UnregulatedDonationsService}
+import services.{SaveService, UnregulatedDonationsService}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import connectors.ClaimsValidationConnector
 import controllers.BaseController
 import views.html.AdjustmentToThisClaimView
-import controllers.actions.{Actions, GuardAction}
+import controllers.actions.Actions
 import forms.AdjustmentToThisClaimFormProvider
 import models.{DeclarationDetailsAnswers, GetUploadResultValidatedGiftAid, GiftAidScheduleData, SessionData}
 import play.api.data.Form
-import controllers.claimDeclaration.routes
 import models.requests.DataRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
@@ -40,12 +39,11 @@ class AdjustmentToThisClaimController @Inject() (
   formProvider: AdjustmentToThisClaimFormProvider,
   saveService: SaveService,
   claimsValidationConnector: ClaimsValidationConnector,
-  claimsService: ClaimsService,
   unregulatedDonationsService: UnregulatedDonationsService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val overPaymentFlag = true
+  val overPaymentFlag = true  //TODO derive if giftAdd previous overpayment, OtherIncome overpayment
 
   val form: Form[Option[String]] = formProvider(
     "adjustmentToThisClaim.error.required",

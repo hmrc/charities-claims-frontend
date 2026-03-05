@@ -19,15 +19,22 @@ package controllers.claimDeclaration
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import controllers.ControllerSpec
 import views.html.AdjustmentToThisClaimView
-import play.api.Application
+import play.api.{inject, Application}
 import forms.AdjustmentToThisClaimFormProvider
 import models.*
 import play.api.data.Form
 import play.api.test.FakeRequest
+import connectors.UnregulatedDonationsConnector
+import uk.gov.hmrc.http.HeaderCarrier
+
+import _root_.scala.concurrent.Future
 
 class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
 
-  private val form: Form[Option[String]] = new AdjustmentToThisClaimFormProvider()(
+  given HeaderCarrier                              = HeaderCarrier()
+  val mockConnector: UnregulatedDonationsConnector = mock[UnregulatedDonationsConnector]
+
+  val form: Form[Option[String]] = new AdjustmentToThisClaimFormProvider()(
     "adjustmentToThisClaim.error.required",
     (20, "adjustmentToThisClaim.error.length"),
     "adjustmentToThisClaim.error.regex",
@@ -47,6 +54,20 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
   val organisationDetailsAnswers = OrganisationDetailsAnswers(
     nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
     reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+    charityRegistrationNumber = Some("123"),
+    areYouACorporateTrustee = Some(false),
+    doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
+    authorisedOfficialTrusteePostcode = Some("none"),
+    authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+    authorisedOfficialTrusteeTitle = Some("MR"),
+    authorisedOfficialTrusteeFirstName = Some("Jack"),
+    authorisedOfficialTrusteeLastName = Some("Smith"),
+    authorisedOfficialDetails = Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
+  )
+
+  val organisationDetailsAnswers2 = OrganisationDetailsAnswers(
+    nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+    reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
     charityRegistrationNumber = Some("123"),
     areYouACorporateTrustee = Some(false),
     doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
@@ -189,6 +210,38 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
         }
       }
 
+      "should render the page correctly when isClaimDetailsComplete condition is met due connectedCharitiesScheduleCompleted and unregulatedLimitExceeded is true" in {
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(true),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          unregulatedLimitExceeded = true,
+          repaymentClaimDetailsAnswers = Some(answers)
+        ).copy(
+          connectedCharitiesScheduleCompleted = true,
+          organisationDetailsAnswers = Some(organisationDetailsAnswers)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form).body
+        }
+      }
+
       "should render ClaimsTaskListController if isClaimDetailsComplete is false" in {
         val sessionData = DeclarationDetailsAnswers.setIncludedAnyAdjustmentsInClaimPrompt(Some("some text ...."))
 
@@ -234,6 +287,88 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form.fill(Some("123456ABC"))).body
+        }
+      }
+
+      "should render the page and pre-populate correctly when Some(UnregulatedLimitExceeded) when total donations less than the Low Income limit" in {
+        (mockConnector
+          .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
+          .expects(testCharitiesReference, *)
+          .returning(Future.successful(Some(BigDecimal(3000))))
+          .once()
+
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(true),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswers = Some(answers),
+          declarationDetailsAnswers = Some(declarationDetailsAnswers)
+        ).copy(
+          connectedCharitiesScheduleCompleted = true,
+          organisationDetailsAnswers = Some(organisationDetailsAnswers2)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .overrides(inject.bind[UnregulatedDonationsConnector].toInstance(mockConnector))
+          .build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(Some("123456ABC"))).body
+        }
+      }
+
+      "should render the page and pre-populate correctly when Some(UnregulatedLimitExceeded) when total donations exceed the Low Income limit" in {
+        (mockConnector
+          .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
+          .expects(testCharitiesReference, *)
+          .returning(Future.successful(Some(BigDecimal(5001))))
+          .once()
+
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(true),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswers = Some(answers),
+          declarationDetailsAnswers = Some(declarationDetailsAnswers)
+        ).copy(
+          connectedCharitiesScheduleCompleted = true,
+          organisationDetailsAnswers = Some(organisationDetailsAnswers2)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .overrides(inject.bind[UnregulatedDonationsConnector].toInstance(mockConnector))
+          .build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.RegisterCharityWithARegulatorController.onPageLoad.url
+          )
+
         }
       }
 
@@ -344,6 +479,48 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           status(result) shouldEqual BAD_REQUEST
         }
       }
+
+      // TODO - test not working
+//      "should reload page with without errors when required field is missing due no previous overpayment" in {
+//        val form: Form[Option[String]] = new AdjustmentToThisClaimFormProvider()(
+//          "adjustmentToThisClaim.error.required",
+//          (20, "adjustmentToThisClaim.error.length"),
+//          "adjustmentToThisClaim.error.regex",
+//          false
+//        )
+//
+//        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+//          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+//          claimingDonationsNotFromCommunityBuilding = Some(false),
+//          claimingDonationsCollectedInCommunityBuildings = Some(false),
+//          connectedToAnyOtherCharities = Some(true),
+//          makingAdjustmentToPreviousClaim = Some(false)
+//        )
+//        val sessionData = SessionData(
+//          charitiesReference = testCharitiesReference,
+//          unsubmittedClaimId = Some(testClaimId),
+//          repaymentClaimDetailsAnswers = Some(answers),
+//          declarationDetailsAnswers = Some(declarationDetailsAnswers)
+//        ).copy(
+//          connectedCharitiesScheduleCompleted = true,
+//          organisationDetailsAnswers = Some(organisationDetailsAnswers)
+//        )
+//
+//        given application: Application = applicationBuilder(sessionData = sessionData).build()
+//
+//        running(application) {
+//          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+//            FakeRequest(POST, routes.AdjustmentToThisClaimController.onSubmit.url)
+//              .withFormUrlEncodedBody("value" -> "")
+//
+//          val result = route(application, request).value
+//
+//          status(result) shouldEqual SEE_OTHER
+//          redirectLocation(result) shouldEqual Some(
+//            controllers.routes.ClaimsTaskListController.onPageLoad.url
+//          )
+//        }
+//      }
     }
   }
 }
