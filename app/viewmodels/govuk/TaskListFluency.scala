@@ -19,12 +19,7 @@ package viewmodels.govuk
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.hint.Hint
-import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.{
-  TaskList,
-  TaskListItem,
-  TaskListItemStatus,
-  TaskListItemTitle
-}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.{TaskList, TaskListItem, TaskListItemTitle}
 import viewmodels.{TaskItem, TaskSection, TaskStatus}
 
 object tasklist extends TaskListFluency
@@ -46,7 +41,7 @@ trait TaskListFluency {
       TaskListItem(
         title = TaskListItemTitle(content = Text(task.name)),
         hint = hintKey.map(key => Hint(content = Text(messages(key)))),
-        status = TaskListItemStatus(tag = Some(task.statusTag)),
+        status = task.status.toTaskListStatus,
         href = if (task.status != TaskStatus.CannotStartYet) Some(task.href.url) else None
       )
   }
