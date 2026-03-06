@@ -110,7 +110,9 @@ class CheckYourOtherIncomeScheduleController @Inject() (
                           _ <- saveService.save(
                                  request.sessionData.copy(
                                    otherIncomeScheduleCompleted = true,
-                                   otherIncomeScheduleData = None
+                                   otherIncomeScheduleData = None,
+                                   adjustmentForOtherIncomePreviousOverClaimed =
+                                     Some(otherIncomeScheduleData.adjustmentForOtherIncomePreviousOverClaimed)
                                  )
                                )
                           _ <- claimsService.save

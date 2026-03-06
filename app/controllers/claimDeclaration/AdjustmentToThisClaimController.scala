@@ -21,11 +21,10 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
 import views.html.AdjustmentToThisClaimView
-import controllers.actions.{Actions, GuardAction}
+import controllers.actions.Actions
 import forms.AdjustmentToThisClaimFormProvider
 import models.{DeclarationDetailsAnswers, SessionData}
 import play.api.data.Form
-import controllers.claimDeclaration.routes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -35,29 +34,30 @@ class AdjustmentToThisClaimController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: AdjustmentToThisClaimView,
   actions: Actions,
-  guard: GuardAction,
   formProvider: AdjustmentToThisClaimFormProvider,
   saveService: SaveService,
   unregulatedDonationsService: UnregulatedDonationsService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[String] = formProvider(
-    "adjustmentToThisClaim.error.required",
-    (350, "adjustmentToThisClaim.error.length"),
-    "adjustmentToThisClaim.error.regex"
-  )
-
   def onPageLoad: Action[AnyContent] =
     actions
       .authAndGetDataWithGuard(SessionData.isClaimDetailsComplete)
       .async { implicit request =>
-        given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+        // derive if there is previous overpayment, then text input is mandatory
+        val form: Form[Option[String]] = formProvider(
+          "adjustmentToThisClaim.error.required",
+          (350, "adjustmentToThisClaim.error.length"),
+          "adjustmentToThisClaim.error.regex",
+          sessionData.adjustmentForOtherIncomePreviousOverClaimed
+            .exists(_ > BigDecimal(0.0)) || sessionData.prevOverclaimedGiftAid.exists(_ > BigDecimal(0.0))
+        )
+        given HeaderCarrier            = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
         if (request.sessionData.unregulatedLimitExceeded) {
           // user already saw WRN5 and chose to continue we show the form without re-checking
           val previousAnswer = DeclarationDetailsAnswers.getIncludedAnyAdjustmentsInClaimPrompt
-          Future.successful(Ok(view(form.withDefault(previousAnswer))))
+          Future.successful(Ok(view(form.withDefault(Some(previousAnswer)))))
         } else {
           unregulatedDonationsService.checkUnregulatedLimit.flatMap {
             case Some(_) =>
@@ -68,7 +68,7 @@ class AdjustmentToThisClaimController @Inject() (
 
             case None =>
               val previousAnswer = DeclarationDetailsAnswers.getIncludedAnyAdjustmentsInClaimPrompt
-              Future.successful(Ok(view(form.withDefault(previousAnswer))))
+              Future.successful(Ok(view(form.withDefault(Some(previousAnswer)))))
           }
         }
       }
@@ -77,6 +77,13 @@ class AdjustmentToThisClaimController @Inject() (
     actions
       .authAndGetDataWithGuard(SessionData.isClaimDetailsComplete)
       .async { implicit request =>
+        val form: Form[Option[String]] = formProvider(
+          "adjustmentToThisClaim.error.required",
+          (350, "adjustmentToThisClaim.error.length"),
+          "adjustmentToThisClaim.error.regex",
+          sessionData.adjustmentForOtherIncomePreviousOverClaimed
+            .exists(_ > BigDecimal(0.0)) || sessionData.prevOverclaimedGiftAid.exists(_ > BigDecimal(0.0))
+        )
         form
           .bindFromRequest()
           .fold(
@@ -91,4 +98,5 @@ class AdjustmentToThisClaimController @Inject() (
                 ) // TODO - redirect when next page available
           )
       }
+
 }

@@ -27,18 +27,36 @@ class AdjustmentToThisClaimFormProvider @Inject() extends Mappings {
   def apply(
     errorRequired: String,
     maxInputLengthError: (Int, String),
-    regexPatternError: String
-  ): Form[String] =
+    regexPatternError: String,
+    overPaymentFlag: Boolean
+  ): Form[Option[String]] =
     val (maxInputLength, maxInputLengthErrorMessage) = maxInputLengthError
     Form(
-      single(
-        "value" -> text(errorRequired)
-          .verifying(
-            firstError(
-              maxLength(maxInputLength, maxInputLengthErrorMessage),
-              regexp(Validation.adjustmentToThisClaimPattern, regexPatternError)
+      if overPaymentFlag then
+        single(
+          "value" ->
+            text(errorRequired)
+              .verifying(
+                firstError(
+                  maxLength(maxInputLength, maxInputLengthErrorMessage),
+                  regexp(Validation.adjustmentToThisClaimPattern, regexPatternError)
+                )
+              )
+        ).transform[Option[String]](Some(_), _.getOrElse(""))
+      else {
+        // text input is not mandatory
+        single(
+          "value" ->
+            optional(
+              text("")
+                .verifying(
+                  firstError(
+                    maxLength(maxInputLength, maxInputLengthErrorMessage),
+                    regexp(Validation.adjustmentToThisClaimPattern, regexPatternError)
+                  )
+                )
             )
-          )
-      )
+        )
+      }
     )
 }
