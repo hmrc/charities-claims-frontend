@@ -449,7 +449,105 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
         }
       }
 
-      "should reload page with errors when required field is missing" in {
+      "should reload page with errors when required field is missing due to adjustmentForOtherIncomePreviousOverClaimed" in {
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(true),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswers = Some(answers),
+          adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(1001.1)),
+          declarationDetailsAnswers = Some(declarationDetailsAnswers)
+        ).copy(
+          connectedCharitiesScheduleCompleted = true,
+          organisationDetailsAnswers = Some(organisationDetailsAnswers)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.AdjustmentToThisClaimController.onSubmit.url)
+              .withFormUrlEncodedBody("value" -> "")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual BAD_REQUEST
+        }
+      }
+
+      "should reload page with errors when required field is missing due to  prevOverclaimedGiftAid " in {
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(true),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswers = Some(answers),
+          prevOverclaimedGiftAid = Some(BigDecimal(201.1)),
+          declarationDetailsAnswers = Some(declarationDetailsAnswers)
+        ).copy(
+          connectedCharitiesScheduleCompleted = true,
+          organisationDetailsAnswers = Some(organisationDetailsAnswers)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.AdjustmentToThisClaimController.onSubmit.url)
+              .withFormUrlEncodedBody("value" -> "")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual BAD_REQUEST
+        }
+      }
+
+      "should reload page with errors when required field is missing due to adjustmentForOtherIncomePreviousOverClaimed & prevOverclaimedGiftAid " in {
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(true),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswers = Some(answers),
+          adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(101.1)),
+          prevOverclaimedGiftAid = Some(BigDecimal(201.1)),
+          declarationDetailsAnswers = Some(declarationDetailsAnswers)
+        ).copy(
+          connectedCharitiesScheduleCompleted = true,
+          organisationDetailsAnswers = Some(organisationDetailsAnswers)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.AdjustmentToThisClaimController.onSubmit.url)
+              .withFormUrlEncodedBody("value" -> "")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual BAD_REQUEST
+        }
+      }
+
+      "should reload page with without errors when required field is missing due no previous overpayment" in {
+
         val answers     = repaymentClaimDetailsAnswersCompleted.copy(
           claimingUnderGiftAidSmallDonationsScheme = Some(false),
           claimingDonationsNotFromCommunityBuilding = Some(false),
@@ -476,51 +574,12 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result) shouldEqual BAD_REQUEST
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
+          )
         }
       }
-
-      // TODO - test not working
-//      "should reload page with without errors when required field is missing due no previous overpayment" in {
-//        val form: Form[Option[String]] = new AdjustmentToThisClaimFormProvider()(
-//          "adjustmentToThisClaim.error.required",
-//          (20, "adjustmentToThisClaim.error.length"),
-//          "adjustmentToThisClaim.error.regex",
-//          false
-//        )
-//
-//        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-//          claimingUnderGiftAidSmallDonationsScheme = Some(false),
-//          claimingDonationsNotFromCommunityBuilding = Some(false),
-//          claimingDonationsCollectedInCommunityBuildings = Some(false),
-//          connectedToAnyOtherCharities = Some(true),
-//          makingAdjustmentToPreviousClaim = Some(false)
-//        )
-//        val sessionData = SessionData(
-//          charitiesReference = testCharitiesReference,
-//          unsubmittedClaimId = Some(testClaimId),
-//          repaymentClaimDetailsAnswers = Some(answers),
-//          declarationDetailsAnswers = Some(declarationDetailsAnswers)
-//        ).copy(
-//          connectedCharitiesScheduleCompleted = true,
-//          organisationDetailsAnswers = Some(organisationDetailsAnswers)
-//        )
-//
-//        given application: Application = applicationBuilder(sessionData = sessionData).build()
-//
-//        running(application) {
-//          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-//            FakeRequest(POST, routes.AdjustmentToThisClaimController.onSubmit.url)
-//              .withFormUrlEncodedBody("value" -> "")
-//
-//          val result = route(application, request).value
-//
-//          status(result) shouldEqual SEE_OTHER
-//          redirectLocation(result) shouldEqual Some(
-//            controllers.routes.ClaimsTaskListController.onPageLoad.url
-//          )
-//        }
-//      }
     }
   }
 }

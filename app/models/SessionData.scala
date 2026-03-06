@@ -50,7 +50,9 @@ final case class SessionData(
   connectedCharitiesScheduleFileUploadReference: Option[FileUploadReference] = None,
   connectedCharitiesScheduleData: Option[ConnectedCharitiesScheduleData] = None,
   connectedCharitiesScheduleCompleted: Boolean = false,
-  unregulatedLimitExceeded: Boolean = false
+  unregulatedLimitExceeded: Boolean = false,
+  adjustmentForOtherIncomePreviousOverClaimed: Option[BigDecimal] = None,
+  prevOverclaimedGiftAid: Option[BigDecimal] = None
 )
 
 object SessionData {
@@ -77,6 +79,8 @@ object SessionData {
       repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers.from(claim.claimData.repaymentClaimDetails)),
       organisationDetailsAnswers = claim.claimData.organisationDetails.map(OrganisationDetailsAnswers.from),
       declarationDetailsAnswers = claim.claimData.declarationDetails.map(DeclarationDetailsAnswers.from),
+      adjustmentForOtherIncomePreviousOverClaimed = claim.adjustmentForOtherIncomePreviousOverClaimed,
+      prevOverclaimedGiftAid = claim.prevOverclaimedGiftAid,
       giftAidSmallDonationsSchemeDonationDetailsAnswers =
         claim.claimData.giftAidSmallDonationsSchemeDonationDetails.map(
           GiftAidSmallDonationsSchemeDonationDetailsAnswers.from
@@ -110,6 +114,8 @@ object SessionData {
   def toUpdateClaimRequest(sessionData: SessionData): Try[UpdateClaimRequest] =
     for {
       lastUpdatedReference                       <- required(sessionData)(_.lastUpdatedReference)
+      adjustmentForOtherIncomePreviousOverClaimed = sessionData.adjustmentForOtherIncomePreviousOverClaimed
+      prevOverclaimedGiftAid                      = sessionData.prevOverclaimedGiftAid
       repaymentClaimDetails                      <- RepaymentClaimDetailsAnswers
                                                       .toRepaymentClaimDetails(sessionData.repaymentClaimDetailsAnswers.get)
       organisationDetails                        <- sessionData.organisationDetailsAnswers
@@ -127,6 +133,8 @@ object SessionData {
       organisationDetails = organisationDetails,
       giftAidSmallDonationsSchemeDonationDetails = giftAidSmallDonationsSchemeDonationDetails,
       declarationDetails = declarationDetails,
+      adjustmentForOtherIncomePreviousOverClaimed = adjustmentForOtherIncomePreviousOverClaimed,
+      prevOverclaimedGiftAid = prevOverclaimedGiftAid,
       giftAidScheduleFileUploadReference =
         // only include the file upload reference if the schedule has been accepted
         if sessionData.giftAidScheduleCompleted

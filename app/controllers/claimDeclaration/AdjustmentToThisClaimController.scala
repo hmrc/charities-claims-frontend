@@ -19,14 +19,12 @@ package controllers.claimDeclaration
 import services.{SaveService, UnregulatedDonationsService}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
-import connectors.ClaimsValidationConnector
 import controllers.BaseController
 import views.html.AdjustmentToThisClaimView
 import controllers.actions.Actions
 import forms.AdjustmentToThisClaimFormProvider
-import models.{DeclarationDetailsAnswers, GetUploadResultValidatedGiftAid, GiftAidScheduleData, SessionData}
+import models.{DeclarationDetailsAnswers, SessionData}
 import play.api.data.Form
-import models.requests.DataRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -38,25 +36,23 @@ class AdjustmentToThisClaimController @Inject() (
   actions: Actions,
   formProvider: AdjustmentToThisClaimFormProvider,
   saveService: SaveService,
-  claimsValidationConnector: ClaimsValidationConnector,
   unregulatedDonationsService: UnregulatedDonationsService
 )(using ec: ExecutionContext)
     extends BaseController {
-
-  val overPaymentFlag = true // TODO derive if giftAdd previous overpayment, OtherIncome overpayment
-
-  val form: Form[Option[String]] = formProvider(
-    "adjustmentToThisClaim.error.required",
-    (350, "adjustmentToThisClaim.error.length"),
-    "adjustmentToThisClaim.error.regex",
-    overPaymentFlag
-  )
 
   def onPageLoad: Action[AnyContent] =
     actions
       .authAndGetDataWithGuard(SessionData.isClaimDetailsComplete)
       .async { implicit request =>
-        given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+        // derive if there is previous overpayment, then text input is mandatory
+        val form: Form[Option[String]] = formProvider(
+          "adjustmentToThisClaim.error.required",
+          (350, "adjustmentToThisClaim.error.length"),
+          "adjustmentToThisClaim.error.regex",
+          sessionData.adjustmentForOtherIncomePreviousOverClaimed
+            .exists(_ > BigDecimal(0.0)) || sessionData.prevOverclaimedGiftAid.exists(_ > BigDecimal(0.0))
+        )
+        given HeaderCarrier            = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
         if (request.sessionData.unregulatedLimitExceeded) {
           // user already saw WRN5 and chose to continue we show the form without re-checking
@@ -81,6 +77,13 @@ class AdjustmentToThisClaimController @Inject() (
     actions
       .authAndGetDataWithGuard(SessionData.isClaimDetailsComplete)
       .async { implicit request =>
+        val form: Form[Option[String]] = formProvider(
+          "adjustmentToThisClaim.error.required",
+          (350, "adjustmentToThisClaim.error.length"),
+          "adjustmentToThisClaim.error.regex",
+          sessionData.adjustmentForOtherIncomePreviousOverClaimed
+            .exists(_ > BigDecimal(0.0)) || sessionData.prevOverclaimedGiftAid.exists(_ > BigDecimal(0.0))
+        )
         form
           .bindFromRequest()
           .fold(
@@ -96,31 +99,4 @@ class AdjustmentToThisClaimController @Inject() (
           )
       }
 
-  def getGiftAidTotalDonations(data: GiftAidScheduleData): BigDecimal =
-    data.prevOverclaimedGiftAid.getOrElse(BigDecimal(0))
-
-  def fetchGiftAidOverPayment(using
-    request: DataRequest[?],
-    hc: HeaderCarrier
-  ): Future[BigDecimal] = {
-    val sessionData = request.sessionData
-    val claimIdOpt  = sessionData.unsubmittedClaimId
-    val fileRefOpt  = sessionData.giftAidScheduleFileUploadReference
-
-    (claimIdOpt, fileRefOpt) match {
-      case (Some(claimId), Some(fileRef)) =>
-        claimsValidationConnector
-          .getUploadResult(claimId, fileRef)
-          .map {
-            case GetUploadResultValidatedGiftAid(_, data) =>
-              getGiftAidTotalDonations(data)
-            case _                                        =>
-              BigDecimal(0)
-          }
-          .recover { case _ => BigDecimal(0) }
-
-      case _ =>
-        Future.successful(BigDecimal(0))
-    }
-  }
 }
