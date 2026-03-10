@@ -198,4 +198,30 @@ object SessionData {
 
   def isUnregulatedLimitExceeded(using session: SessionData): Boolean =
     session.unregulatedLimitExceeded
+
+  def syncUploadReferencesAndFlagsWithCheckboxes(session: SessionData): SessionData =
+    session.copy(
+      giftAidScheduleFileUploadReference =
+        if shouldUploadGiftAidSchedule(using session) then session.giftAidScheduleFileUploadReference else None,
+      otherIncomeScheduleFileUploadReference =
+        if shouldUploadOtherIncomeSchedule(using session) then session.otherIncomeScheduleFileUploadReference else None,
+      communityBuildingsScheduleFileUploadReference =
+        if shouldUploadCommunityBuildingsSchedule(using session) then
+          session.communityBuildingsScheduleFileUploadReference
+        else None,
+      connectedCharitiesScheduleFileUploadReference =
+        if shouldUploadConnectedCharitiesSchedule(using session) then
+          session.connectedCharitiesScheduleFileUploadReference
+        else None,
+      giftAidScheduleCompleted =
+        if shouldUploadGiftAidSchedule(using session) then session.giftAidScheduleCompleted else false,
+      otherIncomeScheduleCompleted =
+        if shouldUploadOtherIncomeSchedule(using session) then session.otherIncomeScheduleCompleted else false,
+      communityBuildingsScheduleCompleted =
+        if shouldUploadCommunityBuildingsSchedule(using session) then session.communityBuildingsScheduleCompleted
+        else false,
+      connectedCharitiesScheduleCompleted =
+        if shouldUploadConnectedCharitiesSchedule(using session) then session.connectedCharitiesScheduleCompleted
+        else false
+    )
 }

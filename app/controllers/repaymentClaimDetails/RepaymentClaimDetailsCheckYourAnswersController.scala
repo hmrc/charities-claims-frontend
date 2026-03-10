@@ -25,10 +25,13 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RepaymentClaimDetailsCheckYourAnswersView
 
 import scala.concurrent.{ExecutionContext, Future}
+import services.SaveService
+import models.SessionData
 
 class RepaymentClaimDetailsCheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
   actions: Actions,
+  saveService: SaveService,
   claimsService: ClaimsService,
   val controllerComponents: MessagesControllerComponents,
   view: RepaymentClaimDetailsCheckYourAnswersView
@@ -45,9 +48,10 @@ class RepaymentClaimDetailsCheckYourAnswersController @Inject() (
       request.sessionData.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
     if checkAnswers
     then
-      claimsService.save.map { _ =>
-        Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
-      }
+      for {
+        _ <- saveService.save(SessionData.syncUploadReferencesAndFlagsWithCheckboxes(request.sessionData))
+        _ <- claimsService.save
+      } yield Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
     else Future.successful(Redirect(routes.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad))
   }
 }
