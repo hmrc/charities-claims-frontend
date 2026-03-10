@@ -92,7 +92,6 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
         }
       }
 
-      // TODO: Update test when AA1 screen route is completed (currently redirects to placeholder /charity-repayment-dashboard)
       "should call backend deletion endpoint and redirect to AA1 when yes is selected and delete succeeds" in {
         val sessionData =
           models.SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
@@ -113,8 +112,8 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CharityRepaymentDashboardController.onPageLoad.url)
+          status(result)               shouldBe SEE_OTHER
+          redirectLocation(result).value should include("/charities-management")
         }
       }
 
