@@ -17,6 +17,7 @@
 package controllers.organisationDetails
 
 import com.google.inject.Inject
+import config.FrontendAppConfig
 import controllers.BaseController
 import controllers.actions.Actions
 import connectors.ClaimsConnector
@@ -34,7 +35,8 @@ class DeleteRepaymentClaimController @Inject() (
   view: DeleteRepaymentClaimView,
   actions: Actions,
   formProvider: YesNoFormProvider,
-  claimsConnector: ClaimsConnector
+  claimsConnector: ClaimsConnector,
+  appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -70,11 +72,8 @@ class DeleteRepaymentClaimController @Inject() (
                 .deleteClaim(claimId)
                 .flatMap {
                   case true  =>
-                    // TODO: This redirects to placeholder AA1 screen - route to be updated in the future
                     Future.successful(
-                      Redirect(
-                        controllers.organisationDetails.routes.CharityRepaymentDashboardController.onPageLoad
-                      )
+                      Redirect(appConfig.charityRepaymentDashboardUrl)
                     )
                   case false =>
                     Future.failed(
