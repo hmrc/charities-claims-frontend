@@ -199,29 +199,59 @@ object SessionData {
   def isUnregulatedLimitExceeded(using session: SessionData): Boolean =
     session.unregulatedLimitExceeded
 
-  def syncUploadReferencesAndFlagsWithCheckboxes(session: SessionData): SessionData =
+  def syncUploadReferencesAndFlagsWithCheckboxes(using session: SessionData): SessionData =
     session.copy(
       giftAidScheduleFileUploadReference =
-        if shouldUploadGiftAidSchedule(using session) then session.giftAidScheduleFileUploadReference else None,
+        if RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true)
+        then session.giftAidScheduleFileUploadReference
+        else None,
       otherIncomeScheduleFileUploadReference =
-        if shouldUploadOtherIncomeSchedule(using session) then session.otherIncomeScheduleFileUploadReference else None,
+        if RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true)
+        then session.otherIncomeScheduleFileUploadReference
+        else None,
       communityBuildingsScheduleFileUploadReference =
-        if shouldUploadCommunityBuildingsSchedule(using session) then
-          session.communityBuildingsScheduleFileUploadReference
+        if RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings.contains(true)
+        then session.communityBuildingsScheduleFileUploadReference
         else None,
       connectedCharitiesScheduleFileUploadReference =
-        if shouldUploadConnectedCharitiesSchedule(using session) then
-          session.connectedCharitiesScheduleFileUploadReference
+        if RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities.contains(true)
+        then session.connectedCharitiesScheduleFileUploadReference
         else None,
       giftAidScheduleCompleted =
-        if shouldUploadGiftAidSchedule(using session) then session.giftAidScheduleCompleted else false,
+        if RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true)
+        then session.giftAidScheduleCompleted
+        else false,
       otherIncomeScheduleCompleted =
-        if shouldUploadOtherIncomeSchedule(using session) then session.otherIncomeScheduleCompleted else false,
+        if RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true)
+        then session.otherIncomeScheduleCompleted
+        else false,
       communityBuildingsScheduleCompleted =
-        if shouldUploadCommunityBuildingsSchedule(using session) then session.communityBuildingsScheduleCompleted
+        if RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings.contains(true)
+        then session.communityBuildingsScheduleCompleted
         else false,
       connectedCharitiesScheduleCompleted =
-        if shouldUploadConnectedCharitiesSchedule(using session) then session.connectedCharitiesScheduleCompleted
+        if RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities.contains(true)
+        then session.connectedCharitiesScheduleCompleted
         else false
     )
+
+  def getAbandonedUploads(using session: SessionData): Seq[FileUploadReference] =
+    Seq(
+      session.giftAidScheduleFileUploadReference.filterNot(_ =>
+        RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true)
+          || session.giftAidScheduleCompleted
+      ),
+      session.otherIncomeScheduleFileUploadReference.filterNot(_ =>
+        RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true)
+          || session.otherIncomeScheduleCompleted
+      ),
+      session.communityBuildingsScheduleFileUploadReference.filterNot(_ =>
+        RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings.contains(true)
+          || session.communityBuildingsScheduleCompleted
+      ),
+      session.connectedCharitiesScheduleFileUploadReference.filterNot(_ =>
+        RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities.contains(true)
+          || session.connectedCharitiesScheduleCompleted
+      )
+    ).flatten
 }

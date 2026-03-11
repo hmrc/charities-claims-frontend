@@ -16,17 +16,18 @@
 
 package controllers.repaymentClaimDetails
 
-import com.google.inject.Inject
-import controllers.actions.Actions
-import play.api.i18n.{I18nSupport, MessagesApi}
+import services.{ClaimsService, SaveService}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.ClaimsService
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import com.google.inject.Inject
+import connectors.ClaimsValidationConnector
 import views.html.RepaymentClaimDetailsCheckYourAnswersView
+import controllers.actions.Actions
+import uk.gov.hmrc.http.HeaderCarrier
+import models.SessionData
+import play.api.i18n.{I18nSupport, MessagesApi}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
-import services.SaveService
-import models.SessionData
 
 class RepaymentClaimDetailsCheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
@@ -34,6 +35,7 @@ class RepaymentClaimDetailsCheckYourAnswersController @Inject() (
   saveService: SaveService,
   claimsService: ClaimsService,
   val controllerComponents: MessagesControllerComponents,
+  claimsValidationConnector: ClaimsValidationConnector,
   view: RepaymentClaimDetailsCheckYourAnswersView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
@@ -48,10 +50,32 @@ class RepaymentClaimDetailsCheckYourAnswersController @Inject() (
       request.sessionData.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
     if checkAnswers
     then
+      val newSessionData = SessionData.syncUploadReferencesAndFlagsWithCheckboxes(using request.sessionData)
       for {
-        _ <- saveService.save(SessionData.syncUploadReferencesAndFlagsWithCheckboxes(request.sessionData))
+        _ <- saveService.save(newSessionData)
         _ <- claimsService.save
+        _ <- removeAbandonedUploads(request.sessionData)
       } yield Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
     else Future.successful(Redirect(routes.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad))
   }
+
+  private def removeAbandonedUploads(
+    sessionData: SessionData
+  )(using headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
+    sessionData.unsubmittedClaimId match {
+      case Some(claimId) =>
+        Future
+          .sequence(
+            SessionData
+              .getAbandonedUploads(using sessionData)
+              .map(upload =>
+                claimsValidationConnector
+                  .deleteSchedule(claimId, upload)
+                  .recover(_ => ()) // best effort to delete abandoned uploads
+              )
+          )
+          .map(_ => ())
+      case None          =>
+        Future.successful(())
+    }
 }
