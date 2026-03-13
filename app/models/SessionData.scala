@@ -31,7 +31,8 @@ final case class SessionData(
   lastUpdatedReference: Option[String] = None,
   repaymentClaimDetailsAnswers: Option[RepaymentClaimDetailsAnswers] = None,
   organisationDetailsAnswers: Option[OrganisationDetailsAnswers] = None,
-  declarationDetailsAnswers: Option[DeclarationDetailsAnswers] = None,
+  understandFalseStatements: Option[Boolean] = None,
+  includedAnyAdjustmentsInClaimPrompt: Option[String] = None,
   giftAidSmallDonationsSchemeDonationDetailsAnswers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers] = None,
   // File upload references and data retrieved from the validation service
   giftAidScheduleUpscanInitialization: Option[UpscanInitiateResponse] = None,
@@ -78,7 +79,8 @@ object SessionData {
       lastUpdatedReference = Some(claim.lastUpdatedReference),
       repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers.from(claim.claimData.repaymentClaimDetails)),
       organisationDetailsAnswers = claim.claimData.organisationDetails.map(OrganisationDetailsAnswers.from),
-      declarationDetailsAnswers = claim.claimData.declarationDetails.map(DeclarationDetailsAnswers.from),
+      includedAnyAdjustmentsInClaimPrompt = claim.claimData.includedAnyAdjustmentsInClaimPrompt,
+      understandFalseStatements = claim.claimData.understandFalseStatements,
       adjustmentForOtherIncomePreviousOverClaimed = claim.adjustmentForOtherIncomePreviousOverClaimed,
       prevOverclaimedGiftAid = claim.prevOverclaimedGiftAid,
       giftAidSmallDonationsSchemeDonationDetailsAnswers =
@@ -115,6 +117,8 @@ object SessionData {
     for {
       lastUpdatedReference                       <- required(sessionData)(_.lastUpdatedReference)
       adjustmentForOtherIncomePreviousOverClaimed = sessionData.adjustmentForOtherIncomePreviousOverClaimed
+      includedAnyAdjustmentsInClaimPrompt         = sessionData.includedAnyAdjustmentsInClaimPrompt
+      understandFalseStatements                   = sessionData.understandFalseStatements
       prevOverclaimedGiftAid                      = sessionData.prevOverclaimedGiftAid
       repaymentClaimDetails                      <- RepaymentClaimDetailsAnswers
                                                       .toRepaymentClaimDetails(sessionData.repaymentClaimDetailsAnswers.get)
@@ -125,14 +129,13 @@ object SessionData {
           .flatMapTry(
             GiftAidSmallDonationsSchemeDonationDetailsAnswers.toGiftAidSmallDonationsSchemeDonationDetails
           )
-      declarationDetails                         <- sessionData.declarationDetailsAnswers
-                                                      .flatMapTry(DeclarationDetailsAnswers.toDeclarationDetails)
     } yield UpdateClaimRequest(
       lastUpdatedReference = lastUpdatedReference,
       repaymentClaimDetails = repaymentClaimDetails,
       organisationDetails = organisationDetails,
       giftAidSmallDonationsSchemeDonationDetails = giftAidSmallDonationsSchemeDonationDetails,
-      declarationDetails = declarationDetails,
+      includedAnyAdjustmentsInClaimPrompt = includedAnyAdjustmentsInClaimPrompt,
+      understandFalseStatements = understandFalseStatements,
       adjustmentForOtherIncomePreviousOverClaimed = adjustmentForOtherIncomePreviousOverClaimed,
       prevOverclaimedGiftAid = prevOverclaimedGiftAid,
       giftAidScheduleFileUploadReference =

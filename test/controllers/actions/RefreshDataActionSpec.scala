@@ -16,9 +16,9 @@
 
 package controllers.actions
 
-import connectors.ClaimsConnector
-import models.requests.{AuthorisedRequest, DataRequest}
+import connectors.{ClaimsConnector, ClaimsValidationConnector}
 import models.*
+import models.requests.{AuthorisedRequest, DataRequest}
 import play.api.mvc.Results.*
 import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
@@ -29,7 +29,6 @@ import util.{BaseSpec, TestClaims}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
-import connectors.ClaimsValidationConnector
 
 class RefreshDataActionSpec extends BaseSpec {
 
@@ -173,7 +172,8 @@ class RefreshDataActionSpec extends BaseSpec {
               )
             )
           )
-          req.sessionData.declarationDetailsAnswers                         shouldBe None
+          req.sessionData.includedAnyAdjustmentsInClaimPrompt               shouldBe None
+          req.sessionData.understandFalseStatements                         shouldBe None
           req.sessionData.otherIncomeScheduleData                           shouldBe None
           req.sessionData.otherIncomeScheduleFileUploadReference            shouldBe None
           req.sessionData.communityBuildingsScheduleData                    shouldBe None

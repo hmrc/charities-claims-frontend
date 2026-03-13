@@ -63,15 +63,15 @@ govukHint: GovukHint)
     ))
 }
 
-@characterCountMessagePlusOptionalAfterInput = {
-    @characterCountMessage
-    @formGroup.afterInput.map(_.asHtml)
-}
-
 @govukTextarea(Textarea(
     id = nonEmptyId,
     name = name,
-    describedBy = Some(s"${nonEmptyId}-info"),
+    describedBy = Some(
+                        Seq(
+                        hint.flatMap(_.id),
+                        Some(s"${nonEmptyId}-info")
+                        ).flatten.mkString(" ")
+                       ),
     spellcheck = spellcheck,
     value = value,
     label = label.copy(forAttr = Some(nonEmptyId)),
@@ -79,10 +79,10 @@ govukHint: GovukHint)
     errorMessage = errorMessage,
     formGroup = formGroup.copy(
         classes = Some(toClasses("govuk-character-count", formGroup.classes.getOrElse(""))),
-        beforeInput = formGroup.beforeInput,
+        beforeInput = Some(HtmlContent(characterCountMessage)),
         attributes = dataAttributes ++ formGroup.attributes,
-        afterInput = Some(HtmlContent(characterCountMessagePlusOptionalAfterInput))
+        afterInput = formGroup.afterInput
     ),
     classes = toClasses("govuk-js-character-count", if (classes.isEmpty) "" else s" $classes"),
-    attributes = attributes
+    attributes = attributes + ("autocomplete" -> "off")
     ))

@@ -16,17 +16,17 @@
 
 package controllers.claimDeclaration
 
-import services.{SaveService, UnregulatedDonationsService}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
-import views.html.AdjustmentToThisClaimView
 import controllers.actions.Actions
 import forms.AdjustmentToThisClaimFormProvider
-import models.{DeclarationDetailsAnswers, SessionData}
+import models.SessionData
 import play.api.data.Form
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.{ClaimsService, SaveService, UnregulatedDonationsService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import views.html.AdjustmentToThisClaimView
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,6 +36,7 @@ class AdjustmentToThisClaimController @Inject() (
   actions: Actions,
   formProvider: AdjustmentToThisClaimFormProvider,
   saveService: SaveService,
+  claimsService: ClaimsService,
   unregulatedDonationsService: UnregulatedDonationsService
 )(using ec: ExecutionContext)
     extends BaseController {
@@ -56,7 +57,7 @@ class AdjustmentToThisClaimController @Inject() (
 
         if (request.sessionData.unregulatedLimitExceeded) {
           // user already saw WRN5 and chose to continue we show the form without re-checking
-          val previousAnswer = DeclarationDetailsAnswers.getIncludedAnyAdjustmentsInClaimPrompt
+          val previousAnswer = request.sessionData.includedAnyAdjustmentsInClaimPrompt
           Future.successful(Ok(view(form.withDefault(Some(previousAnswer)))))
         } else {
           unregulatedDonationsService.checkUnregulatedLimit.flatMap {
@@ -67,7 +68,7 @@ class AdjustmentToThisClaimController @Inject() (
               }
 
             case None =>
-              val previousAnswer = DeclarationDetailsAnswers.getIncludedAnyAdjustmentsInClaimPrompt
+              val previousAnswer = request.sessionData.includedAnyAdjustmentsInClaimPrompt
               Future.successful(Ok(view(form.withDefault(Some(previousAnswer)))))
           }
         }
@@ -89,14 +90,15 @@ class AdjustmentToThisClaimController @Inject() (
           .fold(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
             value =>
-              saveService
-                .save(
-                  DeclarationDetailsAnswers.setIncludedAnyAdjustmentsInClaimPrompt(value)
-                )
-                .map(_ =>
-                  Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
-                ) // TODO - redirect when next page available
+              for {
+                _ <- saveService
+                       .save(
+                         request.sessionData.copy(includedAnyAdjustmentsInClaimPrompt = value)
+                       )
+                _ <- claimsService.save
+              } yield Redirect(
+                controllers.routes.ClaimsTaskListController.onPageLoad
+              ) // TODO - redirect when next page available
           )
       }
-
 }
