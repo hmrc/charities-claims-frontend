@@ -369,6 +369,7 @@ class ClaimsValidationServiceImpl @Inject() (
                 request.sessionData.copy(
                   giftAidScheduleUpscanInitialization = None,
                   giftAidScheduleFileUploadReference = None,
+                  prevOverclaimedGiftAid = None,
                   giftAidScheduleData = None,
                   giftAidScheduleCompleted = false
                 )
@@ -376,6 +377,7 @@ class ClaimsValidationServiceImpl @Inject() (
                 request.sessionData.copy(
                   otherIncomeScheduleUpscanInitialization = None,
                   otherIncomeScheduleFileUploadReference = None,
+                  adjustmentForOtherIncomePreviousOverClaimed = None,
                   otherIncomeScheduleData = None,
                   otherIncomeScheduleCompleted = false
                 )

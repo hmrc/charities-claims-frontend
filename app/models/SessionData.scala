@@ -81,8 +81,8 @@ object SessionData {
       organisationDetailsAnswers = claim.claimData.organisationDetails.map(OrganisationDetailsAnswers.from),
       includedAnyAdjustmentsInClaimPrompt = claim.claimData.includedAnyAdjustmentsInClaimPrompt,
       understandFalseStatements = claim.claimData.understandFalseStatements,
-      adjustmentForOtherIncomePreviousOverClaimed = claim.adjustmentForOtherIncomePreviousOverClaimed,
-      prevOverclaimedGiftAid = claim.prevOverclaimedGiftAid,
+      adjustmentForOtherIncomePreviousOverClaimed = claim.claimData.adjustmentForOtherIncomePreviousOverClaimed,
+      prevOverclaimedGiftAid = claim.claimData.prevOverclaimedGiftAid,
       giftAidSmallDonationsSchemeDonationDetailsAnswers =
         claim.claimData.giftAidSmallDonationsSchemeDonationDetails.map(
           GiftAidSmallDonationsSchemeDonationDetailsAnswers.from
@@ -208,9 +208,17 @@ object SessionData {
         if RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true)
         then session.giftAidScheduleFileUploadReference
         else None,
+      prevOverclaimedGiftAid =
+        if RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true)
+        then session.prevOverclaimedGiftAid
+        else None,
       otherIncomeScheduleFileUploadReference =
         if RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true)
         then session.otherIncomeScheduleFileUploadReference
+        else None,
+      adjustmentForOtherIncomePreviousOverClaimed =
+        if RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true)
+        then session.adjustmentForOtherIncomePreviousOverClaimed
         else None,
       communityBuildingsScheduleFileUploadReference =
         if RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings.contains(true)
