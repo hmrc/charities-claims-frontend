@@ -36,18 +36,17 @@
     }
 
     <h1 class="govuk-heading-l">@messages("adjustmentToThisClaim.heading")</h1>
-    <div class="govuk-hint">@messages("adjustmentToThisClaim.para")</div>
 
     @formHelper(action = routes.AdjustmentToThisClaimController.onSubmit, Symbol("autoComplete") -> "off") {
 
     @govukTextareaCharacterCount(
         CharacterCountViewModel(
             field = form("value"),
+            label = LabelViewModel(messages("adjustmentToThisClaim.heading")).withCssClass("govuk-visually-hidden"),
             maxLength = 350
         ).withHint(
-            HintViewModel(Text(messages("adjustmentToThisClaim.hint")))
-            .withId("value-hint")
-            )
+            HintViewModel(Text(messages("adjustmentToThisClaim.para")))
+        )
         .fullWidth()
     )
 

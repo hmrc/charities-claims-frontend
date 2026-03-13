@@ -16,16 +16,17 @@
 
 package controllers.claimDeclaration
 
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
+import connectors.UnregulatedDonationsConnector
 import controllers.ControllerSpec
-import views.html.AdjustmentToThisClaimView
-import play.api.{inject, Application}
 import forms.AdjustmentToThisClaimFormProvider
 import models.*
 import play.api.data.Form
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
-import connectors.UnregulatedDonationsConnector
+import play.api.{inject, Application}
 import uk.gov.hmrc.http.HeaderCarrier
+import util.TestScheduleData
+import views.html.AdjustmentToThisClaimView
 
 import _root_.scala.concurrent.Future
 
@@ -77,10 +78,6 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
     authorisedOfficialTrusteeFirstName = Some("Jack"),
     authorisedOfficialTrusteeLastName = Some("Smith"),
     authorisedOfficialDetails = Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
-  )
-
-  val declarationDetailsAnswers = DeclarationDetailsAnswers(
-    includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
   )
 
   "ClaimReferenceNumberInputController" - {
@@ -243,7 +240,11 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
       }
 
       "should render ClaimsTaskListController if isClaimDetailsComplete is false" in {
-        val sessionData = DeclarationDetailsAnswers.setIncludedAnyAdjustmentsInClaimPrompt(Some("some text ...."))
+        val sessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            includedAnyAdjustmentsInClaimPrompt = Some("some text ....")
+          )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -270,7 +271,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers),
-          declarationDetailsAnswers = Some(declarationDetailsAnswers)
+          includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
         ).copy(
           connectedCharitiesScheduleCompleted = true,
           organisationDetailsAnswers = Some(organisationDetailsAnswers)
@@ -308,7 +309,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers),
-          declarationDetailsAnswers = Some(declarationDetailsAnswers)
+          includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
         ).copy(
           connectedCharitiesScheduleCompleted = true,
           organisationDetailsAnswers = Some(organisationDetailsAnswers2)
@@ -348,7 +349,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers),
-          declarationDetailsAnswers = Some(declarationDetailsAnswers)
+          includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
         ).copy(
           connectedCharitiesScheduleCompleted = true,
           organisationDetailsAnswers = Some(organisationDetailsAnswers2)
@@ -410,13 +411,13 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers),
-          declarationDetailsAnswers = Some(declarationDetailsAnswers)
+          includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
         ).copy(
           connectedCharitiesScheduleCompleted = true,
           organisationDetailsAnswers = Some(organisationDetailsAnswers)
         )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveClaim.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -462,7 +463,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers),
           adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(1001.1)),
-          declarationDetailsAnswers = Some(declarationDetailsAnswers)
+          includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
         ).copy(
           connectedCharitiesScheduleCompleted = true,
           organisationDetailsAnswers = Some(organisationDetailsAnswers)
@@ -494,7 +495,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers),
           prevOverclaimedGiftAid = Some(BigDecimal(201.1)),
-          declarationDetailsAnswers = Some(declarationDetailsAnswers)
+          includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
         ).copy(
           connectedCharitiesScheduleCompleted = true,
           organisationDetailsAnswers = Some(organisationDetailsAnswers)
@@ -527,7 +528,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = Some(answers),
           adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(101.1)),
           prevOverclaimedGiftAid = Some(BigDecimal(201.1)),
-          declarationDetailsAnswers = Some(declarationDetailsAnswers)
+          includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
         ).copy(
           connectedCharitiesScheduleCompleted = true,
           organisationDetailsAnswers = Some(organisationDetailsAnswers)
@@ -556,16 +557,17 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           makingAdjustmentToPreviousClaim = Some(false)
         )
         val sessionData = SessionData(
+          lastUpdatedReference = Some(testClaimId),
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers),
-          declarationDetailsAnswers = Some(declarationDetailsAnswers)
+          includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
         ).copy(
           connectedCharitiesScheduleCompleted = true,
           organisationDetailsAnswers = Some(organisationDetailsAnswers)
         )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveClaim.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
