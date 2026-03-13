@@ -26,9 +26,7 @@ final case class Claim(
   lastUpdatedReference: String,
   creationTimestamp: String,
   claimData: ClaimData,
-  submissionDetails: Option[SubmissionDetails] = None,
-  adjustmentForOtherIncomePreviousOverClaimed: Option[BigDecimal] = None,
-  prevOverclaimedGiftAid: Option[BigDecimal] = None
+  submissionDetails: Option[SubmissionDetails] = None
 )
 
 object Claim {
@@ -44,7 +42,9 @@ final case class ClaimData(
   giftAidScheduleFileUploadReference: Option[FileUploadReference] = None,
   otherIncomeScheduleFileUploadReference: Option[FileUploadReference] = None,
   communityBuildingsScheduleFileUploadReference: Option[FileUploadReference] = None,
-  connectedCharitiesScheduleFileUploadReference: Option[FileUploadReference] = None
+  connectedCharitiesScheduleFileUploadReference: Option[FileUploadReference] = None,
+  adjustmentForOtherIncomePreviousOverClaimed: Option[BigDecimal] = None,
+  prevOverclaimedGiftAid: Option[BigDecimal] = None
 )
 
 object ClaimData {
