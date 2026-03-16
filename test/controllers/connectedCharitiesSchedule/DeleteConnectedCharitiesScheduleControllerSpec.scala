@@ -76,8 +76,7 @@ class DeleteConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      // TODO: Update test when G2 screen route is completed (currently redirects to placeholder /add-schedule)
-      "should redirect to G2 screen when no is selected" in {
+      "should redirect to ProblemWithConnectedCharitiesScheduleController when no is selected" in {
         given application: Application = applicationBuilder()
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
@@ -90,7 +89,9 @@ class DeleteConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some("/problem-with-connected-charities-schedule")
+          redirectLocation(result) shouldBe Some(
+            controllers.connectedCharitiesSchedule.routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url
+          )
         }
       }
 

@@ -31,7 +31,8 @@ final case class SessionData(
   lastUpdatedReference: Option[String] = None,
   repaymentClaimDetailsAnswers: Option[RepaymentClaimDetailsAnswers] = None,
   organisationDetailsAnswers: Option[OrganisationDetailsAnswers] = None,
-  declarationDetailsAnswers: Option[DeclarationDetailsAnswers] = None,
+  understandFalseStatements: Option[Boolean] = None,
+  includedAnyAdjustmentsInClaimPrompt: Option[String] = None,
   giftAidSmallDonationsSchemeDonationDetailsAnswers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers] = None,
   // File upload references and data retrieved from the validation service
   giftAidScheduleUpscanInitialization: Option[UpscanInitiateResponse] = None,
@@ -49,7 +50,10 @@ final case class SessionData(
   connectedCharitiesScheduleUpscanInitialization: Option[UpscanInitiateResponse] = None,
   connectedCharitiesScheduleFileUploadReference: Option[FileUploadReference] = None,
   connectedCharitiesScheduleData: Option[ConnectedCharitiesScheduleData] = None,
-  connectedCharitiesScheduleCompleted: Boolean = false
+  connectedCharitiesScheduleCompleted: Boolean = false,
+  unregulatedLimitExceeded: Boolean = false,
+  adjustmentForOtherIncomePreviousOverClaimed: Option[BigDecimal] = None,
+  prevOverclaimedGiftAid: Option[BigDecimal] = None
 )
 
 object SessionData {
@@ -75,7 +79,10 @@ object SessionData {
       lastUpdatedReference = Some(claim.lastUpdatedReference),
       repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers.from(claim.claimData.repaymentClaimDetails)),
       organisationDetailsAnswers = claim.claimData.organisationDetails.map(OrganisationDetailsAnswers.from),
-      declarationDetailsAnswers = claim.claimData.declarationDetails.map(DeclarationDetailsAnswers.from),
+      includedAnyAdjustmentsInClaimPrompt = claim.claimData.includedAnyAdjustmentsInClaimPrompt,
+      understandFalseStatements = claim.claimData.understandFalseStatements,
+      adjustmentForOtherIncomePreviousOverClaimed = claim.claimData.adjustmentForOtherIncomePreviousOverClaimed,
+      prevOverclaimedGiftAid = claim.claimData.prevOverclaimedGiftAid,
       giftAidSmallDonationsSchemeDonationDetailsAnswers =
         claim.claimData.giftAidSmallDonationsSchemeDonationDetails.map(
           GiftAidSmallDonationsSchemeDonationDetailsAnswers.from
@@ -109,6 +116,10 @@ object SessionData {
   def toUpdateClaimRequest(sessionData: SessionData): Try[UpdateClaimRequest] =
     for {
       lastUpdatedReference                       <- required(sessionData)(_.lastUpdatedReference)
+      adjustmentForOtherIncomePreviousOverClaimed = sessionData.adjustmentForOtherIncomePreviousOverClaimed
+      includedAnyAdjustmentsInClaimPrompt         = sessionData.includedAnyAdjustmentsInClaimPrompt
+      understandFalseStatements                   = sessionData.understandFalseStatements
+      prevOverclaimedGiftAid                      = sessionData.prevOverclaimedGiftAid
       repaymentClaimDetails                      <- RepaymentClaimDetailsAnswers
                                                       .toRepaymentClaimDetails(sessionData.repaymentClaimDetailsAnswers.get)
       organisationDetails                        <- sessionData.organisationDetailsAnswers
@@ -118,14 +129,15 @@ object SessionData {
           .flatMapTry(
             GiftAidSmallDonationsSchemeDonationDetailsAnswers.toGiftAidSmallDonationsSchemeDonationDetails
           )
-      declarationDetails                         <- sessionData.declarationDetailsAnswers
-                                                      .flatMapTry(DeclarationDetailsAnswers.toDeclarationDetails)
     } yield UpdateClaimRequest(
       lastUpdatedReference = lastUpdatedReference,
       repaymentClaimDetails = repaymentClaimDetails,
       organisationDetails = organisationDetails,
       giftAidSmallDonationsSchemeDonationDetails = giftAidSmallDonationsSchemeDonationDetails,
-      declarationDetails = declarationDetails,
+      includedAnyAdjustmentsInClaimPrompt = includedAnyAdjustmentsInClaimPrompt,
+      understandFalseStatements = understandFalseStatements,
+      adjustmentForOtherIncomePreviousOverClaimed = adjustmentForOtherIncomePreviousOverClaimed,
+      prevOverclaimedGiftAid = prevOverclaimedGiftAid,
       giftAidScheduleFileUploadReference =
         // only include the file upload reference if the schedule has been accepted
         if sessionData.giftAidScheduleCompleted
@@ -158,6 +170,15 @@ object SessionData {
     session.unsubmittedClaimId.isDefined
       && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
 
+  def isClaimDetailsComplete(using session: SessionData): Boolean =
+    session.unsubmittedClaimId.isDefined
+      && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
+      && session.organisationDetailsAnswers.exists(_.hasOrganisationDetailsCompleteAnswers)
+      && (!shouldUploadConnectedCharitiesSchedule || session.connectedCharitiesScheduleCompleted)
+      && (!shouldUploadOtherIncomeSchedule || session.otherIncomeScheduleCompleted)
+      && (!shouldUploadCommunityBuildingsSchedule || session.communityBuildingsScheduleCompleted)
+      && (!shouldUploadGiftAidSchedule || session.giftAidScheduleCompleted)
+
   def shouldUploadGiftAidSchedule(using session: SessionData): Boolean =
     RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true)
       && isRepaymentClaimDetailsComplete
@@ -174,4 +195,74 @@ object SessionData {
   def shouldUploadConnectedCharitiesSchedule(using session: SessionData): Boolean =
     RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities.contains(true)
       && isRepaymentClaimDetailsComplete
+
+  def setUnregulatedLimitExceeded(value: Boolean)(using session: SessionData): SessionData =
+    session.copy(unregulatedLimitExceeded = value)
+
+  def isUnregulatedLimitExceeded(using session: SessionData): Boolean =
+    session.unregulatedLimitExceeded
+
+  def syncUploadReferencesAndFlagsWithCheckboxes(using session: SessionData): SessionData =
+    session.copy(
+      giftAidScheduleFileUploadReference =
+        if RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true)
+        then session.giftAidScheduleFileUploadReference
+        else None,
+      prevOverclaimedGiftAid =
+        if RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true)
+        then session.prevOverclaimedGiftAid
+        else None,
+      otherIncomeScheduleFileUploadReference =
+        if RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true)
+        then session.otherIncomeScheduleFileUploadReference
+        else None,
+      adjustmentForOtherIncomePreviousOverClaimed =
+        if RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true)
+        then session.adjustmentForOtherIncomePreviousOverClaimed
+        else None,
+      communityBuildingsScheduleFileUploadReference =
+        if RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings.contains(true)
+        then session.communityBuildingsScheduleFileUploadReference
+        else None,
+      connectedCharitiesScheduleFileUploadReference =
+        if RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities.contains(true)
+        then session.connectedCharitiesScheduleFileUploadReference
+        else None,
+      giftAidScheduleCompleted =
+        if RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true)
+        then session.giftAidScheduleCompleted
+        else false,
+      otherIncomeScheduleCompleted =
+        if RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true)
+        then session.otherIncomeScheduleCompleted
+        else false,
+      communityBuildingsScheduleCompleted =
+        if RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings.contains(true)
+        then session.communityBuildingsScheduleCompleted
+        else false,
+      connectedCharitiesScheduleCompleted =
+        if RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities.contains(true)
+        then session.connectedCharitiesScheduleCompleted
+        else false
+    )
+
+  def getAbandonedUploads(using session: SessionData): Seq[FileUploadReference] =
+    Seq(
+      session.giftAidScheduleFileUploadReference.filterNot(_ =>
+        RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true)
+          || session.giftAidScheduleCompleted
+      ),
+      session.otherIncomeScheduleFileUploadReference.filterNot(_ =>
+        RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true)
+          || session.otherIncomeScheduleCompleted
+      ),
+      session.communityBuildingsScheduleFileUploadReference.filterNot(_ =>
+        RepaymentClaimDetailsAnswers.getClaimingDonationsCollectedInCommunityBuildings.contains(true)
+          || session.communityBuildingsScheduleCompleted
+      ),
+      session.connectedCharitiesScheduleFileUploadReference.filterNot(_ =>
+        RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities.contains(true)
+          || session.connectedCharitiesScheduleCompleted
+      )
+    ).flatten
 }

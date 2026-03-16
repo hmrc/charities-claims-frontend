@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.CorporateTrusteeDetailsFormProvider
-import models.{Mode, OrganisationDetailsAnswers}
+import models.{Mode, OrganisationDetailsAnswers, SessionData}
 import models.Mode.*
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
@@ -37,14 +37,37 @@ class CorporateTrusteeDetailsController @Inject() (
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if (
-      OrganisationDetailsAnswers.getAreYouACorporateTrustee
-        .contains(true) && OrganisationDetailsAnswers.getDoYouHaveCorporateTrusteeUKAddress.isDefined
-    ) {
-      val isUKAddress    = OrganisationDetailsAnswers.getDoYouHaveCorporateTrusteeUKAddress.getOrElse(false)
-      val previousAnswer = OrganisationDetailsAnswers.getCorporateTrusteeDetails
-      val form           = formProvider(
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
+      if (
+        OrganisationDetailsAnswers.getAreYouACorporateTrustee
+          .contains(true) && OrganisationDetailsAnswers.getDoYouHaveCorporateTrusteeUKAddress.isDefined
+      ) {
+        val isUKAddress    = OrganisationDetailsAnswers.getDoYouHaveCorporateTrusteeUKAddress.getOrElse(false)
+        val previousAnswer = OrganisationDetailsAnswers.getCorporateTrusteeDetails
+        val form           = formProvider(
+          isUKAddress,
+          "corporateTrusteeDetails.name.error.required",
+          "corporateTrusteeDetails.name.error.length",
+          "corporateTrusteeDetails.name.error.regex",
+          "corporateTrusteeDetails.phone.error.required",
+          "corporateTrusteeDetails.phone.error.length",
+          "corporateTrusteeDetails.phone.error.regex",
+          "corporateTrusteeDetails.postCode.error.required",
+          "corporateTrusteeDetails.postCode.error.length",
+          "corporateTrusteeDetails.postCode.error.regex"
+        )
+        Future.successful(Ok(view(form.withDefault(previousAnswer), isUKAddress, mode)))
+      } else {
+        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      }
+    }
+
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
+
+      val isUKAddress = OrganisationDetailsAnswers.getDoYouHaveCorporateTrusteeUKAddress.getOrElse(false)
+      val form        = formProvider(
         isUKAddress,
         "corporateTrusteeDetails.name.error.required",
         "corporateTrusteeDetails.name.error.length",
@@ -56,39 +79,18 @@ class CorporateTrusteeDetailsController @Inject() (
         "corporateTrusteeDetails.postCode.error.length",
         "corporateTrusteeDetails.postCode.error.regex"
       )
-      Future.successful(Ok(view(form.withDefault(previousAnswer), isUKAddress, mode)))
-    } else {
-      Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, isUKAddress, mode))),
+          value =>
+            saveService
+              .save(OrganisationDetailsAnswers.setCorporateTrusteeDetails(value))
+              .map { _ =>
+                Redirect(
+                  routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
+                )
+              }
+        )
     }
-  }
-
-  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-
-    val isUKAddress = OrganisationDetailsAnswers.getDoYouHaveCorporateTrusteeUKAddress.getOrElse(false)
-    val form        = formProvider(
-      isUKAddress,
-      "corporateTrusteeDetails.name.error.required",
-      "corporateTrusteeDetails.name.error.length",
-      "corporateTrusteeDetails.name.error.regex",
-      "corporateTrusteeDetails.phone.error.required",
-      "corporateTrusteeDetails.phone.error.length",
-      "corporateTrusteeDetails.phone.error.regex",
-      "corporateTrusteeDetails.postCode.error.required",
-      "corporateTrusteeDetails.postCode.error.length",
-      "corporateTrusteeDetails.postCode.error.regex"
-    )
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, isUKAddress, mode))),
-        value =>
-          saveService
-            .save(OrganisationDetailsAnswers.setCorporateTrusteeDetails(value))
-            .map { _ =>
-              Redirect(
-                routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
-              )
-            }
-      )
-  }
 }

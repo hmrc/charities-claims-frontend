@@ -25,12 +25,18 @@ class Actions @Inject() (
   actionBuilder: DefaultActionBuilder,
   identify: AuthorisedAction,
   getData: DataRetrievalAction,
+  refreshData: RefreshDataAction,
   guard: GuardAction
 ) {
   def authAndGetData(): ActionBuilder[DataRequest, AnyContent] =
     actionBuilder
       .andThen(identify)
       .andThen(getData)
+
+  def authAndRefreshData(): ActionBuilder[DataRequest, AnyContent] =
+    actionBuilder
+      .andThen(identify)
+      .andThen(refreshData)
 
   def authAndGetDataWithGuard(predicate: SessionData ?=> Boolean): ActionBuilder[DataRequest, AnyContent] =
     actionBuilder

@@ -19,7 +19,7 @@ package controllers.organisationDetails
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
-import models.OrganisationDetailsAnswers
+import models.{OrganisationDetailsAnswers, SessionData}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.OrganisationDetailsIncompleteAnswersView
 
@@ -29,8 +29,9 @@ class OrganisationDetailsIncompleteAnswersController @Inject() (
   actions: Actions
 ) extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val missingFields = OrganisationDetailsAnswers.getMissingFields(request.sessionData.organisationDetailsAnswers)
-    Ok(view(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url, missingFields))
+  def onPageLoad: Action[AnyContent] = actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete) {
+    implicit request =>
+      val missingFields = OrganisationDetailsAnswers.getMissingFields(request.sessionData.organisationDetailsAnswers)
+      Ok(view(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url, missingFields))
   }
 }

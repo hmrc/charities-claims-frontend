@@ -22,20 +22,39 @@ import controllers.actions.Actions
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.ClaimDeclarationView
 import controllers.claimDeclaration.routes
+import models.SessionData
+import services.SaveService
 
 import scala.concurrent.Future
 
 class ClaimDeclarationController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
+  saveService: SaveService,
   view: ClaimDeclarationView
 ) extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Ok(view()))
-  }
+  def onPageLoad: Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isClaimDetailsComplete).async { implicit request =>
+      (
+        sessionData.adjustmentForOtherIncomePreviousOverClaimed
+          .exists(_ > BigDecimal(0.0)),
+        sessionData.prevOverclaimedGiftAid.exists(_ > BigDecimal(0.0))
+      ) match {
+        case (false, false) => Future.successful(Ok(view()))
+        case (_, _)         =>
+          // adjustment details must have been entered if either prev OtherIncome or/and GiftAid are > 0
+          if sessionData.includedAnyAdjustmentsInClaimPrompt.isDefined then Future.successful(Ok(view()))
+          else Future.successful(Redirect(routes.ClaimDeclarationController.onPageLoad))
+      }
+    }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Redirect(routes.ClaimDeclarationController.onPageLoad))
-  }
+  def onSubmit: Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.isClaimDetailsComplete)
+      .async { implicit request =>
+        // read and understood the declaration
+        saveService.save(request.sessionData.copy(understandFalseStatements = Some(true)))
+        Future.successful(Redirect(routes.ClaimDeclarationController.onPageLoad))
+      }
 }

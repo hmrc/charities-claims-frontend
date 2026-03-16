@@ -34,7 +34,7 @@ class ClaimsTaskListController @Inject() (
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] =
-    actions.authAndGetData() { implicit request =>
+    actions.authAndRefreshData() { implicit request =>
       Ok(view(ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl)))
     }
 }
@@ -137,7 +137,7 @@ object ClaimsTaskListController {
     Seq(
       TaskItem(
         name = messages("claimsTaskList.task.readDeclaration"),
-        href = routes.DeclarationDetailsConfirmationController.onPageLoad,
+        href = claimDeclaration.routes.AdjustmentToThisClaimController.onPageLoad,
         status = status
       )
     )

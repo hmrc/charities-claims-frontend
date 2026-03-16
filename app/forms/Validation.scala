@@ -17,5 +17,6 @@
 package forms
 
 object Validation {
-  val claimReferenceNumberPattern = "^([\\x00-\\x7F\\xA0-\\xFF]{1,20})$"
+  val claimReferenceNumberPattern  = "^([\\x00-\\x7F\\xA0-\\xFF]{1,20})$"
+  val adjustmentToThisClaimPattern = "^([\\x00-\\x7F\\xA0-\\xFF]{1,350})$"
 }

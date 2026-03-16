@@ -17,6 +17,8 @@
 package controllers.organisationDetails
 
 import connectors.ClaimsConnector
+import services.SaveService
+import models.SessionData
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
 import play.api.Application
@@ -34,13 +36,17 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
   val form: Form[Boolean] = new YesNoFormProvider()()
 
   val mockClaimsConnector: ClaimsConnector = mock[ClaimsConnector]
+  val mockSaveService: SaveService         = mock[SaveService]
 
   "DeleteRepaymentClaimController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
 
         given application: Application = applicationBuilder()
-          .overrides(bind[ClaimsConnector].toInstance(mockClaimsConnector))
+          .overrides(
+            bind[ClaimsConnector].toInstance(mockClaimsConnector),
+            bind[SaveService].toInstance(mockSaveService)
+          )
           .build()
 
         running(application) {
@@ -61,7 +67,10 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
     "onSubmit" - {
       "should reload the page with errors when a required field is missing" in {
         given application: Application = applicationBuilder()
-          .overrides(bind[ClaimsConnector].toInstance(mockClaimsConnector))
+          .overrides(
+            bind[ClaimsConnector].toInstance(mockClaimsConnector),
+            bind[SaveService].toInstance(mockSaveService)
+          )
           .build()
 
         running(application) {
@@ -77,7 +86,10 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
 
       "should redirect to R2 screen when no is selected" in {
         given application: Application = applicationBuilder()
-          .overrides(bind[ClaimsConnector].toInstance(mockClaimsConnector))
+          .overrides(
+            bind[ClaimsConnector].toInstance(mockClaimsConnector),
+            bind[SaveService].toInstance(mockSaveService)
+          )
           .build()
 
         running(application) {
@@ -92,10 +104,14 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
         }
       }
 
-      // TODO: Update test when AA1 screen route is completed (currently redirects to placeholder /charity-repayment-dashboard)
       "should call backend deletion endpoint and redirect to AA1 when yes is selected and delete succeeds" in {
         val sessionData =
           models.SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
+
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(sessionData))
 
         (mockClaimsConnector
           .deleteClaim(_: String)(using _: HeaderCarrier))
@@ -103,7 +119,10 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
           .returning(Future.successful(true))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
-          .overrides(bind[ClaimsConnector].toInstance(mockClaimsConnector))
+          .overrides(
+            bind[ClaimsConnector].toInstance(mockClaimsConnector),
+            bind[SaveService].toInstance(mockSaveService)
+          )
           .build()
 
         running(application) {
@@ -113,8 +132,8 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.CharityRepaymentDashboardController.onPageLoad.url)
+          status(result)               shouldBe SEE_OTHER
+          redirectLocation(result).value should include("/charities-management")
         }
       }
 
@@ -122,16 +141,56 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
         val sessionData =
           models.SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
 
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(sessionData))
+
         (mockClaimsConnector
           .deleteClaim(_: String)(using _: HeaderCarrier))
           .expects("test-claim-123", *)
           .returning(Future.successful(false))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
-          .overrides(bind[ClaimsConnector].toInstance(mockClaimsConnector))
+          .overrides(
+            bind[ClaimsConnector].toInstance(mockClaimsConnector),
+            bind[SaveService].toInstance(mockSaveService)
+          )
           .build()
 
         running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.DeleteRepaymentClaimController.onSubmit.url)
+              .withFormUrlEncodedBody("value" -> "true")
+
+          val result = route(application, request).value
+
+          a[RuntimeException] should be thrownBy result.futureValue
+        }
+      }
+
+      "should handle case when saveService fails" in {
+
+        val sessionData =
+          SessionData
+            .empty(testCharitiesReference)
+            .copy(unsubmittedClaimId = Some("test-claim-123"))
+
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.failed(new RuntimeException("Save failed")))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData)
+            .overrides(
+              bind[ClaimsConnector].toInstance(mockClaimsConnector),
+              bind[SaveService].toInstance(mockSaveService)
+            )
+            .build()
+
+        running(application) {
+
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.DeleteRepaymentClaimController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
@@ -146,7 +205,10 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
         val sessionData = models.SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
 
         given application: Application = applicationBuilder(sessionData = sessionData)
-          .overrides(bind[ClaimsConnector].toInstance(mockClaimsConnector))
+          .overrides(
+            bind[ClaimsConnector].toInstance(mockClaimsConnector),
+            bind[SaveService].toInstance(mockSaveService)
+          )
           .build()
 
         running(application) {

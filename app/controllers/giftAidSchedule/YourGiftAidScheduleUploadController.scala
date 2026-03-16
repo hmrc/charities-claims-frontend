@@ -117,7 +117,10 @@ class YourGiftAidScheduleUploadController @Inject() (
                 .recoverWith {
                   case e: Exception if e.getMessage.contains("CLAIM_REFERENCE_DOES_NOT_EXIST") =>
                     saveService
-                      .save(request.sessionData.copy(giftAidScheduleFileUploadReference = None))
+                      .save(
+                        request.sessionData
+                          .copy(giftAidScheduleFileUploadReference = None, prevOverclaimedGiftAid = None)
+                      )
                       .map(_ => Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
 
                 }

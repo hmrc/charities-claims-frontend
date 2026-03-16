@@ -157,7 +157,8 @@ class DataRetrievalActionSpec extends BaseSpec {
           req.sessionData.organisationDetailsAnswers                        shouldBe None
           req.sessionData.giftAidScheduleData                               shouldBe None
           req.sessionData.giftAidScheduleFileUploadReference                shouldBe None
-          req.sessionData.declarationDetailsAnswers                         shouldBe None
+          req.sessionData.includedAnyAdjustmentsInClaimPrompt               shouldBe None
+          req.sessionData.understandFalseStatements                         shouldBe None
           req.sessionData.otherIncomeScheduleData                           shouldBe None
           req.sessionData.otherIncomeScheduleFileUploadReference            shouldBe None
           req.sessionData.communityBuildingsScheduleData                    shouldBe None
@@ -248,7 +249,8 @@ class DataRetrievalActionSpec extends BaseSpec {
               )
             )
           )
-          req.sessionData.declarationDetailsAnswers                         shouldBe None
+          req.sessionData.includedAnyAdjustmentsInClaimPrompt               shouldBe None
+          req.sessionData.understandFalseStatements                         shouldBe None
           req.sessionData.otherIncomeScheduleData                           shouldBe None
           req.sessionData.otherIncomeScheduleFileUploadReference            shouldBe None
           req.sessionData.communityBuildingsScheduleData                    shouldBe None

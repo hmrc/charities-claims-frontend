@@ -161,7 +161,10 @@ class YourConnectedCharitiesScheduleUploadControllerSpec extends ControllerSpec 
             claimId,
             testAwaitingResponse,
             None,
-            false
+            false,
+            routes.ConnectedCharitiesScheduleUploadStatusController.status,
+            3,
+            routes.YourConnectedCharitiesScheduleUploadController.onPageLoad
           ).body
 
         }
@@ -191,7 +194,10 @@ class YourConnectedCharitiesScheduleUploadControllerSpec extends ControllerSpec 
             claimId,
             testVerifyingResponse,
             None,
-            true
+            true,
+            routes.ConnectedCharitiesScheduleUploadStatusController.status,
+            3,
+            routes.YourConnectedCharitiesScheduleUploadController.onPageLoad
           ).body
         }
       }
@@ -220,7 +226,10 @@ class YourConnectedCharitiesScheduleUploadControllerSpec extends ControllerSpec 
             claimId,
             testValidatingResponse,
             None,
-            true
+            true,
+            routes.ConnectedCharitiesScheduleUploadStatusController.status,
+            3,
+            routes.YourConnectedCharitiesScheduleUploadController.onPageLoad
           ).body
         }
       }
@@ -248,7 +257,10 @@ class YourConnectedCharitiesScheduleUploadControllerSpec extends ControllerSpec 
             claimId,
             testVerificationFailedResponse,
             None,
-            false
+            false,
+            routes.ConnectedCharitiesScheduleUploadStatusController.status,
+            3,
+            routes.YourConnectedCharitiesScheduleUploadController.onPageLoad
           ).body
         }
       }
@@ -441,7 +453,7 @@ class YourConnectedCharitiesScheduleUploadControllerSpec extends ControllerSpec 
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.UploadConnectedCharitiesScheduleController.onPageLoad.url
+            routes.ProblemUpdatingConnectedCharitiesScheduleUnknownErrorController.onPageLoad.url
           )
         }
       }

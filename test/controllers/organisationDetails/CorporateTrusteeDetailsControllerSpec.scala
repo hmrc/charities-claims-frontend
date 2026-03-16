@@ -58,7 +58,8 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
 
     "onPageLoad" - {
       "should render the page correctly when UK address is false (default)" in {
-        val sessionDataAreYouCorporateTrustee = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+        val sessionDataAreYouCorporateTrustee =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(true))
         val sessionData                       =
           OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(uKAddressFalse)(using
             sessionDataAreYouCorporateTrustee
@@ -79,7 +80,8 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       }
 
       "should render the page correctly when UK address is true" in {
-        val sessionDataAreYouCorporateTrustee = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+        val sessionDataAreYouCorporateTrustee =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(true))
         val sessionData                       =
           OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(uKAddressTrue)(using
             sessionDataAreYouCorporateTrustee
@@ -117,7 +119,8 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       }
 
       "should render the page and pre-populate correctly when data exists for Corporate Trustee and NOT UK address" in {
-        val sessionDataAreYouCorporateTrustee        = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+        val sessionDataAreYouCorporateTrustee        =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(true))
         val sessionDataCorporateTrusteeWithUKAddress =
           OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(uKAddressFalse)(using
             sessionDataAreYouCorporateTrustee
@@ -146,7 +149,8 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       }
 
       "should render the page and pre-populate correctly when data exists for Corporate Trustee and UK address" in {
-        val sessionDataAreYouCorporateTrustee        = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+        val sessionDataAreYouCorporateTrustee        =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(true))
         val sessionDataCorporateTrusteeWithUKAddress =
           OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(uKAddressTrue)(using
             sessionDataAreYouCorporateTrustee
@@ -174,7 +178,8 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       }
 
       "should render page not found if Corporate trustee is false" in {
-        val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(false))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -185,7 +190,7 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
 
         }
       }
@@ -193,7 +198,8 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should redirect to the next page when valid data is submitted (without UK Address)" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -211,7 +217,9 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       }
 
       "should redirect to the next page when valid data is submitted (with UK Address)" in {
-        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(true)
+        val sessionData                = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(true)
+        )
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
@@ -231,7 +239,8 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       }
 
       "should return BadRequest when invalid data (trusteeName) is submitted" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -245,7 +254,8 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       }
 
       "should return BadRequest when invalid data (trusteePhoneNumber) is submitted" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -259,7 +269,9 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
       }
 
       "should return BadRequest when postcode is missing but required (isUkAddress = true)" in {
-        val sessionData                = OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(uKAddressTrue)
+        val sessionData                = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(uKAddressTrue)
+        )
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {

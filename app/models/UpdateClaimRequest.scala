@@ -23,11 +23,14 @@ final case class UpdateClaimRequest(
   repaymentClaimDetails: RepaymentClaimDetails,
   organisationDetails: Option[OrganisationDetails] = None,
   giftAidSmallDonationsSchemeDonationDetails: Option[GiftAidSmallDonationsSchemeDonationDetails] = None,
-  declarationDetails: Option[DeclarationDetails] = None,
+  understandFalseStatements: Option[Boolean] = None,
+  includedAnyAdjustmentsInClaimPrompt: Option[String] = None,
   giftAidScheduleFileUploadReference: Option[FileUploadReference] = None,
   otherIncomeScheduleFileUploadReference: Option[FileUploadReference] = None,
   communityBuildingsScheduleFileUploadReference: Option[FileUploadReference] = None,
-  connectedCharitiesScheduleFileUploadReference: Option[FileUploadReference] = None
+  connectedCharitiesScheduleFileUploadReference: Option[FileUploadReference] = None,
+  adjustmentForOtherIncomePreviousOverClaimed: Option[BigDecimal] = None,
+  prevOverclaimedGiftAid: Option[BigDecimal] = None
 )
 
 object UpdateClaimRequest {

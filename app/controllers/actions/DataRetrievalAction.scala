@@ -42,7 +42,7 @@ class DefaultDataRetrievalAction @Inject() (
 )(using val executionContext: ExecutionContext)
     extends DataRetrievalAction {
 
-  override protected def refine[A](
+  override def refine[A](
     request: AuthorisedRequest[A]
   ): Future[Either[Result, DataRequest[A]]] = {
     given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request.underlying, request.underlying.session)
@@ -69,7 +69,7 @@ class DefaultDataRetrievalAction @Inject() (
                             }
                         case None        =>
                           Future
-                            .failed(new RuntimeException(s"claimId $claimInfo.claimId could not be found in backend"))
+                            .failed(new RuntimeException(s"claim ${claimInfo.claimId} could not be found in backend"))
                       }
                     case _              =>
                       val sessionData = SessionData.empty(request.charitiesReference)

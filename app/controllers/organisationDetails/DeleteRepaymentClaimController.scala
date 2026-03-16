@@ -16,13 +16,17 @@
 
 package controllers.organisationDetails
 
+import play.api.Logging
 import com.google.inject.Inject
+import config.FrontendAppConfig
 import controllers.BaseController
 import controllers.actions.Actions
 import connectors.ClaimsConnector
 import forms.YesNoFormProvider
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.SaveService
+import models.SessionData
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import views.html.DeleteRepaymentClaimView
@@ -34,9 +38,12 @@ class DeleteRepaymentClaimController @Inject() (
   view: DeleteRepaymentClaimView,
   actions: Actions,
   formProvider: YesNoFormProvider,
-  claimsConnector: ClaimsConnector
+  claimsConnector: ClaimsConnector,
+  saveService: SaveService,
+  appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)
-    extends BaseController {
+    extends BaseController
+    with Logging {
 
   val form: Form[Boolean] = formProvider("deleteRepaymentClaim.error.required")
 
@@ -66,23 +73,34 @@ class DeleteRepaymentClaimController @Inject() (
               )
 
             case (true, Some(claimId)) =>
-              claimsConnector
-                .deleteClaim(claimId)
-                .flatMap {
-                  case true  =>
-                    // TODO: This redirects to placeholder AA1 screen - route to be updated in the future
-                    Future.successful(
-                      Redirect(
-                        controllers.organisationDetails.routes.CharityRepaymentDashboardController.onPageLoad
-                      )
-                    )
-                  case false =>
-                    Future.failed(
-                      new RuntimeException(
-                        s"Failed to delete claim with claimId: $claimId - backend returned success: false"
-                      )
-                    )
-                }
+              (for {
+                _ <- saveService.save(SessionData(charitiesReference = request.sessionData.charitiesReference))
+
+                deleted <- claimsConnector.deleteClaim(claimId)
+
+                result <- if (deleted) {
+                            Future.successful(
+                              Redirect(appConfig.charityRepaymentDashboardUrl)
+                            )
+                          } else {
+                            logger
+                              .error(s"Failed to delete claim with claimId: $claimId - backend returned success: false")
+                            Future.failed(
+                              new RuntimeException(
+                                s"Failed to delete claim with claimId: $claimId - backend returned success: false"
+                              )
+                            )
+                          }
+
+              } yield result).recoverWith { case ex =>
+                logger.error(s"Failed to delete claim with claimId: $claimId failed to reset session data", ex)
+                Future.failed(
+                  new RuntimeException(
+                    s"Failed to delete claim with claimId: $claimId failed to reset session data",
+                    ex
+                  )
+                )
+              }
           }
       )
   }
