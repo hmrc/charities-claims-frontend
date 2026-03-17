@@ -36,7 +36,8 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
   "NameOfCharityRegulatorController" - {
     "onPageLoad" - {
       "should render the page correctly" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -52,7 +53,9 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with England and Wales value" in {
 
-        val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
+        val sessionData = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
+        )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -70,7 +73,9 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with Northern Ireland value" in {
 
-        val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(NorthernIreland)
+        val sessionData = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setNameOfCharityRegulator(NorthernIreland)
+        )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -88,7 +93,8 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with Scottish value" in {
 
-        val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(Scottish)
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setNameOfCharityRegulator(Scottish))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -106,7 +112,8 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
       "should render the page and pre-populate correctly with None value" in {
 
-        val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(None)
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setNameOfCharityRegulator(None))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -125,7 +132,8 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
       "should redirect to the next page when the value is EnglandAndWales" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -142,7 +150,8 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
       }
 
       "should redirect to the next page when the value is NorthernIreland" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -159,7 +168,8 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
       }
 
       "should redirect to the next page when the value is Scottish" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -176,7 +186,8 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
       }
 
       "should redirect to the next page when the value is None" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -194,7 +205,9 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
       "in CheckMode when changing from regulator to None" - {
         "should redirect to ReasonNotRegisteredWithRegulatorController" in {
-          val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
+          val sessionData = completeRepaymentDetailsAnswersSession.and(
+            OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
+          )
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -215,7 +228,8 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
       "in CheckMode when changing from None to regulator" - {
         "should redirect to CharityRegulatorNumberController" in {
-          val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(None)
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setNameOfCharityRegulator(None))
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -236,7 +250,9 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
       "in CheckMode when answer is unchanged (same regulator)" - {
         "should redirect to CYA when value remains EnglandAndWales" in {
-          val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
+          val sessionData = completeRepaymentDetailsAnswersSession.and(
+            OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
+          )
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -255,7 +271,8 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
         }
 
         "should redirect to CYA when value remains None" in {
-          val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(None)
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setNameOfCharityRegulator(None))
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -276,7 +293,9 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
       "in CheckMode when changing between regulators" - {
         "should redirect to CharityRegulatorNumberController when changing from EnglandAndWales to Scottish" in {
-          val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
+          val sessionData = completeRepaymentDetailsAnswersSession.and(
+            OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
+          )
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -295,7 +314,8 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
         }
 
         "should redirect to CharityRegulatorNumberController when changing from Scottish to NorthernIreland" in {
-          val sessionData = OrganisationDetailsAnswers.setNameOfCharityRegulator(Scottish)
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setNameOfCharityRegulator(Scottish))
 
           given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -316,7 +336,8 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
       "in CheckMode with no previous answer (entering new data)" - {
         "should redirect to CharityRegulatorNumberController when selecting regulator" in {
-          given application: Application = applicationBuilder().mockSaveSession.build()
+          val sessionData                = completeRepaymentDetailsAnswersSession
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -333,7 +354,8 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
         }
 
         "should redirect to ReasonNotRegisteredWithRegulatorController when selecting None" in {
-          given application: Application = applicationBuilder().mockSaveSession.build()
+          val sessionData                = completeRepaymentDetailsAnswersSession
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -351,7 +373,8 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
       }
 
       "should reload the page with errors when a required field is missing" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =

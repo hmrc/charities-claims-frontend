@@ -110,9 +110,6 @@ POST        /registering-your-charity-with-a-regulator      controllers.Register
 
 GET         /make-a-charity-repayment-claim                 controllers.ClaimsTaskListController.onPageLoad
 
-# TODO: Placeholder screen for AA1 - route will be updated in future
-GET         /charity-repayment-dashboard                    controllers.organisationDetails.CharityRepaymentDashboardController.onPageLoad
-
 GET         /claim-community-building-donations             controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onPageLoad(mode: Mode = Mode.NormalMode)
 POST        /claim-community-building-donations             controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onSubmit(mode: Mode = Mode.NormalMode)
 
@@ -238,7 +235,7 @@ POST        /update-connected-charities-schedule                       controlle
 
 GET         /your-connected-charities-schedule-upload                  controllers.connectedCharitiesSchedule.YourConnectedCharitiesScheduleUploadController.onPageLoad
 POST        /your-connected-charities-schedule-upload                  controllers.connectedCharitiesSchedule.YourConnectedCharitiesScheduleUploadController.onSubmit
-GET         /your-charities-charities-schedule-upload/remove           controllers.connectedCharitiesSchedule.YourConnectedCharitiesScheduleUploadController.onRemove
+GET         /your-connected-charities-schedule-upload/remove           controllers.connectedCharitiesSchedule.YourConnectedCharitiesScheduleUploadController.onRemove
 
 GET         /problem-uploading-connected-charities-schedule-rejected   controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onPageLoad
 POST        /problem-uploading-connected-charities-schedule-rejected   controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onSubmit
@@ -246,8 +243,12 @@ POST        /problem-uploading-connected-charities-schedule-rejected   controlle
 GET         /gift-aid-schedule-upload-status                           controllers.giftAidSchedule.GiftAidScheduleUploadStatusController.status
 GET         /other-income-schedule-upload-status                       controllers.otherIncomeSchedule.OtherIncomeScheduleUploadStatusController.status
 GET         /community-buildings-schedule-upload-status                controllers.communityBuildingsSchedule.CommunityBuildingsScheduleUploadStatusController.status
+GET         /connected-charities-schedule-upload-status                controllers.connectedCharitiesSchedule.ConnectedCharitiesScheduleUploadStatusController.status
 
 GET         /problem-uploading-connected-charities-schedule-quarantine   controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onPageLoad
 POST        /problem-uploading-connected-charities-schedule-quarantine   controllers.connectedCharitiesSchedule.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onSubmit
 
-GET         /claim-complete             controllers.claimDeclaration.ClaimCompleteController.onPageLoad
+GET         /adjustments-to-this-claim            controllers.claimDeclaration.AdjustmentToThisClaimController.onPageLoad
+POST        /adjustments-to-this-claim            controllers.claimDeclaration.AdjustmentToThisClaimController.onSubmit
+
+GET         /claim-complete                         controllers.claimDeclaration.ClaimCompleteController.onPageLoad

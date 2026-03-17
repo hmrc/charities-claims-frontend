@@ -136,7 +136,14 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
         (mockSaveService
           .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(sessionData.copy(giftAidScheduleFileUploadReference = None, giftAidScheduleData = None), *)
+          .expects(
+            sessionData.copy(
+              giftAidScheduleFileUploadReference = None,
+              giftAidScheduleData = None,
+              prevOverclaimedGiftAid = None
+            ),
+            *
+          )
           .returning(Future.successful(()))
 
         await(service.deleteGiftAidSchedule)
@@ -192,7 +199,14 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
         (mockSaveService
           .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(sessionData.copy(otherIncomeScheduleFileUploadReference = None, otherIncomeScheduleData = None), *)
+          .expects(
+            sessionData.copy(
+              otherIncomeScheduleFileUploadReference = None,
+              otherIncomeScheduleData = None,
+              adjustmentForOtherIncomePreviousOverClaimed = None
+            ),
+            *
+          )
           .returning(Future.successful(()))
 
         await(service.deleteOtherIncomeSchedule)

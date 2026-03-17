@@ -20,14 +20,12 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.RadioListFormProvider
-import models.OrganisationDetailsAnswers
-import models.Mode
+import models.{Mode, NameOfCharityRegulator, OrganisationDetailsAnswers, SessionData}
 import models.Mode.*
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
 import views.html.NameOfCharityRegulatorView
-import models.NameOfCharityRegulator
 
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.mvc.Call
@@ -43,25 +41,27 @@ class NameOfCharityRegulatorController @Inject() (
 
   val form: Form[NameOfCharityRegulator] = formProvider("nameOfCharityRegulator.error.required")
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val previousAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete) { implicit request =>
+      val previousAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
 
-    Ok(view(form.withDefault(previousAnswer), mode))
-  }
+      Ok(view(form.withDefault(previousAnswer), mode))
+    }
 
-  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val previousAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
+      val previousAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
 
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveService
-            .save(OrganisationDetailsAnswers.setNameOfCharityRegulator(value))
-            .map(_ => Redirect(NameOfCharityRegulatorController.nextPage(value, mode, previousAnswer)))
-      )
-  }
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            saveService
+              .save(OrganisationDetailsAnswers.setNameOfCharityRegulator(value))
+              .map(_ => Redirect(NameOfCharityRegulatorController.nextPage(value, mode, previousAnswer)))
+        )
+    }
 }
 
 object NameOfCharityRegulatorController {

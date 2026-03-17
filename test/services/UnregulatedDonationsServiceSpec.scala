@@ -18,8 +18,15 @@ package services
 
 import util.BaseSpec
 import util.TestScheduleData
-import connectors.UnregulatedDonationsConnector
-import models.{OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator, SessionData}
+import connectors.{ClaimsValidationConnector, UnregulatedDonationsConnector}
+import models.{
+  FileUploadReference,
+  GetUploadResultValidatedGiftAid,
+  GiftAidScheduleData,
+  OrganisationDetailsAnswers,
+  ReasonNotRegisteredWithRegulator,
+  SessionData
+}
 import models.requests.DataRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import play.api.mvc.AnyContent
@@ -31,10 +38,12 @@ import scala.concurrent.Future
 
 class UnregulatedDonationsServiceSpec extends BaseSpec {
 
-  val mockConnector: UnregulatedDonationsConnector = mock[UnregulatedDonationsConnector]
+  val mockConnector: UnregulatedDonationsConnector             = mock[UnregulatedDonationsConnector]
+  val mockClaimsValidationConnector: ClaimsValidationConnector = mock[ClaimsValidationConnector]
 
   val service = new UnregulatedDonationsServiceImpl(
     unregulatedDonationsConnector = mockConnector,
+    claimsValidationConnector = mockClaimsValidationConnector,
     appConfig = testFrontendAppConfig
   )
 
@@ -87,64 +96,21 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
       }
     }
 
-    "getCurrentClaimDonationsTotal" - {
+    "extractGiftAidTotal" - {
 
-      "should return 0 when no schedule data is present" in {
-        val sessionData = SessionData.empty(testCharitiesReference)
-        val result      = UnregulatedDonationsService.getCurrentClaimDonationsTotal(sessionData)
-        result shouldEqual BigDecimal(0)
-      }
-
-      "should return giftAid total of 1000.00 when only giftAid schedule is present" in {
-        val sessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
-          )
-        val result      = UnregulatedDonationsService.getCurrentClaimDonationsTotal(sessionData)
+      "should return the totalDonations value when present" in {
+        val data   = TestScheduleData.exampleGiftAidScheduleData
+        // exampleGiftAidScheduleData.totalDonations = Some(1000.00)
+        val result = UnregulatedDonationsService.getGiftAidTotalDonations(data)
         result shouldEqual BigDecimal(1000.00)
       }
 
-      "should return otherIncome total of 2000.00 when only otherIncome schedule is present" in {
-        val sessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData)
-          )
-        val result      = UnregulatedDonationsService.getCurrentClaimDonationsTotal(sessionData)
-        result shouldEqual BigDecimal(2000.00)
-      }
-
-      "should return communityBuildings total of 1000.00 when only communityBuildings schedule is present" in {
-        val sessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            communityBuildingsScheduleData = Some(TestScheduleData.exampleCommunityBuildingsScheduleData)
-          )
-        val result      = UnregulatedDonationsService.getCurrentClaimDonationsTotal(sessionData)
-        result shouldEqual BigDecimal(1000.00)
-      }
-
-      "should sum all schedule totals to 4000.00 when multiple schedules are present" in {
-        val sessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData),
-            otherIncomeScheduleData = Some(TestScheduleData.exampleOtherIncomeScheduleData),
-            communityBuildingsScheduleData = Some(TestScheduleData.exampleCommunityBuildingsScheduleData)
-          )
-        // 1000 + 2000 + 1000 = 4000
-        val result      = UnregulatedDonationsService.getCurrentClaimDonationsTotal(sessionData)
-        result shouldEqual BigDecimal(4000.00)
-      }
-
-      "should ignore connectedCharities schedule (has no total donations)" in {
-        val sessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            connectedCharitiesScheduleData = Some(TestScheduleData.exampleConnectedCharitiesScheduleData)
-          )
-        val result      = UnregulatedDonationsService.getCurrentClaimDonationsTotal(sessionData)
+      "should return 0 when totalDonations is None" in {
+        val data   = GiftAidScheduleData(
+          totalDonations = None,
+          donations = Seq.empty
+        )
+        val result = UnregulatedDonationsService.getGiftAidTotalDonations(data)
         result shouldEqual BigDecimal(0)
       }
     }
@@ -455,19 +421,35 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
         }
 
         "should include schedule data in total calculation" in {
+          val testFileRef = FileUploadReference("test-file-ref")
+
           (mockConnector
             .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
             .expects(testCharitiesReference, *)
             .returning(Future.successful(Some(BigDecimal(4500))))
             .once()
 
-          // Session with schedule data that adds 1000 (giftAid total)
+          // mock the validation connector to return gift aid data with totalDonations = 1000
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(*, testFileRef, *)
+            .returning(
+              Future.successful(
+                GetUploadResultValidatedGiftAid(
+                  reference = testFileRef,
+                  giftAidScheduleData = TestScheduleData.exampleGiftAidScheduleData
+                )
+              )
+            )
+            .once()
+
           val baseSessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
             ReasonNotRegisteredWithRegulator.LowIncome
           )(using SessionData.empty(testCharitiesReference))
 
           val sessionData = baseSessionData.copy(
-            giftAidScheduleData = Some(TestScheduleData.exampleGiftAidScheduleData)
+            unsubmittedClaimId = Some("test-claim-id"),
+            giftAidScheduleFileUploadReference = Some(testFileRef)
           )
 
           given request: DataRequest[AnyContent] =
@@ -590,8 +572,5 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
         result shouldEqual None
       }
     }
-
-    // TODO: recordUnregulatedDonation tests to be added later when F11 is implemented
-
   }
 }

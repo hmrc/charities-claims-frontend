@@ -17,6 +17,7 @@
 package controllers.connectedCharitiesSchedule
 
 import com.google.inject.Inject
+import config.FrontendAppConfig
 import connectors.ClaimsValidationConnector
 import controllers.BaseController
 import controllers.actions.Actions
@@ -34,7 +35,8 @@ class YourConnectedCharitiesScheduleUploadController @Inject() (
   actions: Actions,
   claimsValidationConnector: ClaimsValidationConnector,
   claimsValidationService: ClaimsValidationService,
-  saveService: SaveService
+  saveService: SaveService,
+  appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -61,7 +63,10 @@ class YourConnectedCharitiesScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = None,
-                        screenLocked = true
+                        screenLocked = true,
+                        uploadStatusCall = routes.ConnectedCharitiesScheduleUploadStatusController.status,
+                        refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
+                        reloadPageCall = routes.YourConnectedCharitiesScheduleUploadController.onPageLoad
                       )
                     )
 
@@ -71,7 +76,10 @@ class YourConnectedCharitiesScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = None,
-                        screenLocked = true
+                        screenLocked = true,
+                        uploadStatusCall = routes.ConnectedCharitiesScheduleUploadStatusController.status,
+                        refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
+                        reloadPageCall = routes.YourConnectedCharitiesScheduleUploadController.onPageLoad
                       )
                     )
 
@@ -85,7 +93,10 @@ class YourConnectedCharitiesScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = Some(failureDetails),
-                        screenLocked = false
+                        screenLocked = false,
+                        uploadStatusCall = routes.ConnectedCharitiesScheduleUploadStatusController.status,
+                        refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
+                        reloadPageCall = routes.YourConnectedCharitiesScheduleUploadController.onPageLoad
                       )
                     )
 
@@ -95,7 +106,10 @@ class YourConnectedCharitiesScheduleUploadController @Inject() (
                         claimId = claimId,
                         uploadResult = uploadResult,
                         failureDetails = None,
-                        screenLocked = false
+                        screenLocked = false,
+                        uploadStatusCall = routes.ConnectedCharitiesScheduleUploadStatusController.status,
+                        refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
+                        reloadPageCall = routes.YourConnectedCharitiesScheduleUploadController.onPageLoad
                       )
                     )
                 }
@@ -142,7 +156,7 @@ class YourConnectedCharitiesScheduleUploadController @Inject() (
                           case FailureReason.REJECTED   =>
                             routes.ProblemUpdatingConnectedCharitiesScheduleRejectedController.onPageLoad
                           case _                        =>
-                            routes.UploadConnectedCharitiesScheduleController.onPageLoad
+                            routes.ProblemUpdatingConnectedCharitiesScheduleUnknownErrorController.onPageLoad
                         }
                       }
                     )

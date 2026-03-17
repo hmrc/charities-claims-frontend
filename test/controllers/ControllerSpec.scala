@@ -16,20 +16,23 @@
 
 package controllers
 
-import com.softwaremill.diffx.scalatest.DiffShouldMatcher
-import controllers.actions.{AuthorisedAction, DataRetrievalAction}
-import models.SessionData
-import play.api.data.Form
-import play.api.http.*
-import play.api.inject.guice.{GuiceApplicationBuilder, GuiceableModule}
-import play.api.mvc.{Security as _, *}
 import play.api.test.*
-import play.api.{inject, Application}
 import services.{ClaimsService, SaveService}
+import play.api.inject.guice.{GuiceApplicationBuilder, GuiceableModule}
+import util.*
+import controllers.actions.{AuthorisedAction, DataRetrievalAction}
+import play.api.{inject, Application}
+import models.{SessionData, *}
+import play.api.data.Form
+import play.api.mvc.*
+import com.softwaremill.diffx.scalatest.DiffShouldMatcher
+import connectors.{ClaimsConnector, ClaimsValidationConnector}
+import play.api.http.*
+import repositories.SessionCache
 import uk.gov.hmrc.http.HeaderCarrier
-import util.{BaseSpec, FakeAuthorisedAction, FakeDataRetrievalAction}
 
 import scala.concurrent.Future
+import controllers.actions.RefreshDataAction
 
 trait ControllerSpec
     extends BaseSpec
@@ -57,6 +60,9 @@ trait ControllerSpec
             .bind[DataRetrievalAction]
             .toInstance(new FakeDataRetrievalAction(sessionData)),
           inject
+            .bind[RefreshDataAction]
+            .toInstance(new FakeRefreshDataAction(sessionData)),
+          inject
             .bind[AuthorisedAction]
             .toInstance(new FakeAuthorisedAction)
         ) ++
@@ -67,6 +73,33 @@ trait ControllerSpec
         "auditing.enabled"               -> false,
         "metric.enabled"                 -> false
       )
+
+  protected def applicationBuilder(claim: Claim, uploads: Seq[UploadSummary]): GuiceApplicationBuilder = {
+    val sessionData = SessionData.from(claim, "org-123", Some(GetUploadSummaryResponse(uploads)))
+    new GuiceApplicationBuilder()
+      .overrides(
+        List[GuiceableModule](
+          inject
+            .bind[SessionCache]
+            .toInstance(new FakeSessionCache(sessionData)),
+          inject
+            .bind[ClaimsConnector]
+            .toInstance(new FakeClaimsConnector(claim)),
+          inject
+            .bind[ClaimsValidationConnector]
+            .toInstance(new FakeClaimsValidationConnector(uploads)),
+          inject
+            .bind[AuthorisedAction]
+            .toInstance(new FakeAuthorisedAction)
+        ) ++
+          additionalBindings*
+      )
+      .configure(
+        "play.filters.csp.nonce.enabled" -> false,
+        "auditing.enabled"               -> false,
+        "metric.enabled"                 -> false
+      )
+  }
 
   extension (appBuilder: GuiceApplicationBuilder) {
     def mockSaveSession: GuiceApplicationBuilder                           = {

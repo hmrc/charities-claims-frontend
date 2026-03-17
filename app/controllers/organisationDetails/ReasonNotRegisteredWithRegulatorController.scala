@@ -20,15 +20,12 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.RadioListFormProvider
-import models.OrganisationDetailsAnswers
-import models.Mode
+import models.{Mode, NameOfCharityRegulator, OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator, SessionData}
 import models.Mode.*
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
 import views.html.ReasonNotRegisteredWithRegulatorView
-import models.ReasonNotRegisteredWithRegulator
-import models.NameOfCharityRegulator
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -43,40 +40,42 @@ class ReasonNotRegisteredWithRegulatorController @Inject() (
 
   val form: Form[ReasonNotRegisteredWithRegulator] = formProvider("reasonNotRegisteredWithRegulator.error.required")
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val NameOfCharityAnswer: Option[NameOfCharityRegulator] =
-      OrganisationDetailsAnswers.getNameOfCharityRegulator
-    NameOfCharityAnswer match {
-      case Some(NameOfCharityRegulator.None) =>
-        val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
-          OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
-        Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
+      val NameOfCharityAnswer: Option[NameOfCharityRegulator] =
+        OrganisationDetailsAnswers.getNameOfCharityRegulator
+      NameOfCharityAnswer match {
+        case Some(NameOfCharityRegulator.None) =>
+          val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
+            OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
+          Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
 
-      case _ =>
-        Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+        case _ =>
+          Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      }
     }
-  }
 
-  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveService
-            .save(OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(value))
-            .map { _ =>
-              (value, mode) match {
-                // Excepted/Exempt always flow through A2.3/A2.4 (conditional pages)
-                case (ReasonNotRegisteredWithRegulator.Excepted, _) =>
-                  Redirect(routes.CharityExceptedController.onPageLoad(mode))
-                case (ReasonNotRegisteredWithRegulator.Exempt, _)   =>
-                  Redirect(routes.CharityExemptController.onPageLoad(mode))
-                // LowIncome/Waiting skip A2.3/A2.4
-                case (_, CheckMode)                                 => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
-                case (_, NormalMode)                                => Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            saveService
+              .save(OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(value))
+              .map { _ =>
+                (value, mode) match {
+                  // Excepted/Exempt always flow through A2.3/A2.4 (conditional pages)
+                  case (ReasonNotRegisteredWithRegulator.Excepted, _) =>
+                    Redirect(routes.CharityExceptedController.onPageLoad(mode))
+                  case (ReasonNotRegisteredWithRegulator.Exempt, _)   =>
+                    Redirect(routes.CharityExemptController.onPageLoad(mode))
+                  // LowIncome/Waiting skip A2.3/A2.4
+                  case (_, CheckMode)                                 => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
+                  case (_, NormalMode)                                => Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
+                }
               }
-            }
-      )
-  }
+        )
+    }
 }

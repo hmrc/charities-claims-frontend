@@ -111,7 +111,8 @@ class CheckYourGiftAidScheduleController @Inject() (
                           _ <- saveService.save(
                                  request.sessionData.copy(
                                    giftAidScheduleCompleted = true,
-                                   giftAidScheduleData = None
+                                   giftAidScheduleData = None,
+                                   prevOverclaimedGiftAid = giftAidScheduleData.prevOverclaimedGiftAid
                                  )
                                )
                           _ <- claimsService.save

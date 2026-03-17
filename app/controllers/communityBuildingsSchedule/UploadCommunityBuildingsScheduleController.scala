@@ -101,7 +101,8 @@ class UploadCommunityBuildingsScheduleController @Inject() (
               request = UpscanInitiateRequest(
                 successRedirect = baseUrl + routes.UploadCommunityBuildingsScheduleController.onUploadSuccess.url,
                 errorRedirect = baseUrl + routes.UploadCommunityBuildingsScheduleController.onUploadError.url,
-                maximumFileSize = Some(appConfig.maxCommunityBuildingsScheduleUploadSize)
+                maximumFileSize = Some(appConfig.maxCommunityBuildingsScheduleUploadSize),
+                minimumFileSize = Some(1)
               )
             )
           _                      <-

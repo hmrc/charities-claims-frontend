@@ -31,7 +31,8 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
   "AuthorisedOfficialAddressController" - {
     "onPageLoad" - {
       "should render the page correctly if Corporate trustee is false" in {
-        val sessionData                = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+        val sessionData                =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(false))
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
@@ -46,7 +47,8 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
       }
 
       "should render the page and pre-populate correctly with true for UK Address if Corporate trustee is false" in {
-        val sessionDataAreYouCorporateTrustee                = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+        val sessionDataAreYouCorporateTrustee                =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(false))
         val sessionDataAreYouAuthorisedOfficialWithUKAddress =
           OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(true)(using
             sessionDataAreYouCorporateTrustee
@@ -68,7 +70,8 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
       }
 
       "should render the page and pre-populate correctly with false for UK Address if Corporate trustee is false" in {
-        val sessionDataAreYouCorporateTrustee                = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+        val sessionDataAreYouCorporateTrustee                =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(false))
         val sessionDataAreYouAuthorisedOfficialWithUKAddress =
           OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(false)(using
             sessionDataAreYouCorporateTrustee
@@ -89,7 +92,8 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
         }
       }
       "should render page not found if Corporate trustee is true" in {
-        val sessionData = OrganisationDetailsAnswers.setAreYouACorporateTrustee(true)
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(true))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -100,14 +104,15 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }
 
     "onSubmit" - {
       "should redirect to the next page when the value is true" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -124,7 +129,8 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
       }
 
       "should redirect to the next page when the value is false" in {
-        given application: Application = applicationBuilder().mockSaveSession.build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -142,7 +148,8 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
 
       "in CheckMode when changing from No to Yes" - {
         "should redirect to AuthorisedOfficialDetailsController" in {
-          val sessionDataWithAuthorisedOfficial = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+          val sessionDataWithAuthorisedOfficial =
+            completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(false))
           val sessionData                       = OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(false)(using
             sessionDataWithAuthorisedOfficial
           )
@@ -166,7 +173,8 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
 
       "in CheckMode when changing from Yes to No" - {
         "should redirect to AuthorisedOfficialDetailsController" in {
-          val sessionDataWithAuthorisedOfficial = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+          val sessionDataWithAuthorisedOfficial =
+            completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(false))
           val sessionData                       = OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(true)(using
             sessionDataWithAuthorisedOfficial
           )
@@ -190,7 +198,8 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
 
       "in CheckMode when answer is unchanged" - {
         "should redirect to CYA when value remains true" in {
-          val sessionDataWithAuthorisedOfficial = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+          val sessionDataWithAuthorisedOfficial =
+            completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(false))
           val sessionData                       = OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(true)(using
             sessionDataWithAuthorisedOfficial
           )
@@ -212,7 +221,8 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
         }
 
         "should redirect to CYA when value remains false" in {
-          val sessionDataWithAuthorisedOfficial = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+          val sessionDataWithAuthorisedOfficial =
+            completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(false))
           val sessionData                       = OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(false)(using
             sessionDataWithAuthorisedOfficial
           )
@@ -236,7 +246,8 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
 
       "in CheckMode with no previous answer (entering new data)" - {
         "should redirect to AuthorisedOfficialDetailsController when selecting Yes" in {
-          given application: Application = applicationBuilder().mockSaveSession.build()
+          val sessionData                = completeRepaymentDetailsAnswersSession
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -253,7 +264,8 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
         }
 
         "should redirect to AuthorisedOfficialDetailsController when selecting No" in {
-          given application: Application = applicationBuilder().mockSaveSession.build()
+          val sessionData                = completeRepaymentDetailsAnswersSession
+          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -270,7 +282,8 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
         }
 
         "should redirect to AuthorisedOfficialDetailsController when user switched from corporate trustee flow" in {
-          val sessionDataWithAuthOfficial            = OrganisationDetailsAnswers.setAreYouACorporateTrustee(false)
+          val sessionDataWithAuthOfficial            =
+            completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(false))
           val sessionDataWithCorporateTrusteeAddress =
             OrganisationDetailsAnswers.setDoYouHaveCorporateTrusteeUKAddress(true)(using
               sessionDataWithAuthOfficial
@@ -295,7 +308,8 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
       }
 
       "should reload the page with errors when a required field is missing" in {
-        given application: Application = applicationBuilder().build()
+        val sessionData                = completeRepaymentDetailsAnswersSession
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =

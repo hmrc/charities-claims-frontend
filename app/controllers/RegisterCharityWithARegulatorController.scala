@@ -21,11 +21,15 @@ import config.FrontendAppConfig
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.YesNoFormProvider
+import models.SessionData
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.UnregulatedDonationsService
+import services.{SaveService, UnregulatedDonationsService}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import views.html.RegisterCharityWithARegulatorView
 import java.text.DecimalFormat
+import scala.concurrent.{ExecutionContext, Future}
 
 class RegisterCharityWithARegulatorController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -33,34 +37,45 @@ class RegisterCharityWithARegulatorController @Inject() (
   actions: Actions,
   formProvider: YesNoFormProvider,
   appConfig: FrontendAppConfig,
-  unregulatedDonationsService: UnregulatedDonationsService
-) extends BaseController {
+  unregulatedDonationsService: UnregulatedDonationsService,
+  saveService: SaveService
+)(using ec: ExecutionContext)
+    extends BaseController {
 
   val form: Form[Boolean] = formProvider("registerCharityWithARegulator.error.required")
 
   // default is set to Excepted limit - fallback
   private lazy val defaultFormattedLimit: String = new DecimalFormat("#,###").format(appConfig.exceptedLimit)
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    // gets dynamic limit based on charity type (LowIncome = £5,000, Excepted = £100,000)
-    val formattedLimit = unregulatedDonationsService.getApplicableLimit.getOrElse(defaultFormattedLimit)
-    Ok(view(appConfig.registerCharityWithARegulatorUrl, formattedLimit)(form))
-  }
+  def onPageLoad: Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isUnregulatedLimitExceeded) { implicit request =>
+      // gets dynamic limit based on charity type (LowIncome = £5,000, Excepted = £100,000)
+      val formattedLimit = unregulatedDonationsService.getApplicableLimit.getOrElse(defaultFormattedLimit)
+      Ok(view(appConfig.registerCharityWithARegulatorUrl, formattedLimit)(form))
+    }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val formattedLimit = unregulatedDonationsService.getApplicableLimit.getOrElse(defaultFormattedLimit)
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => BadRequest(view(appConfig.registerCharityWithARegulatorUrl, formattedLimit)(formWithErrors)),
-        {
-          case true =>
-            Redirect(routes.ClaimsTaskListController.onPageLoad)
+  def onSubmit: Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isUnregulatedLimitExceeded).async { implicit request =>
+      given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-          case false =>
-            // TODO: User selected 'No' - redirect to D3 placeholder screen, route to be updated in the future
-            Redirect(controllers.routes.DeclarationDetailsConfirmationController.onPageLoad)
-        }
-      )
-  }
+      val formattedLimit = unregulatedDonationsService.getApplicableLimit.getOrElse(defaultFormattedLimit)
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            Future
+              .successful(BadRequest(view(appConfig.registerCharityWithARegulatorUrl, formattedLimit)(formWithErrors))),
+          {
+            case true =>
+              // user selected Yes - reset the flag and redirect back to claims task list
+              val updatedSession = request.sessionData.copy(unregulatedLimitExceeded = false)
+              saveService.save(updatedSession).map { _ =>
+                Redirect(routes.ClaimsTaskListController.onPageLoad)
+              }
+
+            case false =>
+              Future.successful(Redirect(claimDeclaration.routes.AdjustmentToThisClaimController.onPageLoad))
+          }
+        )
+    }
 }

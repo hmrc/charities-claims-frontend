@@ -21,7 +21,7 @@ import com.google.inject.Inject
 import controllers.BaseController
 import views.html.CharityExceptedView
 import controllers.actions.Actions
-import models.{Mode, OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator}
+import models.{Mode, OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator, SessionData}
 import models.Mode.*
 
 import scala.concurrent.Future
@@ -32,19 +32,21 @@ class CharityExceptedController @Inject() (
   view: CharityExceptedView
 ) extends BaseController {
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
-      OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
-    previousAnswer match {
-      case Some(ReasonNotRegisteredWithRegulator.Excepted) => Future.successful(Ok(view(mode)))
-      case _                                               => Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
+      val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
+        OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
+      previousAnswer match {
+        case Some(ReasonNotRegisteredWithRegulator.Excepted) => Future.successful(Ok(view(mode)))
+        case _                                               => Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      }
     }
-  }
 
-  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    mode match {
-      case CheckMode  => Future.successful(Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad))
-      case NormalMode => Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
+      mode match {
+        case CheckMode  => Future.successful(Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad))
+        case NormalMode => Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
+      }
     }
-  }
 }

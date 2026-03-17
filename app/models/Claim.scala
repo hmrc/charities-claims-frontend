@@ -36,12 +36,15 @@ object Claim {
 final case class ClaimData(
   repaymentClaimDetails: RepaymentClaimDetails,
   organisationDetails: Option[OrganisationDetails] = None,
-  declarationDetails: Option[DeclarationDetails] = None,
+  understandFalseStatements: Option[Boolean] = None,
+  includedAnyAdjustmentsInClaimPrompt: Option[String] = None,
   giftAidSmallDonationsSchemeDonationDetails: Option[GiftAidSmallDonationsSchemeDonationDetails] = None,
   giftAidScheduleFileUploadReference: Option[FileUploadReference] = None,
   otherIncomeScheduleFileUploadReference: Option[FileUploadReference] = None,
   communityBuildingsScheduleFileUploadReference: Option[FileUploadReference] = None,
-  connectedCharitiesScheduleFileUploadReference: Option[FileUploadReference] = None
+  connectedCharitiesScheduleFileUploadReference: Option[FileUploadReference] = None,
+  adjustmentForOtherIncomePreviousOverClaimed: Option[BigDecimal] = None,
+  prevOverclaimedGiftAid: Option[BigDecimal] = None
 )
 
 object ClaimData {
@@ -95,15 +98,6 @@ final case class GiftAidScheduleData(
 
 object GiftAidScheduleData {
   given Format[GiftAidScheduleData] = Json.format[GiftAidScheduleData]
-}
-
-final case class DeclarationDetails(
-  understandFalseStatements: Boolean,
-  includedAnyAdjustmentsInClaimPrompt: String
-)
-
-object DeclarationDetails {
-  given Format[DeclarationDetails] = Json.format[DeclarationDetails]
 }
 
 final case class SubmissionDetails(

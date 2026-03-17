@@ -20,9 +20,30 @@ import play.api.i18n.Messages
 import play.api.mvc.Call
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tag.Tag
+import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.TaskListItemStatus
 
 enum TaskStatus {
   case Completed, Incomplete, NotStarted, CannotStartYet
+
+  def toTaskListStatus(using messages: Messages): TaskListItemStatus =
+    this match
+      case Completed =>
+        TaskListItemStatus(content = Text(messages("claimsTaskList.status.completed")))
+
+      case Incomplete =>
+        TaskListItemStatus(tag = Some(tag("claimsTaskList.status.incomplete", "govuk-tag--blue")))
+
+      case NotStarted =>
+        TaskListItemStatus(tag = Some(tag("claimsTaskList.status.notStarted", "govuk-tag--grey")))
+
+      case CannotStartYet =>
+        TaskListItemStatus(tag = Some(tag("claimsTaskList.status.cannotStartYet", "govuk-tag--grey")))
+
+  private def tag(messageKey: String, colour: String)(using messages: Messages): Tag =
+    Tag(
+      content = Text(messages(messageKey)),
+      classes = s"govuk-tag $colour"
+    )
 }
 
 final case class TaskItem(
@@ -30,16 +51,6 @@ final case class TaskItem(
   href: Call,
   status: TaskStatus
 ) {
-  def statusTag(using messages: Messages): Tag = status match {
-    case TaskStatus.Completed      => Tag(content = Text(messages("claimsTaskList.status.completed")), classes = "govuk-tag")
-    case TaskStatus.Incomplete     =>
-      Tag(content = Text(messages("claimsTaskList.status.incomplete")), classes = "govuk-tag govuk-tag--blue")
-    case TaskStatus.NotStarted     =>
-      Tag(content = Text(messages("claimsTaskList.status.notStarted")), classes = "govuk-tag govuk-tag--grey")
-    case TaskStatus.CannotStartYet =>
-      Tag(content = Text(messages("claimsTaskList.status.cannotStartYet")), classes = "govuk-tag govuk-tag--grey")
-  }
-
   def isCompleted: Boolean = status == TaskStatus.Completed
 }
 

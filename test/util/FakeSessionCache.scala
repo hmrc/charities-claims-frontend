@@ -1,5 +1,5 @@
-@*
- * Copyright 2026 HM Revenue & Customs
+/*
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,21 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-    layout: templates.Layout
-)
+package util
 
-@()(implicit request: Request[?], messages: Messages)
+import models.*
+import repositories.SessionCache
+import uk.gov.hmrc.http.HeaderCarrier
 
-@* TODO: This is a placeholder screen (AA1) *@
-@* TODO: Content and functionality will be implemented in the future *@
+import scala.concurrent.Future
 
-@layout(pageTitle = titleNoForm(messages("charityRepaymentDashboard.title")), showBackLink = true) {
+class FakeSessionCache(
+  sessionData: SessionData
+) extends SessionCache {
 
-    <h1 class="govuk-heading-xl">@messages("charityRepaymentDashboard.heading")</h1>
+  override def get()(using hc: HeaderCarrier): Future[Option[SessionData]] =
+    Future.successful(Some(sessionData))
 
-    <p class="govuk-body">@messages("charityRepaymentDashboard.placeholder")</p>
-
+  override def store(sessionData: SessionData)(using hc: HeaderCarrier): Future[Unit] =
+    Future.successful(())
 }

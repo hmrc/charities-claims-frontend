@@ -34,7 +34,7 @@ class ClaimCompleteController @Inject() (
   val onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
       val nextPage       =
-        "about-community-buildings-schedule" // TODO - get the page that needs to be directed to
+        "charity-repayment-claim-summary" // TODO - get the page that needs to be directed to
       val claimRefNumber = "ABCDE123456789012345667899XYZ" // TODO - get the correct claim Ref Number
       Future.successful(Ok(view(nextPage, claimRefNumber)))
     }

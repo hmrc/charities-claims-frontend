@@ -16,9 +16,11 @@
 
 package controllers
 
-import models.*
-import play.api.Application
 import play.api.test.FakeRequest
+import util.*
+import play.api.mvc.{Security as _, *}
+import play.api.Application
+import models.{SessionData, *}
 
 class ClaimsTaskListControllerSpec extends ControllerSpec {
 
@@ -52,7 +54,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
     "onPageLoad" - {
 
       "should render the page with correct heading" in {
-        given application: Application = applicationBuilder(sessionDataWithClaimId()).build()
+        given application: Application = applicationBuilder(TestClaims.testClaimUnsubmitted, Seq.empty).build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -60,16 +62,6 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
           contentAsString(result) should include("Make a charity repayment claim")
-        }
-      }
-
-      "should display About the claim section with all tasks when repaymentClaimDetails complete" in {
-        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
-
-        running(application) {
-          val request = FakeRequest(GET, url)
-          val result  = route(application, request).value
-
           contentAsString(result) should include("About the claim")
           contentAsString(result) should include("Provide repayment claim details")
           contentAsString(result) should include("Provide organisation details")
