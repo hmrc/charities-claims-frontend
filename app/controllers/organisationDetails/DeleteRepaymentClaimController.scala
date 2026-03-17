@@ -48,7 +48,11 @@ class DeleteRepaymentClaimController @Inject() (
   val form: Form[Boolean] = formProvider("deleteRepaymentClaim.error.required")
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(form))
+    request.sessionData.unsubmittedClaimId match {
+      case Some(_) => Ok(view(form))
+      case None    => Redirect(appConfig.charityRepaymentDashboardUrl)
+    }
+
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
