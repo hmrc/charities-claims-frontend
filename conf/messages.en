@@ -188,9 +188,12 @@ checkYourOtherIncomeSchedule.table.column.4 = Gross payment (£)
 checkYourOtherIncomeSchedule.table.column.5 = Tax deducted (£)
 checkYourOtherIncomeSchedule.title = Check your Other Income schedule
 
-claimDeclaration.bullet.one =  I will provide accurate information in this claim
+claimDeclaration.bullet.one = the information given is complete and correct
+claimDeclaration.bullet.two = I have read the HMRC guidance on claiming Gift Aid and top‑up payments under the Gift Aid Small Donations Scheme
+claimDeclaration.bullet.three = where this claim relates to Gift Aid, the charity or Community Amateur Sports Club meets the conditions for tax exemption for the period covered by this claim
+claimDeclaration.warning = I understand that if I give false or misleading information, HMRC may take action against me.
 claimDeclaration.heading = Declaration
-claimDeclaration.paragraph =  I declare that:
+claimDeclaration.paragraph = By submitting this claim, I confirm that:
 claimDeclaration.title = Declaration
 
 claimGASDS.caption = Provide repayment claim details

@@ -97,8 +97,8 @@ class AdjustmentToThisClaimController @Inject() (
                        )
                 _ <- claimsService.save
               } yield Redirect(
-                controllers.routes.ClaimsTaskListController.onPageLoad
-              ) // TODO - redirect when next page available
+                routes.ClaimDeclarationController.onPageLoad
+              )
           )
       }
 }

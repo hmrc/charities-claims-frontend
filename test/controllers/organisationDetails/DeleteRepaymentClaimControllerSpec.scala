@@ -28,6 +28,7 @@ import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.DeleteRepaymentClaimView
+import config.FrontendAppConfig
 
 import scala.concurrent.Future
 
@@ -40,14 +41,37 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
 
   "DeleteRepaymentClaimController" - {
     "onPageLoad" - {
-      "should render the page correctly" in {
+      "should redirect to charity repayment dashboard when unsubmittedClaimId is not present" in {
 
-        given application: Application = applicationBuilder()
-          .overrides(
-            bind[ClaimsConnector].toInstance(mockClaimsConnector),
-            bind[SaveService].toInstance(mockSaveService)
-          )
-          .build()
+        given application: Application =
+          applicationBuilder(sessionData = defaultSessionData.copy(unsubmittedClaimId = None))
+            .overrides(
+              bind[ClaimsConnector].toInstance(mockClaimsConnector),
+              bind[SaveService].toInstance(mockSaveService)
+            )
+            .build()
+
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.DeleteRepaymentClaimController.onPageLoad.url)
+
+          val result = route(application, request).value
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(appConfig.charityRepaymentDashboardUrl)
+        }
+      }
+
+      "should render the page correctly when unsubmittedClaimId is present" in {
+
+        given application: Application =
+          applicationBuilder(sessionData = defaultSessionData.copy(unsubmittedClaimId = Some("test-claim-123")))
+            .overrides(
+              bind[ClaimsConnector].toInstance(mockClaimsConnector),
+              bind[SaveService].toInstance(mockSaveService)
+            )
+            .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -111,7 +135,7 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
         (mockSaveService
           .save(_: SessionData)(using _: HeaderCarrier))
           .expects(*, *)
-          .returning(Future.successful(sessionData))
+          .returning(Future.successful(()))
 
         (mockClaimsConnector
           .deleteClaim(_: String)(using _: HeaderCarrier))
@@ -144,7 +168,7 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
         (mockSaveService
           .save(_: SessionData)(using _: HeaderCarrier))
           .expects(*, *)
-          .returning(Future.successful(sessionData))
+          .returning(Future.successful(()))
 
         (mockClaimsConnector
           .deleteClaim(_: String)(using _: HeaderCarrier))

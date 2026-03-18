@@ -23,12 +23,11 @@ import models.*
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
-import play.api.{Application, inject}
+import play.api.{inject, Application}
 import uk.gov.hmrc.http.HeaderCarrier
-import util.TestScheduleData
 import views.html.AdjustmentToThisClaimView
 
-import _root_.scala.concurrent.Future
+import scala.concurrent.Future
 
 class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
 
@@ -399,7 +398,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
-      "should redirect to ClaimsTaskListController page when dataguard condition is met" in {
+      "should redirect to next page when dataguard condition is met" in {
         val answers     = repaymentClaimDetailsAnswersCompleted.copy(
           claimingUnderGiftAidSmallDonationsScheme = Some(false),
           claimingDonationsNotFromCommunityBuilding = Some(false),
@@ -428,7 +427,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.ClaimsTaskListController.onPageLoad.url
+            routes.ClaimDeclarationController.onPageLoad.url
           )
         }
       }
@@ -578,7 +577,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.routes.ClaimsTaskListController.onPageLoad.url
+            routes.ClaimDeclarationController.onPageLoad.url
           )
         }
       }

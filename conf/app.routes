@@ -251,4 +251,7 @@ POST        /problem-uploading-connected-charities-schedule-quarantine   control
 GET         /adjustments-to-this-claim            controllers.claimDeclaration.AdjustmentToThisClaimController.onPageLoad
 POST        /adjustments-to-this-claim            controllers.claimDeclaration.AdjustmentToThisClaimController.onSubmit
 
-GET         /claim-complete                         controllers.claimDeclaration.ClaimCompleteController.onPageLoad
+GET         /declaration            controllers.claimDeclaration.ClaimDeclarationController.onPageLoad
+POST        /declaration            controllers.claimDeclaration.ClaimDeclarationController.onSubmit
+
+GET         /claim-complete         controllers.claimDeclaration.ClaimCompleteController.onPageLoad
