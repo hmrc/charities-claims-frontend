@@ -22,7 +22,7 @@ import config.FrontendAppConfig
 import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
-import play.api.Logger
+import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
 import play.api.mvc.Results.*
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
@@ -43,9 +43,8 @@ class DefaultAuthorisedAction @Inject() (
   val parser: BodyParsers.Default
 )(implicit val executionContext: ExecutionContext)
     extends AuthorisedAction
-    with AuthorisedFunctions {
-
-  val logger: Logger = Logger(this.getClass)
+    with AuthorisedFunctions
+    with Logging {
 
   override def invokeBlock[A](request: Request[A], block: AuthorisedRequest[A] => Future[Result]): Future[Result] = {
 
@@ -58,6 +57,7 @@ class DefaultAuthorisedAction @Inject() (
             ) =>
           block(AuthorisedRequest(request, affinityGroup, charitiesReference))
         case Some(AffinityGroup.Agent) ~ _ =>
+          logger.warn(s"Agent auth failed: enrolment missing or not activated for ${request.path}")
           Future.failed(InsufficientEnrolments("Agent enrolment missing or not activated"))
 
         case Some(affinityGroup @ AffinityGroup.Organisation) ~ AuthorisedAction.HasActiveOrganisationEnrolment(
@@ -65,16 +65,19 @@ class DefaultAuthorisedAction @Inject() (
             ) =>
           block(AuthorisedRequest(request, affinityGroup, charitiesReference))
         case Some(AffinityGroup.Organisation) ~ _ =>
+          logger.warn(s"Organisation auth failed: enrolment missing or not activated for ${request.path}")
           Future.failed(InsufficientEnrolments("Organisation enrolment missing or not activated"))
 
         case _ =>
+          logger.warn(s"Auth failed: no affinity group found for ${request.path}")
           Future.failed(UnsupportedAffinityGroup("No affinity group found"))
 
       }
       .recover {
         case _: InsufficientEnrolments | _: UnsupportedAffinityGroup =>
           Redirect(controllers.routes.AccessDeniedController.onPageLoad)
-        case _: AuthorisationException                               =>
+        case ex: AuthorisationException                              =>
+          logger.info(s"Unauthenticated access to ${request.path}: ${ex.getMessage}")
           Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
       }
   }
