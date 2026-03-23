@@ -30,9 +30,8 @@ import play.api.libs.json.{Json, Reads, Writes}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration.FiniteDuration
-
 import javax.inject.Inject
-import java.net.URL
+import java.net.{URI, URL}
 import play.api.libs.json.JsNull
 import play.api.Logging
 
@@ -140,10 +139,10 @@ class ClaimsValidationConnectorImpl @Inject() (
     logger.info(s"$method $url [requestId=${hc.requestId.map(_.value).getOrElse("-")}]")
     retry(retryIntervals*)(shouldRetry, retryReason) {
       val request: RequestBuilder = method match {
-        case "GET"    => http.get(URL(url))
-        case "POST"   => http.post(URL(url))
-        case "PUT"    => http.put(URL(url))
-        case "DELETE" => http.delete(URL(url))
+        case "GET"    => http.get(new URI(url).toURL)
+        case "POST"   => http.post(new URI(url).toURL)
+        case "PUT"    => http.put(new URI(url).toURL)
+        case "DELETE" => http.delete(new URI(url).toURL)
       }
       payload
         .fold(request)(p => request.withBody(Json.toJson(p)))
