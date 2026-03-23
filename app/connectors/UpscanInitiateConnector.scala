@@ -69,7 +69,7 @@ class UpscanInitiateConnectorImpl @Inject() (
     claimId: String,
     request: UpscanInitiateRequest
   )(using hc: HeaderCarrier): Future[UpscanInitiateResponse] = {
-    logger.debug(
+    logger.info(
       s"POST $contextPath/v2/initiate for claimId=$claimId [requestId=${hc.requestId.map(_.value).getOrElse("-")}]"
     )
     retry(retryIntervals*)(shouldRetry, retryReason) {
