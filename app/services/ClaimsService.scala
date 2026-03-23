@@ -43,9 +43,7 @@ class ClaimsServiceImpl @Inject() (
   final def save(using hc: HeaderCarrier): Future[Unit] =
     sessionCache.get().flatMap {
       case None =>
-        val msg = "Cannot save claim: no session data found"
-        logger.error(msg)
-        Future.failed(new RuntimeException(msg))
+        Future.failed(new RuntimeException("Cannot save claim: no session data found"))
 
       case Some(sessionData) =>
         sessionData.unsubmittedClaimId match {

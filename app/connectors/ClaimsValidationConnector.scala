@@ -16,24 +16,22 @@
 
 package connectors
 
-import uk.gov.hmrc.http.HttpReads.Implicits.*
 import com.google.inject.ImplementedBy
 import connectors.HttpResponseOps.*
-import org.apache.pekko.actor.ActorSystem
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import play.api.Configuration
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import models.*
-import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import org.apache.pekko.actor.ActorSystem
+import play.api.{Configuration, Logging}
+import play.api.libs.json.{JsNull, Json, Reads, Writes}
 import play.api.libs.ws.JsonBodyWritables.*
-import play.api.libs.json.{Json, Reads, Writes}
+import uk.gov.hmrc.http.HttpReads.Implicits.*
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-import scala.concurrent.{ExecutionContext, Future}
-import scala.concurrent.duration.FiniteDuration
+import java.net.URI
 import javax.inject.Inject
-import java.net.{URI, URL}
-import play.api.libs.json.JsNull
-import play.api.Logging
+import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[ClaimsValidationConnectorImpl])
 trait ClaimsValidationConnector {
@@ -111,11 +109,10 @@ class ClaimsValidationConnectorImpl @Inject() (
       url = s"$baseUrl$contextPath/$claimId/upload-results/$reference"
     ).flatMap { response =>
       if response.success then Future.successful(response)
-      else {
-        val msg = s"Request to DELETE $contextPath/$claimId/upload-results/$reference returned success: false"
-        logger.error(msg)
-        Future.failed(Exception(msg))
-      }
+      else
+        Future.failed(
+          Exception(s"Request to DELETE $contextPath/$claimId/upload-results/$reference returned success: false")
+        )
     }
 
   final def updateUploadStatus(claimId: String, reference: FileUploadReference, status: FileStatus)(using
@@ -159,9 +156,7 @@ class ClaimsValidationConnectorImpl @Inject() (
             Future.successful
           )
       else {
-        val msg = s"Request to $method $url failed because of $response ${response.body}"
-        logger.error(msg)
-        Future.failed(Exception(msg))
+        Future.failed(Exception(s"Request to $method $url failed because of $response ${response.body}"))
       }
     )
   }

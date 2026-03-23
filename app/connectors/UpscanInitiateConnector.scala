@@ -97,10 +97,11 @@ class UpscanInitiateConnectorImpl @Inject() (
             result => Future.successful(result)
           )
       else {
-        val msg =
-          s"Request to POST $contextPath/v2/initiate failed with status ${response.status} for claimId=$claimId, body=${response.body}"
-        logger.error(msg)
-        Future.failed(Exception(msg))
+        Future.failed(
+          Exception(
+            s"Request to POST $contextPath/v2/initiate failed with status ${response.status} for claimId=$claimId, body=${response.body}"
+          )
+        )
       }
     )
   }
