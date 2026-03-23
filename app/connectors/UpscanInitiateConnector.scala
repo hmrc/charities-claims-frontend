@@ -33,6 +33,7 @@ import scala.concurrent.duration.FiniteDuration
 
 import javax.inject.Inject
 import java.net.URL
+import play.api.Logging
 
 @ImplementedBy(classOf[UpscanInitiateConnectorImpl])
 trait UpscanInitiateConnector {
@@ -50,7 +51,8 @@ class UpscanInitiateConnectorImpl @Inject() (
   val actorSystem: ActorSystem
 )(using ExecutionContext)
     extends UpscanInitiateConnector
-    with Retries {
+    with Retries
+    with Logging {
 
   val baseUrl: String = servicesConfig.baseUrl("upscan-initiate")
 
@@ -66,7 +68,10 @@ class UpscanInitiateConnectorImpl @Inject() (
   final def initiate(
     claimId: String,
     request: UpscanInitiateRequest
-  )(using HeaderCarrier): Future[UpscanInitiateResponse] =
+  )(using hc: HeaderCarrier): Future[UpscanInitiateResponse] = {
+    logger.debug(
+      s"POST $contextPath/v2/initiate for claimId=$claimId [requestId=${hc.requestId.map(_.value).getOrElse("-")}]"
+    )
     retry(retryIntervals*)(shouldRetry, retryReason) {
       http
         .post(URL(s"$baseUrl$contextPath/v2/initiate"))
@@ -85,15 +90,19 @@ class UpscanInitiateConnectorImpl @Inject() (
         response
           .parseJSON[UpscanInitiateResponse]()
           .fold(
-            error => Future.failed(Exception(error)),
+            error => {
+              logger.error(s"Failed to parse upscan initiate response for claimId=$claimId: $error")
+              Future.failed(Exception(error))
+            },
             result => Future.successful(result)
           )
-      else
-        Future.failed(
-          Exception(
-            s"Request to GET $contextPath/v2/initiate failed because of $response ${response.body}"
-          )
-        )
+      else {
+        val msg =
+          s"Request to POST $contextPath/v2/initiate failed with status ${response.status} for claimId=$claimId, body=${response.body}"
+        logger.error(msg)
+        Future.failed(Exception(msg))
+      }
     )
+  }
 
 }

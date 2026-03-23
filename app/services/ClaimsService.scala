@@ -24,6 +24,7 @@ import models.SessionData
 import scala.concurrent.{ExecutionContext, Future}
 import models.RepaymentClaimDetailsAnswers
 import repositories.SessionCache
+import play.api.Logging
 
 @ImplementedBy(classOf[ClaimsServiceImpl])
 trait ClaimsService {
@@ -36,24 +37,29 @@ class ClaimsServiceImpl @Inject() (
   sessionCache: SessionCache,
   connector: ClaimsConnector
 )(using ec: ExecutionContext)
-    extends ClaimsService {
+    extends ClaimsService
+    with Logging {
 
   final def save(using hc: HeaderCarrier): Future[Unit] =
     sessionCache.get().flatMap {
       case None =>
-        Future.failed(new RuntimeException("No session data found"))
+        val msg = "Cannot save claim: no session data found"
+        logger.error(msg)
+        Future.failed(new RuntimeException(msg))
 
       case Some(sessionData) =>
         sessionData.unsubmittedClaimId match {
           case None =>
+            logger.info("Creating new claim in backend")
             for
               repaymentClaimDetails <-
                 Future.fromTry(
                   sessionData.repaymentClaimDetailsAnswers
-                    .map(RepaymentClaimDetailsAnswers.toRepaymentClaimDetails(_))
+                    .map(RepaymentClaimDetailsAnswers.toRepaymentClaimDetails)
                     .get
                 )
               response              <- connector.saveClaim(repaymentClaimDetails)
+              _                      = logger.info(s"New claim created with claimId=${response.claimId}")
               _                     <-
                 sessionCache.store(
                   sessionData
@@ -65,6 +71,7 @@ class ClaimsServiceImpl @Inject() (
             yield ()
 
           case Some(claimId) =>
+            logger.info(s"Updating existing claim claimId=$claimId")
             for
               updateClaimRequest <- Future.fromTry(SessionData.toUpdateClaimRequest(sessionData))
               response           <- connector.updateClaim(claimId, updateClaimRequest)

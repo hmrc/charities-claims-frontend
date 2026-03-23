@@ -34,6 +34,7 @@ import scala.concurrent.duration.FiniteDuration
 import javax.inject.Inject
 import java.net.URL
 import play.api.libs.json.JsNull
+import play.api.Logging
 
 @ImplementedBy(classOf[ClaimsValidationConnectorImpl])
 trait ClaimsValidationConnector {
@@ -66,7 +67,8 @@ class ClaimsValidationConnectorImpl @Inject() (
 )(using
   ExecutionContext
 ) extends ClaimsValidationConnector
-    with Retries {
+    with Retries
+    with Logging {
 
   val baseUrl: String = servicesConfig.baseUrl("charities-claims-validation")
 
@@ -110,12 +112,11 @@ class ClaimsValidationConnectorImpl @Inject() (
       url = s"$baseUrl$contextPath/$claimId/upload-results/$reference"
     ).flatMap { response =>
       if response.success then Future.successful(response)
-      else
-        Future.failed(
-          Exception(
-            s"Request to DELETE $contextPath/$claimId/upload-results/$reference returned success: false"
-          )
-        )
+      else {
+        val msg = s"Request to DELETE $contextPath/$claimId/upload-results/$reference returned success: false"
+        logger.error(msg)
+        Future.failed(Exception(msg))
+      }
     }
 
   final def updateUploadStatus(claimId: String, reference: FileUploadReference, status: FileStatus)(using
@@ -135,7 +136,8 @@ class ClaimsValidationConnectorImpl @Inject() (
     writes: Writes[I],
     reads: Reads[O],
     hc: HeaderCarrier
-  ): Future[O] =
+  ): Future[O] = {
+    logger.info(s"$method $url [requestId=${hc.requestId.map(_.value).getOrElse("-")}]")
     retry(retryIntervals*)(shouldRetry, retryReason) {
       val request: RequestBuilder = method match {
         case "GET"    => http.get(URL(url))
@@ -150,12 +152,20 @@ class ClaimsValidationConnectorImpl @Inject() (
       if response.status >= 200 && response.status < 300 then
         response
           .parseJSON[O]()
-          .fold(error => Future.failed(Exception(error)), Future.successful)
-      else
-        Future.failed(
-          Exception(s"Request to $method $url failed because of $response ${response.body}")
-        )
+          .fold(
+            error => {
+              logger.error(s"Failed to parse response from $method $url: $error")
+              Future.failed(Exception(error))
+            },
+            Future.successful
+          )
+      else {
+        val msg = s"Request to $method $url failed because of $response ${response.body}"
+        logger.error(msg)
+        Future.failed(Exception(msg))
+      }
     )
+  }
 
   given Writes[Nothing] = Writes.apply(_ => JsNull)
 
