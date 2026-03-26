@@ -63,7 +63,7 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
     authorisedOfficialDetails = Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
   )
 
-  "ClaimReferenceNumberInputController" - {
+  "ClaimDeclarationController" - {
     "on pageLoad" - {
       "should render the page correctly when isClaimDetailsComplete condition is met" in {
         val answers     = repaymentClaimDetailsAnswersCompleted.copy(
@@ -307,11 +307,13 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
+          println(
+            "********************* :::::::::::::::::::: ---------- " + result + " ---------------- ****************** "
+          )
+
           status(result) shouldEqual SEE_OTHER
           // TODO when next page available
-          redirectLocation(result) shouldEqual Some(
-            routes.ClaimDeclarationController.onPageLoad.url
-          )
+          redirectLocation(result) shouldEqual Some(controllers.routes.PageNotFoundController)
         }
       }
 

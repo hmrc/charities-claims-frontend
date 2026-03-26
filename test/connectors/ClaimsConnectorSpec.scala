@@ -100,6 +100,16 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       response = response
     )
 
+  def givenSubmitClaimEndpointReturns(
+    payload: SubmitClaimRequest,
+    response: HttpResponse
+  ): CallHandler[Future[HttpResponse]] =
+    givenSubmitReturns(
+      expectedUrl = "http://foo.bar.com:1234/foo-claims/claims/123",
+      expectedPayload = Json.toJson(payload),
+      response = response
+    )
+
   given HeaderCarrier = HeaderCarrier()
 
   "ClaimsConnector" - {
@@ -350,6 +360,41 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       givenDeleteClaimEndpointReturns(HttpResponse(500, ""))
       a[Exception] should be thrownBy {
         await(connector.deleteClaim("123"))
+      }
+    }
+  }
+
+  "submitClaim" - {
+    "should send an submit request and return Unit on success" in {
+      val submitRequest = SubmitClaimRequest(
+        claimId = "123",
+        lastUpdatedReference = "1234567890",
+        declarationLanguage = "en"
+      )
+
+      givenSubmitClaimEndpointReturns(
+        payload = submitRequest,
+        response = HttpResponse(200, Json.stringify(Json.toJson(true)))
+      )
+
+      await(connector.submitClaim("123", "1234567890", "en")) shouldBe true
+
+    }
+
+    "should throw UpdatedByAnotherUserException when backend returns 400 with UPDATED_BY_ANOTHER_USER error" in {
+      val submitRequest = SubmitClaimRequest(
+        claimId = "1234567890",
+        lastUpdatedReference = "1234567890",
+        declarationLanguage = "cy"
+      )
+
+      givenSubmitClaimEndpointReturns(
+        payload = submitRequest,
+        response = HttpResponse(400, """{"errorCode": "UPDATED_BY_ANOTHER_USER"}""")
+      )
+
+      a[UpdatedByAnotherUserException] should be thrownBy {
+        await(connector.submitClaim("123", "1234567890", "cy"))
       }
     }
   }

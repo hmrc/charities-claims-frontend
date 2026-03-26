@@ -17,22 +17,28 @@
 package controllers.claimDeclaration
 
 import com.google.inject.Inject
+import connectors.ClaimsConnector
 import controllers.BaseController
 import controllers.actions.Actions
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import views.html.ClaimDeclarationView
 import controllers.claimDeclaration.routes
 import models.SessionData
-import services.SaveService
+import repositories.SessionCache
+import services.{ClaimsService, SaveService}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class ClaimDeclarationController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
   saveService: SaveService,
-  view: ClaimDeclarationView
-) extends BaseController {
+  view: ClaimDeclarationView,
+  claimsService: ClaimsService,
+  claimsConnector: ClaimsConnector,
+  sessionCache: SessionCache
+)(using ec: ExecutionContext)
+    extends BaseController {
 
   def onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isClaimDetailsComplete).async { implicit request =>
@@ -54,7 +60,18 @@ class ClaimDeclarationController @Inject() (
       .authAndGetDataWithGuard(SessionData.isClaimDetailsComplete)
       .async { implicit request =>
         // read and understood the declaration
-        saveService.save(request.sessionData.copy(understandFalseStatements = Some(true)))
-        Future.successful(Redirect(routes.ClaimDeclarationController.onPageLoad))
+        for {
+          _            <- saveService
+                            .save(
+                              request.sessionData.copy(understandFalseStatements = Some(true))
+                            )
+          _            <- claimsService.save
+          updatedClaim <- sessionCache.get()
+          _            <- claimsConnector.submitClaim(
+                            request.sessionData.unsubmittedClaimId.get,
+                            updatedClaim.get.lastUpdatedReference.get,
+                            request.request.lang.code
+                          )
+        } yield Redirect(Call("GET", "/dummy/confirmationPage")) // TODO when next screen available
       }
 }

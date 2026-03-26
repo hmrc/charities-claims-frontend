@@ -69,6 +69,13 @@ trait HttpV2Support { this: MockFactory & Matchers =>
   ): CallHandler[Future[HttpResponse]] =
     mockHttpDeleteSuccess(expectedUrl)(response)
 
+  def givenSubmitReturns(
+    expectedUrl: String,
+    expectedPayload: JsValue,
+    response: HttpResponse
+  ): CallHandler[Future[HttpResponse]] =
+    mockHttpSubmitSuccess(expectedUrl, expectedPayload)(response)
+
   def mockHttpPostSuccess[A](url: String, requestBody: JsValue, hasHeaders: Boolean = false)(response: A) = {
     mockHttpPost(URL(url)).once()
     mockRequestBuilderWithBody(requestBody).once()
@@ -85,6 +92,12 @@ trait HttpV2Support { this: MockFactory & Matchers =>
 
   def mockHttpDeleteSuccess[A](url: String, hasHeaders: Boolean = false)(response: A) = {
     mockHttpDelete(URL(url)).atLeastOnce()
+    if hasHeaders then mockRequestBuilderTransform().atLeastOnce()
+    mockRequestBuilderExecuteWithoutException(response).atLeastOnce()
+  }
+
+  def mockHttpSubmitSuccess[A](url: String, requestBody: JsValue, hasHeaders: Boolean = false)(response: A) = {
+    mockHttpSubmit(URL(url)).atLeastOnce()
     if hasHeaders then mockRequestBuilderTransform().atLeastOnce()
     mockRequestBuilderExecuteWithoutException(response).atLeastOnce()
   }
@@ -148,6 +161,12 @@ trait HttpV2Support { this: MockFactory & Matchers =>
   def mockHttpDelete[A](url: URL) =
     (mockHttp
       .delete(_: URL)(using _: HeaderCarrier))
+      .expects(url, *)
+      .returning(mockRequestBuilder)
+
+  def mockHttpSubmit[A](url: URL) =
+    (mockHttp
+      .post(_: URL)(using _: HeaderCarrier))
       .expects(url, *)
       .returning(mockRequestBuilder)
 
