@@ -101,12 +101,14 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
     )
 
   def givenSubmitClaimEndpointReturns(
-    payload: SubmitClaimRequest,
+    claimId: String,
+    lastUpdatedReference: String,
+    declarationLanguage: String,
     response: HttpResponse
   ): CallHandler[Future[HttpResponse]] =
     givenSubmitReturns(
-      expectedUrl = "http://foo.bar.com:1234/foo-claims/claims/123",
-      expectedPayload = Json.toJson(payload),
+      expectedUrl = "http://foo.bar.com:1234/foo-claims/chris",
+      expectedPayload = Json.toJson(SubmitClaimRequest(claimId, lastUpdatedReference, declarationLanguage)),
       response = response
     )
 
@@ -373,8 +375,10 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       )
 
       givenSubmitClaimEndpointReturns(
-        payload = submitRequest,
-        response = HttpResponse(200, Json.stringify(Json.toJson(true)))
+        claimId = "123",
+        lastUpdatedReference = "1234567890",
+        declarationLanguage = "en",
+        response = HttpResponse(200, Json.stringify(Json.toJson(SubmitClaimResponse(success = true))))
       )
 
       await(connector.submitClaim("123", "1234567890", "en")) shouldBe true
@@ -389,7 +393,9 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       )
 
       givenSubmitClaimEndpointReturns(
-        payload = submitRequest,
+        claimId = "123",
+        lastUpdatedReference = "1234567890",
+        declarationLanguage = "en",
         response = HttpResponse(400, """{"errorCode": "UPDATED_BY_ANOTHER_USER"}""")
       )
 
