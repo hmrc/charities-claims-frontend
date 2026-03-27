@@ -28,6 +28,7 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import models.requests.{AuthorisedRequest, DataRequest}
 
 import scala.concurrent.{ExecutionContext, Future}
+import play.api.Logging
 
 import javax.inject.Inject
 
@@ -40,7 +41,8 @@ class DefaultDataRetrievalAction @Inject() (
   claimsValidationConnector: ClaimsValidationConnector,
   config: FrontendAppConfig
 )(using val executionContext: ExecutionContext)
-    extends DataRetrievalAction {
+    extends DataRetrievalAction
+    with Logging {
 
   override def refine[A](
     request: AuthorisedRequest[A]
@@ -50,6 +52,7 @@ class DefaultDataRetrievalAction @Inject() (
       .get()
       .flatMap {
         case None              =>
+          logger.info(s"No session data in cache for ${request.charitiesReference}, retrieving from backend")
           claimsConnector.retrieveUnsubmittedClaims
             .flatMap { getClaimsResponse =>
               request.affinityGroup match {
@@ -68,6 +71,7 @@ class DefaultDataRetrievalAction @Inject() (
                                 .map(_ => Right(DataRequest(request, sessionData)))
                             }
                         case None        =>
+                          logger.error(s"Claim ${claimInfo.claimId} could not be found in backend")
                           Future
                             .failed(new RuntimeException(s"claim ${claimInfo.claimId} could not be found in backend"))
                       }
