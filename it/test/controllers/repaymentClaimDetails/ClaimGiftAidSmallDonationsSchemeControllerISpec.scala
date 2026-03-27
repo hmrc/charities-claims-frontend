@@ -47,7 +47,6 @@ class ClaimGiftAidSmallDonationsSchemeControllerISpec
   "POST /claim-gasds-payment" should {
 
     "redirect to community building donations page when user submits valid answer" in {
-
       stubBackend()
 
       val result =
@@ -60,7 +59,6 @@ class ClaimGiftAidSmallDonationsSchemeControllerISpec
     }
 
     "return BadRequest when form submission is invalid" in {
-
       stubBackend()
 
       val result =
@@ -70,7 +68,6 @@ class ClaimGiftAidSmallDonationsSchemeControllerISpec
     }
 
     "render update confirmation page when answer changes in CheckMode" in {
-
       stubBackend()
 
       val result =
