@@ -395,7 +395,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       givenSubmitClaimEndpointReturns(
         claimId = "123",
         lastUpdatedReference = "1234567890",
-        declarationLanguage = "en",
+        declarationLanguage = "cy",
         response = HttpResponse(400, """{"errorCode": "UPDATED_BY_ANOTHER_USER"}""")
       )
 

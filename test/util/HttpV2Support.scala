@@ -74,7 +74,7 @@ trait HttpV2Support { this: MockFactory & Matchers =>
     expectedPayload: JsValue,
     response: HttpResponse
   ): CallHandler[Future[HttpResponse]] =
-    mockHttpSubmitSuccess(expectedUrl)(response)
+    mockHttpSubmitSuccess(expectedUrl, expectedPayload)(response)
 
   def mockHttpPostSuccess[A](url: String, requestBody: JsValue, hasHeaders: Boolean = false)(response: A) = {
     mockHttpPost(URL(url)).once()
@@ -96,8 +96,9 @@ trait HttpV2Support { this: MockFactory & Matchers =>
     mockRequestBuilderExecuteWithoutException(response).atLeastOnce()
   }
 
-  def mockHttpSubmitSuccess[A](url: String, hasHeaders: Boolean = false)(response: A) = {
+  def mockHttpSubmitSuccess[A](url: String, requestBody: JsValue, hasHeaders: Boolean = false)(response: A) = {
     mockHttpSubmit(URL(url)).atLeastOnce()
+    mockRequestBuilderWithBody(requestBody).atLeastOnce()
     if hasHeaders then mockRequestBuilderTransform().atLeastOnce()
     mockRequestBuilderExecuteWithoutException(response).atLeastOnce()
   }
