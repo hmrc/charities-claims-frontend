@@ -368,11 +368,6 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
   "submitClaim" - {
     "should send an submit request and return Unit on success" in {
-      val submitRequest = SubmitClaimRequest(
-        claimId = "123",
-        lastUpdatedReference = "1234567890",
-        declarationLanguage = "en"
-      )
 
       givenSubmitClaimEndpointReturns(
         claimId = "123",
@@ -385,12 +380,17 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
     }
 
-    "should throw UpdatedByAnotherUserException when backend returns 400 with UPDATED_BY_ANOTHER_USER error" in {
-      val submitRequest = SubmitClaimRequest(
-        claimId = "1234567890",
+    "should send a Submit request and return false on failure" in {
+      givenSubmitClaimEndpointReturns(
+        claimId = "123",
         lastUpdatedReference = "1234567890",
-        declarationLanguage = "cy"
+        declarationLanguage = "en",
+        HttpResponse(200, Json.stringify(Json.toJson(SubmitClaimResponse(success = false))))
       )
+      await(connector.submitClaim("123", "1234567890", "en")) shouldBe false
+    }
+
+    "should throw UpdatedByAnotherUserException when backend returns 400 with UPDATED_BY_ANOTHER_USER error" in {
 
       givenSubmitClaimEndpointReturns(
         claimId = "123",
