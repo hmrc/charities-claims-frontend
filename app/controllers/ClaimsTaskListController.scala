@@ -144,7 +144,7 @@ object ClaimsTaskListController {
   }
 
   private def buildRepaymentClaimDetailsTask(using request: DataRequest[?], messages: Messages): TaskItem = {
-    val isComplete = request.sessionData.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
+    val isComplete = SessionData.isRepaymentClaimDetailsComplete(using request.sessionData)
     val status     = if (isComplete) TaskStatus.Completed else TaskStatus.Incomplete
     val href       = if (isComplete) {
       repaymentClaimDetails.routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
