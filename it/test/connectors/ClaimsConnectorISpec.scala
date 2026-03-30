@@ -142,4 +142,27 @@ class ClaimsConnectorISpec
       result shouldBe true
     }
   }
+
+  "submitClaim" should {
+
+    "return true when backend returns success" in {
+
+      val request =
+        SubmitClaimRequest(
+          claimId = "claim-1",
+          lastUpdatedReference = "1234567890",
+          declarationLanguage = "en"
+        )
+
+      val response =
+        SubmitClaimResponse(success = true)
+
+      when(POST, "/charities-claims/chris", request)
+        .thenReturn(OK, response)
+
+      val result = connector.submitClaim("claim-1","1234567890","en").futureValue
+
+      result shouldBe true
+    }
+  }
 }
