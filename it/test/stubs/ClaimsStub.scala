@@ -41,4 +41,8 @@ trait ClaimsStub extends WiremockMethods {
   def stubDeleteClaim(claimId: String)(status: Int, body: JsValue = Json.obj()): StubMapping =
     when(DELETE, uri = s"/charities-claims/claims/$claimId")
       .thenReturn(status, body)
+
+  def stubChrisSubmission(status: Int, body: JsValue = Json.obj()): StubMapping =
+    when(POST, uri = s"/charities-claims/chris")
+      .thenReturn(status, body)
 }

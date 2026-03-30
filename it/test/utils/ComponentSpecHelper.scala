@@ -18,6 +18,7 @@ package utils
 
 import org.mongodb.scala.SingleObservableFuture
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.time.SpanSugar.convertIntToGrainOfTime
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
@@ -34,6 +35,8 @@ import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.mongo.test.MongoSupport
 import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.SessionCookieCrypto
 
+import scala.concurrent.duration.FiniteDuration
+
 trait ComponentSpecHelper
     extends AnyWordSpec
     with Matchers
@@ -45,6 +48,8 @@ trait ComponentSpecHelper
     with GuiceOneServerPerSuite {
 
   def extraConfig(): Map[String, String] = Map.empty
+
+  override protected def initTimeout: FiniteDuration = 10.seconds
 
   override lazy val app: Application =
     new GuiceApplicationBuilder()

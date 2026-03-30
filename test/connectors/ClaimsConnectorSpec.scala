@@ -100,6 +100,18 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       response = response
     )
 
+  def givenSubmitClaimEndpointReturns(
+    claimId: String,
+    lastUpdatedReference: String,
+    declarationLanguage: String,
+    response: HttpResponse
+  ): CallHandler[Future[HttpResponse]] =
+    givenSubmitReturns(
+      expectedUrl = "http://foo.bar.com:1234/foo-claims/chris",
+      expectedPayload = Json.toJson(SubmitClaimRequest(claimId, lastUpdatedReference, declarationLanguage)),
+      response = response
+    )
+
   given HeaderCarrier = HeaderCarrier()
 
   "ClaimsConnector" - {
@@ -350,6 +362,45 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       givenDeleteClaimEndpointReturns(HttpResponse(500, ""))
       a[Exception] should be thrownBy {
         await(connector.deleteClaim("123"))
+      }
+    }
+  }
+
+  "submitClaim" - {
+    "should send an submit request and return Unit on success" in {
+
+      givenSubmitClaimEndpointReturns(
+        claimId = "123",
+        lastUpdatedReference = "1234567890",
+        declarationLanguage = "en",
+        response = HttpResponse(200, Json.stringify(Json.toJson(SubmitClaimResponse(success = true))))
+      )
+
+      await(connector.submitClaim("123", "1234567890", "en")) shouldBe true
+
+    }
+
+    "should send a Submit request and return false on failure" in {
+      givenSubmitClaimEndpointReturns(
+        claimId = "123",
+        lastUpdatedReference = "1234567890",
+        declarationLanguage = "en",
+        HttpResponse(200, Json.stringify(Json.toJson(SubmitClaimResponse(success = false))))
+      )
+      await(connector.submitClaim("123", "1234567890", "en")) shouldBe false
+    }
+
+    "should throw UpdatedByAnotherUserException when backend returns 400 with UPDATED_BY_ANOTHER_USER error" in {
+
+      givenSubmitClaimEndpointReturns(
+        claimId = "123",
+        lastUpdatedReference = "1234567890",
+        declarationLanguage = "cy",
+        response = HttpResponse(400, """{"errorCode": "UPDATED_BY_ANOTHER_USER"}""")
+      )
+
+      a[UpdatedByAnotherUserException] should be thrownBy {
+        await(connector.submitClaim("123", "1234567890", "cy"))
       }
     }
   }

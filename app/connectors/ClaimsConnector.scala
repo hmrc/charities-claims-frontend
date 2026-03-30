@@ -48,6 +48,9 @@ trait ClaimsConnector {
   def updateClaim(claimId: String, updateClaimRequest: UpdateClaimRequest)(using
     hc: HeaderCarrier
   ): Future[UpdateClaimResponse]
+  def submitClaim(claimId: String, lastUpdatedReference: String, declarationLanguage: String)(using
+    hc: HeaderCarrier
+  ): Future[Boolean]
   def deleteClaim(claimId: String)(using hc: HeaderCarrier): Future[Boolean]
 }
 
@@ -70,6 +73,8 @@ class ClaimsConnectorImpl @Inject() (
     .getConfString("charities-claims.context-path", "charities-claims")
 
   val claimsApiUrl: String = s"$baseUrl$contextPath/claims"
+
+  val chrisApiUrl: String = s"$baseUrl$contextPath/chris"
 
   final def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse] =
     callCharitiesClaimsBackend[Nothing, GetClaimsResponse](
@@ -128,6 +133,15 @@ class ClaimsConnectorImpl @Inject() (
       url = s"$claimsApiUrl/$claimId"
     ).map(r => r.success)
 
+  final def submitClaim(claimId: String, lastUpdatedReference: String, declarationLanguage: String)(using
+    hc: HeaderCarrier
+  ): Future[Boolean] =
+    callCharitiesClaimsBackend[SubmitClaimRequest, SubmitClaimResponse](
+      method = "POST",
+      url = chrisApiUrl,
+      payload = Some(SubmitClaimRequest(claimId, lastUpdatedReference, declarationLanguage))
+    ).map(r => r.success)
+
   private def callCharitiesClaimsBackend[I, O](
     method: String,
     url: String,
@@ -147,6 +161,7 @@ class ClaimsConnectorImpl @Inject() (
         case "PUT"    => http.put(URL(url))
         case "DELETE" => http.delete(URL(url))
       }
+
       payload
         .fold(request)(p => request.withBody(Json.toJson(p)))
         .execute[HttpResponse]
