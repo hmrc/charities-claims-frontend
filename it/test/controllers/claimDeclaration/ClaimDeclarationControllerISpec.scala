@@ -67,7 +67,10 @@ class ClaimDeclarationControllerISpec extends ComponentSpecHelper with TestDataU
       stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
+      val updateResponse = UpdateClaimResponse(true, claimId)
+      stubUpdateClaim(claimId)(OK, Json.toJson(updateResponse))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
+      stubChrisSubmission(OK, Json.toJson(SubmitClaimResponse(success = true)))
 
       val result = post("/declaration")(Json.obj())
 
