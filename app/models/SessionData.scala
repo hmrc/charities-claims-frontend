@@ -25,6 +25,7 @@ final case class SessionData(
   // claimId of the unsubmitted claim stored in the backend,
   // if empty, the user has started a new claim
   unsubmittedClaimId: Option[String] = None,
+  claimSubmitted: Option[Boolean] = None,
   // HMRC Charities reference from enrolment (CHARID for Organisation, AGENTCHARID for Agent)
   charitiesReference: String,
   // lastUpdatedReference of the claim stored in the backend,
