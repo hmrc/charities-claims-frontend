@@ -23,6 +23,7 @@ import models.*
 import models.requests.DataRequest
 
 import scala.concurrent.{ExecutionContext, Future}
+import play.api.Logging
 
 @ImplementedBy(classOf[ClaimsValidationServiceImpl])
 trait ClaimsValidationService {
@@ -58,7 +59,8 @@ class ClaimsValidationServiceImpl @Inject() (
   saveService: SaveService,
   claimsValidationConnector: ClaimsValidationConnector
 )(using ec: ExecutionContext)
-    extends ClaimsValidationService {
+    extends ClaimsValidationService
+    with Logging {
 
   override def createUploadTracking(claimId: String, request: CreateUploadTrackingRequest)(using
     HeaderCarrier
@@ -201,12 +203,14 @@ class ClaimsValidationServiceImpl @Inject() (
       case None       =>
         request.sessionData.unsubmittedClaimId match {
           case None =>
+            logger.error("No claimId found when attempting to get GiftAid schedule data")
             Future.failed(new RuntimeException("No claimId found when attempting to get GiftAid schedule data"))
 
           case Some(claimId) =>
             getFileUploadReference(ValidationType.GiftAid)
               .flatMap {
                 case None =>
+                  logger.warn(s"No GiftAid schedule upload found for claimId=$claimId")
                   Future.failed(new ScheduleUploadNotFoundException(ValidationType.GiftAid))
 
                 case Some(fileUploadReference) =>
@@ -218,7 +222,10 @@ class ClaimsValidationServiceImpl @Inject() (
                           .save(request.sessionData.copy(giftAidScheduleData = Some(data)))
                           .map(_ => data)
 
-                      case _ =>
+                      case result =>
+                        logger.warn(
+                          s"GiftAid schedule upload result not in validated state for claimId=$claimId: ${result.fileStatus}"
+                        )
                         Future.failed(
                           new ScheduleUploadNotFoundException(ValidationType.GiftAid)
                         )
@@ -236,11 +243,13 @@ class ClaimsValidationServiceImpl @Inject() (
       case None       =>
         request.sessionData.unsubmittedClaimId match {
           case None =>
+            logger.error("No claimId found when attempting to get Other Income schedule data")
             Future.failed(new RuntimeException("No claimId found when attempting to get Other Income schedule data"))
 
           case Some(claimId) =>
             getFileUploadReference(ValidationType.OtherIncome).flatMap {
               case None =>
+                logger.warn(s"No OtherIncome schedule upload found for claimId=$claimId")
                 Future.failed(new ScheduleUploadNotFoundException(ValidationType.OtherIncome))
 
               case Some(fileUploadReference) =>
@@ -252,7 +261,10 @@ class ClaimsValidationServiceImpl @Inject() (
                         .save(request.sessionData.copy(otherIncomeScheduleData = Some(data)))
                         .map(_ => data)
 
-                    case _ =>
+                    case result =>
+                      logger.warn(
+                        s"OtherIncome schedule upload result not in validated state for claimId=$claimId: ${result.fileStatus}"
+                      )
                       Future.failed(new ScheduleUploadNotFoundException(ValidationType.OtherIncome))
                   }
             }
@@ -268,6 +280,7 @@ class ClaimsValidationServiceImpl @Inject() (
       case None       =>
         request.sessionData.unsubmittedClaimId match {
           case None =>
+            logger.error("No claimId found when attempting to get Community Buildings schedule data")
             Future.failed(
               new RuntimeException("No claimId found when attempting to get Community Buildings schedule data")
             )
@@ -276,6 +289,7 @@ class ClaimsValidationServiceImpl @Inject() (
             getFileUploadReference(ValidationType.CommunityBuildings)
               .flatMap {
                 case None =>
+                  logger.warn(s"No CommunityBuildings schedule upload found for claimId=$claimId")
                   Future.failed(new ScheduleUploadNotFoundException(ValidationType.CommunityBuildings))
 
                 case Some(fileUploadReference) =>
@@ -288,7 +302,10 @@ class ClaimsValidationServiceImpl @Inject() (
                           .save(request.sessionData.copy(communityBuildingsScheduleData = Some(data)))
                           .map(_ => data)
 
-                      case _ =>
+                      case result =>
+                        logger.warn(
+                          s"CommunityBuildings schedule upload result not in validated state for claimId=$claimId: ${result.fileStatus}"
+                        )
                         Future.failed(new ScheduleUploadNotFoundException(ValidationType.OtherIncome))
                     }
               }
@@ -304,6 +321,7 @@ class ClaimsValidationServiceImpl @Inject() (
       case None       =>
         request.sessionData.unsubmittedClaimId match {
           case None =>
+            logger.error("No claimId found when attempting to get Connected Charities schedule data")
             Future.failed(
               new RuntimeException("No claimId found when attempting to get Connected Charities schedule data")
             )
@@ -312,6 +330,7 @@ class ClaimsValidationServiceImpl @Inject() (
             getFileUploadReference(ValidationType.ConnectedCharities)
               .flatMap {
                 case None =>
+                  logger.warn(s"No ConnectedCharities schedule upload found for claimId=$claimId")
                   Future.failed(new ScheduleUploadNotFoundException(ValidationType.ConnectedCharities))
 
                 case Some(fileUploadReference) =>
@@ -323,7 +342,10 @@ class ClaimsValidationServiceImpl @Inject() (
                           .save(request.sessionData.copy(connectedCharitiesScheduleData = Some(data)))
                           .map(_ => data)
 
-                      case _ =>
+                      case result =>
+                        logger.warn(
+                          s"ConnectedCharities schedule upload result not in validated state for claimId=$claimId: ${result.fileStatus}"
+                        )
                         Future.failed(new ScheduleUploadNotFoundException(ValidationType.OtherIncome))
                     }
               }
@@ -348,6 +370,7 @@ class ClaimsValidationServiceImpl @Inject() (
   ): Future[Unit] =
     claimIdOpt match {
       case Some(claimId) =>
+        logger.info(s"Deleting $validationType schedule for claimId=$claimId")
         claimsValidationConnector
           .getUploadSummary(claimId)
           .flatMap { summaryResponse =>
@@ -358,6 +381,7 @@ class ClaimsValidationServiceImpl @Inject() (
                   .map(_ => ())
 
               case None =>
+                logger.error(s"No $validationType schedule upload found for claimId=$claimId")
                 Future.failed(
                   new RuntimeException(s"No $validationType schedule upload found for claimId: $claimId")
                 )
@@ -400,6 +424,7 @@ class ClaimsValidationServiceImpl @Inject() (
           }
 
       case None =>
+        logger.error(s"No claimId found when attempting to delete $validationType schedule")
         Future.failed(
           new RuntimeException(s"No claimId found when attempting to delete $validationType schedule")
         )

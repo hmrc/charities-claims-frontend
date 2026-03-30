@@ -32,6 +32,7 @@ import models.ValidationType.GiftAid
 
 import scala.concurrent.{ExecutionContext, Future}
 import services.ClaimsValidationService
+import play.api.Logging
 
 class UploadGiftAidScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -42,7 +43,8 @@ class UploadGiftAidScheduleController @Inject() (
   saveService: SaveService,
   appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)
-    extends BaseController {
+    extends BaseController
+    with Logging {
 
   val onPageLoad: Action[AnyContent] =
     actions
@@ -74,6 +76,7 @@ class UploadGiftAidScheduleController @Inject() (
                   Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
 
                 case None =>
+                  logger.info(s"Initiating GiftAid schedule upload for claimId=$claimId")
                   for {
                     upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
                   } yield Ok(
@@ -139,9 +142,11 @@ class UploadGiftAidScheduleController @Inject() (
           .getFileUploadReference(ValidationType.GiftAid, acceptAwaitingUpload = true)
           .flatMap {
             case Some(fileUploadReference) =>
+              val claimId = request.sessionData.unsubmittedClaimId.get
+              logger.info(s"GiftAid schedule uploaded successfully for claimId=$claimId reference=$fileUploadReference")
               claimsValidationService
                 .updateUploadStatus(
-                  claimId = request.sessionData.unsubmittedClaimId.get,
+                  claimId = claimId,
                   reference = fileUploadReference,
                   GiftAid
                 )
@@ -158,6 +163,8 @@ class UploadGiftAidScheduleController @Inject() (
       .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
       .async { implicit request =>
         val errorCode = request.getQueryString("errorCode")
+        logger.warn(s"GiftAid schedule upload error for claimId=${request.sessionData.unsubmittedClaimId
+            .getOrElse("-")}: errorCode=${errorCode.getOrElse("-")}")
         request.sessionData.giftAidScheduleUpscanInitialization match {
           case Some(upscanInitiateResponse) =>
             Future.successful(
