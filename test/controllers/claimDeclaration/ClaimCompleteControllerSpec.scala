@@ -27,9 +27,8 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
 
   val testClaimId = "claim-123"
 
-  val nextPage        =
+  val nextPage =
     "charity-repayment-claim-summary" // TODO - get the print summary page that needs to be redirected to
-  val submitRefNumber = "ABCDE123456789012345667899XYZ" // TODO - get the correct claim Ref Number
 
   val repaymentClaimDetailsAnswersCompleted: RepaymentClaimDetailsAnswers =
     RepaymentClaimDetailsAnswers(
@@ -78,6 +77,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
         )
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
           unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers)
         ).copy(
@@ -96,7 +96,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ClaimCompleteView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(nextPage, submitRefNumber).body
+          contentAsString(result) shouldEqual view(nextPage, testCharitiesReference).body
         }
       }
 
@@ -110,6 +110,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
         )
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
           unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers)
         ).copy(
@@ -131,7 +132,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ClaimCompleteView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(nextPage, submitRefNumber).body
+          contentAsString(result) shouldEqual view(nextPage, testCharitiesReference).body
         }
       }
 
@@ -145,6 +146,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
         )
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
           unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers)
         ).copy(
@@ -165,7 +167,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ClaimCompleteView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(nextPage, submitRefNumber).body
+          contentAsString(result) shouldEqual view(nextPage, testCharitiesReference).body
         }
       }
       "should render the page correctly when isClaimDetailsComplete condition is met & understandFalseStatements is false  " in {
@@ -178,6 +180,42 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
         )
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswers = Some(answers)
+        ).copy(
+          communityBuildingsScheduleCompleted = true,
+          understandFalseStatements = Some(false),
+          adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(1.0)),
+          includedAnyAdjustmentsInClaimPrompt = Some("test"),
+          organisationDetailsAnswers = Some(organisationDetailsAnswers)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ClaimCompleteController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
+          )
+        }
+      }
+      "should render the page correctly when isClaimDetailsComplete condition is met & lastUpdatedReference is None  " in {
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(true),
+          connectedToAnyOtherCharities = Some(false),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = None,
           unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers)
         ).copy(

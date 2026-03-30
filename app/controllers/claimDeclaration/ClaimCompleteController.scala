@@ -24,7 +24,6 @@ import controllers.actions.Actions
 
 import scala.concurrent.Future
 import models.SessionData
-import models.Claim
 
 class ClaimCompleteController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -35,10 +34,12 @@ class ClaimCompleteController @Inject() (
   val onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isClaimDetailsComplete).async { implicit request =>
       if sessionData.understandFalseStatements.contains(true) then {
-        val nextPage        =
+        val nextPage =
           "charity-repayment-claim-summary" // TODO - get the print summary page that needs to be redirected to
-        val submitRefNumber = "ABCDE123456789012345667899XYZ" // TODO - get the correct claim Ref Number
-        Future.successful(Ok(view(nextPage, submitRefNumber)))
+        sessionData.lastUpdatedReference match {
+          case None        => Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+          case Some(value) => Future.successful(Ok(view(nextPage, value)))
+        }
       } else Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
     }
 }

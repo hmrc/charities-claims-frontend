@@ -30,6 +30,7 @@ import utils.ISODateTime
 import views.html.UploadOtherIncomeScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
+import play.api.Logging
 
 class UploadOtherIncomeScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -40,7 +41,8 @@ class UploadOtherIncomeScheduleController @Inject() (
   saveService: SaveService,
   appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)
-    extends BaseController {
+    extends BaseController
+    with Logging {
 
   val onPageLoad: Action[AnyContent] =
     actions
@@ -72,6 +74,7 @@ class UploadOtherIncomeScheduleController @Inject() (
                   Future.successful(Redirect(routes.YourOtherIncomeScheduleUploadController.onPageLoad))
 
                 case None =>
+                  logger.info(s"Initiating OtherIncome schedule upload for claimId=$claimId")
                   for {
                     upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
                   } yield Ok(
@@ -137,9 +140,13 @@ class UploadOtherIncomeScheduleController @Inject() (
           .getFileUploadReference(ValidationType.OtherIncome, acceptAwaitingUpload = true)
           .flatMap {
             case Some(fileUploadReference) =>
+              val claimId = request.sessionData.unsubmittedClaimId.get
+              logger.info(
+                s"OtherIncome schedule uploaded successfully for claimId=$claimId reference=$fileUploadReference"
+              )
               claimsValidationService
                 .updateUploadStatus(
-                  claimId = request.sessionData.unsubmittedClaimId.get,
+                  claimId = claimId,
                   reference = fileUploadReference,
                   ValidationType.OtherIncome
                 )
@@ -156,6 +163,8 @@ class UploadOtherIncomeScheduleController @Inject() (
       .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
         val errorCode = request.getQueryString("errorCode")
+        logger.warn(s"OtherIncome schedule upload error for claimId=${request.sessionData.unsubmittedClaimId
+            .getOrElse("-")}: errorCode=${errorCode.getOrElse("-")}")
         request.sessionData.otherIncomeScheduleUpscanInitialization match {
           case Some(upscanInitiateResponse) =>
             Future.successful(

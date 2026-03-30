@@ -34,6 +34,7 @@ import scala.concurrent.duration.FiniteDuration
 import javax.inject.Inject
 import java.net.URL
 import play.api.libs.json.JsNull
+import play.api.Logging
 
 @ImplementedBy(classOf[ClaimsConnectorImpl])
 trait ClaimsConnector {
@@ -47,6 +48,9 @@ trait ClaimsConnector {
   def updateClaim(claimId: String, updateClaimRequest: UpdateClaimRequest)(using
     hc: HeaderCarrier
   ): Future[UpdateClaimResponse]
+  def submitClaim(claimId: String, lastUpdatedReference: String, declarationLanguage: String)(using
+    hc: HeaderCarrier
+  ): Future[Boolean]
   def deleteClaim(claimId: String)(using hc: HeaderCarrier): Future[Boolean]
 }
 
@@ -58,7 +62,8 @@ class ClaimsConnectorImpl @Inject() (
 )(using
   ExecutionContext
 ) extends ClaimsConnector
-    with Retries {
+    with Retries
+    with Logging {
 
   val baseUrl: String = servicesConfig.baseUrl("charities-claims")
 
@@ -68,6 +73,8 @@ class ClaimsConnectorImpl @Inject() (
     .getConfString("charities-claims.context-path", "charities-claims")
 
   val claimsApiUrl: String = s"$baseUrl$contextPath/claims"
+
+  val chrisApiUrl: String = s"$baseUrl$contextPath/chris"
 
   final def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse] =
     callCharitiesClaimsBackend[Nothing, GetClaimsResponse](
@@ -126,6 +133,15 @@ class ClaimsConnectorImpl @Inject() (
       url = s"$claimsApiUrl/$claimId"
     ).map(r => r.success)
 
+  final def submitClaim(claimId: String, lastUpdatedReference: String, declarationLanguage: String)(using
+    hc: HeaderCarrier
+  ): Future[Boolean] =
+    callCharitiesClaimsBackend[SubmitClaimRequest, SubmitClaimResponse](
+      method = "POST",
+      url = chrisApiUrl,
+      payload = Some(SubmitClaimRequest(claimId, lastUpdatedReference, declarationLanguage))
+    ).map(r => r.success)
+
   private def callCharitiesClaimsBackend[I, O](
     method: String,
     url: String,
@@ -136,7 +152,8 @@ class ClaimsConnectorImpl @Inject() (
     writes: Writes[I],
     reads: Reads[O],
     hc: HeaderCarrier
-  ): Future[O] =
+  ): Future[O] = {
+    logger.info(s"$method $url [requestId=${hc.requestId.map(_.value).getOrElse("-")}]")
     retry(retryIntervals*)(shouldRetry, retryReason) {
       val request: RequestBuilder = method match {
         case "GET"    => http.get(URL(url))
@@ -144,6 +161,7 @@ class ClaimsConnectorImpl @Inject() (
         case "PUT"    => http.put(URL(url))
         case "DELETE" => http.delete(URL(url))
       }
+
       payload
         .fold(request)(p => request.withBody(Json.toJson(p)))
         .execute[HttpResponse]
@@ -151,17 +169,33 @@ class ClaimsConnectorImpl @Inject() (
       if response.status == 200 then
         response
           .parseJSON[O]()
-          .fold(error => Future.failed(Exception(error)), Future.successful)
+          .fold(
+            error => {
+              logger.error(s"Failed to parse response from $method $url: $error")
+              Future.failed(Exception(error))
+            },
+            Future.successful
+          )
       else if noneOnNotFound && response.status == 404 then Future.successful(noneValue)
       else if response.status == 400 then
         response
           .parseJSON[ClaimError]()
-          .fold(error => Future.failed(Exception(error)), Future.failed(_))
-      else
-        Future.failed(
-          Exception(s"Request to $method $url failed because of $response ${response.body}")
-        )
+          .fold(
+            error => {
+              logger.error(s"Failed to parse 400 error response from $method $url: $error")
+              Future.failed(Exception(error))
+            },
+            e => {
+              logger.warn(s"$method $url returned 400: ${e.getMessage}")
+              Future.failed(e)
+            }
+          )
+      else {
+        logger.error(s"$method $url failed with status ${response.status}")
+        Future.failed(Exception(s"Request to $method $url failed because of $response ${response.body}"))
+      }
     )
+  }
 
   given Writes[Nothing] = Writes.apply(_ => JsNull)
 }

@@ -21,9 +21,28 @@ import models.*
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.Application
+import play.api.inject.guice.GuiceableModule
 import views.html.ClaimDeclarationView
+import services.{ClaimsService, SaveService}
+import connectors.ClaimsConnector
+import repositories.SessionCache
+import play.api.inject.bind
+import uk.gov.hmrc.http.HeaderCarrier
+import scala.concurrent.Future
 
 class ClaimDeclarationControllerSpec extends ControllerSpec {
+
+  val mockClaimsConnector: ClaimsConnector = mock[ClaimsConnector]
+  val mockClaimsService: ClaimsService     = mock[ClaimsService]
+  val mockSaveService: SaveService         = mock[SaveService]
+  val mockSessionCache                     = mock[SessionCache]
+
+  override protected val additionalBindings: List[GuiceableModule] = List(
+    bind[ClaimsConnector].toInstance(mockClaimsConnector),
+    bind[ClaimsService].toInstance(mockClaimsService),
+    bind[SaveService].toInstance(mockSaveService),
+    bind[SessionCache].toInstance(mockSessionCache)
+  )
 
   val testClaimId = "claim-123"
 
@@ -63,7 +82,7 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
     authorisedOfficialDetails = Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
   )
 
-  "ClaimReferenceNumberInputController" - {
+  "ClaimDeclarationController" - {
     "on pageLoad" - {
       "should render the page correctly when isClaimDetailsComplete condition is met" in {
         val answers     = repaymentClaimDetailsAnswersCompleted.copy(
@@ -280,6 +299,7 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
 
     }
     "onSubmit" - {
+
       "should redirect to next page when dataguard condition is met" in {
         val answers     = repaymentClaimDetailsAnswersCompleted.copy(
           claimingUnderGiftAidSmallDonationsScheme = Some(false),
@@ -289,17 +309,40 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
           makingAdjustmentToPreviousClaim = Some(false)
         )
         val sessionData = SessionData(
+          lastUpdatedReference = Some(testClaimId),
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers)
         ).copy(
+          understandFalseStatements = Some(true),
           connectedCharitiesScheduleCompleted = true,
           prevOverclaimedGiftAid = Some(BigDecimal(1.0)),
           includedAnyAdjustmentsInClaimPrompt = Some("test"),
           organisationDetailsAnswers = Some(organisationDetailsAnswers)
         )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(()))
+
+        (mockClaimsService
+          .save(using _: HeaderCarrier))
+          .expects(*)
+          .returning(Future.successful(()))
+
+        (mockSessionCache
+          .get()(using _: HeaderCarrier))
+          .expects(*)
+          .returning(Future.successful(Some(sessionData)))
+
+        (mockClaimsConnector
+          .submitClaim(_: String, _: String, _: String)(using _: HeaderCarrier))
+          .expects(testClaimId, testClaimId, "en", *)
+          .returning(Future.successful(true))
+
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -308,9 +351,7 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.ClaimCompleteController.onPageLoad.url
-          )
+          redirectLocation(result) shouldEqual Some(routes.ClaimCompleteController.onPageLoad.url)
         }
       }
 
@@ -350,10 +391,10 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
 
       "should redirect to Claims List when dataguard condition is not met due empty adjustment details prompt when there is overpayment" in {
         val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-          claimingUnderGiftAidSmallDonationsScheme = Some(false),
-          claimingDonationsNotFromCommunityBuilding = Some(true),
-          claimingDonationsCollectedInCommunityBuildings = Some(false),
-          connectedToAnyOtherCharities = Some(false),
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(true),
+          connectedToAnyOtherCharities = Some(true),
           makingAdjustmentToPreviousClaim = Some(false)
         )
         val sessionData = SessionData(
@@ -361,10 +402,9 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
           unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers)
         ).copy(
-          connectedCharitiesScheduleCompleted = false,
-          otherIncomeScheduleCompleted = false,
-          giftAidScheduleCompleted = false,
-          adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(1.0)),
+          connectedCharitiesScheduleCompleted = true,
+          giftAidScheduleCompleted = true,
+          prevOverclaimedGiftAid = Some(BigDecimal(1.0)),
           includedAnyAdjustmentsInClaimPrompt = None,
           organisationDetailsAnswers = Some(organisationDetailsAnswers)
         )

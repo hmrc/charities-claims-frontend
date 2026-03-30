@@ -30,6 +30,7 @@ import utils.ISODateTime
 import views.html.UploadConnectedCharitiesScheduleView
 
 import scala.concurrent.{ExecutionContext, Future}
+import play.api.Logging
 
 class UploadConnectedCharitiesScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -40,7 +41,8 @@ class UploadConnectedCharitiesScheduleController @Inject() (
   saveService: SaveService,
   appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)
-    extends BaseController {
+    extends BaseController
+    with Logging {
 
   val onPageLoad: Action[AnyContent] =
     actions
@@ -75,6 +77,7 @@ class UploadConnectedCharitiesScheduleController @Inject() (
                       Future.successful(Redirect(routes.YourConnectedCharitiesScheduleUploadController.onPageLoad))
 
                     case None =>
+                      logger.info(s"Initiating ConnectedCharities schedule upload for claimId=$claimId")
                       for {
                         upscanInitiateResponse <- getUpscanInitiateResponse(claimId, appConfig.baseUrl)
                       } yield Ok(
@@ -141,9 +144,13 @@ class UploadConnectedCharitiesScheduleController @Inject() (
           .getFileUploadReference(ValidationType.ConnectedCharities, acceptAwaitingUpload = true)
           .flatMap {
             case Some(fileUploadReference) =>
+              val claimId = request.sessionData.unsubmittedClaimId.get
+              logger.info(
+                s"ConnectedCharities schedule uploaded successfully for claimId=$claimId reference=$fileUploadReference"
+              )
               claimsValidationService
                 .updateUploadStatus(
-                  claimId = request.sessionData.unsubmittedClaimId.get,
+                  claimId = claimId,
                   reference = fileUploadReference,
                   ValidationType.ConnectedCharities
                 )
@@ -160,6 +167,8 @@ class UploadConnectedCharitiesScheduleController @Inject() (
       .authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
       .async { implicit request =>
         val errorCode = request.getQueryString("errorCode")
+        logger.warn(s"ConnectedCharities schedule upload error for claimId=${request.sessionData.unsubmittedClaimId
+            .getOrElse("-")}: errorCode=${errorCode.getOrElse("-")}")
         request.sessionData.connectedCharitiesScheduleUpscanInitialization match {
           case Some(upscanInitiateResponse) =>
             Future.successful(
