@@ -23,9 +23,14 @@ import play.api.libs.json.Json
 import play.api.test.Helpers.*
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
+import models.UpdateClaimResponse
 
-class DeleteCommunityBuildingsScheduleControllerISpec extends ComponentSpecHelper with TestDataUtils
-  with AuthStub with ClaimsStub with ClaimsValidationStub {
+class DeleteCommunityBuildingsScheduleControllerISpec
+    extends ComponentSpecHelper
+    with TestDataUtils
+    with AuthStub
+    with ClaimsStub
+    with ClaimsValidationStub {
 
   private val url = "/delete-gasds-community-buildings-schedule"
 
@@ -57,13 +62,14 @@ class DeleteCommunityBuildingsScheduleControllerISpec extends ComponentSpecHelpe
       stubBackend()
       val deleteRes = DeleteScheduleResponse(success = true)
       stubDeleteSchedule(claimId, communityBuildingsFileRef)(OK, Json.toJson(deleteRes))
+      stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
 
       val result =
         post(url)(
           Json.obj("value" -> true)
         )
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/make-a-charity-repayment-claim")
     }
 
@@ -75,7 +81,7 @@ class DeleteCommunityBuildingsScheduleControllerISpec extends ComponentSpecHelpe
           Json.obj("value" -> false)
         )
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/problem-with-community-buildings-schedule")
     }
   }

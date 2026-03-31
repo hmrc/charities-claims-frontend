@@ -25,12 +25,13 @@ import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
 class YourConnectedCharitiesScheduleUploadControllerISpec
-  extends ComponentSpecHelper with TestDataUtils
+    extends ComponentSpecHelper
+    with TestDataUtils
     with ClaimsStub
     with AuthStub
     with ClaimsValidationStub {
 
-  private val pageUrl = "/your-connected-charities-schedule-upload"
+  private val pageUrl   = "/your-connected-charities-schedule-upload"
   private val removeUrl = "/your-connected-charities-schedule-upload/remove"
   private val submitUrl = "/your-connected-charities-schedule-upload"
 
@@ -42,7 +43,7 @@ class YourConnectedCharitiesScheduleUploadControllerISpec
 
       val result = get(pageUrl)
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/upload-connected-charities-schedule")
     }
 
@@ -66,10 +67,11 @@ class YourConnectedCharitiesScheduleUploadControllerISpec
       stubBackend()
       stubUploadSummary()
       stubDeleteSchedule(claimId, connectedCharitiesFileRef)(OK, Json.toJson(SuccessResponse(true)))
+      stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
 
       val result = get(removeUrl)
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/upload-connected-charities-schedule")
     }
   }
@@ -79,11 +81,14 @@ class YourConnectedCharitiesScheduleUploadControllerISpec
     "redirect to check page when upload validated" in {
       stubBackend()
       stubUploadSummary()
-      stubGetUploadResult(claimId, connectedCharitiesFileRef)(OK, Json.toJson(getUploadResultConnectedCharitiesValidatedJson))
+      stubGetUploadResult(claimId, connectedCharitiesFileRef)(
+        OK,
+        Json.toJson(getUploadResultConnectedCharitiesValidatedJson)
+      )
 
       val result = post(submitUrl)(Json.obj())
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/check-your-connected-charities-schedule")
     }
   }
@@ -95,10 +100,9 @@ class YourConnectedCharitiesScheduleUploadControllerISpec
     val claimResponse =
       claim.copy(
         claimData = claim.claimData.copy(
-          repaymentClaimDetails =
-            claim.claimData.repaymentClaimDetails.copy(
-              connectedToAnyOtherCharities = Some(true)
-            ),
+          repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
+            connectedToAnyOtherCharities = Some(true)
+          ),
           connectedCharitiesScheduleFileUploadReference =
             if withReference then Some(connectedCharitiesFileRef) else None
         )

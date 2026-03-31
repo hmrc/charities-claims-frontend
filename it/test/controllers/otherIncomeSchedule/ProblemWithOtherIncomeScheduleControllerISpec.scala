@@ -71,6 +71,7 @@ class ProblemWithOtherIncomeScheduleControllerISpec
       stubBackendWithValidationErrors()
       val deleteRes = DeleteScheduleResponse(success = true)
       stubDeleteSchedule(claimId, otherIncomefileRef)(OK, Json.toJson(deleteRes))
+      stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
 
       val result = post(url)(Json.obj())
 

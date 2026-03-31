@@ -25,10 +25,11 @@ import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
 class ProblemWithGiftAidScheduleControllerISpec
-    extends ComponentSpecHelper with TestDataUtils
+    extends ComponentSpecHelper
+    with TestDataUtils
     with ClaimsStub
-      with AuthStub
-      with ClaimsValidationStub {
+    with AuthStub
+    with ClaimsValidationStub {
 
   private val pageUrl = "/problem-with-gift-aid-schedule"
 
@@ -71,6 +72,7 @@ class ProblemWithGiftAidScheduleControllerISpec
         OK,
         Json.toJson(DeleteScheduleResponse(success = true))
       )
+      stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
 
       val result = post(pageUrl)(Json.obj())
 
@@ -82,6 +84,7 @@ class ProblemWithGiftAidScheduleControllerISpec
   private def stubBackend(): Unit = {
     stubAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+    stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
   }
 
   private def stubUploadSummary(): Unit =
@@ -117,14 +120,6 @@ class ProblemWithGiftAidScheduleControllerISpec
       claimData = claim.claimData.copy(
         repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(claimingGiftAid = true),
         giftAidScheduleFileUploadReference = Some(giftAidFileRef)
-      )
-    )
-
-  private def claimWithoutFileRef: Claim =
-    claim.copy(
-      claimData = claim.claimData.copy(
-        repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(claimingGiftAid = true),
-        giftAidScheduleFileUploadReference = None
       )
     )
 }

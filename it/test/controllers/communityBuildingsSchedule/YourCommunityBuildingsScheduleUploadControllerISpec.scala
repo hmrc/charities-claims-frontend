@@ -25,12 +25,13 @@ import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
 class YourCommunityBuildingsScheduleUploadControllerISpec
-  extends ComponentSpecHelper with TestDataUtils
+    extends ComponentSpecHelper
+    with TestDataUtils
     with ClaimsStub
     with AuthStub
     with ClaimsValidationStub {
 
-  private val pageUrl = "/your-community-buildings-schedule-upload"
+  private val pageUrl   = "/your-community-buildings-schedule-upload"
   private val removeUrl = "/your-community-buildings-schedule-upload/remove"
   private val submitUrl = "/your-community-buildings-schedule-upload"
 
@@ -42,7 +43,7 @@ class YourCommunityBuildingsScheduleUploadControllerISpec
 
       val result = get(pageUrl)
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/upload-community-buildings-schedule")
     }
 
@@ -66,10 +67,11 @@ class YourCommunityBuildingsScheduleUploadControllerISpec
       stubBackend()
       stubUploadSummary()
       stubDeleteSchedule(claimId, communityBuildingsFileRef)(OK, Json.toJson(SuccessResponse(true)))
+      stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
 
       val result = get(removeUrl)
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/upload-community-buildings-schedule")
     }
   }
@@ -79,11 +81,14 @@ class YourCommunityBuildingsScheduleUploadControllerISpec
     "redirect to check page when upload validated" in {
       stubBackend()
       stubUploadSummary()
-      stubGetUploadResult(claimId, communityBuildingsFileRef)(OK, Json.toJson(getUploadResultCommunityBuildingsValidatedJson))
+      stubGetUploadResult(claimId, communityBuildingsFileRef)(
+        OK,
+        Json.toJson(getUploadResultCommunityBuildingsValidatedJson)
+      )
 
       val result = post(submitUrl)(Json.obj())
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/check-your-community-buildings-schedule")
     }
   }
@@ -95,15 +100,14 @@ class YourCommunityBuildingsScheduleUploadControllerISpec
     val claimResponse =
       claim.copy(
         claimData = claim.claimData.copy(
-          repaymentClaimDetails =
-            claim.claimData.repaymentClaimDetails.copy(
-              claimingDonationsCollectedInCommunityBuildings = Some(true),
-              claimingUnderGiftAidSmallDonationsScheme = true,
-              claimingGiftAid = false,
-              claimingDonationsNotFromCommunityBuilding = Some(false),
-              connectedToAnyOtherCharities = Some(false),
-              makingAdjustmentToPreviousClaim = Some(false)
-            ),
+          repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
+            claimingDonationsCollectedInCommunityBuildings = Some(true),
+            claimingUnderGiftAidSmallDonationsScheme = true,
+            claimingGiftAid = false,
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
+          ),
           communityBuildingsScheduleFileUploadReference =
             if withReference then Some(communityBuildingsFileRef) else None
         )
