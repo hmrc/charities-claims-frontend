@@ -25,10 +25,11 @@ import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
 class ProblemWithConnectedCharitiesScheduleControllerISpec
-    extends ComponentSpecHelper with TestDataUtils
+    extends ComponentSpecHelper
+    with TestDataUtils
     with ClaimsStub
-      with AuthStub
-      with ClaimsValidationStub {
+    with AuthStub
+    with ClaimsValidationStub {
 
   private val pageUrl = "/problem-with-connected-charities-schedule"
 
@@ -71,6 +72,7 @@ class ProblemWithConnectedCharitiesScheduleControllerISpec
         OK,
         Json.toJson(DeleteScheduleResponse(success = true))
       )
+      stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
 
       val result = post(pageUrl)(Json.obj())
 

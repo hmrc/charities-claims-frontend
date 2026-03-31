@@ -57,6 +57,7 @@ trait ClaimsValidationService {
 @Singleton
 class ClaimsValidationServiceImpl @Inject() (
   saveService: SaveService,
+  claimsService: ClaimsService,
   claimsValidationConnector: ClaimsValidationConnector
 )(using ec: ExecutionContext)
     extends ClaimsValidationService
@@ -421,6 +422,9 @@ class ClaimsValidationServiceImpl @Inject() (
                 )
             }
             saveService.save(modifiedSessionData)
+          }
+          .flatMap { _ =>
+            claimsService.save
           }
 
       case None =>

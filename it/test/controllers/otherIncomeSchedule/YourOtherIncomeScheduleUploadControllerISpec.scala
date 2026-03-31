@@ -25,7 +25,8 @@ import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
 class YourOtherIncomeScheduleUploadControllerISpec
-  extends ComponentSpecHelper with TestDataUtils
+    extends ComponentSpecHelper
+    with TestDataUtils
     with AuthStub
     with ClaimsStub
     with ClaimsValidationStub {
@@ -42,7 +43,7 @@ class YourOtherIncomeScheduleUploadControllerISpec
 
       val result = get(pageUrl)
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/upload-other-income-schedule")
     }
 
@@ -66,10 +67,11 @@ class YourOtherIncomeScheduleUploadControllerISpec
       stubBackend()
       stubUploadSummary()
       stubDeleteSchedule(claimId, otherIncomefileRef)(OK, Json.toJson(SuccessResponse(true)))
+      stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
 
       val result = get(removeUrl)
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/upload-other-income-schedule")
     }
   }
@@ -83,7 +85,7 @@ class YourOtherIncomeScheduleUploadControllerISpec
 
       val result = post(submitUrl)(Json.obj())
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/check-your-other-income-schedule")
     }
   }
@@ -95,12 +97,10 @@ class YourOtherIncomeScheduleUploadControllerISpec
     val claimResponse =
       claim.copy(
         claimData = claim.claimData.copy(
-          repaymentClaimDetails =
-            claim.claimData.repaymentClaimDetails.copy(
-              claimingTaxDeducted = true
-            ),
-          otherIncomeScheduleFileUploadReference =
-            if withReference then Some(otherIncomefileRef) else None
+          repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
+            claimingTaxDeducted = true
+          ),
+          otherIncomeScheduleFileUploadReference = if withReference then Some(otherIncomefileRef) else None
         )
       )
 

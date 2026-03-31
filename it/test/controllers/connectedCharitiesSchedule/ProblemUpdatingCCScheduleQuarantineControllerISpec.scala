@@ -16,16 +16,17 @@
 
 package controllers.connectedCharitiesSchedule
 
-import models.{Claim, FileUploadReference}
 import org.jsoup.Jsoup
-import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.libs.json.Json
-import play.api.test.Helpers.*
+import models.Claim
+import org.scalatest.OptionValues.convertOptionToValuable
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
+import play.api.test.Helpers.*
 
 class ProblemUpdatingCCScheduleQuarantineControllerISpec
-  extends ComponentSpecHelper with TestDataUtils
+    extends ComponentSpecHelper
+    with TestDataUtils
     with ClaimsStub
     with AuthStub
     with ClaimsValidationStub {
@@ -53,7 +54,7 @@ class ProblemUpdatingCCScheduleQuarantineControllerISpec
 
       val result = post(url)(Json.obj())
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/upload-connected-charities-schedule")
     }
   }
@@ -68,10 +69,9 @@ class ProblemUpdatingCCScheduleQuarantineControllerISpec
   private def claimWithConnectedCharitiesSchedule: Claim =
     claim.copy(
       claimData = claim.claimData.copy(
-        repaymentClaimDetails =
-          claim.claimData.repaymentClaimDetails.copy(
-            connectedToAnyOtherCharities = Some(true)
-          ),
+        repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
+          connectedToAnyOtherCharities = Some(true)
+        ),
         connectedCharitiesScheduleFileUploadReference = Some(connectedCharitiesFileRef)
       )
     )
