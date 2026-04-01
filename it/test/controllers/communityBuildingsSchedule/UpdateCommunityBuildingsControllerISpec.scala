@@ -25,7 +25,8 @@ import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
 class UpdateCommunityBuildingsControllerISpec
-  extends ComponentSpecHelper with TestDataUtils
+    extends ComponentSpecHelper
+    with TestDataUtils
     with ClaimsStub
     with AuthStub
     with ClaimsValidationStub {
@@ -67,7 +68,7 @@ class UpdateCommunityBuildingsControllerISpec
 
       val result = post(url)(Json.obj("value" -> true))
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/upload-community-buildings-schedule")
     }
 
@@ -76,7 +77,7 @@ class UpdateCommunityBuildingsControllerISpec
 
       val result = post(url)(Json.obj("value" -> false))
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/check-your-community-buildings-schedule")
     }
   }

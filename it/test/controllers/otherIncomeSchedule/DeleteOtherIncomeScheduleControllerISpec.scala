@@ -16,18 +16,23 @@
 
 package controllers.otherIncomeSchedule
 
-import models.{Claim, DeleteScheduleResponse, FileUploadReference}
 import org.jsoup.Jsoup
-import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.libs.json.Json
-import play.api.test.Helpers.*
+import models.{Claim, DeleteScheduleResponse}
+import org.scalatest.OptionValues.convertOptionToValuable
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
+import play.api.test.Helpers.*
+import models.UpdateClaimResponse
 
-class DeleteOtherIncomeScheduleControllerISpec extends ComponentSpecHelper
-  with AuthStub with TestDataUtils with ClaimsStub with ClaimsValidationStub {
+class DeleteOtherIncomeScheduleControllerISpec
+    extends ComponentSpecHelper
+    with AuthStub
+    with TestDataUtils
+    with ClaimsStub
+    with ClaimsValidationStub {
 
-  private val url     = "/delete-other-income-schedule"
+  private val url = "/delete-other-income-schedule"
 
   "GET /delete-other-income-schedule" should {
 
@@ -57,6 +62,7 @@ class DeleteOtherIncomeScheduleControllerISpec extends ComponentSpecHelper
       stubBackend()
       val deleteRes = DeleteScheduleResponse(success = true)
       stubDeleteSchedule(claimId, otherIncomefileRef)(OK, Json.toJson(deleteRes))
+      stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
 
       val result =
         post(url)(

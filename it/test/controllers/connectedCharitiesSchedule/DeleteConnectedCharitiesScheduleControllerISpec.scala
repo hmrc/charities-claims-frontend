@@ -23,9 +23,14 @@ import play.api.libs.json.Json
 import play.api.test.Helpers.*
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
+import models.UpdateClaimResponse
 
-class DeleteConnectedCharitiesScheduleControllerISpec extends ComponentSpecHelper with TestDataUtils
-  with AuthStub with ClaimsStub with ClaimsValidationStub {
+class DeleteConnectedCharitiesScheduleControllerISpec
+    extends ComponentSpecHelper
+    with TestDataUtils
+    with AuthStub
+    with ClaimsStub
+    with ClaimsValidationStub {
 
   private val url = "/delete-gasds-connected-charities-schedule"
 
@@ -55,15 +60,17 @@ class DeleteConnectedCharitiesScheduleControllerISpec extends ComponentSpecHelpe
 
     "delete schedule and redirect to task list when answer is Yes" in {
       stubBackend()
+      stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
       val deleteRes = DeleteScheduleResponse(success = true)
       stubDeleteSchedule(claimId, connectedCharitiesFileRef)(OK, Json.toJson(deleteRes))
+      stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
 
       val result =
         post(url)(
           Json.obj("value" -> true)
         )
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/make-a-charity-repayment-claim")
     }
 
@@ -75,7 +82,7 @@ class DeleteConnectedCharitiesScheduleControllerISpec extends ComponentSpecHelpe
           Json.obj("value" -> false)
         )
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/problem-with-connected-charities-schedule")
     }
   }

@@ -25,7 +25,8 @@ import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
 class UpdateOtherIncomeScheduleControllerISpec
-  extends ComponentSpecHelper with TestDataUtils
+    extends ComponentSpecHelper
+    with TestDataUtils
     with AuthStub
     with ClaimsStub
     with ClaimsValidationStub {
@@ -61,13 +62,14 @@ class UpdateOtherIncomeScheduleControllerISpec
 
       val deleteResponse = DeleteScheduleResponse(success = true)
       stubDeleteSchedule(claimId, otherIncomefileRef)(OK, Json.toJson(deleteResponse))
+      stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
 
       val updateResponse = UpdateClaimResponse(true, claimId)
       stubUpdateClaim(claimId)(OK, Json.toJson(updateResponse))
 
       val result = post(url)(Json.obj("value" -> true))
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/upload-other-income-schedule")
     }
 
@@ -76,7 +78,7 @@ class UpdateOtherIncomeScheduleControllerISpec
 
       val result = post(url)(Json.obj("value" -> false))
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/check-your-other-income-schedule")
     }
   }
@@ -95,10 +97,9 @@ class UpdateOtherIncomeScheduleControllerISpec
   private def claimWithOtherIncome: Claim =
     claim.copy(
       claimData = claim.claimData.copy(
-        repaymentClaimDetails =
-          claim.claimData.repaymentClaimDetails.copy(
-            claimingTaxDeducted = true
-          ),
+        repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
+          claimingTaxDeducted = true
+        ),
         otherIncomeScheduleFileUploadReference = Some(otherIncomefileRef)
       )
     )
