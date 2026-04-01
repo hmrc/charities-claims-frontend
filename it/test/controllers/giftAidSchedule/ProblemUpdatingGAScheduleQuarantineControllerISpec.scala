@@ -16,16 +16,17 @@
 
 package controllers.giftAidSchedule
 
-import models.{Claim, FileUploadReference}
 import org.jsoup.Jsoup
-import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.libs.json.Json
-import play.api.test.Helpers.*
+import models.Claim
+import org.scalatest.OptionValues.convertOptionToValuable
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
+import play.api.test.Helpers.*
 
 class ProblemUpdatingGAScheduleQuarantineControllerISpec
-  extends ComponentSpecHelper with TestDataUtils
+    extends ComponentSpecHelper
+    with TestDataUtils
     with ClaimsStub
     with AuthStub
     with ClaimsValidationStub {
@@ -53,7 +54,7 @@ class ProblemUpdatingGAScheduleQuarantineControllerISpec
 
       val result = post(url)(Json.obj())
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/upload-gift-aid-schedule")
     }
   }
@@ -61,17 +62,16 @@ class ProblemUpdatingGAScheduleQuarantineControllerISpec
   private def stubBackend(): Unit = {
     stubAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
-    stubGetClaims(claimId)(OK,Json.toJson(claimWithGiftAidSchedule))
+    stubGetClaims(claimId)(OK, Json.toJson(claimWithGiftAidSchedule))
     stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryGiftAidValidatedResponse))
   }
 
   private def claimWithGiftAidSchedule: Claim =
     claim.copy(
       claimData = claim.claimData.copy(
-        repaymentClaimDetails =
-          claim.claimData.repaymentClaimDetails.copy(
-            claimingGiftAid = true
-          ),
+        repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
+          claimingGiftAid = true
+        ),
         giftAidScheduleFileUploadReference = Some(giftAidFileRef)
       )
     )

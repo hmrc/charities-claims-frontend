@@ -23,11 +23,16 @@ import play.api.libs.json.Json
 import play.api.test.Helpers.*
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
+import models.UpdateClaimResponse
 
-class DeleteGiftAidScheduleControllerISpec extends ComponentSpecHelper with TestDataUtils
-  with AuthStub with ClaimsStub with ClaimsValidationStub {
+class DeleteGiftAidScheduleControllerISpec
+    extends ComponentSpecHelper
+    with TestDataUtils
+    with AuthStub
+    with ClaimsStub
+    with ClaimsValidationStub {
 
-  private val url     = "/delete-gift-aid-schedule"
+  private val url = "/delete-gift-aid-schedule"
 
   "GET /delete-gift-aid-schedule" should {
 
@@ -57,6 +62,7 @@ class DeleteGiftAidScheduleControllerISpec extends ComponentSpecHelper with Test
       stubBackend()
       val deleteRes = DeleteScheduleResponse(success = true)
       stubDeleteSchedule(claimId, giftAidFileRef)(OK, Json.toJson(deleteRes))
+      stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
 
       val result =
         post(url)(

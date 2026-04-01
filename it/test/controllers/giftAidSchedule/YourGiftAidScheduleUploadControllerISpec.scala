@@ -25,7 +25,8 @@ import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
 class YourGiftAidScheduleUploadControllerISpec
-  extends ComponentSpecHelper with TestDataUtils
+    extends ComponentSpecHelper
+    with TestDataUtils
     with ClaimsStub
     with AuthStub
     with ClaimsValidationStub {
@@ -42,7 +43,7 @@ class YourGiftAidScheduleUploadControllerISpec
 
       val result = get(pageUrl)
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/upload-gift-aid-schedule")
     }
 
@@ -66,10 +67,11 @@ class YourGiftAidScheduleUploadControllerISpec
       stubBackend()
       stubUploadSummary()
       stubDeleteSchedule(claimId, giftAidFileRef)(OK, Json.toJson(SuccessResponse(true)))
+      stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
 
       val result = get(removeUrl)
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/upload-gift-aid-schedule")
     }
   }
@@ -83,7 +85,7 @@ class YourGiftAidScheduleUploadControllerISpec
 
       val result = post(submitUrl)(Json.obj())
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/check-your-gift-aid-schedule")
     }
   }
@@ -95,12 +97,10 @@ class YourGiftAidScheduleUploadControllerISpec
     val claimResponse =
       claim.copy(
         claimData = claim.claimData.copy(
-          repaymentClaimDetails =
-            claim.claimData.repaymentClaimDetails.copy(
-              claimingGiftAid = true
-            ),
-          giftAidScheduleFileUploadReference =
-            if withReference then Some(giftAidFileRef) else None
+          repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
+            claimingGiftAid = true
+          ),
+          giftAidScheduleFileUploadReference = if withReference then Some(giftAidFileRef) else None
         )
       )
 
@@ -122,5 +122,5 @@ class YourGiftAidScheduleUploadControllerISpec
       }
     """
   )
-  
+
 }

@@ -72,6 +72,7 @@ class ProblemWithCommunityBuildingsScheduleControllerISpec
         OK,
         Json.toJson(DeleteScheduleResponse(success = true))
       )
+      stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
 
       val result = post(pageUrl)(Json.obj())
 
