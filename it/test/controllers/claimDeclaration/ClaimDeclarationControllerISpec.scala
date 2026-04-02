@@ -58,7 +58,7 @@ class ClaimDeclarationControllerISpec extends ComponentSpecHelper with TestDataU
       val result               = get("/declaration")
 
       result.status               shouldBe SEE_OTHER
-      result.header(LOCATION).value should include("/declaration")
+      result.header(LOCATION).value should include("/make-a-charity-repayment-claim")
     }
   }
 
