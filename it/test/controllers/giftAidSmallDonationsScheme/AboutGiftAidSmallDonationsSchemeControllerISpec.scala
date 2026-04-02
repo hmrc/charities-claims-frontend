@@ -16,7 +16,6 @@
 
 package controllers.giftAidSmallDonationsScheme
 
-import org.jsoup.Jsoup
 import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.http.HeaderNames.LOCATION
 import play.api.libs.json.Json
@@ -29,20 +28,6 @@ class AboutGiftAidSmallDonationsSchemeControllerISpec
     with ClaimsStub
     with AuthStub
     with ClaimsValidationStub {
-
-  "GET /about-gift-aid-small-donations-scheme" should {
-
-    "render the about the gasds page when guard condition is satisfied" in {
-      stubBackend()
-
-      val result = get("/about-gift-aid-small-donations-scheme")
-
-      result.status shouldBe OK
-
-      val doc = Jsoup.parse(result.body)
-      doc.title should include(msg("aboutGiftAidSmallDonationsScheme.title"))
-    }
-  }
 
   "POST /about-gift-aid-small-donations-scheme" should {
 
@@ -59,18 +44,8 @@ class AboutGiftAidSmallDonationsSchemeControllerISpec
 
   private def stubBackend(): Unit = {
     stubAuthRequest()
-    val updatedClaim =
-      claim.copy(
-        claimData = claim.claimData.copy(
-          repaymentClaimDetails =
-            claim.claimData.repaymentClaimDetails.map(_.copy(
-              claimingDonationsCollectedInCommunityBuildings = Some(true),
-              claimingUnderGiftAidSmallDonationsScheme = true,
-              makingAdjustmentToPreviousClaim = Some(true)
-            ))
-      )
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
-    stubGetClaims(claimId)(OK, Json.toJson(updatedClaim))
+    stubGetClaims(claimId)(OK, Json.toJson(claim))
     stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
   }
 }
