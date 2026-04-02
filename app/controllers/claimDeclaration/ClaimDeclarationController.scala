@@ -51,7 +51,7 @@ class ClaimDeclarationController @Inject() (
         case (_, _)         =>
           // adjustment details must have been entered if either prev OtherIncome or/and GiftAid are > 0
           if sessionData.includedAnyAdjustmentsInClaimPrompt.isDefined then Future.successful(Ok(view()))
-          else Future.successful(Redirect(routes.ClaimDeclarationController.onPageLoad))
+          else Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
       }
     }
 
