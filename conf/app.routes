@@ -255,3 +255,7 @@ GET         /declaration            controllers.claimDeclaration.ClaimDeclaratio
 POST        /declaration            controllers.claimDeclaration.ClaimDeclarationController.onSubmit
 
 GET         /claim-complete         controllers.claimDeclaration.ClaimCompleteController.onPageLoad
+GET         /about-gift-aid-small-donations-scheme                 controllers.giftAidSmallDonationsScheme.AboutGiftAidSmallDonationsSchemeController.onPageLoad
+POST        /about-gift-aid-small-donations-scheme                 controllers.giftAidSmallDonationsScheme.AboutGiftAidSmallDonationsSchemeController.onSubmit
+
+

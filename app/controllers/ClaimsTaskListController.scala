@@ -179,7 +179,7 @@ object ClaimsTaskListController {
   private def buildGasdsDetailsTask(using messages: Messages): TaskItem =
     TaskItem(
       name = messages("claimsTaskList.task.gasdsDetails"),
-      href = routes.PageNotFoundController.onPageLoad,
+      href = giftAidSmallDonationsScheme.routes.AboutGiftAidSmallDonationsSchemeController.onPageLoad,
       status = TaskStatus.Completed
     )
 
