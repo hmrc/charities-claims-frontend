@@ -33,7 +33,6 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
     <span class="govuk-caption-l">@messages("nameOfCharityRegulator.caption")</span>
-    <h1 class="govuk-heading-l">@messages("nameOfCharityRegulator.heading")</h1>
 
     @formHelper(action = routes.NameOfCharityRegulatorController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -63,7 +62,11 @@
                         content = Text(messages("nameOfCharityRegulator.radio.four"))
                     )
                 ),
-                LegendViewModel(messages("nameOfCharityRegulator.legend")).visuallyHidden
+                Fieldset(
+                    legend = Some(Legend(content = Text(messages("nameOfCharityRegulator.heading")), isPageHeading = true,
+                    classes = "govuk-fieldset__legend--l govuk-fieldset__heading--l"
+                    ))
+                )
             )
         )
 
