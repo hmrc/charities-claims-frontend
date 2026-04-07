@@ -254,3 +254,7 @@ POST        /adjustments-to-this-claim            controllers.claimDeclaration.A
 GET         /declaration            controllers.claimDeclaration.ClaimDeclarationController.onPageLoad
 POST        /declaration            controllers.claimDeclaration.ClaimDeclarationController.onSubmit
 
+GET         /about-gift-aid-small-donations-scheme                 controllers.giftAidSmallDonationsScheme.AboutGiftAidSmallDonationsSchemeController.onPageLoad
+POST        /about-gift-aid-small-donations-scheme                 controllers.giftAidSmallDonationsScheme.AboutGiftAidSmallDonationsSchemeController.onSubmit
+
+

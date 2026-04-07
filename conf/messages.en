@@ -724,3 +724,9 @@ adjustmentToThisClaim.heading = What adjustments have you made to this claim?
 adjustmentToThisClaim.para = If you have included any adjustments in this claim, you must enter an explanation below. You can also provide any other information regarding your charity’s repayment claim.
 adjustmentToThisClaim.hint = You can enter up to 350 characters
 adjustmentToThisClaim.title = What adjustments have you made to this claim?
+
+aboutGiftAidSmallDonationsScheme.caption = Provide GASDS donation details
+aboutGiftAidSmallDonationsScheme.heading = About Gift Aid Small Donations Scheme schedule
+aboutGiftAidSmallDonationsScheme.heading = About Gift Aid Small Donations Scheme schedule
+aboutGiftAidSmallDonationsScheme.paragraph.one = Use this service to claim payments under the Gift Aid Small Donations Scheme (GASDS). You can add claims for up to 3 tax years.
+aboutGiftAidSmallDonationsScheme.paragraph.two = GASDS applies to cash donations of £30 or less where the charity or Community Amateur Sports Club does not have a Gift Aid declaration.
