@@ -35,7 +35,7 @@ class ClaimCompleteController @Inject() (
     actions.authAndGetDataWithGuard(SessionData.isClaimDetailsComplete).async { implicit request =>
       if sessionData.understandFalseStatements.contains(true) then {
         val nextPage =
-          "charity-repayment-claim-summary" // TODO - get the print summary page that needs to be redirected to
+          "charity-repayment-claim-summary"
         sessionData.lastUpdatedReference match {
           case None        => Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
           case Some(value) => Future.successful(Ok(view(nextPage, value)))
