@@ -31,15 +31,15 @@ trait Constraints extends validation.Constraints {
 
   protected def regexp(regex: String, errorKey: String): Constraint[String] =
     Constraint {
-      case str if str.replaceAll("\r\n", "\n").matches(regex) =>
+      case str if str.replace("\r\n", "\n").matches(regex) =>
         Valid
-      case _                                                  =>
+      case _                                               =>
         Invalid(errorKey, regex)
     }
 
   override def maxLength(length: Int, errorKey: String): Constraint[String] =
     Constraint[String]("constraint.maxLength", length) { input =>
-      val normalisedInput = input.replaceAll("\r\n", "\n")
+      val normalisedInput = input.replace("\r\n", "\n")
       require(length >= 0, "string maxLength must not be negative")
       if (normalisedInput == null) Invalid(ValidationError(errorKey, length))
       else if (normalisedInput.length <= length) Valid
