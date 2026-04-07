@@ -34,14 +34,16 @@
     }
 
     <span class="govuk-caption-l">@messages("authorisedOfficialAddress.caption")</span>
-    <h1 class="govuk-heading-l">@messages("authorisedOfficialAddress.heading")</h1>
 
     @formHelper(action = routes.AuthorisedOfficialAddressController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
     @govukRadios(
         RadiosViewModel.yesNo(
             form("value"),
-            LegendViewModel(messages("authorisedOfficialAddress.heading")).visuallyHidden
+            Fieldset(
+                legend = Some(Legend(content = Text(messages("authorisedOfficialAddress.heading")), isPageHeading = true,
+                classes = "govuk-fieldset__legend--l"))
+            )
         )
     )
 

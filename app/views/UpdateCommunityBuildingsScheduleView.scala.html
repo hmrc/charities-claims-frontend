@@ -34,14 +34,15 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <h1 class="govuk-heading-l">@messages("updateCommunityBuildingsSchedule.heading")</h1>
-
     @formHelper(action = routes.UpdateCommunityBuildingsScheduleController.onSubmit, Symbol("autoComplete") -> "off") {
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 form("value"),
-                LegendViewModel(messages("updateCommunityBuildingsSchedule.heading")).visuallyHidden
+                Fieldset(
+                    legend = Some(Legend(content = Text(messages("updateCommunityBuildingsSchedule.heading")), isPageHeading = true,
+                    classes = "govuk-fieldset__legend--l"))
+                )
             ).withHint(HintViewModel(Text(messages("updateCommunityBuildingsSchedule.hint"))))
         )
 

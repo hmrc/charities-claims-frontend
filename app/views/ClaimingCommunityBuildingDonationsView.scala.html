@@ -34,14 +34,16 @@
     }
 
     <span class="govuk-caption-l">@messages("claimingCommunityBuildingDonations.caption")</span>
-    <h1 class="govuk-heading-l">@messages("claimingCommunityBuildingDonations.heading")</h1>
 
     @formHelper(action = routes.ClaimingCommunityBuildingDonationsController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 form("value"),
-                LegendViewModel(messages("claimingCommunityBuildingDonations.heading")).visuallyHidden
+                Fieldset(
+                    legend = Some(Legend(content = Text(messages("claimingCommunityBuildingDonations.heading")), isPageHeading = true,
+                    classes = "govuk-fieldset__legend--l"))
+                    )
             )
             .withHint(HintViewModel(Text(messages("claimingCommunityBuildingDonations.hint"))))
         )
