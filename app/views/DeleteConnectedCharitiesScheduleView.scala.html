@@ -34,14 +34,15 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <h1 class="govuk-heading-l">@messages("deleteConnectedCharitiesSchedule.heading")</h1>
-
     @formHelper(action = routes.DeleteConnectedCharitiesScheduleController.onSubmit, Symbol("autoComplete") -> "off") {
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 form("value"),
-                LegendViewModel(messages("deleteConnectedCharitiesSchedule.heading")).visuallyHidden
+                Fieldset(
+                    legend = Some(Legend(content = Text(messages("deleteConnectedCharitiesSchedule.heading")), isPageHeading = true,
+                    classes = "govuk-fieldset__legend--l"))
+                )
             )
         )
 

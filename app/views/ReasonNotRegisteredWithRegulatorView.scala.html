@@ -34,7 +34,6 @@
         }
 
         <span class="govuk-caption-l">@messages("reasonNotRegisteredWithRegulator.caption")</span>
-        <h1 class="govuk-heading-l">@messages("reasonNotRegisteredWithRegulator.heading")</h1>
 
         @formHelper(action = routes.ReasonNotRegisteredWithRegulatorController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -63,7 +62,10 @@
                         content = Text(messages("reasonNotRegisteredWithRegulator.radio.Waiting"))
                     )
                 ),
-                LegendViewModel(messages("reasonNotRegisteredWithRegulator.legend")).visuallyHidden
+                Fieldset(
+                    legend = Some(Legend(content = Text(messages("reasonNotRegisteredWithRegulator.heading")), isPageHeading = true,
+                    classes = "govuk-fieldset__legend--l" ))
+                )
             )
         )
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))

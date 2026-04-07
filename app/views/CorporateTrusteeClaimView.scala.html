@@ -33,14 +33,16 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
     <span class="govuk-caption-l">@messages("corporateTrusteeClaim.caption")</span>
-    <h1 class="govuk-heading-l">@messages("corporateTrusteeClaim.heading")</h1>
 
     @formHelper(action = routes.CorporateTrusteeClaimController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
     @govukRadios(
         RadiosViewModel.yesNo(
             form("value"),
-            LegendViewModel(messages("corporateTrusteeClaim.heading")).visuallyHidden
+            Fieldset(
+                legend = Some(Legend(content = Text(messages("corporateTrusteeClaim.heading")), isPageHeading = true,
+                classes = "govuk-fieldset__legend--l"))
+            )
         )
         .withHint(
             HintViewModel(Text(messages("corporateTrusteeClaim.hint")))
