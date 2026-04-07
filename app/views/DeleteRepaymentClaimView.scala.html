@@ -34,14 +34,15 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <h1 class="govuk-heading-l">@messages("deleteRepaymentClaim.heading")</h1>
-
     @formHelper(action = routes.DeleteRepaymentClaimController.onSubmit, Symbol("autoComplete") -> "off") {
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 form("value"),
-                LegendViewModel(messages("deleteRepaymentClaim.heading")).visuallyHidden
+                Fieldset(
+                    legend = Some(Legend(content = Text(messages("deleteRepaymentClaim.heading")), isPageHeading = true,
+                    classes = "govuk-fieldset__legend--l"))
+                )
             )
         )
 

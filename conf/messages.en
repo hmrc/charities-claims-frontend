@@ -200,7 +200,6 @@ claimGASDS.caption = Provide repayment claim details
 claimGASDS.error.required = Select ‘Yes’ if you are claiming under the Gift Aid Small Donations Scheme
 claimGASDS.heading = Do you want to claim a top-up payment under the Gift Aid Small Donations Scheme?
 claimGASDS.hint = For donations of £20 or less that were not collected in a community building.
-claimGASDS.legend = Do you want to claim a top-up payment under the Gift Aid Small Donations Scheme?
 claimGASDS.missingDetails = confirm if you are claiming a top-up payment under the Gift Aid Small Donations Scheme
 claimGASDS.title = Do you want to claim a top-up payment under the Gift Aid Small Donations Scheme?
 
@@ -511,7 +510,6 @@ problemWithOtherIncomeSchedule.warning = We cannot accept the file because it ha
 reasonNotRegisteredWithRegulator.caption = Provide organisation details
 reasonNotRegisteredWithRegulator.error.required = Select why the charity is not registered with a regulator
 reasonNotRegisteredWithRegulator.heading = Why is the charity not registered with a regulator?
-reasonNotRegisteredWithRegulator.legend = Why is the charity not registered with a regulator?
 reasonNotRegisteredWithRegulator.missingDetails = confirm why you’re not registered with a regulator
 reasonNotRegisteredWithRegulator.radio.Excepted = Your charity is excepted
 reasonNotRegisteredWithRegulator.radio.Exempt = Your charity is exempt

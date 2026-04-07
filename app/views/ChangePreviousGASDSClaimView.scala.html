@@ -34,11 +34,11 @@
     }
 
     <span class="govuk-caption-l">@messages("changePreviousGASDSClaim.caption")</span>
-    <h1 class="govuk-heading-l">@messages("changePreviousGASDSClaim.heading")</h1>
-
-    <p class="govuk-body">@messages("changePreviousGASDSClaim.paragraph")</p>
 
     @formHelper(action = routes.ChangePreviousGASDSClaimController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+        <h1 class="govuk-heading-l">@messages("changePreviousGASDSClaim.heading")</h1>
+
+        <p class="govuk-body">@messages("changePreviousGASDSClaim.paragraph")</p>
 
         @govukRadios(
             RadiosViewModel.yesNo(
