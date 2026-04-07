@@ -66,7 +66,10 @@
                         content = Text(messages("registerCharityWithARegulator.radio.no.label"))
                     )
                 ),
-                LegendViewModel(messages("registerCharityWithARegulator.heading")).visuallyHidden
+                Fieldset(
+                    legend = Some(Legend(content = Text(messages("registerCharityWithARegulator.heading")), isPageHeading = true,
+                    classes = "govuk-fieldset__legend--l"))
+                )
             )
         )
 

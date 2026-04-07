@@ -47,7 +47,10 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 form("value"),
-                LegendViewModel(messages("updateRepaymentClaim.heading")).visuallyHidden
+                Fieldset(
+                    legend = Some(Legend(content = Text(messages("updateRepaymentClaim.heading")), isPageHeading = true,
+                    classes = "govuk-fieldset__legend--l"))
+                )
             )
             .withHint(
                 HintViewModel(Text(messages("updateRepaymentClaim.hint")))

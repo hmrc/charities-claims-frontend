@@ -34,16 +34,14 @@
     }
 
     <span class="govuk-caption-l">@messages("connectedToAnyOtherCharities.caption")</span>
-    <h1 class="govuk-heading-l">@messages("connectedToAnyOtherCharities.heading")</h1>
-
-    <p class="govuk-body">@messages("connectedToAnyOtherCharities.paragraph")</p>
 
     @formHelper(action = routes.ConnectedToAnyOtherCharitiesController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    <h1 class="govuk-heading-l">@messages("connectedToAnyOtherCharities.heading")</h1>
+    <p class="govuk-body">@messages("connectedToAnyOtherCharities.paragraph")</p>
 
         @govukRadios(
             RadiosViewModel.yesNo(
-            form("value"),
-            LegendViewModel(messages("connectedToAnyOtherCharities.legend")).bold
+            form("value")
         )
     )
 
