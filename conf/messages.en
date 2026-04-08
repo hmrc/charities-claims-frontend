@@ -752,6 +752,6 @@ repaymentClaimSummary.goToHmrcServices.link = Go to Your HMRC services
 
 aboutGiftAidSmallDonationsScheme.caption = Provide GASDS donation details
 aboutGiftAidSmallDonationsScheme.heading = About Gift Aid Small Donations Scheme schedule
-aboutGiftAidSmallDonationsScheme.heading = About Gift Aid Small Donations Scheme schedule
+aboutGiftAidSmallDonationsScheme.title = About Gift Aid Small Donations Scheme schedule
 aboutGiftAidSmallDonationsScheme.paragraph.one = Use this service to claim payments under the Gift Aid Small Donations Scheme (GASDS). You can add claims for up to 3 tax years.
 aboutGiftAidSmallDonationsScheme.paragraph.two = GASDS applies to cash donations of £30 or less where the charity or Community Amateur Sports Club does not have a Gift Aid declaration.
