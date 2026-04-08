@@ -23,10 +23,10 @@ import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import play.api.i18n.{I18nSupport, MessagesApi}
 
 import scala.concurrent.{ExecutionContext, Future}
-
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Result
 import models.UpdatedByAnotherUserException
+import models.ValidationType.{CommunityBuildings, ConnectedCharities, GiftAid, OtherIncome}
 import play.api.mvc.Results.Redirect
 import play.api.Logger
 import services.ScheduleUploadNotFoundException
@@ -43,16 +43,37 @@ class ErrorHandler @Inject() (
 
   override def resolveError(rh: RequestHeader, ex: Throwable): Future[Result] =
     ex match {
-      case _: UpdatedByAnotherUserException   =>
+      case _: UpdatedByAnotherUserException       =>
         logger.error(ex.getMessage)
         Future.successful(
           Redirect(controllers.organisationDetails.routes.CannotViewOrManageClaimController.onPageLoad)
         )
-      case _: ScheduleUploadNotFoundException =>
-        Future.successful(
-          Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
-        )
-      case _                                  =>
+      case value: ScheduleUploadNotFoundException =>
+        value.validationType match {
+          case GiftAid            =>
+            Future.successful(Redirect(controllers.giftAidSchedule.routes.UploadGiftAidScheduleController.onPageLoad))
+          case CommunityBuildings =>
+            Future.successful(
+              Redirect(
+                controllers.communityBuildingsSchedule.routes.UploadCommunityBuildingsScheduleController.onPageLoad
+              )
+            )
+          case OtherIncome        =>
+            Future.successful(
+              Redirect(controllers.otherIncomeSchedule.routes.UploadOtherIncomeScheduleController.onPageLoad)
+            )
+          case ConnectedCharities =>
+            Future.successful(
+              Redirect(
+                controllers.connectedCharitiesSchedule.routes.UploadConnectedCharitiesScheduleController.onPageLoad
+              )
+            )
+          case _                  =>
+            Future.successful(
+              Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
+            )
+        }
+      case _                                      =>
         super.resolveError(rh, ex)
     }
 
