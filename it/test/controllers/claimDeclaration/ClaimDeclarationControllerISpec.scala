@@ -40,9 +40,8 @@ class ClaimDeclarationControllerISpec extends ComponentSpecHelper with TestDataU
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
       val result = get("/declaration")
-      val doc    = Jsoup.parse(result.body)
       result.status shouldBe OK
-      doc.title       should include("Declaration")
+      Jsoup.parse(result.body).title should include(msg("claimDeclaration.title"))
     }
 
     "redirect when adjustments exist but prompt not answered" in {
@@ -70,7 +69,7 @@ class ClaimDeclarationControllerISpec extends ComponentSpecHelper with TestDataU
       val updateResponse = UpdateClaimResponse(true, claimId)
       stubUpdateClaim(claimId)(OK, Json.toJson(updateResponse))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
-      stubChrisSubmission(OK, Json.toJson(SubmitClaimResponse(success = true)))
+      stubChrisSubmission(OK, Json.toJson(SubmitClaimResponse(success = true, "sub ref")))
 
       val result = post("/declaration")(Json.obj())
 
@@ -80,6 +79,7 @@ class ClaimDeclarationControllerISpec extends ComponentSpecHelper with TestDataU
       val cached          = await(sessionCache.get())
 
       cached.value.understandFalseStatements shouldBe Some(true)
+      cached.value.submissionReference shouldBe Some("sub ref")
     }
   }
 }

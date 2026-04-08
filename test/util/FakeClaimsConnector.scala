@@ -55,8 +55,20 @@ class FakeClaimsConnector(
 
   override def submitClaim(claimId: String, lastUpdatedReference: String, declarationLanguage: String)(using
     hc: HeaderCarrier
-  ): Future[Boolean] =
-    Future.successful(true)
+  ): Future[SubmitClaimResponse] =
+    Future.successful(SubmitClaimResponse(success = true, submissionReference = "1234567890"))
+
+  override def getSubmissionClaimSummary(claimId: String)(using hc: HeaderCarrier): Future[SubmissionSummaryResponse] =
+    Future.successful(
+      SubmissionSummaryResponse(
+        claimDetails = ClaimDetails("test charity", "test ref", "2026-04-07T11:34:21.147Z", "Mr John"),
+        giftAidDetails = None,
+        otherIncomeDetails = None,
+        gasdsDetails = None,
+        adjustmentDetails = None,
+        submissionReferenceNumber = "sub ref"
+      )
+    )
 
   override def deleteClaim(claimId: String)(using hc: HeaderCarrier): Future[Boolean] =
     Future.successful(true)

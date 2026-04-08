@@ -723,6 +723,33 @@ adjustmentToThisClaim.para = If you have included any adjustments in this claim,
 adjustmentToThisClaim.hint = You can enter up to 350 characters
 adjustmentToThisClaim.title = What adjustments have you made to this claim?
 
+repaymentClaimSummary.title = Charity repayment claim summary
+repaymentClaimSummary.heading = Charity repayment claim summary
+repaymentClaimSummary.claimDetails.heading = Claim details
+repaymentClaimSummary.claimDetails.charityName.label = Charity name
+repaymentClaimSummary.claimDetails.charityReference.label = HMRC Charities reference
+repaymentClaimSummary.claimDetails.submissionDate.label = Submission date
+repaymentClaimSummary.claimDetails.claimSubmittedBy.label = Claim submitted by
+repaymentClaimSummary.giftAidDetails.heading = Gift Aid details
+repaymentClaimSummary.giftAidDetails.noOfGiftAidDonations.label = Number of Gift Aid donations
+repaymentClaimSummary.giftAidDetails.totalValueOfGiftAidDonations.label = Total value of Gift Aid donations claimed
+repaymentClaimSummary.otherIncomeDetails.heading = Other Income details
+repaymentClaimSummary.otherIncomeDetails.noOfOtherIncomeItems.label = Number of Other Income items
+repaymentClaimSummary.otherIncomeDetails.totalValueOfOtherIncomeItems.label = Total value of Other Income claimed
+repaymentClaimSummary.gasdsDetails.heading = Gift Aid Small Donations Scheme (GASDS)
+repaymentClaimSummary.gasds.totalValueOfGASDS.label = Total value of GASDS donations (not collected in a Community Building)
+repaymentClaimSummary.gasds.noOfCommunityBuildings.label = Number of Community Buildings
+repaymentClaimSummary.gasds.totalValueOfCommunityBuildings.label = Total value of GASDS donations collected in a Community Building
+repaymentClaimSummary.gasds.noOfConnectedCharities.label = Number of Connected Charities
+repaymentClaimSummary.adjustmentDetails.heading = Adjustment for overclaimed tax relief details
+repaymentClaimSummary.adjustments.totalTaxRelief.label = Total tax relief overclaimed in Gift Aid and Other Income
+repaymentClaimSummary.adjustments.amountOfGASDS.label = Amount of GASDS previously overclaimed
+repaymentClaimSummary.adjustments.submissionReceiptRefNumber.label = Submission receipt reference number
+repaymentClaimSummary.printSummary.button.label = Print summary
+repaymentClaimSummary.logout.link = Log out and go back HMRC online services
+repaymentClaimSummary.goToHmrcServices.link = Go to Your HMRC services
+
+
 aboutGiftAidSmallDonationsScheme.caption = Provide GASDS donation details
 aboutGiftAidSmallDonationsScheme.heading = About Gift Aid Small Donations Scheme schedule
 aboutGiftAidSmallDonationsScheme.heading = About Gift Aid Small Donations Scheme schedule

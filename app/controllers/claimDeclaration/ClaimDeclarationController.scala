@@ -20,12 +20,12 @@ import com.google.inject.Inject
 import connectors.ClaimsConnector
 import controllers.BaseController
 import controllers.actions.Actions
-import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
-import views.html.ClaimDeclarationView
 import controllers.claimDeclaration.routes
 import models.SessionData
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionCache
 import services.{ClaimsService, SaveService}
+import views.html.ClaimDeclarationView
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -61,17 +61,21 @@ class ClaimDeclarationController @Inject() (
       .async { implicit request =>
         // read and understood the declaration
         for {
-          _            <- saveService
-                            .save(
-                              request.sessionData.copy(understandFalseStatements = Some(true))
-                            )
-          _            <- claimsService.save
-          updatedClaim <- sessionCache.get()
-          _            <- claimsConnector.submitClaim(
-                            request.sessionData.unsubmittedClaimId.get,
-                            updatedClaim.get.lastUpdatedReference.get,
-                            request.request.lang.code
-                          )
-        } yield Redirect(Call("GET", "/dummy/confirmationPage")) // TODO when next screen available
+          _                  <- saveService
+                                  .save(
+                                    request.sessionData.copy(understandFalseStatements = Some(true))
+                                  )
+          _                  <- claimsService.save
+          updatedClaim       <- sessionCache.get()
+          submissionResponse <- claimsConnector.submitClaim(
+                                  request.sessionData.unsubmittedClaimId.get,
+                                  updatedClaim.get.lastUpdatedReference.get,
+                                  request.request.lang.code
+                                )
+          _                  <- saveService
+                                  .save(
+                                    updatedClaim.get.copy(submissionReference = Some(submissionResponse.submissionReference))
+                                  )
+        } yield Redirect(routes.RepaymentClaimSummaryController.onPageLoad)
       }
 }

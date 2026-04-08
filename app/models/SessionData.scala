@@ -17,8 +17,9 @@
 package models
 
 import play.api.libs.json.{Format, Json}
-import scala.util.Try
 import utils.Required.*
+
+import scala.util.Try
 
 final case class SessionData(
   // claimId of the unsubmitted claim stored in the backend,
@@ -53,7 +54,8 @@ final case class SessionData(
   connectedCharitiesScheduleCompleted: Boolean = false,
   unregulatedLimitExceeded: Boolean = false,
   adjustmentForOtherIncomePreviousOverClaimed: Option[BigDecimal] = None,
-  prevOverclaimedGiftAid: Option[BigDecimal] = None
+  prevOverclaimedGiftAid: Option[BigDecimal] = None,
+  submissionReference: Option[String] = None
 )
 
 object SessionData {
@@ -110,7 +112,8 @@ object SessionData {
       connectedCharitiesScheduleUpscanInitialization = uploadsSummaryOpt
         .flatMap(_.findUpload(ValidationType.ConnectedCharities))
         .flatMap(_.asUpscanInitiateResponse),
-      connectedCharitiesScheduleCompleted = claim.claimData.connectedCharitiesScheduleFileUploadReference.isDefined
+      connectedCharitiesScheduleCompleted = claim.claimData.connectedCharitiesScheduleFileUploadReference.isDefined,
+      submissionReference = claim.submissionDetails.map(_.submissionReference)
     )
 
   def toUpdateClaimRequest(sessionData: SessionData): Try[UpdateClaimRequest] =
@@ -178,6 +181,9 @@ object SessionData {
       && (!shouldUploadOtherIncomeSchedule || session.otherIncomeScheduleCompleted)
       && (!shouldUploadCommunityBuildingsSchedule || session.communityBuildingsScheduleCompleted)
       && (!shouldUploadGiftAidSchedule || session.giftAidScheduleCompleted)
+
+  def isClaimSubmitted(using session: SessionData): Boolean =
+    session.submissionReference.isDefined
 
   def shouldUploadGiftAidSchedule(using session: SessionData): Boolean =
     RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true)

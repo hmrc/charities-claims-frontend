@@ -155,14 +155,36 @@ class ClaimsConnectorISpec
         )
 
       val response =
-        SubmitClaimResponse(success = true)
+        SubmitClaimResponse(success = true, submissionReference = "test-ref")
 
       when(POST, "/charities-claims/chris", request)
         .thenReturn(OK, response)
 
       val result = connector.submitClaim("claim-1","1234567890","en").futureValue
 
-      result shouldBe true
+      result shouldBe response
+    }
+  }
+
+  "getSubmissionClaimSummary" should {
+
+    "return submission summary response when backend returns 200" in {
+
+      val response = SubmissionSummaryResponse(
+          ClaimDetails("test charity", "test ref", "2026-04-07T11:34:21.147Z", "Mr John"),
+          None,
+          None,
+          None,
+          None,
+          "sub ref"
+        )
+
+      when(GET, "/charities-claims/submission-summary/claim-1")
+        .thenReturn(OK, response)
+
+      val result = connector.getSubmissionClaimSummary("claim-1").futureValue
+
+      result shouldBe response
     }
   }
 }
