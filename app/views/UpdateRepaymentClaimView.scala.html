@@ -34,8 +34,6 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <h1 class="govuk-heading-l">@messages("updateRepaymentClaim.heading")</h1>
-
     @formHelper(action = submitAction, Symbol("autoComplete") -> "off") {
 
         <input type="hidden" name="confirmingUpdate" value="true">

@@ -35,14 +35,15 @@ govukErrorSummary: GovukErrorSummary
     }
 
     <span class="govuk-caption-l">@messages("charityRegulatorNumber.caption")</span>
-    <h1 class="govuk-heading-l">@messages("charityRegulatorNumber.heading")</h1>
 
     @formHelper(action = routes.CharityRegulatorNumberController.onSubmit(mode), Symbol("autoComplete") -> "on") {
+
+    <h1 class="govuk-heading-l">@messages("charityRegulatorNumber.heading")</h1>
 
     @govukInput(
         InputViewModel(
             field = form("value"),
-            label = LabelViewModel(messages("charityRegulatorNumber.heading")).withCssClass("govuk-visually-hidden")
+            label = Label(content = Text(""),isPageHeading = false)
         ).withHint(
             HintViewModel(Text(messages("charityRegulatorNumber.hint")))
             .withId("value-hint")
