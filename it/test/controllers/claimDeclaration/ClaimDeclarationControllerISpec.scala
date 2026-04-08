@@ -22,9 +22,10 @@ import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.http.HeaderNames.LOCATION
 import play.api.http.Status.SEE_OTHER
 import play.api.libs.json.Json
-import play.api.test.Helpers.OK
+import play.api.test.Helpers.{OK, await, defaultAwaitTimeout}
 import repositories.SessionCache
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
+import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
 class ClaimDeclarationControllerISpec extends ComponentSpecHelper with TestDataUtils with AuthStub with ClaimsStub with ClaimsValidationStub {
@@ -39,9 +40,8 @@ class ClaimDeclarationControllerISpec extends ComponentSpecHelper with TestDataU
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
       val result = get("/declaration")
-      val doc    = Jsoup.parse(result.body)
       result.status shouldBe OK
-      doc.title       should include("Declaration")
+      Jsoup.parse(result.body).title should include(msg("claimDeclaration.title"))
     }
 
     "redirect when adjustments exist but prompt not answered" in {
@@ -61,5 +61,25 @@ class ClaimDeclarationControllerISpec extends ComponentSpecHelper with TestDataU
       result.header(LOCATION).value should include("/make-a-charity-repayment-claim")
     }
   }
+  "POST /declaration" should {
+    "save declaration confirmation and update session cache" in {
+      stubAuthRequest()
+      stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+      stubGetClaims(claimId)(OK, Json.toJson(claim))
+      val updateResponse = UpdateClaimResponse(true, claimId)
+      stubUpdateClaim(claimId)(OK, Json.toJson(updateResponse))
+      stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
+      stubChrisSubmission(OK, Json.toJson(SubmitClaimResponse(success = true, "sub ref")))
 
+      val result = post("/declaration")(Json.obj())
+
+      result.status shouldBe SEE_OTHER
+
+      given HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId("mock-sessionid")))
+      val cached          = await(sessionCache.get())
+
+      cached.value.understandFalseStatements shouldBe Some(true)
+      cached.value.submissionReference shouldBe Some("sub ref")
+    }
+  }
 }

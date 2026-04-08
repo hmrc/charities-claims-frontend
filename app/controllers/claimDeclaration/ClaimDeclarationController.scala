@@ -61,19 +61,21 @@ class ClaimDeclarationController @Inject() (
       .async { implicit request =>
         // read and understood the declaration
         for {
-          _                       <- saveService
-                                       .save(
-                                         request.sessionData.copy(understandFalseStatements = Some(true))
-                                       )
-          _                       <- claimsService.save
-          updatedClaim            <- sessionCache.get()
-          submittedClaim: Boolean <- claimsConnector.submitClaim(
-                                       request.sessionData.unsubmittedClaimId.get,
-                                       updatedClaim.get.lastUpdatedReference.get,
-                                       request.request.lang.code
-                                     )
-        } yield
-          if submittedClaim then Redirect(routes.ClaimCompleteController.onPageLoad)
-          else throw new Exception("Sorry, your claim didn't go through.")
+          _                  <- saveService
+                                  .save(
+                                    request.sessionData.copy(understandFalseStatements = Some(true))
+                                  )
+          _                  <- claimsService.save
+          updatedClaim       <- sessionCache.get()
+          submissionResponse <- claimsConnector.submitClaim(
+                                  request.sessionData.unsubmittedClaimId.get,
+                                  updatedClaim.get.lastUpdatedReference.get,
+                                  request.request.lang.code
+                                )
+          _                  <- saveService
+                                  .save(
+                                    updatedClaim.get.copy(submissionReference = Some(submissionResponse.submissionReference))
+                                  )
+        } yield Redirect(routes.ClaimCompleteController.onPageLoad)
       }
 }

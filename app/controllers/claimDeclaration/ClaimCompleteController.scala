@@ -36,10 +36,9 @@ class ClaimCompleteController @Inject() (
       if sessionData.understandFalseStatements.contains(true) then {
         val nextPage =
           "charity-repayment-claim-summary"
-        sessionData.lastUpdatedReference match {
-          case None        => Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
-          case Some(value) => Future.successful(Ok(view(nextPage, value)))
-        }
+        // this can never be none since it would be caught by SessionData.isClaimDetailsComplete
+        val value    = sessionData.lastUpdatedReference.get
+        Future.successful(Ok(view(nextPage, value)))
       } else Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
     }
 }

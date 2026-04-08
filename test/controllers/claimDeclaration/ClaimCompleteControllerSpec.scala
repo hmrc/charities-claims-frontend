@@ -25,7 +25,7 @@ import views.html.ClaimCompleteView
 
 class ClaimCompleteControllerSpec extends ControllerSpec {
 
-  val testClaimId = "claim-123"
+  val testClaimId = testCharitiesReference
 
   val nextPage =
     "charity-repayment-claim-summary" // TODO - get the print summary page that needs to be redirected to
@@ -65,7 +65,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
     authorisedOfficialTrusteeLastName = Some("Smith"),
     authorisedOfficialDetails = Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
   )
-  "ClaimReferenceNumberInputController" - {
+  "ClaimCompleteController" - {
     "on pageLoad" - {
       "should render the page correctly when isClaimDetailsComplete condition is met" in {
         val answers     = repaymentClaimDetailsAnswersCompleted.copy(
@@ -96,7 +96,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ClaimCompleteView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(nextPage, testCharitiesReference).body
+          contentAsString(result) shouldEqual view(nextPage, testClaimId).body
         }
       }
 
@@ -132,7 +132,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ClaimCompleteView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(nextPage, testCharitiesReference).body
+          contentAsString(result) shouldEqual view(nextPage, testClaimId).body
         }
       }
 
@@ -167,7 +167,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ClaimCompleteView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(nextPage, testCharitiesReference).body
+          contentAsString(result) shouldEqual view(nextPage, testClaimId).body
         }
       }
       "should render the page correctly when isClaimDetailsComplete condition is met & understandFalseStatements is false  " in {
@@ -215,11 +215,11 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
         )
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          lastUpdatedReference = None,
-          unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers)
         ).copy(
           communityBuildingsScheduleCompleted = true,
+          lastUpdatedReference = None,
+          unsubmittedClaimId = None,
           understandFalseStatements = Some(false),
           adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(1.0)),
           includedAnyAdjustmentsInClaimPrompt = Some("test"),

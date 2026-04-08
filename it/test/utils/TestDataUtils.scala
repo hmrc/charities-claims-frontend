@@ -203,4 +203,13 @@ trait TestDataUtils {
         }
       """
   )
+
+  val submissionSummaryResponse = SubmissionSummaryResponse(
+    claimDetails = ClaimDetails("test charity", "test ref", "2026-04-07T11:34:21.147Z", "Mr John"),
+    giftAidDetails = None,
+    otherIncomeDetails = None,
+    gasdsDetails = None,
+    adjustmentDetails = None,
+    submissionReferenceNumber = "sub ref"
+  )
 }
