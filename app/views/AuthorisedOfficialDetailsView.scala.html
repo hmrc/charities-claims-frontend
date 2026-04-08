@@ -68,6 +68,7 @@
               field = form("phoneNumber"),
               label = LabelViewModel(messages("authorisedOfficialDetails.phoneNumber"))
          ).withCssClass("govuk-input--width-20")
+            .withInputType("tel")
               .withAutocomplete("tel"))
 
     @if(isUkAddress) {
