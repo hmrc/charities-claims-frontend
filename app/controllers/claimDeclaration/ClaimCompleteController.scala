@@ -34,10 +34,9 @@ class ClaimCompleteController @Inject() (
   val onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isClaimDetailsComplete).async { implicit request =>
       if sessionData.understandFalseStatements.contains(true) then {
-        val nextPage =
-          "charity-repayment-claim-summary"
+        val nextPage: Call = controllers.claimDeclaration.routes.RepaymentClaimSummaryController.onPageLoad
         // this can never be none since it would be caught by SessionData.isClaimDetailsComplete
-        val value    = sessionData.lastUpdatedReference.get
+        val value          = sessionData.lastUpdatedReference.getOrElse("")
         Future.successful(Ok(view(nextPage, value)))
       } else Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
     }

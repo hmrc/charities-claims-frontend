@@ -24,7 +24,7 @@
     govukButton: GovukButton
 )
 
-@(nextPage: String,claimRefNumber: String)(implicit request: Request[?], messages: Messages)
+@(nextPage: Call,claimRefNumber: String)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("claimComplete.title")),
