@@ -37,12 +37,11 @@ govukErrorSummary: GovukErrorSummary
     <span class="govuk-caption-l">@messages("claimReferenceNumber.caption")</span>
 
    @formHelper(action = routes.ClaimReferenceNumberInputController.onSubmit(mode), Symbol("autoComplete") -> "off") {
-        <h1 class="govuk-heading-l">@messages("claimReferenceNumber.heading")</h1>
 
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = Label(content = Text(""),isPageHeading = false)
+                label = Label(content = Text(messages("claimReferenceNumber.heading")),isPageHeading = true,classes = "govuk-fieldset__legend--l")
                 ).withHint(
                     HintViewModel(Text(messages("claimReferenceNumber.hint")))
                         .withId("value-hint")

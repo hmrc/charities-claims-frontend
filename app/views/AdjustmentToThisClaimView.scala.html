@@ -37,12 +37,10 @@
 
     @formHelper(action = routes.AdjustmentToThisClaimController.onSubmit, Symbol("autoComplete") -> "off") {
 
-    <h1 class="govuk-heading-l">@messages("adjustmentToThisClaim.heading")</h1>
-
     @govukTextareaCharacterCount(
         CharacterCountViewModel(
             field = form("value"),
-            label = Label(content = Text(""),isPageHeading = false),
+            label = Label(content = Text(messages("adjustmentToThisClaim.heading")),isPageHeading = true,classes = "govuk-fieldset__legend--l"),
             maxLength = 350
         ).withHint(
             HintViewModel(Text(messages("adjustmentToThisClaim.para")))
