@@ -33,7 +33,7 @@ class AboutGiftAidSmallDonationsSchemeController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      if RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
+      if RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true)
       then {
         Future.successful(Ok(view()))
       } else {
