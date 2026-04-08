@@ -38,12 +38,10 @@ govukErrorSummary: GovukErrorSummary
 
     @formHelper(action = routes.CharityRegulatorNumberController.onSubmit(mode), Symbol("autoComplete") -> "on") {
 
-    <h1 class="govuk-heading-l">@messages("charityRegulatorNumber.heading")</h1>
-
     @govukInput(
         InputViewModel(
             field = form("value"),
-            label = Label(content = Text(""),isPageHeading = false)
+            label = Label(content = Text(messages("charityRegulatorNumber.heading")),isPageHeading = true,classes = "govuk-fieldset__legend--l")
         ).withHint(
             HintViewModel(Text(messages("charityRegulatorNumber.hint")))
             .withId("value-hint")
