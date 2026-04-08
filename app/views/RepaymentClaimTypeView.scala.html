@@ -37,7 +37,6 @@
     }
 
     <span class="govuk-caption-l">@messages("repaymentClaimType.caption")</span>
-    <h1 class="govuk-heading-l">@messages("repaymentClaimType.heading")</h1>
 
     @formHelper(action = routes.RepaymentClaimTypeController.onSubmit(mode),Symbol("autoComplete") -> "on") {
 
@@ -46,7 +45,10 @@
             form,
             name = "value",
             items = RepaymentClaimTypeCheckBox.items,
-            legend = LegendViewModel(messages("repaymentClaimType.heading")).visuallyHidden
+            Fieldset(
+                legend = Some(Legend(content = Text(messages("repaymentClaimType.heading")), isPageHeading = true,
+                classes = "govuk-fieldset__legend--l"))
+            )
         )
         .withHint(HintViewModel(Text(messages("repaymentClaimType.hint"))))
     )

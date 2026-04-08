@@ -41,7 +41,11 @@
 
         @govukRadios(
             RadiosViewModel.yesNo(
-            form("value")
+            form("value"),
+            Fieldset(
+                legend = Some(Legend(content = Text(messages("connectedToAnyOtherCharities.legend")), isPageHeading = false,
+                classes = "govuk-fieldset__legend--m"))
+            )
         )
     )
 
