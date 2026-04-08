@@ -31,13 +31,9 @@
     <span class="govuk-caption-l">@messages("aboutGiftAidSmallDonationsScheme.caption")</span>
     <h1 class="govuk-heading-l">@messages("aboutGiftAidSmallDonationsScheme.heading")</h1>
 
-
-
     @formHelper(action = routes.AboutGiftAidSmallDonationsSchemeController.onSubmit) {
 
         <p class="govuk-body">@messages("aboutGiftAidSmallDonationsScheme.paragraph.one")</p>
-        <br>
-        <br>
         <p class="govuk-body">@messages("aboutGiftAidSmallDonationsScheme.paragraph.two")</p>
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
