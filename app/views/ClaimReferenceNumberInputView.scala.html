@@ -35,21 +35,21 @@ govukErrorSummary: GovukErrorSummary
    }
 
     <span class="govuk-caption-l">@messages("claimReferenceNumber.caption")</span>
-   <h1 class="govuk-heading-l">@messages("claimReferenceNumber.heading")</h1>
 
    @formHelper(action = routes.ClaimReferenceNumberInputController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+        <h1 class="govuk-heading-l">@messages("claimReferenceNumber.heading")</h1>
 
-@govukInput(
-InputViewModel(
-field = form("value"),
-label = LabelViewModel(messages("claimReferenceNumber.heading")).withCssClass("govuk-visually-hidden")
-).withHint(
-HintViewModel(Text(messages("claimReferenceNumber.hint")))
-.withId("value-hint")
-)
-.withCssClass("govuk-input--width-20")
-)
+        @govukInput(
+            InputViewModel(
+                field = form("value"),
+                label = Label(content = Text(""),isPageHeading = false)
+                ).withHint(
+                    HintViewModel(Text(messages("claimReferenceNumber.hint")))
+                        .withId("value-hint")
+                )
+                .withCssClass("govuk-input--width-20")
+        )
 
-@govukButton(ButtonViewModel(Text(messages("site.continue"))))
-}
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+    }
 }
