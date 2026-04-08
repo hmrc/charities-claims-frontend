@@ -19,7 +19,8 @@ package models
 import play.api.libs.json.{Format, Json}
 
 final case class SubmitClaimResponse(
-  success: Boolean
+  success: Boolean,
+  submissionReference: String
 )
 
 object SubmitClaimResponse {

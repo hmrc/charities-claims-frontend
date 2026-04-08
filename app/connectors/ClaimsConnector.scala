@@ -16,25 +16,22 @@
 
 package connectors
 
-import uk.gov.hmrc.http.HttpReads.Implicits.*
 import com.google.inject.ImplementedBy
 import connectors.HttpResponseOps.*
-import org.apache.pekko.actor.ActorSystem
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import models.*
-import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
-import play.api.Configuration
+import org.apache.pekko.actor.ActorSystem
+import play.api.{Configuration, Logging}
+import play.api.libs.json.{JsNull, Json, Reads, Writes}
 import play.api.libs.ws.JsonBodyWritables.*
-import play.api.libs.json.{Json, Reads, Writes}
+import uk.gov.hmrc.http.HttpReads.Implicits.*
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-import scala.concurrent.{ExecutionContext, Future}
-import scala.concurrent.duration.FiniteDuration
-
-import javax.inject.Inject
 import java.net.URL
-import play.api.libs.json.JsNull
-import play.api.Logging
+import javax.inject.Inject
+import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[ClaimsConnectorImpl])
 trait ClaimsConnector {
@@ -50,8 +47,10 @@ trait ClaimsConnector {
   ): Future[UpdateClaimResponse]
   def submitClaim(claimId: String, lastUpdatedReference: String, declarationLanguage: String)(using
     hc: HeaderCarrier
-  ): Future[Boolean]
+  ): Future[SubmitClaimResponse]
   def deleteClaim(claimId: String)(using hc: HeaderCarrier): Future[Boolean]
+
+  def getSubmissionClaimSummary(claimId: String)(using hc: HeaderCarrier): Future[SubmissionSummaryResponse]
 }
 
 class ClaimsConnectorImpl @Inject() (
@@ -135,12 +134,20 @@ class ClaimsConnectorImpl @Inject() (
 
   final def submitClaim(claimId: String, lastUpdatedReference: String, declarationLanguage: String)(using
     hc: HeaderCarrier
-  ): Future[Boolean] =
+  ): Future[SubmitClaimResponse] =
     callCharitiesClaimsBackend[SubmitClaimRequest, SubmitClaimResponse](
       method = "POST",
       url = chrisApiUrl,
       payload = Some(SubmitClaimRequest(claimId, lastUpdatedReference, declarationLanguage))
-    ).map(r => r.success)
+    )
+
+  final def getSubmissionClaimSummary(claimId: String)(using hc: HeaderCarrier): Future[SubmissionSummaryResponse] =
+    val claimSummaryApiUrl: String = s"$baseUrl$contextPath/submission-summary/$claimId"
+    callCharitiesClaimsBackend[Nothing, SubmissionSummaryResponse](
+      method = "GET",
+      url = claimSummaryApiUrl,
+      payload = None
+    )
 
   private def callCharitiesClaimsBackend[I, O](
     method: String,

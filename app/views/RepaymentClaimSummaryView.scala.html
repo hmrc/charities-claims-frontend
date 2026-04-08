@@ -1,0 +1,103 @@
+@*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import viewmodels.RepaymentClaimSummaryHelper
+@import models.SubmissionSummaryResponse
+@import config.FrontendAppConfig
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukSummaryList: GovukSummaryList,
+    govukButton: GovukButton
+)(using config: FrontendAppConfig)
+
+@(summaryRes: SubmissionSummaryResponse)(implicit request: Request[?], messages: Messages)
+
+@layout(
+    pageTitle = titleNoForm(messages("repaymentClaimSummary.title"))) {
+
+    <h1 class="govuk-heading-l">@messages("repaymentClaimSummary.heading")</h1>
+
+    <h2 class="govuk-heading-m">@messages("repaymentClaimSummary.claimDetails.heading")</h2>
+
+    @govukSummaryList(
+        RepaymentClaimSummaryHelper.claimDetails(summaryRes)
+    )
+
+    @summaryRes.giftAidDetails.map { _ =>
+        <h2 class="govuk-heading-m">
+            @messages("repaymentClaimSummary.giftAidDetails.heading")
+        </h2>
+
+        @govukSummaryList(
+            RepaymentClaimSummaryHelper.giftAidDetails(summaryRes).get
+        )
+    }
+
+    @summaryRes.otherIncomeDetails.map { _ =>
+        <h2 class="govuk-heading-m">
+            @messages("repaymentClaimSummary.otherIncomeDetails.heading")
+        </h2>
+
+        @govukSummaryList(
+            RepaymentClaimSummaryHelper.otherIncomeDetails(summaryRes).get
+        )
+    }
+
+    @summaryRes.gasdsDetails.map { _ =>
+        <h2 class="govuk-heading-m">
+            @messages("repaymentClaimSummary.gasdsDetails.heading")
+        </h2>
+
+        @govukSummaryList(
+            RepaymentClaimSummaryHelper.gasdsDetails(summaryRes).get
+        )
+    }
+
+    @summaryRes.adjustmentDetails.map { _ =>
+        <h2 class="govuk-heading-m">
+            @messages("repaymentClaimSummary.adjustmentDetails.heading")
+        </h2>
+
+        @govukSummaryList(
+            RepaymentClaimSummaryHelper.adjustmentDetails(summaryRes).get
+        )
+    }
+
+    <div class="govuk-!-margin-top-6">
+        <p id="print-this-page" class="govuk-list govuk-link print-link hmrc-!-js-visible govuk-!-display-none-print">
+            <a href="#" class="govuk-link hmrc-!-js-visible" data-module="hmrc-print-link">
+                @messages("repaymentClaimSummary.printSummary.button.label")
+            </a>
+        </p>
+
+        <p class="govuk-body">
+            <a class="govuk-link"
+               href="@config.signOutUrl">
+                @messages("repaymentClaimSummary.logout.link")
+            </a>
+        </p>
+
+        <p class="govuk-body">
+            <a class="govuk-link"
+               href="@config.businessAccountUrl">
+                @messages("repaymentClaimSummary.goToHmrcServices.link")
+            </a>
+        </p>
+
+    </div>
+}

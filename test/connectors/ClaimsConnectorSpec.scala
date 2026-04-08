@@ -16,18 +16,18 @@
 
 package connectors
 
-import util.{BaseSpec, HttpV2Support, TestClaims}
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import com.typesafe.config.ConfigFactory
 import models.*
 import org.scalamock.handlers.CallHandler
-import play.api.test.Helpers.*
-import com.typesafe.config.ConfigFactory
 import play.api.Configuration
 import play.api.libs.json.Json
+import play.api.test.Helpers.*
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import util.{BaseSpec, HttpV2Support, TestClaims}
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
 class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
@@ -109,6 +109,14 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
     givenSubmitReturns(
       expectedUrl = "http://foo.bar.com:1234/foo-claims/chris",
       expectedPayload = Json.toJson(SubmitClaimRequest(claimId, lastUpdatedReference, declarationLanguage)),
+      response = response
+    )
+
+  def givenGetSubmissionClaimSummaryEndpointReturns(
+    response: HttpResponse
+  ): CallHandler[Future[HttpResponse]] =
+    givenGetReturns(
+      expectedUrl = "http://foo.bar.com:1234/foo-claims/submission-summary/123",
       response = response
     )
 
@@ -373,21 +381,17 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
         claimId = "123",
         lastUpdatedReference = "1234567890",
         declarationLanguage = "en",
-        response = HttpResponse(200, Json.stringify(Json.toJson(SubmitClaimResponse(success = true))))
+        response = HttpResponse(
+          200,
+          Json.stringify(Json.toJson(SubmitClaimResponse(success = true, submissionReference = "test-ref")))
+        )
       )
 
-      await(connector.submitClaim("123", "1234567890", "en")) shouldBe true
-
-    }
-
-    "should send a Submit request and return false on failure" in {
-      givenSubmitClaimEndpointReturns(
-        claimId = "123",
-        lastUpdatedReference = "1234567890",
-        declarationLanguage = "en",
-        HttpResponse(200, Json.stringify(Json.toJson(SubmitClaimResponse(success = false))))
+      await(connector.submitClaim("123", "1234567890", "en")) shouldBe SubmitClaimResponse(
+        success = true,
+        submissionReference = "test-ref"
       )
-      await(connector.submitClaim("123", "1234567890", "en")) shouldBe false
+
     }
 
     "should throw UpdatedByAnotherUserException when backend returns 400 with UPDATED_BY_ANOTHER_USER error" in {
@@ -401,6 +405,30 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
       a[UpdatedByAnotherUserException] should be thrownBy {
         await(connector.submitClaim("123", "1234567890", "cy"))
+      }
+    }
+  }
+
+  "getSubmissionClaimSummary" - {
+    val submissionSummaryResponse = SubmissionSummaryResponse(
+      ClaimDetails("test charity", "test ref", "2026-04-07T11:34:21.147Z", "Mr John"),
+      None,
+      None,
+      None,
+      None,
+      "sub ref"
+    )
+    "should send a get request and return a submission summary response on success" in {
+      givenGetSubmissionClaimSummaryEndpointReturns(
+        HttpResponse(200, Json.stringify(Json.toJson(submissionSummaryResponse)))
+      )
+      await(connector.getSubmissionClaimSummary("123")) shouldEqual submissionSummaryResponse
+    }
+
+    "throw an exception if the service returns 404 status" in {
+      givenGetSubmissionClaimSummaryEndpointReturns(HttpResponse(404, "Not Found")).once()
+      a[Exception] should be thrownBy {
+        await(connector.getSubmissionClaimSummary("123"))
       }
     }
   }
