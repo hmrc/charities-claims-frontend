@@ -750,6 +750,14 @@ repaymentClaimSummary.logout.link = Log out and go back HMRC online services
 repaymentClaimSummary.goToHmrcServices.link = Go to Your HMRC services
 
 
+claimComplete.title = Claim complete
+claimComplete.message.2 = Your reference number
+claimComplete.subheading = What happens next
+claimComplete.claimRefNumber = {0}
+claimComplete.para.1 = We’ve sent your charity repayment claim to HMRC.
+claimComplete.para.2 = They will contact you to confirm your repayment, or to ask for more information.
+claimComplete.printSummaryLink = <a class="govuk-link" href="{0}">Print a summary of your claim</a>
+
 aboutGiftAidSmallDonationsScheme.caption = Provide GASDS donation details
 aboutGiftAidSmallDonationsScheme.heading = About Gift Aid Small Donations Scheme schedule
 aboutGiftAidSmallDonationsScheme.title = About Gift Aid Small Donations Scheme schedule

@@ -355,10 +355,8 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          val dummyRedirection = "/charities-claims/charity-repayment-claim-summary"
-
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(dummyRedirection)
+          redirectLocation(result) shouldEqual Some(routes.ClaimCompleteController.onPageLoad.url)
         }
       }
 

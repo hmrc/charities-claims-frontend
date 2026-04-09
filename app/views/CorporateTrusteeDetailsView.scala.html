@@ -51,6 +51,7 @@
             field = form("corporateTrusteeDaytimeTelephoneNumber"),
             label = LabelViewModel(messages("corporateTrusteeDetails.phone.label"))
                 ).withCssClass("govuk-input--width-20")
+                .withInputType("tel")
                 .withAutocomplete("tel"))
     @if(isUKAddress){
         @govukInput(

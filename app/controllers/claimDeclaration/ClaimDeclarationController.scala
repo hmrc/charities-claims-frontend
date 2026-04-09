@@ -20,12 +20,12 @@ import com.google.inject.Inject
 import connectors.ClaimsConnector
 import controllers.BaseController
 import controllers.actions.Actions
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import views.html.ClaimDeclarationView
 import controllers.claimDeclaration.routes
 import models.SessionData
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionCache
 import services.{ClaimsService, SaveService}
-import views.html.ClaimDeclarationView
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -76,6 +76,6 @@ class ClaimDeclarationController @Inject() (
                                   .save(
                                     updatedClaim.get.copy(submissionReference = Some(submissionResponse.submissionReference))
                                   )
-        } yield Redirect(routes.RepaymentClaimSummaryController.onPageLoad)
+        } yield Redirect(routes.ClaimCompleteController.onPageLoad)
       }
 }
