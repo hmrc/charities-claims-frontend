@@ -19,34 +19,31 @@ package controllers.claimDeclaration
 import models.*
 import org.jsoup.Jsoup
 import play.api.libs.json.Json
-import play.api.test.Helpers.OK
+import play.api.test.Helpers.{OK}
 import repositories.SessionCache
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
-class RepaymentClaimSummaryControllerISpec
-    extends ComponentSpecHelper
-    with TestDataUtils
-    with AuthStub
-    with ClaimsStub
-    with ClaimsValidationStub {
+class ClaimCompleteControllerISpec extends ComponentSpecHelper with TestDataUtils with AuthStub with ClaimsStub with ClaimsValidationStub {
   lazy val sessionCache: SessionCache =
     app.injector.instanceOf[SessionCache]
 
-  "GET /charity-repayment-claim-summary" should {
-    "render the charity repayment claim summary page" in {
+  "GET /claim-complete"  should {
+    "render the claim complete page" in {
+      val claimWithAdjustments =
+        claim.copy(
+          claimData = claim.claimData.copy(
+            understandFalseStatements = Some(true)
+          )
+        )
       stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
-      stubGetClaims(claimId)(
-        OK,
-        Json.toJson(claim.copy(claimSubmitted = true, submissionDetails = Some(SubmissionDetails("", "sub ref"))))
-      )
+      stubGetClaims(claimId)(OK, Json.toJson(claimWithAdjustments))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
-      stubGetSubmissionSummary(claimId)(OK, Json.toJson(submissionSummaryResponse))
 
-      val result = get("/charity-repayment-claim-summary")
-      result.status                shouldBe OK
-      Jsoup.parse(result.body).title should include(msg("repaymentClaimSummary.title"))
+      val result = get("/claim-complete")
+      result.status shouldBe OK
+      Jsoup.parse(result.body).title       should include(msg("claimComplete.title"))
     }
   }
 }
