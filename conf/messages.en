@@ -763,3 +763,9 @@ aboutGiftAidSmallDonationsScheme.heading = About Gift Aid Small Donations Scheme
 aboutGiftAidSmallDonationsScheme.title = About Gift Aid Small Donations Scheme schedule
 aboutGiftAidSmallDonationsScheme.paragraph.one = Use this service to claim payments under the Gift Aid Small Donations Scheme (GASDS). You can add claims for up to 3 tax years.
 aboutGiftAidSmallDonationsScheme.paragraph.two = GASDS applies to cash donations of £30 or less where the charity or Community Amateur Sports Club does not have a Gift Aid declaration.
+
+adjustmentToGiftAidOverclaimed.caption = Provide GASDS donation details
+adjustmentToGiftAidOverclaimed.heading = What is the adjustment amount for Gift Aid previously overclaimed?
+adjustmentToGiftAidOverclaimed.title = What is the adjustment amount for Gift Aid previously overclaimed?
+adjustmentToGiftAidOverclaimed.error.required = Enter an adjustment amount for Gift Aid previously overclaimed
+adjustmentToGiftAidOverclaimed.error.invalid = Enter an adjustment amount for Gift Aid previously overclaimed in the correct format

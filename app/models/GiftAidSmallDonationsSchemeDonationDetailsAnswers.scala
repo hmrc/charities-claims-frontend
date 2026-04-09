@@ -20,12 +20,11 @@ import play.api.libs.json.Format
 import play.api.libs.json.Json
 import scala.util.Try
 import utils.Required.required
+import scala.util.Success
 
 final case class GiftAidSmallDonationsSchemeDonationDetailsAnswers(
   adjustmentForGiftAidOverClaimed: Option[BigDecimal] = None,
-  claims: Option[Seq[GiftAidSmallDonationsSchemeClaim]] = None,
-  connectedCharitiesScheduleData: Option[Seq[ConnectedCharity]] = None,
-  communityBuildingsScheduleData: Option[Seq[CommunityBuilding]] = None
+  claims: Option[Seq[GiftAidSmallDonationsSchemeClaim]] = None
 )
 
 object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
@@ -33,28 +32,44 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
   given Format[GiftAidSmallDonationsSchemeDonationDetailsAnswers] =
     Json.format[GiftAidSmallDonationsSchemeDonationDetailsAnswers]
 
+  private def get[A](f: GiftAidSmallDonationsSchemeDonationDetailsAnswers => Option[A])(using
+    session: SessionData
+  ): Option[A] =
+    session.giftAidSmallDonationsSchemeDonationDetailsAnswers.flatMap(f)
+
+  private def set[A](value: A)(
+    f: (GiftAidSmallDonationsSchemeDonationDetailsAnswers, A) => GiftAidSmallDonationsSchemeDonationDetailsAnswers
+  )(using
+    session: SessionData
+  ): SessionData =
+    val updated = session.giftAidSmallDonationsSchemeDonationDetailsAnswers match
+      case Some(existing) => f(existing, value)
+      case None           => f(GiftAidSmallDonationsSchemeDonationDetailsAnswers(), value)
+    session.copy(giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(updated))
+
   def from(
     giftAidSmallDonationsSchemeScheduleData: GiftAidSmallDonationsSchemeDonationDetails
   ): GiftAidSmallDonationsSchemeDonationDetailsAnswers =
     GiftAidSmallDonationsSchemeDonationDetailsAnswers(
       adjustmentForGiftAidOverClaimed = Some(giftAidSmallDonationsSchemeScheduleData.adjustmentForGiftAidOverClaimed),
-      claims = Some(giftAidSmallDonationsSchemeScheduleData.claims),
-      connectedCharitiesScheduleData = Some(giftAidSmallDonationsSchemeScheduleData.connectedCharitiesScheduleData),
-      communityBuildingsScheduleData = Some(giftAidSmallDonationsSchemeScheduleData.communityBuildingsScheduleData)
+      claims = Some(giftAidSmallDonationsSchemeScheduleData.claims)
     )
 
   def toGiftAidSmallDonationsSchemeDonationDetails(
     answers: GiftAidSmallDonationsSchemeDonationDetailsAnswers
   ): Try[GiftAidSmallDonationsSchemeDonationDetails] =
-    for {
-      adjustmentForGiftAidOverClaimed <- required(answers)(_.adjustmentForGiftAidOverClaimed)
-      claims                          <- required(answers)(_.claims)
-      connectedCharitiesScheduleData  <- required(answers)(_.connectedCharitiesScheduleData)
-      communityBuildingsScheduleData  <- required(answers)(_.communityBuildingsScheduleData)
-    } yield GiftAidSmallDonationsSchemeDonationDetails(
-      adjustmentForGiftAidOverClaimed = adjustmentForGiftAidOverClaimed,
-      claims = claims,
-      connectedCharitiesScheduleData = connectedCharitiesScheduleData,
-      communityBuildingsScheduleData = communityBuildingsScheduleData
+    Success(
+      GiftAidSmallDonationsSchemeDonationDetails(
+        adjustmentForGiftAidOverClaimed = answers.adjustmentForGiftAidOverClaimed.getOrElse(0),
+        claims = answers.claims.getOrElse(Seq.empty),
+        connectedCharitiesScheduleData = Seq.empty,
+        communityBuildingsScheduleData = Seq.empty
+      )
     )
+
+  def setAdjustmentForGiftAidOverClaimed(value: BigDecimal)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(adjustmentForGiftAidOverClaimed = Some(v)))
+
+  def getAdjustmentForGiftAidOverClaimed(using session: SessionData): Option[BigDecimal] =
+    get(a => a.adjustmentForGiftAidOverClaimed)
 }
