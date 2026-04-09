@@ -27,7 +27,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
 
   val testClaimId = testCharitiesReference
 
-  val nextPage: Call = controllers.claimDeclaration.routes.RepaymentClaimSummaryController.onPageLoad
+  val nextPage: Call = Call("GET", "/charities-claims/charity-repayment-claim-summary")
 
   val repaymentClaimDetailsAnswersCompleted: RepaymentClaimDetailsAnswers =
     RepaymentClaimDetailsAnswers(
@@ -82,7 +82,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ClaimCompleteView]
 
           status(result) shouldEqual OK
-//          contentAsString(result) shouldEqual view(nextPage, testClaimId).body
+          contentAsString(result) shouldEqual view(nextPage, testClaimId).body
         }
       }
 
@@ -118,7 +118,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ClaimCompleteView]
 
           status(result) shouldEqual OK
-//          contentAsString(result) shouldEqual view(nextPage, testClaimId).body
+          contentAsString(result) shouldEqual view(nextPage, testClaimId).body
         }
       }
 
@@ -153,7 +153,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ClaimCompleteView]
 
           status(result) shouldEqual OK
-//          contentAsString(result) shouldEqual view(nextPage, testClaimId).body
+          contentAsString(result) shouldEqual view(nextPage, testClaimId).body
         }
       }
       "should render the page correctly when isClaimDetailsComplete condition is met & understandFalseStatements is false  " in {
@@ -191,41 +191,6 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
           )
         }
       }
-//      "should render the page correctly when isClaimDetailsComplete condition is met & unsubmitted is None  " in {
-//        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-//          claimingUnderGiftAidSmallDonationsScheme = Some(false),
-//          claimingDonationsNotFromCommunityBuilding = Some(false),
-//          claimingDonationsCollectedInCommunityBuildings = Some(true),
-//          connectedToAnyOtherCharities = Some(false),
-//          makingAdjustmentToPreviousClaim = Some(false)
-//        )
-//        val sessionData = SessionData(
-//          charitiesReference = testCharitiesReference,
-//          repaymentClaimDetailsAnswers = Some(answers)
-//        ).copy(
-//          communityBuildingsScheduleCompleted = true,
-//          lastUpdatedReference = None,
-//          unsubmittedClaimId = None,
-//          understandFalseStatements = Some(false),
-//          adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(1.0)),
-//          includedAnyAdjustmentsInClaimPrompt = Some("test"),
-//          organisationDetailsAnswers = Some(organisationDetailsAnswers)
-//        )
-//
-//        given application: Application = applicationBuilder(sessionData = sessionData).build()
-//
-//        running(application) {
-//          given request: FakeRequest[AnyContentAsEmpty.type] =
-//            FakeRequest(GET, routes.ClaimCompleteController.onPageLoad.url)
-//
-//          val result = route(application, request).value
-//
-//          status(result) shouldEqual SEE_OTHER
-//          redirectLocation(result) shouldEqual Some(
-//            controllers.routes.ClaimsTaskListController.onPageLoad.url
-//          )
-//        }
-//      }
     }
   }
 }
