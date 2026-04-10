@@ -346,11 +346,6 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
           .expects(testClaimId, testClaimId, "en", *)
           .returning(Future.successful(SubmitClaimResponse(true, "test sub ref")))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
-
         given application: Application = applicationBuilder(sessionData = sessionData)
           .build()
 

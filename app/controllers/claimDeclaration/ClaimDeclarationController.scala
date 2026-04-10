@@ -76,9 +76,6 @@ class ClaimDeclarationController @Inject() (
                                   .save(
                                     updatedClaim.get.copy(submissionReference = Some(submissionResponse.submissionReference))
                                   )
-          _                  <- saveService.save(
-                                  request.sessionData.copy(submissionReference = Some(submissionResponse.submissionReference))
-                                )
         } yield Redirect(routes.ClaimCompleteController.onPageLoad)
       }
 }
