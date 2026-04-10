@@ -42,7 +42,7 @@ class RepaymentClaimSummaryControllerISpec
         Json.toJson(claim.copy(claimSubmitted = true, submissionDetails = Some(SubmissionDetails("", "subref"))))
       )
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
-      stubGetSubmissionSummary("subref")(OK, Json.toJson(submissionSummaryResponse))
+      stubGetSubmissionSummary(claimId)(OK, Json.toJson(submissionSummaryResponse))
 
       val result = get("/charity-repayment-claim-summary")
       result.status                shouldBe OK

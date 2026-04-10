@@ -38,7 +38,7 @@ class RepaymentClaimSummaryController @Inject() (
   def onPageLoad: Action[AnyContent] =
     actions.authAndGetData().async { implicit request =>
       if request.sessionData.submissionReference.isDefined then {
-        claimsConnector.getSubmissionClaimSummary(request.sessionData.submissionReference.get).map { summaryResult =>
+        claimsConnector.getSubmissionClaimSummary(request.sessionData.unsubmittedClaimId.get).map { summaryResult =>
           Ok(view(summaryResult))
         }
       } else Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))

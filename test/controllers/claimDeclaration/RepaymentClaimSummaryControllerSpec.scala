@@ -57,7 +57,7 @@ class RepaymentClaimSummaryControllerSpec extends ControllerSpec {
 
         (mockClaimsConnector
           .getSubmissionClaimSummary(_: String)(using _: HeaderCarrier))
-          .expects(submissionRef, *)
+          .expects(testClaimId, *)
           .returning(Future.successful(submissionSummaryResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
