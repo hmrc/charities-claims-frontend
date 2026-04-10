@@ -24,21 +24,21 @@ import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
 class AboutGiftAidSmallDonationsSchemeControllerISpec
-  extends ComponentSpecHelper with TestDataUtils
+    extends ComponentSpecHelper
+    with TestDataUtils
     with ClaimsStub
     with AuthStub
     with ClaimsValidationStub {
 
   "POST /about-gift-aid-small-donations-scheme" should {
 
-    // TODO when next page available
     "redirect to next page" in {
       stubBackend()
 
       val result = post("/about-gift-aid-small-donations-scheme")(Json.obj())
 
-      result.status shouldBe SEE_OTHER
-      result.header(LOCATION).value should include("/make-a-charity-repayment-claim")
+      result.status               shouldBe SEE_OTHER
+      result.header(LOCATION).value should include("/which-tax-year-are-you-claiming-for/1")
     }
   }
 

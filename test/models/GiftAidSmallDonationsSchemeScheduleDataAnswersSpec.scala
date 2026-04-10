@@ -25,25 +25,7 @@ class GiftAidSmallDonationsSchemeScheduleDataAnswersSpec extends BaseSpec {
     "be serializable and deserializable" in {
       val giftAidSmallDonationsSchemeScheduleDataAnswerss = GiftAidSmallDonationsSchemeDonationDetailsAnswers(
         adjustmentForGiftAidOverClaimed = Some(1000.00),
-        claims = Some(Seq(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00))),
-        connectedCharitiesScheduleData =
-          Some(Seq(ConnectedCharity(charityItem = 1, charityName = "foobar", charityReference = "1234567890"))),
-        communityBuildingsScheduleData = Some(
-          Seq(
-            CommunityBuilding(
-              buildingItem = 1,
-              buildingName = "foobar",
-              firstLineOfAddress = "123",
-              postcode = "AB1 2CD",
-              taxYearOneEnd = 2025,
-              taxYearOneAmount = 1001.00,
-              taxYearTwoEnd = 2026,
-              taxYearTwoAmount = 1002.00,
-              taxYearThreeEnd = 2027,
-              taxYearThreeAmount = 1003.00
-            )
-          )
-        )
+        claims = Some(Seq(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00)))
       )
 
       val json = Json.toJson(giftAidSmallDonationsSchemeScheduleDataAnswerss)
@@ -57,22 +39,8 @@ class GiftAidSmallDonationsSchemeScheduleDataAnswersSpec extends BaseSpec {
       val giftAidSmallDonationsSchemeScheduleData = GiftAidSmallDonationsSchemeDonationDetails(
         adjustmentForGiftAidOverClaimed = 1000.00,
         claims = Seq(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00)),
-        connectedCharitiesScheduleData =
-          Seq(ConnectedCharity(charityItem = 1, charityName = "foobar", charityReference = "1234567890")),
-        communityBuildingsScheduleData = Seq(
-          CommunityBuilding(
-            buildingItem = 1,
-            buildingName = "foobar",
-            firstLineOfAddress = "123",
-            postcode = "AB1 2CD",
-            taxYearOneEnd = 2025,
-            taxYearOneAmount = 1001.00,
-            taxYearTwoEnd = 2026,
-            taxYearTwoAmount = 1002.00,
-            taxYearThreeEnd = 2027,
-            taxYearThreeAmount = 1003.00
-          )
-        )
+        connectedCharitiesScheduleData = Seq.empty,
+        communityBuildingsScheduleData = Seq.empty
       )
 
       val giftAidSmallDonationsSchemeScheduleDataAnswers =
@@ -80,25 +48,7 @@ class GiftAidSmallDonationsSchemeScheduleDataAnswersSpec extends BaseSpec {
 
       giftAidSmallDonationsSchemeScheduleDataAnswers shouldBe GiftAidSmallDonationsSchemeDonationDetailsAnswers(
         adjustmentForGiftAidOverClaimed = Some(1000.00),
-        claims = Some(Seq(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00))),
-        connectedCharitiesScheduleData =
-          Some(Seq(ConnectedCharity(charityItem = 1, charityName = "foobar", charityReference = "1234567890"))),
-        communityBuildingsScheduleData = Some(
-          Seq(
-            CommunityBuilding(
-              buildingItem = 1,
-              buildingName = "foobar",
-              firstLineOfAddress = "123",
-              postcode = "AB1 2CD",
-              taxYearOneEnd = 2025,
-              taxYearOneAmount = 1001.00,
-              taxYearTwoEnd = 2026,
-              taxYearTwoAmount = 1002.00,
-              taxYearThreeEnd = 2027,
-              taxYearThreeAmount = 1003.00
-            )
-          )
-        )
+        claims = Some(Seq(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00)))
       )
     }
 

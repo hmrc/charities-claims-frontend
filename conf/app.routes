@@ -258,5 +258,7 @@ GET        	/charity-repayment-claim-summary       controllers.claimDeclaration.
 GET         /claim-complete         controllers.claimDeclaration.ClaimCompleteController.onPageLoad
 GET         /about-gift-aid-small-donations-scheme                 controllers.giftAidSmallDonationsScheme.AboutGiftAidSmallDonationsSchemeController.onPageLoad
 POST        /about-gift-aid-small-donations-scheme                 controllers.giftAidSmallDonationsScheme.AboutGiftAidSmallDonationsSchemeController.onSubmit
-
+GET         /adjustment-to-gift-aid-overclaimed                    controllers.giftAidSmallDonationsScheme.AdjustmentToGiftAidOverclaimedController.onPageLoad
+POST        /adjustment-to-gift-aid-overclaimed                    controllers.giftAidSmallDonationsScheme.AdjustmentToGiftAidOverclaimedController.onSubmit
+GET         /which-tax-year-are-you-claiming-for/:index            controllers.giftAidSmallDonationsScheme.WhichTaxYearAreYouClaimingForController.onPageLoad(index: Int)
 
