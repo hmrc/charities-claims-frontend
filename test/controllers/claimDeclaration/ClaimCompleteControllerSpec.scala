@@ -64,6 +64,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference),
           unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers)
         ).copy(
@@ -97,6 +98,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference),
           unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers)
         ).copy(
@@ -133,6 +135,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference),
           unsubmittedClaimId = Some(testClaimId),
           repaymentClaimDetailsAnswers = Some(answers)
         ).copy(
@@ -156,7 +159,7 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
           contentAsString(result) shouldEqual view(nextPage, testClaimId).body
         }
       }
-      "should render the page correctly when isClaimDetailsComplete condition is met & understandFalseStatements is false  " in {
+      "should render the page correctly when isClaimDetailsComplete condition is met & submissionReference is not defined  " in {
         val answers     = repaymentClaimDetailsAnswersCompleted.copy(
           claimingUnderGiftAidSmallDonationsScheme = Some(false),
           claimingDonationsNotFromCommunityBuilding = Some(false),

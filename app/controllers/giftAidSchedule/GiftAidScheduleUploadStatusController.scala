@@ -37,7 +37,7 @@ class GiftAidScheduleUploadStatusController @Inject() (
 
   val status: Action[AnyContent] =
     actions
-      .authAndGetData()
+      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
       .async { implicit request =>
         {
           for {

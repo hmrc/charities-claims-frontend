@@ -74,7 +74,9 @@ class ConnectedCharitiesScheduleUploadStatusControllerSpec extends ControllerSpe
 
     "status" - {
       "unsubmitted Claim ID is not defined" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingConnectedCharities(true)
+        val sessionData                = RepaymentClaimDetailsAnswers
+          .setClaimingConnectedCharities(true)
+          .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false))
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {

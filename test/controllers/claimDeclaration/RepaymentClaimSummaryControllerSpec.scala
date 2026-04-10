@@ -36,14 +36,15 @@ class RepaymentClaimSummaryControllerSpec extends ControllerSpec {
     bind[ClaimsConnector].toInstance(mockClaimsConnector)
   )
 
-  private val testClaimId = "claim-123"
+  private val testClaimId   = "claim-123"
+  private val submissionRef = "sub-ref"
 
   "ClaimDeclarationController" - {
     "on pageLoad" - {
       "should render the page correctly when isClaimSubmitted condition is met" in {
         val sessionData = SessionData
           .empty(testCharitiesReference)
-          .copy(submissionReference = Some("sub ref"), unsubmittedClaimId = Some(testClaimId))
+          .copy(submissionReference = Some(submissionRef), unsubmittedClaimId = Some(testClaimId))
 
         val submissionSummaryResponse = SubmissionSummaryResponse(
           claimDetails = ClaimDetails("test charity", "test ref", "2026-04-07T11:34:21.147Z", "Mr John"),
@@ -51,12 +52,12 @@ class RepaymentClaimSummaryControllerSpec extends ControllerSpec {
           otherIncomeDetails = None,
           gasdsDetails = None,
           adjustmentDetails = None,
-          submissionReferenceNumber = "sub ref"
+          submissionReferenceNumber = submissionRef
         )
 
         (mockClaimsConnector
           .getSubmissionClaimSummary(_: String)(using _: HeaderCarrier))
-          .expects(testClaimId, *)
+          .expects(submissionRef, *)
           .returning(Future.successful(submissionSummaryResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()

@@ -18,19 +18,22 @@ package controllers.repaymentClaimDetails
 
 import com.google.inject.Inject
 import controllers.BaseController
-import controllers.actions.Actions
-import models.RepaymentClaimDetailsAnswers
+import controllers.actions.{Actions, GuardAction}
+import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.RepaymentClaimDetailsIncompleteAnswersView
 
 class RepaymentClaimDetailsIncompleteAnswersController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
+  guard: GuardAction,
   view: RepaymentClaimDetailsIncompleteAnswersView
 ) extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    val missingFields = RepaymentClaimDetailsAnswers.getMissingFields(request.sessionData.repaymentClaimDetailsAnswers)
-    Ok(view(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url, missingFields))
-  }
+  def onPageLoad: Action[AnyContent] =
+    actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)) { implicit request =>
+      val missingFields =
+        RepaymentClaimDetailsAnswers.getMissingFields(request.sessionData.repaymentClaimDetailsAnswers)
+      Ok(view(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url, missingFields))
+    }
 }

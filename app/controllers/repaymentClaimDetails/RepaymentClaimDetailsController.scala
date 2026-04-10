@@ -18,8 +18,9 @@ package controllers.repaymentClaimDetails
 
 import com.google.inject.Inject
 import controllers.BaseController
-import controllers.actions.Actions
+import controllers.actions.{Actions, GuardAction}
 import models.Mode.NormalMode
+import models.SessionData
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.RepaymentClaimDetailsView
 
@@ -28,14 +29,17 @@ import scala.concurrent.Future
 class RepaymentClaimDetailsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
+  guard: GuardAction,
   view: RepaymentClaimDetailsView
 ) extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Ok(view()))
-  }
+  def onPageLoad: Action[AnyContent] =
+    actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)).async { implicit request =>
+      Future.successful(Ok(view()))
+    }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    Future.successful(Redirect(routes.RepaymentClaimTypeController.onPageLoad(NormalMode)))
-  }
+  def onSubmit: Action[AnyContent] =
+    actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)).async { implicit request =>
+      Future.successful(Redirect(routes.RepaymentClaimTypeController.onPageLoad(NormalMode)))
+    }
 }

@@ -21,7 +21,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import connectors.ClaimsValidationConnector
 import views.html.RepaymentClaimDetailsCheckYourAnswersView
-import controllers.actions.Actions
+import controllers.actions.{Actions, GuardAction}
 import uk.gov.hmrc.http.HeaderCarrier
 import models.SessionData
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -33,6 +33,7 @@ class RepaymentClaimDetailsCheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
   actions: Actions,
   saveService: SaveService,
+  guard: GuardAction,
   claimsService: ClaimsService,
   val controllerComponents: MessagesControllerComponents,
   claimsValidationConnector: ClaimsValidationConnector,
@@ -40,24 +41,30 @@ class RepaymentClaimDetailsCheckYourAnswersController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val previousAnswers = request.sessionData.repaymentClaimDetailsAnswers
-    Future.successful(Ok(view(previousAnswers)))
-  }
+  def onPageLoad: Action[AnyContent] = actions
+    .authAndGetData()
+    .andThen(guard(SessionData.isClaimNotSubmitted))
+    .async { implicit request =>
+      val previousAnswers = request.sessionData.repaymentClaimDetailsAnswers
+      Future.successful(Ok(view(previousAnswers)))
+    }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val checkAnswers =
-      request.sessionData.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
-    if checkAnswers
-    then
-      val newSessionData = SessionData.syncUploadReferencesAndFlagsWithCheckboxes(using request.sessionData)
-      for {
-        _ <- saveService.save(newSessionData)
-        _ <- claimsService.save
-        _ <- removeAbandonedUploads(request.sessionData)
-      } yield Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
-    else Future.successful(Redirect(routes.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad))
-  }
+  def onSubmit: Action[AnyContent] = actions
+    .authAndGetData()
+    .andThen(guard(SessionData.isClaimNotSubmitted))
+    .async { implicit request =>
+      val checkAnswers =
+        request.sessionData.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
+      if checkAnswers
+      then
+        val newSessionData = SessionData.syncUploadReferencesAndFlagsWithCheckboxes(using request.sessionData)
+        for {
+          _ <- saveService.save(newSessionData)
+          _ <- claimsService.save
+          _ <- removeAbandonedUploads(request.sessionData)
+        } yield Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
+      else Future.successful(Redirect(routes.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad))
+    }
 
   private def removeAbandonedUploads(
     sessionData: SessionData

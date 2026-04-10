@@ -74,8 +74,11 @@ class CommunityBuildingsScheduleUploadStatusControllerSpec extends ControllerSpe
 
     "status" - {
       "unsubmitted Claim ID is not defined" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
+        val sessionData = completeGasdsSession
+          .and(
+            RepaymentClaimDetailsAnswers
+              .setClaimingDonationsCollectedInCommunityBuildings(true, Some(true))
+          )
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -91,11 +94,10 @@ class CommunityBuildingsScheduleUploadStatusControllerSpec extends ControllerSpe
       }
 
       "unsubmitted Claim ID is defined and file reference is not defined" in {
-        val sessionData =
-          completeRepaymentDetailsAnswersSession
-            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
-            .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
-            .copy(communityBuildingsScheduleFileUploadReference = None)
+        val sessionData = completeGasdsSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
+          .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
+          .copy(communityBuildingsScheduleFileUploadReference = None)
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
@@ -113,7 +115,7 @@ class CommunityBuildingsScheduleUploadStatusControllerSpec extends ControllerSpe
 
       "unsubmitted Claim ID & file reference are defined - result = Awaiting (other) - display the screen" in {
 
-        val sessionData = completeRepaymentDetailsAnswersSession
+        val sessionData = completeGasdsSession
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
           .copy(communityBuildingsScheduleFileUploadReference = Some(fileUploadReference))
@@ -142,7 +144,7 @@ class CommunityBuildingsScheduleUploadStatusControllerSpec extends ControllerSpe
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verifying" in {
-        val sessionData = completeRepaymentDetailsAnswersSession
+        val sessionData = completeGasdsSession
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
           .copy(communityBuildingsScheduleFileUploadReference = Some(fileUploadReference))
@@ -170,7 +172,7 @@ class CommunityBuildingsScheduleUploadStatusControllerSpec extends ControllerSpe
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Validating" in {
-        val sessionData = completeRepaymentDetailsAnswersSession
+        val sessionData = completeGasdsSession
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
           .copy(communityBuildingsScheduleFileUploadReference = Some(fileUploadReference))
@@ -199,7 +201,7 @@ class CommunityBuildingsScheduleUploadStatusControllerSpec extends ControllerSpe
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Validated" in {
-        val sessionData = completeRepaymentDetailsAnswersSession
+        val sessionData = completeGasdsSession
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
           .copy(communityBuildingsScheduleFileUploadReference = Some(fileUploadReference))
@@ -228,7 +230,7 @@ class CommunityBuildingsScheduleUploadStatusControllerSpec extends ControllerSpe
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Validation Errors" in {
-        val sessionData = completeRepaymentDetailsAnswersSession
+        val sessionData = completeGasdsSession
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
           .copy(communityBuildingsScheduleFileUploadReference = Some(fileUploadReference))
@@ -257,7 +259,7 @@ class CommunityBuildingsScheduleUploadStatusControllerSpec extends ControllerSpe
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed - REJECTED" in {
-        val sessionData = completeRepaymentDetailsAnswersSession
+        val sessionData = completeGasdsSession
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
           .copy(communityBuildingsScheduleFileUploadReference = Some(fileUploadReference))
@@ -285,7 +287,7 @@ class CommunityBuildingsScheduleUploadStatusControllerSpec extends ControllerSpe
       }
 
       "unsubmitted Claim ID & file reference are defined - recoverWith" in {
-        val sessionData = completeRepaymentDetailsAnswersSession
+        val sessionData = completeGasdsSession
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
           .copy(communityBuildingsScheduleFileUploadReference = Some(fileUploadReference))

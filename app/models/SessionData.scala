@@ -174,6 +174,9 @@ object SessionData {
     session.unsubmittedClaimId.isDefined
       && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
 
+  def isClaimNotSubmitted(using session: SessionData): Boolean =
+    session.submissionReference.isEmpty
+
   def isClaimDetailsComplete(using session: SessionData): Boolean =
     session.unsubmittedClaimId.isDefined
       && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
