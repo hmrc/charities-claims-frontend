@@ -21,6 +21,7 @@ import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.AboutGiftAidSmallDonationsSchemeView
+import models.RepaymentClaimDetailsAnswers
 
 class AboutGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
   "AboutGiftAidSmallDonationsSchemeController" - {
@@ -60,8 +61,9 @@ class AboutGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
-      "should redirect to the next page" in {
-        val sessionData = completeGasdsSession
+      "should redirect to the next page when makingAdjustmentToPreviousClaim is true" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(true)(using completeGasdsSession)
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -72,8 +74,28 @@ class AboutGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          // TODO - change to the next page when availale
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(
+            controllers.giftAidSmallDonationsScheme.routes.AdjustmentToGiftAidOverclaimedController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect to the next page when makingAdjustmentToPreviousClaim is false" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(false)(using completeGasdsSession)
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.AboutGiftAidSmallDonationsSchemeController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.giftAidSmallDonationsScheme.routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1).url
+          )
         }
       }
 

@@ -25,33 +25,19 @@ import views.html.AboutGiftAidSmallDonationsSchemeView
 
 import scala.concurrent.Future
 
-class AboutGiftAidSmallDonationsSchemeController @Inject() (
+class WhichTaxYearAreYouClaimingForController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  actions: Actions,
-  view: AboutGiftAidSmallDonationsSchemeView
+  actions: Actions
+  // view: WhichTaxYearAreYouClaimingForView
 ) extends BaseController {
 
-  val onPageLoad: Action[AnyContent] =
+  def onPageLoad(index: Int): Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete)
+      .authAndGetDataWithGuard(
+        SessionData.isRepaymentClaimDetailsComplete
+          && RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(false)
+      )
       .async { implicit request =>
-        if RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true)
-        then {
-          Future.successful(Ok(view()))
-        } else {
-          Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
-        }
-      }
-
-  val onSubmit: Action[AnyContent] =
-    actions
-      .authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete)
-      .async { implicit request =>
-        Future.successful(
-          if (RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true))
-            Redirect(routes.AdjustmentToGiftAidOverclaimedController.onPageLoad)
-          else
-            Redirect(routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1))
-        )
+        Future.successful(Ok)
       }
 }
