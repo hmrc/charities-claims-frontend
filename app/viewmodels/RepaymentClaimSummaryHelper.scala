@@ -25,7 +25,7 @@ import java.time.format.DateTimeFormatter
 
 object RepaymentClaimSummaryHelper {
   def claimDetails(summary: SubmissionSummaryResponse)(implicit messages: Messages): SummaryList =
-    val formatter = DateTimeFormatter.ofPattern("d MMM yyyy HH:mm:ss").withZone(ZoneId.of("UTC"))
+    val formatter = DateTimeFormatter.ofPattern("d MMM yyyy HH:mm:ss").withZone(ZoneId.of("Europe/London"))
     SummaryList(
       rows = Seq(
         row(messages("repaymentClaimSummary.claimDetails.charityName.label"), summary.claimDetails.charityName),
