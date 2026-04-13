@@ -18,17 +18,14 @@ package controllers.giftAidSmallDonationsScheme
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
-import controllers.giftAidSmallDonationsScheme.routes
-import models.{RepaymentClaimDetailsAnswers, SessionData}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import views.html.AdjustmentToGiftAidOverclaimedView
 import forms.AmountFormProvider
-
-import scala.concurrent.Future
+import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import models.GiftAidSmallDonationsSchemeDonationDetailsAnswers
-import scala.concurrent.ExecutionContext
+import views.html.AdjustmentToGiftAidOverclaimedView
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class AdjustmentToGiftAidOverclaimedController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -74,8 +71,10 @@ class AdjustmentToGiftAidOverclaimedController @Inject() (
               saveService
                 .save(GiftAidSmallDonationsSchemeDonationDetailsAnswers.setAdjustmentForGiftAidOverClaimed(value))
                 .map(_ =>
-                  Redirect("/charities-claims/check-gasds-adjustment-amount")
-                ) // TODO update URL when next screen available
+                  Redirect(
+                    controllers.giftAidSmallDonationsScheme.routes.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad
+                  )
+                )
           )
       }
 }

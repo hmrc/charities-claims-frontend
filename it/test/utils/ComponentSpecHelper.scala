@@ -93,23 +93,25 @@ trait ComponentSpecHelper
   }
 
   override def afterAll(): Unit = {
-    stopWiremock()
-    super.afterAll()
+    try {
+      dropTestDatabase()
+      mongoClient.close()
+    } finally {
+      stopWiremock()
+      super.afterAll()
+    }
   }
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     resetWiremock()
-    clearSessionCache()
+    dropTestDatabase()
   }
 
-  private def clearSessionCache(): Unit =
-    await(
-      mongoComponent.database
-        .getCollection("sessions")
-        .drop()
-        .toFuture()
-    )
+  private def dropTestDatabase(): Unit = {
+    require(databaseName.startsWith("test-"), "Refusing to drop non-test database")
+    await(mongoDatabase.drop().toFuture())
+  }
 
   val baseUrl: String = "/charities-claims"
 
