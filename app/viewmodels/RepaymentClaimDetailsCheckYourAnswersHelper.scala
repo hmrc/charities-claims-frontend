@@ -71,7 +71,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
                     .onPageLoad(CheckMode)
                     .url,
-                  messages("repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label")
+                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
                 )
               )
 
