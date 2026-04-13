@@ -18,7 +18,8 @@ package controllers.connectedCharitiesSchedule
 
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
-import models.SessionData
+import models.requests.DataRequest
+import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
@@ -38,9 +39,30 @@ class DeleteConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
 
   "DeleteConnectedCharitiesScheduleController" - {
     "onPageLoad" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.DeleteConnectedCharitiesScheduleController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should render the page correctly" in {
 
-        given application: Application = applicationBuilder()
+        given application: Application = applicationBuilder(sessionData = completeGasdsSession)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -60,8 +82,30 @@ class DeleteConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
+
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.DeleteConnectedCharitiesScheduleController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should reload the page with errors when a required field is missing" in {
-        given application: Application = applicationBuilder()
+        given application: Application = applicationBuilder(sessionData = completeGasdsSession)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -77,7 +121,7 @@ class DeleteConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
       }
 
       "should redirect to ProblemWithConnectedCharitiesScheduleController when no is selected" in {
-        given application: Application = applicationBuilder()
+        given application: Application = applicationBuilder(sessionData = completeGasdsSession)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -96,7 +140,9 @@ class DeleteConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
       }
 
       "should call backend deletion endpoint and redirect to R2 when yes is selected" in {
-        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
+        val sessionData = completeRepaymentDetailsAnswersSession.and(
+          RepaymentClaimDetailsAnswers.setClaimingConnectedCharities(true)
+        )
 
         (mockClaimsValidationService
           .deleteConnectedCharitiesSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
@@ -118,20 +164,17 @@ class DeleteConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
           redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
-
       "should handle case when no ConnectedCharities upload data is found" in {
-        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
-
         (mockClaimsValidationService
-          .deleteConnectedCharitiesSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
+          .deleteConnectedCharitiesSchedule(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
           .returning(
             Future.failed(
-              new RuntimeException("No ConnectedCharities schedule upload found for claimId: test-claim-123")
+              new RuntimeException("No ConnectedCharities schedule upload found for claimId: claim-123")
             )
           )
 
-        given application: Application = applicationBuilder(sessionData = sessionData)
+        given application: Application = applicationBuilder(sessionData = completeGasdsSession)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
           .build()
 
@@ -146,21 +189,13 @@ class DeleteConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      "should handle case when no claimId is in session data" in {
-        val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = None)
+      "should redirect to ClaimsTaskListController when data guard fails" in {
+        val sessionData = RepaymentClaimDetailsAnswers
+          .setClaimingUnderGiftAidSmallDonationsScheme(true)
+          .and(RepaymentClaimDetailsAnswers.setClaimingConnectedCharities(false))
+          .and(SessionData.setUnsubmittedClaimId("claim-123"))
 
-        (mockClaimsValidationService
-          .deleteConnectedCharitiesSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(
-            Future.failed(
-              new RuntimeException("No claimId found when attempting to delete ConnectedCharities schedule")
-            )
-          )
-
-        given application: Application = applicationBuilder(sessionData = sessionData)
-          .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
-          .build()
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -168,8 +203,10 @@ class DeleteConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
-
-          a[RuntimeException] should be thrownBy result.futureValue
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
+          )
         }
       }
     }
