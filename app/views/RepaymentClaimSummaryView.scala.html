@@ -28,7 +28,9 @@
 @(summaryRes: SubmissionSummaryResponse)(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleNoForm(messages("repaymentClaimSummary.title"))) {
+    showBackLink = false,
+    pageTitle = titleNoForm(messages("repaymentClaimSummary.title"))
+) {
 
     <h1 class="govuk-heading-l">@messages("repaymentClaimSummary.heading")</h1>
 
