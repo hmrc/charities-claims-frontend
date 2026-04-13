@@ -73,7 +73,8 @@ class OtherIncomeScheduleUploadStatusControllerSpec extends ControllerSpec {
 
     "status" - {
       "unsubmitted Claim ID is not defined" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+        val sessionData                =
+          completeRepaymentDetailsAnswersSession.and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {

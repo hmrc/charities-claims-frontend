@@ -30,9 +30,11 @@ class GuardAction @Inject() ()(using ec: ExecutionContext) {
       override def executionContext: ExecutionContext = ec
 
       override protected def filter[A](request: DataRequest[A]): Future[Option[Result]] = {
-        given SessionData = request.sessionData
+        given sessionData: SessionData = request.sessionData
         Future.successful {
-          if predicate then None
+          if sessionData.submissionReference.isDefined
+          then Some(Results.Redirect(controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad))
+          else if predicate then None
           else Some(Results.Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
         }
       }

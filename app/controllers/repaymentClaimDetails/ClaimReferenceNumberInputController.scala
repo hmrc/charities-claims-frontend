@@ -24,7 +24,7 @@ import controllers.BaseController
 import views.html.ClaimReferenceNumberInputView
 import controllers.actions.{Actions, GuardAction}
 import forms.TextInputFormProvider
-import models.{Mode, RepaymentClaimDetailsAnswers}
+import models.{Mode, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
 import controllers.repaymentClaimDetails.routes
 
@@ -50,6 +50,7 @@ class ClaimReferenceNumberInputController @Inject() (
     actions
       .authAndGetData()
       .andThen(guard(RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true)))
+      .andThen(guard(SessionData.isClaimNotSubmitted))
       .async { implicit request =>
         val previousAnswer = RepaymentClaimDetailsAnswers.getClaimReferenceNumber
         Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
@@ -59,6 +60,7 @@ class ClaimReferenceNumberInputController @Inject() (
     actions
       .authAndGetData()
       .andThen(guard(RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true)))
+      .andThen(guard(SessionData.isClaimNotSubmitted))
       .async { implicit request =>
         form
           .bindFromRequest()

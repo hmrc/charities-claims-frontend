@@ -39,7 +39,7 @@ class RepaymentClaimSummaryControllerISpec
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(
         OK,
-        Json.toJson(claim.copy(claimSubmitted = true, submissionDetails = Some(SubmissionDetails("", "sub ref"))))
+        Json.toJson(claim.copy(claimSubmitted = true, submissionDetails = Some(SubmissionDetails("", "subref"))))
       )
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
       stubGetSubmissionSummary(claimId)(OK, Json.toJson(submissionSummaryResponse))

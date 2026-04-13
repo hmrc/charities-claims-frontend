@@ -19,13 +19,12 @@ package controllers.claimDeclaration
 import com.google.inject.Inject
 import connectors.ClaimsConnector
 import controllers.actions.Actions
-import models.SessionData
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RepaymentClaimSummaryView
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class RepaymentClaimSummaryController @Inject() (
   override val messagesApi: MessagesApi,
@@ -37,9 +36,11 @@ class RepaymentClaimSummaryController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
   def onPageLoad: Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.isClaimSubmitted).async { implicit request =>
-      claimsConnector.getSubmissionClaimSummary(request.sessionData.unsubmittedClaimId.get).map { summaryResult =>
-        Ok(view(summaryResult))
-      }
+    actions.authAndGetData().async { implicit request =>
+      if request.sessionData.submissionReference.isDefined then {
+        claimsConnector.getSubmissionClaimSummary(request.sessionData.unsubmittedClaimId.get).map { summaryResult =>
+          Ok(view(summaryResult))
+        }
+      } else Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
     }
 }
