@@ -25,6 +25,7 @@ final case class SessionData(
   // claimId of the unsubmitted claim stored in the backend,
   // if empty, the user has started a new claim
   unsubmittedClaimId: Option[String] = None,
+  claimSubmitted: Option[Boolean] = None,
   // HMRC Charities reference from enrolment (CHARID for Organisation, AGENTCHARID for Agent)
   charitiesReference: String,
   // lastUpdatedReference of the claim stored in the backend,
@@ -172,6 +173,9 @@ object SessionData {
   def isRepaymentClaimDetailsComplete(using session: SessionData): Boolean =
     session.unsubmittedClaimId.isDefined
       && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
+
+  def isClaimNotSubmitted(using session: SessionData): Boolean =
+    session.submissionReference.isEmpty
 
   def isClaimDetailsComplete(using session: SessionData): Boolean =
     session.unsubmittedClaimId.isDefined

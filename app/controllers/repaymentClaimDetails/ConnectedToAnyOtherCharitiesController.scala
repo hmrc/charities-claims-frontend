@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.{Actions, GuardAction}
 import forms.YesNoFormProvider
-import models.{Mode, RepaymentClaimDetailsAnswers}
+import models.{Mode, RepaymentClaimDetailsAnswers, SessionData}
 import models.Mode.*
 import controllers.repaymentClaimDetails.routes
 import models.requests.DataRequest
@@ -28,6 +28,7 @@ import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import play.api.data.Form
 import services.SaveService
 import views.html.{ConnectedToAnyOtherCharitiesView, UpdateRepaymentClaimView}
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class ConnectedToAnyOtherCharitiesController @Inject() (
@@ -48,6 +49,7 @@ class ConnectedToAnyOtherCharitiesController @Inject() (
     actions
       .authAndGetData()
       .andThen(guard(RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)))
+      .andThen(guard(SessionData.isClaimNotSubmitted))
       .async { implicit request =>
         val previousAnswer = RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities
         Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
@@ -57,6 +59,7 @@ class ConnectedToAnyOtherCharitiesController @Inject() (
     actions
       .authAndGetData()
       .andThen(guard(RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)))
+      .andThen(guard(SessionData.isClaimNotSubmitted))
       .async { implicit request =>
         if (isConfirmingUpdate) {
           handleUpdateConfirmationSubmit(mode)

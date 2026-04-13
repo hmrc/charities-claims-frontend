@@ -71,7 +71,8 @@ class GiftAidScheduleUploadStatusControllerSpec extends ControllerSpec {
 
     "status" - {
       "unsubmitted Claim ID is not defined" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingGiftAid(true)
+        val sessionData                =
+          completeRepaymentDetailsAnswersSession.and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {

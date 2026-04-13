@@ -21,13 +21,14 @@ import controllers.BaseController
 import controllers.actions.{Actions, GuardAction}
 import controllers.repaymentClaimDetails.routes
 import forms.YesNoFormProvider
-import models.{Mode, RepaymentClaimDetailsAnswers}
+import models.{Mode, RepaymentClaimDetailsAnswers, SessionData}
 import models.requests.DataRequest
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
 import views.html.{ChangePreviousGASDSClaimView, UpdateRepaymentClaimView}
 import models.Mode.*
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class ChangePreviousGASDSClaimController @Inject() (
@@ -45,21 +46,27 @@ class ChangePreviousGASDSClaimController @Inject() (
   val confirmUpdateForm: Form[Boolean] = formProvider("updateRepaymentClaim.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
-    actions.authAndGetData().andThen(guard(RepaymentClaimDetailsAnswers.isClaimingGASDSWithDonations)).async {
-      implicit request =>
+    actions
+      .authAndGetData()
+      .andThen(guard(RepaymentClaimDetailsAnswers.isClaimingGASDSWithDonations))
+      .andThen(guard(SessionData.isClaimNotSubmitted))
+      .async { implicit request =>
         val previousAnswer = RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim
         Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
-    }
+      }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
-    actions.authAndGetData().andThen(guard(RepaymentClaimDetailsAnswers.isClaimingGASDSWithDonations)).async {
-      implicit request =>
+    actions
+      .authAndGetData()
+      .andThen(guard(RepaymentClaimDetailsAnswers.isClaimingGASDSWithDonations))
+      .andThen(guard(SessionData.isClaimNotSubmitted))
+      .async { implicit request =>
         if (isConfirmingUpdate) {
           handleUpdateConfirmationSubmit(mode)
         } else {
           handleQuestionSubmit(mode)
         }
-    }
+      }
 
   def handleQuestionSubmit(mode: Mode)(implicit request: DataRequest[AnyContent]) =
     form

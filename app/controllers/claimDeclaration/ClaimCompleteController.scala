@@ -23,7 +23,6 @@ import views.html.ClaimCompleteView
 import controllers.actions.Actions
 
 import scala.concurrent.Future
-import models.SessionData
 
 class ClaimCompleteController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -32,12 +31,12 @@ class ClaimCompleteController @Inject() (
 ) extends BaseController {
 
   val onPageLoad: Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.isClaimDetailsComplete).async { implicit request =>
-      if sessionData.understandFalseStatements.contains(true) then {
-        val nextPage: Call = controllers.claimDeclaration.routes.RepaymentClaimSummaryController.onPageLoad
-        // this can never be none since it would be caught by SessionData.isClaimDetailsComplete
-        val value          = sessionData.lastUpdatedReference.getOrElse("")
-        Future.successful(Ok(view(nextPage, value)))
-      } else Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+    actions.authAndGetData().async { implicit request =>
+      sessionData.submissionReference match {
+        case Some(value) =>
+          val nextPage: Call = controllers.claimDeclaration.routes.RepaymentClaimSummaryController.onPageLoad
+          Future.successful(Ok(view(nextPage, value)))
+        case _           => Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      }
     }
 }

@@ -21,7 +21,7 @@ import controllers.BaseController
 import controllers.actions.{Actions, GuardAction}
 import controllers.repaymentClaimDetails.routes
 import forms.YesNoFormProvider
-import models.{Mode, RepaymentClaimDetailsAnswers}
+import models.{Mode, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
@@ -48,6 +48,7 @@ class ClaimGiftAidSmallDonationsSchemeController @Inject() (
     actions
       .authAndGetData()
       .andThen(guard(RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)))
+      .andThen(guard(SessionData.isClaimNotSubmitted))
       .async { implicit request =>
         val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding
         Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
@@ -57,6 +58,7 @@ class ClaimGiftAidSmallDonationsSchemeController @Inject() (
     actions
       .authAndGetData()
       .andThen(guard(RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)))
+      .andThen(guard(SessionData.isClaimNotSubmitted))
       .async { implicit request =>
         if (isConfirmingUpdate) {
           handleUpdateConfirmationSubmit(mode)

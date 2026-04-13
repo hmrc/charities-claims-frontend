@@ -37,7 +37,7 @@ class CommunityBuildingsScheduleUploadStatusController @Inject() (
 
   val status: Action[AnyContent] =
     actions
-      .authAndGetData()
+      .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
       .async { implicit request =>
         {
           for {

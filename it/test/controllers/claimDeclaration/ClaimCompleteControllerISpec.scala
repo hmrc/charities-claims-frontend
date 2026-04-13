@@ -32,9 +32,10 @@ class ClaimCompleteControllerISpec extends ComponentSpecHelper with TestDataUtil
     "render the claim complete page" in {
       val claimWithAdjustments =
         claim.copy(
-          claimData = claim.claimData.copy(
-            understandFalseStatements = Some(true)
-          )
+          submissionDetails = Some(SubmissionDetails(
+            submissionReference= "12345",
+          submissionTimestamp = ""
+          ))
         )
       stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))

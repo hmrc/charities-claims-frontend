@@ -18,9 +18,9 @@ package controllers.repaymentClaimDetails
 
 import com.google.inject.Inject
 import controllers.BaseController
-import controllers.actions.Actions
+import controllers.actions.{Actions, GuardAction}
 import forms.{CheckBoxListFormProvider, YesNoFormProvider}
-import models.{Mode, RepaymentClaimDetailsAnswers, RepaymentClaimType}
+import models.{Mode, RepaymentClaimDetailsAnswers, RepaymentClaimType, SessionData}
 import models.requests.DataRequest
 import controllers.repaymentClaimDetails.routes
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -28,6 +28,7 @@ import play.api.data.Form
 import services.SaveService
 import views.html.{RepaymentClaimTypeView, UpdateRepaymentClaimView}
 import models.Mode.*
+
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.mvc.Call
 
@@ -36,6 +37,7 @@ class RepaymentClaimTypeController @Inject() (
   view: RepaymentClaimTypeView,
   updateRepaymentClaimView: UpdateRepaymentClaimView,
   actions: Actions,
+  guard: GuardAction,
   formProvider: CheckBoxListFormProvider,
   yesNoFormProvider: YesNoFormProvider,
   saveService: SaveService
@@ -45,18 +47,20 @@ class RepaymentClaimTypeController @Inject() (
   val form: Form[RepaymentClaimType]   = formProvider()
   val confirmUpdateForm: Form[Boolean] = yesNoFormProvider("updateRepaymentClaim.error.required")
 
-  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    val previousAnswer = RepaymentClaimDetailsAnswers.getRepaymentClaimType
-    Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
-  }
-
-  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    if (isConfirmingUpdate) {
-      handleUpdateConfirmationSubmit(mode)
-    } else {
-      handleQuestionSubmit(mode)
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)).async { implicit request =>
+      val previousAnswer = RepaymentClaimDetailsAnswers.getRepaymentClaimType
+      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
     }
-  }
+
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)).async { implicit request =>
+      if (isConfirmingUpdate) {
+        handleUpdateConfirmationSubmit(mode)
+      } else {
+        handleQuestionSubmit(mode)
+      }
+    }
 
   def handleQuestionSubmit(mode: Mode)(implicit request: DataRequest[AnyContent]) = {
     val previousAnswer: Option[RepaymentClaimType] = RepaymentClaimDetailsAnswers.getRepaymentClaimType

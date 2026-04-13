@@ -18,10 +18,8 @@ package controllers.giftAidSmallDonationsScheme
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
-import controllers.giftAidSmallDonationsScheme.routes
 import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import views.html.AboutGiftAidSmallDonationsSchemeView
 
 import scala.concurrent.Future
 
@@ -35,7 +33,7 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
     actions
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
-          && RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(false)
+          && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
       )
       .async { implicit request =>
         Future.successful(Ok)
