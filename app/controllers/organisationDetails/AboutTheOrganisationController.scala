@@ -41,6 +41,9 @@ class AboutTheOrganisationController @Inject() (
 
   val onSubmit: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      Future.successful(Redirect(routes.NameOfCharityRegulatorController.onPageLoad(NormalMode)))
+      val charitiesReference = request.sessionData.charitiesReference
+      if charitiesReference.startsWith("CH") || charitiesReference.startsWith("CF") then
+        Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
+      else Future.successful(Redirect(routes.NameOfCharityRegulatorController.onPageLoad(NormalMode)))
     }
 }

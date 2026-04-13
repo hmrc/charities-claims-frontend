@@ -42,10 +42,14 @@ class NameOfCharityRegulatorController @Inject() (
   val form: Form[NameOfCharityRegulator] = formProvider("nameOfCharityRegulator.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete) { implicit request =>
-      val previousAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
-
-      Ok(view(form.withDefault(previousAnswer), mode))
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
+      val charitiesReference = request.sessionData.charitiesReference
+      if charitiesReference.startsWith("CH") || charitiesReference.startsWith("CF") then
+        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      else {
+        val previousAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
+        Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+      }
     }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =

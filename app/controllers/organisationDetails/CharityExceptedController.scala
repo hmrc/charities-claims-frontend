@@ -34,11 +34,16 @@ class CharityExceptedController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
-        OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
-      previousAnswer match {
-        case Some(ReasonNotRegisteredWithRegulator.Excepted) => Future.successful(Ok(view(mode)))
-        case _                                               => Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      val charitiesReference = request.sessionData.charitiesReference
+      if charitiesReference.startsWith("CH") || charitiesReference.startsWith("CF") then
+        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      else {
+        val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
+          OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
+        previousAnswer match {
+          case Some(ReasonNotRegisteredWithRegulator.Excepted) => Future.successful(Ok(view(mode)))
+          case _                                               => Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+        }
       }
     }
 
