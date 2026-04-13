@@ -76,7 +76,7 @@ class RepaymentClaimSummaryHelperSpec extends PlaySpec with GuiceOneAppPerSuite 
       result.rows.head.value.content.asHtml.body must include("Test Charity")
       result.rows(1).value.content.asHtml.body   must include("ABC123")
       result.rows(2).value.content.asHtml.body   must include("SUB123456")
-      result.rows(3).value.content.asHtml.body   must include("7 Apr 2026 11:34:21")
+      result.rows(3).value.content.asHtml.body   must include("7 Apr 2026 12:34:21")
       result.rows(4).value.content.asHtml.body   must include("John Doe")
     }
   }
