@@ -119,7 +119,7 @@ class GiftAidScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.GiftAidScheduleUploadSuccessfulController.onSubmit.url)
+            FakeRequest(POST, routes.GiftAidScheduleUploadSuccessfulController.onSubmit.url)
 
           val result = route(application, request).value
 

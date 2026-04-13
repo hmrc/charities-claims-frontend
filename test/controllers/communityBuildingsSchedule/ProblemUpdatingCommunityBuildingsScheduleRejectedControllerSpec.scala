@@ -119,7 +119,7 @@ class ProblemUpdatingCommunityBuildingsScheduleRejectedControllerSpec extends Co
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onSubmit.url)
+            FakeRequest(POST, routes.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onSubmit.url)
 
           val result = route(application, request).value
 

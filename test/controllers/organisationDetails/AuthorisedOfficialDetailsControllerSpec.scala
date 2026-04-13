@@ -212,7 +212,7 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AuthorisedOfficialDetailsController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.AuthorisedOfficialDetailsController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 

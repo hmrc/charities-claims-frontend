@@ -136,7 +136,7 @@ class CharityExceptedControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CharityExceptedController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.CharityExceptedController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 

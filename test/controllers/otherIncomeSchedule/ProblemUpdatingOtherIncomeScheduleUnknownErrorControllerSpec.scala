@@ -119,7 +119,7 @@ class ProblemUpdatingOtherIncomeScheduleUnknownErrorControllerSpec extends Contr
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onSubmit.url)
+            FakeRequest(POST, routes.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onSubmit.url)
 
           val result = route(application, request).value
 

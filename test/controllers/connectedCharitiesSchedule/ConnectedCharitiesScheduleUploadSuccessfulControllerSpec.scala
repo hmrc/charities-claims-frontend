@@ -118,7 +118,7 @@ class ConnectedCharitiesScheduleUploadSuccessfulControllerSpec extends Controlle
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ConnectedCharitiesScheduleUploadSuccessfulController.onSubmit.url)
+            FakeRequest(POST, routes.ConnectedCharitiesScheduleUploadSuccessfulController.onSubmit.url)
 
           val result = route(application, request).value
 

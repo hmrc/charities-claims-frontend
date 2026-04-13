@@ -117,7 +117,7 @@ class ProblemUpdatingOtherIncomeScheduleRejectedControllerSpec extends Controlle
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemUpdatingOtherIncomeScheduleRejectedController.onSubmit.url)
+            FakeRequest(POST, routes.ProblemUpdatingOtherIncomeScheduleRejectedController.onSubmit.url)
 
           val result = route(application, request).value
 

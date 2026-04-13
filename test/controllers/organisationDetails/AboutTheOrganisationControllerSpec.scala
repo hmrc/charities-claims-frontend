@@ -93,7 +93,7 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AboutTheOrganisationController.onSubmit.url)
+            FakeRequest(POST, routes.AboutTheOrganisationController.onSubmit.url)
 
           val result = route(application, request).value
 

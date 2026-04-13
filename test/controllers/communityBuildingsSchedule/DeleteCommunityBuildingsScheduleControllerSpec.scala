@@ -94,7 +94,7 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DeleteCommunityBuildingsScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteCommunityBuildingsScheduleController.onSubmit.url)
 
           val result = route(application, request).value
 

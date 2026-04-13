@@ -329,7 +329,7 @@ class ProblemWithConnectedCharitiesScheduleControllerSpec extends ControllerSpec
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.ProblemWithConnectedCharitiesScheduleController.onSubmit.url)
 
           val result = route(application, request).value
 

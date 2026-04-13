@@ -137,7 +137,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AdjustmentToGiftAidOverclaimedController.onSubmit.url)
+            FakeRequest(POST, routes.AdjustmentToGiftAidOverclaimedController.onSubmit.url)
 
           val result = route(application, request).value
 

@@ -184,7 +184,7 @@ class CheckYourGiftAidScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CheckYourGiftAidScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.CheckYourGiftAidScheduleController.onSubmit.url)
 
           val result = route(application, request).value
 

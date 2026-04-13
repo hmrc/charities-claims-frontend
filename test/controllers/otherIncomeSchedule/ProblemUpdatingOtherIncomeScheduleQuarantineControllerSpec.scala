@@ -118,7 +118,7 @@ class ProblemUpdatingOtherIncomeScheduleQuarantineControllerSpec extends Control
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemUpdatingOtherIncomeScheduleQuarantineController.onSubmit.url)
+            FakeRequest(POST, routes.ProblemUpdatingOtherIncomeScheduleQuarantineController.onSubmit.url)
 
           val result = route(application, request).value
 

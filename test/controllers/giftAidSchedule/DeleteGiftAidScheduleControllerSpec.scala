@@ -94,7 +94,7 @@ class DeleteGiftAidScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DeleteGiftAidScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteGiftAidScheduleController.onSubmit.url)
 
           val result = route(application, request).value
 

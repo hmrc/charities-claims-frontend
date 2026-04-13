@@ -144,7 +144,7 @@ class CorporateTrusteeAddressControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeAddressController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.CorporateTrusteeAddressController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 

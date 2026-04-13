@@ -118,7 +118,7 @@ class ProblemUpdatingGiftAidScheduleQuarantineControllerSpec extends ControllerS
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemUpdatingGiftAidScheduleQuarantineController.onSubmit.url)
+            FakeRequest(POST, routes.ProblemUpdatingGiftAidScheduleQuarantineController.onSubmit.url)
 
           val result = route(application, request).value
 

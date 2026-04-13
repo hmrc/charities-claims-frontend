@@ -155,7 +155,7 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CommunityBuildingsScheduleUploadSuccessfulController.onSubmit.url)
+            FakeRequest(POST, routes.CommunityBuildingsScheduleUploadSuccessfulController.onSubmit.url)
 
           val result = route(application, request).value
 

@@ -97,7 +97,7 @@ class UpdateCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.UpdateCommunityBuildingsScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.UpdateCommunityBuildingsScheduleController.onSubmit.url)
 
           val result = route(application, request).value
 

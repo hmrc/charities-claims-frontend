@@ -142,7 +142,7 @@ class AuthorisedOfficialAddressControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AuthorisedOfficialAddressController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.AuthorisedOfficialAddressController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 

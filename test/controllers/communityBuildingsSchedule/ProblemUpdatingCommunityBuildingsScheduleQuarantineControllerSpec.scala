@@ -118,7 +118,7 @@ class ProblemUpdatingCommunityBuildingsScheduleQuarantineControllerSpec extends 
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onSubmit.url)
+            FakeRequest(POST, routes.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onSubmit.url)
 
           val result = route(application, request).value
 

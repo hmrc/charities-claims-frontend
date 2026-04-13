@@ -169,7 +169,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 

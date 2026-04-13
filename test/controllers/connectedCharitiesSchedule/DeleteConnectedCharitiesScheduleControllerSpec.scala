@@ -94,7 +94,7 @@ class DeleteConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DeleteConnectedCharitiesScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteConnectedCharitiesScheduleController.onSubmit.url)
 
           val result = route(application, request).value
 

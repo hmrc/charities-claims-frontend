@@ -229,7 +229,7 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode).url)
+            FakeRequest(POST, routes.CorporateTrusteeDetailsController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 

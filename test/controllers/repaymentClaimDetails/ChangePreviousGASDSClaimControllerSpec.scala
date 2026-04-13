@@ -162,7 +162,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.ChangePreviousGASDSClaimController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 

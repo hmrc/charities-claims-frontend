@@ -423,7 +423,7 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemWithOtherIncomeScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.ProblemWithOtherIncomeScheduleController.onSubmit.url)
 
           val result = route(application, request).value
 

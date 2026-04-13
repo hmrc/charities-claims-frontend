@@ -118,7 +118,7 @@ class ProblemUpdatingCommunityBuildingsScheduleUnknownErrorControllerSpec extend
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onSubmit.url)
+            FakeRequest(POST, routes.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onSubmit.url)
 
           val result = route(application, request).value
 

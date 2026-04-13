@@ -182,7 +182,7 @@ class CheckYourConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CheckYourConnectedCharitiesScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.CheckYourConnectedCharitiesScheduleController.onSubmit.url)
 
           val result = route(application, request).value
 

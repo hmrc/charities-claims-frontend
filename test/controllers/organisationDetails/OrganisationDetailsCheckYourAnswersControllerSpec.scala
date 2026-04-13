@@ -614,7 +614,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onSubmit.url)
+            FakeRequest(POST, routes.OrganisationDetailsCheckYourAnswersController.onSubmit.url)
 
           val result = route(application, request).value
 

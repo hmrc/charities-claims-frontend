@@ -77,7 +77,7 @@ class RepaymentClaimDetailsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.RepaymentClaimDetailsController.onSubmit.url)
+            FakeRequest(POST, routes.RepaymentClaimDetailsController.onSubmit.url)
 
           val result = route(application, request).value
 

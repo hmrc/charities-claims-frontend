@@ -97,7 +97,7 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.UpdateOtherIncomeScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.UpdateOtherIncomeScheduleController.onSubmit.url)
 
           val result = route(application, request).value
 

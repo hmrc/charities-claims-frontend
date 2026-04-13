@@ -118,7 +118,7 @@ class ProblemUpdatingGiftAidScheduleUnknownErrorControllerSpec extends Controlle
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemUpdatingGiftAidScheduleUnknownErrorController.onSubmit.url)
+            FakeRequest(POST, routes.ProblemUpdatingGiftAidScheduleUnknownErrorController.onSubmit.url)
 
           val result = route(application, request).value
 

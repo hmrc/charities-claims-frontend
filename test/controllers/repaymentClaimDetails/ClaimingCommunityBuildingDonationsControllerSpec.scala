@@ -140,7 +140,7 @@ class ClaimingCommunityBuildingDonationsControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimingCommunityBuildingDonationsController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.ClaimingCommunityBuildingDonationsController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 

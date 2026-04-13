@@ -150,7 +150,7 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CharityRegulatorNumberController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 

@@ -134,7 +134,7 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit.url)
+            FakeRequest(POST, routes.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit.url)
 
           val result = route(application, request).value
 

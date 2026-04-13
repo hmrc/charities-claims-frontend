@@ -119,7 +119,7 @@ class ClaimGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.ClaimGiftAidSmallDonationsSchemeController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 

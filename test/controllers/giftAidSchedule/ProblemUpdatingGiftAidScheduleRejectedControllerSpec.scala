@@ -118,7 +118,7 @@ class ProblemUpdatingGiftAidScheduleRejectedControllerSpec extends ControllerSpe
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemUpdatingGiftAidScheduleRejectedController.onSubmit.url)
+            FakeRequest(POST, routes.ProblemUpdatingGiftAidScheduleRejectedController.onSubmit.url)
 
           val result = route(application, request).value
 

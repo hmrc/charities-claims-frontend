@@ -118,7 +118,7 @@ class AboutOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AboutOtherIncomeScheduleController.onSubmit.url)
+            FakeRequest(POST, routes.AboutOtherIncomeScheduleController.onSubmit.url)
 
           val result = route(application, request).value
 

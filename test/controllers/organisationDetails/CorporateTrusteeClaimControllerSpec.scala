@@ -118,7 +118,7 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeClaimController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.CorporateTrusteeClaimController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 
