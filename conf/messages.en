@@ -770,3 +770,9 @@ adjustmentToGiftAidOverclaimed.heading = What is the adjustment amount for Gift 
 adjustmentToGiftAidOverclaimed.title = What is the adjustment amount for Gift Aid previously overclaimed?
 adjustmentToGiftAidOverclaimed.error.required = Enter an adjustment amount for Gift Aid previously overclaimed
 adjustmentToGiftAidOverclaimed.error.invalid = Enter an adjustment amount for Gift Aid previously overclaimed in the correct format
+
+gasdsAdjustmentAmountCheckYourAnswers.caption = Provide GASDS donation details
+gasdsAdjustmentAmountCheckYourAnswers.heading = Check your GASDS adjustment amount
+gasdsAdjustmentAmountCheckYourAnswers.title = Check your GASDS adjustment amount
+gasdsAdjustmentAmountCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Amount of GASDS previously overclaimed
+
