@@ -195,6 +195,7 @@ claimDeclaration.warning = I understand that if I give false or misleading infor
 claimDeclaration.heading = Declaration
 claimDeclaration.paragraph = By submitting this claim, I confirm that:
 claimDeclaration.title = Declaration
+claimDeclaration.submit = Confirm and submit claim
 
 claimGASDS.caption = Provide repayment claim details
 claimGASDS.error.required = Select ‘Yes’ if you are claiming under the Gift Aid Small Donations Scheme

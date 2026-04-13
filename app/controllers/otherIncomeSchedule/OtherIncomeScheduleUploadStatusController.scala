@@ -37,7 +37,7 @@ class OtherIncomeScheduleUploadStatusController @Inject() (
 
   val status: Action[AnyContent] =
     actions
-      .authAndGetData()
+      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
         {
           for {

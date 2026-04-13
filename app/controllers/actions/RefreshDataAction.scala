@@ -47,7 +47,11 @@ class DefaultRefreshDataAction @Inject() (
     cache
       .get()
       .flatMap {
-        case Some(sessionData) if sessionData.unsubmittedClaimId.isDefined =>
+        case Some(sessionData) if sessionData.submissionReference.isDefined =>
+          Future.successful(
+            Left(Results.Redirect(controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad))
+          )
+        case Some(sessionData) if sessionData.unsubmittedClaimId.isDefined  =>
           claimsConnector
             .getClaim(sessionData.unsubmittedClaimId.get)
             .flatMap {
