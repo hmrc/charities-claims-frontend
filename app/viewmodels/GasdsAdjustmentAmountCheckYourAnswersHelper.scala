@@ -22,6 +22,8 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.*
 
+import scala.math.BigDecimal.RoundingMode
+
 object GasdsAdjustmentAmountCheckYourAnswersHelper {
 
   def buildSummaryList(
@@ -101,5 +103,5 @@ object GasdsAdjustmentAmountCheckYourAnswersHelper {
     )
 
   private def formatCurrency(amount: BigDecimal): String =
-    s"£${amount.setScale(2)}"
+    s"£${amount.setScale(2, RoundingMode.HALF_UP)}"
 }

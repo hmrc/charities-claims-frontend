@@ -61,7 +61,9 @@ class GasdsAdjustmentAmountCheckYourAnswersController @Inject() (
           if (claimingUnderGasds) {
             Redirect(routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1))
           } else {
-            Redirect("/charities-claims/check-your-GASDS-donation-details")
+            Redirect(
+              "/charities-claims/check-your-GASDS-donation-details"
+            ) // TODO update URL when next screen is available
           }
         )
       }

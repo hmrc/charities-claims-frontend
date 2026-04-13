@@ -44,7 +44,7 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerISpec
     }
   }
 
-  "POST /check-your-organisation-details" should {
+  "POST /check-gasds-adjustment-amount" should {
 
     "redirect to WhichTaxYearAreYouClaimingFor when submitting and claiming under GASDS" in {
       stubBackend()
