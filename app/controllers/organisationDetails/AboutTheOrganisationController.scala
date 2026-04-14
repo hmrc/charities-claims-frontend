@@ -21,6 +21,7 @@ import play.api.i18n.I18nSupport
 import controllers.actions.Actions
 import models.Mode.*
 import models.SessionData
+import models.SessionData.isCASCCharityReference
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.AboutTheOrganisationView
@@ -41,8 +42,11 @@ class AboutTheOrganisationController @Inject() (
 
   val onSubmit: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      val charitiesReference = request.sessionData.charitiesReference
-      if charitiesReference.startsWith("CH") || charitiesReference.startsWith("CF") then
+
+      given sessionData: SessionData = request.sessionData
+
+      val charitiesReference = isCASCCharityReference(request.sessionData)
+      if (SessionData.isCASCCharityReference(sessionData) then
         Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
       else Future.successful(Redirect(routes.NameOfCharityRegulatorController.onPageLoad(NormalMode)))
     }

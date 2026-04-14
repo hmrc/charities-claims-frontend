@@ -177,6 +177,9 @@ object SessionData {
   def isClaimNotSubmitted(using session: SessionData): Boolean =
     session.submissionReference.isEmpty
 
+  def isCASCCharityReference(using session: SessionData): Boolean =
+      session.charitiesReference.startsWith("CH") || session.charitiesReference.startsWith("CF")
+
   def isClaimDetailsComplete(using session: SessionData): Boolean =
     session.unsubmittedClaimId.isDefined
       && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
