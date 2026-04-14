@@ -27,6 +27,27 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
 
   "RepaymentClaimDetailsIncompleteAnswersController" - {
     "onPageLoad" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should render the page with default missing fields when no session data present" in {
 
         given application: Application = applicationBuilder().build()

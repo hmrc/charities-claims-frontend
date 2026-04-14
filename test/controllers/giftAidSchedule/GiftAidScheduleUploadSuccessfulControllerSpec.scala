@@ -18,20 +18,40 @@ package controllers.giftAidSchedule
 
 import controllers.ControllerSpec
 import controllers.giftAidSchedule.routes
-import models.RepaymentClaimDetailsAnswers
+import models.{FileUploadReference, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.Application
 import play.api.test.FakeRequest
 import util.TestScheduleData
-import models.FileUploadReference
 import views.html.GiftAidScheduleUploadSuccessfulView
 import play.api.i18n.MessagesApi
 import play.api.i18n.Lang
+import play.api.mvc.AnyContentAsEmpty
 
 class GiftAidScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
 
   "GiftAidScheduleUploadSuccessfulControllerSpec" - {
     "onPageLoad" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
 
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.GiftAidScheduleUploadSuccessfulController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should render page successfully" in {
         val sessionData = completeRepaymentDetailsAnswersSession
           .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
@@ -88,6 +108,27 @@ class GiftAidScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.GiftAidScheduleUploadSuccessfulController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should redirect to the next page" in {
         val sessionData              = completeRepaymentDetailsAnswersSession
           .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))

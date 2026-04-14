@@ -18,7 +18,7 @@ package controllers.organisationDetails
 
 import controllers.ControllerSpec
 import forms.CorporateTrusteeDetailsFormProvider
-import models.{CorporateTrusteeDetails, OrganisationDetailsAnswers}
+import models.{CorporateTrusteeDetails, OrganisationDetailsAnswers, SessionData}
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
@@ -57,6 +57,27 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
   "CorporateTrusteeDetailsController" - {
 
     "onPageLoad" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should render the page correctly when UK address is false (default)" in {
         val sessionDataAreYouCorporateTrustee =
           completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(true))
@@ -197,6 +218,27 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.CorporateTrusteeDetailsController.onSubmit(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should redirect to the next page when valid data is submitted (without UK Address)" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
