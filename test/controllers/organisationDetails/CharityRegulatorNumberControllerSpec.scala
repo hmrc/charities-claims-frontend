@@ -19,7 +19,7 @@ package controllers.organisationDetails
 import controllers.ControllerSpec
 import forms.CharityRegulatorNumberFormProvider
 import models.Mode.*
-import models.OrganisationDetailsAnswers
+import models.{OrganisationDetailsAnswers, SessionData}
 import play.api.Application
 import play.api.i18n.MessagesApi
 import models.NameOfCharityRegulator.*
@@ -35,6 +35,27 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
   "CharityRegulatorNumberController" - {
 
     "onPageLoad" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CharityRegulatorNumberController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should render the page correctly if name of charity is EnglandAndWales" in {
         val sessionData                = completeRepaymentDetailsAnswersSession.and(
           OrganisationDetailsAnswers.setNameOfCharityRegulator(EnglandAndWales)
@@ -118,6 +139,27 @@ class CharityRegulatorNumberControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.CharityRegulatorNumberController.onSubmit(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should redirect to the next page when valid data is submitted" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()

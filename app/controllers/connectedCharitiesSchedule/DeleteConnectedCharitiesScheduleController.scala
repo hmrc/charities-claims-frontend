@@ -20,6 +20,7 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.YesNoFormProvider
+import models.SessionData
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ClaimsValidationService
@@ -38,23 +39,25 @@ class DeleteConnectedCharitiesScheduleController @Inject() (
 
   val form: Form[Boolean] = formProvider("deleteConnectedCharitiesSchedule.error.required")
 
-  def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(form))
-  }
+  def onPageLoad: Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule) { implicit request =>
+      Ok(view(form))
+    }
 
-  def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          if value then {
-            claimsValidationService.deleteConnectedCharitiesSchedule.map { _ =>
-              Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
+  def onSubmit: Action[AnyContent] =
+    actions.authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+          value =>
+            if value then {
+              claimsValidationService.deleteConnectedCharitiesSchedule.map { _ =>
+                Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
+              }
+            } else {
+              Future.successful(Redirect(routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad))
             }
-          } else {
-            Future.successful(Redirect(routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad))
-          }
-      )
-  }
+        )
+    }
 }

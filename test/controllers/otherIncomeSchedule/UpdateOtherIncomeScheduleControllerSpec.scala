@@ -27,6 +27,7 @@ import play.api.test.FakeRequest
 import services.ClaimsValidationService
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.UpdateOtherIncomeScheduleView
+import models.SessionData
 
 import scala.concurrent.Future
 import services.ClaimsService
@@ -41,6 +42,27 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
   "UpdateOtherIncomeScheduleController" - {
     "onPageLoad" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.UpdateOtherIncomeScheduleController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should render the page correctly" in {
         val sessionData                =
           completeRepaymentDetailsAnswersSession.and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
@@ -64,6 +86,27 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.UpdateOtherIncomeScheduleController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should reload the page with errors when a required field is missing" in {
         val sessionData                =
           completeRepaymentDetailsAnswersSession.and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))

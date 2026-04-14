@@ -21,7 +21,7 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import models.RepaymentClaimDetailsAnswers
+import models.{RepaymentClaimDetailsAnswers, SessionData}
 import models.SessionData.and
 import forms.YesNoFormProvider
 import models.Mode.*
@@ -125,9 +125,53 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
           redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
+
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        ).and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
+
     }
 
     "onSubmit" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        ).and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false))
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.ChangePreviousGASDSClaimController.onSubmit(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "normalMode: should redirect to ConnectedToAnyOtherCharitiesController when the value is true" in {
         val sessionData                = RepaymentClaimDetailsAnswers
           .setClaimingUnderGiftAidSmallDonationsScheme(true)

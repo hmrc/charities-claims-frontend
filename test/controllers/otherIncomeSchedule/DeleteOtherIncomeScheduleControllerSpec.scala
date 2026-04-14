@@ -28,7 +28,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import views.html.DeleteOtherIncomeScheduleView
 
 import scala.concurrent.Future
-import models.RepaymentClaimDetailsAnswers
+import models.{RepaymentClaimDetailsAnswers, SessionData}
 
 class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
@@ -56,6 +56,28 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
           status(result)                        shouldBe OK
           contentAsString(result)               shouldBe view(form).body
           view.render(form, request, msgs).body shouldBe view(form).body
+        }
+      }
+
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.DeleteOtherIncomeScheduleController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
         }
       }
     }

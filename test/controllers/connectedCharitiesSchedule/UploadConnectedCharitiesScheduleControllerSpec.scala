@@ -117,7 +117,27 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
   "UploadOtherIncomeScheduleController" - {
 
     "onPageLoad" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
 
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should render ClaimsTaskListController if setClaimingTaxDeducted is false" in {
         val sessionData  = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false)
         val customConfig = Map(
@@ -259,7 +279,27 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
     }
 
     "onUploadSuccess" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
 
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onUploadSuccess.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should update status and redirect when reference exists" in {
 
         val sessionData =
