@@ -22,6 +22,7 @@ import controllers.actions.Actions
 import forms.RadioListFormProvider
 import models.{Mode, NameOfCharityRegulator, OrganisationDetailsAnswers, SessionData}
 import models.Mode.*
+import models.SessionData.isCASCCharityReference
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
@@ -43,9 +44,8 @@ class NameOfCharityRegulatorController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      val charitiesReference = request.sessionData.charitiesReference
-      if charitiesReference.startsWith("CH") || charitiesReference.startsWith("CF") then
-        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      given sessionData: SessionData = request.sessionData
+      if isCASCCharityReference then Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
       else {
         val previousAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
         Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))

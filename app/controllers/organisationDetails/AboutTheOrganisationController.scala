@@ -44,9 +44,7 @@ class AboutTheOrganisationController @Inject() (
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
 
       given sessionData: SessionData = request.sessionData
-
-      val charitiesReference = isCASCCharityReference(request.sessionData)
-      if (SessionData.isCASCCharityReference(sessionData) then
+      if isCASCCharityReference then
         Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
       else Future.successful(Redirect(routes.NameOfCharityRegulatorController.onPageLoad(NormalMode)))
     }

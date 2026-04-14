@@ -73,9 +73,33 @@ class ConnectedCharitiesScheduleUploadStatusControllerSpec extends ControllerSpe
   "ConnectedCharitiesScheduleUploadStatusControllerSpec" - {
 
     "status" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ConnectedCharitiesScheduleUploadStatusController.status.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "unsubmitted Claim ID is not defined" in {
-        val sessionData                = RepaymentClaimDetailsAnswers
-          .setClaimingConnectedCharities(true)
+        val sessionData                = completeGasdsSession
+          .and(
+            RepaymentClaimDetailsAnswers
+              .setClaimingConnectedCharities(true)
+          )
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(false))
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 

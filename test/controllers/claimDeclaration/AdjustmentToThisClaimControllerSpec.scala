@@ -87,6 +87,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           claimingUnderGiftAidSmallDonationsScheme = Some(false),
           claimingDonationsNotFromCommunityBuilding = Some(false),
           claimingDonationsCollectedInCommunityBuildings = Some(true),
+          claimingGiftAid = Some(false),
           connectedToAnyOtherCharities = Some(false),
           makingAdjustmentToPreviousClaim = Some(false)
         )
@@ -149,6 +150,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           claimingUnderGiftAidSmallDonationsScheme = Some(false),
           claimingDonationsNotFromCommunityBuilding = Some(true),
           claimingDonationsCollectedInCommunityBuildings = Some(false),
+          claimingGiftAid = Some(false),
           connectedToAnyOtherCharities = Some(false),
           makingAdjustmentToPreviousClaim = Some(false)
         )
@@ -180,6 +182,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           claimingUnderGiftAidSmallDonationsScheme = Some(false),
           claimingDonationsNotFromCommunityBuilding = Some(false),
           claimingDonationsCollectedInCommunityBuildings = Some(false),
+          claimingGiftAid = Some(false),
           connectedToAnyOtherCharities = Some(true),
           makingAdjustmentToPreviousClaim = Some(false)
         )
@@ -206,7 +209,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render the page correctly when isClaimDetailsComplete condition is met due connectedCharitiesScheduleCompleted and unregulatedLimitExceeded is true" in {
+      "should render the page correctly when isClaimDetailsComplete condition is met due unregulatedLimitExceeded is true" in {
         val answers     = repaymentClaimDetailsAnswersCompleted.copy(
           claimingUnderGiftAidSmallDonationsScheme = Some(false),
           claimingDonationsNotFromCommunityBuilding = Some(false),
@@ -264,6 +267,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           claimingDonationsNotFromCommunityBuilding = Some(false),
           claimingDonationsCollectedInCommunityBuildings = Some(false),
           connectedToAnyOtherCharities = Some(true),
+          claimingGiftAid = Some(false),
           makingAdjustmentToPreviousClaim = Some(false)
         )
         val sessionData = SessionData(
@@ -302,6 +306,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           claimingDonationsNotFromCommunityBuilding = Some(false),
           claimingDonationsCollectedInCommunityBuildings = Some(false),
           connectedToAnyOtherCharities = Some(true),
+          claimingGiftAid = Some(true),
           makingAdjustmentToPreviousClaim = Some(false)
         )
         val sessionData = SessionData(
@@ -311,6 +316,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
         ).copy(
           connectedCharitiesScheduleCompleted = true,
+          giftAidScheduleCompleted = true,
           organisationDetailsAnswers = Some(organisationDetailsAnswers2)
         )
 
@@ -342,6 +348,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           claimingDonationsNotFromCommunityBuilding = Some(false),
           claimingDonationsCollectedInCommunityBuildings = Some(false),
           connectedToAnyOtherCharities = Some(true),
+          claimingGiftAid = Some(true),
           makingAdjustmentToPreviousClaim = Some(false)
         )
         val sessionData = SessionData(
@@ -351,6 +358,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
         ).copy(
           connectedCharitiesScheduleCompleted = true,
+          giftAidScheduleCompleted = true,
           organisationDetailsAnswers = Some(organisationDetailsAnswers2)
         )
 
