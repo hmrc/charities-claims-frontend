@@ -43,7 +43,7 @@ class AdjustmentToThisClaimController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.isClaimDetailsComplete)
+      .authAndRefreshDataWithGuard(SessionData.isClaimDetailsComplete)
       .async { implicit request =>
         // derive if there is previous overpayment, then text input is mandatory
         val form: Form[Option[String]] = formProvider(
@@ -76,7 +76,7 @@ class AdjustmentToThisClaimController @Inject() (
 
   def onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.isClaimDetailsComplete)
+      .authAndRefreshDataWithGuard(SessionData.isClaimDetailsComplete)
       .async { implicit request =>
         val form: Form[Option[String]] = formProvider(
           "adjustmentToThisClaim.error.required",

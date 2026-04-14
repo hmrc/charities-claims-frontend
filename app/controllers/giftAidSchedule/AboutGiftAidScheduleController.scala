@@ -37,7 +37,7 @@ class AboutGiftAidScheduleController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
       .async { implicit request =>
         if RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true) then {
           if request.sessionData.giftAidScheduleCompleted
@@ -53,7 +53,7 @@ class AboutGiftAidScheduleController @Inject() (
 
   def onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
       .async { implicit request =>
         Future.successful(Redirect(routes.UploadGiftAidScheduleController.onPageLoad))
       }

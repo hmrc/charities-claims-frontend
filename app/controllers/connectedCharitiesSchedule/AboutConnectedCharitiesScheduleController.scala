@@ -37,7 +37,7 @@ class AboutConnectedCharitiesScheduleController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
       .async { implicit request =>
         if RepaymentClaimDetailsAnswers.getConnectedToAnyOtherCharities.contains(true) then {
           if request.sessionData.connectedCharitiesScheduleCompleted
@@ -53,7 +53,7 @@ class AboutConnectedCharitiesScheduleController @Inject() (
 
   def onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
       .async { implicit request =>
         Future.successful(Redirect(routes.UploadConnectedCharitiesScheduleController.onPageLoad))
       }
