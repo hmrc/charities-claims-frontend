@@ -42,13 +42,13 @@ class UpdateConnectedCharitiesScheduleController @Inject() (
   val form: Form[Boolean] = formProvider("updateConnectedCharitiesSchedule.error.required")
 
   def onPageLoad: Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule) { implicit request =>
+    actions.authAndRefreshDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule) { implicit request =>
       Ok(view(form))
     }
 
   def onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
       .async { implicit request =>
         form
           .bindFromRequest()

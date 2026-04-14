@@ -42,13 +42,13 @@ class UpdateOtherIncomeScheduleController @Inject() (
   val form: Form[Boolean] = formProvider("updateOtherIncomeSchedule.error.required")
 
   def onPageLoad: Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule) { implicit request =>
+    actions.authAndRefreshDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule) { implicit request =>
       Ok(view(form))
     }
 
   def onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
         form
           .bindFromRequest()

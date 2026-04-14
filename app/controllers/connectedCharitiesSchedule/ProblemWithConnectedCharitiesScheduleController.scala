@@ -41,7 +41,7 @@ class ProblemWithConnectedCharitiesScheduleController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
       .async { implicit request =>
         val claimId = request.sessionData.unsubmittedClaimId.get
 
@@ -79,7 +79,7 @@ class ProblemWithConnectedCharitiesScheduleController @Inject() (
 
   val onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
       .async { implicit request =>
         claimsValidationService.deleteConnectedCharitiesSchedule
           .map(_ => Redirect(routes.UploadConnectedCharitiesScheduleController.onPageLoad))
