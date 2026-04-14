@@ -121,7 +121,7 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.DeleteRepaymentClaimController.onPageLoad.url)
+            FakeRequest(POST, routes.DeleteRepaymentClaimController.onSubmit.url)
 
           val result = route(application, request).value
 
