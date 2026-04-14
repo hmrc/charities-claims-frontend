@@ -117,7 +117,27 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
   "UploadCommunityBuildingsScheduleController" - {
 
     "onPageLoad" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
 
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.UploadCommunityBuildingsScheduleController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should render ClaimsTaskListController if setClaimingDonationsCollectedInCommunityBuildings is false" in {
         val sessionData =
           RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, Some(true))
@@ -251,6 +271,27 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
     }
 
     "onUploadSuccess" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.UploadCommunityBuildingsScheduleController.onUploadSuccess.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
 
       "should update status and redirect when reference exists" in {
 

@@ -37,8 +37,7 @@ class ConnectedCharitiesScheduleUploadStatusController @Inject() (
 
   val status: Action[AnyContent] =
     actions
-      .authAndGetData()
-      // .authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
+      .authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
       .async { implicit request =>
         {
           for {

@@ -18,9 +18,10 @@ package controllers.communityBuildingsSchedule
 
 import controllers.ControllerSpec
 import controllers.communityBuildingsSchedule.routes
-import models.{FileUploadReference, RepaymentClaimDetailsAnswers}
+import models.{FileUploadReference, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.Application
 import play.api.i18n.{Lang, MessagesApi}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import util.TestScheduleData
 import views.html.CommunityBuildingsScheduleUploadSuccessfulView
@@ -29,7 +30,27 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
 
   "CommunityBuildingsScheduleUploadSuccessfulController" - {
     "onPageLoad" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
 
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CommunityBuildingsScheduleUploadSuccessfulController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should render page successfully" in {
         val sessionData = completeGasdsSession
           .copy(
@@ -123,6 +144,27 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
     }
 
     "onSubmit" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.CommunityBuildingsScheduleUploadSuccessfulController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should redirect to the next page" in {
         val sessionData = completeGasdsSession
           .copy(

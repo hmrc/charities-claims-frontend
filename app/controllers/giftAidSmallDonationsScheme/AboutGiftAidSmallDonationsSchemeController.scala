@@ -35,7 +35,9 @@ class AboutGiftAidSmallDonationsSchemeController @Inject() (
     actions
       .authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete)
       .async { implicit request =>
-        if RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true)
+        if RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(
+            true
+          ) || RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
         then {
           Future.successful(Ok(view()))
         } else {

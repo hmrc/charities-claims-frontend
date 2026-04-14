@@ -18,9 +18,10 @@ package controllers.connectedCharitiesSchedule
 
 import controllers.ControllerSpec
 import controllers.connectedCharitiesSchedule.routes
-import models.{FileUploadReference, RepaymentClaimDetailsAnswers}
+import models.{FileUploadReference, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.Application
 import play.api.i18n.{Lang, MessagesApi}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import util.TestScheduleData
 import views.html.ConnectedCharitiesScheduleUploadSuccessfulView
@@ -29,7 +30,27 @@ class ConnectedCharitiesScheduleUploadSuccessfulControllerSpec extends Controlle
 
   "ConnectedCharitiesScheduleUploadSuccessfulControllerSpec" - {
     "onPageLoad" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
 
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ConnectedCharitiesScheduleUploadSuccessfulController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should render page successfully" in {
         val sessionData = completeRepaymentDetailsAnswersSession
           .and(RepaymentClaimDetailsAnswers.setClaimingConnectedCharities(true))
@@ -86,6 +107,27 @@ class ConnectedCharitiesScheduleUploadSuccessfulControllerSpec extends Controlle
     }
 
     "onSubmit" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.ConnectedCharitiesScheduleUploadSuccessfulController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should redirect to the next page" in {
         val sessionData              = completeRepaymentDetailsAnswersSession
           .and(RepaymentClaimDetailsAnswers.setClaimingConnectedCharities(true))

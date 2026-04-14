@@ -22,7 +22,7 @@ import controllers.ControllerSpec
 import views.html.ReasonNotRegisteredWithRegulatorView
 import play.api.Application
 import forms.RadioListFormProvider
-import models.{OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator}
+import models.{OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator, SessionData}
 import play.api.data.Form
 import models.Mode.*
 import models.NameOfCharityRegulator.{EnglandAndWales, None, NorthernIreland, Scottish}
@@ -36,6 +36,27 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
 
   "ReasonNotRegisteredWithRegulatorController" - {
     "onPageLoad" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should render the page correctly if name of charity is None" in {
         val sessionData                =
           completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setNameOfCharityRegulator(None))
@@ -203,6 +224,27 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onSubmit(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should redirect to CharityExceptedController when the value is Excepted in NormalMode" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
