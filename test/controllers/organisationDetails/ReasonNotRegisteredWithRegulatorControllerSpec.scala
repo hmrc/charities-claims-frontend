@@ -235,7 +235,7 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode).url)
+            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 
