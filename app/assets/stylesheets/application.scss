@@ -23,3 +23,9 @@
 .custom-padding-header {
   padding: 0 !important;
 }
+
+@media print {
+  a[href]:after {
+    content: none !important;
+  }
+}
