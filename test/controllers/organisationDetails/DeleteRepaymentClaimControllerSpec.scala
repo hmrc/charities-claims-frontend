@@ -41,6 +41,27 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
 
   "DeleteRepaymentClaimController" - {
     "onPageLoad" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.DeleteRepaymentClaimController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should redirect to charity repayment dashboard when unsubmittedClaimId is not present" in {
 
         given application: Application =
@@ -89,6 +110,27 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.DeleteRepaymentClaimController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
       "should reload the page with errors when a required field is missing" in {
         given application: Application = applicationBuilder()
           .overrides(

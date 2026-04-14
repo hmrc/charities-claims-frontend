@@ -48,64 +48,72 @@ class DeleteRepaymentClaimController @Inject() (
   val form: Form[Boolean] = formProvider("deleteRepaymentClaim.error.required")
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    request.sessionData.unsubmittedClaimId match {
-      case Some(_) => Ok(view(form))
-      case None    => Redirect(appConfig.charityRepaymentDashboardUrl)
-    }
+    if request.sessionData.submissionReference.isDefined then
+      Redirect(controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad)
+    else
+      request.sessionData.unsubmittedClaimId match {
+        case Some(_) => Ok(view(form))
+        case None    => Redirect(appConfig.charityRepaymentDashboardUrl)
+      }
 
   }
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          (value, request.sessionData.unsubmittedClaimId) match {
-            case (false, _) =>
-              Future.successful(
-                Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
-              )
-
-            case (true, None) =>
-              Future.failed(
-                new RuntimeException(
-                  "No unsubmittedClaimId found in session when attempting to delete repayment claim"
+    if request.sessionData.submissionReference.isDefined then
+      Future.successful(Redirect(controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad))
+    else {
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+          value =>
+            (value, request.sessionData.unsubmittedClaimId) match {
+              case (false, _) =>
+                Future.successful(
+                  Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
                 )
-              )
 
-            case (true, Some(claimId)) =>
-              (for {
-                _ <- saveService.save(SessionData(charitiesReference = request.sessionData.charitiesReference))
-
-                deleted <- claimsConnector.deleteClaim(claimId)
-
-                result <- if (deleted) {
-                            Future.successful(
-                              Redirect(appConfig.charityRepaymentDashboardUrl)
-                            )
-                          } else {
-                            logger
-                              .error(s"Failed to delete claim with claimId: $claimId - backend returned success: false")
-                            Future.failed(
-                              new RuntimeException(
-                                s"Failed to delete claim with claimId: $claimId - backend returned success: false"
-                              )
-                            )
-                          }
-
-              } yield result).recoverWith { case ex =>
-                logger.error(s"Failed to delete claim with claimId: $claimId failed to reset session data", ex)
+              case (true, None) =>
                 Future.failed(
                   new RuntimeException(
-                    s"Failed to delete claim with claimId: $claimId failed to reset session data",
-                    ex
+                    "No unsubmittedClaimId found in session when attempting to delete repayment claim"
                   )
                 )
-              }
-          }
-      )
+
+              case (true, Some(claimId)) =>
+                (for {
+                  _ <- saveService.save(SessionData(charitiesReference = request.sessionData.charitiesReference))
+
+                  deleted <- claimsConnector.deleteClaim(claimId)
+
+                  result <- if (deleted) {
+                              Future.successful(
+                                Redirect(appConfig.charityRepaymentDashboardUrl)
+                              )
+                            } else {
+                              logger
+                                .error(
+                                  s"Failed to delete claim with claimId: $claimId - backend returned success: false"
+                                )
+                              Future.failed(
+                                new RuntimeException(
+                                  s"Failed to delete claim with claimId: $claimId - backend returned success: false"
+                                )
+                              )
+                            }
+
+                } yield result).recoverWith { case ex =>
+                  logger.error(s"Failed to delete claim with claimId: $claimId failed to reset session data", ex)
+                  Future.failed(
+                    new RuntimeException(
+                      s"Failed to delete claim with claimId: $claimId failed to reset session data",
+                      ex
+                    )
+                  )
+                }
+            }
+        )
+    }
   }
 }
