@@ -22,6 +22,7 @@ import play.api.libs.json.Json
 import scala.util.Try
 import utils.Required.required
 import models.SessionData
+import models.SessionData.isCASCCharityReference
 
 final case class OrganisationDetailsAnswers(
   nameOfCharityRegulator: Option[NameOfCharityRegulator] = None,
@@ -42,21 +43,22 @@ final case class OrganisationDetailsAnswers(
   authorisedOfficialDetails: Option[AuthorisedOfficialDetails] = None
 ) {
   def missingFields: List[String] =
+    given sessionData: SessionData = sessionData
     List(
-      nameOfCharityRegulator.isEmpty                            -> "nameOfCharityRegulator.missingDetails",
+      (nameOfCharityRegulator.isEmpty && !isCASCCharityReference)               -> "nameOfCharityRegulator.missingDetails",
       (nameOfCharityRegulator.isDefined && nameOfCharityRegulator.contains(
         NameOfCharityRegulator.None
-      ) && reasonNotRegisteredWithRegulator.isEmpty)            -> "reasonNotRegisteredWithRegulator.missingDetails",
+      ) && reasonNotRegisteredWithRegulator.isEmpty && !isCASCCharityReference) -> "reasonNotRegisteredWithRegulator.missingDetails",
       (nameOfCharityRegulator.isDefined &&
         (nameOfCharityRegulator.contains(NameOfCharityRegulator.EnglandAndWales)
           || nameOfCharityRegulator.contains(NameOfCharityRegulator.Scottish)
           || nameOfCharityRegulator.contains(
             NameOfCharityRegulator.NorthernIreland
-          )) && charityRegistrationNumber.isEmpty)              -> "charityRegulatorNumber.missingDetails",
-      areYouACorporateTrustee.isEmpty                           -> "corporateTrusteeClaim.missingDetails",
+          )) && charityRegistrationNumber.isEmpty && !isCASCCharityReference)   -> "charityRegulatorNumber.missingDetails",
+      areYouACorporateTrustee.isEmpty                                           -> "corporateTrusteeClaim.missingDetails",
       (areYouACorporateTrustee.contains(
         true
-      ) && doYouHaveCorporateTrusteeUKAddress.isEmpty)          -> "corporateTrusteeAddress.missingDetails",
+      ) && doYouHaveCorporateTrusteeUKAddress.isEmpty)                          -> "corporateTrusteeAddress.missingDetails",
       (
         areYouACorporateTrustee.contains(true)
           && doYouHaveCorporateTrusteeUKAddress.contains(true)
@@ -65,7 +67,7 @@ final case class OrganisationDetailsAnswers(
               || nameOfCorporateTrustee.isEmpty
               || corporateTrusteeDaytimeTelephoneNumber.isEmpty
           )
-      )                                                         -> "corporateTrusteeDetails.missingDetails",
+      )                                                                         -> "corporateTrusteeDetails.missingDetails",
       (
         areYouACorporateTrustee.contains(true)
           && doYouHaveCorporateTrusteeUKAddress.contains(false)
@@ -73,16 +75,16 @@ final case class OrganisationDetailsAnswers(
             corporateTrusteeDaytimeTelephoneNumber.isEmpty
               || nameOfCorporateTrustee.isEmpty
           )
-      )                                                         -> "corporateTrusteeDetails.missingDetails",
+      )                                                                         -> "corporateTrusteeDetails.missingDetails",
       (areYouACorporateTrustee.contains(
         false
-      ) && doYouHaveAuthorisedOfficialTrusteeUKAddress.isEmpty) -> "authorisedOfficialAddress.missingDetails",
+      ) && doYouHaveAuthorisedOfficialTrusteeUKAddress.isEmpty)                 -> "authorisedOfficialAddress.missingDetails",
       (areYouACorporateTrustee.contains(false)
         && doYouHaveAuthorisedOfficialTrusteeUKAddress.contains(true)
         && (authorisedOfficialTrusteeFirstName.isEmpty
           || authorisedOfficialTrusteeFirstName.isEmpty
           || authorisedOfficialTrusteeDaytimeTelephoneNumber.isEmpty
-          || authorisedOfficialTrusteePostcode.isEmpty))        -> "authorisedOfficialDetails.missingDetails",
+          || authorisedOfficialTrusteePostcode.isEmpty))                        -> "authorisedOfficialDetails.missingDetails",
       (
         areYouACorporateTrustee.contains(false)
           && doYouHaveAuthorisedOfficialTrusteeUKAddress.contains(false)
@@ -91,7 +93,7 @@ final case class OrganisationDetailsAnswers(
               || authorisedOfficialTrusteeLastName.isEmpty
               || authorisedOfficialTrusteeDaytimeTelephoneNumber.isEmpty
           )
-      )                                                         -> "authorisedOfficialDetails.missingDetails"
+      )                                                                         -> "authorisedOfficialDetails.missingDetails"
     ).collect { case (true, key) => key }
 
   def hasOrganisationDetailsCompleteAnswers: Boolean = missingFields.isEmpty

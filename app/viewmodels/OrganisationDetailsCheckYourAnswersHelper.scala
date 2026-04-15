@@ -21,13 +21,15 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.*
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import models.Mode.*
 import models.NameOfCharityRegulator.{EnglandAndWales, NorthernIreland, Scottish}
-import models.{NameOfCharityRegulator, OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator}
+import models.{NameOfCharityRegulator, OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator, SessionData}
+import models.SessionData.isCASCCharityReference
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 
 object OrganisationDetailsCheckYourAnswersHelper {
 
   def buildSummaryList(answers: Option[OrganisationDetailsAnswers])(implicit messages: Messages): SummaryList = {
-    val rows = answers match {
+    given sessionData: SessionData = sessionData
+    val rows                       = answers match {
       case Some(buildList) =>
         Seq(
           buildList.nameOfCharityRegulator match {
@@ -76,15 +78,17 @@ object OrganisationDetailsCheckYourAnswersHelper {
                 )
               )
             case _                                 =>
-              Some(
-                missingDataRow(
-                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
-                  controllers.organisationDetails.routes.NameOfCharityRegulatorController
-                    .onPageLoad(CheckMode)
-                    .url,
-                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
+              if isCASCCharityReference then
+                Some(
+                  missingDataRow(
+                    messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
+                    controllers.organisationDetails.routes.NameOfCharityRegulatorController
+                      .onPageLoad(CheckMode)
+                      .url,
+                    messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
+                  )
                 )
-              )
+              else None
           },
           buildList.nameOfCharityRegulator match {
             case Some(NameOfCharityRegulator.None)                              =>
@@ -405,13 +409,23 @@ object OrganisationDetailsCheckYourAnswersHelper {
 
       case None => // first screen (charity regulator name) and are you corporate trustee are independent screens
         Seq(
-          missingDataRow(
-            messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
-            controllers.organisationDetails.routes.NameOfCharityRegulatorController
-              .onPageLoad(CheckMode)
-              .url,
-            messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
-          ),
+          if isCASCCharityReference then
+            missingDataRow(
+              messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label"),
+              controllers.organisationDetails.routes.CorporateTrusteeClaimController
+                .onPageLoad(CheckMode)
+                .url,
+              messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.change.hidden")
+            )
+          else
+            missingDataRow(
+              messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
+              controllers.organisationDetails.routes.NameOfCharityRegulatorController
+                .onPageLoad(CheckMode)
+                .url,
+              messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
+            )
+          ,
           missingDataRow(
             messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label"),
             controllers.organisationDetails.routes.CorporateTrusteeClaimController
