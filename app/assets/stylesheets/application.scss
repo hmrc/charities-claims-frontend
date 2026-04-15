@@ -30,9 +30,7 @@
   }
 }
 
-govuk-panel__body strong {
+.claim-reference-number {
   display: block;
-  overflow: auto;
-  word-wrap: break-all;
-  overflow-wrap: break-all;
+  word-break: break-all;
 }
