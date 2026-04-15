@@ -30,7 +30,7 @@ class ProblemUpdatingOtherIncomeScheduleQuarantineController @Inject() (
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] = actions
-    .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule) { implicit request =>
+    .authAndRefreshDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule) { implicit request =>
       Ok(
         view(
           messagesKeyPrefix = "problemUpdatingOtherIncomeScheduleQuarantine",
@@ -41,7 +41,7 @@ class ProblemUpdatingOtherIncomeScheduleQuarantineController @Inject() (
     }
 
   def onSubmit: Action[AnyContent] = actions
-    .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule) { implicit request =>
+    .authAndRefreshDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule) { implicit request =>
       Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad)
     }
 }
