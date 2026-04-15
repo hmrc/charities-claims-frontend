@@ -20,9 +20,9 @@ import models.*
 import org.jsoup.Jsoup
 import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.http.HeaderNames.LOCATION
-import play.api.http.Status.SEE_OTHER
+import play.api.http.Status.{NO_CONTENT, SEE_OTHER}
 import play.api.libs.json.Json
-import play.api.test.Helpers.{OK, await, defaultAwaitTimeout}
+import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, OK, await, defaultAwaitTimeout}
 import repositories.SessionCache
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
@@ -70,16 +70,37 @@ class ClaimDeclarationControllerISpec extends ComponentSpecHelper with TestDataU
       stubUpdateClaim(claimId)(OK, Json.toJson(updateResponse))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
       stubChrisSubmission(OK, Json.toJson(SubmitClaimResponse(success = true, "sub ref")))
+      stubTouchTtl(claimId)(NO_CONTENT)
 
       val result = post("/declaration")(Json.obj())
 
       result.status shouldBe SEE_OTHER
+      verifyPatch(s"/charities-claims-validation/ttl/$claimId")
 
       given HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId("mock-sessionid")))
       val cached          = await(sessionCache.get())
 
       cached.value.understandFalseStatements shouldBe Some(true)
       cached.value.submissionReference shouldBe Some("sub ref")
+    }
+
+    "should still succeed even if TTL call fails" in {
+      stubAuthRequest()
+      stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+      stubGetClaims(claimId)(OK, Json.toJson(claim))
+
+      val updateResponse = UpdateClaimResponse(true, claimId)
+      stubUpdateClaim(claimId)(OK, Json.toJson(updateResponse))
+
+      stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
+      stubChrisSubmission(OK, Json.toJson(SubmitClaimResponse(success = true, "sub ref")))
+
+      stubTouchTtl(claimId)(INTERNAL_SERVER_ERROR)
+
+      val result = post("/declaration")(Json.obj())
+
+      result.status shouldBe SEE_OTHER
+      verifyPatch(s"/charities-claims-validation/ttl/$claimId")
     }
   }
 }

@@ -18,7 +18,7 @@ package connectors
 
 import models.*
 import org.scalatest.wordspec.AnyWordSpec
-import play.api.http.Status.OK
+import play.api.http.Status.{NO_CONTENT, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{ComponentSpecHelper, TestDataUtils, WiremockMethods}
@@ -131,6 +131,17 @@ class ClaimsValidationConnectorISpec
       val result = connector.updateUploadStatus(claimId, reference, FileStatus.VALIDATING).futureValue
 
       result shouldBe true
+    }
+  }
+
+  "touchTtl" should {
+
+    "complete successfully when backend returns 204 NO_CONTENT" in {
+
+      when(PATCH, s"/charities-claims-validation/ttl/$claimId")
+        .thenReturn(NO_CONTENT, "")
+
+      connector.touchTtl(claimId).futureValue shouldBe ()
     }
   }
 }

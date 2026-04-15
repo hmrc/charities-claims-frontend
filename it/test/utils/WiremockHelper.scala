@@ -18,9 +18,9 @@ package utils
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.github.tomakehurst.wiremock.client.WireMock._
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration._
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration.*
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 
@@ -36,6 +36,15 @@ object WiremockHelper extends Eventually with IntegrationPatience {
       case None       => uriMapping
     }
     verify(postRequest)
+  }
+
+  def verifyPatch(uri: String, optBody: Option[String] = None): Unit = {
+    val uriMapping = patchRequestedFor(urlEqualTo(uri))
+    val patchRequest = optBody match {
+      case Some(body) => uriMapping.withRequestBody(equalTo(body))
+      case None => uriMapping
+    }
+    verify(patchRequest)
   }
 
   def verifyGet(uri: String): Unit             = verify(getRequestedFor(urlEqualTo(uri)))
@@ -84,7 +93,7 @@ object WiremockHelper extends Eventually with IntegrationPatience {
 
 trait WiremockHelper {
 
-  import WiremockHelper._
+  import WiremockHelper.*
 
   lazy val wmConfig: WireMockConfiguration = wireMockConfig().port(wiremockPort)
   lazy val wireMockServer: WireMockServer  = new WireMockServer(wmConfig)
@@ -97,4 +106,7 @@ trait WiremockHelper {
   def stopWiremock(): Unit = wireMockServer.stop()
 
   def resetWiremock(): Unit = WireMock.reset()
+
+  def verifyPatch(uri: String, optBody: Option[String] = None): Unit =
+    WiremockHelper.verifyPatch(uri, optBody)
 }

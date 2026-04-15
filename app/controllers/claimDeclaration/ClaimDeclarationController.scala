@@ -20,12 +20,12 @@ import com.google.inject.Inject
 import connectors.ClaimsConnector
 import controllers.BaseController
 import controllers.actions.Actions
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import views.html.ClaimDeclarationView
 import controllers.claimDeclaration.routes
 import models.SessionData
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionCache
-import services.{ClaimsService, SaveService}
+import services.{ClaimsService, SaveService, ValidationTtlService}
+import views.html.ClaimDeclarationView
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,6 +36,7 @@ class ClaimDeclarationController @Inject() (
   view: ClaimDeclarationView,
   claimsService: ClaimsService,
   claimsConnector: ClaimsConnector,
+  validationTtlService: ValidationTtlService,
   sessionCache: SessionCache
 )(using ec: ExecutionContext)
     extends BaseController {
@@ -59,6 +60,7 @@ class ClaimDeclarationController @Inject() (
     actions
       .authAndGetDataWithGuard(SessionData.isClaimDetailsComplete)
       .async { implicit request =>
+        val claimId = request.sessionData.unsubmittedClaimId.getOrElse("")
         // read and understood the declaration
         for {
           _                  <- saveService
@@ -68,7 +70,7 @@ class ClaimDeclarationController @Inject() (
           _                  <- claimsService.save
           updatedClaim       <- sessionCache.get()
           submissionResponse <- claimsConnector.submitClaim(
-                                  request.sessionData.unsubmittedClaimId.get,
+                                  claimId,
                                   updatedClaim.get.lastUpdatedReference.get,
                                   request.request.lang.code
                                 )
@@ -76,6 +78,10 @@ class ClaimDeclarationController @Inject() (
                                   .save(
                                     updatedClaim.get.copy(submissionReference = Some(submissionResponse.submissionReference))
                                   )
-        } yield Redirect(routes.ClaimCompleteController.onPageLoad)
+        } yield {
+          // do not block submission on TTL update
+          validationTtlService.touchValidationTtl(claimId)
+          Redirect(routes.ClaimCompleteController.onPageLoad)
+        }
       }
 }

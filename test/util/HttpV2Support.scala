@@ -90,6 +90,12 @@ trait HttpV2Support { this: MockFactory & Matchers =>
     mockRequestBuilderExecuteWithoutException(response).once()
   }
 
+  def mockHttpPatchSuccess[A](url: String, hasHeaders: Boolean = false)(response: A) = {
+    mockHttpPatch(URL(url)).anyNumberOfTimes()
+    if hasHeaders then mockRequestBuilderTransform().atLeastOnce()
+    mockRequestBuilderExecuteWithoutException(response).anyNumberOfTimes()
+  }
+
   def mockHttpDeleteSuccess[A](url: String, hasHeaders: Boolean = false)(response: A) = {
     mockHttpDelete(URL(url)).atLeastOnce()
     if hasHeaders then mockRequestBuilderTransform().atLeastOnce()
@@ -162,6 +168,12 @@ trait HttpV2Support { this: MockFactory & Matchers =>
   def mockHttpDelete[A](url: URL) =
     (mockHttp
       .delete(_: URL)(using _: HeaderCarrier))
+      .expects(url, *)
+      .returning(mockRequestBuilder)
+
+  def mockHttpPatch[A](url: URL) =
+    (mockHttp
+      .patch(_: URL)(using _: HeaderCarrier))
       .expects(url, *)
       .returning(mockRequestBuilder)
 

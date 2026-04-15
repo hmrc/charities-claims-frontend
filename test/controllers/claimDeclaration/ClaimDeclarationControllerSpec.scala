@@ -16,32 +16,35 @@
 
 package controllers.claimDeclaration
 
+import connectors.ClaimsConnector
 import controllers.ControllerSpec
 import models.*
+import play.api.Application
+import play.api.inject.bind
+import play.api.inject.guice.GuiceableModule
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.Application
-import play.api.inject.guice.GuiceableModule
-import views.html.ClaimDeclarationView
-import services.{ClaimsService, SaveService}
-import connectors.ClaimsConnector
 import repositories.SessionCache
-import play.api.inject.bind
+import services.{ClaimsService, SaveService, ValidationTtlService}
 import uk.gov.hmrc.http.HeaderCarrier
+import views.html.ClaimDeclarationView
+
 import scala.concurrent.Future
 
 class ClaimDeclarationControllerSpec extends ControllerSpec {
 
-  val mockClaimsConnector: ClaimsConnector = mock[ClaimsConnector]
-  val mockClaimsService: ClaimsService     = mock[ClaimsService]
-  val mockSaveService: SaveService         = mock[SaveService]
-  val mockSessionCache                     = mock[SessionCache]
+  val mockClaimsConnector: ClaimsConnector           = mock[ClaimsConnector]
+  val mockClaimsService: ClaimsService               = mock[ClaimsService]
+  val mockSaveService: SaveService                   = mock[SaveService]
+  val mockSessionCache                               = mock[SessionCache]
+  val mockValidationTtlService: ValidationTtlService = mock[ValidationTtlService]
 
   override protected val additionalBindings: List[GuiceableModule] = List(
     bind[ClaimsConnector].toInstance(mockClaimsConnector),
     bind[ClaimsService].toInstance(mockClaimsService),
     bind[SaveService].toInstance(mockSaveService),
-    bind[SessionCache].toInstance(mockSessionCache)
+    bind[SessionCache].toInstance(mockSessionCache),
+    bind[ValidationTtlService].toInstance(mockValidationTtlService)
   )
 
   val testClaimId = "claim-123"
@@ -345,6 +348,12 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
           .submitClaim(_: String, _: String, _: String)(using _: HeaderCarrier))
           .expects(testClaimId, testClaimId, "en", *)
           .returning(Future.successful(SubmitClaimResponse(true, "test sub ref")))
+
+        (mockValidationTtlService
+          .touchValidationTtl(_: String)(using _: HeaderCarrier))
+          .expects(testClaimId, *)
+          .returning(Future.unit)
+          .once()
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .build()

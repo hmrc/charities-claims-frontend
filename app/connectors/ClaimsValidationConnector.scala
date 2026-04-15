@@ -20,9 +20,10 @@ import com.google.inject.ImplementedBy
 import connectors.HttpResponseOps.*
 import models.*
 import org.apache.pekko.actor.ActorSystem
-import play.api.{Configuration, Logging}
+import play.api.http.Status.NO_CONTENT
 import play.api.libs.json.{JsNull, Json, Reads, Writes}
 import play.api.libs.ws.JsonBodyWritables.*
+import play.api.{Configuration, Logging}
 import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -54,6 +55,7 @@ trait ClaimsValidationConnector {
     hc: HeaderCarrier
   ): Future[Boolean]
 
+  def touchTtl(claimId: String)(using hc: HeaderCarrier): Future[Unit]
 }
 
 class ClaimsValidationConnectorImpl @Inject() (
@@ -82,6 +84,17 @@ class ClaimsValidationConnectorImpl @Inject() (
       url = s"$baseUrl$contextPath/$claimId/create-upload-tracking",
       payload = Some(request)
     ).map(_.success)
+
+  def touchTtl(claimId: String)(using hc: HeaderCarrier): Future[Unit] = {
+    val url = new URI(s"$baseUrl$contextPath/ttl/$claimId").toURL
+
+    retry(retryIntervals*)(shouldRetry, retryReason) {
+      http.patch(url).execute[HttpResponse]
+    }.flatMap { response =>
+      if response.status == NO_CONTENT then Future.unit
+      else Future.failed(Exception(s"Touch TTL failed: ${response.status} ${response.body}"))
+    }
+  }
 
   final def getUploadSummary(claimId: String)(using hc: HeaderCarrier): Future[GetUploadSummaryResponse] =
     callValidationBackend[Nothing, GetUploadSummaryResponse](

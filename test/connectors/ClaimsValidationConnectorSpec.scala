@@ -117,6 +117,11 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
       Json.toJson(UpdateUploadStatusRequest(FileStatus.VERIFYING))
     )(response)
 
+  def givenTouchTtlEndpointReturns(response: HttpResponse): CallHandler[Future[HttpResponse]] =
+    mockHttpPatchSuccess(
+      "http://example.com:1234/charities-claims-validation/ttl/123"
+    )(response)
+
   given HeaderCarrier = HeaderCarrier()
 
   "ClaimsValidationConnector" - {
@@ -295,6 +300,32 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         await(
           connector.updateUploadStatus("123", FileUploadReference("file-upload-reference-123"), FileStatus.VERIFYING)
         ) should be(true)
+      }
+    }
+
+    "touchTtl" - {
+
+      "should succeed when service returns 204 NO_CONTENT" in {
+        givenTouchTtlEndpointReturns(HttpResponse(NO_CONTENT, "")).once()
+
+        await(connector.touchTtl("123")) shouldBe ()
+      }
+
+      "should fail when response is not NO_CONTENT" in {
+        givenTouchTtlEndpointReturns(HttpResponse(500, "")).anyNumberOfTimes()
+
+        val ex = intercept[Exception] {
+          await(connector.touchTtl("123"))
+        }
+
+        ex.getMessage should include("Touch TTL failed")
+      }
+
+      "should retry and succeed when a subsequent attempt returns 204" in {
+        givenTouchTtlEndpointReturns(HttpResponse(500, "")).once()
+        givenTouchTtlEndpointReturns(HttpResponse(NO_CONTENT, "")).once()
+
+        await(connector.touchTtl("123")) shouldBe ()
       }
     }
   }

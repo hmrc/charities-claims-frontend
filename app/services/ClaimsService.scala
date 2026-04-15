@@ -18,13 +18,12 @@ package services
 
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.ClaimsConnector
+import models.{RepaymentClaimDetailsAnswers, SessionData}
+import play.api.Logging
+import repositories.SessionCache
 import uk.gov.hmrc.http.HeaderCarrier
-import models.SessionData
 
 import scala.concurrent.{ExecutionContext, Future}
-import models.RepaymentClaimDetailsAnswers
-import repositories.SessionCache
-import play.api.Logging
 
 @ImplementedBy(classOf[ClaimsServiceImpl])
 trait ClaimsService {
@@ -35,7 +34,8 @@ trait ClaimsService {
 
 class ClaimsServiceImpl @Inject() (
   sessionCache: SessionCache,
-  connector: ClaimsConnector
+  connector: ClaimsConnector,
+  validationTtlService: ValidationTtlService
 )(using ec: ExecutionContext)
     extends ClaimsService
     with Logging {
@@ -78,6 +78,7 @@ class ClaimsServiceImpl @Inject() (
                                         lastUpdatedReference = Some(response.lastUpdatedReference)
                                       )
                                     )
+              _                   = validationTtlService.touchValidationTtl(claimId)
             yield ()
         }
     }

@@ -45,4 +45,6 @@ class FakeClaimsValidationConnector(
     hc: HeaderCarrier
   ): Future[Boolean] = ???
 
+  override def touchTtl(claimId: String)(using hc: HeaderCarrier): Future[Unit] = ???
+
 }

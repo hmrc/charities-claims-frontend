@@ -46,4 +46,9 @@ trait ClaimsValidationStub extends WiremockMethods {
     when(PUT, uri = s"/charities-claims-validation/$claimId/upload-results/$reference")
       .thenReturn(status, body)
   }
+
+  def stubTouchTtl(claimId: String)(status: Int, body: JsValue = Json.obj()): StubMapping = {
+    when(PATCH, uri = s"/charities-claims-validation/ttl/:claimId$claimId")
+      .thenReturn(status, body)
+  }
 }
