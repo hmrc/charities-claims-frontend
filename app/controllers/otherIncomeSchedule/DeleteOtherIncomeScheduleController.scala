@@ -39,10 +39,10 @@ class DeleteOtherIncomeScheduleController @Inject() (
 
   val form: Form[Boolean] = formProvider("deleteOtherIncomeSchedule.error.required")
 
-  def onPageLoad: Action[AnyContent] = actions.authAndRefreshDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule) {
-    implicit request =>
+  def onPageLoad: Action[AnyContent] =
+    actions.authAndRefreshDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule) { implicit request =>
       Ok(view(form))
-  }
+    }
 
   def onSubmit: Action[AnyContent] =
     actions

@@ -145,7 +145,7 @@ object ClaimsTaskListController {
 
   private def buildRepaymentClaimDetailsTask(using request: DataRequest[?], messages: Messages): TaskItem = {
     val isComplete = SessionData.isRepaymentClaimDetailsComplete(using request.sessionData)
-    val status     = if (isComplete) TaskStatus.Completed else TaskStatus.Incomplete
+    val status     = if (isComplete) TaskStatus.Completed else TaskStatus.NotStarted
     val href       = if (isComplete) {
       repaymentClaimDetails.routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
     } else {
@@ -162,7 +162,7 @@ object ClaimsTaskListController {
   private def buildOrganisationDetailsTask(using request: DataRequest[?], messages: Messages): TaskItem = {
     val isComplete = request.sessionData.organisationDetailsAnswers
       .exists(_.hasOrganisationDetailsCompleteAnswers)
-    val status     = if (isComplete) TaskStatus.Completed else TaskStatus.Incomplete
+    val status     = if (isComplete) TaskStatus.Completed else TaskStatus.NotStarted
     val href       = if (isComplete) {
       organisationDetails.routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
     } else {
