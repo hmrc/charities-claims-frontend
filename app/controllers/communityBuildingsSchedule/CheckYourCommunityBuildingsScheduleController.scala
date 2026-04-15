@@ -45,7 +45,7 @@ class CheckYourCommunityBuildingsScheduleController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
       .async { implicit request =>
         claimsValidationService.getCommunityBuildingsScheduleData
           .map { communityBuildingsScheduleData =>
@@ -71,7 +71,7 @@ class CheckYourCommunityBuildingsScheduleController @Inject() (
 
   val onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
       .async { implicit request =>
         claimsValidationService.getCommunityBuildingsScheduleData
           .flatMap { communityBuildingsScheduleData =>

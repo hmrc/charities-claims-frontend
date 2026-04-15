@@ -45,7 +45,7 @@ class CheckYourGiftAidScheduleController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
       .async { implicit request =>
         claimsValidationService.getGiftAidScheduleData
           .map { giftAidScheduleData =>
@@ -71,7 +71,7 @@ class CheckYourGiftAidScheduleController @Inject() (
 
   val onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
       .async { implicit request =>
         claimsValidationService.getGiftAidScheduleData
           .flatMap { giftAidScheduleData =>
