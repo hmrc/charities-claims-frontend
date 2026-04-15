@@ -40,13 +40,13 @@ class DeleteCommunityBuildingsScheduleController @Inject() (
   val form: Form[Boolean] = formProvider("deleteCommunityBuildingsSchedule.error.required")
 
   def onPageLoad: Action[AnyContent] = actions
-    .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule) { implicit request =>
+    .authAndRefreshDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule) { implicit request =>
       Ok(view(form))
     }
 
   def onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
       .async { implicit request =>
         form
           .bindFromRequest()

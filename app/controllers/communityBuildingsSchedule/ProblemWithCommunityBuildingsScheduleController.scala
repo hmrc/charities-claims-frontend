@@ -41,7 +41,7 @@ class ProblemWithCommunityBuildingsScheduleController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
       .async { implicit request =>
         val claimId = request.sessionData.unsubmittedClaimId.get
 
@@ -82,7 +82,7 @@ class ProblemWithCommunityBuildingsScheduleController @Inject() (
 
   val onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
       .async { implicit request =>
         claimsValidationService.deleteCommunityBuildingsSchedule
           .map(_ => Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))

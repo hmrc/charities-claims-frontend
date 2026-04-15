@@ -41,7 +41,7 @@ class ProblemWithOtherIncomeScheduleController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
         val claimId = request.sessionData.unsubmittedClaimId.get
 
@@ -81,7 +81,7 @@ class ProblemWithOtherIncomeScheduleController @Inject() (
 
   val onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
         claimsValidationService.deleteOtherIncomeSchedule
           .map(_ => Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))

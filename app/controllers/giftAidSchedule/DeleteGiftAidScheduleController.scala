@@ -40,13 +40,13 @@ class DeleteGiftAidScheduleController @Inject() (
   val form: Form[Boolean] = formProvider("deleteGiftAidSchedule.error.required")
 
   def onPageLoad: Action[AnyContent] = actions
-    .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule) { implicit request =>
+    .authAndRefreshDataWithGuard(SessionData.shouldUploadGiftAidSchedule) { implicit request =>
       Ok(view(form))
     }
 
   def onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
       .async { implicit request =>
         form
           .bindFromRequest()

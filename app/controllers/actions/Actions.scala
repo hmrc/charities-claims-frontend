@@ -43,4 +43,10 @@ class Actions @Inject() (
       .andThen(identify)
       .andThen(getData)
       .andThen(guard(predicate))
+
+  def authAndRefreshDataWithGuard(predicate: SessionData ?=> Boolean): ActionBuilder[DataRequest, AnyContent] =
+    actionBuilder
+      .andThen(identify)
+      .andThen(refreshData)
+      .andThen(guard(predicate))
 }
