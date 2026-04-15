@@ -30,7 +30,7 @@ class ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController @Inject() 
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] = actions
-    .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule) { implicit request =>
+    .authAndRefreshDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule) { implicit request =>
       Ok(
         view(
           messagesKeyPrefix = "problemUpdatingCommunityBuildingsScheduleUnknownError",
@@ -41,7 +41,7 @@ class ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController @Inject() 
     }
 
   def onSubmit: Action[AnyContent] = actions
-    .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule) { implicit request =>
+    .authAndRefreshDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule) { implicit request =>
       Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad)
     }
 

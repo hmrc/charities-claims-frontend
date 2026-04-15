@@ -37,7 +37,7 @@ class AboutOtherIncomeScheduleController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
         if RepaymentClaimDetailsAnswers.getClaimingTaxDeducted.contains(true) then {
           if request.sessionData.otherIncomeScheduleCompleted
@@ -53,7 +53,7 @@ class AboutOtherIncomeScheduleController @Inject() (
 
   def onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
         Future.successful(Redirect(routes.UploadOtherIncomeScheduleController.onPageLoad))
       }

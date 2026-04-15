@@ -44,7 +44,7 @@ class AdjustmentToGiftAidOverclaimedController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(
+      .authAndRefreshDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
           && RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
       )
@@ -58,7 +58,7 @@ class AdjustmentToGiftAidOverclaimedController @Inject() (
 
   val onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(
+      .authAndRefreshDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
           && RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
       )

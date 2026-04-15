@@ -42,13 +42,13 @@ class UpdateCommunityBuildingsScheduleController @Inject() (
   val form: Form[Boolean] = formProvider("updateCommunityBuildingsSchedule.error.required")
 
   def onPageLoad: Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule) { implicit request =>
+    actions.authAndRefreshDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule) { implicit request =>
       Ok(view(form))
     }
 
   def onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
       .async { implicit request =>
         form
           .bindFromRequest()

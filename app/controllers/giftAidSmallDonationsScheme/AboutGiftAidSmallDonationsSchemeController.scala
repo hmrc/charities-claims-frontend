@@ -33,7 +33,7 @@ class AboutGiftAidSmallDonationsSchemeController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete)
+      .authAndRefreshDataWithGuard(SessionData.isRepaymentClaimDetailsComplete)
       .async { implicit request =>
         if RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(
             true
@@ -47,7 +47,7 @@ class AboutGiftAidSmallDonationsSchemeController @Inject() (
 
   val onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete)
+      .authAndRefreshDataWithGuard(SessionData.isRepaymentClaimDetailsComplete)
       .async { implicit request =>
         Future.successful(
           if (RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true))

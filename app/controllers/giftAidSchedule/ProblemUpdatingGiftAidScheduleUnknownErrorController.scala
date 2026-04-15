@@ -30,7 +30,7 @@ class ProblemUpdatingGiftAidScheduleUnknownErrorController @Inject() (
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] = actions
-    .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule) { implicit request =>
+    .authAndRefreshDataWithGuard(SessionData.shouldUploadGiftAidSchedule) { implicit request =>
       Ok(
         view(
           messagesKeyPrefix = "problemUpdatingGiftAidScheduleUnknownError",
@@ -41,7 +41,7 @@ class ProblemUpdatingGiftAidScheduleUnknownErrorController @Inject() (
     }
 
   def onSubmit: Action[AnyContent] = actions
-    .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule) { implicit request =>
+    .authAndRefreshDataWithGuard(SessionData.shouldUploadGiftAidSchedule) { implicit request =>
       Redirect(routes.UploadGiftAidScheduleController.onPageLoad)
     }
 }

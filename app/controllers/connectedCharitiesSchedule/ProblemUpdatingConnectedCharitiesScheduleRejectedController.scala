@@ -30,7 +30,7 @@ class ProblemUpdatingConnectedCharitiesScheduleRejectedController @Inject() (
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] = actions
-    .authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule) { implicit request =>
+    .authAndRefreshDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule) { implicit request =>
       Ok(
         view(
           messagesKeyPrefix = "problemUpdatingConnectedCharitiesScheduleRejected",
@@ -41,7 +41,7 @@ class ProblemUpdatingConnectedCharitiesScheduleRejectedController @Inject() (
     }
 
   def onSubmit: Action[AnyContent] = actions
-    .authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule) { implicit request =>
+    .authAndRefreshDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule) { implicit request =>
       Redirect(routes.UploadConnectedCharitiesScheduleController.onPageLoad)
     }
 }

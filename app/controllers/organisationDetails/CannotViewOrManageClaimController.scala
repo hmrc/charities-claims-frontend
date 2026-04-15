@@ -31,6 +31,8 @@ class CannotViewOrManageClaimController @Inject() (
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    Ok(view(appConfig.makeCharityRepaymentClaimUrl))
+    if request.sessionData.submissionReference.isDefined then
+      Redirect(controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad)
+    else Ok(view(appConfig.makeCharityRepaymentClaimUrl))
   }
 }

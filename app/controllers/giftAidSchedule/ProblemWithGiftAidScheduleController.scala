@@ -41,7 +41,7 @@ class ProblemWithGiftAidScheduleController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
       .async { implicit request =>
         val claimId = request.sessionData.unsubmittedClaimId.get
 
@@ -81,7 +81,7 @@ class ProblemWithGiftAidScheduleController @Inject() (
 
   val onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
       .async { implicit request =>
         claimsValidationService.deleteGiftAidSchedule
           .map(_ => Redirect(routes.UploadGiftAidScheduleController.onPageLoad))

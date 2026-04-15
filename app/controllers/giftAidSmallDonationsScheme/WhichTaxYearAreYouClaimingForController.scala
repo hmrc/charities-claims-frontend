@@ -31,7 +31,7 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
 
   def onPageLoad(index: Int): Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(
+      .authAndRefreshDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
           && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
       )
