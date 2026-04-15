@@ -183,7 +183,9 @@ object SessionData {
   def isClaimDetailsComplete(using session: SessionData): Boolean =
     session.unsubmittedClaimId.isDefined
       && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
-      && session.organisationDetailsAnswers.exists(_.hasOrganisationDetailsCompleteAnswers)
+      && session.organisationDetailsAnswers.exists(
+        _.hasOrganisationDetailsCompleteAnswers(isCASCCharityReference(using session))
+      )
       && (!shouldUploadConnectedCharitiesSchedule || session.connectedCharitiesScheduleCompleted)
       && (!shouldUploadOtherIncomeSchedule || session.otherIncomeScheduleCompleted)
       && (!shouldUploadCommunityBuildingsSchedule || session.communityBuildingsScheduleCompleted)

@@ -21,66 +21,65 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.*
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import models.Mode.*
 import models.NameOfCharityRegulator.{EnglandAndWales, NorthernIreland, Scottish}
-import models.{NameOfCharityRegulator, OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator, SessionData}
-import models.SessionData.isCASCCharityReference
+import models.{NameOfCharityRegulator, OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 
 object OrganisationDetailsCheckYourAnswersHelper {
 
-  def buildSummaryList(answers: Option[OrganisationDetailsAnswers])(implicit messages: Messages): SummaryList = {
-    given sessionData: SessionData = sessionData
-    val isCASCCharityRef           = SessionData.isCASCCharityReference
-    val rows                       = answers match {
+  def buildSummaryList(answers: Option[OrganisationDetailsAnswers], isCASCCharityRef: Boolean)(implicit
+    messages: Messages
+  ): SummaryList = {
+    val rows = answers match {
       case Some(buildList) =>
         Seq(
-          if isCASCCharityRef then None
-          else
-            buildList.nameOfCharityRegulator match {
-              case Some(EnglandAndWales)             =>
-                Some(
-                  summaryRow(
-                    messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
-                    messages("organisationDetailsCheckYourAnswers.charityRegulatorName.EnglandAndWales.label"),
-                    controllers.organisationDetails.routes.NameOfCharityRegulatorController
-                      .onPageLoad(CheckMode)
-                      .url,
-                    messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
-                  )
+          buildList.nameOfCharityRegulator match {
+            case Some(EnglandAndWales)             =>
+              Some(
+                summaryRow(
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.EnglandAndWales.label"),
+                  controllers.organisationDetails.routes.NameOfCharityRegulatorController
+                    .onPageLoad(CheckMode)
+                    .url,
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
                 )
-              case Some(NorthernIreland)             =>
-                Some(
-                  summaryRow(
-                    messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
-                    messages("organisationDetailsCheckYourAnswers.charityRegulatorName.NorthernIreland.label"),
-                    controllers.organisationDetails.routes.NameOfCharityRegulatorController
-                      .onPageLoad(CheckMode)
-                      .url,
-                    messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
-                  )
+              )
+            case Some(NorthernIreland)             =>
+              Some(
+                summaryRow(
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.NorthernIreland.label"),
+                  controllers.organisationDetails.routes.NameOfCharityRegulatorController
+                    .onPageLoad(CheckMode)
+                    .url,
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
                 )
-              case Some(Scottish)                    =>
-                Some(
-                  summaryRow(
-                    messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
-                    messages("organisationDetailsCheckYourAnswers.charityRegulatorName.Scottish.label"),
-                    controllers.organisationDetails.routes.NameOfCharityRegulatorController
-                      .onPageLoad(CheckMode)
-                      .url,
-                    messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
-                  )
+              )
+            case Some(Scottish)                    =>
+              Some(
+                summaryRow(
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.Scottish.label"),
+                  controllers.organisationDetails.routes.NameOfCharityRegulatorController
+                    .onPageLoad(CheckMode)
+                    .url,
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
                 )
-              case Some(NameOfCharityRegulator.None) =>
-                Some(
-                  summaryRow(
-                    messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
-                    messages("organisationDetailsCheckYourAnswers.charityRegulatorName.none.label"),
-                    controllers.organisationDetails.routes.NameOfCharityRegulatorController
-                      .onPageLoad(CheckMode)
-                      .url,
-                    messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
-                  )
+              )
+            case Some(NameOfCharityRegulator.None) =>
+              Some(
+                summaryRow(
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.none.label"),
+                  controllers.organisationDetails.routes.NameOfCharityRegulatorController
+                    .onPageLoad(CheckMode)
+                    .url,
+                  messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
                 )
-              case _                                 =>
+              )
+            case _                                 =>
+              if isCASCCharityRef then None
+              else
                 Some(
                   missingDataRow(
                     messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
@@ -90,97 +89,95 @@ object OrganisationDetailsCheckYourAnswersHelper {
                     messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
                   )
                 )
-            }
-          ,
-          if isCASCCharityRef then None
-          else
-            buildList.nameOfCharityRegulator match {
+          },
+          buildList.nameOfCharityRegulator match {
 
-              case Some(NameOfCharityRegulator.None)                              =>
-                buildList.reasonNotRegisteredWithRegulator match {
-                  case Some(ReasonNotRegisteredWithRegulator.Excepted)  =>
-                    Some(
-                      summaryRow(
-                        messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
-                        messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.excepted.label"),
-                        controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
-                          .onPageLoad(CheckMode)
-                          .url,
-                        messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
-                      )
+            case Some(NameOfCharityRegulator.None)                              =>
+              buildList.reasonNotRegisteredWithRegulator match {
+                case Some(ReasonNotRegisteredWithRegulator.Excepted)  =>
+                  Some(
+                    summaryRow(
+                      messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
+                      messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.excepted.label"),
+                      controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
+                        .onPageLoad(CheckMode)
+                        .url,
+                      messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
                     )
-                  case Some(ReasonNotRegisteredWithRegulator.Exempt)    =>
-                    Some(
-                      summaryRow(
-                        messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
-                        messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.exempt.label"),
-                        controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
-                          .onPageLoad(CheckMode)
-                          .url,
-                        messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
-                      )
+                  )
+                case Some(ReasonNotRegisteredWithRegulator.Exempt)    =>
+                  Some(
+                    summaryRow(
+                      messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
+                      messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.exempt.label"),
+                      controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
+                        .onPageLoad(CheckMode)
+                        .url,
+                      messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
                     )
-                  case Some(ReasonNotRegisteredWithRegulator.LowIncome) =>
-                    Some(
-                      summaryRow(
-                        messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
-                        messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.lowIncome.label"),
-                        controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
-                          .onPageLoad(CheckMode)
-                          .url,
-                        messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
-                      )
+                  )
+                case Some(ReasonNotRegisteredWithRegulator.LowIncome) =>
+                  Some(
+                    summaryRow(
+                      messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
+                      messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.lowIncome.label"),
+                      controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
+                        .onPageLoad(CheckMode)
+                        .url,
+                      messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
                     )
-                  case Some(ReasonNotRegisteredWithRegulator.Waiting)   =>
-                    Some(
-                      summaryRow(
-                        messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
-                        messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.waiting.label"),
-                        controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
-                          .onPageLoad(CheckMode)
-                          .url,
-                        messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
-                      )
+                  )
+                case Some(ReasonNotRegisteredWithRegulator.Waiting)   =>
+                  Some(
+                    summaryRow(
+                      messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
+                      messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.waiting.label"),
+                      controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
+                        .onPageLoad(CheckMode)
+                        .url,
+                      messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
                     )
-                  case _                                                =>
-                    Some(
-                      missingDataRow(
-                        messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
-                        controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
-                          .onPageLoad(CheckMode)
-                          .url,
-                        messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
-                      )
-                    )
-                }
-              case Some(NorthernIreland) | Some(Scottish) | Some(EnglandAndWales) =>
-                buildList.charityRegistrationNumber match {
-                  case Some(regNum) =>
-                    Some(
-                      summaryRow(
-                        messages("organisationDetailsCheckYourAnswers.charityRegulatorNumber.label"),
-                        regNum,
-                        controllers.organisationDetails.routes.CharityRegulatorNumberController
-                          .onPageLoad(CheckMode)
-                          .url,
-                        messages("organisationDetailsCheckYourAnswers.charityRegulatorNumber.label")
-                      )
-                    )
-                  case _            =>
+                  )
+                case _                                                =>
+                  if isCASCCharityRef then None
+                  else
                     Some(
                       missingDataRow(
-                        messages("organisationDetailsCheckYourAnswers.charityRegulatorNumber.label"),
-                        controllers.organisationDetails.routes.CharityRegulatorNumberController
+                        messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label"),
+                        controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
                           .onPageLoad(CheckMode)
                           .url,
-                        messages("organisationDetailsCheckYourAnswers.charityRegulatorNumber.label")
+                        messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.label")
                       )
                     )
-                }
-              case _                                                              =>
-                None
-            }
-          ,
+              }
+            case Some(NorthernIreland) | Some(Scottish) | Some(EnglandAndWales) =>
+              buildList.charityRegistrationNumber match {
+                case Some(regNum) =>
+                  Some(
+                    summaryRow(
+                      messages("organisationDetailsCheckYourAnswers.charityRegulatorNumber.label"),
+                      regNum,
+                      controllers.organisationDetails.routes.CharityRegulatorNumberController
+                        .onPageLoad(CheckMode)
+                        .url,
+                      messages("organisationDetailsCheckYourAnswers.charityRegulatorNumber.label")
+                    )
+                  )
+                case _            =>
+                  Some(
+                    missingDataRow(
+                      messages("organisationDetailsCheckYourAnswers.charityRegulatorNumber.label"),
+                      controllers.organisationDetails.routes.CharityRegulatorNumberController
+                        .onPageLoad(CheckMode)
+                        .url,
+                      messages("organisationDetailsCheckYourAnswers.charityRegulatorNumber.label")
+                    )
+                  )
+              }
+            case _                                                              =>
+              None
+          },
           buildList.areYouACorporateTrustee match {
             case Some(value) =>
               // change screen for are you corporate trustee
@@ -414,8 +411,8 @@ object OrganisationDetailsCheckYourAnswersHelper {
         ).flatten
 
       case None => // first screen (charity regulator name) and are you corporate trustee are independent screens
-        Seq(
-          if isCASCCharityReference then {
+        if isCASCCharityRef then
+          Seq(
             missingDataRow(
               messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label"),
               controllers.organisationDetails.routes.CorporateTrusteeClaimController
@@ -423,23 +420,24 @@ object OrganisationDetailsCheckYourAnswersHelper {
                 .url,
               messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.change.hidden")
             )
-          } else
+          )
+        else
+          Seq(
             missingDataRow(
               messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
               controllers.organisationDetails.routes.NameOfCharityRegulatorController
                 .onPageLoad(CheckMode)
                 .url,
               messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
+            ),
+            missingDataRow(
+              messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label"),
+              controllers.organisationDetails.routes.CorporateTrusteeClaimController
+                .onPageLoad(CheckMode)
+                .url,
+              messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.change.hidden")
             )
-          ,
-          missingDataRow(
-            messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label"),
-            controllers.organisationDetails.routes.CorporateTrusteeClaimController
-              .onPageLoad(CheckMode)
-              .url,
-            messages("organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.change.hidden")
           )
-        )
 
     }
 

@@ -20,6 +20,7 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import controllers.actions.Actions
 import models.SessionData
+import models.SessionData.isCASCCharityReference
 import models.requests.DataRequest
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -160,10 +161,11 @@ object ClaimsTaskListController {
   }
 
   private def buildOrganisationDetailsTask(using request: DataRequest[?], messages: Messages): TaskItem = {
-    val isComplete = request.sessionData.organisationDetailsAnswers
-      .exists(_.hasOrganisationDetailsCompleteAnswers)
-    val status     = if (isComplete) TaskStatus.Completed else TaskStatus.Incomplete
-    val href       = if (isComplete) {
+    val isCASCCharityRef: Boolean = isCASCCharityReference(using request.sessionData)
+    val isComplete                = request.sessionData.organisationDetailsAnswers
+      .exists(_.hasOrganisationDetailsCompleteAnswers(isCASCCharityRef))
+    val status                    = if (isComplete) TaskStatus.Completed else TaskStatus.Incomplete
+    val href                      = if (isComplete) {
       organisationDetails.routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
     } else {
       organisationDetails.routes.AboutTheOrganisationController.onPageLoad
