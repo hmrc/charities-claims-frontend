@@ -56,7 +56,7 @@ case class ValidationErrorsPaginationResult(
 ) extends PaginationStatus
 
 case class CommunityBuildingsPaginationResult(
-  paginatedData: Seq[CommunityBuilding1],
+  paginatedData: Seq[CommunityBuilding],
   paginationViewModel: PaginationViewModel,
   totalRecords: Int,
   currentPage: Int,
@@ -167,7 +167,7 @@ object PaginationService {
   }
 
   def paginateCommunityBuildings(
-    allCommunityBuildings: Seq[CommunityBuilding1],
+    allCommunityBuildings: Seq[CommunityBuilding],
     currentPage: Int = 1,
     baseUrl: String
   ): CommunityBuildingsPaginationResult = {

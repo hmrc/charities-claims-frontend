@@ -21,13 +21,22 @@ import play.api.libs.json.Json
 import scala.util.Try
 import utils.Required.required
 import scala.util.Success
+import play.api.libs.json.Reads
+import play.api.libs.json.Writes
+import scala.util.Failure
 
 final case class GiftAidSmallDonationsSchemeDonationDetailsAnswers(
   adjustmentForGiftAidOverClaimed: Option[BigDecimal] = None,
-  claims: Option[Seq[GiftAidSmallDonationsSchemeClaim]] = None
+  claims: Option[Seq[Option[GiftAidSmallDonationsSchemeClaim]]] = None
 )
 
 object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
+
+  given [A](using f: Format[A]): Format[Seq[Option[A]]] = {
+    val reads  = Reads.seq(Reads.optionWithNull(using f))
+    val writes = Writes.seq(Writes.optionWithNull(using f))
+    Format(reads, writes)
+  }
 
   given Format[GiftAidSmallDonationsSchemeDonationDetailsAnswers] =
     Json.format[GiftAidSmallDonationsSchemeDonationDetailsAnswers]
@@ -52,24 +61,56 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
   ): GiftAidSmallDonationsSchemeDonationDetailsAnswers =
     GiftAidSmallDonationsSchemeDonationDetailsAnswers(
       adjustmentForGiftAidOverClaimed = Some(giftAidSmallDonationsSchemeScheduleData.adjustmentForGiftAidOverClaimed),
-      claims = Some(giftAidSmallDonationsSchemeScheduleData.claims)
+      claims = Some(giftAidSmallDonationsSchemeScheduleData.claims.map(Some(_)))
     )
 
   def toGiftAidSmallDonationsSchemeDonationDetails(
     answers: GiftAidSmallDonationsSchemeDonationDetailsAnswers
   ): Try[GiftAidSmallDonationsSchemeDonationDetails] =
-    Success(
-      GiftAidSmallDonationsSchemeDonationDetails(
-        adjustmentForGiftAidOverClaimed = answers.adjustmentForGiftAidOverClaimed.getOrElse(0),
-        claims = answers.claims.getOrElse(Seq.empty),
-        connectedCharitiesScheduleData = Seq.empty,
-        communityBuildingsScheduleData = Seq.empty
+    if answers.claims.isDefined
+      && (answers.claims.get.size > 3)
+    then Failure(new MissingRequiredFieldsException("GASDS claims cannot be more than 3"))
+    else
+      Success(
+        GiftAidSmallDonationsSchemeDonationDetails(
+          adjustmentForGiftAidOverClaimed = answers.adjustmentForGiftAidOverClaimed.getOrElse(0),
+          claims = answers.claims
+            .map(_.collect { case Some(claim) => claim })
+            .getOrElse(Seq.empty)
+        )
       )
-    )
 
   def setAdjustmentForGiftAidOverClaimed(value: BigDecimal)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(adjustmentForGiftAidOverClaimed = Some(v)))
 
   def getAdjustmentForGiftAidOverClaimed(using session: SessionData): Option[BigDecimal] =
     get(a => a.adjustmentForGiftAidOverClaimed)
+
+  def getClaims(using session: SessionData): Seq[Option[GiftAidSmallDonationsSchemeClaim]] =
+    get(a => a.claims).getOrElse(Seq.empty)
+
+  def getClaim(index: Int)(using session: SessionData): Option[GiftAidSmallDonationsSchemeClaim] =
+    get(a => a.claims.flatMap(_.lift(index)).flatten)
+
+  def setClaim(index: Int, value: GiftAidSmallDonationsSchemeClaim)(using session: SessionData): SessionData =
+    set(value)((a, v) =>
+      a.copy(claims =
+        a.claims
+          .map(_.updated(index, Some(v)))
+          .orElse(Some(Seq.fill(index)(None).:+(Some(v))))
+      )
+    )
+
+  def removeClaim(index: Int)(using session: SessionData): SessionData =
+    session.giftAidSmallDonationsSchemeDonationDetailsAnswers match {
+      case Some(existing) =>
+        val updatedClaims = existing.copy(claims = existing.claims.map(c => c.take(index) ++ c.drop(index + 1)))
+        session.copy(giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(updatedClaims))
+      case None           =>
+        session
+    }
+
+  def getClaimsSize(using session: SessionData): Int =
+    session.giftAidSmallDonationsSchemeDonationDetailsAnswers.flatMap(_.claims.map(_.size)).getOrElse(0)
+
 }
