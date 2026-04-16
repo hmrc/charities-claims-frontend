@@ -39,6 +39,7 @@ class AdjustmentToGiftAidOverclaimedController @Inject() (
   val form: Form[BigDecimal] = formProvider(
     errorRequired = "adjustmentToGiftAidOverclaimed.error.required",
     formatErrorMsg = "adjustmentToGiftAidOverclaimed.error.invalid",
+    maxAmountErrorMsg = "adjustmentToGiftAidOverclaimed.error.maxAmountError",
     allowZero = true
   )
 

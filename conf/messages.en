@@ -768,8 +768,10 @@ aboutGiftAidSmallDonationsScheme.paragraph.two = GASDS applies to cash donations
 adjustmentToGiftAidOverclaimed.caption = Provide GASDS donation details
 adjustmentToGiftAidOverclaimed.heading = What is the adjustment amount for Gift Aid previously overclaimed?
 adjustmentToGiftAidOverclaimed.title = What is the adjustment amount for Gift Aid previously overclaimed?
+adjustmentToGiftAidOverclaimed.hint = This can be up to 2 decimal places, for example £1000.00
 adjustmentToGiftAidOverclaimed.error.required = Enter an adjustment amount for Gift Aid previously overclaimed
 adjustmentToGiftAidOverclaimed.error.invalid = Enter an adjustment amount for Gift Aid previously overclaimed in the correct format
+adjustmentToGiftAidOverclaimed.error.maxAmountError = Adjustment amount must be £1,000,000,000,000 or less
 
 gasdsAdjustmentAmountCheckYourAnswers.caption = Provide GASDS donation details
 gasdsAdjustmentAmountCheckYourAnswers.heading = Check your GASDS adjustment amount

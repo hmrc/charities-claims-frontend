@@ -87,6 +87,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
             .apply(
               errorRequired = "adjustmentToGiftAidOverclaimed.error.required",
               formatErrorMsg = "adjustmentToGiftAidOverclaimed.error.invalid",
+              maxAmountErrorMsg = "adjustmentToGiftAidOverclaimed.error.maxAmountError",
               allowZero = true
             )
 
@@ -116,6 +117,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
             .apply(
               errorRequired = "adjustmentToGiftAidOverclaimed.error.required",
               formatErrorMsg = "adjustmentToGiftAidOverclaimed.error.invalid",
+              maxAmountErrorMsg = "adjustmentToGiftAidOverclaimed.error.maxAmountError",
               allowZero = true
             )
 
@@ -189,6 +191,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
             .apply(
               errorRequired = "adjustmentToGiftAidOverclaimed.error.required",
               formatErrorMsg = "adjustmentToGiftAidOverclaimed.error.invalid",
+              maxAmountErrorMsg = "adjustmentToGiftAidOverclaimed.error.maxAmountError",
               allowZero = true
             )
 
@@ -218,6 +221,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
             .apply(
               errorRequired = "adjustmentToGiftAidOverclaimed.error.required",
               formatErrorMsg = "adjustmentToGiftAidOverclaimed.error.invalid",
+              maxAmountErrorMsg = "adjustmentToGiftAidOverclaimed.error.maxAmountError",
               allowZero = true
             )
 

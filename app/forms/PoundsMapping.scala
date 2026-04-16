@@ -16,22 +16,22 @@
 
 package forms
 
-import play.api.data.*
-import scala.math.BigDecimal.RoundingMode
-import play.api.data.format.Formatter
-import play.api.data.format.Formats
-import scala.util.control.Exception
-import play.api.data.validation.Constraint
-import play.api.data.validation.Invalid
-import play.api.data.validation.Valid
 import cats.syntax.either.*
+import play.api.data.*
+import play.api.data.format.{Formats, Formatter}
+import play.api.data.validation.{Constraint, Invalid, Valid}
+
 import java.text.DecimalFormat
+import scala.math.BigDecimal.RoundingMode
+import scala.util.control.Exception
 
 object PoundsMapping extends Mappings {
+  private val MaxAmount = BigDecimal("1000000000000")
 
   def apply(
     errorRequired: String,
     formatErrorMsg: String,
+    maxAmountError: String,
     allowZero: Boolean = false,
     zeroErrorMsg: Option[String] = None
   ): Mapping[BigDecimal] =
@@ -40,17 +40,18 @@ object PoundsMapping extends Mappings {
       .verifying(
         Constraint[BigDecimal]((num: BigDecimal) =>
           num match {
-            case n if n < 0  => Invalid(formatErrorMsg)
-            case n if n == 0 => if allowZero then Valid else Invalid(zeroErrorMsg.getOrElse(formatErrorMsg))
-            case _           => Valid
+            case n if n < 0         => Invalid(formatErrorMsg)
+            case n if n == 0        => if allowZero then Valid else Invalid(zeroErrorMsg.getOrElse(formatErrorMsg))
+            case n if n > MaxAmount => Invalid(maxAmountError)
+            case _                  => Valid
           }
         )
       )
 
-  def moneyBigDecimalFormat(errorRequired: String, formatErrorMsg: String): Formatter[BigDecimal] =
-    bigDecimalFormat(precision = 13, scale = 2, errorRequired, formatErrorMsg)
+  private def moneyBigDecimalFormat(errorRequired: String, formatErrorMsg: String): Formatter[BigDecimal] =
+    bigDecimalFormat(precision = 15, scale = 2, errorRequired, formatErrorMsg)
 
-  def bigDecimalFormat(
+  private def bigDecimalFormat(
     precision: Int,
     scale: Int,
     errorRequired: String,
@@ -83,7 +84,7 @@ object PoundsMapping extends Mappings {
                 .leftMap(_ => Seq(FormError(key, formatErrorMsg)))
           }
 
-      def unbind(key: String, value: BigDecimal) =
+      def unbind(key: String, value: BigDecimal): Map[String, String] =
         Map(key -> decimalFormat.format(value))
     }
 }

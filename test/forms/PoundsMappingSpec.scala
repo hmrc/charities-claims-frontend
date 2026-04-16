@@ -26,6 +26,7 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxAmountError = "error.maxAmount",
         allowZero = true
       )
       val result   = mappings.bind(Map("" -> "123.45"))
@@ -36,6 +37,7 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxAmountError = "error.maxAmount",
         allowZero = true
       )
       val result   = mappings.bind(Map("" -> "123"))
@@ -46,6 +48,7 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxAmountError = "error.maxAmount",
         allowZero = true
       )
       val result   = mappings.bind(Map("" -> ""))
@@ -56,6 +59,7 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxAmountError = "error.maxAmount",
         allowZero = true
       )
       val result   = mappings.bind(Map("" -> "123.456"))
@@ -66,6 +70,7 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxAmountError = "error.maxAmount",
         allowZero = true
       )
       val result   = mappings.bind(Map("" -> "123.45a"))
@@ -76,6 +81,7 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxAmountError = "error.maxAmount",
         allowZero = true
       )
       val result   = mappings.bind(Map("" -> "12345678901234567890"))
@@ -86,6 +92,7 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxAmountError = "error.maxAmount",
         allowZero = true
       )
       val result   = mappings.bind(Map("" -> "-123.45"))
@@ -96,6 +103,7 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxAmountError = "error.maxAmount",
         allowZero = false
       )
       val result   = mappings.bind(Map("" -> "0"))
@@ -106,6 +114,7 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxAmountError = "error.maxAmount",
         allowZero = false,
         zeroErrorMsg = Some("error.zero")
       )
@@ -113,14 +122,41 @@ class PoundsMappingSpec extends BaseSpec {
       result shouldBe Left(List(FormError("", List("error.zero"), List())))
     }
 
+    "bind invalid pounds amount (exceeds max amount)" in {
+      val mappings = PoundsMapping(
+        errorRequired = "error.required",
+        formatErrorMsg = "error.invalid",
+        maxAmountError = "error.maxAmount",
+        allowZero = true
+      )
+
+      val result = mappings.bind(Map("" -> "1000000000000.01"))
+
+      result shouldBe Left(List(FormError("", List("error.maxAmount"), List())))
+    }
+
     "bind zero pounds amount when allowed" in {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxAmountError = "error.maxAmount",
         allowZero = true
       )
       val result   = mappings.bind(Map("" -> "0"))
       result shouldBe Right(BigDecimal("0"))
+    }
+
+    "bind valid pounds amount at max amount boundary" in {
+      val mappings = PoundsMapping(
+        errorRequired = "error.required",
+        formatErrorMsg = "error.invalid",
+        maxAmountError = "error.maxAmount",
+        allowZero = true
+      )
+
+      val result = mappings.bind(Map("" -> "1000000000000"))
+
+      result shouldBe Right(BigDecimal("1000000000000"))
     }
   }
 }
