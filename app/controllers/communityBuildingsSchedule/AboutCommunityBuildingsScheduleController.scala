@@ -51,7 +51,7 @@ class AboutCommunityBuildingsScheduleController @Inject() (
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
+    actions.authAndRefreshDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
       if request.sessionData.communityBuildingsScheduleCompleted
       then {
         Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
@@ -61,7 +61,7 @@ class AboutCommunityBuildingsScheduleController @Inject() (
     }
 
   def onSubmit: Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
+    actions.authAndRefreshDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
       Future.successful(Redirect(routes.UploadCommunityBuildingsScheduleController.onPageLoad))
     }
 }

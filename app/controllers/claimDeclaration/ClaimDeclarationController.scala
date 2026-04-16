@@ -41,7 +41,7 @@ class ClaimDeclarationController @Inject() (
     extends BaseController {
 
   def onPageLoad: Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.isClaimDetailsComplete).async { implicit request =>
+    actions.authAndRefreshDataWithGuard(SessionData.isClaimDetailsComplete).async { implicit request =>
       (
         sessionData.adjustmentForOtherIncomePreviousOverClaimed
           .exists(_ > BigDecimal(0.0)),
@@ -57,7 +57,7 @@ class ClaimDeclarationController @Inject() (
 
   def onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.isClaimDetailsComplete)
+      .authAndRefreshDataWithGuard(SessionData.isClaimDetailsComplete)
       .async { implicit request =>
         // read and understood the declaration
         for {
