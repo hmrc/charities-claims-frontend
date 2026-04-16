@@ -199,31 +199,88 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
       }
     }
 
-    "isOverLimit" - {
+    "isOverToEqualToLimit" - {
 
-      "should return true when totalDonations exceeds limit" in {
-        val result = UnregulatedDonationsService.isOverLimit(
+      "should return true when totalDonations exceeds limit 5000" in {
+        val result = UnregulatedDonationsService.isOverToEqualToLimit(
           totalDonations = BigDecimal(5001),
           limit = 5000
         )
         result shouldEqual true
       }
 
-      "should return false when totalDonations is under limit" in {
-        val result = UnregulatedDonationsService.isOverLimit(
+      "should return false when totalDonations is under limit 5000" in {
+        val result = UnregulatedDonationsService.isOverToEqualToLimit(
           totalDonations = BigDecimal(4999),
           limit = 5000
         )
         result shouldEqual false
       }
 
-      "should return false when totalDonations equals limit (not over)" in {
-        val result = UnregulatedDonationsService.isOverLimit(
-          totalDonations = BigDecimal(5000),
+      "should return false when totalDonations is under limit 2 5000" in {
+        val result = UnregulatedDonationsService.isOverToEqualToLimit(
+          totalDonations = BigDecimal(4999.99),
           limit = 5000
         )
         result shouldEqual false
       }
+
+      "should return false when totalDonations is under limit 3 5000" in {
+        val result = UnregulatedDonationsService.isOverToEqualToLimit(
+          totalDonations = BigDecimal(4999.999),
+          limit = 5000
+        )
+        result shouldEqual false
+      }
+
+      "should return false when totalDonations equals limit 5000 (not over)" in {
+        val result = UnregulatedDonationsService.isOverToEqualToLimit(
+          totalDonations = BigDecimal(5000),
+          limit = 5000
+        )
+        result shouldEqual true
+      }
+
+      "should return true when totalDonations exceeds limit 100000" in {
+        val result = UnregulatedDonationsService.isOverToEqualToLimit(
+          totalDonations = BigDecimal(100001),
+          limit = 100000
+        )
+        result shouldEqual true
+      }
+
+      "should return false when totalDonations is under limit 100000" in {
+        val result = UnregulatedDonationsService.isOverToEqualToLimit(
+          totalDonations = BigDecimal(99999),
+          limit = 100000
+        )
+        result shouldEqual false
+      }
+
+      "should return false when totalDonations is under limit 2 100000" in {
+        val result = UnregulatedDonationsService.isOverToEqualToLimit(
+          totalDonations = BigDecimal(99999.99),
+          limit = 100000
+        )
+        result shouldEqual false
+      }
+
+      "should return false when totalDonations is under limit 3 100000" in {
+        val result = UnregulatedDonationsService.isOverToEqualToLimit(
+          totalDonations = BigDecimal(99999.999),
+          limit = 100000
+        )
+        result shouldEqual false
+      }
+
+      "should return false when totalDonations equals limit 100000 (not over)" in {
+        val result = UnregulatedDonationsService.isOverToEqualToLimit(
+          totalDonations = BigDecimal(100000),
+          limit = 100000
+        )
+        result shouldEqual true
+      }
+
     }
 
     "buildLimitExceededResult" - {
@@ -239,10 +296,10 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
       }
     }
 
-    "checkIfOverLimit" - {
+    "checkIfOverToEqualToLimit" - {
 
-      "should return Some(UnregulatedLimitExceeded) when total exceeds limit" in {
-        val result = UnregulatedDonationsService.checkIfOverLimit(
+      "should return Some(UnregulatedLimitExceeded) when total exceeds limit 5000" in {
+        val result = UnregulatedDonationsService.checkIfOverToEqualToLimit(
           currentClaimTotal = BigDecimal(3000),
           existingUnregulatedDonations = BigDecimal(3000),
           limit = 5000
@@ -250,8 +307,8 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
         result shouldEqual Some(UnregulatedLimitExceeded(5000, "5,000"))
       }
 
-      "should return None when total is under limit" in {
-        val result = UnregulatedDonationsService.checkIfOverLimit(
+      "should return None when total is under limit 5000" in {
+        val result = UnregulatedDonationsService.checkIfOverToEqualToLimit(
           currentClaimTotal = BigDecimal(1000),
           existingUnregulatedDonations = BigDecimal(1000),
           limit = 5000
@@ -259,13 +316,76 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
         result shouldEqual None
       }
 
-      "should return None when total equals limit" in {
-        val result = UnregulatedDonationsService.checkIfOverLimit(
+      "should return None when total is under limit 5000 2" in {
+        val result = UnregulatedDonationsService.checkIfOverToEqualToLimit(
+          currentClaimTotal = BigDecimal(1000),
+          existingUnregulatedDonations = BigDecimal(3999.99),
+          limit = 5000
+        )
+        result shouldEqual None
+      }
+
+      "should return None when total is under limit 5000 3" in {
+        val result = UnregulatedDonationsService.checkIfOverToEqualToLimit(
+          currentClaimTotal = BigDecimal(1000),
+          existingUnregulatedDonations = BigDecimal(3999.999),
+          limit = 5000
+        )
+        result shouldEqual None
+      }
+
+      "should return None when total equals limit 5000" in {
+        val result = UnregulatedDonationsService.checkIfOverToEqualToLimit(
           currentClaimTotal = BigDecimal(2500),
           existingUnregulatedDonations = BigDecimal(2500),
           limit = 5000
         )
+        result shouldEqual Some(UnregulatedLimitExceeded(5000, "5,000"))
+      }
+
+      "should return Some(UnregulatedLimitExceeded) when total exceeds limit 100000" in {
+        val result = UnregulatedDonationsService.checkIfOverToEqualToLimit(
+          currentClaimTotal = BigDecimal(50000),
+          existingUnregulatedDonations = BigDecimal(60000),
+          limit = 100000
+        )
+        result shouldEqual Some(UnregulatedLimitExceeded(100000, "100,000"))
+      }
+
+      "should return None when total is under limit 100000" in {
+        val result = UnregulatedDonationsService.checkIfOverToEqualToLimit(
+          currentClaimTotal = BigDecimal(30000),
+          existingUnregulatedDonations = BigDecimal(30000),
+          limit = 100000
+        )
         result shouldEqual None
+      }
+
+      "should return None when total is under limit 100000 2" in {
+        val result = UnregulatedDonationsService.checkIfOverToEqualToLimit(
+          currentClaimTotal = BigDecimal(10000),
+          existingUnregulatedDonations = BigDecimal(89999.99),
+          limit = 100000
+        )
+        result shouldEqual None
+      }
+
+      "should return None when total is under limit 100000 3" in {
+        val result = UnregulatedDonationsService.checkIfOverToEqualToLimit(
+          currentClaimTotal = BigDecimal(10000),
+          existingUnregulatedDonations = BigDecimal(89999.999),
+          limit = 100000
+        )
+        result shouldEqual None
+      }
+
+      "should return None when total equals limit 100000" in {
+        val result = UnregulatedDonationsService.checkIfOverToEqualToLimit(
+          currentClaimTotal = BigDecimal(10000),
+          existingUnregulatedDonations = BigDecimal(90000),
+          limit = 100000
+        )
+        result shouldEqual Some(UnregulatedLimitExceeded(100000, "100,000"))
       }
     }
 
