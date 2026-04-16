@@ -67,16 +67,13 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
   def toGiftAidSmallDonationsSchemeDonationDetails(
     answers: GiftAidSmallDonationsSchemeDonationDetailsAnswers
   ): Try[GiftAidSmallDonationsSchemeDonationDetails] =
-    if answers.claims.isDefined
-      && (answers.claims.get.size > 3)
+    if answers.claims.exists(_.size > 3)
     then Failure(new MissingRequiredFieldsException("GASDS claims cannot be more than 3"))
     else
       Success(
         GiftAidSmallDonationsSchemeDonationDetails(
           adjustmentForGiftAidOverClaimed = answers.adjustmentForGiftAidOverClaimed.getOrElse(0),
-          claims = answers.claims
-            .map(_.collect { case Some(claim) => claim })
-            .getOrElse(Seq.empty)
+          claims = answers.claims.toSeq.flatMap(_.flatten)
         )
       )
 
@@ -104,7 +101,8 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
   def removeClaim(index: Int)(using session: SessionData): SessionData =
     session.giftAidSmallDonationsSchemeDonationDetailsAnswers match {
       case Some(existing) =>
-        val updatedClaims = existing.copy(claims = existing.claims.map(c => c.take(index) ++ c.drop(index + 1)))
+        val updatedClaims =
+          existing.copy(claims = existing.claims.map(_.patch(from = index, other = Nil, replaced = 1)))
         session.copy(giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(updatedClaims))
       case None           =>
         session
