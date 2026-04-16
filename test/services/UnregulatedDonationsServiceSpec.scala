@@ -273,7 +273,7 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
         result shouldEqual false
       }
 
-      "should return false when totalDonations equals limit 100000 (at boundary)" in {
+      "should return true when totalDonations equals limit 100000 (at boundary)" in {
         val result = UnregulatedDonationsService.isOverOrEqualToLimit(
           totalDonations = BigDecimal(100000),
           limit = 100000
