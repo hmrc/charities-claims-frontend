@@ -59,11 +59,13 @@ class DefaultRefreshDataAction @Inject() (
                 claimsValidationConnector
                   .getUploadSummary(claim.claimId)
                   .flatMap { uploadsSummary =>
-                    val sessionData =
-                      SessionData.from(claim, request.charitiesReference, Some(uploadsSummary))
+                    val refreshedSessionData =
+                      SessionData
+                        .from(claim, request.charitiesReference, Some(uploadsSummary))
+                        .copy(unregulatedLimitExceeded = sessionData.unregulatedLimitExceeded)
                     cache
-                      .store(sessionData)
-                      .map(_ => Right(DataRequest(request, sessionData)))
+                      .store(refreshedSessionData)
+                      .map(_ => Right(DataRequest(request, refreshedSessionData)))
                   }
               case None        =>
                 Future
