@@ -44,7 +44,7 @@ class CheckYourOtherIncomeScheduleController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
         claimsValidationService.getOtherIncomeScheduleData
           .map { otherIncomeScheduleData =>
@@ -70,7 +70,7 @@ class CheckYourOtherIncomeScheduleController @Inject() (
 
   val onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
         claimsValidationService.getOtherIncomeScheduleData
           .flatMap { otherIncomeScheduleData =>

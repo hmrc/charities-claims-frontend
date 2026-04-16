@@ -48,7 +48,7 @@ class UploadGiftAidScheduleController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadGiftAidSchedule)
       .async { implicit request =>
         val claimId = request.sessionData.unsubmittedClaimId.get
 

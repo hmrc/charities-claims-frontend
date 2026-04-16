@@ -46,7 +46,7 @@ class UploadOtherIncomeScheduleController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
         val claimId = request.sessionData.unsubmittedClaimId.get
 

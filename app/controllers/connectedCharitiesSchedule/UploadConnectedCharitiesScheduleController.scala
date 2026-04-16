@@ -46,7 +46,7 @@ class UploadConnectedCharitiesScheduleController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
       .async { implicit request =>
         request.sessionData.unsubmittedClaimId match {
           case None =>
