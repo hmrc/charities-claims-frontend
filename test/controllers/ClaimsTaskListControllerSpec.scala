@@ -446,7 +446,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val result  = route(application, request).value
           val content = contentAsString(result)
 
-          content should include("Go to dashboard")
+          content should include("Go to manage charity repayment claims")
           content should include("http://localhost:8033/charities-management/charity-repayment-dashboard")
         }
       }
@@ -458,7 +458,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val request = FakeRequest(GET, url)
           val result  = route(application, request).value
 
-          contentAsString(result) should include("Incomplete")
+          contentAsString(result) should include("Not yet started")
         }
       }
 
