@@ -42,20 +42,27 @@ class TaskStatusSpec extends BaseSpec {
       result.tag.value.content shouldBe Text(messages("claimsTaskList.status.incomplete"))
     }
 
-    "return grey tag when status is NotStarted" in {
+    "return blue tag when status is NotStarted" in {
       val result = TaskStatus.NotStarted.toTaskListStatus
 
       result.tag               shouldBe defined
-      result.tag.value.classes   should include("govuk-tag--grey")
+      result.tag.value.classes   should include("govuk-tag--blue")
       result.tag.value.content shouldBe Text(messages("claimsTaskList.status.notStarted"))
     }
 
-    "return grey tag when status is CannotStartYet" in {
+    "return as plain text when status is CannotStartYet" in {
       val result = TaskStatus.CannotStartYet.toTaskListStatus
 
+      result.content shouldBe Text(messages("claimsTaskList.status.cannotStartYet"))
+      result.tag     shouldBe None
+    }
+
+    "return green tag when status is InProgress" in {
+      val result = TaskStatus.InProgress.toTaskListStatus
+
       result.tag               shouldBe defined
-      result.tag.value.classes   should include("govuk-tag--grey")
-      result.tag.value.content shouldBe Text(messages("claimsTaskList.status.cannotStartYet"))
+      result.tag.value.classes   should include("govuk-tag--green")
+      result.tag.value.content shouldBe Text(messages("claimsTaskList.status.inProgress"))
     }
   }
 
