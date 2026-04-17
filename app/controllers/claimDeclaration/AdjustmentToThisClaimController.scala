@@ -72,8 +72,11 @@ class AdjustmentToThisClaimController @Inject() (
                 }
 
               case None =>
+                val updatedSession = request.sessionData.copy(unregulatedLimitExceeded = false)
                 val previousAnswer = request.sessionData.includedAnyAdjustmentsInClaimPrompt
-                Future.successful(Ok(view(form.withDefault(Some(previousAnswer)))))
+                saveService.save(updatedSession).map { _ =>
+                  Ok(view(form.withDefault(Some(previousAnswer))))
+                }
             }
         else {
           val previousAnswer = request.sessionData.includedAnyAdjustmentsInClaimPrompt
