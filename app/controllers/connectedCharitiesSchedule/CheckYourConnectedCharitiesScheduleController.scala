@@ -45,7 +45,7 @@ class CheckYourConnectedCharitiesScheduleController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
       .async { implicit request =>
         claimsValidationService.getConnectedCharitiesScheduleData
           .map { connectedCharitiesScheduleData =>
@@ -70,7 +70,7 @@ class CheckYourConnectedCharitiesScheduleController @Inject() (
 
   val onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadConnectedCharitiesSchedule)
       .async { implicit request =>
         claimsValidationService.getConnectedCharitiesScheduleData
           .flatMap { connectedCharitiesScheduleData =>

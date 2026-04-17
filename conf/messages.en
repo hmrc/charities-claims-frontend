@@ -522,11 +522,11 @@ reasonNotRegisteredWithRegulator.title = Why is the charity not registered with 
 registerCharityWithARegulator.error.required = Select ‘Yes’ if you need to register with a regulator
 registerCharityWithARegulator.heading = Registering your charity with a regulator
 registerCharityWithARegulator.legend = Do you need to register your charity with a regulator?
-registerCharityWithARegulator.paragraph = If your annual income is more than £{1}, you need to <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">register your charity with a regulator (opens in new tab)</a>.
+registerCharityWithARegulator.paragraph = If your annual income is £{1} or more, you need to <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">register your charity with a regulator (opens in new tab)</a>.
 registerCharityWithARegulator.radio.no.label = No, continue with claim
 registerCharityWithARegulator.radio.yes.label = Yes
 registerCharityWithARegulator.title = Registering your charity with a regulator
-registerCharityWithARegulator.warning = You have made claims for Gift Aid repayments on donations over £{1} in the last 12 months.
+registerCharityWithARegulator.warning = You have made claims for Gift Aid repayments on donations of £{1} or more in the last 12 months.
 
 repaymentClaimDetails.bullet1 = tax repayments on Gift Aid donations
 repaymentClaimDetails.bullet2 = top-up payments under the Gift Aid Small Donations Scheme

@@ -42,7 +42,7 @@ class YourOtherIncomeScheduleUploadController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
         val claimId = request.sessionData.unsubmittedClaimId.get
 
@@ -124,7 +124,7 @@ class YourOtherIncomeScheduleUploadController @Inject() (
 
   def onRemove: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
         for {
           _ <- claimsValidationService.deleteOtherIncomeSchedule
@@ -133,7 +133,7 @@ class YourOtherIncomeScheduleUploadController @Inject() (
 
   def onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
         val claimId = request.sessionData.unsubmittedClaimId.get
 

@@ -43,7 +43,7 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
       .async { implicit request =>
         val claimId = request.sessionData.unsubmittedClaimId.get
 
@@ -126,7 +126,7 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
 
   def onRemove: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
       .async { implicit request =>
         for {
           _ <- claimsValidationService.deleteCommunityBuildingsSchedule
@@ -135,7 +135,7 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
 
   def onSubmit: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
+      .authAndRefreshDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule)
       .async { implicit request =>
         val claimId = request.sessionData.unsubmittedClaimId.get
 
