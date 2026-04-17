@@ -22,6 +22,7 @@ import controllers.actions.Actions
 import forms.RadioListFormProvider
 import models.{Mode, NameOfCharityRegulator, OrganisationDetailsAnswers, SessionData}
 import models.Mode.*
+import models.SessionData.isCASCCharityReference
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
@@ -42,10 +43,13 @@ class NameOfCharityRegulatorController @Inject() (
   val form: Form[NameOfCharityRegulator] = formProvider("nameOfCharityRegulator.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete) { implicit request =>
-      val previousAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
-
-      Ok(view(form.withDefault(previousAnswer), mode))
+    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
+      given sessionData: SessionData = request.sessionData
+      if isCASCCharityReference then Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      else {
+        val previousAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
+        Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+      }
     }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =

@@ -56,6 +56,50 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
           )
         }
       }
+      "should redirect to the ClaimsTaskListController if charity ref start with CH" in {
+        val testCharitiesReference: String                      = "CH-test-charities-ref"
+        val completeRepaymentDetailsAnswersSession: SessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some("test-claim-id"),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers)
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = completeRepaymentDetailsAnswersSession).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.NameOfCharityRegulatorController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
+
+      "should redirect to the ClaimsTaskListController if charity ref start with CF" in {
+        val testCharitiesReference: String                      = "CF-test-charities-ref"
+        val completeRepaymentDetailsAnswersSession: SessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some("test-claim-id"),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers)
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = completeRepaymentDetailsAnswersSession).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.NameOfCharityRegulatorController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
+
       "should render the page correctly" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
         given application: Application = applicationBuilder(sessionData = sessionData).build()
