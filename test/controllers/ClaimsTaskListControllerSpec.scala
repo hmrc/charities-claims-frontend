@@ -783,7 +783,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         }
       }
 
-      "should display Declaration section as in progress yet when Repayment & organisation Claim Details complete" in {
+      "should display Declaration section as Not yet started when Repayment & organisation Claim Details complete" in {
         val answers     = repaymentClaimDetailsAnswersCompleted.copy(claimingGiftAid = Some(true))
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
@@ -823,7 +823,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         }
       }
 
-      "should display Declaration section as in progress yet when Repayment & organisation Claim Details complete & some text for adjustments Claim prompt" in {
+      "should display Declaration section as in progress when Repayment & organisation Claim Details complete & some text for adjustments Claim prompt" in {
         val answers     = repaymentClaimDetailsAnswersCompleted.copy(claimingGiftAid = Some(true))
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,

@@ -50,7 +50,7 @@ class TaskStatusSpec extends BaseSpec {
       result.tag.value.content shouldBe Text(messages("claimsTaskList.status.notStarted"))
     }
 
-    "return grey tag when status is CannotStartYet" in {
+    "return as plain text when status is CannotStartYet" in {
       val result = TaskStatus.CannotStartYet.toTaskListStatus
 
       result.content shouldBe Text(messages("claimsTaskList.status.cannotStartYet"))

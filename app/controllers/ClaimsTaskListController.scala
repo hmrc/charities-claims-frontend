@@ -54,7 +54,7 @@ object ClaimsTaskListController {
       )
       val declarationSection               = TaskSection(
         headingKey = "claimsTaskList.section.declaration",
-        tasks = buildDeclarationSection(allSectionsComplete = false, false),
+        tasks = buildDeclarationSection(allSectionsComplete = false, declarationInProgress = false),
         hintKey = Some("claimsTaskList.declaration.warning")
       )
 
