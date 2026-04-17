@@ -132,8 +132,19 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to declaration screen when No is selected" in {
-        given application: Application = applicationBuilder(sessionData = sessionDataExcepted).build()
+      "should set unregulatedWarningBypassed and redirect to declaration screen when No is selected" in {
+        val mockSaveService: SaveService = mock[SaveService]
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(where { (sessionData: SessionData, _: HeaderCarrier) =>
+            sessionData.unregulatedWarningBypassed
+          })
+          .returning(Future.successful(()))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionDataExcepted)
+            .overrides(bind[SaveService].toInstance(mockSaveService))
+            .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
