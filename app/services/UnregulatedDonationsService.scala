@@ -68,20 +68,20 @@ object UnregulatedDonationsService {
   ): BigDecimal =
     currentClaimTotal + existingUnregulatedDonations
 
-  def isOverLimit(totalDonations: BigDecimal, limit: Int): Boolean =
-    totalDonations > limit
+  def isOverOrEqualToLimit(totalDonations: BigDecimal, limit: Int): Boolean =
+    totalDonations >= limit
 
   def buildLimitExceededResult(limit: Int): UnregulatedLimitExceeded =
     UnregulatedLimitExceeded(limit, formatLimit(limit))
 
-  def checkIfOverLimit(
+  def checkIfOverOrEqualToLimit(
     currentClaimTotal: BigDecimal,
     existingUnregulatedDonations: BigDecimal,
     limit: Int
   ): Option[UnregulatedLimitExceeded] = {
     val totalDonations = calculateTotalDonations(currentClaimTotal, existingUnregulatedDonations)
 
-    if (isOverLimit(totalDonations, limit)) {
+    if (isOverOrEqualToLimit(totalDonations, limit)) {
       Some(buildLimitExceededResult(limit))
     } else {
       None
@@ -150,7 +150,7 @@ class UnregulatedDonationsServiceImpl @Inject() (
             } yield {
               val existingDonations = existingDonationsOpt.getOrElse(BigDecimal(0))
 
-              checkIfOverLimit(currentClaimTotal, existingDonations, limit)
+              checkIfOverOrEqualToLimit(currentClaimTotal, existingDonations, limit)
             }
 
           case None =>

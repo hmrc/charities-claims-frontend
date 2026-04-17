@@ -261,14 +261,15 @@ claimsTaskList.caption = HMRC Charities reference: {0}
 claimsTaskList.declaration.warning = You must complete every section before you can declare.
 claimsTaskList.heading = Make a charity repayment claim
 claimsTaskList.link.deleteClaim = Delete claim
-claimsTaskList.link.goToDashboard = Go to dashboard
+claimsTaskList.link.goToDashboard = Go to manage charity repayment claims
 claimsTaskList.section.aboutTheClaim = About the claim
 claimsTaskList.section.declaration = Declaration
 claimsTaskList.section.uploadDocuments = Upload documents
 claimsTaskList.status.cannotStartYet = Cannot start yet
 claimsTaskList.status.completed = Completed
 claimsTaskList.status.incomplete = Incomplete
-claimsTaskList.status.notStarted = Not started
+claimsTaskList.status.inProgress = In progress
+claimsTaskList.status.notStarted = Not yet started
 claimsTaskList.task.communityBuildingsSchedule = Add community buildings schedule
 claimsTaskList.task.connectedCharitiesSchedule = Add connected charities schedule
 claimsTaskList.task.gasdsDetails = Gift Aid Small Donations Scheme details
@@ -521,11 +522,11 @@ reasonNotRegisteredWithRegulator.title = Why is the charity not registered with 
 registerCharityWithARegulator.error.required = Select ‘Yes’ if you need to register with a regulator
 registerCharityWithARegulator.heading = Registering your charity with a regulator
 registerCharityWithARegulator.legend = Do you need to register your charity with a regulator?
-registerCharityWithARegulator.paragraph = If your annual income is more than £{1}, you need to <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">register your charity with a regulator (opens in new tab)</a>.
+registerCharityWithARegulator.paragraph = If your annual income is £{1} or more, you need to <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">register your charity with a regulator (opens in new tab)</a>.
 registerCharityWithARegulator.radio.no.label = No, continue with claim
 registerCharityWithARegulator.radio.yes.label = Yes
 registerCharityWithARegulator.title = Registering your charity with a regulator
-registerCharityWithARegulator.warning = You have made claims for Gift Aid repayments on donations over £{1} in the last 12 months.
+registerCharityWithARegulator.warning = You have made claims for Gift Aid repayments on donations of £{1} or more in the last 12 months.
 
 repaymentClaimDetails.bullet1 = tax repayments on Gift Aid donations
 repaymentClaimDetails.bullet2 = top-up payments under the Gift Aid Small Donations Scheme

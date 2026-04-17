@@ -68,10 +68,6 @@ class ErrorHandler @Inject() (
                 controllers.connectedCharitiesSchedule.routes.UploadConnectedCharitiesScheduleController.onPageLoad
               )
             )
-          case _                  =>
-            Future.successful(
-              Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
-            )
         }
       case _                                      =>
         super.resolveError(rh, ex)

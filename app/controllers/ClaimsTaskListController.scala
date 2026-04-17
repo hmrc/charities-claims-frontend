@@ -55,7 +55,7 @@ object ClaimsTaskListController {
       )
       val declarationSection               = TaskSection(
         headingKey = "claimsTaskList.section.declaration",
-        tasks = buildDeclarationSection(allSectionsComplete = false),
+        tasks = buildDeclarationSection(allSectionsComplete = false, declarationInProgress = false),
         hintKey = Some("claimsTaskList.declaration.warning")
       )
 
@@ -78,7 +78,10 @@ object ClaimsTaskListController {
 
       val declarationSection = TaskSection(
         headingKey = "claimsTaskList.section.declaration",
-        tasks = buildDeclarationSection(allSectionsComplete),
+        tasks = buildDeclarationSection(
+          allSectionsComplete,
+          request.sessionData.includedAnyAdjustmentsInClaimPrompt.isDefined
+        ),
         hintKey = if (allSectionsComplete) None else Some("claimsTaskList.declaration.warning")
       )
 
@@ -133,8 +136,15 @@ object ClaimsTaskListController {
     ).flatten
   }
 
-  private def buildDeclarationSection(allSectionsComplete: Boolean)(using messages: Messages): Seq[TaskItem] = {
-    val status = if (allSectionsComplete) TaskStatus.NotStarted else TaskStatus.CannotStartYet
+  private def buildDeclarationSection(allSectionsComplete: Boolean, declarationInProgress: Boolean)(using
+    messages: Messages
+  ): Seq[TaskItem] = {
+    val status =
+      (allSectionsComplete, declarationInProgress) match {
+        case (false, _)    => TaskStatus.CannotStartYet
+        case (true, false) => TaskStatus.NotStarted
+        case (true, true)  => TaskStatus.InProgress
+      }
     Seq(
       TaskItem(
         name = messages("claimsTaskList.task.readDeclaration"),
@@ -146,7 +156,7 @@ object ClaimsTaskListController {
 
   private def buildRepaymentClaimDetailsTask(using request: DataRequest[?], messages: Messages): TaskItem = {
     val isComplete = SessionData.isRepaymentClaimDetailsComplete(using request.sessionData)
-    val status     = if (isComplete) TaskStatus.Completed else TaskStatus.Incomplete
+    val status     = if (isComplete) TaskStatus.Completed else TaskStatus.NotStarted
     val href       = if (isComplete) {
       repaymentClaimDetails.routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
     } else {
@@ -189,6 +199,8 @@ object ClaimsTaskListController {
     val status =
       if request.sessionData.giftAidScheduleCompleted
       then TaskStatus.Completed
+      else if request.sessionData.giftAidScheduleUpscanInitialization.isDefined || request.sessionData.giftAidScheduleFileUploadReference.isDefined
+      then TaskStatus.InProgress
       else TaskStatus.Incomplete
 
     TaskItem(
@@ -201,6 +213,8 @@ object ClaimsTaskListController {
     val status =
       if request.sessionData.otherIncomeScheduleCompleted
       then TaskStatus.Completed
+      else if request.sessionData.otherIncomeScheduleUpscanInitialization.isDefined || request.sessionData.otherIncomeScheduleFileUploadReference.isDefined
+      then TaskStatus.InProgress
       else TaskStatus.Incomplete
 
     TaskItem(
@@ -213,6 +227,8 @@ object ClaimsTaskListController {
     val status =
       if request.sessionData.communityBuildingsScheduleCompleted
       then TaskStatus.Completed
+      else if request.sessionData.communityBuildingsScheduleUpscanInitialization.isDefined || request.sessionData.communityBuildingsScheduleFileUploadReference.isDefined
+      then TaskStatus.InProgress
       else TaskStatus.Incomplete
 
     TaskItem(
@@ -225,6 +241,8 @@ object ClaimsTaskListController {
     val status =
       if request.sessionData.connectedCharitiesScheduleCompleted
       then TaskStatus.Completed
+      else if request.sessionData.connectedCharitiesScheduleUpscanInitialization.isDefined || request.sessionData.connectedCharitiesScheduleFileUploadReference.isDefined
+      then TaskStatus.InProgress
       else TaskStatus.Incomplete
 
     TaskItem(
