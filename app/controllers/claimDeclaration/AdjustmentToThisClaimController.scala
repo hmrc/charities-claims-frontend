@@ -56,11 +56,14 @@ class AdjustmentToThisClaimController @Inject() (
         given HeaderCarrier            = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
         if RepaymentClaimDetailsAnswers.getClaimingGiftAid.contains(true) then
-          if (request.sessionData.unregulatedLimitExceeded) {
-            // user already saw WRN5 and chose to continue we show the form without re-checking
+          if request.sessionData.unregulatedWarningBypassed then
+            // user just saw WRN5 and chose to continue — consume the bypass flag and show the form
+            val updatedSession = request.sessionData.copy(unregulatedWarningBypassed = false)
             val previousAnswer = request.sessionData.includedAnyAdjustmentsInClaimPrompt
-            Future.successful(Ok(view(form.withDefault(Some(previousAnswer)))))
-          } else {
+            saveService.save(updatedSession).map { _ =>
+              Ok(view(form.withDefault(Some(previousAnswer))))
+            }
+          else
             unregulatedDonationsService.checkUnregulatedLimit.flatMap {
               case Some(_) =>
                 val updatedSession = request.sessionData.copy(unregulatedLimitExceeded = true)
@@ -72,7 +75,6 @@ class AdjustmentToThisClaimController @Inject() (
                 val previousAnswer = request.sessionData.includedAnyAdjustmentsInClaimPrompt
                 Future.successful(Ok(view(form.withDefault(Some(previousAnswer)))))
             }
-          }
         else {
           val previousAnswer = request.sessionData.includedAnyAdjustmentsInClaimPrompt
           Future.successful(Ok(view(form.withDefault(Some(previousAnswer)))))

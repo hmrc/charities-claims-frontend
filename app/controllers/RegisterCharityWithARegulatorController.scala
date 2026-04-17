@@ -74,7 +74,10 @@ class RegisterCharityWithARegulatorController @Inject() (
               }
 
             case false =>
-              Future.successful(Redirect(claimDeclaration.routes.AdjustmentToThisClaimController.onPageLoad))
+              val updatedSession = request.sessionData.copy(unregulatedWarningBypassed = true)
+              saveService.save(updatedSession).map { _ =>
+                Redirect(claimDeclaration.routes.AdjustmentToThisClaimController.onPageLoad)
+              }
           }
         )
     }
