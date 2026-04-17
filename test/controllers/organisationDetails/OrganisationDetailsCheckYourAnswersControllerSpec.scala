@@ -53,551 +53,1036 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           )
         }
       }
-      "should render the page correctly when organisation details not defined" in {
+      "is CH/CF charity ref " - {
+        val isCASCCharityRef = true
 
-        val sessionData = completeRepaymentDetailsAnswersSession
+        "should render the page correctly when organisation details with  name of charity=NorthernIreland, Reg Num not defined, both Corporate Trustee is true and not UK Address and CH/CF charity ref" in {
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.NorthernIreland),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(false),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
+          val sessionData                =
+            completeRepaymentDetailsAnswersSession.copy(
+              organisationDetailsAnswers = Some(organisationDetailsAnswers),
+              charitiesReference = "CF-123"
+            )
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-          val result = route(application, request).value
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
 
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+            val result = route(application, request).value
 
-          status(result) shouldEqual OK
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
 
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
         }
-      }
 
-      "should render the page correctly when organisation details with  name of charity=EnglandAndWales, Reg Num, both Corporate Trustee & UK Address true" in {
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales),
-          charityRegistrationNumber = Some("123"),
-          areYouACorporateTrustee = Some(true),
-          doYouHaveCorporateTrusteeUKAddress = Some(true),
-          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-          corporateTrusteePostcode = Some("none"),
-          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-          corporateTrusteeDetails =
-            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-        )
+        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Waiting, both Corporate Trustee is true and not UK Address and CH/CF charity ref" in {
 
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(false),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(
+              organisationDetailsAnswers = Some(organisationDetailsAnswers),
+              charitiesReference = "CF-123"
+            )
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-          val result = route(application, request).value
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
 
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+            val result = route(application, request).value
 
-          status(result) shouldEqual OK
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
 
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
         }
-      }
-      "should render the page correctly when organisation details with  name of charity not defined, Reg Num, both Corporate Trustee & UK Address true" in {
+        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Exempt, both Corporate Trustee is true and not UK Address and CH/CF charity ref" in {
 
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          charityRegistrationNumber = Some("123"),
-          areYouACorporateTrustee = Some(true),
-          doYouHaveCorporateTrusteeUKAddress = Some(true),
-          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-          corporateTrusteePostcode = Some("none"),
-          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-          corporateTrusteeDetails =
-            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-        )
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Exempt),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(false),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
 
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(
+              organisationDetailsAnswers = Some(organisationDetailsAnswers),
+              charitiesReference = "CF-123"
+            )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
 
-          val result = route(application, request).value
+            val result = route(application, request).value
 
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
 
-          status(result) shouldEqual OK
+            status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
         }
-      }
-      "should render the page correctly when organisation details with  name of charity=NorthernIreland, Reg Num not defined, both Corporate Trustee is true and not UK Address" in {
+        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Excepted, both Corporate Trustee is true and not UK Address and CH/CF charity ref" in {
 
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.NorthernIreland),
-          areYouACorporateTrustee = Some(true),
-          doYouHaveCorporateTrusteeUKAddress = Some(false),
-          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-          corporateTrusteeDetails =
-            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-        )
-        val sessionData                =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Excepted),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(false),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(
+              organisationDetailsAnswers = Some(organisationDetailsAnswers),
+              charitiesReference = "CF-123"
+            )
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-          val result = route(application, request).value
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
 
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+            val result = route(application, request).value
 
-          status(result) shouldEqual OK
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
 
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
         }
-      }
+        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and not UK Address and CH/CF charity ref" in {
 
-      "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Waiting, both Corporate Trustee is true and not UK Address" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(false),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
 
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-          areYouACorporateTrustee = Some(true),
-          doYouHaveCorporateTrusteeUKAddress = Some(false),
-          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-          corporateTrusteeDetails =
-            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-        )
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(
+              organisationDetailsAnswers = Some(organisationDetailsAnswers),
+              charitiesReference = "CF-123"
+            )
 
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+            val result = route(application, request).value
 
-          val result = route(application, request).value
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
 
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+            status(result) shouldEqual OK
 
-          status(result) shouldEqual OK
-
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
         }
-      }
-      "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Exempt, both Corporate Trustee is true and not UK Address" in {
+        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and UK Address not defined and CH/CF charity ref" in {
 
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Exempt),
-          areYouACorporateTrustee = Some(true),
-          doYouHaveCorporateTrusteeUKAddress = Some(false),
-          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-          corporateTrusteeDetails =
-            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-        )
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+            areYouACorporateTrustee = Some(true),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
 
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(
+              organisationDetailsAnswers = Some(organisationDetailsAnswers),
+              charitiesReference = "CF-123"
+            )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
 
-          val result = route(application, request).value
+            val result = route(application, request).value
 
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
 
-          status(result) shouldEqual OK
+            status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
         }
-      }
-      "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Excepted, both Corporate Trustee is true and not UK Address" in {
+        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is not defined and UK Address not defined and CH/CF charity ref" in {
 
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Excepted),
-          areYouACorporateTrustee = Some(true),
-          doYouHaveCorporateTrusteeUKAddress = Some(false),
-          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-          corporateTrusteeDetails =
-            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-        )
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
 
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(
+              organisationDetailsAnswers = Some(organisationDetailsAnswers),
+              charitiesReference = "CF-123"
+            )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
 
-          val result = route(application, request).value
+            val result = route(application, request).value
 
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
 
-          status(result) shouldEqual OK
+            status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
         }
-      }
-      "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and not UK Address" in {
 
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
-          areYouACorporateTrustee = Some(true),
-          doYouHaveCorporateTrusteeUKAddress = Some(false),
-          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-          corporateTrusteeDetails =
-            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-        )
+        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = true and UK address but details not defined and CH/CF charity ref" in {
 
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+            charityRegistrationNumber = Some("123"),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(true)
+          )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(
+              organisationDetailsAnswers = Some(organisationDetailsAnswers),
+              charitiesReference = "CF-123"
+            )
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-          val result = route(application, request).value
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
 
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+            val result = route(application, request).value
 
-          status(result) shouldEqual OK
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
 
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
         }
-      }
-      "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and UK Address not defined" in {
+        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = true and not UK address but details not defined and CH/CF charity ref" in {
 
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
-          areYouACorporateTrustee = Some(true),
-          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-          corporateTrusteeDetails =
-            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-        )
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+            charityRegistrationNumber = Some("123"),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(false)
+          )
 
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(
+              organisationDetailsAnswers = Some(organisationDetailsAnswers),
+              charitiesReference = "CF-123"
+            )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
 
-          val result = route(application, request).value
+            val result = route(application, request).value
 
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
 
-          status(result) shouldEqual OK
+            status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
         }
-      }
-      "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is not defined and UK Address not defined" in {
+        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address and CH/CF charity ref" in {
 
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
-          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-          corporateTrusteeDetails =
-            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-        )
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+            charityRegistrationNumber = Some("123"),
+            areYouACorporateTrustee = Some(false),
+            doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
+            authorisedOfficialTrusteePostcode = Some("none"),
+            authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            authorisedOfficialTrusteeTitle = Some("MR"),
+            authorisedOfficialTrusteeFirstName = Some("Jack"),
+            authorisedOfficialTrusteeLastName = Some("Smith"),
+            authorisedOfficialDetails =
+              Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
+          )
 
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(
+              organisationDetailsAnswers = Some(organisationDetailsAnswers),
+              charitiesReference = "CF-123"
+            )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
 
-          val result = route(application, request).value
+            val result = route(application, request).value
 
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
 
-          status(result) shouldEqual OK
+            status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
         }
-      }
+        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address and CH/CF charity ref" in {
 
-      "should render the page correctly when organisation details with  name of charity =None, reason for not registered = not defined, both Corporate Trustee is true and not UK Address" in {
-
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-          areYouACorporateTrustee = Some(true),
-          doYouHaveCorporateTrusteeUKAddress = Some(false),
-          nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
-          corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-          corporateTrusteeDetails =
-            Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
-        )
-
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
-
-          status(result) shouldEqual OK
-
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
-        }
-      }
-      "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = true and UK address but details not defined" in {
-
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
-          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-          charityRegistrationNumber = Some("123"),
-          areYouACorporateTrustee = Some(true),
-          doYouHaveCorporateTrusteeUKAddress = Some(true)
-        )
-
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
-
-          status(result) shouldEqual OK
-
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
-        }
-      }
-      "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = true and not UK address but details not defined" in {
-
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
-          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-          charityRegistrationNumber = Some("123"),
-          areYouACorporateTrustee = Some(true),
-          doYouHaveCorporateTrusteeUKAddress = Some(false)
-        )
-
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
-
-          status(result) shouldEqual OK
-
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
-        }
-      }
-      "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address" in {
-
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
-          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-          charityRegistrationNumber = Some("123"),
-          areYouACorporateTrustee = Some(false),
-          doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
-          authorisedOfficialTrusteePostcode = Some("none"),
-          authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-          authorisedOfficialTrusteeTitle = Some("MR"),
-          authorisedOfficialTrusteeFirstName = Some("Jack"),
-          authorisedOfficialTrusteeLastName = Some("Smith"),
-          authorisedOfficialDetails =
-            Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
-        )
-
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
-
-          status(result) shouldEqual OK
-
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
-        }
-      }
-      "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address" in {
-
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
-          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-          charityRegistrationNumber = Some("123"),
-          areYouACorporateTrustee = Some(false),
-          doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
-          authorisedOfficialTrusteePostcode = Some("none"),
-          authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-          authorisedOfficialTrusteeTitle = Some("MR"),
-          authorisedOfficialTrusteeFirstName = Some("Jack"),
-          authorisedOfficialTrusteeLastName = Some("Smith"),
-          authorisedOfficialDetails =
-            Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
-        )
-
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
-
-          status(result) shouldEqual OK
-
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
-        }
-      }
-      "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address but details not defined" in {
-
-        val organisationDetailsAnswers =
-          OrganisationDetailsAnswers(
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
             reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
             charityRegistrationNumber = Some("123"),
             areYouACorporateTrustee = Some(false),
             doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
+            authorisedOfficialTrusteePostcode = Some("none"),
+            authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            authorisedOfficialTrusteeTitle = Some("MR"),
+            authorisedOfficialTrusteeFirstName = Some("Jack"),
+            authorisedOfficialTrusteeLastName = Some("Smith"),
             authorisedOfficialDetails =
               Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
           )
 
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(
+              organisationDetailsAnswers = Some(organisationDetailsAnswers),
+              charitiesReference = "CF-123"
+            )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
 
-          val result = route(application, request).value
+            val result = route(application, request).value
 
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
 
-          status(result) shouldEqual OK
+            status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address but details not defined and CH/CF charity ref" in {
+
+          val organisationDetailsAnswers =
+            OrganisationDetailsAnswers(
+              nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+              charityRegistrationNumber = Some("123"),
+              areYouACorporateTrustee = Some(false),
+              doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
+              authorisedOfficialDetails =
+                Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
+            )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(
+              organisationDetailsAnswers = Some(organisationDetailsAnswers),
+              charitiesReference = "CF-123"
+            )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address but details not defined and CH/CF charity ref" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+            charityRegistrationNumber = Some("123"),
+            areYouACorporateTrustee = Some(false),
+            doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
+            authorisedOfficialDetails =
+              Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
+          )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(
+              organisationDetailsAnswers = Some(organisationDetailsAnswers),
+              charitiesReference = "CF-123"
+            )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address not defined and CH/CF charity ref" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+            charityRegistrationNumber = Some("123"),
+            areYouACorporateTrustee = Some(false),
+            authorisedOfficialTrusteePostcode = Some("none"),
+            authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            authorisedOfficialTrusteeTitle = Some("MR"),
+            authorisedOfficialTrusteeFirstName = Some("Jack"),
+            authorisedOfficialTrusteeLastName = Some("Smith"),
+            authorisedOfficialDetails =
+              Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
+          )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(
+              organisationDetailsAnswers = Some(organisationDetailsAnswers),
+              charitiesReference = "CF-123"
+            )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
         }
       }
-      "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address but details not defined" in {
 
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
-          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-          charityRegistrationNumber = Some("123"),
-          areYouACorporateTrustee = Some(false),
-          doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
-          authorisedOfficialDetails =
-            Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
-        )
+      "not CH/CF charity ref " - {
+        val isCASCCharityRef = false
+        "should render the page correctly when organisation details not defined" in {
 
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+          val sessionData = completeRepaymentDetailsAnswersSession
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
 
-          val result = route(application, request).value
+            val result = route(application, request).value
 
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
 
-          status(result) shouldEqual OK
+            status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
         }
-      }
-      "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address not defined" in {
 
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
-          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
-          charityRegistrationNumber = Some("123"),
-          areYouACorporateTrustee = Some(false),
-          authorisedOfficialTrusteePostcode = Some("none"),
-          authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
-          authorisedOfficialTrusteeTitle = Some("MR"),
-          authorisedOfficialTrusteeFirstName = Some("Jack"),
-          authorisedOfficialTrusteeLastName = Some("Smith"),
-          authorisedOfficialDetails =
-            Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
-        )
+        "should render the page correctly when organisation details with  name of charity=EnglandAndWales, Reg Num, both Corporate Trustee & UK Address true" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales),
+            charityRegistrationNumber = Some("123"),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(true),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteePostcode = Some("none"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
 
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
 
-          val result = route(application, request).value
+            val result = route(application, request).value
 
-          val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
 
-          status(result) shouldEqual OK
+            status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity not defined, Reg Num, both Corporate Trustee & UK Address true" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            charityRegistrationNumber = Some("123"),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(true),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteePostcode = Some("none"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity=NorthernIreland, Reg Num not defined, both Corporate Trustee is true and not UK Address" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.NorthernIreland),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(false),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
+          val sessionData                =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+
+        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Waiting, both Corporate Trustee is true and not UK Address" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(false),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Exempt, both Corporate Trustee is true and not UK Address" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Exempt),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(false),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Excepted, both Corporate Trustee is true and not UK Address" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Excepted),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(false),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and not UK Address" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(false),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and UK Address not defined" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+            areYouACorporateTrustee = Some(true),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is not defined and UK Address not defined" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+
+        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = not defined, both Corporate Trustee is true and not UK Address" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(false),
+            nameOfCorporateTrustee = Some("Name of Corporate Trustee"),
+            corporateTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            corporateTrusteeDetails =
+              Some(CorporateTrusteeDetails("Name of Corporate Trustee", "12345678AB", Some("none")))
+          )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = true and UK address but details not defined" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+            charityRegistrationNumber = Some("123"),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(true)
+          )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = true and not UK address but details not defined" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+            charityRegistrationNumber = Some("123"),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(false)
+          )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+            charityRegistrationNumber = Some("123"),
+            areYouACorporateTrustee = Some(false),
+            doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
+            authorisedOfficialTrusteePostcode = Some("none"),
+            authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            authorisedOfficialTrusteeTitle = Some("MR"),
+            authorisedOfficialTrusteeFirstName = Some("Jack"),
+            authorisedOfficialTrusteeLastName = Some("Smith"),
+            authorisedOfficialDetails =
+              Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
+          )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+            charityRegistrationNumber = Some("123"),
+            areYouACorporateTrustee = Some(false),
+            doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
+            authorisedOfficialTrusteePostcode = Some("none"),
+            authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            authorisedOfficialTrusteeTitle = Some("MR"),
+            authorisedOfficialTrusteeFirstName = Some("Jack"),
+            authorisedOfficialTrusteeLastName = Some("Smith"),
+            authorisedOfficialDetails =
+              Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
+          )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address but details not defined" in {
+
+          val organisationDetailsAnswers =
+            OrganisationDetailsAnswers(
+              nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+              charityRegistrationNumber = Some("123"),
+              areYouACorporateTrustee = Some(false),
+              doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true),
+              authorisedOfficialDetails =
+                Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
+            )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address but details not defined" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+            charityRegistrationNumber = Some("123"),
+            areYouACorporateTrustee = Some(false),
+            doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
+            authorisedOfficialDetails =
+              Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
+          )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
+        }
+        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address not defined" in {
+
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+            charityRegistrationNumber = Some("123"),
+            areYouACorporateTrustee = Some(false),
+            authorisedOfficialTrusteePostcode = Some("none"),
+            authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("12345678AB"),
+            authorisedOfficialTrusteeTitle = Some("MR"),
+            authorisedOfficialTrusteeFirstName = Some("Jack"),
+            authorisedOfficialTrusteeLastName = Some("Smith"),
+            authorisedOfficialDetails =
+              Some(AuthorisedOfficialDetails(Some("MR"), "Jack", "Smith", "12345678AB", Some("none")))
+          )
+
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[OrganisationDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
+          }
         }
       }
     }

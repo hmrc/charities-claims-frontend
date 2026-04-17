@@ -33,7 +33,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
       case Some(buildList) =>
         Seq(
           buildList.nameOfCharityRegulator match {
-            case Some(EnglandAndWales)             =>
+            case Some(EnglandAndWales) if !isCASCCharityRef             =>
               Some(
                 summaryRow(
                   messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
@@ -44,7 +44,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
                   messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
                 )
               )
-            case Some(NorthernIreland)             =>
+            case Some(NorthernIreland) if !isCASCCharityRef             =>
               Some(
                 summaryRow(
                   messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
@@ -55,7 +55,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
                   messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
                 )
               )
-            case Some(Scottish)                    =>
+            case Some(Scottish) if !isCASCCharityRef                    =>
               Some(
                 summaryRow(
                   messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
@@ -66,7 +66,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
                   messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
                 )
               )
-            case Some(NameOfCharityRegulator.None) =>
+            case Some(NameOfCharityRegulator.None) if !isCASCCharityRef =>
               Some(
                 summaryRow(
                   messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label"),
@@ -77,7 +77,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
                   messages("organisationDetailsCheckYourAnswers.charityRegulatorName.label")
                 )
               )
-            case _                                 =>
+            case _                                                      =>
               if isCASCCharityRef then None
               else
                 Some(

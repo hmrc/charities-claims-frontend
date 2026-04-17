@@ -126,8 +126,9 @@ object SessionData {
       prevOverclaimedGiftAid                      = sessionData.prevOverclaimedGiftAid
       repaymentClaimDetails                      <- RepaymentClaimDetailsAnswers
                                                       .toRepaymentClaimDetails(sessionData.repaymentClaimDetailsAnswers.get)
-      organisationDetails                        <- sessionData.organisationDetailsAnswers
-                                                      .flatMapTry(OrganisationDetailsAnswers.toOrganisationDetails)
+      organisationDetails                        <-
+        sessionData.organisationDetailsAnswers
+          .flatMapTry(OrganisationDetailsAnswers.toOrganisationDetails(_, isCASCCharityReference(using sessionData)))
       giftAidSmallDonationsSchemeDonationDetails <-
         sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
           .flatMapTry(

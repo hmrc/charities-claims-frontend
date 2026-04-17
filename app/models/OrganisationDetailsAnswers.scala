@@ -19,7 +19,7 @@ package models
 import play.api.libs.json.Format
 import play.api.libs.json.Json
 
-import scala.util.Try
+import scala.util.{Success, Try}
 import utils.Required.required
 
 final case class OrganisationDetailsAnswers(
@@ -115,7 +115,7 @@ object OrganisationDetailsAnswers {
 
   def from(organisationDetails: OrganisationDetails): OrganisationDetailsAnswers =
     OrganisationDetailsAnswers(
-      nameOfCharityRegulator = organisationDetails.nameOfCharityRegulator,
+      nameOfCharityRegulator = Some(organisationDetails.nameOfCharityRegulator),
       reasonNotRegisteredWithRegulator = organisationDetails.reasonNotRegisteredWithRegulator,
       charityRegistrationNumber = organisationDetails.charityRegistrationNumber,
       areYouACorporateTrustee = Some(organisationDetails.areYouACorporateTrustee),
@@ -134,11 +134,16 @@ object OrganisationDetailsAnswers {
 
   def getMissingFields(answers: Option[OrganisationDetailsAnswers], isCASCCharityRef: Boolean): List[String] =
     answers match
-      case Some(a) => a.missingFields(isCASCCharityRef)
-      case None    => defaultMissingFields
+      case Some(a)                   => a.missingFields(isCASCCharityRef)
+      case None if !isCASCCharityRef => defaultMissingFields
+      case None                      => defaultMissingFieldsForCHCF
 
   private val defaultMissingFields: List[String] = List(
     "nameOfCharityRegulator.missingDetails",
+    "corporateTrusteeClaim.missingDetails"
+  )
+
+  private val defaultMissingFieldsForCHCF: List[String] = List(
     "corporateTrusteeClaim.missingDetails"
   )
 
@@ -255,16 +260,18 @@ object OrganisationDetailsAnswers {
       )
     )
 
-  def toOrganisationDetails(answers: OrganisationDetailsAnswers): Try[OrganisationDetails] =
+  def toOrganisationDetails(answers: OrganisationDetailsAnswers, isCASCCharity: Boolean): Try[OrganisationDetails] =
     for {
+      nameOfCharityRegulator  <-
+        if isCASCCharity then Success(NameOfCharityRegulator.None) else required(answers)(_.nameOfCharityRegulator)
       areYouACorporateTrustee <- required(answers)(_.areYouACorporateTrustee)
     } yield OrganisationDetails(
-      nameOfCharityRegulator = answers.nameOfCharityRegulator,
+      nameOfCharityRegulator = nameOfCharityRegulator,
       reasonNotRegisteredWithRegulator =
-        if answers.nameOfCharityRegulator == NameOfCharityRegulator.None then answers.reasonNotRegisteredWithRegulator
+        if nameOfCharityRegulator == NameOfCharityRegulator.None then answers.reasonNotRegisteredWithRegulator
         else None,
       charityRegistrationNumber =
-        if answers.nameOfCharityRegulator != NameOfCharityRegulator.None then answers.charityRegistrationNumber
+        if nameOfCharityRegulator != NameOfCharityRegulator.None then answers.charityRegistrationNumber
         else None,
       areYouACorporateTrustee = areYouACorporateTrustee,
       doYouHaveCorporateTrusteeUKAddress =
