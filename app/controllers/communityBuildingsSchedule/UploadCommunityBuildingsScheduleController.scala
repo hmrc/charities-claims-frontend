@@ -47,7 +47,7 @@ class UploadCommunityBuildingsScheduleController @Inject() (
     with Logging {
 
   val onPageLoad: Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
+    actions.authAndRefreshDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
       val claimId = request.sessionData.unsubmittedClaimId.get
 
       request.sessionData.communityBuildingsScheduleUpscanInitialization match {
