@@ -51,14 +51,14 @@ class RegisterCharityWithARegulatorController @Inject() (
     actions.authAndGetDataWithGuard(SessionData.isUnregulatedLimitExceeded).async { implicit request =>
       given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
       // gets dynamic limit based on charity type (LowIncome = £5,000, Excepted = £100,000)
-      val formattedLimit = unregulatedDonationsService.getApplicableLimit.getOrElse(defaultFormattedLimit)
+      val formattedLimit  = unregulatedDonationsService.getApplicableLimit.getOrElse(defaultFormattedLimit)
       // Re-check the actual limit. The session flag may be stale if the user changed their data
       // after the flag was set (e.g. via URL hop). If the limit is no longer exceeded, reset the
       // flag and redirect rather than showing WRN5 incorrectly.
       unregulatedDonationsService.checkUnregulatedLimit.flatMap {
         case Some(_) =>
           Future.successful(Ok(view(appConfig.registerCharityWithARegulatorUrl, formattedLimit)(form)))
-        case None =>
+        case None    =>
           val updatedSession = request.sessionData.copy(unregulatedLimitExceeded = false)
           saveService.save(updatedSession).map { _ =>
             Redirect(routes.ClaimsTaskListController.onPageLoad)
