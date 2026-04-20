@@ -62,7 +62,10 @@ class DefaultRefreshDataAction @Inject() (
                     val refreshedSessionData =
                       SessionData
                         .from(claim, request.charitiesReference, Some(uploadsSummary))
-                        .copy(unregulatedLimitExceeded = sessionData.unregulatedLimitExceeded)
+                        .copy(
+                          unregulatedLimitExceeded = sessionData.unregulatedLimitExceeded,
+                          unregulatedWarningBypassed = sessionData.unregulatedWarningBypassed
+                        )
                     cache
                       .store(refreshedSessionData)
                       .map(_ => Right(DataRequest(request, refreshedSessionData)))

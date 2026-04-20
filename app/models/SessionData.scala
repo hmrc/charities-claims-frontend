@@ -54,6 +54,7 @@ final case class SessionData(
   connectedCharitiesScheduleData: Option[ConnectedCharitiesScheduleData] = None,
   connectedCharitiesScheduleCompleted: Boolean = false,
   unregulatedLimitExceeded: Boolean = false,
+  unregulatedWarningBypassed: Boolean = false,
   adjustmentForOtherIncomePreviousOverClaimed: Option[BigDecimal] = None,
   prevOverclaimedGiftAid: Option[BigDecimal] = None,
   submissionReference: Option[String] = None
