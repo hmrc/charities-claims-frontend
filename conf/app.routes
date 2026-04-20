@@ -265,3 +265,5 @@ GET         /which-tax-year-are-you-claiming-for/:index            controllers.g
 
 GET         /check-gasds-adjustment-amount                controllers.giftAidSmallDonationsScheme.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad
 POST        /check-gasds-adjustment-amount                controllers.giftAidSmallDonationsScheme.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit
+
+GET         /cannot-set-up-gasds-claim                    controllers.giftAidSmallDonationsScheme.GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersController.onPageLoad

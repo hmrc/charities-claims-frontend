@@ -28,7 +28,20 @@ import scala.util.Failure
 final case class GiftAidSmallDonationsSchemeDonationDetailsAnswers(
   adjustmentForGiftAidOverClaimed: Option[BigDecimal] = None,
   claims: Option[Seq[Option[GiftAidSmallDonationsSchemeClaim]]] = None
-)
+) {
+
+  def missingFields: List[String] =
+    claims match {
+      case None                                         => List("giftAidSmallDonationsSchemeDonationDetails.missingDetails")
+      case Some(claimSeq) if claimSeq.forall(_.isEmpty) =>
+        List("giftAidSmallDonationsSchemeDonationDetails.missingDetails")
+      case Some(claimSeq)                               =>
+        claimSeq.zipWithIndex.collect { case (None, i) =>
+          s"giftAidSmallDonationsSchemeDonationDetails.claim${i + 1}.missingDetails"
+        }.toList
+    }
+
+}
 
 object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
 
@@ -110,5 +123,14 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
 
   def getClaimsSize(using session: SessionData): Int =
     session.giftAidSmallDonationsSchemeDonationDetailsAnswers.flatMap(_.claims.map(_.size)).getOrElse(0)
+
+  def getMissingFields(answers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers]): List[String] =
+    answers match
+      case Some(a) => a.missingFields
+      case None    => defaultMissingFields
+
+  private val defaultMissingFields: List[String] = List(
+    "giftAidSmallDonationsSchemeDonationDetails.missingDetails"
+  )
 
 }
