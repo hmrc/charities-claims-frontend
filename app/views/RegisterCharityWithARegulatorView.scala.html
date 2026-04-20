@@ -47,10 +47,6 @@
 
     @formHelper(action = routes.RegisterCharityWithARegulatorController.onSubmit, Symbol("autoComplete") -> "off") {
 
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-            @messages("registerCharityWithARegulator.legend")
-        </legend>
-
         @govukRadios(
             RadiosViewModel(
                 form("value"),
@@ -67,8 +63,8 @@
                     )
                 ),
                 Fieldset(
-                    legend = Some(Legend(content = Text(messages("registerCharityWithARegulator.heading")), isPageHeading = true,
-                    classes = "govuk-fieldset__legend--l"))
+                    legend = Some(Legend(content = Text(messages("registerCharityWithARegulator.legend")), isPageHeading = false,
+                    classes = "govuk-fieldset__legend--m"))
                 )
             )
         )
