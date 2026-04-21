@@ -174,7 +174,7 @@ object ClaimsTaskListController {
     val isCASCCharityRef: Boolean = isCASCCharityReference(using request.sessionData)
     val isComplete                = request.sessionData.organisationDetailsAnswers
       .exists(_.hasOrganisationDetailsCompleteAnswers(isCASCCharityRef))
-    val status                    = if (isComplete) TaskStatus.Completed else TaskStatus.Incomplete
+    val status                    = if (isComplete) TaskStatus.Completed else TaskStatus.NotStarted
     val href                      = if (isComplete) {
       organisationDetails.routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
     } else {

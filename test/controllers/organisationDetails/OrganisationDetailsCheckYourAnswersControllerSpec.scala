@@ -56,7 +56,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
       "is CH/CF charity ref " - {
         val isCASCCharityRef = true
 
-        "should render the page correctly when organisation details with  name of charity=NorthernIreland, Reg Num not defined, both Corporate Trustee is true and not UK Address and CH/CF charity ref" in {
+        "should render the page correctly when organisation details with name of charity=NorthernIreland, Reg Num not defined, both Corporate Trustee is true and not UK Address and CH/CF charity ref" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.NorthernIreland),
@@ -89,7 +89,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           }
         }
 
-        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Waiting, both Corporate Trustee is true and not UK Address and CH/CF charity ref" in {
+        "should render the page correctly when organisation details with of charity =None, reason for not registered = Waiting, both Corporate Trustee is true and not UK Address and CH/CF charity ref" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -123,7 +123,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Exempt, both Corporate Trustee is true and not UK Address and CH/CF charity ref" in {
+        "should render the page correctly when organisation details with name of charity =None, reason for not registered = Exempt, both Corporate Trustee is true and not UK Address and CH/CF charity ref" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -157,7 +157,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Excepted, both Corporate Trustee is true and not UK Address and CH/CF charity ref" in {
+        "should render the page correctly when organisation details with name of charity =None, reason for not registered = Excepted, both Corporate Trustee is true and not UK Address and CH/CF charity ref" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -191,7 +191,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and not UK Address and CH/CF charity ref" in {
+        "should render the page correctly when organisation details with name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and not UK Address and CH/CF charity ref" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -225,7 +225,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and UK Address not defined and CH/CF charity ref" in {
+        "should render the page correctly when organisation details with name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and UK Address not defined and CH/CF charity ref" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -258,7 +258,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is not defined and UK Address not defined and CH/CF charity ref" in {
+        "should render the page correctly when organisation details with name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is not defined and UK Address not defined and CH/CF charity ref" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -291,7 +291,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           }
         }
 
-        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = true and UK address but details not defined and CH/CF charity ref" in {
+        "should render the page correctly when organisation details with name of charity=Scottish, Reg Num, Corporate Trustee = true and UK address but details not defined and CH/CF charity ref" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -322,7 +322,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = true and not UK address but details not defined and CH/CF charity ref" in {
+        "should render the page correctly when organisation details with name of charity=Scottish, Reg Num, Corporate Trustee = true and not UK address but details not defined and CH/CF charity ref" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -353,7 +353,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address and CH/CF charity ref" in {
+        "should render the page correctly when organisation details with name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address and CH/CF charity ref" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -391,7 +391,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address and CH/CF charity ref" in {
+        "should render the page correctly when organisation details with name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address and CH/CF charity ref" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -429,7 +429,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address but details not defined and CH/CF charity ref" in {
+        "should render the page correctly when organisation details with name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address but details not defined and CH/CF charity ref" in {
 
           val organisationDetailsAnswers =
             OrganisationDetailsAnswers(
@@ -463,7 +463,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address but details not defined and CH/CF charity ref" in {
+        "should render the page correctly when organisation details with name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address but details not defined and CH/CF charity ref" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -496,7 +496,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address not defined and CH/CF charity ref" in {
+        "should render the page correctly when organisation details with name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address not defined and CH/CF charity ref" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -557,7 +557,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           }
         }
 
-        "should render the page correctly when organisation details with  name of charity=EnglandAndWales, Reg Num, both Corporate Trustee & UK Address true" in {
+        "should render the page correctly when organisation details with name of charity=EnglandAndWales, Reg Num, both Corporate Trustee & UK Address true" in {
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales),
             charityRegistrationNumber = Some("123"),
@@ -588,7 +588,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity not defined, Reg Num, both Corporate Trustee & UK Address true" in {
+        "should render the page correctly when organisation details with name of charity not defined, Reg Num, both Corporate Trustee & UK Address true" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             charityRegistrationNumber = Some("123"),
@@ -619,7 +619,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity=NorthernIreland, Reg Num not defined, both Corporate Trustee is true and not UK Address" in {
+        "should render the page correctly when organisation details with name of charity=NorthernIreland, Reg Num not defined, both Corporate Trustee is true and not UK Address" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.NorthernIreland),
@@ -649,7 +649,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           }
         }
 
-        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Waiting, both Corporate Trustee is true and not UK Address" in {
+        "should render the page correctly when organisation details with name of charity =None, reason for not registered = Waiting, both Corporate Trustee is true and not UK Address" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -680,7 +680,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Exempt, both Corporate Trustee is true and not UK Address" in {
+        "should render the page correctly when organisation details with name of charity =None, reason for not registered = Exempt, both Corporate Trustee is true and not UK Address" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -711,7 +711,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = Excepted, both Corporate Trustee is true and not UK Address" in {
+        "should render the page correctly when organisation details with name of charity =None, reason for not registered = Excepted, both Corporate Trustee is true and not UK Address" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -742,7 +742,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and not UK Address" in {
+        "should render the page correctly when organisation details with name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and not UK Address" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -773,7 +773,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and UK Address not defined" in {
+        "should render the page correctly when organisation details with name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is true and UK Address not defined" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -803,7 +803,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is not defined and UK Address not defined" in {
+        "should render the page correctly when organisation details with name of charity =None, reason for not registered = LowIncome, both Corporate Trustee is not defined and UK Address not defined" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -833,7 +833,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           }
         }
 
-        "should render the page correctly when organisation details with  name of charity =None, reason for not registered = not defined, both Corporate Trustee is true and not UK Address" in {
+        "should render the page correctly when organisation details with name of charity =None, reason for not registered = not defined, both Corporate Trustee is true and not UK Address" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
@@ -863,7 +863,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = true and UK address but details not defined" in {
+        "should render the page correctly when organisation details with name of charity=Scottish, Reg Num, Corporate Trustee = true and UK address but details not defined" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -891,7 +891,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = true and not UK address but details not defined" in {
+        "should render the page correctly when organisation details with name of charity=Scottish, Reg Num, Corporate Trustee = true and not UK address but details not defined" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -919,7 +919,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address" in {
+        "should render the page correctly when organisation details with name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -954,7 +954,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address" in {
+        "should render the page correctly when organisation details with name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -989,7 +989,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address but details not defined" in {
+        "should render the page correctly when organisation details with name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address but details not defined" in {
 
           val organisationDetailsAnswers =
             OrganisationDetailsAnswers(
@@ -1020,7 +1020,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address but details not defined" in {
+        "should render the page correctly when organisation details with name of charity=Scottish, Reg Num, Corporate Trustee = false and not UK address but details not defined" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
@@ -1050,7 +1050,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             contentAsString(result) shouldEqual view(sessionData.organisationDetailsAnswers, isCASCCharityRef).body
           }
         }
-        "should render the page correctly when organisation details with  name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address not defined" in {
+        "should render the page correctly when organisation details with name of charity=Scottish, Reg Num, Corporate Trustee = false and UK address not defined" in {
 
           val organisationDetailsAnswers = OrganisationDetailsAnswers(
             nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),

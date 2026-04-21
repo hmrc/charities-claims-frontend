@@ -26,6 +26,7 @@ import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
 import views.html.ReasonNotRegisteredWithRegulatorView
+import models.SessionData.isCASCCharityReference
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -42,9 +43,8 @@ class ReasonNotRegisteredWithRegulatorController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      val charitiesReference = request.sessionData.charitiesReference
-      if charitiesReference.startsWith("CH") || charitiesReference.startsWith("CF") then
-        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      given sessionData: SessionData = request.sessionData
+      if isCASCCharityReference then Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
       else {
         val NameOfCharityAnswer: Option[NameOfCharityRegulator] =
           OrganisationDetailsAnswers.getNameOfCharityRegulator
