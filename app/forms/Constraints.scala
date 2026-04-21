@@ -37,6 +37,12 @@ trait Constraints extends validation.Constraints {
         Invalid(errorKey, regex)
     }
 
+  protected def required(errorKey: String): Constraint[String] =
+    Constraint[String]("constraint.required") { input =>
+      if (input != null && input.trim.nonEmpty) Valid
+      else Invalid(ValidationError(errorKey))
+    }
+
   override def maxLength(length: Int, errorKey: String): Constraint[String] =
     Constraint[String]("constraint.maxLength", length) { input =>
       val normalisedInput = input.replace("\r\n", "\n")

@@ -267,3 +267,9 @@ GET         /check-gasds-adjustment-amount                controllers.giftAidSma
 POST        /check-gasds-adjustment-amount                controllers.giftAidSmallDonationsScheme.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit
 
 GET         /cannot-set-up-gasds-claim                    controllers.giftAidSmallDonationsScheme.GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersController.onPageLoad
+
+GET         /which-tax-year-are-you-claiming-for/:index        controllers.giftAidSmallDonationsScheme.WhichTaxYearAreYouClaimingForController.onPageLoad(index: Int)
+POST        /which-tax-year-are-you-claiming-for/:index        controllers.giftAidSmallDonationsScheme.WhichTaxYearAreYouClaimingForController.onSubmit(index: Int)
+
+GET         /donation-amount-you-are-claiming/:index        controllers.giftAidSmallDonationsScheme.DonationAmountYouAreClaimingController.onPageLoad(index: Int)
+POST        /donation-amount-you-are-claiming/:index        controllers.giftAidSmallDonationsScheme.DonationAmountYouAreClaimingController.onSubmit(index: Int)

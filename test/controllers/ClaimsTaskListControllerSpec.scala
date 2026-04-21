@@ -503,7 +503,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         }
       }
 
-      "should show Gift Aid schedule as Incomplete when not completed" in {
+      "should show Gift Aid schedule as not yet started when not completed" in {
         val answers     = repaymentClaimDetailsAnswersCompleted.copy(claimingGiftAid = Some(true))
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
@@ -517,7 +517,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val request = FakeRequest(GET, url)
           val result  = route(application, request).value
 
-          contentAsString(result) should include("Incomplete")
+          contentAsString(result) should include("Not yet started")
         }
       }
 
@@ -582,7 +582,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         }
       }
 
-      "should show Other income schedule as Incomplete when not completed" in {
+      "should show Other income schedule as not yet started when not completed" in {
         val answers     = repaymentClaimDetailsAnswersCompleted.copy(claimingTaxDeducted = Some(true))
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
@@ -596,7 +596,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val request = FakeRequest(GET, url)
           val result  = route(application, request).value
 
-          contentAsString(result) should include("Incomplete")
+          contentAsString(result) should include("Not yet started")
         }
       }
 

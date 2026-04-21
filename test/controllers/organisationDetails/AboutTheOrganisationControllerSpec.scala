@@ -118,6 +118,50 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
         }
       }
 
+      "should redirect to the CorporateTrusteeClaimController if charity ref start with CH" in {
+        val testCharitiesReference: String                      = "CH-test-charities-ref"
+        val completeRepaymentDetailsAnswersSession: SessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some("test-claim-id"),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers)
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = completeRepaymentDetailsAnswersSession).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.AboutTheOrganisationController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
+        }
+      }
+
+      "should redirect to the CorporateTrusteeClaimController if charity ref start with CF" in {
+        val testCharitiesReference: String                      = "CF-test-charities-ref"
+        val completeRepaymentDetailsAnswersSession: SessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some("test-claim-id"),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers)
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = completeRepaymentDetailsAnswersSession).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.AboutTheOrganisationController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
+        }
+      }
+
       "should redirect to the ClaimsTaskListController" in {
         given application: Application = applicationBuilder().build()
 

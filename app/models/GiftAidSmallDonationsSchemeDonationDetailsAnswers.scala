@@ -16,14 +16,9 @@
 
 package models
 
-import play.api.libs.json.Format
-import play.api.libs.json.Json
-import scala.util.Try
-import utils.Required.required
-import scala.util.Success
-import play.api.libs.json.Reads
-import play.api.libs.json.Writes
-import scala.util.Failure
+import play.api.libs.json.{Format, Json, Reads, Writes}
+
+import scala.util.{Failure, Success, Try}
 
 final case class GiftAidSmallDonationsSchemeDonationDetailsAnswers(
   adjustmentForGiftAidOverClaimed: Option[BigDecimal] = None,
@@ -102,13 +97,25 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
   def getClaim(index: Int)(using session: SessionData): Option[GiftAidSmallDonationsSchemeClaim] =
     get(a => a.claims.flatMap(_.lift(index)).flatten)
 
+  def isTaxYearEntered(index: Int)(using session: SessionData): Boolean =
+    getClaim(index).exists(_.taxYear > 0)
+
+  def isValidIndex(index: Int): Boolean =
+    index >= 1 && index <= 3
+
   def setClaim(index: Int, value: GiftAidSmallDonationsSchemeClaim)(using session: SessionData): SessionData =
     set(value)((a, v) =>
-      a.copy(claims =
-        a.claims
-          .map(_.updated(index, Some(v)))
-          .orElse(Some(Seq.fill(index)(None).:+(Some(v))))
-      )
+      a.copy(claims = a.claims match {
+        case Some(existing) if index < existing.length =>
+          Some(existing.updated(index, Some(v)))
+
+        case Some(existing) =>
+          val gap = Seq.fill(index - existing.length)(None)
+          Some(existing ++ gap :+ Some(v))
+
+        case None =>
+          Some(Seq.fill(index)(None) :+ Some(v))
+      })
     )
 
   def removeClaim(index: Int)(using session: SessionData): SessionData =

@@ -19,6 +19,7 @@ package controllers.organisationDetails
 import com.google.inject.Inject
 import controllers.actions.Actions
 import models.SessionData
+import models.SessionData.isCASCCharityReference
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ClaimsService
@@ -40,12 +41,14 @@ class OrganisationDetailsCheckYourAnswersController @Inject() (
   def onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
       val previousAnswers = request.sessionData.organisationDetailsAnswers
-      Future.successful(Ok(view(previousAnswers)))
+      Future.successful(Ok(view(previousAnswers, isCASCCharityReference(using request.sessionData))))
     }
 
   def onSubmit: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      val checkAnswers = request.sessionData.organisationDetailsAnswers.exists(_.hasOrganisationDetailsCompleteAnswers)
+      val checkAnswers =
+        request.sessionData.organisationDetailsAnswers
+          .exists(_.hasOrganisationDetailsCompleteAnswers(isCASCCharityReference(using request.sessionData)))
       if checkAnswers
       then
         claimsService.save.map { _ =>
