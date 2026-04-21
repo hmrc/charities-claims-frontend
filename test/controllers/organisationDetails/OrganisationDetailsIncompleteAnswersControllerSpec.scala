@@ -48,12 +48,12 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
           )
         }
       }
-      "should render the page with default missing fields when no session data present" in {
+      "should render the page with default missing fields when no session data present when not CH/CF charity ref" in {
         val sessionData = completeRepaymentDetailsAnswersSession
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        val defaultMissingFields = OrganisationDetailsAnswers.getMissingFields(None)
+        val isCASCCharityRef           = false
+        val defaultMissingFields       = OrganisationDetailsAnswers.getMissingFields(None, isCASCCharityRef)
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -72,7 +72,57 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
         }
       }
 
-      "should render the page with missing fields when answers are incomplete" in {
+      "should render the page with default missing fields when no session data present when CH charity ref" in {
+        val sessionData = completeRepaymentDetailsAnswersSession.copy(charitiesReference = "CH-123")
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        val isCASCCharityRef     = true
+        val defaultMissingFields = OrganisationDetailsAnswers.getMissingFields(None, isCASCCharityRef)
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.OrganisationDetailsIncompleteAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[OrganisationDetailsIncompleteAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
+            defaultMissingFields
+          ).body
+        }
+      }
+
+      "should render the page with default missing fields when no session data present when CF charity ref" in {
+        val sessionData = completeRepaymentDetailsAnswersSession.copy(charitiesReference = "CF-123")
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        val isCASCCharityRef     = true
+        val defaultMissingFields = OrganisationDetailsAnswers.getMissingFields(None, isCASCCharityRef)
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.OrganisationDetailsIncompleteAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[OrganisationDetailsIncompleteAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
+            defaultMissingFields
+          ).body
+        }
+      }
+
+      "should render the page with missing fields when answers are incomplete when not CH/CF charity ref" in {
 
         val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
@@ -93,7 +143,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
         given application: Application = applicationBuilder(sessionData).build()
 
-        val missingFields = OrganisationDetailsAnswers().missingFields
+        val isCASCCharityRef = false
+        val missingFields    = OrganisationDetailsAnswers().missingFields(isCASCCharityRef)
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -166,7 +217,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
         }
       }
 
-      "should render the page with charity regulator number missing when regulator is EnglandAndWales" in {
+      "should render the page with charity regulator number missing when regulator is EnglandAndWales && not CH/CF charity Ref" in {
         val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(true),
@@ -189,7 +240,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
         given application: Application = applicationBuilder(sessionData).build()
 
-        val missingFields = sessionData.organisationDetailsAnswers.get.missingFields
+        val isCASCCharityRef = false
+        val missingFields    = sessionData.organisationDetailsAnswers.get.missingFields(isCASCCharityRef)
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -208,7 +260,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
         }
       }
 
-      "should render the page with reason not registered missing when regulator is None" in {
+      "should render the page with reason not registered missing when regulator is None && not CH/CF charity ref" in {
         val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(true),
@@ -231,7 +283,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
         given application: Application = applicationBuilder(sessionData).build()
 
-        val missingFields = sessionData.organisationDetailsAnswers.get.missingFields
+        val isCASCCharityRef = false
+        val missingFields    = sessionData.organisationDetailsAnswers.get.missingFields(isCASCCharityRef)
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -250,7 +303,53 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
         }
       }
 
-      "should render the page with corporate trustee details missing when corporate trustee selected" in {
+      "should render the page with corporate trustee details missing when corporate trustee selected && CH/CF charity Ref" in {
+        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
+          claimingGiftAid = Some(true),
+          claimingTaxDeducted = Some(true),
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingReferenceNumber = Some(false),
+          claimReferenceNumber = Some("12345678AB")
+        )
+
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some("123"),
+          lastUpdatedReference = Some("123"),
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
+          organisationDetailsAnswers = Some(
+            OrganisationDetailsAnswers(
+              nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+              areYouACorporateTrustee = Some(true),
+              doYouHaveCorporateTrusteeUKAddress = Some(true)
+            )
+          )
+        ).copy(charitiesReference = "CF-123")
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        val isCASCCharityRef = true
+        val missingFields    = sessionData.organisationDetailsAnswers.get.missingFields(isCASCCharityRef)
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.OrganisationDetailsIncompleteAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[OrganisationDetailsIncompleteAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
+            missingFields
+          ).body
+        }
+      }
+
+      "should render the page with corporate trustee details missing when corporate trustee selected && not CH/CF charity Ref" in {
         val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(true),
@@ -276,7 +375,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
         given application: Application = applicationBuilder(sessionData).build()
 
-        val missingFields = sessionData.organisationDetailsAnswers.get.missingFields
+        val isCASCCharityRef = false
+        val missingFields    = sessionData.organisationDetailsAnswers.get.missingFields(isCASCCharityRef)
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -295,7 +395,7 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
         }
       }
 
-      "should render the page with authorised official details missing when not corporate trustee" in {
+      "should render the page with authorised official details missing when not corporate trustee && not CH/CF charity ref" in {
         val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(true),
@@ -321,7 +421,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
         given application: Application = applicationBuilder(sessionData).build()
 
-        val missingFields = sessionData.organisationDetailsAnswers.get.missingFields
+        val isCASCCharityRef = false
+        val missingFields    = sessionData.organisationDetailsAnswers.get.missingFields(isCASCCharityRef)
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -340,7 +441,53 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
         }
       }
 
-      "should render the page with multiple missing fields when only regulator name provided" in {
+      "should render the page with authorised official details missing when not corporate trustee && CH/CF charity ref" in {
+        val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
+          claimingGiftAid = Some(true),
+          claimingTaxDeducted = Some(true),
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingReferenceNumber = Some(false),
+          claimReferenceNumber = Some("12345678AB")
+        )
+
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some("123"),
+          lastUpdatedReference = Some("123"),
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
+          organisationDetailsAnswers = Some(
+            OrganisationDetailsAnswers(
+              nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+              reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.Waiting),
+              areYouACorporateTrustee = Some(false),
+              doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true)
+            )
+          )
+        ).copy(charitiesReference = "CF-123")
+
+        given application: Application = applicationBuilder(sessionData).build()
+
+        val isCASCCharityRef = true
+        val missingFields    = sessionData.organisationDetailsAnswers.get.missingFields(isCASCCharityRef)
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.OrganisationDetailsIncompleteAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[OrganisationDetailsIncompleteAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
+            missingFields
+          ).body
+        }
+      }
+
+      "should render the page with multiple missing fields when only regulator name provided && not CH/CF charity Ref" in {
         val repaymentClaimDetailsDefaultAnswers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(true),
           claimingTaxDeducted = Some(true),
@@ -363,7 +510,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
         given application: Application = applicationBuilder(sessionData).build()
 
-        val missingFields = sessionData.organisationDetailsAnswers.get.missingFields
+        val isCASCCharityRef = false
+        val missingFields    = sessionData.organisationDetailsAnswers.get.missingFields(isCASCCharityRef)
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =

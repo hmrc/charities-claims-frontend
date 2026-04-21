@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-package forms
+package utils
 
-object Validation {
-  val claimReferenceNumberPattern  = "^([\\x00-\\x7F\\xA0-\\xFF]{1,20})$"
-  val adjustmentToThisClaimPattern = "^([\\x00-\\x7F\\xA0-\\xFF]{1,350})$"
-  val taxYearRegexPattern          = "^\\d{4}$"
+object TaxYearLabels {
+
+  def taxYearLabelKey(index: Int): String =
+    index match {
+      case 1 => "taxYear.first"
+      case 2 => "taxYear.second"
+      case 3 => "taxYear.third"
+      case _ => throw new IllegalArgumentException(s"Invalid index: $index")
+    }
 }

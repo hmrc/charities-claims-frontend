@@ -23,6 +23,7 @@ import views.html.CharityExceptedView
 import controllers.actions.Actions
 import models.{Mode, OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator, SessionData}
 import models.Mode.*
+import models.SessionData.isCASCCharityReference
 
 import scala.concurrent.Future
 
@@ -34,11 +35,15 @@ class CharityExceptedController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
-        OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
-      previousAnswer match {
-        case Some(ReasonNotRegisteredWithRegulator.Excepted) => Future.successful(Ok(view(mode)))
-        case _                                               => Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      given sessionData: SessionData = request.sessionData
+      if isCASCCharityReference then Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      else {
+        val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
+          OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
+        previousAnswer match {
+          case Some(ReasonNotRegisteredWithRegulator.Excepted) => Future.successful(Ok(view(mode)))
+          case _                                               => Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+        }
       }
     }
 

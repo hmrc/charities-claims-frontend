@@ -69,87 +69,220 @@ class OrganisationDetailsAnswersSpec extends BaseSpec {
     }
 
     "missingFields" - {
-      "should return missing fields when OrganisationDetailsAnswers is empty" in {
-        val organisationDetailsAnswers = OrganisationDetailsAnswers()
+      "not CH/CF charity ref" - {
+        val isCASCCharityRef = false
+        "should return missing fields when OrganisationDetailsAnswers is empty " in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers()
 
-        val missingFields = organisationDetailsAnswers.missingFields
+          val missingFields = organisationDetailsAnswers.missingFields(isCASCCharityRef)
 
-        missingFields should contain("nameOfCharityRegulator.missingDetails")
-        missingFields should contain("corporateTrusteeClaim.missingDetails")
+          missingFields should contain("nameOfCharityRegulator.missingDetails")
+          missingFields should contain("corporateTrusteeClaim.missingDetails")
+        }
+
+        "should return charityRegulatorNumber is missing when regulator requires registration number" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales)
+          )
+          val missingFields              = organisationDetailsAnswers.missingFields(isCASCCharityRef)
+
+          missingFields should contain("charityRegulatorNumber.missingDetails")
+        }
+
+        "should return corporateTrusteeDetails is missing when corporate trustee selected but corporate name missing" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            nameOfCorporateTrustee = None,
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(true)
+          )
+          val missingFields              = organisationDetailsAnswers.missingFields(isCASCCharityRef)
+
+          missingFields should contain("corporateTrusteeDetails.missingDetails")
+        }
+
+        "should return corporateTrusteeDetails is missing when corporate trustee selected but phone missing" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            nameOfCorporateTrustee = Some("some corporate name"),
+            corporateTrusteeDaytimeTelephoneNumber = None,
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(true)
+          )
+          val missingFields              = organisationDetailsAnswers.missingFields(isCASCCharityRef)
+
+          missingFields should contain("corporateTrusteeDetails.missingDetails")
+        }
+
+        "should return corporateTrusteeDetails is missing when corporate trustee & uk address is not in UK selected but phone missing" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            nameOfCorporateTrustee = Some("some corporate name"),
+            corporateTrusteeDaytimeTelephoneNumber = None,
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(false)
+          )
+          val missingFields              = organisationDetailsAnswers.missingFields(isCASCCharityRef)
+
+          missingFields should contain("corporateTrusteeDetails.missingDetails")
+        }
+
+        "should return corporateTrusteeDetails is missing when corporate trustee & uk address is not in UK selected but corporate name missing" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            nameOfCorporateTrustee = None,
+            corporateTrusteeDaytimeTelephoneNumber = Some("07912345678"),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(false)
+          )
+          val missingFields              = organisationDetailsAnswers.missingFields(isCASCCharityRef)
+
+          missingFields should contain("corporateTrusteeDetails.missingDetails")
+        }
+
+        "should return authorisedOfficialDetails is missing when not corporate trustee but details missing" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+            areYouACorporateTrustee = Some(false),
+            doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true)
+          )
+          val missingFields              = organisationDetailsAnswers.missingFields(isCASCCharityRef)
+
+          missingFields should contain("authorisedOfficialDetails.missingDetails")
+        }
+
+        "should return empty missing fields list when all required fields are complete" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+            areYouACorporateTrustee = Some(false),
+            doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
+            authorisedOfficialTrusteeFirstName = Some("John"),
+            authorisedOfficialTrusteeLastName = Some("Doe"),
+            authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("07912345678")
+          )
+          val missingFields              = organisationDetailsAnswers.missingFields(isCASCCharityRef)
+
+          missingFields shouldBe empty
+        }
       }
+      "is CH/CF charity ref" - {
+        val isCASCCharityRef = true
+        "should return missing fields when OrganisationDetailsAnswers is empty " in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers()
 
-      "should return charityRegulatorNumber is missing when regulator requires registration number" in {
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales)
-        )
+          val missingFields = organisationDetailsAnswers.missingFields(isCASCCharityRef)
 
-        val missingFields = organisationDetailsAnswers.missingFields
+          missingFields should contain("corporateTrusteeClaim.missingDetails")
+        }
 
-        missingFields should contain("charityRegulatorNumber.missingDetails")
-      }
+        "should return charityRegulatorNumber is missing when regulator requires registration number" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales)
+          )
+          val missingFields              = organisationDetailsAnswers.missingFields(isCASCCharityRef)
 
-      "should return corporateTrusteeDetails is missing when corporate trustee selected but details missing" in {
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
-          areYouACorporateTrustee = Some(true),
-          doYouHaveCorporateTrusteeUKAddress = Some(true)
-        )
+          missingFields shouldNot contain("charityRegulatorNumber.missingDetails")
+        }
 
-        val missingFields = organisationDetailsAnswers.missingFields
+        "should return corporateTrusteeDetails is missing when corporate trustee selected but details missing" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            areYouACorporateTrustee = Some(true),
+            corporateTrusteeDaytimeTelephoneNumber = None,
+            doYouHaveCorporateTrusteeUKAddress = Some(true)
+          )
+          val missingFields              = organisationDetailsAnswers.missingFields(isCASCCharityRef)
 
-        missingFields should contain("corporateTrusteeDetails.missingDetails")
-      }
+          missingFields should contain("corporateTrusteeDetails.missingDetails")
+          missingFields shouldNot contain("charityRegulatorNumber.missingDetails")
+        }
 
-      "should return authorisedOfficialDetails is missing when not corporate trustee but details missing" in {
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
-          areYouACorporateTrustee = Some(false),
-          doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true)
-        )
+        "should return corporateTrusteeDetails is missing when corporate trustee selected but phone missing" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            nameOfCorporateTrustee = Some("some corporate name"),
+            corporateTrusteeDaytimeTelephoneNumber = None,
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+            areYouACorporateTrustee = Some(true),
+            doYouHaveCorporateTrusteeUKAddress = Some(true)
+          )
+          val missingFields              = organisationDetailsAnswers.missingFields(isCASCCharityRef)
 
-        val missingFields = organisationDetailsAnswers.missingFields
+          missingFields should contain("corporateTrusteeDetails.missingDetails")
+        }
 
-        missingFields should contain("authorisedOfficialDetails.missingDetails")
-      }
+        "should return authorisedOfficialDetails is missing when not corporate trustee but details missing" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            areYouACorporateTrustee = Some(false),
+            doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(true)
+          )
+          val missingFields              = organisationDetailsAnswers.missingFields(isCASCCharityRef)
 
-      "should return empty missing fields list when all required fields are complete" in {
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
-          areYouACorporateTrustee = Some(false),
-          doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
-          authorisedOfficialTrusteeFirstName = Some("John"),
-          authorisedOfficialTrusteeLastName = Some("Doe"),
-          authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("07912345678")
-        )
+          missingFields should contain("authorisedOfficialDetails.missingDetails")
+        }
 
-        val missingFields = organisationDetailsAnswers.missingFields
+        "should return empty missing fields list when all required fields are complete" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            areYouACorporateTrustee = Some(false),
+            doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
+            authorisedOfficialTrusteeFirstName = Some("John"),
+            authorisedOfficialTrusteeLastName = Some("Doe"),
+            authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("07912345678")
+          )
+          val missingFields              = organisationDetailsAnswers.missingFields(isCASCCharityRef)
 
-        missingFields shouldBe empty
+          missingFields shouldBe empty
+        }
       }
     }
 
     "hasOrganisationDetailsCompleteAnswers" - {
-      "should return false when there are missing fields" in {
-        val organisationDetailsAnswers = OrganisationDetailsAnswers()
+      "is CH/CF charity ref" - {
+        val isCASCCharityRef = true
+        "should return false when there are missing fields" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers()
 
-        organisationDetailsAnswers.hasOrganisationDetailsCompleteAnswers shouldBe false
+          organisationDetailsAnswers.hasOrganisationDetailsCompleteAnswers(isCASCCharityRef) shouldBe false
+        }
+
+        "should return true when there are no missing fields" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            areYouACorporateTrustee = Some(false),
+            doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
+            authorisedOfficialTrusteeFirstName = Some("John"),
+            authorisedOfficialTrusteeLastName = Some("Doe"),
+            authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("07912345678")
+          )
+
+          organisationDetailsAnswers.hasOrganisationDetailsCompleteAnswers(isCASCCharityRef) shouldBe true
+        }
       }
+      "is not CH/CF charity ref" - {
+        val isCASCCharityRef = false
+        "should return false when there are missing fields" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers()
 
-      "should return true when there are no missing fields" in {
-        val organisationDetailsAnswers = OrganisationDetailsAnswers(
-          nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
-          reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
-          areYouACorporateTrustee = Some(false),
-          doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
-          authorisedOfficialTrusteeFirstName = Some("John"),
-          authorisedOfficialTrusteeLastName = Some("Doe"),
-          authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("07912345678")
-        )
+          organisationDetailsAnswers.hasOrganisationDetailsCompleteAnswers(isCASCCharityRef) shouldBe false
+        }
 
-        organisationDetailsAnswers.hasOrganisationDetailsCompleteAnswers shouldBe true
+        "should return true when there are no missing fields" in {
+          val organisationDetailsAnswers = OrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.None),
+            reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+            areYouACorporateTrustee = Some(false),
+            doYouHaveAuthorisedOfficialTrusteeUKAddress = Some(false),
+            authorisedOfficialTrusteeFirstName = Some("John"),
+            authorisedOfficialTrusteeLastName = Some("Doe"),
+            authorisedOfficialTrusteeDaytimeTelephoneNumber = Some("07912345678")
+          )
+
+          organisationDetailsAnswers.hasOrganisationDetailsCompleteAnswers(isCASCCharityRef) shouldBe true
+        }
       }
     }
   }

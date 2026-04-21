@@ -127,8 +127,9 @@ object SessionData {
       prevOverclaimedGiftAid                      = sessionData.prevOverclaimedGiftAid
       repaymentClaimDetails                      <- RepaymentClaimDetailsAnswers
                                                       .toRepaymentClaimDetails(sessionData.repaymentClaimDetailsAnswers.get)
-      organisationDetails                        <- sessionData.organisationDetailsAnswers
-                                                      .flatMapTry(OrganisationDetailsAnswers.toOrganisationDetails)
+      organisationDetails                        <-
+        sessionData.organisationDetailsAnswers
+          .flatMapTry(OrganisationDetailsAnswers.toOrganisationDetails(_, isCASCCharityReference(using sessionData)))
       giftAidSmallDonationsSchemeDonationDetails <-
         sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
           .flatMapTry(
@@ -178,10 +179,15 @@ object SessionData {
   def isClaimNotSubmitted(using session: SessionData): Boolean =
     session.submissionReference.isEmpty
 
+  def isCASCCharityReference(using session: SessionData): Boolean =
+    session.charitiesReference.startsWith("CH") || session.charitiesReference.startsWith("CF")
+
   def isClaimDetailsComplete(using session: SessionData): Boolean =
     session.unsubmittedClaimId.isDefined
       && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
-      && session.organisationDetailsAnswers.exists(_.hasOrganisationDetailsCompleteAnswers)
+      && session.organisationDetailsAnswers.exists(
+        _.hasOrganisationDetailsCompleteAnswers(isCASCCharityReference(using session))
+      )
       && (!shouldUploadConnectedCharitiesSchedule || session.connectedCharitiesScheduleCompleted)
       && (!shouldUploadOtherIncomeSchedule || session.otherIncomeScheduleCompleted)
       && (!shouldUploadCommunityBuildingsSchedule || session.communityBuildingsScheduleCompleted)

@@ -19,9 +19,8 @@ package models
 import play.api.libs.json.Format
 import play.api.libs.json.Json
 
-import scala.util.Try
+import scala.util.{Success, Try}
 import utils.Required.required
-import models.SessionData
 
 final case class OrganisationDetailsAnswers(
   nameOfCharityRegulator: Option[NameOfCharityRegulator] = None,
@@ -41,22 +40,22 @@ final case class OrganisationDetailsAnswers(
   corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None,
   authorisedOfficialDetails: Option[AuthorisedOfficialDetails] = None
 ) {
-  def missingFields: List[String] =
+  def missingFields(isCASCCharityRef: Boolean): List[String] =
     List(
-      nameOfCharityRegulator.isEmpty                            -> "nameOfCharityRegulator.missingDetails",
+      (nameOfCharityRegulator.isEmpty && !isCASCCharityRef)               -> "nameOfCharityRegulator.missingDetails",
       (nameOfCharityRegulator.isDefined && nameOfCharityRegulator.contains(
         NameOfCharityRegulator.None
-      ) && reasonNotRegisteredWithRegulator.isEmpty)            -> "reasonNotRegisteredWithRegulator.missingDetails",
+      ) && reasonNotRegisteredWithRegulator.isEmpty && !isCASCCharityRef) -> "reasonNotRegisteredWithRegulator.missingDetails",
       (nameOfCharityRegulator.isDefined &&
         (nameOfCharityRegulator.contains(NameOfCharityRegulator.EnglandAndWales)
           || nameOfCharityRegulator.contains(NameOfCharityRegulator.Scottish)
           || nameOfCharityRegulator.contains(
             NameOfCharityRegulator.NorthernIreland
-          )) && charityRegistrationNumber.isEmpty)              -> "charityRegulatorNumber.missingDetails",
-      areYouACorporateTrustee.isEmpty                           -> "corporateTrusteeClaim.missingDetails",
+          )) && charityRegistrationNumber.isEmpty && !isCASCCharityRef)   -> "charityRegulatorNumber.missingDetails",
+      areYouACorporateTrustee.isEmpty                                     -> "corporateTrusteeClaim.missingDetails",
       (areYouACorporateTrustee.contains(
         true
-      ) && doYouHaveCorporateTrusteeUKAddress.isEmpty)          -> "corporateTrusteeAddress.missingDetails",
+      ) && doYouHaveCorporateTrusteeUKAddress.isEmpty)                    -> "corporateTrusteeAddress.missingDetails",
       (
         areYouACorporateTrustee.contains(true)
           && doYouHaveCorporateTrusteeUKAddress.contains(true)
@@ -65,7 +64,7 @@ final case class OrganisationDetailsAnswers(
               || nameOfCorporateTrustee.isEmpty
               || corporateTrusteeDaytimeTelephoneNumber.isEmpty
           )
-      )                                                         -> "corporateTrusteeDetails.missingDetails",
+      )                                                                   -> "corporateTrusteeDetails.missingDetails",
       (
         areYouACorporateTrustee.contains(true)
           && doYouHaveCorporateTrusteeUKAddress.contains(false)
@@ -73,16 +72,16 @@ final case class OrganisationDetailsAnswers(
             corporateTrusteeDaytimeTelephoneNumber.isEmpty
               || nameOfCorporateTrustee.isEmpty
           )
-      )                                                         -> "corporateTrusteeDetails.missingDetails",
+      )                                                                   -> "corporateTrusteeDetails.missingDetails",
       (areYouACorporateTrustee.contains(
         false
-      ) && doYouHaveAuthorisedOfficialTrusteeUKAddress.isEmpty) -> "authorisedOfficialAddress.missingDetails",
+      ) && doYouHaveAuthorisedOfficialTrusteeUKAddress.isEmpty)           -> "authorisedOfficialAddress.missingDetails",
       (areYouACorporateTrustee.contains(false)
         && doYouHaveAuthorisedOfficialTrusteeUKAddress.contains(true)
         && (authorisedOfficialTrusteeFirstName.isEmpty
           || authorisedOfficialTrusteeFirstName.isEmpty
           || authorisedOfficialTrusteeDaytimeTelephoneNumber.isEmpty
-          || authorisedOfficialTrusteePostcode.isEmpty))        -> "authorisedOfficialDetails.missingDetails",
+          || authorisedOfficialTrusteePostcode.isEmpty))                  -> "authorisedOfficialDetails.missingDetails",
       (
         areYouACorporateTrustee.contains(false)
           && doYouHaveAuthorisedOfficialTrusteeUKAddress.contains(false)
@@ -91,10 +90,12 @@ final case class OrganisationDetailsAnswers(
               || authorisedOfficialTrusteeLastName.isEmpty
               || authorisedOfficialTrusteeDaytimeTelephoneNumber.isEmpty
           )
-      )                                                         -> "authorisedOfficialDetails.missingDetails"
+      )                                                                   -> "authorisedOfficialDetails.missingDetails"
     ).collect { case (true, key) => key }
 
-  def hasOrganisationDetailsCompleteAnswers: Boolean = missingFields.isEmpty
+  def hasOrganisationDetailsCompleteAnswers(isCASCCharityRef: Boolean): Boolean = missingFields(
+    isCASCCharityRef
+  ).isEmpty
 }
 
 object OrganisationDetailsAnswers {
@@ -131,13 +132,18 @@ object OrganisationDetailsAnswers {
       authorisedOfficialTrusteeLastName = organisationDetails.authorisedOfficialTrusteeLastName
     )
 
-  def getMissingFields(answers: Option[OrganisationDetailsAnswers]): List[String] =
+  def getMissingFields(answers: Option[OrganisationDetailsAnswers], isCASCCharityRef: Boolean): List[String] =
     answers match
-      case Some(a) => a.missingFields
-      case None    => defaultMissingFields
+      case Some(a)                   => a.missingFields(isCASCCharityRef)
+      case None if !isCASCCharityRef => defaultMissingFields
+      case None                      => defaultMissingFieldsForCHCF
 
   private val defaultMissingFields: List[String] = List(
     "nameOfCharityRegulator.missingDetails",
+    "corporateTrusteeClaim.missingDetails"
+  )
+
+  private val defaultMissingFieldsForCHCF: List[String] = List(
     "corporateTrusteeClaim.missingDetails"
   )
 
@@ -254,9 +260,10 @@ object OrganisationDetailsAnswers {
       )
     )
 
-  def toOrganisationDetails(answers: OrganisationDetailsAnswers): Try[OrganisationDetails] =
+  def toOrganisationDetails(answers: OrganisationDetailsAnswers, isCASCCharity: Boolean): Try[OrganisationDetails] =
     for {
-      nameOfCharityRegulator  <- required(answers)(_.nameOfCharityRegulator)
+      nameOfCharityRegulator  <-
+        if isCASCCharity then Success(NameOfCharityRegulator.None) else required(answers)(_.nameOfCharityRegulator)
       areYouACorporateTrustee <- required(answers)(_.areYouACorporateTrustee)
     } yield OrganisationDetails(
       nameOfCharityRegulator = nameOfCharityRegulator,
@@ -264,7 +271,8 @@ object OrganisationDetailsAnswers {
         if nameOfCharityRegulator == NameOfCharityRegulator.None then answers.reasonNotRegisteredWithRegulator
         else None,
       charityRegistrationNumber =
-        if nameOfCharityRegulator != NameOfCharityRegulator.None then answers.charityRegistrationNumber else None,
+        if nameOfCharityRegulator != NameOfCharityRegulator.None then answers.charityRegistrationNumber
+        else None,
       areYouACorporateTrustee = areYouACorporateTrustee,
       doYouHaveCorporateTrusteeUKAddress =
         if areYouACorporateTrustee && answers.doYouHaveCorporateTrusteeUKAddress.isDefined then

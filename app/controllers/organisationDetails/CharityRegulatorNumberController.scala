@@ -21,6 +21,7 @@ import controllers.actions.Actions
 import forms.CharityRegulatorNumberFormProvider
 import models.Mode.*
 import controllers.BaseController
+import models.SessionData.isCASCCharityReference
 import models.{Mode, NameOfCharityRegulator, OrganisationDetailsAnswers, SessionData}
 import services.SaveService
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -41,12 +42,17 @@ class CharityRegulatorNumberController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      val previousAnswer = OrganisationDetailsAnswers.getCharityRegistrationNumber
+      given sessionData: SessionData = request.sessionData
 
-      val nameOfCharityAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
-      if nameOfCharityAnswer.isEmpty || nameOfCharityAnswer.contains(NameOfCharityRegulator.None)
-      then Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
-      else Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+      if isCASCCharityReference then Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      else {
+        val previousAnswer = OrganisationDetailsAnswers.getCharityRegistrationNumber
+
+        val nameOfCharityAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
+        if nameOfCharityAnswer.isEmpty || nameOfCharityAnswer.contains(NameOfCharityRegulator.None)
+        then Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+        else Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+      }
     }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
