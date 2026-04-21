@@ -18,13 +18,14 @@ package controllers
 
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
+import models.requests.DataRequest
 import models.{OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator, SessionData}
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
-import services.SaveService
+import services.{SaveService, UnregulatedDonationsService, UnregulatedLimitExceeded}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
@@ -32,6 +33,20 @@ import scala.concurrent.Future
 class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
 
   val form: Form[Boolean] = new YesNoFormProvider()()
+
+  class FakeUnregulatedDonationsService(
+    limitExceeded: Option[UnregulatedLimitExceeded],
+    applicableLimit: Option[String]
+  ) extends UnregulatedDonationsService {
+    def checkUnregulatedLimit(using DataRequest[?], HeaderCarrier): Future[Option[UnregulatedLimitExceeded]] =
+      Future.successful(limitExceeded)
+    def getApplicableLimit(using DataRequest[?]): Option[String]                                             = applicableLimit
+  }
+
+  def appWithFakeService(sessionData: SessionData, service: UnregulatedDonationsService): Application =
+    applicationBuilder(sessionData = sessionData)
+      .overrides(bind[UnregulatedDonationsService].toInstance(service))
+      .build()
 
   // session data with unregulatedLimitExceeded = true so the data guard allows access
   val sessionDataLowIncome: SessionData = OrganisationDetailsAnswers
@@ -61,7 +76,11 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
   "RegisterCharityWithARegulatorController" - {
     "onPageLoad" - {
       "should render the page with LowIncome limit (£5,000) for LowIncome charity" in {
-        given application: Application = applicationBuilder(sessionData = sessionDataLowIncome).build()
+        val fakeService                = new FakeUnregulatedDonationsService(
+          limitExceeded = Some(UnregulatedLimitExceeded(5000, "5,000")),
+          applicableLimit = Some("5,000")
+        )
+        given application: Application = appWithFakeService(sessionDataLowIncome, fakeService)
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -75,7 +94,11 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
       }
 
       "should render the page with Excepted limit (£100,000) for Excepted charity" in {
-        given application: Application = applicationBuilder(sessionData = sessionDataExcepted).build()
+        val fakeService                = new FakeUnregulatedDonationsService(
+          limitExceeded = Some(UnregulatedLimitExceeded(100000, "100,000")),
+          applicableLimit = Some("100,000")
+        )
+        given application: Application = appWithFakeService(sessionDataExcepted, fakeService)
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -89,7 +112,11 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
       }
 
       "should render the page with default Excepted limit (£100,000) when charity reason is not set (defaultFormattedLimit fallback)" in {
-        given application: Application = applicationBuilder(sessionData = sessionDataNoReason).build()
+        val fakeService                = new FakeUnregulatedDonationsService(
+          limitExceeded = Some(UnregulatedLimitExceeded(100000, "100,000")),
+          applicableLimit = None
+        )
+        given application: Application = appWithFakeService(sessionDataNoReason, fakeService)
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -132,8 +159,19 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to declaration screen when No is selected" in {
-        given application: Application = applicationBuilder(sessionData = sessionDataExcepted).build()
+      "should set unregulatedWarningBypassed and redirect to declaration screen when No is selected" in {
+        val mockSaveService: SaveService = mock[SaveService]
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(where { (sessionData: SessionData, _: HeaderCarrier) =>
+            sessionData.unregulatedWarningBypassed
+          })
+          .returning(Future.successful(()))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionDataExcepted)
+            .overrides(bind[SaveService].toInstance(mockSaveService))
+            .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -179,7 +217,11 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
     "WRN5 screen content" - {
 
       "should display WRN5 page title and LowIncome limit content" in {
-        given application: Application = applicationBuilder(sessionData = sessionDataLowIncome).build()
+        val fakeService                = new FakeUnregulatedDonationsService(
+          limitExceeded = Some(UnregulatedLimitExceeded(5000, "5,000")),
+          applicableLimit = Some("5,000")
+        )
+        given application: Application = appWithFakeService(sessionDataLowIncome, fakeService)
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -195,7 +237,11 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
       }
 
       "should display WRN5 page title and Excepted limit content" in {
-        given application: Application = applicationBuilder(sessionData = sessionDataExcepted).build()
+        val fakeService                = new FakeUnregulatedDonationsService(
+          limitExceeded = Some(UnregulatedLimitExceeded(100000, "100,000")),
+          applicableLimit = Some("100,000")
+        )
+        given application: Application = appWithFakeService(sessionDataExcepted, fakeService)
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =

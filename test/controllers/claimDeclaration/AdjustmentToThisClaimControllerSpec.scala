@@ -24,6 +24,7 @@ import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.{inject, Application}
+import services.SaveService
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.AdjustmentToThisClaimView
 
@@ -291,6 +292,95 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form.fill(Some("123456ABC"))).body
+        }
+      }
+
+      "should render the page when unregulatedWarningBypassed is true (user just bypassed WRN5)" in {
+        val mockSaveService = mock[SaveService]
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(where { (sessionData: SessionData, _: HeaderCarrier) =>
+            !sessionData.unregulatedWarningBypassed
+          })
+          .returning(Future.successful(()))
+
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(true),
+          claimingGiftAid = Some(true),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          unregulatedLimitExceeded = true,
+          unregulatedWarningBypassed = true,
+          repaymentClaimDetailsAnswers = Some(answers)
+        ).copy(
+          connectedCharitiesScheduleCompleted = true,
+          giftAidScheduleCompleted = true,
+          organisationDetailsAnswers = Some(organisationDetailsAnswers2)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .overrides(inject.bind[SaveService].toInstance(mockSaveService))
+          .build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form).body
+        }
+      }
+
+      "should redirect to the warning page when unregulatedWarningBypassed is false and limit is exceeded (re-visit after bypass)" in {
+        (mockConnector
+          .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
+          .expects(testCharitiesReference, *)
+          .returning(Future.successful(Some(BigDecimal(5001))))
+          .once()
+
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(true),
+          claimingGiftAid = Some(true),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          unregulatedLimitExceeded = true,
+          unregulatedWarningBypassed = false,
+          repaymentClaimDetailsAnswers = Some(answers)
+        ).copy(
+          connectedCharitiesScheduleCompleted = true,
+          giftAidScheduleCompleted = true,
+          organisationDetailsAnswers = Some(organisationDetailsAnswers2)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .overrides(inject.bind[UnregulatedDonationsConnector].toInstance(mockConnector))
+          .build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.RegisterCharityWithARegulatorController.onPageLoad.url
+          )
         }
       }
 
