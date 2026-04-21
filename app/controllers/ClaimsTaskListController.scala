@@ -201,7 +201,7 @@ object ClaimsTaskListController {
       then TaskStatus.Completed
       else if request.sessionData.giftAidScheduleUpscanInitialization.isDefined || request.sessionData.giftAidScheduleFileUploadReference.isDefined
       then TaskStatus.InProgress
-      else TaskStatus.Incomplete
+      else TaskStatus.NotStarted
 
     TaskItem(
       name = messages("claimsTaskList.task.giftAidSchedule"),
@@ -215,7 +215,7 @@ object ClaimsTaskListController {
       then TaskStatus.Completed
       else if request.sessionData.otherIncomeScheduleUpscanInitialization.isDefined || request.sessionData.otherIncomeScheduleFileUploadReference.isDefined
       then TaskStatus.InProgress
-      else TaskStatus.Incomplete
+      else TaskStatus.NotStarted
 
     TaskItem(
       name = messages("claimsTaskList.task.otherIncomeSchedule"),
@@ -229,7 +229,7 @@ object ClaimsTaskListController {
       then TaskStatus.Completed
       else if request.sessionData.communityBuildingsScheduleUpscanInitialization.isDefined || request.sessionData.communityBuildingsScheduleFileUploadReference.isDefined
       then TaskStatus.InProgress
-      else TaskStatus.Incomplete
+      else TaskStatus.NotStarted
 
     TaskItem(
       name = messages("claimsTaskList.task.communityBuildingsSchedule"),
@@ -243,7 +243,7 @@ object ClaimsTaskListController {
       then TaskStatus.Completed
       else if request.sessionData.connectedCharitiesScheduleUpscanInitialization.isDefined || request.sessionData.connectedCharitiesScheduleFileUploadReference.isDefined
       then TaskStatus.InProgress
-      else TaskStatus.Incomplete
+      else TaskStatus.NotStarted
 
     TaskItem(
       name = messages("claimsTaskList.task.connectedCharitiesSchedule"),
