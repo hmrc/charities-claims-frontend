@@ -16,23 +16,23 @@
 
 package controllers
 
-import play.api.test.*
-import services.{ClaimsService, SaveService}
-import play.api.inject.guice.{GuiceApplicationBuilder, GuiceableModule}
-import util.*
-import controllers.actions.{AuthorisedAction, DataRetrievalAction}
-import play.api.{inject, Application}
-import models.{SessionData, *}
-import play.api.data.Form
-import play.api.mvc.*
 import com.softwaremill.diffx.scalatest.DiffShouldMatcher
 import connectors.{ClaimsConnector, ClaimsValidationConnector}
+import controllers.actions.{AuthorisedAction, DataRetrievalAction, RefreshDataAction}
+import models.*
+import play.api.data.Form
 import play.api.http.*
+import play.api.i18n.{Lang, Messages, MessagesApi}
+import play.api.inject.guice.{GuiceApplicationBuilder, GuiceableModule}
+import play.api.mvc.*
+import play.api.test.*
+import play.api.{inject, Application}
 import repositories.SessionCache
+import services.{ClaimsService, SaveService}
 import uk.gov.hmrc.http.HeaderCarrier
+import util.*
 
 import scala.concurrent.Future
-import controllers.actions.RefreshDataAction
 
 trait ControllerSpec
     extends BaseSpec
@@ -140,6 +140,11 @@ trait ControllerSpec
     }
   }
   protected val additionalBindings: List[GuiceableModule] = List()
+
+  def messages(application: Application): Messages = {
+    val messagesApi = application.injector.instanceOf[MessagesApi]
+    messagesApi.preferred(Seq(Lang.defaultLang))
+  }
 
   def runningApplication[T](block: Application => T): T =
     running(_ => applicationBuilder())(block)

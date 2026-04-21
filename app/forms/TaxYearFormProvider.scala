@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,22 @@
 
 package forms
 
-object Validation {
-  val claimReferenceNumberPattern  = "^([\\x00-\\x7F\\xA0-\\xFF]{1,20})$"
-  val adjustmentToThisClaimPattern = "^([\\x00-\\x7F\\xA0-\\xFF]{1,350})$"
-  val taxYearRegexPattern          = "^\\d{4}$"
+import play.api.data.Form
+import play.api.data.Forms.text
+
+import javax.inject.Inject
+
+class TaxYearFormProvider @Inject() extends Constraints {
+
+  def apply(requiredKey: String, invalidKey: String): Form[Int] =
+    Form(
+      "value" -> text
+        .verifying(
+          firstError(
+            required(requiredKey),
+            regexp(Validation.taxYearRegexPattern, invalidKey)
+          )
+        )
+        .transform[Int](_.toInt, _.toString)
+    )
 }

@@ -15,27 +15,142 @@
  */
 
 package controllers.giftAidSmallDonationsScheme
+
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
-import models.{RepaymentClaimDetailsAnswers, SessionData}
+import forms.TaxYearFormProvider
+import models.{
+  GiftAidSmallDonationsSchemeClaim,
+  GiftAidSmallDonationsSchemeDonationDetailsAnswers,
+  RepaymentClaimDetailsAnswers,
+  SessionData
+}
+import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.TaxYearService.TaxYearError
+import services.{SaveService, TaxYearService}
+import utils.TaxYearLabels.taxYearLabelKey
+import views.html.WhichTaxYearAreYouClaimingForView
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class WhichTaxYearAreYouClaimingForController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  actions: Actions
-  // view: WhichTaxYearAreYouClaimingForView
-) extends BaseController {
+  actions: Actions,
+  view: WhichTaxYearAreYouClaimingForView,
+  formProvider: TaxYearFormProvider,
+  taxYearService: TaxYearService,
+  saveService: SaveService
+)(using ExecutionContext)
+    extends BaseController {
+
+  private def zeroIndex(index: Int): Int = index - 1
+
+  private def form(index: Int)(using messages: Messages) = {
+    val label = messages(taxYearLabelKey(index))
+
+    formProvider(
+      requiredKey = messages("whichTaxYearAreYouClaimingFor.error.required", label),
+      invalidKey = messages("whichTaxYearAreYouClaimingFor.error.invalid", label)
+    )
+  }
 
   def onPageLoad(index: Int): Action[AnyContent] =
     actions
-      .authAndRefreshDataWithGuard(
-        SessionData.isRepaymentClaimDetailsComplete
-          && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
+      .authAndGetDataWithGuard(
+        SessionData.isRepaymentClaimDetailsComplete &&
+          RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) &&
+          GiftAidSmallDonationsSchemeDonationDetailsAnswers.isValidIndex(index)
       )
       .async { implicit request =>
-        Future.successful(Ok)
+
+        implicit val messages: Messages = messagesApi.preferred(request)
+
+        val preparedForm = form(index)
+
+        val existingValue: Option[Int] =
+          GiftAidSmallDonationsSchemeDonationDetailsAnswers
+            .getClaim(zeroIndex(index))
+            .map(_.taxYear)
+
+        Future.successful(
+          Ok(view(preparedForm.withDefault(existingValue), index))
+        )
       }
+
+  def onSubmit(index: Int): Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(
+        SessionData.isRepaymentClaimDetailsComplete &&
+          RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) &&
+          GiftAidSmallDonationsSchemeDonationDetailsAnswers.isValidIndex(index)
+      )
+      .async { implicit request =>
+
+        implicit val messages: Messages       = messagesApi.preferred(request)
+        implicit val sessionData: SessionData = request.sessionData
+
+        val preparedForm = form(index)
+
+        preparedForm
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, index))),
+            taxYear => {
+
+              val existingYears =
+                (0 until index - 1).flatMap(i =>
+                  GiftAidSmallDonationsSchemeDonationDetailsAnswers
+                    .getClaim(i)
+                    .map(_.taxYear)
+                )
+
+              taxYearService.validateTaxYears(taxYear, existingYears) match {
+
+                case Some(error) =>
+                  val formWithError =
+                    preparedForm
+                      .fill(taxYear)
+                      .withError("value", mapErrorToMessage(error))
+
+                  Future.successful(BadRequest(view(formWithError, index)))
+
+                case None =>
+                  val claim =
+                    GiftAidSmallDonationsSchemeDonationDetailsAnswers
+                      .getClaim(zeroIndex(index))
+                      .map(_.copy(taxYear = taxYear))
+                      .getOrElse(
+                        GiftAidSmallDonationsSchemeClaim(
+                          taxYear = taxYear,
+                          amountOfDonationsReceived = None
+                        )
+                      )
+
+                  saveService
+                    .save(
+                      GiftAidSmallDonationsSchemeDonationDetailsAnswers
+                        .setClaim(zeroIndex(index), claim)
+                    )
+                    .map(_ =>
+                      Redirect(
+                        controllers.giftAidSmallDonationsScheme.routes.DonationAmountYouAreClaimingController
+                          .onPageLoad(index)
+                      )
+                    )
+              }
+            }
+          )
+      }
+
+  private def mapErrorToMessage(error: TaxYearError)(using messages: Messages): String =
+    error match {
+      case TaxYearError.TooOld(min) =>
+        messages("whichTaxYearAreYouClaimingFor.error.tooOld", min.toString)
+      case TaxYearError.Future      =>
+        messages("whichTaxYearAreYouClaimingFor.error.future")
+      case TaxYearError.Duplicate   =>
+        messages("whichTaxYearAreYouClaimingFor.error.duplicate")
+    }
 }

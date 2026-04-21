@@ -20,13 +20,19 @@ import util.BaseSpec
 import play.api.libs.json.Json
 import scala.util.Success
 
-class GiftAidSmallDonationsSchemeScheduleDataAnswerspec extends BaseSpec {
+class GiftAidSmallDonationsSchemeDonationDetailsAnswersSpec extends BaseSpec {
 
   "GiftAidSmallDonationsSchemeScheduleDataAnswers" - {
     "be serializable and deserializable" in {
       val giftAidSmallDonationsSchemeScheduleDataAnswers = GiftAidSmallDonationsSchemeDonationDetailsAnswers(
         adjustmentForGiftAidOverClaimed = Some(1000.00),
-        claims = Some(Seq(Some(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00))))
+        claims = Some(
+          Seq(
+            Some(
+              GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = Some(BigDecimal(1000.00)))
+            )
+          )
+        )
       )
 
       val json = Json.toJson(giftAidSmallDonationsSchemeScheduleDataAnswers)
@@ -39,7 +45,8 @@ class GiftAidSmallDonationsSchemeScheduleDataAnswerspec extends BaseSpec {
     "be created from GiftAidSmallDonationsSchemeScheduleData" in {
       val giftAidSmallDonationsSchemeScheduleData = GiftAidSmallDonationsSchemeDonationDetails(
         adjustmentForGiftAidOverClaimed = 1000.00,
-        claims = Seq(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00))
+        claims =
+          Seq(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = Some(BigDecimal(1000.00))))
       )
 
       val giftAidSmallDonationsSchemeScheduleDataAnswers =
@@ -47,13 +54,19 @@ class GiftAidSmallDonationsSchemeScheduleDataAnswerspec extends BaseSpec {
 
       giftAidSmallDonationsSchemeScheduleDataAnswers shouldBe GiftAidSmallDonationsSchemeDonationDetailsAnswers(
         adjustmentForGiftAidOverClaimed = Some(1000.00),
-        claims = Some(Seq(Some(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00))))
+        claims = Some(
+          Seq(
+            Some(
+              GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = Some(BigDecimal(1000.00)))
+            )
+          )
+        )
       )
     }
 
     "get claims when there is only one" in {
       val claims = Seq(
-        Some(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00))
+        Some(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = Some(BigDecimal(1000.00))))
       )
 
       given SessionData = SessionData(
@@ -102,8 +115,8 @@ class GiftAidSmallDonationsSchemeScheduleDataAnswerspec extends BaseSpec {
 
     "get claims when there are two" in {
       val claims = Seq(
-        Some(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00)),
-        Some(GiftAidSmallDonationsSchemeClaim(taxYear = 2026, amountOfDonationsReceived = 2000.00))
+        Some(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = Some(BigDecimal(1000.00)))),
+        Some(GiftAidSmallDonationsSchemeClaim(taxYear = 2026, amountOfDonationsReceived = Some(BigDecimal(2000.00))))
       )
 
       given SessionData = SessionData(
@@ -152,9 +165,9 @@ class GiftAidSmallDonationsSchemeScheduleDataAnswerspec extends BaseSpec {
 
     "get claims when there are three" in {
       val claims = Seq(
-        Some(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = 1000.00)),
-        Some(GiftAidSmallDonationsSchemeClaim(taxYear = 2026, amountOfDonationsReceived = 2000.00)),
-        Some(GiftAidSmallDonationsSchemeClaim(taxYear = 2027, amountOfDonationsReceived = 3000.00))
+        Some(GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = Some(BigDecimal(1000.00)))),
+        Some(GiftAidSmallDonationsSchemeClaim(taxYear = 2026, amountOfDonationsReceived = Some(BigDecimal(2000.00)))),
+        Some(GiftAidSmallDonationsSchemeClaim(taxYear = 2027, amountOfDonationsReceived = Some(BigDecimal(3000.00))))
       )
 
       given SessionData = SessionData(
@@ -200,6 +213,65 @@ class GiftAidSmallDonationsSchemeScheduleDataAnswerspec extends BaseSpec {
           )
         )
     }
+    "setClaim should create a new claims sequence when none exists" in {
+      given SessionData = SessionData.empty("1234567890")
+
+      val claim = GiftAidSmallDonationsSchemeClaim(2025, Some(BigDecimal(100)))
+
+      val updated = GiftAidSmallDonationsSchemeDonationDetailsAnswers.setClaim(0, claim)
+
+      GiftAidSmallDonationsSchemeDonationDetailsAnswers.getClaims(using updated) shouldBe
+        Seq(Some(claim))
+    }
+
+    "setClaim should fill gaps with None when inserting beyond index 0" in {
+      given SessionData = SessionData.empty("1234567890")
+
+      val claim = GiftAidSmallDonationsSchemeClaim(2027, Some(BigDecimal(300)))
+
+      val updated = GiftAidSmallDonationsSchemeDonationDetailsAnswers.setClaim(2, claim)
+
+      GiftAidSmallDonationsSchemeDonationDetailsAnswers.getClaims(using updated) shouldBe
+        Seq(None, None, Some(claim))
+    }
+
+    "setClaim should update an existing claim at the given index" in {
+      val original     = GiftAidSmallDonationsSchemeClaim(2025, Some(BigDecimal(100)))
+      val updatedClaim = GiftAidSmallDonationsSchemeClaim(2026, Some(BigDecimal(200)))
+
+      given SessionData = SessionData(
+        charitiesReference = "1234567890",
+        giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+          GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+            claims = Some(Seq(Some(original)))
+          )
+        )
+      )
+
+      val updated = GiftAidSmallDonationsSchemeDonationDetailsAnswers.setClaim(0, updatedClaim)
+
+      GiftAidSmallDonationsSchemeDonationDetailsAnswers.getClaims(using updated) shouldBe
+        Seq(Some(updatedClaim))
+    }
+
+    "setClaim should add the claim with index 1, 2 and 3 if atleast one claim already exists" in {
+      val existing = GiftAidSmallDonationsSchemeClaim(2025, Some(BigDecimal(100)))
+      val newClaim = GiftAidSmallDonationsSchemeClaim(2026, Some(BigDecimal(200)))
+
+      given SessionData = SessionData(
+        charitiesReference = "1234567890",
+        giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+          GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+            claims = Some(Seq(Some(existing))) // length = 1
+          )
+        )
+      )
+
+      val updated = GiftAidSmallDonationsSchemeDonationDetailsAnswers.setClaim(1, newClaim)
+
+      GiftAidSmallDonationsSchemeDonationDetailsAnswers.getClaims(using updated) shouldBe
+        Seq(Some(existing), Some(newClaim))
+    }
 
     "set, get and remove a single claim at index" in {
       for (index <- 0 until 3) {
@@ -207,7 +279,7 @@ class GiftAidSmallDonationsSchemeScheduleDataAnswerspec extends BaseSpec {
         GiftAidSmallDonationsSchemeDonationDetailsAnswers.getClaim(index) shouldBe None
         val claim = GiftAidSmallDonationsSchemeClaim(
           taxYear = 2025 + index,
-          amountOfDonationsReceived = 1000.00 * index
+          amountOfDonationsReceived = Some(1000.00 * index)
         )
 
         GiftAidSmallDonationsSchemeDonationDetailsAnswers.getClaimsSize shouldBe 0
