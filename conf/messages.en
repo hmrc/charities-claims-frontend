@@ -570,8 +570,8 @@ repaymentClaimType.title = Which type of repayment claim do you want to make?
 scheduleUploadFailure.continue = Upload a new schedule
 scheduleUploadFailure.link = No, return to manage charity repayment claims
 
-service.name = Charities Claims
-service.title = Charities
+service.name = Make a charity tax repayment claim
+service.title = Make a charity tax repayment claim
 session-expired-message=For your security, we will time you out in
 
 session-expired.keep-alive-button-text=Continue
@@ -785,6 +785,15 @@ donationAmountYouAreClaiming.hint = This can be up to 2 decimal places, for exam
 donationAmountYouAreClaiming.error.required = Enter a {0} tax year amount
 donationAmountYouAreClaiming.error.invalid = Enter a {0} tax year amount in the correct format
 donationAmountYouAreClaiming.error.maxLength = Donation amount must be £1,000,000,000,000 or less
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.heading = This claim cannot be setup
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.message = You need to provide the following details to continue:
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.returnLink = Go back to provide the missing details for your claim
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.title = This claim cannot be setup
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.warning = This claim cannot be setup because some details are missing.
+giftAidSmallDonationsSchemeDonationDetails.missingDetails = provide your GASDS donation details
+giftAidSmallDonationsSchemeDonationDetails.claim1.missingDetails = provide your GASDS donation details for tax year 1
+giftAidSmallDonationsSchemeDonationDetails.claim2.missingDetails = provide your GASDS donation details for tax year 2
+giftAidSmallDonationsSchemeDonationDetails.claim3.missingDetails = provide your GASDS donation details for tax year 3
 
 whichTaxYearAreYouClaimingFor.caption = Provide GASDS donation details {0}
 whichTaxYearAreYouClaimingFor.heading = Which tax year are you claiming for?
@@ -800,6 +809,3 @@ whichTaxYearAreYouClaimingFor.error.duplicate = Donations claimed for more than 
 taxYear.first = first
 taxYear.second = second
 taxYear.third = third
-
-
-
