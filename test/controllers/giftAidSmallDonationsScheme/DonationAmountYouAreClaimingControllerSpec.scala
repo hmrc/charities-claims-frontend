@@ -48,7 +48,7 @@ class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
     ),
     giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
       GiftAidSmallDonationsSchemeDonationDetailsAnswers(
-        claims = Some(Seq(Some(GiftAidSmallDonationsSchemeClaim(validTaxYear, None))))
+        claims = Some(Seq(Some(GiftAidSmallDonationsSchemeClaimAnswers(validTaxYear, None))))
       )
     )
   )
@@ -56,7 +56,7 @@ class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
   private def withClaim(session: SessionData, amount: BigDecimal = 0): SessionData =
     GiftAidSmallDonationsSchemeDonationDetailsAnswers.setClaim(
       index - 1,
-      GiftAidSmallDonationsSchemeClaim(
+      GiftAidSmallDonationsSchemeClaimAnswers(
         taxYear = validTaxYear,
         amountOfDonationsReceived = Some(amount)
       )
