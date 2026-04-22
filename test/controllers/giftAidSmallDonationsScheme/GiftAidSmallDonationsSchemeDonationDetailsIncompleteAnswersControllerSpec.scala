@@ -22,7 +22,7 @@ import controllers.ControllerSpec
 import views.html.GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersView
 import play.api.Application
 import models.{
-  GiftAidSmallDonationsSchemeClaim,
+  GiftAidSmallDonationsSchemeClaimAnswers,
   GiftAidSmallDonationsSchemeDonationDetailsAnswers,
   RepaymentClaimDetailsAnswers,
   SessionData
@@ -143,7 +143,10 @@ class GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersControllerSpec 
           claims = Some(
             Seq(
               Some(
-                GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = Some(BigDecimal(1000.00)))
+                GiftAidSmallDonationsSchemeClaimAnswers(
+                  taxYear = 2025,
+                  amountOfDonationsReceived = Some(BigDecimal(1000.00))
+                )
               ),
               None
             )
@@ -188,7 +191,10 @@ class GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersControllerSpec 
           claims = Some(
             Seq(
               Some(
-                GiftAidSmallDonationsSchemeClaim(taxYear = 2025, amountOfDonationsReceived = Some(BigDecimal(1000.00)))
+                GiftAidSmallDonationsSchemeClaimAnswers(
+                  taxYear = 2025,
+                  amountOfDonationsReceived = Some(BigDecimal(1000.00))
+                )
               )
             )
           )

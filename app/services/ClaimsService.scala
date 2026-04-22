@@ -18,11 +18,11 @@ package services
 
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.ClaimsConnector
-import models.{RepaymentClaimDetailsAnswers, SessionData}
+import models.RepaymentClaimDetailsAnswers
 import play.api.Logging
 import repositories.SessionCache
 import uk.gov.hmrc.http.HeaderCarrier
-
+import models.SessionData
 import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[ClaimsServiceImpl])
