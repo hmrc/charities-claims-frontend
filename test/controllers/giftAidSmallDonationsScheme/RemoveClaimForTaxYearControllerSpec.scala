@@ -47,7 +47,7 @@ class RemoveClaimForTaxYearControllerSpec extends ControllerSpec {
     ),
     giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
       GiftAidSmallDonationsSchemeDonationDetailsAnswers(
-        claims = Some(Seq(Some(GiftAidSmallDonationsSchemeClaim(validTaxYear, None))))
+        claims = Some(Seq(Some(GiftAidSmallDonationsSchemeClaimAnswers(validTaxYear, None))))
       )
     )
   )
