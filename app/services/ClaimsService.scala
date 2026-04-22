@@ -23,7 +23,6 @@ import models.SessionData
 
 import scala.concurrent.{ExecutionContext, Future}
 import models.RepaymentClaimDetailsAnswers
-import models.SessionData.isCASCCharityReference
 import repositories.SessionCache
 import play.api.Logging
 

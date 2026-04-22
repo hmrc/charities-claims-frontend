@@ -126,7 +126,7 @@ class RemoveClaimForTaxYearControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result)           shouldEqual SEE_OTHER
+          status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
             "/check-your-donation-details" // TODO redirect to the correct url once it is implemented
           )
@@ -144,7 +144,7 @@ class RemoveClaimForTaxYearControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result)           shouldEqual SEE_OTHER
+          status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
             "/check-your-donation-details" // TODO redirect to the correct url once it is implemented
           )
