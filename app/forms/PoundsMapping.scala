@@ -32,11 +32,12 @@ object PoundsMapping extends Mappings {
   def apply(
     errorRequired: String,
     formatErrorMsg: String,
+    maxLengthErrorMsg: String,
     allowZero: Boolean = false,
     zeroErrorMsg: Option[String] = None
   ): Mapping[BigDecimal] =
     Forms
-      .of[BigDecimal](using moneyBigDecimalFormat(errorRequired, formatErrorMsg))
+      .of[BigDecimal](using moneyBigDecimalFormat(errorRequired, formatErrorMsg, maxLengthErrorMsg))
       .verifying(
         Constraint[BigDecimal]((num: BigDecimal) =>
           num match {
@@ -47,14 +48,19 @@ object PoundsMapping extends Mappings {
         )
       )
 
-  def moneyBigDecimalFormat(errorRequired: String, formatErrorMsg: String): Formatter[BigDecimal] =
-    bigDecimalFormat(precision = 13, scale = 2, errorRequired, formatErrorMsg)
+  private def moneyBigDecimalFormat(
+    errorRequired: String,
+    formatErrorMsg: String,
+    maxLengthErrorMsg: String
+  ): Formatter[BigDecimal] =
+    bigDecimalFormat(precision = 15, scale = 2, errorRequired, formatErrorMsg, maxLengthErrorMsg)
 
   def bigDecimalFormat(
     precision: Int,
     scale: Int,
     errorRequired: String,
-    formatErrorMsg: String
+    formatErrorMsg: String,
+    maxLengthErrorMsg: String
   ): Formatter[BigDecimal] =
     new Formatter[BigDecimal] {
       override val format: Option[(String, Nil.type)] = Some(("format.real", Nil))
@@ -67,8 +73,10 @@ object PoundsMapping extends Mappings {
       def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BigDecimal] =
         Formats.stringFormat
           .bind(key, data)
-          .flatMap { userInput =>
+          .flatMap { value =>
+            val userInput = value.trim
             if userInput.isEmpty then Left(Seq(FormError(key, errorRequired)))
+            else if userInput.length > 16 then Left(Seq(FormError(key, maxLengthErrorMsg)))
             else
               Exception
                 .allCatch[BigDecimal]
@@ -83,7 +91,7 @@ object PoundsMapping extends Mappings {
                 .leftMap(_ => Seq(FormError(key, formatErrorMsg)))
           }
 
-      def unbind(key: String, value: BigDecimal) =
+      def unbind(key: String, value: BigDecimal): Map[String, String] =
         Map(key -> decimalFormat.format(value))
     }
 }

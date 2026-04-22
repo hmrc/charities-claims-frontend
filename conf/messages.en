@@ -771,18 +771,20 @@ adjustmentToGiftAidOverclaimed.heading = What is the adjustment amount for Gift 
 adjustmentToGiftAidOverclaimed.title = What is the adjustment amount for Gift Aid previously overclaimed?
 adjustmentToGiftAidOverclaimed.error.required = Enter an adjustment amount for Gift Aid previously overclaimed
 adjustmentToGiftAidOverclaimed.error.invalid = Enter an adjustment amount for Gift Aid previously overclaimed in the correct format
+adjustmentToGiftAidOverclaimed.error.maxLength = Adjustment amount must be £1,000,000,000,000 or less
 
 gasdsAdjustmentAmountCheckYourAnswers.caption = Provide GASDS donation details
 gasdsAdjustmentAmountCheckYourAnswers.heading = Check your GASDS adjustment amount
 gasdsAdjustmentAmountCheckYourAnswers.title = Check your GASDS adjustment amount
 gasdsAdjustmentAmountCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Amount of GASDS previously overclaimed
 
-DonationAmountYouAreClaiming.caption = Provide GASDS donation details {0}
-DonationAmountYouAreClaiming.heading = What donation amount are you claiming under GASDS, in pounds?
-DonationAmountYouAreClaiming.title = What donation amount are you claiming under GASDS, in pounds?
-DonationAmountYouAreClaiming.hint = This can be up to 2 decimal places, for example £1000.00
-DonationAmountYouAreClaiming.error.required = Enter a {0} tax year amount
-DonationAmountYouAreClaiming.error.invalid = Enter a {0} tax year amount in the correct format
+donationAmountYouAreClaiming.caption = Provide GASDS donation details {0}
+donationAmountYouAreClaiming.heading = What donation amount are you claiming under GASDS, in pounds?
+donationAmountYouAreClaiming.title = What donation amount are you claiming under GASDS, in pounds?
+donationAmountYouAreClaiming.hint = This can be up to 2 decimal places, for example £1000.00
+donationAmountYouAreClaiming.error.required = Enter a {0} tax year amount
+donationAmountYouAreClaiming.error.invalid = Enter a {0} tax year amount in the correct format
+donationAmountYouAreClaiming.error.maxLength = Donation amount must be £1,000,000,000,000 or less
 
 whichTaxYearAreYouClaimingFor.caption = Provide GASDS donation details {0}
 whichTaxYearAreYouClaimingFor.heading = Which tax year are you claiming for?

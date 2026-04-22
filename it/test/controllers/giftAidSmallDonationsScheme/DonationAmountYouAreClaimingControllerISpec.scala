@@ -43,7 +43,7 @@ class DonationAmountYouAreClaimingControllerISpec
 
       result.status                shouldBe OK
       Jsoup.parse(result.body).title should include(
-        msg("DonationAmountYouAreClaiming.title")
+        msg("donationAmountYouAreClaiming.title")
       )
     }
   }

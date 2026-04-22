@@ -17,15 +17,12 @@
 package controllers.giftAidSmallDonationsScheme
 
 import controllers.ControllerSpec
+import forms.AmountFormProvider
+import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.Application
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import views.html.AdjustmentToGiftAidOverclaimedView
-import models.RepaymentClaimDetailsAnswers
-import models.SessionData
-import forms.AmountFormProvider
-import models.GiftAidSmallDonationsSchemeDonationDetailsAnswers
-import play.api.mvc.AnyContentAsFormUrlEncoded
 
 class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
 
@@ -87,6 +84,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
             .apply(
               errorRequired = "adjustmentToGiftAidOverclaimed.error.required",
               formatErrorMsg = "adjustmentToGiftAidOverclaimed.error.invalid",
+              maxLengthErrorMsg = "adjustmentToGiftAidOverclaimed.error.maxLength",
               allowZero = true
             )
 
@@ -116,6 +114,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
             .apply(
               errorRequired = "adjustmentToGiftAidOverclaimed.error.required",
               formatErrorMsg = "adjustmentToGiftAidOverclaimed.error.invalid",
+              maxLengthErrorMsg = "adjustmentToGiftAidOverclaimed.error.maxLength",
               allowZero = true
             )
 
@@ -189,6 +188,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
             .apply(
               errorRequired = "adjustmentToGiftAidOverclaimed.error.required",
               formatErrorMsg = "adjustmentToGiftAidOverclaimed.error.invalid",
+              maxLengthErrorMsg = "adjustmentToGiftAidOverclaimed.error.maxLength",
               allowZero = true
             )
 
@@ -218,6 +218,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
             .apply(
               errorRequired = "adjustmentToGiftAidOverclaimed.error.required",
               formatErrorMsg = "adjustmentToGiftAidOverclaimed.error.invalid",
+              maxLengthErrorMsg = "adjustmentToGiftAidOverclaimed.error.maxLength",
               allowZero = true
             )
 
