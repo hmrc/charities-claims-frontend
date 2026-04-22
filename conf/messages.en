@@ -777,6 +777,16 @@ gasdsAdjustmentAmountCheckYourAnswers.heading = Check your GASDS adjustment amou
 gasdsAdjustmentAmountCheckYourAnswers.title = Check your GASDS adjustment amount
 gasdsAdjustmentAmountCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Amount of GASDS previously overclaimed
 
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.heading = This claim cannot be setup
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.message = You need to provide the following details to continue:
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.returnLink = Go back to provide the missing details for your claim
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.title = This claim cannot be setup
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.warning = This claim cannot be setup because some details are missing.
+giftAidSmallDonationsSchemeDonationDetails.missingDetails = provide your GASDS donation details
+giftAidSmallDonationsSchemeDonationDetails.claim1.missingDetails = provide your GASDS donation details for tax year 1
+giftAidSmallDonationsSchemeDonationDetails.claim2.missingDetails = provide your GASDS donation details for tax year 2
+giftAidSmallDonationsSchemeDonationDetails.claim3.missingDetails = provide your GASDS donation details for tax year 3
+
 DonationAmountYouAreClaiming.caption = Provide GASDS donation details {0}
 DonationAmountYouAreClaiming.heading = What donation amount are you claiming under GASDS, in pounds?
 DonationAmountYouAreClaiming.title = What donation amount are you claiming under GASDS, in pounds?
@@ -798,6 +808,3 @@ whichTaxYearAreYouClaimingFor.error.duplicate = Donations claimed for more than 
 taxYear.first = first
 taxYear.second = second
 taxYear.third = third
-
-
-
