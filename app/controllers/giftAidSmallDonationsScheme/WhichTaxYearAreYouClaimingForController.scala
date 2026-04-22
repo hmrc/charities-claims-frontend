@@ -21,7 +21,7 @@ import controllers.BaseController
 import controllers.actions.Actions
 import forms.TaxYearFormProvider
 import models.{
-  GiftAidSmallDonationsSchemeClaim,
+  GiftAidSmallDonationsSchemeClaimAnswers,
   GiftAidSmallDonationsSchemeDonationDetailsAnswers,
   RepaymentClaimDetailsAnswers,
   SessionData
@@ -122,7 +122,7 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
                       .getClaim(zeroIndex(index))
                       .map(_.copy(taxYear = taxYear))
                       .getOrElse(
-                        GiftAidSmallDonationsSchemeClaim(
+                        GiftAidSmallDonationsSchemeClaimAnswers(
                           taxYear = taxYear,
                           amountOfDonationsReceived = None
                         )

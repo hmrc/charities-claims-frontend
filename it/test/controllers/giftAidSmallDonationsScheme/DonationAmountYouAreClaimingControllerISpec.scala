@@ -25,7 +25,7 @@ import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
 class DonationAmountYouAreClaimingControllerISpec
-  extends ComponentSpecHelper
+    extends ComponentSpecHelper
     with TestDataUtils
     with ClaimsStub
     with AuthStub
@@ -41,7 +41,7 @@ class DonationAmountYouAreClaimingControllerISpec
 
       val result = get(url)
 
-      result.status shouldBe OK
+      result.status                shouldBe OK
       Jsoup.parse(result.body).title should include(
         msg("DonationAmountYouAreClaiming.title")
       )
@@ -56,7 +56,7 @@ class DonationAmountYouAreClaimingControllerISpec
       val result =
         post(url)(Json.obj("amount" -> "123.45"))
 
-      result.status shouldBe SEE_OTHER
+      result.status                 shouldBe SEE_OTHER
       result.header(LOCATION).value shouldBe s"/check-claim-details-for-tax-year/$index"
     }
   }
@@ -81,7 +81,7 @@ class DonationAmountYouAreClaimingControllerISpec
             claims = Seq(
               GiftAidSmallDonationsSchemeClaim(
                 taxYear = 2025,
-                amountOfDonationsReceived = Some(BigDecimal(0))
+                amountOfDonationsReceived = BigDecimal(0)
               )
             )
           )

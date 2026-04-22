@@ -18,11 +18,11 @@ package models
 
 import play.api.libs.json.{Format, Json, Reads, Writes}
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Try}
 
 final case class GiftAidSmallDonationsSchemeDonationDetailsAnswers(
   adjustmentForGiftAidOverClaimed: Option[BigDecimal] = None,
-  claims: Option[Seq[Option[GiftAidSmallDonationsSchemeClaim]]] = None
+  claims: Option[Seq[Option[GiftAidSmallDonationsSchemeClaimAnswers]]] = None
 )
 
 object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
@@ -56,7 +56,11 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
   ): GiftAidSmallDonationsSchemeDonationDetailsAnswers =
     GiftAidSmallDonationsSchemeDonationDetailsAnswers(
       adjustmentForGiftAidOverClaimed = Some(giftAidSmallDonationsSchemeScheduleData.adjustmentForGiftAidOverClaimed),
-      claims = Some(giftAidSmallDonationsSchemeScheduleData.claims.map(Some(_)))
+      claims = Some(
+        giftAidSmallDonationsSchemeScheduleData.claims.map(c =>
+          Some(GiftAidSmallDonationsSchemeClaimAnswers(c.taxYear, Some(c.amountOfDonationsReceived)))
+        )
+      )
     )
 
   def toGiftAidSmallDonationsSchemeDonationDetails(
@@ -65,10 +69,22 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
     if answers.claims.exists(_.size > 3)
     then Failure(new MissingRequiredFieldsException("GASDS claims cannot be more than 3"))
     else
-      Success(
+      Try(
         GiftAidSmallDonationsSchemeDonationDetails(
           adjustmentForGiftAidOverClaimed = answers.adjustmentForGiftAidOverClaimed.getOrElse(0),
-          claims = answers.claims.toSeq.flatMap(_.flatten)
+          claims = answers.claims.toSeq
+            .flatMap(_.flatten)
+            .map(c =>
+              GiftAidSmallDonationsSchemeClaim(
+                c.taxYear,
+                c.amountOfDonationsReceived
+                  .getOrElse(
+                    throw new MissingRequiredFieldsException(
+                      s"Amount of donations received is missing for tax year ${c.taxYear}"
+                    )
+                  )
+              )
+            )
         )
       )
 
@@ -78,10 +94,10 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
   def getAdjustmentForGiftAidOverClaimed(using session: SessionData): Option[BigDecimal] =
     get(a => a.adjustmentForGiftAidOverClaimed)
 
-  def getClaims(using session: SessionData): Seq[Option[GiftAidSmallDonationsSchemeClaim]] =
+  def getClaims(using session: SessionData): Seq[Option[GiftAidSmallDonationsSchemeClaimAnswers]] =
     get(a => a.claims).getOrElse(Seq.empty)
 
-  def getClaim(index: Int)(using session: SessionData): Option[GiftAidSmallDonationsSchemeClaim] =
+  def getClaim(index: Int)(using session: SessionData): Option[GiftAidSmallDonationsSchemeClaimAnswers] =
     get(a => a.claims.flatMap(_.lift(index)).flatten)
 
   def isTaxYearEntered(index: Int)(using session: SessionData): Boolean =
@@ -90,7 +106,7 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
   def isValidIndex(index: Int): Boolean =
     index >= 1 && index <= 3
 
-  def setClaim(index: Int, value: GiftAidSmallDonationsSchemeClaim)(using session: SessionData): SessionData =
+  def setClaim(index: Int, value: GiftAidSmallDonationsSchemeClaimAnswers)(using session: SessionData): SessionData =
     set(value)((a, v) =>
       a.copy(claims = a.claims match {
         case Some(existing) if index < existing.length =>

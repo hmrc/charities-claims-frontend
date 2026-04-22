@@ -160,7 +160,7 @@ object GiftAidSmallDonationsSchemeDonationDetails {
 
 final case class GiftAidSmallDonationsSchemeClaim(
   taxYear: Int,
-  amountOfDonationsReceived: Option[BigDecimal]
+  amountOfDonationsReceived: BigDecimal
 )
 
 object GiftAidSmallDonationsSchemeClaim {
