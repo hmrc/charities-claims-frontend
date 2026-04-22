@@ -39,7 +39,7 @@ trait Constraints extends validation.Constraints {
 
   protected def required(errorKey: String): Constraint[String] =
     Constraint[String]("constraint.required") { input =>
-      if (input != null && input.trim.nonEmpty) Valid
+      if (input.trim.nonEmpty) Valid
       else Invalid(ValidationError(errorKey))
     }
 

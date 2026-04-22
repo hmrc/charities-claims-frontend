@@ -39,12 +39,13 @@ class AdjustmentToGiftAidOverclaimedController @Inject() (
   val form: Form[BigDecimal] = formProvider(
     errorRequired = "adjustmentToGiftAidOverclaimed.error.required",
     formatErrorMsg = "adjustmentToGiftAidOverclaimed.error.invalid",
+    maxLengthErrorMsg = "adjustmentToGiftAidOverclaimed.error.maxLength",
     allowZero = true
   )
 
   val onPageLoad: Action[AnyContent] =
     actions
-      .authAndRefreshDataWithGuard(
+      .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
           && RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
       )
@@ -58,7 +59,7 @@ class AdjustmentToGiftAidOverclaimedController @Inject() (
 
   val onSubmit: Action[AnyContent] =
     actions
-      .authAndRefreshDataWithGuard(
+      .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
           && RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
       )

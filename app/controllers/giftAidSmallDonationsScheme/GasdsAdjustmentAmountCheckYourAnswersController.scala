@@ -36,7 +36,7 @@ class GasdsAdjustmentAmountCheckYourAnswersController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     actions
-      .authAndRefreshDataWithGuard(
+      .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete &&
           RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
       )
@@ -47,7 +47,7 @@ class GasdsAdjustmentAmountCheckYourAnswersController @Inject() (
 
   def onSubmit: Action[AnyContent] =
     actions
-      .authAndRefreshDataWithGuard(
+      .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete &&
           RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
       )

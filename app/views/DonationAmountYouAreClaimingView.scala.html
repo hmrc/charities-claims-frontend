@@ -28,12 +28,12 @@
 @(form: Form[?], index: Int)(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = title(form, messages("DonationAmountYouAreClaiming.title"))
+    pageTitle = title(form, messages("donationAmountYouAreClaiming.title"))
 ) {
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
-    <span class="govuk-caption-l">@messages("DonationAmountYouAreClaiming.caption", if(index == 1) "" else s"- Tax year $index")</span>
+    <span class="govuk-caption-l">@messages("donationAmountYouAreClaiming.caption", if(index == 1) "" else s"- Tax year $index")</span>
 
     @formHelper(action = routes.DonationAmountYouAreClaimingController.onSubmit(index)) {
 
@@ -46,17 +46,17 @@
             label = Label(
                 isPageHeading = true,
                 classes = "govuk-label--l",
-                content = Text(messages("DonationAmountYouAreClaiming.heading"))
+                content = Text(messages("donationAmountYouAreClaiming.heading"))
             ),
             hint = Some(Hint(
-            content = Text(messages("DonationAmountYouAreClaiming.hint"))
+            content = Text(messages("donationAmountYouAreClaiming.hint"))
             )),
             classes = "govuk-input--width-5",
             spellcheck = Some(false),
             prefix = Some(PrefixOrSuffix(
                 content = Text("£")
             )),
-            attributes = Map("autocomplete" -> "off", "maxlength" -> "16")
+            attributes = Map("autocomplete" -> "off")
         ))
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))

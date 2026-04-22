@@ -83,8 +83,9 @@ class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
           val label = messages("taxYear.first")
 
           val form = formProvider(
-            errorRequired = messages("DonationAmountYouAreClaiming.error.required", label),
-            formatErrorMsg = messages("DonationAmountYouAreClaiming.error.invalid", label),
+            errorRequired = messages("donationAmountYouAreClaiming.error.required", label),
+            formatErrorMsg = messages("donationAmountYouAreClaiming.error.invalid", label),
+            maxLengthErrorMsg = messages("donationAmountYouAreClaiming.error.maxLength"),
             allowZero = true
           )
 
@@ -112,8 +113,9 @@ class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
           val label = messages("taxYear.first")
 
           val form = formProvider(
-            errorRequired = messages("DonationAmountYouAreClaiming.error.required", label),
-            formatErrorMsg = messages("DonationAmountYouAreClaiming.error.invalid", label),
+            errorRequired = messages("donationAmountYouAreClaiming.error.required", label),
+            formatErrorMsg = messages("donationAmountYouAreClaiming.error.invalid", label),
+            maxLengthErrorMsg = messages("donationAmountYouAreClaiming.error.maxLength"),
             allowZero = true
           )
 
@@ -165,8 +167,9 @@ class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
           val label = messages("taxYear.first")
 
           val form = formProvider(
-            errorRequired = messages("DonationAmountYouAreClaiming.error.required", label),
-            formatErrorMsg = messages("DonationAmountYouAreClaiming.error.invalid", label),
+            errorRequired = messages("donationAmountYouAreClaiming.error.required", label),
+            formatErrorMsg = messages("donationAmountYouAreClaiming.error.invalid", label),
+            maxLengthErrorMsg = messages("donationAmountYouAreClaiming.error.maxLength"),
             allowZero = true
           )
 

@@ -18,14 +18,14 @@ package services
 
 import services.TaxYearService.TaxYearError
 
-import java.time.LocalDate
+import java.time.{LocalDate, ZoneId}
 
 class TaxYearService {
 
   def validateTaxYears(
     taxYear: Int,
     existingYears: Seq[Int],
-    today: LocalDate = LocalDate.now()
+    today: LocalDate = LocalDate.now(ZoneId.of("Europe/London"))
   ): Option[TaxYearError] = {
 
     val (minYear, maxYear) = validRange(today)
