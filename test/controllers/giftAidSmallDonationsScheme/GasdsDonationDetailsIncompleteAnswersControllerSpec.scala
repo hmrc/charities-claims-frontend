@@ -19,7 +19,7 @@ package controllers.giftAidSmallDonationsScheme
 import play.api.test.FakeRequest
 import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
-import views.html.GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersView
+import views.html.GasdsDonationDetailsIncompleteAnswersView
 import play.api.Application
 import models.{
   GiftAidSmallDonationsSchemeClaimAnswers,
@@ -28,7 +28,7 @@ import models.{
   SessionData
 }
 
-class GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec {
+class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec {
 
   private val checkYourGasdsDonationDetailsUrl = "/charities-claims/check-your-GASDS-donation-details"
 
@@ -43,7 +43,7 @@ class GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersControllerSpec 
     makingAdjustmentToPreviousClaim = Some(false)
   )
 
-  "GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersController" - {
+  "GasdsDonationDetailsIncompleteAnswersController" - {
     "onPageLoad" - {
       "should redirect to claim complete when submissionReference is defined" in {
         val sessionData = SessionData(
@@ -60,7 +60,7 @@ class GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersControllerSpec 
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(
               GET,
-              routes.GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersController.onPageLoad.url
+              routes.GasdsDonationDetailsIncompleteAnswersController.onPageLoad.url
             )
 
           val result = route(application, request).value
@@ -86,12 +86,12 @@ class GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersControllerSpec 
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(
               GET,
-              routes.GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersController.onPageLoad.url
+              routes.GasdsDonationDetailsIncompleteAnswersController.onPageLoad.url
             )
 
           val result = route(application, request).value
 
-          val view                 = application.injector.instanceOf[GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersView]
+          val view                 = application.injector.instanceOf[GasdsDonationDetailsIncompleteAnswersView]
           val defaultMissingFields = GiftAidSmallDonationsSchemeDonationDetailsAnswers.getMissingFields(None)
 
           status(result) shouldEqual OK
@@ -119,12 +119,12 @@ class GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersControllerSpec 
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(
               GET,
-              routes.GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersController.onPageLoad.url
+              routes.GasdsDonationDetailsIncompleteAnswersController.onPageLoad.url
             )
 
           val result = route(application, request).value
 
-          val view                  = application.injector.instanceOf[GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersView]
+          val view                  = application.injector.instanceOf[GasdsDonationDetailsIncompleteAnswersView]
           val expectedMissingFields = incompleteAnswers.missingFields
 
           status(result) shouldEqual OK
@@ -166,12 +166,12 @@ class GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersControllerSpec 
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(
               GET,
-              routes.GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersController.onPageLoad.url
+              routes.GasdsDonationDetailsIncompleteAnswersController.onPageLoad.url
             )
 
           val result = route(application, request).value
 
-          val view                  = application.injector.instanceOf[GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersView]
+          val view                  = application.injector.instanceOf[GasdsDonationDetailsIncompleteAnswersView]
           val expectedMissingFields = incompleteAnswers.missingFields
 
           status(result) shouldEqual OK
@@ -213,12 +213,12 @@ class GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersControllerSpec 
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(
               GET,
-              routes.GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersController.onPageLoad.url
+              routes.GasdsDonationDetailsIncompleteAnswersController.onPageLoad.url
             )
 
           val result = route(application, request).value
 
-          val view = application.injector.instanceOf[GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersView]
+          val view = application.injector.instanceOf[GasdsDonationDetailsIncompleteAnswersView]
 
           status(result) shouldEqual OK
 
@@ -236,7 +236,7 @@ class GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersControllerSpec 
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(
               GET,
-              routes.GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersController.onPageLoad.url
+              routes.GasdsDonationDetailsIncompleteAnswersController.onPageLoad.url
             )
 
           val result = route(application, request).value

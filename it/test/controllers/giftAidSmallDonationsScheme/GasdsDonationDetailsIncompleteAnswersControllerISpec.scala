@@ -22,7 +22,7 @@ import play.api.libs.json.Json
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
-class GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersControllerISpec
+class GasdsDonationDetailsIncompleteAnswersControllerISpec
     extends ComponentSpecHelper
     with TestDataUtils
     with ClaimsStub

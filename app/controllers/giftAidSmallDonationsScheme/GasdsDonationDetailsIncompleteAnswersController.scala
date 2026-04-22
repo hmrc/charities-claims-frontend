@@ -21,12 +21,12 @@ import controllers.BaseController
 import controllers.actions.Actions
 import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, SessionData}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import views.html.GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersView
+import views.html.GasdsDonationDetailsIncompleteAnswersView
 
-class GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersController @Inject() (
+class GasdsDonationDetailsIncompleteAnswersController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
-  view: GiftAidSmallDonationsSchemeDonationDetailsIncompleteAnswersView
+  view: GasdsDonationDetailsIncompleteAnswersView
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] =
