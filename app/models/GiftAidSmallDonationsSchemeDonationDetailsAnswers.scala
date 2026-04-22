@@ -113,8 +113,8 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
   def getClaim(index: Int)(using session: SessionData): Option[GiftAidSmallDonationsSchemeClaimAnswers] =
     get(a => a.claims.flatMap(_.lift(index)).flatten)
 
-  def isTaxYearEntered(index: Int)(using session: SessionData): Boolean =
-    getClaim(index).exists(_.taxYear > 0)
+  def isClaimExist(index: Int)(using session: SessionData): Boolean =
+    getClaim(index).isDefined
 
   def isValidIndex(index: Int): Boolean =
     index >= 1 && index <= 3

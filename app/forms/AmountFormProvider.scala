@@ -26,9 +26,10 @@ class AmountFormProvider @Inject() extends Mappings {
   def apply(
     errorRequired: String,
     formatErrorMsg: String,
+    maxLengthErrorMsg: String,
     allowZero: Boolean = true
   ): Form[BigDecimal] =
     Form(
-      "amount" -> PoundsMapping(errorRequired, formatErrorMsg, allowZero)
+      "amount" -> PoundsMapping(errorRequired, formatErrorMsg, maxLengthErrorMsg, allowZero)
     )
 }

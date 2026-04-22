@@ -261,7 +261,6 @@ POST        /about-gift-aid-small-donations-scheme                 controllers.g
 
 GET         /adjustment-to-gift-aid-overclaimed                    controllers.giftAidSmallDonationsScheme.AdjustmentToGiftAidOverclaimedController.onPageLoad
 POST        /adjustment-to-gift-aid-overclaimed                    controllers.giftAidSmallDonationsScheme.AdjustmentToGiftAidOverclaimedController.onSubmit
-GET         /which-tax-year-are-you-claiming-for/:index            controllers.giftAidSmallDonationsScheme.WhichTaxYearAreYouClaimingForController.onPageLoad(index: Int)
 
 GET         /check-gasds-adjustment-amount                controllers.giftAidSmallDonationsScheme.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad
 POST        /check-gasds-adjustment-amount                controllers.giftAidSmallDonationsScheme.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit

@@ -26,6 +26,7 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxLengthErrorMsg = "error.maxAmount",
         allowZero = true
       )
       val result   = mappings.bind(Map("" -> "123.45"))
@@ -36,6 +37,7 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxLengthErrorMsg = "error.maxAmount",
         allowZero = true
       )
       val result   = mappings.bind(Map("" -> "123"))
@@ -46,6 +48,7 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxLengthErrorMsg = "error.maxAmount",
         allowZero = true
       )
       val result   = mappings.bind(Map("" -> ""))
@@ -56,6 +59,7 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxLengthErrorMsg = "error.maxAmount",
         allowZero = true
       )
       val result   = mappings.bind(Map("" -> "123.456"))
@@ -66,6 +70,7 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxLengthErrorMsg = "error.maxAmount",
         allowZero = true
       )
       val result   = mappings.bind(Map("" -> "123.45a"))
@@ -76,16 +81,18 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxLengthErrorMsg = "error.maxLength",
         allowZero = true
       )
       val result   = mappings.bind(Map("" -> "12345678901234567890"))
-      result shouldBe Left(List(FormError("", List("error.invalid"), List())))
+      result shouldBe Left(List(FormError("", List("error.maxLength"), List())))
     }
 
     "bind invalid pounds amount (negative)" in {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxLengthErrorMsg = "error.maxAmount",
         allowZero = true
       )
       val result   = mappings.bind(Map("" -> "-123.45"))
@@ -96,6 +103,7 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxLengthErrorMsg = "error.maxAmount",
         allowZero = false
       )
       val result   = mappings.bind(Map("" -> "0"))
@@ -106,6 +114,7 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxLengthErrorMsg = "error.maxAmount",
         allowZero = false,
         zeroErrorMsg = Some("error.zero")
       )
@@ -117,10 +126,24 @@ class PoundsMappingSpec extends BaseSpec {
       val mappings = PoundsMapping(
         errorRequired = "error.required",
         formatErrorMsg = "error.invalid",
+        maxLengthErrorMsg = "error.maxAmount",
         allowZero = true
       )
       val result   = mappings.bind(Map("" -> "0"))
       result shouldBe Right(BigDecimal("0"))
+    }
+
+    "bind invalid pounds amount when input exceeds max length" in {
+      val mappings = PoundsMapping(
+        errorRequired = "error.required",
+        formatErrorMsg = "error.invalid",
+        maxLengthErrorMsg = "error.maxLength",
+        allowZero = true
+      )
+
+      val result = mappings.bind(Map("" -> "12345678901234567"))
+
+      result shouldBe Left(List(FormError("", List("error.maxLength"), List())))
     }
   }
 }

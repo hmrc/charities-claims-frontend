@@ -43,8 +43,9 @@ class DonationAmountYouAreClaimingController @Inject() (
   private def form(index: Int)(using messages: Messages) =
     val label = messages(taxYearLabelKey(index))
     formProvider(
-      errorRequired = messages("DonationAmountYouAreClaiming.error.required", label),
-      formatErrorMsg = messages("DonationAmountYouAreClaiming.error.invalid", label),
+      errorRequired = messages("donationAmountYouAreClaiming.error.required", label),
+      formatErrorMsg = messages("donationAmountYouAreClaiming.error.invalid", label),
+      maxLengthErrorMsg = messages("donationAmountYouAreClaiming.error.maxLength"),
       allowZero = true
     )
 
@@ -53,7 +54,7 @@ class DonationAmountYouAreClaimingController @Inject() (
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
           && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
-          && GiftAidSmallDonationsSchemeDonationDetailsAnswers.isTaxYearEntered(zeroIndex(index))
+          && GiftAidSmallDonationsSchemeDonationDetailsAnswers.isClaimExist(zeroIndex(index))
       )
       .async { implicit request =>
         implicit val messages: Messages = messagesApi.preferred(request)
@@ -75,7 +76,7 @@ class DonationAmountYouAreClaimingController @Inject() (
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
           && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
-          && GiftAidSmallDonationsSchemeDonationDetailsAnswers.isTaxYearEntered(zeroIndex(index))
+          && GiftAidSmallDonationsSchemeDonationDetailsAnswers.isClaimExist(zeroIndex(index))
       )
       .async { implicit request =>
         implicit val messages: Messages = messagesApi.preferred(request)
