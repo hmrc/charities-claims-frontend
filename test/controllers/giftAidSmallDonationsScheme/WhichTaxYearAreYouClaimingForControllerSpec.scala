@@ -49,7 +49,7 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
   private def withClaim(session: SessionData, year: Int): SessionData =
     GiftAidSmallDonationsSchemeDonationDetailsAnswers.setClaim(
       index - 1,
-      GiftAidSmallDonationsSchemeClaim(
+      GiftAidSmallDonationsSchemeClaimAnswers(
         taxYear = year,
         amountOfDonationsReceived = None
       )
@@ -168,7 +168,7 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
       "should return BAD_REQUEST for duplicate year" in {
         val session =
           GiftAidSmallDonationsSchemeDonationDetailsAnswers
-            .setClaim(0, GiftAidSmallDonationsSchemeClaim(validYear, None))(using baseSession)
+            .setClaim(0, GiftAidSmallDonationsSchemeClaimAnswers(validYear, None))(using baseSession)
 
         given application: Application =
           applicationBuilder(sessionData = session).build()
