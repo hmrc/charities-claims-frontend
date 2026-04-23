@@ -16,6 +16,7 @@
 
 package controllers.giftAidSmallDonationsScheme
 
+import models.Mode.NormalMode
 import org.jsoup.Jsoup
 import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.libs.json.Json
@@ -52,7 +53,7 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerISpec
       val result = post(url)(Json.obj())
 
       result.status               shouldBe SEE_OTHER
-      result.header(LOCATION).value shouldBe routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1).url
+      result.header(LOCATION).value shouldBe routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1, NormalMode).url
     }
   }
 

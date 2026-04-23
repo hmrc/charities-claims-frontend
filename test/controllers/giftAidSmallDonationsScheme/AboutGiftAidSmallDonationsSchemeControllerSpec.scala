@@ -22,6 +22,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.AboutGiftAidSmallDonationsSchemeView
 import models.{RepaymentClaimDetailsAnswers, SessionData}
+import models.Mode.NormalMode
 
 class AboutGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
   "AboutGiftAidSmallDonationsSchemeController" - {
@@ -136,7 +137,9 @@ class AboutGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.giftAidSmallDonationsScheme.routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1).url
+            controllers.giftAidSmallDonationsScheme.routes.WhichTaxYearAreYouClaimingForController
+              .onPageLoad(1, NormalMode)
+              .url
           )
         }
       }

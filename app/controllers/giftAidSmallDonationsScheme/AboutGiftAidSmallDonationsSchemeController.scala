@@ -19,6 +19,7 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import controllers.giftAidSmallDonationsScheme.routes
+import models.Mode.NormalMode
 import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.AboutGiftAidSmallDonationsSchemeView
@@ -53,7 +54,7 @@ class AboutGiftAidSmallDonationsSchemeController @Inject() (
           if (RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true))
             Redirect(routes.AdjustmentToGiftAidOverclaimedController.onPageLoad)
           else
-            Redirect(routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1))
+            Redirect(routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1, NormalMode))
         )
       }
 }

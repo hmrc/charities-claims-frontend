@@ -103,7 +103,7 @@ class DonationAmountYouAreClaimingController @Inject() (
                       GiftAidSmallDonationsSchemeDonationDetailsAnswers
                         .setClaim(zeroIndex(index), updatedClaim)
                     )
-                    .map(_ => Redirect(s"/check-claim-details-for-tax-year/$index"))
+                    .map(_ => Redirect(routes.ClaimDetailsForTaxYearCheckYourAnswersController.onPageLoad(index)))
                 }
           )
       }

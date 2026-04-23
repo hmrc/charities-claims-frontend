@@ -16,75 +16,68 @@
 
 package controllers.giftAidSmallDonationsScheme
 
-import models.{GiftAidSmallDonationsSchemeClaim, GiftAidSmallDonationsSchemeDonationDetails}
-import org.jsoup.Jsoup
+import models.GiftAidSmallDonationsSchemeDonationDetails
 import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.libs.json.Json
 import play.api.test.Helpers.{LOCATION, *}
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
-class DonationAmountYouAreClaimingControllerISpec
-    extends ComponentSpecHelper
+class ClaimDetailsForTaxYearCheckYourAnswersControllerISpec
+  extends ComponentSpecHelper
     with TestDataUtils
     with ClaimsStub
     with AuthStub
     with ClaimsValidationStub {
 
   private val index = 1
-  private val url   = s"/donation-amount-you-are-claiming/$index"
+  private val url   = s"/check-claim-details-for-tax-year/$index"
 
-  "GET /donation-amount-you-are-claiming/:index" should {
+  "GET /check-claim-details-for-tax-year/:index" should {
 
-    "render the donation amount page" in {
+    "render the check your answers page when claim exists" in {
       stubBackend()
 
       val result = get(url)
 
-      result.status                shouldBe OK
-      Jsoup.parse(result.body).title should include(
-        msg("donationAmountYouAreClaiming.title")
-      )
+      result.status shouldBe OK
     }
   }
 
-  "POST /donation-amount-you-are-claiming/:index" should {
+  "POST /check-claim-details-for-tax-year/:index" should {
 
-    "redirect to check your answers page when valid amount submitted" in {
+    "redirect to claim added page" in {
       stubBackend()
 
-      val result =
-        post(url)(Json.obj("amount" -> "123.45"))
+      val result = post(url)(Json.obj())
 
-      result.status                 shouldBe SEE_OTHER
+      result.status shouldBe SEE_OTHER
       result.header(LOCATION).value shouldBe
-        controllers.giftAidSmallDonationsScheme.routes.ClaimDetailsForTaxYearCheckYourAnswersController.onPageLoad(1).url
+        "/charities-claims/claim-added-for-tax-year"
     }
   }
 
   private def stubBackend(): Unit = {
 
-    val baseClaim = claim.copy(
+    val existingClaims =
+      claim.claimData.giftAidSmallDonationsSchemeDonationDetails
+        .map(_.claims)
+        .getOrElse(Seq.empty)
+
+    val gasdsClaim = claim.copy(
       claimData = claim.claimData.copy(
         repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
-          claimingGiftAid = true,
-          claimingTaxDeducted = false,
           claimingUnderGiftAidSmallDonationsScheme = true,
-          claimReferenceNumber = Some("ref"),
           makingAdjustmentToPreviousClaim = Some(false),
-          claimingDonationsNotFromCommunityBuilding = Some(true),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
           claimingDonationsCollectedInCommunityBuildings = Some(false),
-          connectedToAnyOtherCharities = Some(false)
+          connectedToAnyOtherCharities = Some(false),
+          claimReferenceNumber = Some("ref")
         ),
         giftAidSmallDonationsSchemeDonationDetails = Some(
           GiftAidSmallDonationsSchemeDonationDetails(
             adjustmentForGiftAidOverClaimed = BigDecimal(0),
-            claims = Seq(
-              GiftAidSmallDonationsSchemeClaim(
-                taxYear = 2025,
-                amountOfDonationsReceived = BigDecimal(0)
-              )
-            )
+            claims = existingClaims.take(1)
           )
         )
       )
@@ -92,7 +85,29 @@ class DonationAmountYouAreClaimingControllerISpec
 
     stubAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
-    stubGetClaims(claimId)(OK, Json.toJson(baseClaim))
+    stubGetClaims(claimId)(OK, Json.toJson(gasdsClaim))
+    stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
+  }
+
+  private def stubBackendWithoutClaims(): Unit = {
+
+    val gasdsClaim = claim.copy(
+      claimData = claim.claimData.copy(
+        repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
+          claimingUnderGiftAidSmallDonationsScheme = true
+        ),
+        giftAidSmallDonationsSchemeDonationDetails = Some(
+          GiftAidSmallDonationsSchemeDonationDetails(
+            adjustmentForGiftAidOverClaimed = BigDecimal(0),
+            claims = Seq.empty
+          )
+        )
+      )
+    )
+
+    stubAuthRequest()
+    stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+    stubGetClaims(claimId)(OK, Json.toJson(gasdsClaim))
     stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
   }
 }
