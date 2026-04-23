@@ -37,27 +37,25 @@
 
     @formHelper(action = routes.DonationAmountYouAreClaimingController.onSubmit(index)) {
 
-        @govukInput(Input(
-            id = "amount",
-            name = "amount",
-            value = form("amount").value,
-            inputType = "text",
-            pattern = Some("[0-9.]*"),
-            label = Label(
+        @govukInput(
+            InputViewModel(
+            form("amount"),
+            Label(
                 isPageHeading = true,
                 classes = "govuk-label--l",
                 content = Text(messages("donationAmountYouAreClaiming.heading"))
-            ),
-            hint = Some(Hint(
+            )
+        )
+        .withInputType("text")
+        .withPattern("[0-9.]*")
+        .withHint(Hint(
             content = Text(messages("donationAmountYouAreClaiming.hint"))
-            )),
-            classes = "govuk-input--width-5",
-            spellcheck = Some(false),
-            prefix = Some(PrefixOrSuffix(
-                content = Text("£")
-            )),
-            attributes = Map("autocomplete" -> "off")
         ))
+        .withCssClass("govuk-input--width-5")
+        .withSpellcheck(false)
+        .withPrefix(PrefixOrSuffix(content = Text("£")))
+        .withAttribute("autocomplete" -> "off")
+        )
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
     }
