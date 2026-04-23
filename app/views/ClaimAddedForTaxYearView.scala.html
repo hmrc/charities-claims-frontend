@@ -1,0 +1,83 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import views.html.components.*
+@import controllers.giftAidSmallDonationsScheme.routes
+@import controllers.repaymentClaimDetails.routes
+@import models.RepaymentClaimDetailsAnswers
+@import viewmodels.RepaymentClaimDetailsCheckYourAnswersHelper
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    customSummaryList: CustomSummaryList,
+    govukRadios: GovukRadios,
+    govukButton: GovukButton
+)
+
+@(form: Form[Boolean], oRows: Option[Seq[(String, Seq[(String, String, String)])]] = None,  countOfTaxYears: Int = 0, singularOrPlural: String = "")(implicit request: Request[?], messages: Messages)
+
+
+@layout(
+    pageTitle = title(form, messages("claimAddedForTaxYear.title", countOfTaxYears, singularOrPlural))
+) {
+
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+
+    <span class="govuk-caption-l">@messages("claimAddedForTaxYear.caption")</span>
+    <h1 class="govuk-heading-l">@messages("claimAddedForTaxYear.heading", countOfTaxYears, singularOrPlural)</h1>
+
+    @if(oRows.isDefined) {
+        @customSummaryList(oRows.get)
+    }
+
+    @formHelper(action = controllers.giftAidSmallDonationsScheme.routes.ClaimAddedForTaxYearController.onSubmit, Symbol("autoComplete") -> "off") {
+
+        @if(countOfTaxYears < 3) {
+            @{
+                val radios = RadiosViewModel.yesNo(
+                    form("value"),
+                    Fieldset(
+                        legend = Some(
+                            Legend(
+                                content = Text(messages("claimAddedForTaxYear.subtitle")),
+                                isPageHeading = true,
+                                classes = "govuk-fieldset__legend--m"
+                            )
+                        )
+                    )
+                )
+
+                val radiosWithOptionalHint =
+                    if(countOfTaxYears > 1)
+                        radios.withHint(HintViewModel(Text(messages("claimAddedForTaxYear.hint"))))
+                    else
+                        radios
+
+                govukRadios(radiosWithOptionalHint)
+            }
+        }
+
+        @govukButton(
+            ButtonViewModel(
+                Text(messages("site.continue"))
+            )
+        )
+    }
+}

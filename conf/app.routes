@@ -281,3 +281,6 @@ POST        /donation-amount-you-are-claiming/:index        controllers.giftAidS
 GET         /check-claim-details-for-tax-year/:index                controllers.giftAidSmallDonationsScheme.ClaimDetailsForTaxYearCheckYourAnswersController.onPageLoad(index: Int)
 POST        /check-claim-details-for-tax-year/:index                controllers.giftAidSmallDonationsScheme.ClaimDetailsForTaxYearCheckYourAnswersController.onSubmit(index: Int)
 
+
+GET         /claim-added-for-tax-year                       controllers.giftAidSmallDonationsScheme.ClaimAddedForTaxYearController.onPageLoad
+POST        /claim-added-for-tax-year                       controllers.giftAidSmallDonationsScheme.ClaimAddedForTaxYearController.onSubmit

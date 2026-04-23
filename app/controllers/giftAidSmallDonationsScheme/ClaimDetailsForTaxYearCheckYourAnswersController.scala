@@ -59,6 +59,6 @@ class ClaimDetailsForTaxYearCheckYourAnswersController @Inject() (
       .async { implicit request =>
         Future.successful(
           Redirect("/charities-claims/claim-added-for-tax-year")
-        ) // TODO update URL when next screen is available
+        )
       }
 }

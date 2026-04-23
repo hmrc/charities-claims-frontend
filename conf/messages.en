@@ -820,3 +820,15 @@ claimForTaxYearCheckYourAnswers.title = Check your claim details for tax year {0
 claimForTaxYearCheckYourAnswers.heading = Check your claim details for tax year {0}
 claimForTaxYearCheckYourAnswers.taxYear.label = Tax year
 claimForTaxYearCheckYourAnswers.donationAmount.label = Donation amount
+
+claimAddedForTaxYear.caption = Provide GASDS donation details
+claimAddedForTaxYear.heading = You have added a claim for {0} tax {1}
+claimAddedForTaxYear.title = You have added a claim for {0} tax {1}
+claimAddedForTaxYear.taxYear.key = Tax year {0}
+claimAddedForTaxYear.error.required = Select 'Yes' if you want to make a claim for another tax year
+claimAddedForTaxYear.subtitle = Do you want to add a claim for another tax year?
+claimAddedForTaxYear.hint = You can only make claims for up to 3 tax years.
+claimAddedForTaxYear.singularOrPlural.singular = year
+claimAddedForTaxYear.singularOrPlural.plural = years
+
+
