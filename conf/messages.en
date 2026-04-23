@@ -813,3 +813,9 @@ whichTaxYearAreYouClaimingFor.error.duplicate = Donations claimed for more than 
 taxYear.first = first
 taxYear.second = second
 taxYear.third = third
+
+claimForTaxYearCheckYourAnswers.caption = Provide GASDS donation details
+claimForTaxYearCheckYourAnswers.title = Check your claim details for tax year {0}
+claimForTaxYearCheckYourAnswers.heading = Check your claim details for tax year {0}
+claimForTaxYearCheckYourAnswers.taxYear.label = Tax year
+claimForTaxYearCheckYourAnswers.donationAmount.label = Donation amount

@@ -17,6 +17,7 @@
 package controllers.giftAidSmallDonationsScheme
 
 import controllers.ControllerSpec
+import models.Mode.NormalMode
 import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
@@ -161,7 +162,7 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result).value shouldEqual
-            routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1).url
+            routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1, NormalMode).url
         }
       }
 

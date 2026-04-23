@@ -18,54 +18,47 @@ package controllers.giftAidSmallDonationsScheme
 
 import com.google.inject.Inject
 import controllers.actions.Actions
-import models.Mode.NormalMode
 import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.GasdsAdjustmentAmountCheckYourAnswersView
+import views.html.ClaimDetailsForTaxYearCheckYourAnswersView
 
 import scala.concurrent.Future
 
-class GasdsAdjustmentAmountCheckYourAnswersController @Inject() (
+class ClaimDetailsForTaxYearCheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
   actions: Actions,
   val controllerComponents: MessagesControllerComponents,
-  view: GasdsAdjustmentAmountCheckYourAnswersView
+  view: ClaimDetailsForTaxYearCheckYourAnswersView
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] =
+  def onPageLoad(index: Int): Action[AnyContent] =
     actions
       .authAndGetDataWithGuard(
-        SessionData.isRepaymentClaimDetailsComplete &&
-          RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
+        SessionData.isRepaymentClaimDetailsComplete
+          && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
       )
       .async { implicit request =>
-        val giftAidDonationsAnswers = request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
-        Future.successful(Ok(view(giftAidDonationsAnswers)))
+
+        val claimOpt =
+          request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
+            .flatMap(_.claims)
+            .flatMap(_.lift(index - 1))
+            .flatten
+        Future.successful(Ok(view(claimOpt, index)))
       }
 
-  def onSubmit: Action[AnyContent] =
+  def onSubmit(index: Int): Action[AnyContent] =
     actions
       .authAndGetDataWithGuard(
-        SessionData.isRepaymentClaimDetailsComplete &&
-          RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
+        SessionData.isRepaymentClaimDetailsComplete
+          && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
       )
       .async { implicit request =>
-        val claimingUnderGasds =
-          request.sessionData.repaymentClaimDetailsAnswers
-            .flatMap(_.claimingUnderGiftAidSmallDonationsScheme)
-            .contains(true)
-
         Future.successful(
-          if (claimingUnderGasds) {
-            Redirect(routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1, NormalMode))
-          } else {
-            Redirect(
-              "/charities-claims/check-your-GASDS-donation-details"
-            ) // TODO update URL when next screen is available
-          }
-        )
+          Redirect("/charities-claims/claim-added-for-tax-year")
+        ) // TODO update URL when next screen is available
       }
 }

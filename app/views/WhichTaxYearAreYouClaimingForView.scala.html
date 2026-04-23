@@ -24,7 +24,7 @@ govukInput: GovukInput,
 govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[?], index: Int)(implicit request: Request[?], messages: Messages)
+@(form: Form[?], index: Int, mode: Mode)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = title(form, messages("whichTaxYearAreYouClaimingFor.title"))
@@ -40,7 +40,7 @@ govukErrorSummary: GovukErrorSummary
     <p class="govuk-body">
         @messages("whichTaxYearAreYouClaimingFor.paragraph")
     </p>
-    @formHelper(action = routes.WhichTaxYearAreYouClaimingForController.onSubmit(index), Symbol("autoComplete") -> "on") {
+    @formHelper(action = routes.WhichTaxYearAreYouClaimingForController.onSubmit(index, mode), Symbol("autoComplete") -> "on") {
 
     @govukInput(
         InputViewModel(

@@ -142,7 +142,7 @@ class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            s"/check-claim-details-for-tax-year/$index" // TODO redirect to the correct url once it is implemented
+            routes.ClaimDetailsForTaxYearCheckYourAnswersController.onPageLoad(index).url
           )
         }
       }

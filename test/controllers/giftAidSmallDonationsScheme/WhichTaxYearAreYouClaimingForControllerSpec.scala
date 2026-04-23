@@ -19,6 +19,7 @@ package controllers.giftAidSmallDonationsScheme
 import controllers.ControllerSpec
 import forms.TaxYearFormProvider
 import models.*
+import models.Mode.{CheckMode, NormalMode}
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
@@ -69,7 +70,7 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.WhichTaxYearAreYouClaimingForController.onPageLoad(index).url)
+            FakeRequest(GET, routes.WhichTaxYearAreYouClaimingForController.onPageLoad(index, NormalMode).url)
 
           val result = route(application, request).value
 
@@ -85,7 +86,7 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
           )
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form, index).body
+          contentAsString(result) shouldEqual view(form, index, NormalMode).body
         }
       }
 
@@ -97,7 +98,7 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.WhichTaxYearAreYouClaimingForController.onPageLoad(index).url)
+            FakeRequest(GET, routes.WhichTaxYearAreYouClaimingForController.onPageLoad(index, NormalMode).url)
 
           val result = route(application, request).value
 
@@ -113,20 +114,20 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
           )
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(validYear), index).body
+          contentAsString(result) shouldEqual view(form.fill(validYear), index, NormalMode).body
         }
       }
     }
 
     "onSubmit" - {
 
-      "should redirect when valid tax year submitted" in {
+      "should redirect to donation amount page when valid tax year submitted in NormalMode" in {
         given application: Application =
           applicationBuilder(sessionData = baseSession).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.WhichTaxYearAreYouClaimingForController.onSubmit(index).url)
+            FakeRequest(POST, routes.WhichTaxYearAreYouClaimingForController.onSubmit(index, NormalMode).url)
               .withFormUrlEncodedBody("value" -> validYear.toString)
 
           val result = route(application, request).value
@@ -138,13 +139,34 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
         }
       }
 
+      "should redirect to CheckYourAnswers page in CheckMode" in {
+        given application: Application =
+          applicationBuilder(sessionData = baseSession).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(
+              POST,
+              routes.WhichTaxYearAreYouClaimingForController.onSubmit(index, CheckMode).url
+            ).withFormUrlEncodedBody("value" -> validYear.toString)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result).value shouldEqual
+            controllers.giftAidSmallDonationsScheme.routes.ClaimDetailsForTaxYearCheckYourAnswersController
+              .onPageLoad(index)
+              .url
+        }
+      }
+
       "should return BAD_REQUEST when empty" in {
         given application: Application =
           applicationBuilder(sessionData = baseSession).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.WhichTaxYearAreYouClaimingForController.onSubmit(index).url)
+            FakeRequest(POST, routes.WhichTaxYearAreYouClaimingForController.onSubmit(index, NormalMode).url)
               .withFormUrlEncodedBody("value" -> "")
 
           val result = route(application, request).value
@@ -161,7 +183,7 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
           )
 
           status(result) shouldEqual BAD_REQUEST
-          contentAsString(result) shouldEqual view(form.bind(Map("value" -> "")), index).body
+          contentAsString(result) shouldEqual view(form.bind(Map("value" -> "")), index, NormalMode).body
         }
       }
 
@@ -175,12 +197,15 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.WhichTaxYearAreYouClaimingForController.onSubmit(2).url)
+            FakeRequest(POST, routes.WhichTaxYearAreYouClaimingForController.onSubmit(2, NormalMode).url)
               .withFormUrlEncodedBody("value" -> validYear.toString)
 
           val result = route(application, request).value
 
           status(result) shouldEqual BAD_REQUEST
+          contentAsString(result) should include(
+            messages(application)("whichTaxYearAreYouClaimingFor.error.duplicate")
+          )
         }
       }
 
@@ -190,12 +215,15 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.WhichTaxYearAreYouClaimingForController.onSubmit(index).url)
+            FakeRequest(POST, routes.WhichTaxYearAreYouClaimingForController.onSubmit(index, NormalMode).url)
               .withFormUrlEncodedBody("value" -> tooOldYear.toString)
 
           val result = route(application, request).value
 
           status(result) shouldEqual BAD_REQUEST
+          contentAsString(result) should include(
+            messages(application)("whichTaxYearAreYouClaimingFor.error.tooOld", "2024") // adjust min if needed
+          )
         }
       }
 
@@ -205,12 +233,15 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.WhichTaxYearAreYouClaimingForController.onSubmit(index).url)
+            FakeRequest(POST, routes.WhichTaxYearAreYouClaimingForController.onSubmit(index, NormalMode).url)
               .withFormUrlEncodedBody("value" -> futureYear.toString)
 
           val result = route(application, request).value
 
           status(result) shouldEqual BAD_REQUEST
+          contentAsString(result) should include(
+            messages(application)("whichTaxYearAreYouClaimingFor.error.future")
+          )
         }
       }
     }
