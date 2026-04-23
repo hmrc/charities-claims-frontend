@@ -47,6 +47,7 @@ govukErrorSummary: GovukErrorSummary
             .withId("value-hint")
         )
         .withCssClass("govuk-input--width-20")
+        .withAttribute("autocomplete" -> "off")
     )
 
     @govukButton(ButtonViewModel(Text(messages("site.continue"))))
