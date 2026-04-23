@@ -49,7 +49,7 @@ class RemoveClaimForTaxYearController @Inject() (
         SessionData.isRepaymentClaimDetailsComplete &&
           RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) &&
           GiftAidSmallDonationsSchemeDonationDetailsAnswers.isValidIndex(index) &&
-          GiftAidSmallDonationsSchemeDonationDetailsAnswers.isTaxYearEntered(zeroIndex(index))
+          GiftAidSmallDonationsSchemeDonationDetailsAnswers.isClaimExist(zeroIndex(index))
       )
       .async { implicit request =>
         implicit val messages: Messages = messagesApi.preferred(request)
@@ -68,7 +68,7 @@ class RemoveClaimForTaxYearController @Inject() (
         SessionData.isRepaymentClaimDetailsComplete &&
           RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) &&
           GiftAidSmallDonationsSchemeDonationDetailsAnswers.isValidIndex(index) &&
-          GiftAidSmallDonationsSchemeDonationDetailsAnswers.isTaxYearEntered(zeroIndex(index))
+          GiftAidSmallDonationsSchemeDonationDetailsAnswers.isClaimExist(zeroIndex(index))
       )
       .async { implicit request =>
         implicit val messages: Messages       = messagesApi.preferred(request)
