@@ -27,7 +27,7 @@
 @(form: Form[Boolean], index: Int, taxYear: Int)(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = title(form, messages("removeClaimForTaxYear.title", taxYear))
+    pageTitle = title(form, messages("removeClaimForTaxYear.title", taxYear.toString))
 ) {
 
     @if(form.errors.nonEmpty) {
@@ -40,7 +40,7 @@
             RadiosViewModel.yesNo(
                 form("value"),
                 Fieldset(
-                    legend = Some(Legend(content = Text(messages("removeClaimForTaxYear.heading", taxYear)), isPageHeading = true,
+                    legend = Some(Legend(content = Text(messages("removeClaimForTaxYear.heading", taxYear.toString)), isPageHeading = true,
                     classes = "govuk-fieldset__legend--l"))
                 )
             )
