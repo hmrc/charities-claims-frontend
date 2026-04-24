@@ -53,15 +53,7 @@
             @{
                 val radios = RadiosViewModel.yesNo(
                     form("value"),
-                    Fieldset(
-                        legend = Some(
-                            Legend(
-                                content = Text(messages("claimAddedForTaxYear.subtitle")),
-                                isPageHeading = true,
-                                classes = "govuk-fieldset__legend--m"
-                            )
-                        )
-                    )
+                    LegendViewModel(messages("claimAddedForTaxYear.legend")).bold
                 )
 
                 val radiosWithOptionalHint =

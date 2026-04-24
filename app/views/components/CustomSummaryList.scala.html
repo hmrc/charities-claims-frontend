@@ -30,7 +30,7 @@
                 @for((url, linkText, hiddenKey) <- links) {
                 <li class="govuk-summary-list__actions-list-item">
                     <a class="govuk-link" href="@url">
-                        <span class="link-text" aria-hidden="true">@messages(linkText)</span>
+                        <span class="link-text">@messages(linkText)</span>
                         <span class="govuk-visually-hidden"> @messages(hiddenKey, item)</span>
                     </a>
                 </li>
