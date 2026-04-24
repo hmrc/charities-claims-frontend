@@ -19,15 +19,17 @@ package controllers.giftAidSmallDonationsScheme
 import com.google.inject.Inject
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import controllers.actions.Actions as ControllerActions
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import forms.YesNoFormProvider
+import models.requests.DataRequest
 import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, RepaymentClaimDetailsAnswers, SessionData}
+import viewmodels.ClaimAddedForTaxYearHelper._
 import play.api.data.Form
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ClaimAddedForTaxYearView
 import models.Mode.*
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class ClaimAddedForTaxYearController @Inject() (
   override val messagesApi: MessagesApi,
@@ -40,6 +42,14 @@ class ClaimAddedForTaxYearController @Inject() (
 
   val form: Form[Boolean] = formProvider("claimAddedForTaxYear.error.required")
 
+  private def extractTaxYears(using request: DataRequest[?]): (Seq[Int], Int) = {
+    val gasdsAnswers =
+      request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
+
+    val taxYears = getTaxYears(gasdsAnswers)
+    (taxYears, taxYears.size)
+  }
+
   def onPageLoad: Action[AnyContent] = actions
     .authAndGetDataWithGuard(
       SessionData.isRepaymentClaimDetailsComplete
@@ -47,11 +57,8 @@ class ClaimAddedForTaxYearController @Inject() (
         && GiftAidSmallDonationsSchemeDonationDetailsAnswers.getClaimsSize != 0
     )
     .async { implicit request =>
-      val gasdsAnswers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers] =
-        request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
 
-      val taxYears: Seq[Int] = getTaxYears(gasdsAnswers)
-      val countOfTaxYears    = taxYears.size
+      val (taxYears, countOfTaxYears) = extractTaxYears
 
       Future.successful(
         Ok(
@@ -73,91 +80,46 @@ class ClaimAddedForTaxYearController @Inject() (
     )
     .async { implicit request =>
 
-      val gasdsAnswers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers] =
-        request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
+      val (taxYears, countOfTaxYears) = extractTaxYears
 
-      val taxYears: Seq[Int] = getTaxYears(gasdsAnswers)
-      val countOfTaxYears    = taxYears.size
-
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors =>
-            Future.successful(
-              BadRequest(
-                view(
-                  formWithErrors,
-                  buildCustomSummaryList(taxYears),
-                  countOfTaxYears,
-                  getSingularOrPlural(countOfTaxYears)
-                )
-              )
-            ),
-          value =>
-            if value then {
-              Future.successful(
-                Redirect(
-                  controllers.giftAidSmallDonationsScheme.routes.WhichTaxYearAreYouClaimingForController
-                    .onPageLoad(taxYears.size + 1, NormalMode)
-                )
-              )
-            } else {
-              Future.successful(
-                Redirect(
-                  s"/check-your-donation-details" // TODO redirect to the correct url once it is implemented
-                )
-              )
-            }
+      if (countOfTaxYears == 3) {
+        Future.successful(
+          Redirect(
+            s"/check-your-donation-details" // TODO redirect to the correct url once it is implemented
+          )
         )
+      } else {
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors =>
+              Future.successful(
+                BadRequest(
+                  view(
+                    formWithErrors,
+                    buildCustomSummaryList(taxYears),
+                    countOfTaxYears,
+                    getSingularOrPlural(countOfTaxYears)
+                  )
+                )
+              ),
+            value =>
+              if value then {
+                Future.successful(
+                  Redirect(
+                    controllers.giftAidSmallDonationsScheme.routes.WhichTaxYearAreYouClaimingForController
+                      .onPageLoad(taxYears.size + 1, NormalMode)
+                  )
+                )
+              } else {
+                Future.successful(
+                  Redirect(
+                    s"/check-your-donation-details" // TODO redirect to the correct url once it is implemented
+                  )
+                )
+              }
+          )
+      }
     }
-
-  private def getTaxYears(gasdsAnswers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers]): Seq[Int] =
-    gasdsAnswers.toSeq
-      .flatMap(_.claims.toSeq)
-      .flatMap(_.collect { case Some(c) => c.taxYear })
-
-  private def buildCustomSummaryList(
-    taxYears: Seq[Int]
-  )(using messages: Messages): Option[Seq[(String, Seq[(String, String, String)])]] = {
-    val taxYearLabels: Seq[String] = taxYears.map { taxYear =>
-      messages("claimAddedForTaxYear.taxYear.key", taxYear.toString)
-    }
-
-    val customSummaryListRows: Seq[(String, Seq[(String, String, String)])] = taxYearLabels.zipWithIndex.map {
-      (taxYearLabel, index) =>
-        buildCustomSummaryListRows(taxYearLabels.size > 1, taxYearLabel, index + 1)
-    }
-
-    Option.when(customSummaryListRows.nonEmpty)(customSummaryListRows)
-  }
-
-  private def buildCustomSummaryListRows(
-    isMultipleTaxYears: Boolean,
-    label: String,
-    index: Int
-  ): (String, Seq[(String, String, String)]) =
-    val baseActions =
-      Seq(
-        (
-          controllers.giftAidSmallDonationsScheme.routes.ClaimDetailsForTaxYearCheckYourAnswersController
-            .onPageLoad(index)
-            .url,
-          "site.change",
-          label
-        )
-      )
-
-    val actions =
-      if isMultipleTaxYears then
-        baseActions :+ (controllers.giftAidSmallDonationsScheme.routes.RemoveClaimForTaxYearController
-          .onPageLoad(index)
-          .url, "site.remove", label)
-      else baseActions
-
-    label -> actions
-
-  private def getSingularOrPlural(countOfTaxYears: Int)(using messages: Messages) =
-    if (countOfTaxYears > 1) messages("claimAddedForTaxYear.singularOrPlural.plural")
-    else messages("claimAddedForTaxYear.singularOrPlural.singular")
 
 }
