@@ -41,7 +41,7 @@ class RemoveClaimForTaxYearController @Inject() (
   private def zeroIndex(index: Int): Int = index - 1
 
   private def form(taxYear: Int)(using messages: Messages): Form[Boolean] =
-    formProvider(messages("removeClaimForTaxYear.error.required", taxYear))
+    formProvider(messages("removeClaimForTaxYear.error.required", taxYear.toString))
 
   def onPageLoad(index: Int): Action[AnyContent] =
     actions
