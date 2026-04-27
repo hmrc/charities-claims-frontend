@@ -54,7 +54,7 @@ class RemoveClaimForTaxYearControllerSpec extends ControllerSpec {
 
   private def form(app: Application) = {
     given msgs: Messages = messages(app)
-    new YesNoFormProvider()(msgs("removeClaimForTaxYear.error.required", validTaxYear))
+    new YesNoFormProvider()(msgs("removeClaimForTaxYear.error.required", validTaxYear.toString))
   }
 
   "RemoveClaimForTaxYearController" - {
