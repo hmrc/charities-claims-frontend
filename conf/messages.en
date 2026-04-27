@@ -583,6 +583,7 @@ session-expired.sign-out-button-text=Sign-out
 
 site.change = Change
 site.continue = Continue
+site.confirmAndContinue = Confirm and continue
 site.enter = Enter
 site.govuk = GOV.UK
 site.no = No
@@ -829,5 +830,13 @@ claimAddedForTaxYear.legend = Do you want to add a claim for another tax year?
 claimAddedForTaxYear.hint = You can only make claims for up to 3 tax years.
 claimAddedForTaxYear.singularOrPlural.singular = year
 claimAddedForTaxYear.singularOrPlural.plural = years
+
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.caption = Provide GASDS donation details
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading = Check your GASDS donation details
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.title = Check your GASDS donation details
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.1 = GASDS claim adjustment
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.2 = GASDS claims
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Amount of GASDS previously overclaimed
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.numberOfTaxYearsAdded.label = Number of tax years added
 
 
