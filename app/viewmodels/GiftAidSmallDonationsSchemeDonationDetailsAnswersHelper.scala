@@ -33,7 +33,7 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper {
       messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.adjustmentToGiftAidOverclaimed.label")
 
     val changeOrEnterUrl =
-      controllers.giftAidSmallDonationsScheme.routes.AdjustmentToGiftAidOverclaimedController.onPageLoad.url
+      controllers.giftAidSmallDonationsScheme.routes.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad.url
 
     val summaryListRow =
       answers

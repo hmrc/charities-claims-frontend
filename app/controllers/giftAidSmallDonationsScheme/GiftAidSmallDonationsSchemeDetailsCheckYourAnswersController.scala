@@ -24,6 +24,7 @@ import services.ClaimsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersView
 import viewmodels.GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
+import models.RepaymentClaimDetailsAnswers
 import models.SessionData
 import play.api.mvc.{Action, AnyContent}
 
@@ -40,25 +41,37 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      val previousAnswers = request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
+    actions
+      .authAndGetDataWithGuard(
+        SessionData.isRepaymentClaimDetailsComplete
+          && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
+          && RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true)
+      )
+      .async { implicit request =>
+        val previousAnswers = request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
 
-      Future.successful(
-        Ok(
-          view(
-            GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
-              .buildSummaryListForAdjustmentToGiftAidOverclaimed(previousAnswers),
-            GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
-              .buildSummaryListForNumberOfTaxYearsAdded(previousAnswers)
+        Future.successful(
+          Ok(
+            view(
+              GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
+                .buildSummaryListForAdjustmentToGiftAidOverclaimed(previousAnswers),
+              GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
+                .buildSummaryListForNumberOfTaxYearsAdded(previousAnswers)
+            )
           )
         )
-      )
-    }
+      }
 
   def onSubmit: Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      claimsService.save.map { _ =>
-        Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
+    actions
+      .authAndGetDataWithGuard(
+        SessionData.isRepaymentClaimDetailsComplete
+          && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
+          && RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true)
+      )
+      .async { implicit request =>
+        claimsService.save.map { _ =>
+          Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
+        }
       }
-    }
 }
