@@ -38,7 +38,7 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
         claimingGiftAid = Some(false),
         claimingTaxDeducted = Some(false),
         claimingUnderGiftAidSmallDonationsScheme = Some(true),
-        claimingDonationsNotFromCommunityBuilding = Some(false),
+        claimingDonationsNotFromCommunityBuilding = Some(true),
         claimingDonationsCollectedInCommunityBuildings = Some(false),
         makingAdjustmentToPreviousClaim = Some(false),
         connectedToAnyOtherCharities = Some(false),
@@ -134,7 +134,7 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.DonationAmountYouAreClaimingController.onPageLoad(index).url
+            routes.DonationAmountYouAreClaimingController.onPageLoad(index, NormalMode).url
           )
         }
       }

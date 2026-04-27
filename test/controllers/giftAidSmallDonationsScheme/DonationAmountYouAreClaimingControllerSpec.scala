@@ -19,6 +19,7 @@ package controllers.giftAidSmallDonationsScheme
 import controllers.ControllerSpec
 import forms.AmountFormProvider
 import models.*
+import models.Mode.NormalMode
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
@@ -39,7 +40,7 @@ class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
         claimingGiftAid = Some(false),
         claimingTaxDeducted = Some(false),
         claimingUnderGiftAidSmallDonationsScheme = Some(true),
-        claimingDonationsNotFromCommunityBuilding = Some(false),
+        claimingDonationsNotFromCommunityBuilding = Some(true),
         claimingDonationsCollectedInCommunityBuildings = Some(false),
         makingAdjustmentToPreviousClaim = Some(false),
         connectedToAnyOtherCharities = Some(false),
@@ -72,7 +73,7 @@ class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DonationAmountYouAreClaimingController.onPageLoad(index).url)
+            FakeRequest(GET, routes.DonationAmountYouAreClaimingController.onPageLoad(index, NormalMode).url)
 
           val result = route(application, request).value
 
@@ -90,7 +91,7 @@ class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
           )
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form, index).body
+          contentAsString(result) shouldEqual view(form, index, NormalMode).body
         }
       }
 
@@ -102,7 +103,7 @@ class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DonationAmountYouAreClaimingController.onPageLoad(index).url)
+            FakeRequest(GET, routes.DonationAmountYouAreClaimingController.onPageLoad(index, NormalMode).url)
 
           val result = route(application, request).value
 
@@ -120,7 +121,7 @@ class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
           )
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(BigDecimal(123.45)), index).body
+          contentAsString(result) shouldEqual view(form.fill(BigDecimal(123.45)), index, NormalMode).body
         }
       }
     }
@@ -135,7 +136,7 @@ class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DonationAmountYouAreClaimingController.onSubmit(index).url)
+            FakeRequest(POST, routes.DonationAmountYouAreClaimingController.onSubmit(index, NormalMode).url)
               .withFormUrlEncodedBody("amount" -> "123.45")
 
           val result = route(application, request).value
@@ -155,7 +156,7 @@ class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DonationAmountYouAreClaimingController.onSubmit(index).url)
+            FakeRequest(POST, routes.DonationAmountYouAreClaimingController.onSubmit(index, NormalMode).url)
               .withFormUrlEncodedBody("amount" -> "")
 
           val result = route(application, request).value
@@ -174,7 +175,7 @@ class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
           )
 
           status(result) shouldEqual BAD_REQUEST
-          contentAsString(result) shouldEqual view(form.bind(Map("amount" -> "")), index).body
+          contentAsString(result) shouldEqual view(form.bind(Map("amount" -> "")), index, NormalMode).body
         }
       }
 
@@ -188,7 +189,7 @@ class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DonationAmountYouAreClaimingController.onSubmit(index).url)
+            FakeRequest(POST, routes.DonationAmountYouAreClaimingController.onSubmit(index, NormalMode).url)
               .withFormUrlEncodedBody("amount" -> "123")
 
           val result = route(application, request).value

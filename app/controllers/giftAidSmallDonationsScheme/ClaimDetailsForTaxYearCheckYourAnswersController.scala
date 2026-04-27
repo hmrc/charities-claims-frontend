@@ -39,6 +39,7 @@ class ClaimDetailsForTaxYearCheckYourAnswersController @Inject() (
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
           && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
+          && RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true)
       )
       .async { implicit request =>
 
@@ -55,6 +56,7 @@ class ClaimDetailsForTaxYearCheckYourAnswersController @Inject() (
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
           && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
+          && RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true)
       )
       .async { implicit request =>
         Future.successful(
