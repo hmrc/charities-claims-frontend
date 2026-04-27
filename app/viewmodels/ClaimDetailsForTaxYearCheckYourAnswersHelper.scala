@@ -58,7 +58,7 @@ object ClaimDetailsForTaxYearCheckYourAnswersHelper {
             messages("claimForTaxYearCheckYourAnswers.donationAmount.label"),
             formatCurrency(amount),
             controllers.giftAidSmallDonationsScheme.routes.DonationAmountYouAreClaimingController
-              .onPageLoad(index)
+              .onPageLoad(index, CheckMode)
               .url,
             messages("claimForTaxYearCheckYourAnswers.donationAmount.label")
           )
@@ -67,7 +67,7 @@ object ClaimDetailsForTaxYearCheckYourAnswersHelper {
           missingDataRow(
             messages("claimForTaxYearCheckYourAnswers.donationAmount.label"),
             controllers.giftAidSmallDonationsScheme.routes.DonationAmountYouAreClaimingController
-              .onPageLoad(index)
+              .onPageLoad(index, CheckMode)
               .url,
             messages("claimForTaxYearCheckYourAnswers.donationAmount.label")
           )

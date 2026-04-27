@@ -34,7 +34,7 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
         claimingGiftAid = Some(false),
         claimingTaxDeducted = Some(false),
         claimingUnderGiftAidSmallDonationsScheme = Some(true),
-        claimingDonationsNotFromCommunityBuilding = Some(false),
+        claimingDonationsNotFromCommunityBuilding = Some(true),
         claimingDonationsCollectedInCommunityBuildings = Some(false),
         makingAdjustmentToPreviousClaim = Some(true),
         connectedToAnyOtherCharities = Some(false),
@@ -183,8 +183,7 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
 
           status(result) shouldEqual SEE_OTHER
 
-          redirectLocation(result).value shouldEqual
-            "/charities-claims/check-your-GASDS-donation-details"
+          redirectLocation(result).value shouldEqual controllers.routes.ClaimsTaskListController.onPageLoad.url
         }
       }
     }

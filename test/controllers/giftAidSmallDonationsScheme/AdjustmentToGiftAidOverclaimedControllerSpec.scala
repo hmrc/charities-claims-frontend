@@ -161,7 +161,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            "/charities-claims/check-gasds-adjustment-amount"
+            routes.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad.url
           )
         }
       }

@@ -39,6 +39,7 @@ class GasdsAdjustmentAmountCheckYourAnswersController @Inject() (
     actions
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete &&
+          RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) &&
           RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
       )
       .async { implicit request =>
@@ -50,6 +51,7 @@ class GasdsAdjustmentAmountCheckYourAnswersController @Inject() (
     actions
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete &&
+          RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) &&
           RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
       )
       .async { implicit request =>

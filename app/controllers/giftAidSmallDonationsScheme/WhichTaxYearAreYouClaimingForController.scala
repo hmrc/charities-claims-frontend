@@ -57,6 +57,7 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete &&
           RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) &&
+          RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true) &&
           GiftAidSmallDonationsSchemeDonationDetailsAnswers.isValidIndex(index)
       )
       .async { implicit request =>
@@ -80,6 +81,7 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete &&
           RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) &&
+          RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true) &&
           GiftAidSmallDonationsSchemeDonationDetailsAnswers.isValidIndex(index)
       )
       .async { implicit request =>
@@ -155,7 +157,7 @@ object WhichTaxYearAreYouClaimingForController {
     mode match {
       case NormalMode =>
         controllers.giftAidSmallDonationsScheme.routes.DonationAmountYouAreClaimingController
-          .onPageLoad(index)
+          .onPageLoad(index, NormalMode)
       case CheckMode  =>
         controllers.giftAidSmallDonationsScheme.routes.ClaimDetailsForTaxYearCheckYourAnswersController
           .onPageLoad(index)

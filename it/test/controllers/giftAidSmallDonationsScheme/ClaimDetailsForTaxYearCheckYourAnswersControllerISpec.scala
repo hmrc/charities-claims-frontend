@@ -69,7 +69,7 @@ class ClaimDetailsForTaxYearCheckYourAnswersControllerISpec
         repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
           claimingUnderGiftAidSmallDonationsScheme = true,
           makingAdjustmentToPreviousClaim = Some(false),
-          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsNotFromCommunityBuilding = Some(true),
           claimingDonationsCollectedInCommunityBuildings = Some(false),
           connectedToAnyOtherCharities = Some(false),
           claimReferenceNumber = Some("ref")
@@ -78,28 +78,6 @@ class ClaimDetailsForTaxYearCheckYourAnswersControllerISpec
           GiftAidSmallDonationsSchemeDonationDetails(
             adjustmentForGiftAidOverClaimed = BigDecimal(0),
             claims = existingClaims.take(1)
-          )
-        )
-      )
-    )
-
-    stubAuthRequest()
-    stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
-    stubGetClaims(claimId)(OK, Json.toJson(gasdsClaim))
-    stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
-  }
-
-  private def stubBackendWithoutClaims(): Unit = {
-
-    val gasdsClaim = claim.copy(
-      claimData = claim.claimData.copy(
-        repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
-          claimingUnderGiftAidSmallDonationsScheme = true
-        ),
-        giftAidSmallDonationsSchemeDonationDetails = Some(
-          GiftAidSmallDonationsSchemeDonationDetails(
-            adjustmentForGiftAidOverClaimed = BigDecimal(0),
-            claims = Seq.empty
           )
         )
       )

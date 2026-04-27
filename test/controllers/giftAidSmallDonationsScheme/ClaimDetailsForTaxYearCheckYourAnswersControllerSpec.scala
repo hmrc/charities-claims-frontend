@@ -38,7 +38,7 @@ class ClaimDetailsForTaxYearCheckYourAnswersControllerSpec extends ControllerSpe
         claimingGiftAid = Some(false),
         claimingTaxDeducted = Some(false),
         claimingUnderGiftAidSmallDonationsScheme = Some(true),
-        claimingDonationsNotFromCommunityBuilding = Some(false),
+        claimingDonationsNotFromCommunityBuilding = Some(true),
         claimingDonationsCollectedInCommunityBuildings = Some(false),
         makingAdjustmentToPreviousClaim = Some(false),
         connectedToAnyOtherCharities = Some(false),

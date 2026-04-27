@@ -259,14 +259,14 @@ GET         /claim-complete         controllers.claimDeclaration.ClaimCompleteCo
 GET         /about-gift-aid-small-donations-scheme                 controllers.giftAidSmallDonationsScheme.AboutGiftAidSmallDonationsSchemeController.onPageLoad
 POST        /about-gift-aid-small-donations-scheme                 controllers.giftAidSmallDonationsScheme.AboutGiftAidSmallDonationsSchemeController.onSubmit
 
-GET         /adjustment-to-gift-aid-overclaimed                    controllers.giftAidSmallDonationsScheme.AdjustmentToGiftAidOverclaimedController.onPageLoad
-POST        /adjustment-to-gift-aid-overclaimed                    controllers.giftAidSmallDonationsScheme.AdjustmentToGiftAidOverclaimedController.onSubmit
+GET         /adjustment-for-gift-aid-small-donations-scheme-overclaimed                    controllers.giftAidSmallDonationsScheme.AdjustmentToGiftAidOverclaimedController.onPageLoad
+POST        /adjustment-for-gift-aid-small-donations-scheme-overclaimed                    controllers.giftAidSmallDonationsScheme.AdjustmentToGiftAidOverclaimedController.onSubmit
 
 GET         /remove-claim-for-tax-year/:index                    controllers.giftAidSmallDonationsScheme.RemoveClaimForTaxYearController.onPageLoad(index: Int)
 POST        /remove-claim-for-tax-year/:index                    controllers.giftAidSmallDonationsScheme.RemoveClaimForTaxYearController.onSubmit(index: Int)
 
-GET         /check-gasds-adjustment-amount                controllers.giftAidSmallDonationsScheme.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad
-POST        /check-gasds-adjustment-amount                controllers.giftAidSmallDonationsScheme.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit
+GET         /check-gift-aid-small-donations-scheme-adjustment-amount                controllers.giftAidSmallDonationsScheme.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad
+POST        /check-gift-aid-small-donations-scheme-adjustment-amount                controllers.giftAidSmallDonationsScheme.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit
 
 GET         /cannot-set-up-gasds-claim                    controllers.giftAidSmallDonationsScheme.GasdsDonationDetailsIncompleteAnswersController.onPageLoad
 
@@ -275,8 +275,10 @@ GET         /change-which-tax-year-are-you-claiming-for/:index        controller
 POST        /which-tax-year-are-you-claiming-for/:index        controllers.giftAidSmallDonationsScheme.WhichTaxYearAreYouClaimingForController.onSubmit(index: Int, mode: Mode = Mode.NormalMode)
 POST        /change-which-tax-year-are-you-claiming-for/:index        controllers.giftAidSmallDonationsScheme.WhichTaxYearAreYouClaimingForController.onSubmit(index: Int, mode: Mode = Mode.CheckMode)
 
-GET         /donation-amount-you-are-claiming/:index        controllers.giftAidSmallDonationsScheme.DonationAmountYouAreClaimingController.onPageLoad(index: Int)
-POST        /donation-amount-you-are-claiming/:index        controllers.giftAidSmallDonationsScheme.DonationAmountYouAreClaimingController.onSubmit(index: Int)
+GET         /donation-amount-you-are-claiming/:index        controllers.giftAidSmallDonationsScheme.DonationAmountYouAreClaimingController.onPageLoad(index: Int, mode: Mode = Mode.NormalMode)
+GET         /change-donation-amount-you-are-claiming/:index        controllers.giftAidSmallDonationsScheme.DonationAmountYouAreClaimingController.onPageLoad(index: Int, mode: Mode = Mode.CheckMode)
+POST        /donation-amount-you-are-claiming/:index        controllers.giftAidSmallDonationsScheme.DonationAmountYouAreClaimingController.onSubmit(index: Int, mode: Mode = Mode.NormalMode)
+POST        /change-donation-amount-you-are-claiming/:index        controllers.giftAidSmallDonationsScheme.DonationAmountYouAreClaimingController.onSubmit(index: Int, mode: Mode = Mode.CheckMode)
 
 GET         /check-claim-details-for-tax-year/:index                controllers.giftAidSmallDonationsScheme.ClaimDetailsForTaxYearCheckYourAnswersController.onPageLoad(index: Int)
 POST        /check-claim-details-for-tax-year/:index                controllers.giftAidSmallDonationsScheme.ClaimDetailsForTaxYearCheckYourAnswersController.onSubmit(index: Int)

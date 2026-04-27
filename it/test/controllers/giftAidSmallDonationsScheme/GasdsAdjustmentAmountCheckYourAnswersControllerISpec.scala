@@ -31,9 +31,9 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerISpec
     with AuthStub
     with ClaimsValidationStub {
 
-  private val url = "/check-gasds-adjustment-amount"
+  private val url = "/check-gift-aid-small-donations-scheme-adjustment-amount"
 
-  "GET /check-gasds-adjustment-amount" should {
+  "GET /check-gift-aid-small-donations-scheme-adjustment-amount" should {
 
     "render the check your answers page" in {
       stubBackend()
@@ -45,7 +45,7 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerISpec
     }
   }
 
-  "POST /check-gasds-adjustment-amount" should {
+  "POST /check-gift-aid-small-donations-scheme-adjustment-amount" should {
 
     "redirect to WhichTaxYearAreYouClaimingFor when submitting and claiming under GASDS" in {
       stubBackend()
