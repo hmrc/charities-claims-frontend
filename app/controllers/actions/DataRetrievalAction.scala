@@ -93,8 +93,7 @@ class DefaultDataRetrievalAction @Inject() (
                       Future.successful(
                         Left(
                           Results.Redirect(
-                            // TODO: replace with correct url when ready
-                            "page-for-agent-to-select-claim"
+                            config.charityRepaymentDashboardUrl
                           )
                         )
                       )
@@ -103,8 +102,7 @@ class DefaultDataRetrievalAction @Inject() (
                       Future.successful(
                         Left(
                           Results.Redirect(
-                            // TODO: replace with correct url when ready
-                            "error-agent-unsubmitted-claim-limit-exceeded"
+                            config.charityRepaymentDashboardUrl
                           )
                         )
                       )
