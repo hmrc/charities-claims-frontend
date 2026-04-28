@@ -209,6 +209,38 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
         }
       }
 
+      "should return BAD_REQUEST when duplicate exists among three claims" in {
+        val session1 =
+          GiftAidSmallDonationsSchemeDonationDetailsAnswers
+            .setClaim(0, GiftAidSmallDonationsSchemeClaimAnswers(2024, None))(using baseSession)
+
+        val session2 =
+          GiftAidSmallDonationsSchemeDonationDetailsAnswers
+            .setClaim(1, GiftAidSmallDonationsSchemeClaimAnswers(2025, None))(using session1)
+
+        val session3 =
+          GiftAidSmallDonationsSchemeDonationDetailsAnswers
+            .setClaim(2, GiftAidSmallDonationsSchemeClaimAnswers(2026, None))(using session2)
+
+        given application: Application =
+          applicationBuilder(sessionData = session3).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(
+              POST,
+              routes.WhichTaxYearAreYouClaimingForController.onSubmit(3, NormalMode).url
+            ).withFormUrlEncodedBody("value" -> "2025")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual BAD_REQUEST
+          contentAsString(result) should include(
+            messages(application)("whichTaxYearAreYouClaimingFor.error.duplicate")
+          )
+        }
+      }
+
       "should return BAD_REQUEST when year is too old" in {
         given application: Application =
           applicationBuilder(sessionData = baseSession).build()
