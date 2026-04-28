@@ -45,7 +45,6 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController @Inject() (
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
           && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
-          && RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true)
       )
       .async { implicit request =>
         val previousAnswers = request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
@@ -67,7 +66,6 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController @Inject() (
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
           && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
-          && RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true)
       )
       .async { implicit request =>
         claimsService.save.map { _ =>
