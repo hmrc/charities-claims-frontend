@@ -16,6 +16,7 @@
 
 package controllers.repaymentClaimDetails
 
+import models.Mode.NormalMode
 import org.jsoup.Jsoup
 import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.http.HeaderNames.LOCATION
@@ -55,7 +56,7 @@ class ClaimGiftAidSmallDonationsSchemeControllerISpec
         )
 
       result.status shouldBe SEE_OTHER
-      result.header(LOCATION).value should include("/charities-claims/claim-community-building-donations")
+      result.header(LOCATION).value shouldBe routes.ClaimingCommunityBuildingDonationsController.onPageLoad(NormalMode).url
     }
 
     "return BadRequest when form submission is invalid" in {

@@ -16,6 +16,7 @@
 
 package controllers.repaymentClaimDetails
 
+import models.Mode.NormalMode
 import org.jsoup.Jsoup
 import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.http.HeaderNames.LOCATION
@@ -44,7 +45,7 @@ class ClaimingReferenceNumberControllerISpec
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.title() should include("Do you have a claim reference number?")
+      doc.title() should include(msg("claimingReferenceNumber.title"))
     }
   }
 
@@ -62,7 +63,7 @@ class ClaimingReferenceNumberControllerISpec
         )
 
       result.status shouldBe SEE_OTHER
-      result.header(LOCATION).value should include("/enter-claim-reference-number")
+      result.header(LOCATION).value shouldBe routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url
     }
 
     "redirect to check your answers when user selects no" in {
@@ -77,7 +78,7 @@ class ClaimingReferenceNumberControllerISpec
         )
 
       result.status shouldBe SEE_OTHER
-      result.header(LOCATION).value should include("/check-your-repayment-claim")
+      result.header(LOCATION).value shouldBe routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
     }
 
     "return BadRequest when form submission is invalid" in {

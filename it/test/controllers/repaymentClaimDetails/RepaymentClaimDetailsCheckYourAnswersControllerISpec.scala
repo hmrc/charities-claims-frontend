@@ -52,7 +52,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerISpec
       val result = post("/check-your-repayment-claim")(Json.obj())
 
       result.status               shouldBe SEE_OTHER
-      result.header(LOCATION).value should include("/charities-claims/make-a-charity-repayment-claim")
+      result.header(LOCATION).value shouldBe controllers.routes.ClaimsTaskListController.onPageLoad.url
     }
 
     "redirect to incomplete answers page when answers are incomplete" in {
@@ -62,7 +62,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerISpec
       val result = post("/check-your-repayment-claim")(Json.obj())
 
       result.status               shouldBe SEE_OTHER
-      result.header(LOCATION).value should include("/cannot-set-up-repayment-claim")
+      result.header(LOCATION).value shouldBe routes.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad.url
     }
   }
 
