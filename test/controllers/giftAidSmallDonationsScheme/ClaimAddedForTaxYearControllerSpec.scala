@@ -133,7 +133,9 @@ class ClaimAddedForTaxYearControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some("/check-your-donation-details")
+          redirectLocation(result) shouldBe Some(
+            "/charities-claims/check-your-gift-aid-small-donations-scheme-donation-details"
+          )
         }
       }
 
@@ -170,7 +172,9 @@ class ClaimAddedForTaxYearControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some("/check-your-donation-details")
+          redirectLocation(result) shouldBe Some(
+            "/charities-claims/check-your-gift-aid-small-donations-scheme-donation-details"
+          )
         }
       }
 
