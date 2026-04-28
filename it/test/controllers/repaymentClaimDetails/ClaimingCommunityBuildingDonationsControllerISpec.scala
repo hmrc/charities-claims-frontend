@@ -16,6 +16,7 @@
 
 package controllers.repaymentClaimDetails
 
+import models.Mode.NormalMode
 import org.jsoup.Jsoup
 import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.http.HeaderNames.LOCATION
@@ -40,7 +41,7 @@ class ClaimingCommunityBuildingDonationsControllerISpec
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.title() should include("Do you want to claim for donations collected in community buildings?")
+      doc.title() should include(msg("claimingCommunityBuildingDonations.title"))
     }
   }
 
@@ -55,7 +56,7 @@ class ClaimingCommunityBuildingDonationsControllerISpec
         )
 
       result.status               shouldBe SEE_OTHER
-      result.header(LOCATION).value should include("/change-previous-gasds-claim")
+      result.header(LOCATION).value shouldBe routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url
     }
 
     "redirect to next page when user selects no" in {
@@ -89,7 +90,7 @@ class ClaimingCommunityBuildingDonationsControllerISpec
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.title() should include("Do you want to update this repayment claim?")
+      doc.title() should include(msg("updateRepaymentClaim.title"))
     }
   }
 

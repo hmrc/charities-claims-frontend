@@ -85,7 +85,7 @@ class ClaimAddedForTaxYearController @Inject() (
       if (countOfTaxYears == 3) {
         Future.successful(
           Redirect(
-            controllers.giftAidSmallDonationsScheme.routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad
+            s"/check-your-donation-details" // TODO redirect to the correct url once it is implemented
           )
         )
       } else {
@@ -114,7 +114,7 @@ class ClaimAddedForTaxYearController @Inject() (
               } else {
                 Future.successful(
                   Redirect(
-                    controllers.giftAidSmallDonationsScheme.routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad
+                    s"/check-your-donation-details" // TODO redirect to the correct url once it is implemented
                   )
                 )
               }

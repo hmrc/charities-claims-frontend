@@ -583,7 +583,6 @@ session-expired.sign-out-button-text=Sign-out
 
 site.change = Change
 site.continue = Continue
-site.confirmAndContinue = Confirm and continue
 site.enter = Enter
 site.govuk = GOV.UK
 site.no = No
@@ -831,12 +830,20 @@ claimAddedForTaxYear.hint = You can only make claims for up to 3 tax years.
 claimAddedForTaxYear.singularOrPlural.singular = year
 claimAddedForTaxYear.singularOrPlural.plural = years
 
-giftAidSmallDonationsSchemeDetailsCheckYourAnswers.caption = Provide GASDS donation details
-giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading = Check your GASDS donation details
-giftAidSmallDonationsSchemeDetailsCheckYourAnswers.title = Check your GASDS donation details
-giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.1 = GASDS claim adjustment
-giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.2 = GASDS claims
-giftAidSmallDonationsSchemeDetailsCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Amount of GASDS previously overclaimed
-giftAidSmallDonationsSchemeDetailsCheckYourAnswers.numberOfTaxYearsAdded.label = Number of tax years added
-
-
+gasdsClaimType.title = Gift Aid Small Donations Scheme (GASDS) details
+gasdsClaimType.heading = Gift Aid Small Donations Scheme (GASDS) details
+gasdsClaimType.caption = Provide repayment claim details
+gasdsClaimType.description = We need to know what you want to claim under GASDS.
+gasdsClaimType.youCanClaim = You can claim:
+gasdsClaimType.topUp = GASDS top-up payments
+gasdsClaimType.topUp.desc = For donations of £30 or less that were not collected in a community building.
+gasdsClaimType.community = Community buildings top-up payments
+gasdsClaimType.community.desc = For donations of £30 or less that were collected in a community building during charitable activities.
+gasdsClaimType.connected = Connected charity or CASC claims
+gasdsClaimType.connected.desc = If your client is connected to other charities or Community Amateur Sports Clubs (CASCs), the £2,000 payment limit is shared across all connected organisations.
+gasdsClaimType.question = Which type of GASDS claim(s) do you want to make?
+gasdsClaimType.hint = Select at least one
+gasdsClaimType.label.topUp = GASDS top-up payment
+gasdsClaimType.label.communityBuildings = Community buildings top-up payment
+gasdsClaimType.label.connectedCharity = Connected charity or CASC claim
+gasdsClaimType.error.required = Select which type of GASDS claim(s) you want to make

@@ -16,6 +16,7 @@
 
 package controllers.repaymentClaimDetails
 
+import models.Mode.NormalMode
 import org.jsoup.Jsoup
 import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.http.HeaderNames.LOCATION
@@ -24,41 +25,46 @@ import play.api.test.Helpers.*
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
-class ClaimReferenceNumberInputControllerISpec
-  extends ComponentSpecHelper with TestDataUtils with ClaimsStub with AuthStub with ClaimsValidationStub {
+class GasdsClaimTypeControllerISpec
+  extends ComponentSpecHelper
+    with TestDataUtils
+    with ClaimsStub
+    with AuthStub
+    with ClaimsValidationStub {
 
-  "GET /enter-claim-reference-number" should {
+  private val url = "/select-gift-aid-small-donations-scheme-claim-type"
 
-    "render the claim reference number page" in {
+  "GET /select-gift-aid-small-donations-scheme-claim-type" should {
+
+    "render the GASDS claim type page" in {
       stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
-      val result = get("/enter-claim-reference-number")
+      val result = get(url)
 
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.title() should include(msg("claimReferenceNumber.title"))
+      doc.title() should include(msg("gasdsClaimType.title"))
     }
   }
 
-  "POST /enter-claim-reference-number" should {
+  "POST /select-gift-aid-small-donations-scheme-claim-type" should {
 
-    "redirect to check your answers when valid value submitted" in {
+    "redirect to change previous gasds claim page when connected charities NOT selected" in {
       stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
-      val result =
-        post("/enter-claim-reference-number")(
-          Json.obj("value" -> "123456")
-        )
+      val result = post(url)(
+        Map("value" -> Seq("communityBuildings"))
+      )
 
       result.status shouldBe SEE_OTHER
-      result.header(LOCATION).value shouldBe routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+      result.header(LOCATION).value shouldBe routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url
     }
   }
 }

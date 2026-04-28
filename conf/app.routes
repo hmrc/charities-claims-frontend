@@ -287,5 +287,8 @@ POST        /check-claim-details-for-tax-year/:index                controllers.
 GET         /claim-added-for-tax-year                       controllers.giftAidSmallDonationsScheme.ClaimAddedForTaxYearController.onPageLoad
 POST        /claim-added-for-tax-year                       controllers.giftAidSmallDonationsScheme.ClaimAddedForTaxYearController.onSubmit
 
-GET         /check-your-gift-aid-small-donations-scheme-donation-details                       controllers.giftAidSmallDonationsScheme.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad
-POST        /check-your-gift-aid-small-donations-scheme-donation-details                       controllers.giftAidSmallDonationsScheme.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onSubmit
+GET         /select-gift-aid-small-donations-scheme-claim-type        controllers.repaymentClaimDetails.GasdsClaimTypeController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-select-gift-aid-small-donations-scheme-claim-type        controllers.repaymentClaimDetails.GasdsClaimTypeController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /select-gift-aid-small-donations-scheme-claim-type        controllers.repaymentClaimDetails.GasdsClaimTypeController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-select-gift-aid-small-donations-scheme-claim-type        controllers.repaymentClaimDetails.GasdsClaimTypeController.onSubmit(mode: Mode = Mode.CheckMode)
+
