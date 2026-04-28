@@ -40,7 +40,10 @@ enum TaskStatus {
         TaskListItemStatus(tag = Some(tag("claimsTaskList.status.inProgress", "govuk-tag--green")))
 
       case CannotStartYet =>
-        TaskListItemStatus(content = Text(messages("claimsTaskList.status.cannotStartYet")))
+        TaskListItemStatus(
+          content = Text(messages("claimsTaskList.status.cannotStartYet")),
+          classes = "govuk-task-list__status govuk-task-list__status--cannot-start-yet"
+        )
 
   private def tag(messageKey: String, colour: String)(using messages: Messages): Tag =
     Tag(

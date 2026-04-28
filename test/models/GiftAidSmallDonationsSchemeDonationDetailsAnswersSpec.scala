@@ -449,5 +449,26 @@ class GiftAidSmallDonationsSchemeDonationDetailsAnswersSpec extends BaseSpec {
       }
     }
 
+    "allClaims should return empty when no claims exist" in {
+      given SessionData = SessionData.empty("1234567890")
+
+      GiftAidSmallDonationsSchemeDonationDetailsAnswers.allClaims shouldBe Seq.empty
+    }
+
+    "allClaims should return all claims in order" in {
+      val claim1 = GiftAidSmallDonationsSchemeClaimAnswers(2025, Some(BigDecimal(1000)))
+      val claim2 = GiftAidSmallDonationsSchemeClaimAnswers(2026, Some(BigDecimal(2000)))
+
+      given SessionData = SessionData(
+        charitiesReference = "1234567890",
+        giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+          GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+            claims = Some(Seq(Some(claim1), Some(claim2)))
+          )
+        )
+      )
+
+      GiftAidSmallDonationsSchemeDonationDetailsAnswers.allClaims shouldBe Seq(claim1, claim2)
+    }
   }
 }

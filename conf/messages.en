@@ -34,7 +34,7 @@ aboutOtherIncomeSchedule.title = About Other Income schedule
 aboutTheOrganisation.caption = Provide organisation details
 aboutTheOrganisation.heading = About the organisation
 aboutTheOrganisation.paragraph.one = You need to provide information about the organisation you are claiming for.
-aboutTheOrganisation.paragraph.two = The person making this claim must be an approved official or corporate trustee recognised by HM Revenue Customs.
+aboutTheOrganisation.paragraph.two = The person making this claim must be an approved official or corporate trustee recognised by HM Revenue & Customs.
 aboutTheOrganisation.title = About the organisation
 
 addSchedule.heading = Add Schedule
@@ -54,7 +54,7 @@ authorisedOfficialDetails.firstName = First name
 authorisedOfficialDetails.firstName.error.format = Enter an authorised official first name in the correct format
 authorisedOfficialDetails.firstName.error.length = Authorised official first name must be 35 characters or less
 authorisedOfficialDetails.firstName.error.required = Enter an authorised official first name
-authorisedOfficialDetails.heading = What are the authorised official details?
+authorisedOfficialDetails.heading = What are the authorised official’s details?
 authorisedOfficialDetails.lastName = Last name
 authorisedOfficialDetails.lastName.error.format = Enter an authorised official last name in the correct format
 authorisedOfficialDetails.lastName.error.length = Authorised official last name must be 35 characters or less
@@ -68,7 +68,7 @@ authorisedOfficialDetails.postcode = Postcode
 authorisedOfficialDetails.postcode.error.format = Enter an authorised official postcode in the correct format
 authorisedOfficialDetails.postcode.error.length = Authorised official postcode must be 8 characters or less
 authorisedOfficialDetails.postcode.error.required = Enter an authorised official postcode
-authorisedOfficialDetails.title = What are the authorised official details?
+authorisedOfficialDetails.title = What are the authorised official’s details?
 authorisedOfficialDetails.title.error.format = Enter an authorised official title in the correct format
 authorisedOfficialDetails.title.error.length = Authorised official title must be 4 characters or less
 authorisedOfficialDetails.titleField = Title (optional)
@@ -89,17 +89,17 @@ changePreviousGASDSClaim.title = Gift Aid Small Donations Scheme claim
 charityExcepted.bullet.1 = a church or chapel
 charityExcepted.bullet.2 = a charity that provides premises for schools
 charityExcepted.bullet.3 = a scout or guide group
-charityExcepted.bullet.4 = a charitable service of the Armed Forces
-charityExcepted.bullet.5 = a student union
+charityExcepted.bullet.4 = a charitable service of the armed forces
+charityExcepted.bullet.5 = a students’ union
 charityExcepted.heading = Your charity is excepted
 charityExcepted.p1 = Your charity is excepted as the charity’s income is £100,000 or less and is classed as one of the following:
 charityExcepted.title = Your charity is excepted
 
-charityExempt.bullet.1 = it is an educational institution such as a university or school
-charityExempt.bullet.2 = it is a museum or gallery
-charityExempt.bullet.3 = it is a housing association
+charityExempt.bullet.1 = university or school
+charityExempt.bullet.2 = museum or gallery
+charityExempt.bullet.3 = housing association
 charityExempt.heading = Your charity is exempt
-charityExempt.p1 = Your charity is exempt from registering with a regulator because:
+charityExempt.p1 = The charity is exempt from registering with a regulator because it is a:
 charityExempt.title = Your charity is exempt
 
 charityRegulatorNumber.caption = Provide organisation details
@@ -343,6 +343,10 @@ deleteOtherIncomeSchedule.title = Do you want to delete this Other Income schedu
 deleteRepaymentClaim.error.required = Select ‘Yes’ if you want to delete this repayment claim
 deleteRepaymentClaim.heading = Are you sure you want to delete this repayment claim?
 deleteRepaymentClaim.title = Are you sure you want to delete this repayment claim?
+
+removeClaimForTaxYear.error.required = Select ‘Yes’ if you want to remove the claim for tax year {0}
+removeClaimForTaxYear.heading = Do you want to remove the claim for tax year {0}?
+removeClaimForTaxYear.title = Do you want to remove the claim for tax year {0}?
 error.browser.title.prefix = Error:
 
 fileUpload.status.AWAITING_UPLOAD = Uploading
@@ -387,7 +391,7 @@ nameOfCharityRegulator.radio.two = Charity Commission for Northern Ireland
 nameOfCharityRegulator.title = What is the name of the charity regulator?
 
 organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.change.hidden = change authorised official details
-organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.label = Authorised official details
+organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.label = Authorised official’s details
 organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.change.hidden = change authorised official’s UK address
 organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.label = Authorised official UK address
 organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.change.hidden = change corporate trustee claim
@@ -412,7 +416,7 @@ organisationDetailsCheckYourAnswers.reasonNotRegistered.exempt.label = Your char
 organisationDetailsCheckYourAnswers.reasonNotRegistered.label = Registered with regulator
 organisationDetailsCheckYourAnswers.reasonNotRegistered.lowIncome.label = Your charity is located in England or Wales and your income is less than £5,000 per year
 organisationDetailsCheckYourAnswers.reasonNotRegistered.missing.label = missing value
-organisationDetailsCheckYourAnswers.reasonNotRegistered.waiting.label = Your charity is based in Northern Ireland and you are awaiting registration with the CCNI
+organisationDetailsCheckYourAnswers.reasonNotRegistered.waiting.label = Your charity is based in Northern Ireland and you are awaiting registration with the Charity Commission for Northern Ireland (CCNI)
 organisationDetailsCheckYourAnswers.title = Check your organisation details
 
 organisationDetailsIncompleteAnswers.heading = This claim cannot be setup
@@ -579,6 +583,7 @@ session-expired.sign-out-button-text=Sign-out
 
 site.change = Change
 site.continue = Continue
+site.confirmAndContinue = Confirm and continue
 site.enter = Enter
 site.govuk = GOV.UK
 site.no = No
@@ -751,7 +756,6 @@ repaymentClaimSummary.printSummary.button.label = Print summary
 repaymentClaimSummary.logout.link = Log out and go back HMRC online services
 repaymentClaimSummary.goToHmrcServices.link = Go to Your HMRC services
 
-
 claimComplete.title = Claim complete
 claimComplete.message.2 = Your reference number
 claimComplete.subheading = What happens next
@@ -769,6 +773,7 @@ aboutGiftAidSmallDonationsScheme.paragraph.two = GASDS applies to cash donations
 adjustmentToGiftAidOverclaimed.caption = Provide GASDS donation details
 adjustmentToGiftAidOverclaimed.heading = What is the adjustment amount for Gift Aid previously overclaimed?
 adjustmentToGiftAidOverclaimed.title = What is the adjustment amount for Gift Aid previously overclaimed?
+adjustmentToGiftAidOverclaimed.hint = This can be up to 2 decimal places, for example £1000.00
 adjustmentToGiftAidOverclaimed.error.required = Enter an adjustment amount for Gift Aid previously overclaimed
 adjustmentToGiftAidOverclaimed.error.invalid = Enter an adjustment amount for Gift Aid previously overclaimed in the correct format
 adjustmentToGiftAidOverclaimed.error.maxLength = Adjustment amount must be £1,000,000,000,000 or less
@@ -809,3 +814,47 @@ whichTaxYearAreYouClaimingFor.error.duplicate = Donations claimed for more than 
 taxYear.first = first
 taxYear.second = second
 taxYear.third = third
+
+claimForTaxYearCheckYourAnswers.caption = Provide GASDS donation details
+claimForTaxYearCheckYourAnswers.title = Check your claim details for tax year {0}
+claimForTaxYearCheckYourAnswers.heading = Check your claim details for tax year {0}
+claimForTaxYearCheckYourAnswers.taxYear.label = Tax year
+claimForTaxYearCheckYourAnswers.donationAmount.label = Donation amount
+
+claimAddedForTaxYear.caption = Provide GASDS donation details
+claimAddedForTaxYear.heading = You have added a claim for {0} tax {1}
+claimAddedForTaxYear.title = You have added a claim for {0} tax {1}
+claimAddedForTaxYear.taxYear.key = Tax year {0}
+claimAddedForTaxYear.error.required = Select ‘Yes’ if you want to make a claim for another tax year
+claimAddedForTaxYear.legend = Do you want to add a claim for another tax year?
+claimAddedForTaxYear.hint = You can only make claims for up to 3 tax years.
+claimAddedForTaxYear.singularOrPlural.singular = year
+claimAddedForTaxYear.singularOrPlural.plural = years
+
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.caption = Provide GASDS donation details
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading = Check your GASDS donation details
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.title = Check your GASDS donation details
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.1 = GASDS claim adjustment
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.2 = GASDS claims
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Amount of GASDS previously overclaimed
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.numberOfTaxYearsAdded.label = Number of tax years added
+
+
+
+gasdsClaimType.title = Gift Aid Small Donations Scheme (GASDS) details
+gasdsClaimType.heading = Gift Aid Small Donations Scheme (GASDS) details
+gasdsClaimType.caption = Provide repayment claim details
+gasdsClaimType.description = We need to know what you want to claim under GASDS.
+gasdsClaimType.youCanClaim = You can claim:
+gasdsClaimType.topUp = GASDS top-up payments
+gasdsClaimType.topUp.desc = For donations of £30 or less that were not collected in a community building.
+gasdsClaimType.community = Community buildings top-up payments
+gasdsClaimType.community.desc = For donations of £30 or less that were collected in a community building during charitable activities.
+gasdsClaimType.connected = Connected charity or CASC claims
+gasdsClaimType.connected.desc = If your client is connected to other charities or Community Amateur Sports Clubs (CASCs), the £2,000 payment limit is shared across all connected organisations.
+gasdsClaimType.question = Which type of GASDS claim(s) do you want to make?
+gasdsClaimType.hint = Select at least one
+gasdsClaimType.label.topUp = GASDS top-up payment
+gasdsClaimType.label.communityBuildings = Community buildings top-up payment
+gasdsClaimType.label.connectedCharity = Connected charity or CASC claim
+gasdsClaimType.error.required = Select which type of GASDS claim(s) you want to make

@@ -16,7 +16,7 @@
 
 package controllers.actions
 
-import play.api.test.{FakeRequest, Helpers}
+import play.api.test.Helpers
 import play.api.test.Helpers.*
 import util.BaseSpec
 import play.api.mvc.*

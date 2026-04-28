@@ -37,24 +37,25 @@
 
     @formHelper(action = routes.AdjustmentToGiftAidOverclaimedController.onSubmit) {
 
-        @govukInput(Input(
-            id = "amount",
-            name = "amount",
-            value = form("amount").value,
-            inputType = "text",
-            pattern = Some("[0-9.]*"),
-            label = Label(
+    @govukInput(
+        InputViewModel(
+            form("amount"),
+            Label(
                 isPageHeading = true,
                 classes = "govuk-label--l",
                 content = Text(messages("adjustmentToGiftAidOverclaimed.heading"))
-            ),
-            classes = "govuk-input--width-5",
-            spellcheck = Some(false),
-            prefix = Some(PrefixOrSuffix(
-                content = Text("£")
-            )),
-            attributes = Map("autocomplete" -> "off")
+            )
+        )
+        .withInputType("text")
+        .withPattern("[0-9.]*")
+        .withHint(Hint(
+            content = Text(messages("adjustmentToGiftAidOverclaimed.hint"))
         ))
+        .withCssClass("govuk-input--width-5")
+        .withSpellcheck(false)
+        .withPrefix(PrefixOrSuffix(content = Text("£")))
+        .withAttribute("autocomplete" -> "off")
+    )
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
     }

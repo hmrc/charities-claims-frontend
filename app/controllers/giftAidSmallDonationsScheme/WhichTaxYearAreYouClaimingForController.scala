@@ -20,14 +20,10 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.TaxYearFormProvider
-import models.{
-  GiftAidSmallDonationsSchemeClaimAnswers,
-  GiftAidSmallDonationsSchemeDonationDetailsAnswers,
-  RepaymentClaimDetailsAnswers,
-  SessionData
-}
+import models.Mode.{CheckMode, NormalMode}
+import models.*
 import play.api.i18n.Messages
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.TaxYearService.TaxYearError
 import services.{SaveService, TaxYearService}
 import utils.TaxYearLabels.taxYearLabelKey
@@ -56,11 +52,12 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
     )
   }
 
-  def onPageLoad(index: Int): Action[AnyContent] =
+  def onPageLoad(index: Int, mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete &&
           RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) &&
+          RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true) &&
           GiftAidSmallDonationsSchemeDonationDetailsAnswers.isValidIndex(index)
       )
       .async { implicit request =>
@@ -75,15 +72,16 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
             .map(_.taxYear)
 
         Future.successful(
-          Ok(view(preparedForm.withDefault(existingValue), index))
+          Ok(view(preparedForm.withDefault(existingValue), index, mode))
         )
       }
 
-  def onSubmit(index: Int): Action[AnyContent] =
+  def onSubmit(index: Int, mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete &&
           RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) &&
+          RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true) &&
           GiftAidSmallDonationsSchemeDonationDetailsAnswers.isValidIndex(index)
       )
       .async { implicit request =>
@@ -96,16 +94,14 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
         preparedForm
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, index))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, index, mode))),
             taxYear => {
 
               val existingYears =
-                (0 until index - 1).flatMap(i =>
-                  GiftAidSmallDonationsSchemeDonationDetailsAnswers
-                    .getClaim(i)
-                    .map(_.taxYear)
-                )
-
+                GiftAidSmallDonationsSchemeDonationDetailsAnswers.allClaims.zipWithIndex
+                  .collect {
+                    case (claim, i) if i != zeroIndex(index) => claim.taxYear
+                  }
               taxYearService.validateTaxYears(taxYear, existingYears) match {
 
                 case Some(error) =>
@@ -114,7 +110,7 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
                       .fill(taxYear)
                       .withError("value", mapErrorToMessage(error))
 
-                  Future.successful(BadRequest(view(formWithError, index)))
+                  Future.successful(BadRequest(view(formWithError, index, mode)))
 
                 case None =>
                   val claim =
@@ -135,8 +131,7 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
                     )
                     .map(_ =>
                       Redirect(
-                        controllers.giftAidSmallDonationsScheme.routes.DonationAmountYouAreClaimingController
-                          .onPageLoad(index)
+                        WhichTaxYearAreYouClaimingForController.nextPage(mode, index)
                       )
                     )
               }
@@ -153,4 +148,17 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
       case TaxYearError.Duplicate   =>
         messages("whichTaxYearAreYouClaimingFor.error.duplicate")
     }
+}
+object WhichTaxYearAreYouClaimingForController {
+
+  def nextPage(mode: Mode, index: Int): Call =
+    mode match {
+      case NormalMode =>
+        controllers.giftAidSmallDonationsScheme.routes.DonationAmountYouAreClaimingController
+          .onPageLoad(index, NormalMode)
+      case CheckMode  =>
+        controllers.giftAidSmallDonationsScheme.routes.ClaimDetailsForTaxYearCheckYourAnswersController
+          .onPageLoad(index)
+    }
+
 }

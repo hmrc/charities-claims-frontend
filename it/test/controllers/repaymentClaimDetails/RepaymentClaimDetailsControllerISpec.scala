@@ -16,6 +16,7 @@
 
 package controllers.repaymentClaimDetails
 
+import models.Mode.NormalMode
 import org.jsoup.Jsoup
 import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.http.HeaderNames.LOCATION
@@ -39,7 +40,7 @@ class RepaymentClaimDetailsControllerISpec extends ComponentSpecHelper with Test
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.title() should include("Repayment claim details")
+      doc.title() should include(msg("repaymentClaimDetails.title"))
     }
   }
 
@@ -54,7 +55,7 @@ class RepaymentClaimDetailsControllerISpec extends ComponentSpecHelper with Test
       val result = post("/repayment-claim-details")(Map.empty[String, Seq[String]])
 
       result.status               shouldBe SEE_OTHER
-      result.header(LOCATION).value should include("/repayment-claim-type")
+      result.header(LOCATION).value shouldBe routes.RepaymentClaimTypeController.onPageLoad(NormalMode).url
     }
   }
 }

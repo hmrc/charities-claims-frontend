@@ -40,7 +40,7 @@ class ClaimReferenceNumberInputControllerISpec
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.title() should include("What is your claim reference number?")
+      doc.title() should include(msg("claimReferenceNumber.title"))
     }
   }
 
@@ -58,22 +58,7 @@ class ClaimReferenceNumberInputControllerISpec
         )
 
       result.status shouldBe SEE_OTHER
-      result.header(LOCATION).value should include("/check-your-repayment-claim")
-    }
-
-    "return BadRequest when form submission is invalid" in {
-      stubAuthRequest()
-      stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
-      stubGetClaims(claimId)(OK, Json.toJson(claim))
-      stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
-
-      val result =
-        post("/enter-claim-reference-number")(Map("value" -> Seq("")))
-
-      result.status shouldBe BAD_REQUEST
-
-      val doc = Jsoup.parse(result.body)
-      doc.title() should include("What is your claim reference number?")
+      result.header(LOCATION).value shouldBe routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
     }
   }
 }

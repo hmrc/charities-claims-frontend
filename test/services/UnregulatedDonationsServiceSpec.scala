@@ -30,7 +30,6 @@ import models.{
 import models.requests.DataRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import play.api.mvc.AnyContent
-import play.api.test.FakeRequest
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 
 import scala.concurrent.ExecutionContext.Implicits.global

@@ -18,7 +18,6 @@ package controllers
 
 import play.api.Application
 import play.api.mvc.{AnyContentAsFormUrlEncoded, MessagesControllerComponents}
-import play.api.test.FakeRequest
 
 class BaseControllerSpec extends ControllerSpec {
 
@@ -72,7 +71,7 @@ class BaseControllerSpec extends ControllerSpec {
         given application: Application = applicationBuilder().build()
 
         running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+          given request: play.api.test.FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, "/test")
               .withFormUrlEncodedBody("confirmingUpdate" -> "true")
 
@@ -94,17 +93,17 @@ class BaseControllerSpec extends ControllerSpec {
               application.injector.instanceOf[MessagesControllerComponents]
           }
 
-          given request1: FakeRequest[AnyContentAsFormUrlEncoded] =
+          given request1: play.api.test.FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, "/test")
               .withFormUrlEncodedBody("value" -> "true")
           controller.isConfirmingUpdate(using request1) shouldBe false
 
-          given request2: FakeRequest[AnyContentAsFormUrlEncoded] =
+          given request2: play.api.test.FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, "/test")
               .withFormUrlEncodedBody("confirmingUpdate" -> "false")
           controller.isConfirmingUpdate(using request2) shouldBe false
 
-          given request3: FakeRequest[AnyContentAsFormUrlEncoded] =
+          given request3: play.api.test.FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, "/test")
               .withFormUrlEncodedBody("other" -> "field")
           controller.isConfirmingUpdate(using request3) shouldBe false

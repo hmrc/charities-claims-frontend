@@ -57,7 +57,8 @@ class DonationAmountYouAreClaimingControllerISpec
         post(url)(Json.obj("amount" -> "123.45"))
 
       result.status                 shouldBe SEE_OTHER
-      result.header(LOCATION).value shouldBe s"/check-claim-details-for-tax-year/$index"
+      result.header(LOCATION).value shouldBe
+        controllers.giftAidSmallDonationsScheme.routes.ClaimDetailsForTaxYearCheckYourAnswersController.onPageLoad(1).url
     }
   }
 

@@ -174,6 +174,27 @@ object RepaymentClaimDetailsAnswers {
     }
   }
 
+  def getGasdsClaimType(using session: SessionData): Option[GasdsClaimType] =
+    session.repaymentClaimDetailsAnswers.map { answers =>
+      GasdsClaimType(
+        topUp = answers.claimingDonationsNotFromCommunityBuilding.contains(true),
+        communityBuildings = answers.claimingDonationsCollectedInCommunityBuildings.contains(true),
+        connectedCharity = answers.connectedToAnyOtherCharities.contains(true)
+      )
+    }
+
+  def setGasdsClaimType(value: GasdsClaimType)(using session: SessionData): SessionData = {
+
+    val updatedSession = set(value) { (a, v) =>
+      a.copy(
+        claimingDonationsNotFromCommunityBuilding = Some(v.topUp),
+        claimingDonationsCollectedInCommunityBuildings = Some(v.communityBuildings),
+        connectedToAnyOtherCharities = Some(v.connectedCharity)
+      )
+    }
+    updatedSession
+  }
+
   private def clearRepaymentClaimTypeFlow(using session: SessionData): SessionData =
     val updated = session.repaymentClaimDetailsAnswers match
       case Some(existing) =>

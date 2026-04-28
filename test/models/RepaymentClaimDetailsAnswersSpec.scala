@@ -16,9 +16,8 @@
 
 package models
 
-import util.BaseSpec
 import play.api.libs.json.Json
-import util.TestScheduleData
+import util.{BaseSpec, TestScheduleData}
 
 class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
 
@@ -198,6 +197,148 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           GiftAidSmallDonationsSchemeDonationDetailsAnswers()
         )
         result.repaymentClaimDetailsAnswers.value.claimingUnderGiftAidSmallDonationsScheme shouldBe Some(true)
+      }
+    }
+
+    "getGasdsClaimType" - {
+
+      "should return None when no answers in session" in {
+        given session: SessionData = SessionData.empty(testCharitiesReference)
+
+        RepaymentClaimDetailsAnswers.getGasdsClaimType shouldBe None
+      }
+
+      "should map all true values correctly" in {
+        given session: SessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingDonationsNotFromCommunityBuilding = Some(true),
+                claimingDonationsCollectedInCommunityBuildings = Some(true),
+                connectedToAnyOtherCharities = Some(true)
+              )
+            )
+          )
+
+        RepaymentClaimDetailsAnswers.getGasdsClaimType shouldBe Some(
+          GasdsClaimType(
+            topUp = true,
+            communityBuildings = true,
+            connectedCharity = true
+          )
+        )
+      }
+
+      "should treat None values as false" in {
+        given session: SessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingDonationsNotFromCommunityBuilding = None,
+                claimingDonationsCollectedInCommunityBuildings = None,
+                connectedToAnyOtherCharities = None
+              )
+            )
+          )
+
+        RepaymentClaimDetailsAnswers.getGasdsClaimType shouldBe Some(
+          GasdsClaimType(
+            topUp = false,
+            communityBuildings = false,
+            connectedCharity = false
+          )
+        )
+      }
+
+      "should correctly map mixed values" in {
+        given session: SessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingDonationsNotFromCommunityBuilding = Some(true),
+                claimingDonationsCollectedInCommunityBuildings = Some(false),
+                connectedToAnyOtherCharities = None
+              )
+            )
+          )
+
+        RepaymentClaimDetailsAnswers.getGasdsClaimType shouldBe Some(
+          GasdsClaimType(
+            topUp = true,
+            communityBuildings = false,
+            connectedCharity = false
+          )
+        )
+      }
+    }
+
+    "setGasdsClaimType" - {
+
+      "should set all fields to true" in {
+        given session: SessionData = SessionData.empty(testCharitiesReference)
+
+        val result = RepaymentClaimDetailsAnswers.setGasdsClaimType(
+          GasdsClaimType(
+            topUp = true,
+            communityBuildings = true,
+            connectedCharity = true
+          )
+        )
+
+        val answers = result.repaymentClaimDetailsAnswers.value
+
+        answers.claimingDonationsNotFromCommunityBuilding      shouldBe Some(true)
+        answers.claimingDonationsCollectedInCommunityBuildings shouldBe Some(true)
+        answers.connectedToAnyOtherCharities                   shouldBe Some(true)
+      }
+
+      "should set all fields to false" in {
+        given session: SessionData = SessionData.empty(testCharitiesReference)
+
+        val result = RepaymentClaimDetailsAnswers.setGasdsClaimType(
+          GasdsClaimType(
+            topUp = false,
+            communityBuildings = false,
+            connectedCharity = false
+          )
+        )
+
+        val answers = result.repaymentClaimDetailsAnswers.value
+
+        answers.claimingDonationsNotFromCommunityBuilding      shouldBe Some(false)
+        answers.claimingDonationsCollectedInCommunityBuildings shouldBe Some(false)
+        answers.connectedToAnyOtherCharities                   shouldBe Some(false)
+      }
+
+      "should overwrite existing values" in {
+        given session: SessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingDonationsNotFromCommunityBuilding = Some(false),
+                claimingDonationsCollectedInCommunityBuildings = Some(false),
+                connectedToAnyOtherCharities = Some(false)
+              )
+            )
+          )
+
+        val result = RepaymentClaimDetailsAnswers.setGasdsClaimType(
+          GasdsClaimType(
+            topUp = true,
+            communityBuildings = false,
+            connectedCharity = true
+          )
+        )
+
+        val answers = result.repaymentClaimDetailsAnswers.value
+
+        answers.claimingDonationsNotFromCommunityBuilding      shouldBe Some(true)
+        answers.claimingDonationsCollectedInCommunityBuildings shouldBe Some(false)
+        answers.connectedToAnyOtherCharities                   shouldBe Some(true)
       }
     }
   }

@@ -17,6 +17,7 @@
 package controllers.giftAidSmallDonationsScheme
 
 import models.GiftAidSmallDonationsSchemeDonationDetails
+import models.Mode.NormalMode
 import org.jsoup.Jsoup
 import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.libs.json.Json
@@ -59,7 +60,7 @@ class WhichTaxYearAreYouClaimingForControllerISpec
         post(url)(Json.obj("value" -> validYear.toString))
 
       result.status                 shouldBe SEE_OTHER
-      result.header(LOCATION).value shouldBe routes.DonationAmountYouAreClaimingController.onPageLoad(index).url
+      result.header(LOCATION).value shouldBe routes.DonationAmountYouAreClaimingController.onPageLoad(index, NormalMode).url
     }
   }
 

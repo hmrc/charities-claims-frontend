@@ -39,7 +39,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerISpec
 
       val doc = Jsoup.parse(result.body)
 
-      doc.title() should include("This claim cannot be setup")
+      doc.title() should include(msg("repaymentClaimDetailsIncompleteAnswers.title"))
     }
   }
 }

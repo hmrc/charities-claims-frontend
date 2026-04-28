@@ -20,9 +20,10 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.AmountFormProvider
-import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, RepaymentClaimDetailsAnswers, SessionData}
+import models.Mode.NormalMode
+import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, Mode, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.i18n.Messages
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
 import utils.TaxYearLabels.taxYearLabelKey
 import views.html.DonationAmountYouAreClaimingView
@@ -49,12 +50,13 @@ class DonationAmountYouAreClaimingController @Inject() (
       allowZero = true
     )
 
-  def onPageLoad(index: Int): Action[AnyContent] =
+  def onPageLoad(index: Int, mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
-          && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
-          && GiftAidSmallDonationsSchemeDonationDetailsAnswers.isClaimExist(zeroIndex(index))
+          && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) &&
+          RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true) &&
+          GiftAidSmallDonationsSchemeDonationDetailsAnswers.isClaimExist(zeroIndex(index))
       )
       .async { implicit request =>
         implicit val messages: Messages = messagesApi.preferred(request)
@@ -67,16 +69,17 @@ class DonationAmountYouAreClaimingController @Inject() (
             .flatMap(_.amountOfDonationsReceived)
 
         Future.successful(
-          Ok(view(preparedForm.withDefault(existingValue), index))
+          Ok(view(preparedForm.withDefault(existingValue), index, mode))
         )
       }
 
-  def onSubmit(index: Int): Action[AnyContent] =
+  def onSubmit(index: Int, mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
-          && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
-          && GiftAidSmallDonationsSchemeDonationDetailsAnswers.isClaimExist(zeroIndex(index))
+          && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) &&
+          RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true) &&
+          GiftAidSmallDonationsSchemeDonationDetailsAnswers.isClaimExist(zeroIndex(index))
       )
       .async { implicit request =>
         implicit val messages: Messages = messagesApi.preferred(request)
@@ -85,7 +88,7 @@ class DonationAmountYouAreClaimingController @Inject() (
         preparedForm
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, index))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, index, mode))),
             value =>
               GiftAidSmallDonationsSchemeDonationDetailsAnswers
                 .getClaim(zeroIndex(index))
@@ -103,8 +106,13 @@ class DonationAmountYouAreClaimingController @Inject() (
                       GiftAidSmallDonationsSchemeDonationDetailsAnswers
                         .setClaim(zeroIndex(index), updatedClaim)
                     )
-                    .map(_ => Redirect(s"/check-claim-details-for-tax-year/$index"))
+                    .map(_ => Redirect(DonationAmountYouAreClaimingController.nextPage(index)))
                 }
           )
       }
+}
+
+object DonationAmountYouAreClaimingController {
+  def nextPage(index: Int): Call =
+    routes.ClaimDetailsForTaxYearCheckYourAnswersController.onPageLoad(index)
 }

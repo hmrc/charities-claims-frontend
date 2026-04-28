@@ -21,7 +21,7 @@ import models.requests.{AuthorisedRequest, DataRequest}
 import models.*
 import play.api.mvc.Results.*
 import play.api.test.Helpers.*
-import play.api.test.{FakeRequest, Helpers}
+import play.api.test.Helpers
 import repositories.SessionCache
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.http.HeaderCarrier
@@ -351,7 +351,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       val result =
         action.invokeBlock(authorisedRequestAgent, (_: DataRequest[?]) => ???) // never going to be executed
       status(result)           shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("page-for-agent-to-select-claim")
+      redirectLocation(result) shouldBe Some("http://foo.com/charity-repayment-dashboard")
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and no claims are retrieved from backend and equal to limit for agent" in {
@@ -379,7 +379,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       val result =
         action.invokeBlock(authorisedRequestAgent, (_: DataRequest[?]) => ???) // never going to be executed
       status(result)           shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("error-agent-unsubmitted-claim-limit-exceeded")
+      redirectLocation(result) shouldBe Some("http://foo.com/charity-repayment-dashboard")
     }
   }
 }

@@ -18,6 +18,7 @@ package controllers.giftAidSmallDonationsScheme
 
 import com.google.inject.Inject
 import controllers.actions.Actions
+import models.Mode.NormalMode
 import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -38,6 +39,7 @@ class GasdsAdjustmentAmountCheckYourAnswersController @Inject() (
     actions
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete &&
+          RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) &&
           RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
       )
       .async { implicit request =>
@@ -49,21 +51,22 @@ class GasdsAdjustmentAmountCheckYourAnswersController @Inject() (
     actions
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete &&
+          RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true) &&
           RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
       )
       .async { implicit request =>
-        val claimingUnderGasds =
+        val claimingTopUpUnderGasds =
           request.sessionData.repaymentClaimDetailsAnswers
-            .flatMap(_.claimingUnderGiftAidSmallDonationsScheme)
+            .flatMap(_.claimingDonationsNotFromCommunityBuilding)
             .contains(true)
 
         Future.successful(
-          if (claimingUnderGasds) {
-            Redirect(routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1))
+          if (claimingTopUpUnderGasds) {
+            Redirect(routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1, NormalMode))
           } else {
             Redirect(
-              "/charities-claims/check-your-GASDS-donation-details"
-            ) // TODO update URL when next screen is available
+              routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad
+            )
           }
         )
       }

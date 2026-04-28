@@ -17,6 +17,7 @@
 package controllers.giftAidSmallDonationsScheme
 
 import controllers.ControllerSpec
+import models.Mode.NormalMode
 import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
@@ -33,7 +34,7 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
         claimingGiftAid = Some(false),
         claimingTaxDeducted = Some(false),
         claimingUnderGiftAidSmallDonationsScheme = Some(true),
-        claimingDonationsNotFromCommunityBuilding = Some(false),
+        claimingDonationsNotFromCommunityBuilding = Some(true),
         claimingDonationsCollectedInCommunityBuildings = Some(false),
         makingAdjustmentToPreviousClaim = Some(true),
         connectedToAnyOtherCharities = Some(false),
@@ -161,7 +162,7 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result).value shouldEqual
-            routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1).url
+            routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1, NormalMode).url
         }
       }
 
@@ -169,7 +170,10 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
         given application: Application = applicationBuilder(sessionData =
           sessionData.copy(
             repaymentClaimDetailsAnswers = sessionData.repaymentClaimDetailsAnswers.map(
-              _.copy(claimingUnderGiftAidSmallDonationsScheme = Some(false))
+              _.copy(
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = Some(false)
+              )
             )
           )
         ).build()
@@ -182,8 +186,9 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
 
           status(result) shouldEqual SEE_OTHER
 
-          redirectLocation(result).value shouldEqual
-            "/charities-claims/check-your-GASDS-donation-details"
+          redirectLocation(
+            result
+          ).value shouldEqual routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad.url
         }
       }
     }

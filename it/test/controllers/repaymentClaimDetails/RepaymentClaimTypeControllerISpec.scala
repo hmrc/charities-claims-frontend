@@ -16,6 +16,7 @@
 
 package controllers.repaymentClaimDetails
 
+import models.Mode.NormalMode
 import org.jsoup.Jsoup
 import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.http.HeaderNames.LOCATION
@@ -24,7 +25,12 @@ import play.api.test.Helpers.*
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
-class RepaymentClaimTypeControllerISpec extends ComponentSpecHelper with TestDataUtils with ClaimsStub with AuthStub with ClaimsValidationStub {
+class RepaymentClaimTypeControllerISpec
+    extends ComponentSpecHelper
+    with TestDataUtils
+    with ClaimsStub
+    with AuthStub
+    with ClaimsValidationStub {
 
   "GET /repayment-claim-type" should {
 
@@ -39,14 +45,13 @@ class RepaymentClaimTypeControllerISpec extends ComponentSpecHelper with TestDat
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.title() should include("Which type of repayment claim do you want to make?")
+      doc.title() should include(msg("repaymentClaimType.title"))
     }
   }
 
   "POST /repayment-claim-type" should {
 
     "redirect to next page when valid data submitted" in {
-      stubAuthRequest()
       stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
@@ -59,12 +64,11 @@ class RepaymentClaimTypeControllerISpec extends ComponentSpecHelper with TestDat
           )
         )
 
-      result.status               shouldBe SEE_OTHER
-      result.header(LOCATION).value should include("/charities-claims/claim-reference-number")
+      result.status                 shouldBe SEE_OTHER
+      result.header(LOCATION).value shouldBe routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url
     }
 
     "return BadRequest when form submission is invalid" in {
-      stubAuthRequest()
       stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
@@ -77,7 +81,6 @@ class RepaymentClaimTypeControllerISpec extends ComponentSpecHelper with TestDat
     }
 
     "render update confirmation page when answer changes in CheckMode" in {
-      stubAuthRequest()
       stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
@@ -93,7 +96,7 @@ class RepaymentClaimTypeControllerISpec extends ComponentSpecHelper with TestDat
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.title() should include("Do you want to update this repayment claim?")
+      doc.title() should include(msg("updateRepaymentClaim.title"))
     }
   }
 }

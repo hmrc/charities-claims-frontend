@@ -16,6 +16,7 @@
 
 package controllers.repaymentClaimDetails
 
+import models.Mode.NormalMode
 import org.jsoup.Jsoup
 import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.http.HeaderNames.LOCATION
@@ -55,7 +56,7 @@ class ChangePreviousGASDSClaimControllerISpec
         )
 
       result.status shouldBe SEE_OTHER
-      result.header(LOCATION).value should include("/charities-claims/connected-to-charities")
+      result.header(LOCATION).value shouldBe routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
     }
 
     "return BadRequest when form submission is invalid" in {
