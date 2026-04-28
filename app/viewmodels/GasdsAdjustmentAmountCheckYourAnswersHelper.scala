@@ -17,6 +17,7 @@
 package viewmodels
 
 import models.GiftAidSmallDonationsSchemeDonationDetailsAnswers
+import models.Mode.CheckMode
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -39,7 +40,9 @@ object GasdsAdjustmentAmountCheckYourAnswersHelper {
                   "gasdsAdjustmentAmountCheckYourAnswers.adjustmentToGiftAidOverclaimed.label"
                 ),
                 formatCurrency(value),
-                controllers.giftAidSmallDonationsScheme.routes.AdjustmentToGiftAidOverclaimedController.onPageLoad.url,
+                controllers.giftAidSmallDonationsScheme.routes.AdjustmentToGiftAidOverclaimedController
+                  .onPageLoad(CheckMode)
+                  .url,
                 messages("gasdsAdjustmentAmountCheckYourAnswers.adjustmentToGiftAidOverclaimed.label")
               )
 
@@ -48,7 +51,9 @@ object GasdsAdjustmentAmountCheckYourAnswersHelper {
                 messages(
                   "gasdsAdjustmentAmountCheckYourAnswers.adjustmentToGiftAidOverclaimed.label"
                 ),
-                controllers.giftAidSmallDonationsScheme.routes.AdjustmentToGiftAidOverclaimedController.onPageLoad.url,
+                controllers.giftAidSmallDonationsScheme.routes.AdjustmentToGiftAidOverclaimedController
+                  .onPageLoad(CheckMode)
+                  .url,
                 messages("gasdsAdjustmentAmountCheckYourAnswers.adjustmentToGiftAidOverclaimed.label")
               )
           }
@@ -58,7 +63,9 @@ object GasdsAdjustmentAmountCheckYourAnswersHelper {
         Seq(
           missingDataRow(
             messages("gasdsAdjustmentAmountCheckYourAnswers.adjustmentToGiftAidOverclaimed.label"),
-            controllers.giftAidSmallDonationsScheme.routes.AdjustmentToGiftAidOverclaimedController.onPageLoad.url,
+            controllers.giftAidSmallDonationsScheme.routes.AdjustmentToGiftAidOverclaimedController
+              .onPageLoad(CheckMode)
+              .url,
             messages("gasdsAdjustmentAmountCheckYourAnswers.adjustmentToGiftAidOverclaimed.label")
           )
         )

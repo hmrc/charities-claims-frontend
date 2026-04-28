@@ -22,6 +22,8 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, Actio
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.*
 import models.GiftAidSmallDonationsSchemeDonationDetailsAnswers
+import models.Mode.{CheckMode, NormalMode}
+
 import scala.math.BigDecimal.RoundingMode
 
 object GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper {
@@ -33,7 +35,9 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper {
       messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.adjustmentToGiftAidOverclaimed.label")
 
     val changeOrEnterUrl =
-      controllers.giftAidSmallDonationsScheme.routes.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad.url
+      controllers.giftAidSmallDonationsScheme.routes.GasdsAdjustmentAmountCheckYourAnswersController
+        .onPageLoad(CheckMode)
+        .url
 
     val summaryListRow =
       answers

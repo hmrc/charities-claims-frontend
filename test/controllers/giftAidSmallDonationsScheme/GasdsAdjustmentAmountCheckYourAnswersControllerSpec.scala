@@ -17,7 +17,7 @@
 package controllers.giftAidSmallDonationsScheme
 
 import controllers.ControllerSpec
-import models.Mode.NormalMode
+import models.Mode.{CheckMode, NormalMode}
 import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
@@ -56,7 +56,7 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad.url)
+            FakeRequest(GET, routes.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -71,7 +71,7 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad.url)
+            FakeRequest(GET, routes.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -80,7 +80,7 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
           status(result) shouldEqual OK
 
           contentAsString(result) shouldEqual
-            view(sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers).body
+            view(sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers, NormalMode).body
         }
       }
 
@@ -95,7 +95,7 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad.url)
+            FakeRequest(GET, routes.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -113,7 +113,7 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad.url)
+            FakeRequest(GET, routes.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -135,7 +135,7 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit.url)
+            FakeRequest(POST, routes.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -145,18 +145,18 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
           )
         }
       }
-      "redirect to WhichTaxYearAreYouClaimingFor when claiming under GASDS" in {
+      "redirect to WhichTaxYearAreYouClaimingFor when claiming top-up under GASDS" in {
         given application: Application = applicationBuilder(sessionData =
           sessionData.copy(
             repaymentClaimDetailsAnswers = sessionData.repaymentClaimDetailsAnswers.map(
-              _.copy(claimingUnderGiftAidSmallDonationsScheme = Some(true))
+              _.copy(claimingDonationsNotFromCommunityBuilding = Some(true))
             )
           )
         ).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit.url)
+            FakeRequest(POST, routes.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -166,29 +166,42 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
         }
       }
 
-      "redirect to GASDS donation details check page when not claiming under GASDS" in {
+      "redirect to GASDS donation details check page when not claiming top up under GASDS" in {
         given application: Application = applicationBuilder(sessionData =
           sessionData.copy(
             repaymentClaimDetailsAnswers = sessionData.repaymentClaimDetailsAnswers.map(
-              _.copy(
-                claimingUnderGiftAidSmallDonationsScheme = Some(true),
-                claimingDonationsNotFromCommunityBuilding = Some(false)
-              )
+              _.copy(claimingDonationsNotFromCommunityBuilding = Some(false))
             )
           )
         ).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit.url)
+            FakeRequest(POST, routes.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
+          redirectLocation(result).value shouldEqual
+            routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad.url
+        }
+      }
 
-          redirectLocation(
-            result
-          ).value shouldEqual routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad.url
+      "redirect to GASDS details check page in CheckMode" in {
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(
+              POST,
+              routes.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit(CheckMode).url
+            )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result).value shouldEqual
+            routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad.url
         }
       }
     }

@@ -24,7 +24,7 @@
    govukButton: GovukButton
 )
 
-@(answers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers])(implicit request: Request[?], messages: Messages)
+@(answers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers], mode: Mode)(implicit request: Request[?], messages: Messages)
 
 @layout(
    pageTitle = titleNoForm(messages("gasdsAdjustmentAmountCheckYourAnswers.title"))) {
@@ -34,7 +34,7 @@
 
    @govukSummaryList(GasdsAdjustmentAmountCheckYourAnswersHelper.buildSummaryList(answers))
 
-   @formHelper(action = routes.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit) {
+   @formHelper(action = routes.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit(mode)) {
 
        @govukButton(
            ButtonViewModel(

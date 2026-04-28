@@ -341,5 +341,69 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
         answers.connectedToAnyOtherCharities                   shouldBe Some(true)
       }
     }
+
+    "setMakingAdjustmentToPreviousClaim" - {
+
+      "should reset adjustment to 0 when set to false" in {
+        given session: SessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+              GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+                adjustmentForGiftAidOverClaimed = Some(BigDecimal(45)),
+                claims = Some(Seq(Some(GiftAidSmallDonationsSchemeClaimAnswers(2026, Some(100)))))
+              )
+            )
+          )
+
+        val result = RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(false)
+
+        result.giftAidSmallDonationsSchemeDonationDetailsAnswers.value.adjustmentForGiftAidOverClaimed shouldBe Some(
+          BigDecimal(0)
+        )
+      }
+    }
+
+    "setClaimingDonationsNotFromCommunityBuilding" - {
+
+      "should clear claims but keep object when set to false" in {
+        given session: SessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+              GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+                adjustmentForGiftAidOverClaimed = Some(BigDecimal(45)),
+                claims = Some(Seq(Some(GiftAidSmallDonationsSchemeClaimAnswers(2026, Some(100)))))
+              )
+            )
+          )
+
+        val result = RepaymentClaimDetailsAnswers
+          .setClaimingDonationsNotFromCommunityBuilding(false)
+
+        result.giftAidSmallDonationsSchemeDonationDetailsAnswers.value.claims shouldBe Some(Seq.empty)
+      }
+    }
+
+    "setRepaymentClaimType" - {
+
+      "should remove entire GASDS data when switching from true to false" in {
+        val prev = Some(RepaymentClaimType(true, true, true))
+
+        given session: SessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            giftAidSmallDonationsSchemeDonationDetailsAnswers =
+              Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
+          )
+
+        val result = RepaymentClaimDetailsAnswers.setRepaymentClaimType(
+          RepaymentClaimType(true, true, false),
+          prev
+        )
+
+        result.giftAidSmallDonationsSchemeDonationDetailsAnswers shouldBe None
+      }
+    }
   }
 }
