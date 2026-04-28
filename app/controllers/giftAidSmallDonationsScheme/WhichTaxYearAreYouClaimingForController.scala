@@ -98,12 +98,10 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
             taxYear => {
 
               val existingYears =
-                (0 until index - 1).flatMap(i =>
-                  GiftAidSmallDonationsSchemeDonationDetailsAnswers
-                    .getClaim(i)
-                    .map(_.taxYear)
-                )
-
+                GiftAidSmallDonationsSchemeDonationDetailsAnswers.allClaims.zipWithIndex
+                  .collect {
+                    case (claim, i) if i != zeroIndex(index) => claim.taxYear
+                  }
               taxYearService.validateTaxYears(taxYear, existingYears) match {
 
                 case Some(error) =>

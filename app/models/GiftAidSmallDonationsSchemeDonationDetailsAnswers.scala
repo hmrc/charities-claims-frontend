@@ -113,6 +113,9 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
   def getClaim(index: Int)(using session: SessionData): Option[GiftAidSmallDonationsSchemeClaimAnswers] =
     get(a => a.claims.flatMap(_.lift(index)).flatten)
 
+  def allClaims(using session: SessionData): Seq[GiftAidSmallDonationsSchemeClaimAnswers] =
+    get(_.claims).getOrElse(Seq.empty).flatten
+
   def isClaimExist(index: Int)(using session: SessionData): Boolean =
     getClaim(index).isDefined
 
