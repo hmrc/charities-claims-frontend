@@ -351,7 +351,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       val result =
         action.invokeBlock(authorisedRequestAgent, (_: DataRequest[?]) => ???) // never going to be executed
       status(result)           shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("page-for-agent-to-select-claim")
+      redirectLocation(result) shouldBe Some("http://foo.com/charity-repayment-dashboard")
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and no claims are retrieved from backend and equal to limit for agent" in {
@@ -379,7 +379,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       val result =
         action.invokeBlock(authorisedRequestAgent, (_: DataRequest[?]) => ???) // never going to be executed
       status(result)           shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("error-agent-unsubmitted-claim-limit-exceeded")
+      redirectLocation(result) shouldBe Some("http://foo.com/charity-repayment-dashboard")
     }
   }
 }

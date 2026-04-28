@@ -41,7 +41,6 @@
 
   <input type="hidden" name="enrolment[1].name" value="HMRC-CHAR-AGENT" />
   <input type="hidden" name="enrolment[1].taxIdentifier[0].name" value="AGENTCHARID" />
-  <input type="hidden" name="enrolment[1].taxIdentifier[0].value" value="AGENT123" />
   <input type="hidden" name="enrolment[1].state" value="Activated" />
 
   <input type="hidden" name="redirectionUrl" value="@continueUrl" />
@@ -112,6 +111,17 @@
       name="enrolment[0].taxIdentifier[0].value"
       type="text"
       value="ORG123"
+    />
+  </div>
+
+  <div class="govuk-form-group">
+    <label class="govuk-label" for="enrolment[1].taxIdentifier[0].value">Agent Reference</label>
+    <input
+      class="govuk-input"
+      id="input-value"
+      name="enrolment[1].taxIdentifier[0].value"
+      type="text"
+      value="AGENT123"
     />
   </div>
 
