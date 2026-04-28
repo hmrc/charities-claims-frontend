@@ -26,7 +26,7 @@
     govukButton: GovukButton
 )
 
-@(summaryListAdjustmentToGiftAidOverclaimed: SummaryList, summaryListNumberOfTaxYearsAdded: SummaryList)(implicit request: Request[?], messages: Messages)
+@(oSummaryListForAdjustmentToGiftAidOverclaimed: Option[SummaryList], oSummaryListForNumberOfTaxYearsAdded: Option[SummaryList])(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.title"))
@@ -34,12 +34,15 @@
 
     <span class="govuk-caption-l">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.caption")</span>
     <h1 class="govuk-heading-l">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading")</h1>
+    @if(oSummaryListForAdjustmentToGiftAidOverclaimed.isDefined) {
+        <h2 class="govuk-heading-m">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.1")</h2>
+        @govukSummaryList(oSummaryListForAdjustmentToGiftAidOverclaimed.get)
+    }
 
-    <h2 class="govuk-heading-m">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.1")</h2>
-    @govukSummaryList(summaryListAdjustmentToGiftAidOverclaimed)
-
-    <h2 class="govuk-heading-m">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.2")</h2>
-    @govukSummaryList(summaryListNumberOfTaxYearsAdded)
+    @if(oSummaryListForNumberOfTaxYearsAdded.isDefined) {
+        <h2 class="govuk-heading-m">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.2")</h2>
+        @govukSummaryList(oSummaryListForNumberOfTaxYearsAdded.get)
+    }
 
     @formHelper(action = controllers.giftAidSmallDonationsScheme.routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onSubmit) {
 
