@@ -19,11 +19,12 @@ package controllers.actions
 import models.SessionData
 import models.requests.DataRequest
 import play.api.mvc.{ActionBuilder, AnyContent, Results}
-import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import util.BaseSpec
 
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.auth.core.AffinityGroup
+import models.requests.AuthorisedRequest
 
 class GuardActionSpec extends BaseSpec {
 
@@ -41,7 +42,7 @@ class GuardActionSpec extends BaseSpec {
         request: play.api.mvc.Request[A],
         block: DataRequest[A] => Future[play.api.mvc.Result]
       ) =
-        block(DataRequest(request, sessionData))
+        block(DataRequest(AuthorisedRequest(request, AffinityGroup.Organisation, testCharitiesReference), sessionData))
     }
 
   "GuardAction" - {
