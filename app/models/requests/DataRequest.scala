@@ -16,10 +16,17 @@
 
 package models.requests
 
-import play.api.mvc.{Request, WrappedRequest}
+import play.api.mvc.WrappedRequest
 import models.SessionData
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 final case class DataRequest[A](
-  request: Request[A],
+  request: AuthorisedRequest[A],
   sessionData: SessionData
-) extends WrappedRequest[A](request)
+) extends WrappedRequest[A](request) {
+
+  inline def isAgent: Boolean           = request.affinityGroup == AffinityGroup.Agent
+  inline def isOrganisation: Boolean    = request.affinityGroup == AffinityGroup.Organisation
+  inline def charitiesReference: String = request.charitiesReference
+
+}

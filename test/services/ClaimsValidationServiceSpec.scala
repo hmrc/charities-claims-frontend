@@ -27,7 +27,6 @@ import models.{
   ValidationType
 }
 import models.requests.DataRequest
-import play.api.test.FakeRequest
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.http.HeaderCarrier
 import util.BaseSpec

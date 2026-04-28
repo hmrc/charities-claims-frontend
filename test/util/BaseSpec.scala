@@ -16,7 +16,6 @@
 
 package util
 
-import play.api.test.FakeRequest
 import org.scalatest.concurrent.ScalaFutures
 import org.scalamock.scalatest.MockFactory
 import org.apache.pekko.stream.Materializer
@@ -31,6 +30,9 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, OptionValues}
 import play.api.{Application, Configuration}
 import org.scalatest.time.{Millis, Span}
+import uk.gov.hmrc.auth.core.AffinityGroup
+import models.requests.AuthorisedRequest
+import play.api.mvc.AnyContent
 
 abstract class BaseSpec
     extends AnyFreeSpec
@@ -139,4 +141,14 @@ abstract class BaseSpec
       )
     )
   )
+
+  object FakeRequest {
+    def apply(affinityGroup: AffinityGroup, charitiesReference: String): AuthorisedRequest[AnyContent] =
+      AuthorisedRequest(play.api.test.FakeRequest(), affinityGroup, charitiesReference)
+
+    def apply(): AuthorisedRequest[AnyContent] =
+      apply(AffinityGroup.Organisation, testCharitiesReference)
+
+    def apply(method: String, url: String) = play.api.test.FakeRequest(method, url)
+  }
 }

@@ -21,7 +21,7 @@ import models.requests.{AuthorisedRequest, DataRequest}
 import models.*
 import play.api.mvc.Results.*
 import play.api.test.Helpers.*
-import play.api.test.{FakeRequest, Helpers}
+import play.api.test.Helpers
 import repositories.SessionCache
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.http.HeaderCarrier
