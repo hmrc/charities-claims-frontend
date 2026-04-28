@@ -47,15 +47,36 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController @Inject() (
           && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
       )
       .async { implicit request =>
+        import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
         val previousAnswers = request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
+
+        val oSummaryListForAdjustmentToGiftAidOverclaimed: Option[SummaryList] =
+          if request.sessionData.repaymentClaimDetailsAnswers
+              .flatMap(_.makingAdjustmentToPreviousClaim)
+              .contains(true)
+          then
+            Some(
+              GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
+                .buildSummaryListForAdjustmentToGiftAidOverclaimed(previousAnswers)
+            )
+          else None
+
+        val oSummaryListForNumberOfTaxYearsAdded: Option[SummaryList] =
+          if request.sessionData.repaymentClaimDetailsAnswers
+              .flatMap(_.claimingDonationsNotFromCommunityBuilding)
+              .contains(true)
+          then
+            Some(
+              GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
+                .buildSummaryListForNumberOfTaxYearsAdded(previousAnswers)
+            )
+          else None
 
         Future.successful(
           Ok(
             view(
-              GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
-                .buildSummaryListForAdjustmentToGiftAidOverclaimed(previousAnswers),
-              GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
-                .buildSummaryListForNumberOfTaxYearsAdded(previousAnswers)
+              oSummaryListForAdjustmentToGiftAidOverclaimed,
+              oSummaryListForNumberOfTaxYearsAdded
             )
           )
         )
