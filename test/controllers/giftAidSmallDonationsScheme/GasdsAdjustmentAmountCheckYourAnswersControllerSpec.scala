@@ -170,7 +170,10 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
         given application: Application = applicationBuilder(sessionData =
           sessionData.copy(
             repaymentClaimDetailsAnswers = sessionData.repaymentClaimDetailsAnswers.map(
-              _.copy(claimingUnderGiftAidSmallDonationsScheme = Some(false))
+              _.copy(
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = Some(false)
+              )
             )
           )
         ).build()
@@ -183,7 +186,9 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
 
           status(result) shouldEqual SEE_OTHER
 
-          redirectLocation(result).value shouldEqual controllers.routes.ClaimsTaskListController.onPageLoad.url
+          redirectLocation(
+            result
+          ).value shouldEqual routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad.url
         }
       }
     }

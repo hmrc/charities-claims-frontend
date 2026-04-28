@@ -55,18 +55,18 @@ class GasdsAdjustmentAmountCheckYourAnswersController @Inject() (
           RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
       )
       .async { implicit request =>
-        val claimingUnderGasds =
+        val claimingTopUpUnderGasds =
           request.sessionData.repaymentClaimDetailsAnswers
-            .flatMap(_.claimingUnderGiftAidSmallDonationsScheme)
+            .flatMap(_.claimingDonationsNotFromCommunityBuilding)
             .contains(true)
 
         Future.successful(
-          if (claimingUnderGasds) {
+          if (claimingTopUpUnderGasds) {
             Redirect(routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1, NormalMode))
           } else {
             Redirect(
-              "/charities-claims/check-your-GASDS-donation-details"
-            ) // TODO update URL when next screen is available
+              routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad
+            )
           }
         )
       }
