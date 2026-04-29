@@ -102,7 +102,7 @@ trait ControllerSpec
   }
 
   extension (appBuilder: GuiceApplicationBuilder) {
-    def mockSaveSession: GuiceApplicationBuilder                           = {
+    def mockSaveSession: GuiceApplicationBuilder = {
       val mockSaveService: SaveService = mock[SaveService]
       (mockSaveService
         .save(_: SessionData)(using _: HeaderCarrier))
@@ -114,7 +114,8 @@ trait ControllerSpec
           .toInstance(mockSaveService)
       )
     }
-    def mockSaveClaim: GuiceApplicationBuilder                             = {
+
+    def mockSaveClaim: GuiceApplicationBuilder = {
       val mockClaimsService: ClaimsService = mock[ClaimsService]
       (mockClaimsService
         .save(using _: HeaderCarrier))
@@ -126,6 +127,7 @@ trait ControllerSpec
           .toInstance(mockClaimsService)
       )
     }
+
     def mockSaveClaimFailed(exception: Throwable): GuiceApplicationBuilder = {
       val mockClaimsService: ClaimsService = mock[ClaimsService]
       (mockClaimsService
@@ -136,6 +138,19 @@ trait ControllerSpec
         inject
           .bind[ClaimsService]
           .toInstance(mockClaimsService)
+      )
+    }
+
+    def mockClaimsConnectorLastVisitedAt: GuiceApplicationBuilder = {
+      val mockClaimsConnector: ClaimsConnector = mock[ClaimsConnector]
+      (mockClaimsConnector
+        .updateLastVisitedAt(_: String)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(Future.successful(()))
+      appBuilder.overrides(
+        inject
+          .bind[ClaimsConnector]
+          .toInstance(mockClaimsConnector)
       )
     }
   }
