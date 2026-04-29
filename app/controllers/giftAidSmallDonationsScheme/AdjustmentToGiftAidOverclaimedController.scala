@@ -41,7 +41,7 @@ class AdjustmentToGiftAidOverclaimedController @Inject() (
     errorRequired = "adjustmentToGiftAidOverclaimed.error.required",
     formatErrorMsg = "adjustmentToGiftAidOverclaimed.error.invalid",
     maxLengthErrorMsg = "adjustmentToGiftAidOverclaimed.error.maxLength",
-    allowZero = true
+    allowZero = false
   )
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =

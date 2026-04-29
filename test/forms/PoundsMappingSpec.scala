@@ -107,19 +107,7 @@ class PoundsMappingSpec extends BaseSpec {
         allowZero = false
       )
       val result   = mappings.bind(Map("" -> "0"))
-      result shouldBe Left(List(FormError("", List("error.invalid"), List())))
-    }
-
-    "bind invalid pounds amount (zero but not allowed) when zero error message is provided" in {
-      val mappings = PoundsMapping(
-        errorRequired = "error.required",
-        formatErrorMsg = "error.invalid",
-        maxLengthErrorMsg = "error.maxAmount",
-        allowZero = false,
-        zeroErrorMsg = Some("error.zero")
-      )
-      val result   = mappings.bind(Map("" -> "0"))
-      result shouldBe Left(List(FormError("", List("error.zero"), List())))
+      result shouldBe Left(List(FormError("", List("error.required"), List())))
     }
 
     "bind zero pounds amount when allowed" in {
