@@ -20,4 +20,5 @@ object Validation {
   val claimReferenceNumberPattern  = "^([\\x00-\\x7F\\xA0-\\xFF]{1,20})$"
   val adjustmentToThisClaimPattern = "^([\\x00-\\x7F\\xA0-\\xFF]{1,350})$"
   val taxYearRegexPattern          = "^\\d{4}$"
+  val charityNamePattern           = "^[A-Za-z 0-9\\\\-']{1,160}$"
 }

@@ -303,3 +303,5 @@ GET         /maximum-claims-limit-reached                       controllers.repa
 POST        /maximum-claims-limit-reached                       controllers.repaymentClaimDetails.Warning11MaxClaimsReachedController.onSubmit
 
 
+
+GET         /enter-the-chartity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onPageLoad(mode: Mode = Mode.NormalMode)
