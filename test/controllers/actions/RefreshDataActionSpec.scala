@@ -53,7 +53,8 @@ class RefreshDataActionSpec extends BaseSpec {
           mockClaimsConnector,
           mockClaimsValidationConnector,
           testFrontendAppConfig
-        )
+        ),
+        testFrontendAppConfig
       )
 
       val sessionData =
@@ -109,7 +110,8 @@ class RefreshDataActionSpec extends BaseSpec {
           mockClaimsConnector,
           mockClaimsValidationConnector,
           testFrontendAppConfig
-        )
+        ),
+        testFrontendAppConfig
       )
 
       val sessionData =
@@ -199,7 +201,8 @@ class RefreshDataActionSpec extends BaseSpec {
           mockClaimsConnector,
           mockClaimsValidationConnector,
           testFrontendAppConfig
-        )
+        ),
+        testFrontendAppConfig
       )
 
       val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
