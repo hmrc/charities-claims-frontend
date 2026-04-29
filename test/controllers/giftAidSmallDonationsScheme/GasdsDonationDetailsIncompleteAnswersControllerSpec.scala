@@ -30,7 +30,8 @@ import models.{
 
 class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec {
 
-  private val checkYourGasdsDonationDetailsUrl = "/charities-claims/check-your-GASDS-donation-details"
+  private val checkYourGasdsDonationDetailsUrl =
+    routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad.url
 
   private val completeRepaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
     claimingGiftAid = Some(false),

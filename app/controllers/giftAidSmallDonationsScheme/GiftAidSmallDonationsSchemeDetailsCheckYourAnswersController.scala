@@ -89,8 +89,54 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController @Inject() (
           && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
       )
       .async { implicit request =>
-        claimsService.save.map { _ =>
-          Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
-        }
+
+        val repaymentDetails =
+          request.sessionData.repaymentClaimDetailsAnswers
+
+        val gasdsDetails =
+          request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
+
+        val bClaimingDonationsNotFromCommunityBuilding: Boolean =
+          repaymentDetails.flatMap(_.claimingDonationsNotFromCommunityBuilding).contains(true)
+
+        val bMakingAdjustmentToPreviousClaim: Boolean =
+          repaymentDetails.flatMap(_.makingAdjustmentToPreviousClaim).contains(true)
+
+        val bAdjustmentForGiftAidOverClaimed: Boolean =
+          gasdsDetails
+            .flatMap(_.adjustmentForGiftAidOverClaimed)
+            .exists(_ != BigDecimal(0))
+
+        val bGiftAidSmallDonationsSchemeClaimAnswers: Boolean =
+          gasdsDetails.exists {
+            _.claims.exists { claims =>
+              claims.nonEmpty &&
+              claims.forall {
+                case Some(claim) =>
+                  claim.taxYear > 0 && claim.amountOfDonationsReceived.isDefined
+                case None        =>
+                  false
+              }
+            }
+          }
+
+        val minimumDataCheckPass: Boolean =
+          (bClaimingDonationsNotFromCommunityBuilding, bMakingAdjustmentToPreviousClaim) match {
+            case (true, true)   =>
+              bAdjustmentForGiftAidOverClaimed && bGiftAidSmallDonationsSchemeClaimAnswers
+            case (true, false)  =>
+              bGiftAidSmallDonationsSchemeClaimAnswers
+            case (false, true)  =>
+              bAdjustmentForGiftAidOverClaimed
+            case (false, false) =>
+              true
+          }
+
+        if minimumDataCheckPass
+        then
+          claimsService.save.map { _ =>
+            Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
+          }
+        else Future.successful(Redirect(routes.GasdsDonationDetailsIncompleteAnswersController.onPageLoad))
       }
 }
