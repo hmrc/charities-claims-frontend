@@ -52,7 +52,7 @@ class AboutGiftAidSmallDonationsSchemeController @Inject() (
       .async { implicit request =>
         Future.successful(
           if (RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true))
-            Redirect(routes.AdjustmentToGiftAidOverclaimedController.onPageLoad)
+            Redirect(routes.AdjustmentToGiftAidOverclaimedController.onPageLoad(NormalMode))
           else
             Redirect(routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1, NormalMode))
         )

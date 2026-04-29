@@ -19,7 +19,8 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.AmountFormProvider
-import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, RepaymentClaimDetailsAnswers, SessionData}
+import models.Mode.NormalMode
+import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, Mode, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
@@ -43,7 +44,7 @@ class AdjustmentToGiftAidOverclaimedController @Inject() (
     allowZero = true
   )
 
-  val onPageLoad: Action[AnyContent] =
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
@@ -53,12 +54,15 @@ class AdjustmentToGiftAidOverclaimedController @Inject() (
       .async { implicit request =>
         Future.successful(
           Ok(
-            view(form.withDefault(GiftAidSmallDonationsSchemeDonationDetailsAnswers.getAdjustmentForGiftAidOverClaimed))
+            view(
+              form.withDefault(GiftAidSmallDonationsSchemeDonationDetailsAnswers.getAdjustmentForGiftAidOverClaimed),
+              mode
+            )
           )
         )
       }
 
-  val onSubmit: Action[AnyContent] =
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
@@ -69,13 +73,14 @@ class AdjustmentToGiftAidOverclaimedController @Inject() (
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               saveService
                 .save(GiftAidSmallDonationsSchemeDonationDetailsAnswers.setAdjustmentForGiftAidOverClaimed(value))
                 .map(_ =>
                   Redirect(
-                    controllers.giftAidSmallDonationsScheme.routes.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad
+                    controllers.giftAidSmallDonationsScheme.routes.GasdsAdjustmentAmountCheckYourAnswersController
+                      .onPageLoad(mode)
                   )
                 )
           )
