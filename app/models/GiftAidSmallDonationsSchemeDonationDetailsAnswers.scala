@@ -65,13 +65,21 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
     session.copy(giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(updated))
 
   def from(
-    giftAidSmallDonationsSchemeScheduleData: GiftAidSmallDonationsSchemeDonationDetails
-  ): GiftAidSmallDonationsSchemeDonationDetailsAnswers =
+            giftAidSmallDonationsSchemeScheduleData: GiftAidSmallDonationsSchemeDonationDetails
+          ): GiftAidSmallDonationsSchemeDonationDetailsAnswers =
     GiftAidSmallDonationsSchemeDonationDetailsAnswers(
-      adjustmentForGiftAidOverClaimed = Some(giftAidSmallDonationsSchemeScheduleData.adjustmentForGiftAidOverClaimed),
+      adjustmentForGiftAidOverClaimed =
+        Option.when(giftAidSmallDonationsSchemeScheduleData.adjustmentForGiftAidOverClaimed != 0)(
+          giftAidSmallDonationsSchemeScheduleData.adjustmentForGiftAidOverClaimed
+        ),
       claims = Some(
         giftAidSmallDonationsSchemeScheduleData.claims.map(c =>
-          Some(GiftAidSmallDonationsSchemeClaimAnswers(c.taxYear, Some(c.amountOfDonationsReceived)))
+          Some(
+            GiftAidSmallDonationsSchemeClaimAnswers(
+              c.taxYear,
+              Some(c.amountOfDonationsReceived)
+            )
+          )
         )
       )
     )
