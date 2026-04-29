@@ -176,6 +176,81 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         }
       }
 
+      "should show GASDS task as Completed when GASDS details are complete" in {
+        val gasdsAnswers = GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+          claims = Some(
+            Seq(
+              Some(
+                GiftAidSmallDonationsSchemeClaimAnswers(
+                  taxYear = 2024,
+                  amountOfDonationsReceived = Some(BigDecimal(100))
+                )
+              )
+            )
+          )
+        )
+
+        val answers = repaymentClaimDetailsAnswersCompleted.copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingDonationsNotFromCommunityBuilding = Some(true),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(false),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswers = Some(answers),
+          giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(gasdsAnswers)
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
+
+        running(application) {
+          val request = FakeRequest(GET, url)
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          content should include("Gift Aid Small Donations Scheme details")
+          content should include("Completed")
+        }
+      }
+
+      "should show GASDS task as Not yet started when GASDS details are incomplete" in {
+
+        val gasdsAnswers = GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+          claims = None
+        )
+
+        val answers = repaymentClaimDetailsAnswersCompleted.copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingDonationsNotFromCommunityBuilding = Some(true),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(false),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswers = Some(answers),
+          giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(gasdsAnswers)
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
+
+        running(application) {
+          val result  = route(application, FakeRequest(GET, url)).value
+          val content = contentAsString(result)
+
+          content should include("Gift Aid Small Donations Scheme details")
+          content should include("Not yet started")
+        }
+      }
+
       "should display Gift Aid schedule task when claimingGiftAid is true" in {
         val answers     = repaymentClaimDetailsAnswersCompleted.copy(claimingGiftAid = Some(true))
         val sessionData = SessionData(
