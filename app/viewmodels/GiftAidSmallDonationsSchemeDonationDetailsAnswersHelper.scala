@@ -22,7 +22,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, Actio
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.*
 import models.GiftAidSmallDonationsSchemeDonationDetailsAnswers
-import models.Mode.{CheckMode, NormalMode}
+import models.Mode.*
 
 import scala.math.BigDecimal.RoundingMode
 
@@ -65,9 +65,6 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper {
     val label =
       messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.numberOfTaxYearsAdded.label")
 
-    val changeOrEnterUrl =
-      controllers.giftAidSmallDonationsScheme.routes.ClaimAddedForTaxYearController.onPageLoad.url
-
     val taxYearsCount: Int = answers
       .flatMap(_.claims)
       .fold(0)(_.flatten.size)
@@ -78,14 +75,16 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper {
         .fold(
           missingDataRow(
             label,
-            changeOrEnterUrl,
+            controllers.giftAidSmallDonationsScheme.routes.WhichTaxYearAreYouClaimingForController
+              .onPageLoad(1, NormalMode)
+              .url,
             label
           )
         )(count =>
           summaryRow(
             label,
             count.toString,
-            changeOrEnterUrl,
+            controllers.giftAidSmallDonationsScheme.routes.ClaimAddedForTaxYearController.onPageLoad.url,
             label
           )
         )
