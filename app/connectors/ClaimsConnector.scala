@@ -32,6 +32,7 @@ import java.net.URL
 import javax.inject.Inject
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
+import play.api.libs.json.JsObject
 
 @ImplementedBy(classOf[ClaimsConnectorImpl])
 trait ClaimsConnector {
@@ -51,6 +52,8 @@ trait ClaimsConnector {
   def deleteClaim(claimId: String)(using hc: HeaderCarrier): Future[Boolean]
 
   def getSubmissionClaimSummary(claimId: String)(using hc: HeaderCarrier): Future[SubmissionSummaryResponse]
+
+  def updateLastVisitedAt(claimId: String)(using hc: HeaderCarrier): Future[Unit]
 }
 
 class ClaimsConnectorImpl @Inject() (
@@ -124,6 +127,12 @@ class ClaimsConnectorImpl @Inject() (
       payload = Some(updateClaimRequest)
     )
 
+  final def updateLastVisitedAt(claimId: String)(using hc: HeaderCarrier): Future[Unit] =
+    callCharitiesClaimsBackend[Nothing, JsObject](
+      method = "PATCH",
+      url = s"$claimsApiUrl/$claimId/last-visited-at"
+    ).map(_ => ())
+
   final def deleteClaim(claimId: String)(using
     hc: HeaderCarrier
   ): Future[Boolean] =
@@ -167,6 +176,7 @@ class ClaimsConnectorImpl @Inject() (
         case "POST"   => http.post(URL(url))
         case "PUT"    => http.put(URL(url))
         case "DELETE" => http.delete(URL(url))
+        case "PATCH"  => http.patch(URL(url))
       }
 
       payload

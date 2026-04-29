@@ -72,4 +72,7 @@ class FakeClaimsConnector(
 
   override def deleteClaim(claimId: String)(using hc: HeaderCarrier): Future[Boolean] =
     Future.successful(true)
+
+  override def updateLastVisitedAt(claimId: String)(using hc: HeaderCarrier): Future[Unit] =
+    Future.successful(())
 }

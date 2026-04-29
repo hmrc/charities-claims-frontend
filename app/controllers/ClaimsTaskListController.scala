@@ -26,17 +26,34 @@ import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import viewmodels.{ClaimsTaskListViewModel, TaskItem, TaskSection, TaskStatus}
 import views.html.ClaimsTaskListView
+import connectors.ClaimsConnector
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext
 
 class ClaimsTaskListController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: ClaimsTaskListView,
   actions: Actions,
-  appConfig: FrontendAppConfig
-) extends BaseController {
+  appConfig: FrontendAppConfig,
+  claimsConnector: ClaimsConnector
+)(using ExecutionContext)
+    extends BaseController {
 
   def onPageLoad: Action[AnyContent] =
-    actions.authAndRefreshData() { implicit request =>
-      Ok(view(ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl)))
+    actions.authAndRefreshData().async { implicit request =>
+      request.sessionData.unsubmittedClaimId match {
+        case Some(claimId) =>
+          claimsConnector
+            .updateLastVisitedAt(claimId)
+            .map { _ =>
+              Ok(view(ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl)))
+            }
+
+        case None =>
+          Future.successful(
+            Ok(view(ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl)))
+          )
+      }
     }
 }
 
