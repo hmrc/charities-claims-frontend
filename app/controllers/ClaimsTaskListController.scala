@@ -205,12 +205,22 @@ object ClaimsTaskListController {
     )
   }
 
-  private def buildGasdsDetailsTask(using messages: Messages): TaskItem =
+  private def buildGasdsDetailsTask(using request: DataRequest[?], messages: Messages): TaskItem = {
+    val isComplete = request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
+      .exists(_.hasGasdsDonationDetailsCompleteAnswers)
+    val status     = if (isComplete) TaskStatus.Completed else TaskStatus.NotStarted
+    val href       = if (isComplete) {
+      giftAidSmallDonationsScheme.routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad
+    } else {
+      giftAidSmallDonationsScheme.routes.AboutGiftAidSmallDonationsSchemeController.onPageLoad
+    }
+
     TaskItem(
       name = messages("claimsTaskList.task.gasdsDetails"),
-      href = giftAidSmallDonationsScheme.routes.AboutGiftAidSmallDonationsSchemeController.onPageLoad,
-      status = TaskStatus.Completed
+      href = href,
+      status = status
     )
+  }
 
   private def buildGiftAidScheduleTask(using request: DataRequest[?], messages: Messages): TaskItem =
     val status =

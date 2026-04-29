@@ -36,6 +36,7 @@ final case class GiftAidSmallDonationsSchemeDonationDetailsAnswers(
         }.toList
     }
 
+  def hasGasdsDonationDetailsCompleteAnswers: Boolean = missingFields.isEmpty
 }
 
 object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
