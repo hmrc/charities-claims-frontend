@@ -51,7 +51,7 @@ class DefaultDataRetrievalAction @Inject() (
     cache
       .get()
       .flatMap {
-        case None              =>
+        case None =>
           logger.info(s"No session data in cache for ${request.charitiesReference}, retrieving from backend")
           claimsConnector.retrieveUnsubmittedClaims
             .flatMap { getClaimsResponse =>
@@ -103,38 +103,71 @@ class DefaultDataRetrievalAction @Inject() (
                                 }
 
                             case None =>
-                              Future.successful(
-                                Left(
-                                  Results.Redirect(
-                                    config.charityRepaymentDashboardUrl
-                                  )
-                                )
-                              )
+                              Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
                           }
-                        case _                                                                          =>
-                          Future.successful(
-                            Left(
-                              Results.Redirect(
-                                config.charityRepaymentDashboardUrl
-                              )
-                            )
-                          )
+                        case Some(claimId) if claimId == "blank"                                        =>
+                          val sessionData = SessionData.empty(request.charitiesReference)
+                          cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
+
+                        case _ =>
+                          Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
                       }
 
                     case _ =>
-                      Future.successful(
-                        Left(
-                          Results.Redirect(
-                            config.charityRepaymentDashboardUrl
-                          )
-                        )
-                      )
+                      Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
                   }
               }
             }
+
         case Some(sessionData) =>
-          Future.successful(Right(DataRequest(request, sessionData)))
+          request.affinityGroup match {
+            case AffinityGroup.Organisation =>
+              Future.successful(Right(DataRequest(request, sessionData)))
+
+            case AffinityGroup.Agent =>
+              request.underlying.getQueryString("claimId") match {
+                case Some(claimId) =>
+                  tryOpenAgentClaimById(request, claimId)
+
+                case None =>
+                  Future.successful(Right(DataRequest(request, sessionData)))
+              }
+          }
 
       }
   }
+
+  private def tryOpenAgentClaimById(request: AuthorisedRequest[?], claimId: String)(using HeaderCarrier) =
+    claimsConnector.retrieveUnsubmittedClaims
+      .flatMap { getClaimsResponse =>
+        if getClaimsResponse.claimsCount > 0
+          && getClaimsResponse.claimsCount < config.agentUnsubmittedClaimLimit
+        then {
+          if getClaimsResponse.claimsList.exists(_.claimId == claimId)
+          then
+            claimsConnector
+              .getClaim(claimId)
+              .flatMap {
+                case Some(claim) =>
+                  claimsValidationConnector
+                    .getUploadSummary(claim.claimId)
+                    .flatMap { uploadsSummary =>
+                      val sessionData =
+                        SessionData.from(claim, request.charitiesReference, Some(uploadsSummary))
+                      cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
+                    }
+
+                case None =>
+                  Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
+              }
+          else if claimId == "blank" then {
+            val sessionData = SessionData.empty(request.charitiesReference)
+            cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
+          } else {
+            Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
+          }
+        } else {
+          Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
+        }
+      }
 }
