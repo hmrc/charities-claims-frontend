@@ -90,13 +90,36 @@ class DefaultDataRetrievalAction @Inject() (
                         .map(_ => Right(DataRequest(request, sessionData)))
 
                     case x if x > 0 && x < config.agentUnsubmittedClaimLimit =>
-                      Future.successful(
-                        Left(
-                          Results.Redirect(
-                            config.charityRepaymentDashboardUrl
+                      request.underlying.getQueryString("claimId") match {
+                        case Some(claimId) if getClaimsResponse.claimsList.exists(_.claimId == claimId) =>
+                          claimsConnector.getClaim(claimId).flatMap {
+                            case Some(claim) =>
+                              claimsValidationConnector
+                                .getUploadSummary(claim.claimId)
+                                .flatMap { uploadsSummary =>
+                                  val sessionData =
+                                    SessionData.from(claim, request.charitiesReference, Some(uploadsSummary))
+                                  cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
+                                }
+
+                            case None =>
+                              Future.successful(
+                                Left(
+                                  Results.Redirect(
+                                    config.charityRepaymentDashboardUrl
+                                  )
+                                )
+                              )
+                          }
+                        case _                                                                          =>
+                          Future.successful(
+                            Left(
+                              Results.Redirect(
+                                config.charityRepaymentDashboardUrl
+                              )
+                            )
                           )
-                        )
-                      )
+                      }
 
                     case _ =>
                       Future.successful(
