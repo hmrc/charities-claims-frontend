@@ -65,8 +65,8 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
     session.copy(giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(updated))
 
   def from(
-            giftAidSmallDonationsSchemeScheduleData: GiftAidSmallDonationsSchemeDonationDetails
-          ): GiftAidSmallDonationsSchemeDonationDetailsAnswers =
+    giftAidSmallDonationsSchemeScheduleData: GiftAidSmallDonationsSchemeDonationDetails
+  ): GiftAidSmallDonationsSchemeDonationDetailsAnswers =
     GiftAidSmallDonationsSchemeDonationDetailsAnswers(
       adjustmentForGiftAidOverClaimed =
         Option.when(giftAidSmallDonationsSchemeScheduleData.adjustmentForGiftAidOverClaimed != 0)(
