@@ -47,9 +47,9 @@ pageTitle = title(form, messages("gasdsClaimType.title"))
       <span class="govuk-body">
         @messages("gasdsClaimType.topUp")
       </span>
-        <div class="govuk-hint govuk-!-margin-top-1">
+        <p class="claim-type-hint govuk-!-margin-top-1 govuk-!-margin-bottom-0">
             @messages("gasdsClaimType.topUp.desc")
-        </div>
+        </p>
     </li>
 
     @if(!isCASCCharityReference) {
@@ -57,9 +57,9 @@ pageTitle = title(form, messages("gasdsClaimType.title"))
             <span class="govuk-body">
               @messages("gasdsClaimType.community")
             </span>
-            <div class="govuk-hint govuk-!-margin-top-1">
+            <p class="claim-type-hint govuk-!-margin-top-1 govuk-!-margin-bottom-0">
                 @messages("gasdsClaimType.community.desc")
-            </div>
+            </p>
         </li>
     }
 
@@ -67,29 +67,29 @@ pageTitle = title(form, messages("gasdsClaimType.title"))
       <span class="govuk-body">
         @messages("gasdsClaimType.connected")
       </span>
-        <div class="govuk-hint govuk-!-margin-top-1">
+        <p class="claim-type-hint govuk-!-margin-top-1 govuk-!-margin-bottom-0">
             @messages("gasdsClaimType.connected.desc")
-        </div>
+        </p>
     </li>
 </ul>
 
-    @formHelper(action = routes.GasdsClaimTypeController.onSubmit(mode)) {
-         @govukCheckboxes(
-              CheckboxesViewModel(
-                  form,
-                  name = "value",
-                  items = GasdsClaimTypeCheckBox.itemsFiltered(isCASCCharityReference),
-                  fieldset = Fieldset(
-                    legend = Some(
-                      Legend(
-                        content = Text(messages("gasdsClaimType.question")),
-                        isPageHeading = false,
-                        classes = "govuk-fieldset__legend--m"
-                      )
-                    )
+@formHelper(action = routes.GasdsClaimTypeController.onSubmit(mode)) {
+     @govukCheckboxes(
+          CheckboxesViewModel(
+              form,
+              name = "value",
+              items = GasdsClaimTypeCheckBox.itemsFiltered(isCASCCharityReference),
+              fieldset = Fieldset(
+                legend = Some(
+                  Legend(
+                    content = Text(messages("gasdsClaimType.question")),
+                    isPageHeading = false,
+                    classes = "govuk-fieldset__legend--m"
                   )
-              ).withHint(HintViewModel(Text(messages("gasdsClaimType.hint"))))
-         )
-         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
-    }
+                )
+              )
+          ).withHint(HintViewModel(Text(messages("gasdsClaimType.hint"))))
+     )
+     @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+}
 }
