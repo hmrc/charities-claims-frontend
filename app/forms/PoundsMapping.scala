@@ -33,8 +33,7 @@ object PoundsMapping extends Mappings {
     errorRequired: String,
     formatErrorMsg: String,
     maxLengthErrorMsg: String,
-    allowZero: Boolean = false,
-    zeroErrorMsg: Option[String] = None
+    allowZero: Boolean = false
   ): Mapping[BigDecimal] =
     Forms
       .of[BigDecimal](using moneyBigDecimalFormat(errorRequired, formatErrorMsg, maxLengthErrorMsg))
@@ -42,7 +41,7 @@ object PoundsMapping extends Mappings {
         Constraint[BigDecimal]((num: BigDecimal) =>
           num match {
             case n if n < 0  => Invalid(formatErrorMsg)
-            case n if n == 0 => if allowZero then Valid else Invalid(zeroErrorMsg.getOrElse(formatErrorMsg))
+            case n if n == 0 => if allowZero then Valid else Invalid(errorRequired)
             case _           => Valid
           }
         )
