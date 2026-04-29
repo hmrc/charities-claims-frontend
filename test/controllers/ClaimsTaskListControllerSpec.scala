@@ -107,7 +107,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -130,7 +130,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -154,7 +154,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -165,7 +165,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should not display GASDS task when claimingUnderGiftAidSmallDonationsScheme is false" in {
-        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
+        given application: Application =
+          applicationBuilder(sessionDataWithCompleteRcd()).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -183,7 +184,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -194,7 +195,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should not display Gift Aid schedule task when claimingGiftAid is false" in {
-        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
+        given application: Application =
+          applicationBuilder(sessionDataWithCompleteRcd()).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -212,7 +214,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -223,7 +225,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should not display Other income schedule task when claimingTaxDeducted is false" in {
-        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
+        given application: Application =
+          applicationBuilder(sessionDataWithCompleteRcd()).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -247,7 +250,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -274,7 +277,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           communityBuildingsScheduleFileUploadReference = Some(fileUploadReference)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -303,7 +306,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           communityBuildingsScheduleUpscanInitialization = Some(upscanResponse)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -330,7 +333,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           communityBuildingsScheduleCompleted = true
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -343,7 +346,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should not display Community buildings schedule task when claimingDonationsCollectedInCommunityBuildings is false" in {
-        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
+        given application: Application =
+          applicationBuilder(sessionDataWithCompleteRcd()).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -367,7 +371,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -394,7 +398,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           connectedCharitiesScheduleFileUploadReference = Some(fileUploadReference)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -423,7 +427,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           connectedCharitiesScheduleUpscanInitialization = Some(upscanResponse)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -450,7 +454,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           connectedCharitiesScheduleCompleted = true
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -463,7 +467,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should not display Connected charities schedule task when connectedToAnyOtherCharities is false" in {
-        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
+        given application: Application =
+          applicationBuilder(sessionDataWithCompleteRcd()).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -474,7 +479,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should not display Upload documents section when no upload tasks are visible" in {
-        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
+        given application: Application =
+          applicationBuilder(sessionDataWithCompleteRcd()).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -492,7 +498,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -510,7 +516,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -529,7 +535,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           giftAidScheduleCompleted = true
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -549,7 +555,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = Some(answers)
         ).copy(giftAidScheduleCompleted = false, giftAidScheduleFileUploadReference = Some(fileUploadReference))
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -569,7 +575,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = Some(answers)
         ).copy(giftAidScheduleCompleted = false, giftAidScheduleUpscanInitialization = Some(upscanResponse))
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -589,7 +595,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -608,7 +614,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           otherIncomeScheduleCompleted = true
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -628,7 +634,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = Some(answers)
         ).copy(otherIncomeScheduleCompleted = false, otherIncomeScheduleFileUploadReference = Some(fileUploadReference))
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -648,7 +654,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = Some(answers)
         ).copy(otherIncomeScheduleCompleted = false, otherIncomeScheduleUpscanInitialization = Some(upscanResponse))
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -668,7 +674,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           repaymentClaimDetailsAnswers = Some(answers)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -680,7 +686,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display Declaration section when Repayment Claim Details complete" in {
-        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
+        given application: Application =
+          applicationBuilder(sessionDataWithCompleteRcd()).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -692,7 +699,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display declaration warning when other sections incomplete" in {
-        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
+        given application: Application =
+          applicationBuilder(sessionDataWithCompleteRcd()).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -703,7 +711,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display Delete claim link when repaymentClaimDetails complete" in {
-        given application: Application = applicationBuilder(sessionDataWithCompleteRcd()).build()
+        given application: Application =
+          applicationBuilder(sessionDataWithCompleteRcd()).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -714,7 +723,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display Go to dashboard link pointing to management frontend" in {
-        given application: Application = applicationBuilder(sessionDataWithClaimId()).build()
+        given application: Application =
+          applicationBuilder(sessionDataWithClaimId()).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -727,7 +737,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should show status tags for tasks" in {
-        given application: Application = applicationBuilder(sessionDataWithClaimId()).build()
+        given application: Application =
+          applicationBuilder(sessionDataWithClaimId()).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -738,7 +749,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should use govuk-heading-l class for the page heading" in {
-        given application: Application = applicationBuilder(sessionDataWithClaimId()).build()
+        given application: Application =
+          applicationBuilder(sessionDataWithClaimId()).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -755,7 +767,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           unsubmittedClaimId = Some(testClaimId)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -771,7 +783,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           unsubmittedClaimId = Some(testClaimId)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -811,7 +823,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           giftAidScheduleCompleted = true
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -852,7 +864,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           includedAnyAdjustmentsInClaimPrompt = Some("some reason for adjustment")
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -869,7 +881,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           unsubmittedClaimId = Some(testClaimId)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -881,7 +893,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       }
 
       "should display caption with HMRC Charities reference" in {
-        given application: Application = applicationBuilder(sessionDataWithClaimId()).build()
+        given application: Application =
+          applicationBuilder(sessionDataWithClaimId()).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -920,7 +933,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           unsubmittedClaimId = Some(testClaimId)
         )
 
-        given application: Application = applicationBuilder(sessionData).build()
+        given application: Application = applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)

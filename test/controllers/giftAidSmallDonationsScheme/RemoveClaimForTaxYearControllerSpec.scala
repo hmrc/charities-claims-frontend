@@ -128,7 +128,7 @@ class RemoveClaimForTaxYearControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            "/check-your-donation-details" // TODO redirect to the correct url once it is implemented
+            routes.ClaimAddedForTaxYearController.onPageLoad.url
           )
         }
       }
@@ -146,7 +146,7 @@ class RemoveClaimForTaxYearControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            "/check-your-donation-details" // TODO redirect to the correct url once it is implemented
+            routes.ClaimAddedForTaxYearController.onPageLoad.url
           )
         }
       }

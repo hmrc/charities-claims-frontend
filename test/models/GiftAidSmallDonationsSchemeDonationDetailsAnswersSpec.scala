@@ -71,6 +71,37 @@ class GiftAidSmallDonationsSchemeDonationDetailsAnswersSpec extends BaseSpec {
       )
     }
 
+    "set adjustmentForGiftAidOverClaimed to None when value is 0" in {
+      val giftAidSmallDonationsSchemeScheduleData = GiftAidSmallDonationsSchemeDonationDetails(
+        adjustmentForGiftAidOverClaimed = 0,
+        claims = Seq(
+          GiftAidSmallDonationsSchemeClaim(
+            taxYear = 2025,
+            amountOfDonationsReceived = BigDecimal(1000.00)
+          )
+        )
+      )
+
+      val result =
+        GiftAidSmallDonationsSchemeDonationDetailsAnswers.from(
+          giftAidSmallDonationsSchemeScheduleData
+        )
+
+      result shouldBe GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+        adjustmentForGiftAidOverClaimed = None,
+        claims = Some(
+          Seq(
+            Some(
+              GiftAidSmallDonationsSchemeClaimAnswers(
+                taxYear = 2025,
+                amountOfDonationsReceived = Some(BigDecimal(1000.00))
+              )
+            )
+          )
+        )
+      )
+    }
+
     "be successfully converted to GiftAidSmallDonationsSchemeDonationDetails" in {
       val giftAidSmallDonationsSchemeDonationDetailsAnswers = GiftAidSmallDonationsSchemeDonationDetailsAnswers(
         adjustmentForGiftAidOverClaimed = Some(1000.00),

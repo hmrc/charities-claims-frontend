@@ -18,6 +18,7 @@ package controllers.giftAidSmallDonationsScheme
 
 import controllers.ControllerSpec
 import forms.AmountFormProvider
+import models.Mode.NormalMode
 import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.Application
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
@@ -56,7 +57,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AdjustmentToGiftAidOverclaimedController.onPageLoad.url)
+            FakeRequest(GET, routes.AdjustmentToGiftAidOverclaimedController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -71,7 +72,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AdjustmentToGiftAidOverclaimedController.onPageLoad.url)
+            FakeRequest(GET, routes.AdjustmentToGiftAidOverclaimedController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -88,7 +89,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
               allowZero = true
             )
 
-          contentAsString(result) shouldEqual view(form).body
+          contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
 
@@ -101,7 +102,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AdjustmentToGiftAidOverclaimedController.onPageLoad.url)
+            FakeRequest(GET, routes.AdjustmentToGiftAidOverclaimedController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -118,7 +119,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
               allowZero = true
             )
 
-          contentAsString(result) shouldEqual view(form.fill(BigDecimal(123.45))).body
+          contentAsString(result) shouldEqual view(form.fill(BigDecimal(123.45)), NormalMode).body
         }
       }
 
@@ -136,7 +137,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.AdjustmentToGiftAidOverclaimedController.onSubmit.url)
+            FakeRequest(POST, routes.AdjustmentToGiftAidOverclaimedController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -154,14 +155,14 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.AdjustmentToGiftAidOverclaimedController.onSubmit.url)
+            FakeRequest(POST, routes.AdjustmentToGiftAidOverclaimedController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("amount" -> "123.45")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad.url
+            routes.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -174,7 +175,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.AdjustmentToGiftAidOverclaimedController.onSubmit.url)
+            FakeRequest(POST, routes.AdjustmentToGiftAidOverclaimedController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("amount" -> "")
 
           val result = route(application, request).value
@@ -192,7 +193,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
               allowZero = true
             )
 
-          contentAsString(result) shouldEqual view(form.bind(Map("amount" -> ""))).body
+          contentAsString(result) shouldEqual view(form.bind(Map("amount" -> "")), NormalMode).body
         }
       }
 
@@ -204,7 +205,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.AdjustmentToGiftAidOverclaimedController.onSubmit.url)
+            FakeRequest(POST, routes.AdjustmentToGiftAidOverclaimedController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("amount" -> "invalid")
 
           val result = route(application, request).value
@@ -222,7 +223,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
               allowZero = true
             )
 
-          contentAsString(result) shouldEqual view(form.bind(Map("amount" -> "invalid"))).body
+          contentAsString(result) shouldEqual view(form.bind(Map("amount" -> "invalid")), NormalMode).body
         }
       }
 

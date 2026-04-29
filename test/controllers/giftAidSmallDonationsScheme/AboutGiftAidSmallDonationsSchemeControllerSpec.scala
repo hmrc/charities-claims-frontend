@@ -118,7 +118,9 @@ class AboutGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            controllers.giftAidSmallDonationsScheme.routes.AdjustmentToGiftAidOverclaimedController.onPageLoad.url
+            controllers.giftAidSmallDonationsScheme.routes.AdjustmentToGiftAidOverclaimedController
+              .onPageLoad(NormalMode)
+              .url
           )
         }
       }

@@ -16,7 +16,7 @@
 
 package services
 
-import com.google.inject.{ImplementedBy, Inject}
+import com.google.inject.{ImplementedBy, Inject, Singleton}
 import connectors.ClaimsConnector
 import models.RepaymentClaimDetailsAnswers
 import play.api.Logging
@@ -32,6 +32,7 @@ trait ClaimsService {
   def save(using hc: HeaderCarrier): Future[Unit]
 }
 
+@Singleton
 class ClaimsServiceImpl @Inject() (
   sessionCache: SessionCache,
   connector: ClaimsConnector
@@ -80,4 +81,7 @@ class ClaimsServiceImpl @Inject() (
             yield ()
         }
     }
+
+  final def updateLastVisitedAt(claimId: String)(using hc: HeaderCarrier): Future[Unit] =
+    connector.updateLastVisitedAt(claimId)
 }

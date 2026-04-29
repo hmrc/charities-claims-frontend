@@ -23,12 +23,14 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
 import scala.concurrent.Future
+import com.google.inject.Singleton
 
 @ImplementedBy(classOf[SaveServiceImpl])
 trait SaveService {
   def save(sessionData: SessionData)(using hc: HeaderCarrier): Future[Unit]
 }
 
+@Singleton
 class SaveServiceImpl @Inject() (cache: SessionCache) extends SaveService {
   def save(updatedSessionData: SessionData)(using hc: HeaderCarrier): Future[Unit] =
     cache.store(updatedSessionData)

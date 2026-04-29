@@ -89,13 +89,13 @@ class RemoveClaimForTaxYearController @Inject() (
                   .save(GiftAidSmallDonationsSchemeDonationDetailsAnswers.removeClaim(zeroIndex(index)))
                   .map(_ =>
                     Redirect(
-                      s"/check-your-donation-details" // TODO redirect to the correct url once it is implemented
+                      routes.ClaimAddedForTaxYearController.onPageLoad
                     )
                   )
               } else {
                 Future.successful(
                   Redirect(
-                    s"/check-your-donation-details" // TODO redirect to the correct url once it is implemented
+                    routes.ClaimAddedForTaxYearController.onPageLoad
                   )
                 )
               }

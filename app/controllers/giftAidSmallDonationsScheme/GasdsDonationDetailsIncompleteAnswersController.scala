@@ -37,7 +37,7 @@ class GasdsDonationDetailsIncompleteAnswersController @Inject() (
         )
       Ok(
         view(
-          "/charities-claims/check-your-GASDS-donation-details", // TODO: update when S2.16 route is available
+          routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad.url,
           missingFields
         )
       )

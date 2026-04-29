@@ -47,7 +47,7 @@ class DonationAmountYouAreClaimingController @Inject() (
       errorRequired = messages("donationAmountYouAreClaiming.error.required", label),
       formatErrorMsg = messages("donationAmountYouAreClaiming.error.invalid", label),
       maxLengthErrorMsg = messages("donationAmountYouAreClaiming.error.maxLength"),
-      allowZero = true
+      allowZero = false
     )
 
   def onPageLoad(index: Int, mode: Mode = NormalMode): Action[AnyContent] =
