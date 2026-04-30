@@ -23,10 +23,12 @@
         govukErrorSummary: GovukErrorSummary,
         govukRadios: GovukRadios,
         govukTextarea : GovukTextarea,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        govukTextareaCharacterCount: GovukTextareaCharacterCount
+
 )
 
-@(form: Form[?], mode: Mode)(implicit request: Request[?], messages: Messages)
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(
     pageTitle = title(form, messages("enterCharityName.title"))
@@ -35,18 +37,21 @@
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
-    <span class="govuk-caption-l">@messages("claimingReferenceNumber.caption")</span>
+    <span class="govuk-caption-l">@messages("enterCharityName.caption")</span>
 
-    @govukTextarea(Textarea(
-        id = "more-detail",
-        name = "moreDetail",
-        label = Label(
-            isPageHeading = true,
-            classes = "govuk-label--l",
-            content = Text("Can you provide more detail?")
-        ),
-        hint = Some(Hint(
-            content = Text("Do not include personal or financial information, like your National Insurance number or credit card details")
-        ))
-    ))
+    @formHelper(action = routes.EnterCharityNameController.onSubmit(), Symbol("autoComplete") -> "off") {
+
+        @govukTextareaCharacterCount(
+            CharacterCountViewModel(
+                field = form("value"),
+                label = Label(content = Text(messages("enterCharityName.heading")),isPageHeading = true,classes = "govuk-fieldset__legend--l"),
+                maxLength = 160
+            ).withHint(
+                HintViewModel(Text(messages("enterCharityName.hint")))
+            )
+            .fullWidth()
+        )
+
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+    }
 }

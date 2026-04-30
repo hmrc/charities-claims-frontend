@@ -24,36 +24,51 @@ import forms.CharityNameFormProvider
 import play.api.data.Form
 import models.{Mode, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.SaveService
 import views.html.EnterCharityNameView
-
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class EnterCharityNameController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
   guard: GuardAction,
   formProvider: CharityNameFormProvider,
-  view: EnterCharityNameView
-) extends BaseController {
+  view: EnterCharityNameView,
+  saveService: SaveService
+)(using ec: ExecutionContext)
+    extends BaseController {
 
-  val form: Form[String] = formProvider(
-    "enterCharityName.error.required",
-    (160, "enterCharityName.error.length"),
-    "enterCharityName.error.regex"
-  )
+  val form: Form[String] = formProvider()
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
-    actions
-      .authAndGetData()
-      .andThen(guard(RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true)))
-      .andThen(guard(SessionData.isClaimNotSubmitted))
-      .async { implicit request =>
-        Future.successful(Ok(view(form, mode)))
-      }
-
-  def onSubmit: Action[AnyContent] =
     actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)).async { implicit request =>
-      Future.successful(Redirect(routes.RepaymentClaimTypeController.onPageLoad(NormalMode)))
+
+      val previousAnswer = RepaymentClaimDetailsAnswers.getNameOfCharity match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
+      Future.successful(Ok(view(previousAnswer, mode)))
+    }
+
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
+    actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            saveService
+              .save(RepaymentClaimDetailsAnswers.setNameOfCharity(value))
+              .map(_ => Redirect(routes.RepaymentClaimTypeController.onPageLoad(mode)))
+//            for {
+//              _ <- saveService
+//                .save(request.sessionData.copy(includedAnyAdjustmentsInClaimPrompt = value))
+//              _ <- claimsService.save
+//            } yield Redirect(
+//              routes.RepaymentClaimTypeController.onPageLoad(NormalMode)
+//            )
+        )
+      // Future.successful(Redirect(routes.RepaymentClaimTypeController.onPageLoad(NormalMode)))
     }
 
 }

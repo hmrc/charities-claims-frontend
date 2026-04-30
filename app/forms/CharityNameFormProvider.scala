@@ -24,21 +24,13 @@ import javax.inject.Inject
 
 class CharityNameFormProvider @Inject() extends Mappings {
 
-  def apply(
-    errorRequired: String,
-    maxInputLengthError: (Int, String),
-    regexPatternError: String
-  ): Form[String] =
-    val (maxInputLength, maxInputLengthErrorMessage) = maxInputLengthError
+  private val charityNameRegex     = "^[A-Za-z 0-9\\-']{1,160}$"
+  private val maxCharityNameLength = 160
+
+  def apply(): Form[String] =
     Form(
-      single(
-        "value" -> text(errorRequired)
-          .verifying(
-            firstError(
-              maxLength(maxInputLength, maxInputLengthErrorMessage),
-              regexp(Validation.charityNamePattern, regexPatternError)
-            )
-          )
-      )
+      "value" -> text("enterCharityName.error.required")
+        .verifying(regexp(charityNameRegex, "enterCharityName.error.regex"))
+        .verifying(maxLength(maxCharityNameLength, "enterCharityName.error.length"))
     )
 }
