@@ -17,14 +17,19 @@
 package controllers.giftAidSmallDonationsScheme
 
 import controllers.ControllerSpec
+
 import play.api.Application
-import play.api.mvc.AnyContentAsEmpty
-import play.api.test.FakeRequest
+import play.api.mvc.{AnyContentAsEmpty, BodyParsers}
+import play.api.test.{FakeRequest, Helpers}
 import views.html.AboutGiftAidSmallDonationsSchemeView
 import models.{RepaymentClaimDetailsAnswers, SessionData}
 import models.Mode.NormalMode
 
+import uk.gov.hmrc.auth.core.AffinityGroup
+
 class AboutGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
+  val bodyParser: BodyParsers.Default = BodyParsers.Default(Helpers.stubPlayBodyParsers)
+
   "AboutGiftAidSmallDonationsSchemeController" - {
     "onPageLoad" - {
       "should render ClaimCompleteController if submissionReference is defined" in {
@@ -48,11 +53,13 @@ class AboutGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
           )
         }
       }
-      "should render the page correctly" in {
+      "should render the page correctly when user is Organisation (isAgent = false)" in {
         val sessionData = completeGasdsSession
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation).build()
 
+        val isAgent = false
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.AboutGiftAidSmallDonationsSchemeController.onPageLoad.url)
@@ -63,7 +70,28 @@ class AboutGiftAidSmallDonationsSchemeControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view().body
+          contentAsString(result) shouldEqual view(isAgent).body
+        }
+      }
+
+      "should render the page correctly when user is Agent" in {
+        val sessionData = completeGasdsSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        val isAgent = true
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.AboutGiftAidSmallDonationsSchemeController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[AboutGiftAidSmallDonationsSchemeView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(isAgent).body
         }
       }
 

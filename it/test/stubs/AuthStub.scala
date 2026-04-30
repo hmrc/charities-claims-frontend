@@ -30,6 +30,9 @@ trait AuthStub extends WiremockMethods {
     when(method = POST, uri = authUrl)
       .thenReturn(status = status, body = writes.writes(body))
 
+  def stubAgentAuthRequest(): Unit =
+      stubAuth(OK, successfulAgentAuthResponse)
+
   def stubAuthFailure(): Unit =
     when(method = POST, uri = authUrl)
       .thenReturn(status = UNAUTHORIZED, headers = Map(HeaderNames.WWW_AUTHENTICATE -> s"""MDTP detail="MissingBearerToken""""))
@@ -60,5 +63,29 @@ trait AuthStub extends WiremockMethods {
         "providerType" -> "credType"
       )
     )
+
+  val successfulAgentAuthResponse: JsObject =
+      Json.obj(
+        "affinityGroup" -> "Agent",
+        "allEnrolments" -> Json.arr(
+          Json.obj(
+            "key" -> "HMRC-CHAR-AGENT",
+            "identifiers" -> Json.arr(
+              Json.obj(
+                "key" -> "AGENTCHARID",
+                "value" -> "1234567890",
+                "state" -> "Activated"
+              )
+            )
+          )
+        ),
+        "internalId" -> "internal",
+        "groupIdentifier" -> "123456789-ABCD-123456789",
+        "credentialRole" -> "role1",
+        "optionalCredentials" -> Json.obj(
+          "providerId" -> "12345",
+          "providerType" -> "credType"
+        )
+      )
 
 }
