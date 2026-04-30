@@ -39,7 +39,7 @@
     }
     <span class="govuk-caption-l">@messages("enterCharityName.caption")</span>
 
-    @formHelper(action = routes.EnterCharityNameController.onSubmit(), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.EnterCharityNameController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @govukTextareaCharacterCount(
             CharacterCountViewModel(
