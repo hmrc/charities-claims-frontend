@@ -295,3 +295,7 @@ GET         /change-select-gift-aid-small-donations-scheme-claim-type        con
 POST        /select-gift-aid-small-donations-scheme-claim-type        controllers.repaymentClaimDetails.GasdsClaimTypeController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-select-gift-aid-small-donations-scheme-claim-type        controllers.repaymentClaimDetails.GasdsClaimTypeController.onSubmit(mode: Mode = Mode.CheckMode)
 
+GET         /maximum-claims-limit-reached                       controllers.repaymentClaimDetails.Warning11MaxClaimsReachedController.onPageLoad
+POST        /maximum-claims-limit-reached                       controllers.repaymentClaimDetails.Warning11MaxClaimsReachedController.onSubmit
+
+
