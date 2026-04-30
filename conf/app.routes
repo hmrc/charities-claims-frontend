@@ -259,14 +259,18 @@ GET         /claim-complete         controllers.claimDeclaration.ClaimCompleteCo
 GET         /about-gift-aid-small-donations-scheme                 controllers.giftAidSmallDonationsScheme.AboutGiftAidSmallDonationsSchemeController.onPageLoad
 POST        /about-gift-aid-small-donations-scheme                 controllers.giftAidSmallDonationsScheme.AboutGiftAidSmallDonationsSchemeController.onSubmit
 
-GET         /adjustment-for-gift-aid-small-donations-scheme-overclaimed                    controllers.giftAidSmallDonationsScheme.AdjustmentToGiftAidOverclaimedController.onPageLoad
-POST        /adjustment-for-gift-aid-small-donations-scheme-overclaimed                    controllers.giftAidSmallDonationsScheme.AdjustmentToGiftAidOverclaimedController.onSubmit
+GET         /adjustment-for-gift-aid-small-donations-scheme-overclaimed                    controllers.giftAidSmallDonationsScheme.AdjustmentToGiftAidOverclaimedController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-adjustment-for-gift-aid-small-donations-scheme-overclaimed                    controllers.giftAidSmallDonationsScheme.AdjustmentToGiftAidOverclaimedController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /adjustment-for-gift-aid-small-donations-scheme-overclaimed                    controllers.giftAidSmallDonationsScheme.AdjustmentToGiftAidOverclaimedController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-adjustment-for-gift-aid-small-donations-scheme-overclaimed                    controllers.giftAidSmallDonationsScheme.AdjustmentToGiftAidOverclaimedController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /remove-claim-for-tax-year/:index                    controllers.giftAidSmallDonationsScheme.RemoveClaimForTaxYearController.onPageLoad(index: Int)
 POST        /remove-claim-for-tax-year/:index                    controllers.giftAidSmallDonationsScheme.RemoveClaimForTaxYearController.onSubmit(index: Int)
 
-GET         /check-gift-aid-small-donations-scheme-adjustment-amount                controllers.giftAidSmallDonationsScheme.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad
-POST        /check-gift-aid-small-donations-scheme-adjustment-amount                controllers.giftAidSmallDonationsScheme.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit
+GET         /check-gift-aid-small-donations-scheme-adjustment-amount                controllers.giftAidSmallDonationsScheme.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-check-gift-aid-small-donations-scheme-adjustment-amount                controllers.giftAidSmallDonationsScheme.GasdsAdjustmentAmountCheckYourAnswersController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /check-gift-aid-small-donations-scheme-adjustment-amount                controllers.giftAidSmallDonationsScheme.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-check-gift-aid-small-donations-scheme-adjustment-amount                controllers.giftAidSmallDonationsScheme.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /cannot-set-up-gasds-claim                    controllers.giftAidSmallDonationsScheme.GasdsDonationDetailsIncompleteAnswersController.onPageLoad
 

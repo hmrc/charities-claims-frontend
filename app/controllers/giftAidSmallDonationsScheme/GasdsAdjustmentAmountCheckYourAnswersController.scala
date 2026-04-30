@@ -18,10 +18,10 @@ package controllers.giftAidSmallDonationsScheme
 
 import com.google.inject.Inject
 import controllers.actions.Actions
-import models.Mode.NormalMode
-import models.{RepaymentClaimDetailsAnswers, SessionData}
+import models.Mode.{CheckMode, NormalMode}
+import models.{Mode, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.GasdsAdjustmentAmountCheckYourAnswersView
 
@@ -35,7 +35,7 @@ class GasdsAdjustmentAmountCheckYourAnswersController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] =
+  def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete &&
@@ -44,10 +44,10 @@ class GasdsAdjustmentAmountCheckYourAnswersController @Inject() (
       )
       .async { implicit request =>
         val giftAidDonationsAnswers = request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
-        Future.successful(Ok(view(giftAidDonationsAnswers)))
+        Future.successful(Ok(view(giftAidDonationsAnswers, mode)))
       }
 
-  def onSubmit: Action[AnyContent] =
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete &&
@@ -61,13 +61,21 @@ class GasdsAdjustmentAmountCheckYourAnswersController @Inject() (
             .contains(true)
 
         Future.successful(
-          if (claimingTopUpUnderGasds) {
-            Redirect(routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1, NormalMode))
-          } else {
-            Redirect(
-              routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad
-            )
-          }
+          Redirect(GasdsAdjustmentAmountCheckYourAnswersController.nextPage(mode, claimingTopUpUnderGasds))
         )
       }
+}
+
+object GasdsAdjustmentAmountCheckYourAnswersController {
+  def nextPage(mode: Mode, claimingTopUpUnderGasds: Boolean): Call =
+    mode match {
+      case NormalMode =>
+        if (claimingTopUpUnderGasds) {
+          routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1, NormalMode)
+        } else {
+          routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad
+        }
+      case CheckMode  =>
+        routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad
+    }
 }

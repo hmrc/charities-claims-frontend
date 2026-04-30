@@ -24,6 +24,7 @@ import services.ClaimsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersView
 import viewmodels.GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import models.RepaymentClaimDetailsAnswers
 import models.SessionData
 import play.api.mvc.{Action, AnyContent}
@@ -49,13 +50,33 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController @Inject() (
       .async { implicit request =>
         val previousAnswers = request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
 
+        val oSummaryListForAdjustmentToGiftAidOverclaimed: Option[SummaryList] =
+          if request.sessionData.repaymentClaimDetailsAnswers
+              .flatMap(_.makingAdjustmentToPreviousClaim)
+              .contains(true)
+          then
+            Some(
+              GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
+                .buildSummaryListForAdjustmentToGiftAidOverclaimed(previousAnswers)
+            )
+          else None
+
+        val oSummaryListForNumberOfTaxYearsAdded: Option[SummaryList] =
+          if request.sessionData.repaymentClaimDetailsAnswers
+              .flatMap(_.claimingDonationsNotFromCommunityBuilding)
+              .contains(true)
+          then
+            Some(
+              GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
+                .buildSummaryListForNumberOfTaxYearsAdded(previousAnswers)
+            )
+          else None
+
         Future.successful(
           Ok(
             view(
-              GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
-                .buildSummaryListForAdjustmentToGiftAidOverclaimed(previousAnswers),
-              GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
-                .buildSummaryListForNumberOfTaxYearsAdded(previousAnswers)
+              oSummaryListForAdjustmentToGiftAidOverclaimed,
+              oSummaryListForNumberOfTaxYearsAdded
             )
           )
         )
@@ -68,8 +89,12 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController @Inject() (
           && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
       )
       .async { implicit request =>
-        claimsService.save.map { _ =>
-          Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
-        }
+        if request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
+            .exists(_.hasGasdsDonationDetailsCompleteAnswers(request.sessionData.repaymentClaimDetailsAnswers))
+        then
+          claimsService.save.map { _ =>
+            Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
+          }
+        else Future.successful(Redirect(routes.GasdsDonationDetailsIncompleteAnswersController.onPageLoad))
       }
 }

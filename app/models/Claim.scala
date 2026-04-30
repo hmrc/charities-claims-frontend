@@ -26,7 +26,8 @@ final case class Claim(
   lastUpdatedReference: String,
   creationTimestamp: String,
   claimData: ClaimData,
-  submissionDetails: Option[SubmissionDetails] = None
+  submissionDetails: Option[SubmissionDetails] = None,
+  lastVisitedAt: Option[Long] = None
 )
 
 object Claim {

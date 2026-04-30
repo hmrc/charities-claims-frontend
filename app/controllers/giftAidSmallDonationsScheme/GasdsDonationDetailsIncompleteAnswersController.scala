@@ -19,7 +19,7 @@ package controllers.giftAidSmallDonationsScheme
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
-import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, SessionData}
+import models.SessionData
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.GasdsDonationDetailsIncompleteAnswersView
 
@@ -31,13 +31,45 @@ class GasdsDonationDetailsIncompleteAnswersController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete) { implicit request =>
+
+      val repaymentClaimDetailsAnswers = request.sessionData.repaymentClaimDetailsAnswers
+
+      def buildMissingFieldsWhenGasdsNotExist: List[String] = {
+
+        val bClaimingDonationsNotFromCommunityBuilding: Boolean =
+          repaymentClaimDetailsAnswers.flatMap(_.claimingDonationsNotFromCommunityBuilding).contains(true)
+
+        val bMakingAdjustmentToPreviousClaim: Boolean =
+          repaymentClaimDetailsAnswers.flatMap(_.makingAdjustmentToPreviousClaim).contains(true)
+
+        (bClaimingDonationsNotFromCommunityBuilding, bMakingAdjustmentToPreviousClaim) match {
+          case (true, true)   =>
+            List(
+              "giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount",
+              "giftAidSmallDonationsSchemeDonationDetails.claim.missingYears",
+              "giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount"
+            )
+          case (true, false)  =>
+            List(
+              "giftAidSmallDonationsSchemeDonationDetails.claim.missingYears",
+              "giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount"
+            )
+          case (false, true)  =>
+            List("giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount")
+          case (false, false) =>
+            Nil
+
+        }
+      }
+
       val missingFields =
-        GiftAidSmallDonationsSchemeDonationDetailsAnswers.getMissingFields(
-          request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
-        )
+        request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
+          .map(_.missingFields(repaymentClaimDetailsAnswers))
+          .getOrElse(buildMissingFieldsWhenGasdsNotExist)
+
       Ok(
         view(
-          "/charities-claims/check-your-GASDS-donation-details", // TODO: update when S2.16 route is available
+          routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad.url,
           missingFields
         )
       )

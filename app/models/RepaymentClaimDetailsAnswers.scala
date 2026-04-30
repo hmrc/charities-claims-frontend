@@ -125,8 +125,24 @@ object RepaymentClaimDetailsAnswers {
     _.makingAdjustmentToPreviousClaim
   )
 
-  def setMakingAdjustmentToPreviousClaim(value: Boolean)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(makingAdjustmentToPreviousClaim = Some(v)))
+  def setMakingAdjustmentToPreviousClaim(value: Boolean)(using session: SessionData): SessionData = {
+    val baseSession =
+      set(value)((a, v) => a.copy(makingAdjustmentToPreviousClaim = Some(v)))
+
+    if (value) baseSession
+    else clearGasdsAdjustment(baseSession)
+  }
+
+  private def clearGasdsAdjustment(session: SessionData): SessionData =
+    session.giftAidSmallDonationsSchemeDonationDetailsAnswers match {
+      case Some(existing) =>
+        session.copy(
+          giftAidSmallDonationsSchemeDonationDetailsAnswers =
+            Some(existing.copy(adjustmentForGiftAidOverClaimed = Some(BigDecimal(0))))
+        )
+      case None           =>
+        session
+    }
 
   def getClaimingGiftAid(using session: SessionData): Option[Boolean] = get(_.claimingGiftAid)
 
@@ -205,7 +221,7 @@ object RepaymentClaimDetailsAnswers {
           connectedToAnyOtherCharities = None
         )
       case None           => RepaymentClaimDetailsAnswers()
-    session.copy(repaymentClaimDetailsAnswers = Some(updated))
+    session.copy(repaymentClaimDetailsAnswers = Some(updated), giftAidSmallDonationsSchemeDonationDetailsAnswers = None)
 
   def getClaimingDonationsCollectedInCommunityBuildings(using session: SessionData): Option[Boolean] = get(
     _.claimingDonationsCollectedInCommunityBuildings
@@ -234,15 +250,34 @@ object RepaymentClaimDetailsAnswers {
   )
 
   // clear makingAdjustmentToPreviousClaim if claimingDonationsCollectedInCommunityBuildings & claimingDonationsNotFromCommunityBuilding are both false
-  def setClaimingDonationsNotFromCommunityBuilding(value: Boolean, nextScreenAnswer: Option[Boolean] = None)(using
-    session: SessionData
-  ): SessionData = {
-    val updatedSession = set(value)((a, v) => a.copy(claimingDonationsNotFromCommunityBuilding = Some(v)))
+  def setClaimingDonationsNotFromCommunityBuilding(
+    value: Boolean,
+    nextScreenAnswer: Option[Boolean] = None
+  )(using session: SessionData): SessionData = {
+
+    val baseSession =
+      set(value)((a, v) => a.copy(claimingDonationsNotFromCommunityBuilding = Some(v)))
+
+    val updatedSession = if (value) baseSession else clearGasdsClaims(baseSession)
+
     (value, nextScreenAnswer) match {
-      case (false, Some(false)) => clearMakingAdjustmentToPreviousClaim(using updatedSession)
-      case (_, _)               => updatedSession
+      case (false, Some(false)) =>
+        clearMakingAdjustmentToPreviousClaim(using updatedSession)
+
+      case _ =>
+        updatedSession
     }
   }
+
+  private def clearGasdsClaims(session: SessionData): SessionData =
+    session.giftAidSmallDonationsSchemeDonationDetailsAnswers match {
+      case Some(existing) =>
+        session.copy(
+          giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(existing.copy(claims = Some(Seq.empty)))
+        )
+      case None           =>
+        session
+    }
 
   private def clearMakingAdjustmentToPreviousClaim(using session: SessionData): SessionData =
     val updated = session.repaymentClaimDetailsAnswers match

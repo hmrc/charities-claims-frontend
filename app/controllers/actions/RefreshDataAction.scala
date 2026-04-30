@@ -28,6 +28,8 @@ import models.requests.{AuthorisedRequest, DataRequest}
 import scala.concurrent.{ExecutionContext, Future}
 
 import javax.inject.Inject
+import uk.gov.hmrc.auth.core.AffinityGroup
+import config.FrontendAppConfig
 
 @ImplementedBy(classOf[DefaultRefreshDataAction])
 trait RefreshDataAction extends ActionRefiner[AuthorisedRequest, DataRequest]
@@ -36,7 +38,8 @@ class DefaultRefreshDataAction @Inject() (
   cache: SessionCache,
   claimsConnector: ClaimsConnector,
   claimsValidationConnector: ClaimsValidationConnector,
-  dataRetrievalAction: DefaultDataRetrievalAction
+  dataRetrievalAction: DefaultDataRetrievalAction,
+  config: FrontendAppConfig
 )(using val executionContext: ExecutionContext)
     extends RefreshDataAction {
 
@@ -44,6 +47,19 @@ class DefaultRefreshDataAction @Inject() (
     request: AuthorisedRequest[A]
   ): Future[Either[Result, DataRequest[A]]] = {
     given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request.underlying, request.underlying.session)
+    request.affinityGroup match {
+      case AffinityGroup.Agent        =>
+        request.underlying.getQueryString("claimId") match {
+          case Some(claimId) => tryOpenAgentClaimById(request, claimId)
+          case None          => proceedWithCurrentClaim(request)
+        }
+      case AffinityGroup.Organisation =>
+        proceedWithCurrentClaim(request)
+
+    }
+  }
+
+  private def proceedWithCurrentClaim[A](request: AuthorisedRequest[A])(using HeaderCarrier) =
     cache
       .get()
       .flatMap {
@@ -51,7 +67,8 @@ class DefaultRefreshDataAction @Inject() (
           Future.successful(
             Left(Results.Redirect(controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad))
           )
-        case Some(sessionData) if sessionData.unsubmittedClaimId.isDefined  =>
+
+        case Some(sessionData) if sessionData.unsubmittedClaimId.isDefined =>
           claimsConnector
             .getClaim(sessionData.unsubmittedClaimId.get)
             .flatMap {
@@ -79,7 +96,32 @@ class DefaultRefreshDataAction @Inject() (
 
         case _ =>
           dataRetrievalAction.refine(request)
-
       }
-  }
+
+  private def tryOpenAgentClaimById(request: AuthorisedRequest[?], claimId: String)(using HeaderCarrier) =
+    claimsConnector.retrieveUnsubmittedClaims
+      .flatMap { getClaimsResponse =>
+        if getClaimsResponse.claimsCount > 0
+          && getClaimsResponse.claimsCount < config.agentUnsubmittedClaimLimit
+          && getClaimsResponse.claimsList.exists(_.claimId == claimId)
+        then {
+          claimsConnector
+            .getClaim(claimId)
+            .flatMap {
+              case Some(claim) =>
+                claimsValidationConnector
+                  .getUploadSummary(claim.claimId)
+                  .flatMap { uploadsSummary =>
+                    val sessionData =
+                      SessionData.from(claim, request.charitiesReference, Some(uploadsSummary))
+                    cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
+                  }
+
+              case None =>
+                Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
+            }
+        } else {
+          Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
+        }
+      }
 }

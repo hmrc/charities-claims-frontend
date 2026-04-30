@@ -26,17 +26,34 @@ import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import viewmodels.{ClaimsTaskListViewModel, TaskItem, TaskSection, TaskStatus}
 import views.html.ClaimsTaskListView
+import connectors.ClaimsConnector
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext
 
 class ClaimsTaskListController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: ClaimsTaskListView,
   actions: Actions,
-  appConfig: FrontendAppConfig
-) extends BaseController {
+  appConfig: FrontendAppConfig,
+  claimsConnector: ClaimsConnector
+)(using ExecutionContext)
+    extends BaseController {
 
   def onPageLoad: Action[AnyContent] =
-    actions.authAndRefreshData() { implicit request =>
-      Ok(view(ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl)))
+    actions.authAndRefreshData().async { implicit request =>
+      request.sessionData.unsubmittedClaimId match {
+        case Some(claimId) =>
+          claimsConnector
+            .updateLastVisitedAt(claimId)
+            .map { _ =>
+              Ok(view(ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl)))
+            }
+
+        case None =>
+          Future.successful(
+            Ok(view(ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl)))
+          )
+      }
     }
 }
 
@@ -188,12 +205,22 @@ object ClaimsTaskListController {
     )
   }
 
-  private def buildGasdsDetailsTask(using messages: Messages): TaskItem =
+  private def buildGasdsDetailsTask(using request: DataRequest[?], messages: Messages): TaskItem = {
+    val isComplete = request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
+      .exists(_.hasGasdsDonationDetailsCompleteAnswers(request.sessionData.repaymentClaimDetailsAnswers))
+    val status     = if (isComplete) TaskStatus.Completed else TaskStatus.NotStarted
+    val href       = if (isComplete) {
+      giftAidSmallDonationsScheme.routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad
+    } else {
+      giftAidSmallDonationsScheme.routes.AboutGiftAidSmallDonationsSchemeController.onPageLoad
+    }
+
     TaskItem(
       name = messages("claimsTaskList.task.gasdsDetails"),
-      href = giftAidSmallDonationsScheme.routes.AboutGiftAidSmallDonationsSchemeController.onPageLoad,
-      status = TaskStatus.Completed
+      href = href,
+      status = status
     )
+  }
 
   private def buildGiftAidScheduleTask(using request: DataRequest[?], messages: Messages): TaskItem =
     val status =

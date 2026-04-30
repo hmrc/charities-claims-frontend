@@ -52,6 +52,7 @@ class AdjustmentToThisClaimController @Inject() (
           "adjustmentToThisClaim.error.regex",
           sessionData.adjustmentForOtherIncomePreviousOverClaimed
             .exists(_ > BigDecimal(0.0)) || sessionData.prevOverclaimedGiftAid.exists(_ > BigDecimal(0.0))
+            || RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
         )
         given HeaderCarrier            = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
@@ -94,6 +95,7 @@ class AdjustmentToThisClaimController @Inject() (
           "adjustmentToThisClaim.error.regex",
           sessionData.adjustmentForOtherIncomePreviousOverClaimed
             .exists(_ > BigDecimal(0.0)) || sessionData.prevOverclaimedGiftAid.exists(_ > BigDecimal(0.0))
+            || RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
         )
         form
           .bindFromRequest()
