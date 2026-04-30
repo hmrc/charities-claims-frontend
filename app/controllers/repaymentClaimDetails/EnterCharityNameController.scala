@@ -19,13 +19,14 @@ package controllers.repaymentClaimDetails
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.{Actions, GuardAction}
-import models.Mode.NormalMode
+import models.Mode.{CheckMode, NormalMode}
 import forms.CharityNameFormProvider
 import play.api.data.Form
 import models.{Mode, RepaymentClaimDetailsAnswers, SessionData}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
 import views.html.EnterCharityNameView
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class EnterCharityNameController @Inject() (
@@ -59,16 +60,14 @@ class EnterCharityNameController @Inject() (
           value =>
             saveService
               .save(RepaymentClaimDetailsAnswers.setNameOfCharity(value))
-              .map(_ => Redirect(routes.RepaymentClaimTypeController.onPageLoad(mode)))
-//            for {
-//              _ <- saveService
-//                .save(request.sessionData.copy(includedAnyAdjustmentsInClaimPrompt = value))
-//              _ <- claimsService.save
-//            } yield Redirect(
-//              routes.RepaymentClaimTypeController.onPageLoad(NormalMode)
-//            )
+              .map(_ => Redirect(navigator(mode)))
         )
-      // Future.successful(Redirect(routes.RepaymentClaimTypeController.onPageLoad(NormalMode)))
     }
 
+  def navigator(mode: Mode): Call = mode match {
+    case NormalMode =>
+      routes.RepaymentClaimTypeController.onPageLoad(mode)
+    case CheckMode  =>
+      routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+  }
 }

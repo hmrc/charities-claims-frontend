@@ -16,10 +16,8 @@
 
 package forms
 
-import forms.{Mappings, Validation}
+import forms.Mappings
 import play.api.data.Form
-import play.api.data.Forms.*
-
 import javax.inject.Inject
 
 class CharityNameFormProvider @Inject() extends Mappings {
