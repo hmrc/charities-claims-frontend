@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.AdjustmentToThisClaimFormProvider
-import models.{RepaymentClaimDetailsAnswers, SessionData}
+import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{ClaimsService, SaveService, UnregulatedDonationsService}
@@ -52,6 +52,7 @@ class AdjustmentToThisClaimController @Inject() (
           "adjustmentToThisClaim.error.regex",
           sessionData.adjustmentForOtherIncomePreviousOverClaimed
             .exists(_ > BigDecimal(0.0)) || sessionData.prevOverclaimedGiftAid.exists(_ > BigDecimal(0.0))
+            || RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
         )
         given HeaderCarrier            = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
@@ -94,6 +95,7 @@ class AdjustmentToThisClaimController @Inject() (
           "adjustmentToThisClaim.error.regex",
           sessionData.adjustmentForOtherIncomePreviousOverClaimed
             .exists(_ > BigDecimal(0.0)) || sessionData.prevOverclaimedGiftAid.exists(_ > BigDecimal(0.0))
+            || RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
         )
         form
           .bindFromRequest()
