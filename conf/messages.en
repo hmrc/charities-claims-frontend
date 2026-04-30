@@ -859,3 +859,7 @@ gasdsClaimType.label.topUp = GASDS top-up payment
 gasdsClaimType.label.communityBuildings = Community buildings top-up payment
 gasdsClaimType.label.connectedCharity = Connected charity or CASC claim
 gasdsClaimType.error.required = Select which type of GASDS claim(s) you want to make
+
+warning11MaxClaimsReached.message.1 = You have reached the maximum number of draft claims
+warning11MaxClaimsReached.message.2 = You can have 120 claims in progress at one time. Please delete an existing claim to make a new claim.
+warning11MaxClaimsReached.title = You cannot manage this claim
