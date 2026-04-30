@@ -25,18 +25,111 @@ final case class GiftAidSmallDonationsSchemeDonationDetailsAnswers(
   claims: Option[Seq[Option[GiftAidSmallDonationsSchemeClaimAnswers]]] = None
 ) {
 
-  def missingFields: List[String] =
-    claims match {
-      case None                                         => List("giftAidSmallDonationsSchemeDonationDetails.missingDetails")
-      case Some(claimSeq) if claimSeq.forall(_.isEmpty) =>
-        List("giftAidSmallDonationsSchemeDonationDetails.missingDetails")
-      case Some(claimSeq)                               =>
-        claimSeq.zipWithIndex.collect { case (None, i) =>
-          s"giftAidSmallDonationsSchemeDonationDetails.claim${i + 1}.missingDetails"
+  private def validateAdjustmentAmount(
+    bAdjustmentForGiftAidOverClaimed: Boolean
+  ): List[String] =
+    Option
+      .unless(bAdjustmentForGiftAidOverClaimed)(
+        "giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount"
+      )
+      .toList
+
+  private def validateTaxYear(
+    claims: Option[Seq[Option[GiftAidSmallDonationsSchemeClaimAnswers]]]
+  ): List[String] =
+    claims match
+      case None =>
+        List("giftAidSmallDonationsSchemeDonationDetails.claim.missingYears")
+
+      case Some(Nil) =>
+        List("giftAidSmallDonationsSchemeDonationDetails.claim.missingYears")
+
+      case Some(claimSeq) =>
+        if claimSeq.exists {
+            case None        => true
+            case Some(claim) => claim.taxYear < 1
+          }
+        then List("giftAidSmallDonationsSchemeDonationDetails.claim.missingYears")
+        else Nil
+
+  private def validateDonationAmounts(
+    claims: Option[Seq[Option[GiftAidSmallDonationsSchemeClaimAnswers]]]
+  ): List[String] =
+    claims match
+      case None =>
+        List("giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount")
+
+      case Some(Nil) =>
+        List("giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount")
+
+      case Some(claimSeq) =>
+        claimSeq.zipWithIndex.flatMap {
+          case (None, i) =>
+            Some(
+              s"giftAidSmallDonationsSchemeDonationDetails.claim${i + 1}.missingAmount"
+            )
+
+          case (Some(claim), i) if claim.amountOfDonationsReceived.isEmpty =>
+            Some(
+              s"giftAidSmallDonationsSchemeDonationDetails.claim${i + 1}.missingAmount"
+            )
+
+          case _ =>
+            None
         }.toList
+
+  def missingFields(repaymentClaimDetailsAnswers: Option[RepaymentClaimDetailsAnswers]): List[String] = {
+
+    val bClaimingDonationsNotFromCommunityBuilding: Boolean =
+      repaymentClaimDetailsAnswers.flatMap(_.claimingDonationsNotFromCommunityBuilding).contains(true)
+
+    val bMakingAdjustmentToPreviousClaim: Boolean =
+      repaymentClaimDetailsAnswers.flatMap(_.makingAdjustmentToPreviousClaim).contains(true)
+
+    val bAdjustmentForGiftAidOverClaimed: Boolean =
+      adjustmentForGiftAidOverClaimed
+        .exists(_ != BigDecimal(0))
+
+    val bGiftAidSmallDonationsSchemeClaimAnswers: Boolean =
+      claims.exists { claims =>
+        claims.nonEmpty &&
+        claims.forall {
+          case Some(claim) =>
+            claim.taxYear > 0 && claim.amountOfDonationsReceived.isDefined
+          case None        =>
+            false
+        }
+      }
+
+    (bClaimingDonationsNotFromCommunityBuilding, bMakingAdjustmentToPreviousClaim) match {
+      case (true, true) =>
+        val adjustmentErrors =
+          validateAdjustmentAmount(bAdjustmentForGiftAidOverClaimed)
+
+        val claimErrors =
+          if bGiftAidSmallDonationsSchemeClaimAnswers then Nil
+          else validateTaxYear(claims) ++ validateDonationAmounts(claims)
+
+        adjustmentErrors ++ claimErrors
+
+      case (true, false) =>
+        if bGiftAidSmallDonationsSchemeClaimAnswers then Nil
+        else validateTaxYear(claims) ++ validateDonationAmounts(claims)
+
+      case (false, true) =>
+        validateAdjustmentAmount(bAdjustmentForGiftAidOverClaimed)
+
+      case (false, false) =>
+        Nil
     }
 
-  def hasGasdsDonationDetailsCompleteAnswers: Boolean = missingFields.isEmpty
+  }
+
+  def hasGasdsDonationDetailsCompleteAnswers(
+    repaymentClaimDetailsAnswers: Option[RepaymentClaimDetailsAnswers]
+  ): Boolean =
+    missingFields(repaymentClaimDetailsAnswers).isEmpty
+
 }
 
 object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
@@ -159,13 +252,12 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
   def getClaimsSize(using session: SessionData): Int =
     session.giftAidSmallDonationsSchemeDonationDetailsAnswers.flatMap(_.claims.map(_.size)).getOrElse(0)
 
-  def getMissingFields(answers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers]): List[String] =
+  def getMissingFields(
+    repaymentClaimDetailsAnswers: Option[RepaymentClaimDetailsAnswers],
+    answers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers] = None
+  ): List[String] =
     answers match
-      case Some(a) => a.missingFields
-      case None    => defaultMissingFields
-
-  private val defaultMissingFields: List[String] = List(
-    "giftAidSmallDonationsSchemeDonationDetails.missingDetails"
-  )
+      case Some(a) => a.missingFields(repaymentClaimDetailsAnswers)
+      case None    => Nil
 
 }

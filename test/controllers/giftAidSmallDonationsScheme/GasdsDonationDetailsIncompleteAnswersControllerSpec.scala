@@ -93,7 +93,10 @@ class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec
           val result = route(application, request).value
 
           val view                 = application.injector.instanceOf[GasdsDonationDetailsIncompleteAnswersView]
-          val defaultMissingFields = GiftAidSmallDonationsSchemeDonationDetailsAnswers.getMissingFields(None)
+          val defaultMissingFields = GiftAidSmallDonationsSchemeDonationDetailsAnswers.getMissingFields(
+            sessionData.repaymentClaimDetailsAnswers,
+            None
+          )
 
           status(result) shouldEqual OK
 
@@ -110,7 +113,12 @@ class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers),
+          repaymentClaimDetailsAnswers = Some(
+            completeRepaymentClaimDetailsAnswers.copy(
+              claimingDonationsNotFromCommunityBuilding = Some(false),
+              makingAdjustmentToPreviousClaim = Some(true)
+            )
+          ),
           giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(incompleteAnswers)
         )
 
@@ -126,7 +134,7 @@ class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec
           val result = route(application, request).value
 
           val view                  = application.injector.instanceOf[GasdsDonationDetailsIncompleteAnswersView]
-          val expectedMissingFields = incompleteAnswers.missingFields
+          val expectedMissingFields = incompleteAnswers.missingFields(sessionData.repaymentClaimDetailsAnswers)
 
           status(result) shouldEqual OK
 
@@ -135,7 +143,7 @@ class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec
             expectedMissingFields
           ).body
 
-          expectedMissingFields should contain("giftAidSmallDonationsSchemeDonationDetails.missingDetails")
+          expectedMissingFields should contain("giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount")
         }
       }
 
@@ -173,7 +181,7 @@ class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec
           val result = route(application, request).value
 
           val view                  = application.injector.instanceOf[GasdsDonationDetailsIncompleteAnswersView]
-          val expectedMissingFields = incompleteAnswers.missingFields
+          val expectedMissingFields = incompleteAnswers.missingFields(sessionData.repaymentClaimDetailsAnswers)
 
           status(result) shouldEqual OK
 
@@ -182,8 +190,9 @@ class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec
             expectedMissingFields
           ).body
 
-          expectedMissingFields        should contain("giftAidSmallDonationsSchemeDonationDetails.claim2.missingDetails")
-          expectedMissingFields.size shouldBe 1
+          expectedMissingFields        should contain("giftAidSmallDonationsSchemeDonationDetails.claim.missingYears")
+          expectedMissingFields        should contain("giftAidSmallDonationsSchemeDonationDetails.claim2.missingAmount")
+          expectedMissingFields.size shouldBe 2
         }
       }
 
