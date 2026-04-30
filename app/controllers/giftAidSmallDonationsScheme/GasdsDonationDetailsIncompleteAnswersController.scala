@@ -19,7 +19,7 @@ package controllers.giftAidSmallDonationsScheme
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
-import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, SessionData}
+import models.SessionData
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.GasdsDonationDetailsIncompleteAnswersView
 
@@ -32,9 +32,10 @@ class GasdsDonationDetailsIncompleteAnswersController @Inject() (
   def onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete) { implicit request =>
       val missingFields =
-        GiftAidSmallDonationsSchemeDonationDetailsAnswers.getMissingFields(
-          request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
-        )
+        request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
+          .map(_.missingFields(request.sessionData.repaymentClaimDetailsAnswers))
+          .getOrElse(List.empty)
+
       Ok(
         view(
           routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad.url,

@@ -24,6 +24,7 @@ import services.ClaimsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersView
 import viewmodels.GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import models.RepaymentClaimDetailsAnswers
 import models.SessionData
 import play.api.mvc.{Action, AnyContent}
@@ -47,7 +48,6 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController @Inject() (
           && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
       )
       .async { implicit request =>
-        import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
         val previousAnswers = request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
 
         val oSummaryListForAdjustmentToGiftAidOverclaimed: Option[SummaryList] =
@@ -89,50 +89,8 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController @Inject() (
           && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
       )
       .async { implicit request =>
-
-        val repaymentDetails =
-          request.sessionData.repaymentClaimDetailsAnswers
-
-        val gasdsDetails =
-          request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
-
-        val bClaimingDonationsNotFromCommunityBuilding: Boolean =
-          repaymentDetails.flatMap(_.claimingDonationsNotFromCommunityBuilding).contains(true)
-
-        val bMakingAdjustmentToPreviousClaim: Boolean =
-          repaymentDetails.flatMap(_.makingAdjustmentToPreviousClaim).contains(true)
-
-        val bAdjustmentForGiftAidOverClaimed: Boolean =
-          gasdsDetails
-            .flatMap(_.adjustmentForGiftAidOverClaimed)
-            .exists(_ != BigDecimal(0))
-
-        val bGiftAidSmallDonationsSchemeClaimAnswers: Boolean =
-          gasdsDetails.exists {
-            _.claims.exists { claims =>
-              claims.nonEmpty &&
-              claims.forall {
-                case Some(claim) =>
-                  claim.taxYear > 0 && claim.amountOfDonationsReceived.isDefined
-                case None        =>
-                  false
-              }
-            }
-          }
-
-        val minimumDataCheckPass: Boolean =
-          (bClaimingDonationsNotFromCommunityBuilding, bMakingAdjustmentToPreviousClaim) match {
-            case (true, true)   =>
-              bAdjustmentForGiftAidOverClaimed && bGiftAidSmallDonationsSchemeClaimAnswers
-            case (true, false)  =>
-              bGiftAidSmallDonationsSchemeClaimAnswers
-            case (false, true)  =>
-              bAdjustmentForGiftAidOverClaimed
-            case (false, false) =>
-              true
-          }
-
-        if minimumDataCheckPass
+        if request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
+            .exists(_.hasGasdsDonationDetailsCompleteAnswers(request.sessionData.repaymentClaimDetailsAnswers))
         then
           claimsService.save.map { _ =>
             Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)

@@ -795,10 +795,11 @@ giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.message = You need t
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.returnLink = Go back to provide the missing details for your claim
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.title = This claim cannot be setup
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.warning = This claim cannot be setup because some details are missing.
-giftAidSmallDonationsSchemeDonationDetails.missingDetails = provide your GASDS donation details
-giftAidSmallDonationsSchemeDonationDetails.claim1.missingDetails = provide your GASDS donation details for tax year 1
-giftAidSmallDonationsSchemeDonationDetails.claim2.missingDetails = provide your GASDS donation details for tax year 2
-giftAidSmallDonationsSchemeDonationDetails.claim3.missingDetails = provide your GASDS donation details for tax year 3
+giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount = confirm the amount of GASDS previously overclaimed
+giftAidSmallDonationsSchemeDonationDetails.claim.missingYears = confirm the number of tax years you are claiming for
+giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount = confirm the donation amount you are claiming for tax year 1
+giftAidSmallDonationsSchemeDonationDetails.claim2.missingAmount = confirm the donation amount you are claiming for tax year 2
+giftAidSmallDonationsSchemeDonationDetails.claim3.missingAmount = confirm the donation amount you are claiming for tax year 3
 
 whichTaxYearAreYouClaimingFor.caption = Provide GASDS donation details {0}
 whichTaxYearAreYouClaimingFor.heading = Which tax year are you claiming for?
