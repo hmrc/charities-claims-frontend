@@ -25,7 +25,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeAuthorisedAction(using Materializer) extends AuthorisedAction {
+class FakeAuthorisedAction(affinityGroup: AffinityGroup)(using Materializer) extends AuthorisedAction {
 
   override protected implicit val executionContext: ExecutionContext =
     scala.concurrent.ExecutionContext.Implicits.global
@@ -33,5 +33,5 @@ class FakeAuthorisedAction(using Materializer) extends AuthorisedAction {
   override def parser: BodyParser[AnyContent] = BodyParsers.Default(Helpers.stubPlayBodyParsers)
 
   override def invokeBlock[A](request: Request[A], block: AuthorisedRequest[A] => Future[Result]): Future[Result] =
-    block(AuthorisedRequest(request, AffinityGroup.Organisation, "test-charities-reference"))
+    block(AuthorisedRequest(request, affinityGroup, "test-charities-reference"))
 }
