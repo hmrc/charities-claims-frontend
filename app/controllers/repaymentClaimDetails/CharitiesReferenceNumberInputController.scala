@@ -17,6 +17,7 @@
 package controllers.repaymentClaimDetails
 
 import com.google.inject.Inject
+import config.FrontendAppConfig
 import controllers.BaseController
 import controllers.actions.{Actions, GuardAction}
 import controllers.repaymentClaimDetails.routes
@@ -36,7 +37,8 @@ class CharitiesReferenceNumberInputController @Inject() (
   actions: Actions,
   guard: GuardAction,
   formProvider: TextInputFormProvider,
-  saveService: SaveService
+  saveService: SaveService,
+  appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -56,6 +58,7 @@ class CharitiesReferenceNumberInputController @Inject() (
         Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
       }
 
+  // TODO: UPDATE REDIRECT to R1.7
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetData()
@@ -69,7 +72,7 @@ class CharitiesReferenceNumberInputController @Inject() (
             value =>
               saveService
                 .save(RepaymentClaimDetailsAnswers.setHmrcCharitiesReference(value))
-                .map(_ => Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad))
+                .map(_ => Redirect(appConfig.charityRepaymentDashboardUrl))
           )
       }
 }

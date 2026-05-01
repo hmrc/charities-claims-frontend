@@ -16,6 +16,7 @@
 
 package controllers.repaymentClaimDetails
 
+import config.FrontendAppConfig
 import controllers.ControllerSpec
 import forms.TextInputFormProvider
 import models.Mode.*
@@ -24,7 +25,7 @@ import play.api.Application
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
-import views.html.ClaimReferenceNumberInputView
+import views.html.CharitiesReferenceNumberInputView
 
 class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
 
@@ -37,191 +38,50 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
   "CharitiesReferenceNumberInputController" - {
 
     "onPageLoad" - {
-      "should render the page correctly when the user has said YES to having a reference number" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(true)
+      //TODO: UPDATE URL
+      "should render the page correctly when the user provides a HMRC Charities Reference number" in {
+        val sessionData = RepaymentClaimDetailsAnswers.setHmrcCharitiesReference("AA12356")
+
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
+            FakeRequest(GET, routes.CharitiesReferenceNumberInputController.onPageLoad().url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimReferenceNumberInputView]
+          val view   = application.injector.instanceOf[CharitiesReferenceNumberInputView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
-
-      "should render ClaimsTaskListController if claimingReferenceNumber is false" in {
-        val sessionData = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(false)
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
-        }
-      }
-
-      "should render ClaimsTaskListController if charitiesReferenceNumber is empty (None)" in {
-        // Must provide 'old' answers to satisfy the case class, even if empty - this needs to be removed when the other pages are created
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers(claimReferenceNumber = Some("123456")))
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
-        }
-      }
-
-      "should render the ClaimsTaskListController and incorrectly pre-populate data" in {
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswers = Some(
-            RepaymentClaimDetailsAnswers(
-              claimingReferenceNumber = Some(false),
-              claimReferenceNumber = Some("123456")
-            )
-          )
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
-        }
-      }
-
     }
 
     "onSubmit" - {
-      "should render ClaimCompleteController if submissionReference is defined" in {
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          lastUpdatedReference = Some(testCharitiesReference),
-          submissionReference = Some(testCharitiesReference)
-        )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
-          )
-        }
-      }
-      "should redirect to Declaration page when in NormalMode" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(true)
+      //TODO: UPDATE REDIRECT URL
+      "should redirect to R17 Agent About Repayment page when in NormalMode" in {
+        val sessionData                = RepaymentClaimDetailsAnswers.setHmrcCharitiesReference("AA12356")
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
-              .withFormUrlEncodedBody("value" -> "123456")
+            FakeRequest(POST, routes.CharitiesReferenceNumberInputController.onSubmit().url)
+              .withFormUrlEncodedBody("value" -> "AA12356")
 
           val result = route(application, request).value
+
+          val appConfig = application.injector.instanceOf[FrontendAppConfig]
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
-          )
+//          redirectLocation(result) shouldEqual Some(
+//            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+//          )
+          redirectLocation(result) shouldEqual Some(appConfig.charityRepaymentDashboardUrl)
+
         }
       }
 
-      "should redirect back to CYA page when in CheckMode" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(true)
-        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(CheckMode).url)
-              .withFormUrlEncodedBody("value" -> "123456")
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
-          )
-        }
-      }
-
-      "should reload the page with errors when a required field is missing" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(true)
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
-              .withFormUrlEncodedBody("value" -> "")
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual BAD_REQUEST
-        }
-      }
-
-      "should redirect to ClaimsTaskListController when claimingReferenceNumber is false" in {
-        val sessionData                = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(false)
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
-              .withFormUrlEncodedBody("value" -> "123456")
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            controllers.routes.ClaimsTaskListController.onPageLoad.url
-          )
-        }
-      }
-
-      "should redirect to ClaimsTaskListController when claimingReferenceNumber is None" in {
-        given application: Application = applicationBuilder().build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.ClaimReferenceNumberInputController.onSubmit(NormalMode).url)
-              .withFormUrlEncodedBody("value" -> "123456")
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            controllers.routes.ClaimsTaskListController.onPageLoad.url
-          )
-        }
-      }
     }
   }
 }
