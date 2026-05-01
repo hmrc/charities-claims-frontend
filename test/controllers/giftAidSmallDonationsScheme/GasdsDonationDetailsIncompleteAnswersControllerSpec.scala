@@ -73,12 +73,13 @@ class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec
         }
       }
 
-      "should render the page with default missing fields when no GASDS answers present" in {
+      "should render the page with missing fields when no GASDS answers present" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers)
+          repaymentClaimDetailsAnswers =
+            Some(completeRepaymentClaimDetailsAnswers.copy(makingAdjustmentToPreviousClaim = Some(true)))
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -93,9 +94,10 @@ class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec
           val result = route(application, request).value
 
           val view                 = application.injector.instanceOf[GasdsDonationDetailsIncompleteAnswersView]
-          val defaultMissingFields = GiftAidSmallDonationsSchemeDonationDetailsAnswers.getMissingFields(
-            sessionData.repaymentClaimDetailsAnswers,
-            None
+          val defaultMissingFields = List(
+            "giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount",
+            "giftAidSmallDonationsSchemeDonationDetails.claim.missingYears",
+            "giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount"
           )
 
           status(result) shouldEqual OK

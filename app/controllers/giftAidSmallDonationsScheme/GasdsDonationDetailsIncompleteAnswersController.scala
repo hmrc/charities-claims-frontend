@@ -31,10 +31,41 @@ class GasdsDonationDetailsIncompleteAnswersController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete) { implicit request =>
+
+      val repaymentClaimDetailsAnswers = request.sessionData.repaymentClaimDetailsAnswers
+
+      def buildMissingFieldsWhenGasdsNotExist: List[String] = {
+
+        val bClaimingDonationsNotFromCommunityBuilding: Boolean =
+          repaymentClaimDetailsAnswers.flatMap(_.claimingDonationsNotFromCommunityBuilding).contains(true)
+
+        val bMakingAdjustmentToPreviousClaim: Boolean =
+          repaymentClaimDetailsAnswers.flatMap(_.makingAdjustmentToPreviousClaim).contains(true)
+
+        (bClaimingDonationsNotFromCommunityBuilding, bMakingAdjustmentToPreviousClaim) match {
+          case (true, true)   =>
+            List(
+              "giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount",
+              "giftAidSmallDonationsSchemeDonationDetails.claim.missingYears",
+              "giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount"
+            )
+          case (true, false)  =>
+            List(
+              "giftAidSmallDonationsSchemeDonationDetails.claim.missingYears",
+              "giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount"
+            )
+          case (false, true)  =>
+            List("giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount")
+          case (false, false) =>
+            Nil
+
+        }
+      }
+
       val missingFields =
         request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
-          .map(_.missingFields(request.sessionData.repaymentClaimDetailsAnswers))
-          .getOrElse(List.empty)
+          .map(_.missingFields(repaymentClaimDetailsAnswers))
+          .getOrElse(buildMissingFieldsWhenGasdsNotExist)
 
       Ok(
         view(
