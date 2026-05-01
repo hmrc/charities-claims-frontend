@@ -1,0 +1,57 @@
+@*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.repaymentClaimDetails.routes
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+
+@this(
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukRadios: GovukRadios,
+        govukTextarea : GovukTextarea,
+        govukButton: GovukButton,
+        govukTextareaCharacterCount: GovukTextareaCharacterCount
+
+)
+
+@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+
+@layout(
+    pageTitle = title(form, messages("enterCharityName.title"))
+) {
+
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+    <span class="govuk-caption-l">@messages("enterCharityName.caption")</span>
+
+    @formHelper(action = routes.EnterCharityNameController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+
+        @govukTextareaCharacterCount(
+            CharacterCountViewModel(
+                field = form("value"),
+                label = Label(content = Text(messages("enterCharityName.heading")),isPageHeading = true,classes = "govuk-fieldset__legend--l"),
+                maxLength = 160
+            ).withHint(
+                HintViewModel(Text(messages("enterCharityName.hint")))
+            )
+            .fullWidth()
+        )
+
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+    }
+}

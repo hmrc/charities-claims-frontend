@@ -863,3 +863,13 @@ gasdsClaimType.error.required = Select which type of GASDS claim(s) you want to 
 warning11MaxClaimsReached.message.1 = You have reached the maximum number of draft claims
 warning11MaxClaimsReached.message.2 = You can have 120 claims in progress at one time. Please delete an existing claim to make a new claim.
 warning11MaxClaimsReached.title = You cannot manage this claim
+
+enterCharityName.title = What is the name of the charity or Community Amateur Sports Club (CASC)?
+enterCharityName.heading = What is the name of the charity or Community Amateur Sports Club (CASC)?
+enterCharityName.caption = Provide charity repayment claim details
+enterCharityName.hint = Enter the name registered with HM Revenue & Customs. For example, Royal Society for the Prevention of Cruelty to Animals Hillingdon, Slough and District Branch.
+enterCharityName.charLimit = You have 160 characters remaining
+enterCharityName.error.required = Enter a charity or Community Amateur Sports Club (CASC) name
+enterCharityName.error.length = Charity or Community Amateur Sports Club (CASC) name must be 160 characters or less
+enterCharityName.error.regex = Enter a charity or Community Amateur Sports Club (CASC) name in the correct format
+

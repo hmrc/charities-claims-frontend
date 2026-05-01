@@ -16,9 +16,19 @@
 
 package forms
 
-object Validation {
-  val claimReferenceNumberPattern  = "^([\\x00-\\x7F\\xA0-\\xFF]{1,20})$"
-  val adjustmentToThisClaimPattern = "^([\\x00-\\x7F\\xA0-\\xFF]{1,350})$"
-  val taxYearRegexPattern          = "^\\d{4}$"
-  val charityNamePattern           = "^[A-Za-z 0-9\\\\-']{1,160}$"
+import forms.Mappings
+import play.api.data.Form
+import javax.inject.Inject
+
+class CharityNameFormProvider @Inject() extends Mappings {
+
+  private val charityNameRegex     = "^[A-Za-z 0-9\\-']{1,160}$"
+  private val maxCharityNameLength = 160
+
+  def apply(): Form[String] =
+    Form(
+      "value" -> text("enterCharityName.error.required")
+        .verifying(regexp(charityNameRegex, "enterCharityName.error.regex"))
+        .verifying(maxLength(maxCharityNameLength, "enterCharityName.error.length"))
+    )
 }
