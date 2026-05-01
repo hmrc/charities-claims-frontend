@@ -38,7 +38,7 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
   "CharitiesReferenceNumberInputController" - {
 
     "onPageLoad" - {
-      //TODO: UPDATE URL
+      // TODO: UPDATE URL
       "should render the page correctly when the user provides a HMRC Charities Reference number" in {
         val sessionData = RepaymentClaimDetailsAnswers.setHmrcCharitiesReference("AA12356")
 
@@ -59,7 +59,7 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
 
     "onSubmit" - {
 
-      //TODO: UPDATE REDIRECT URL
+      // TODO: UPDATE REDIRECT URL
       "should redirect to R17 Agent About Repayment page when in NormalMode" in {
         val sessionData                = RepaymentClaimDetailsAnswers.setHmrcCharitiesReference("AA12356")
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
