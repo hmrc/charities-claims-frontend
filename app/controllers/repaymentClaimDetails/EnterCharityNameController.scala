@@ -43,19 +43,15 @@ class EnterCharityNameController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)).async { implicit request =>
-      request.isAgent match {
-        case true =>
-          val previousAnswer = RepaymentClaimDetailsAnswers.getNameOfCharity match {
-            case None        => form
-            case Some(value) => form.fill(value)
-          }
-          Future.successful(Ok(view(previousAnswer, mode)))
-
-        case _ =>
-          // TODO: Build org view for this screen
-          println("access denied")
-          Future.successful(Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad))
-
+      if (request.isAgent) {
+        val previousAnswer = RepaymentClaimDetailsAnswers.getNameOfCharity match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
+        Future.successful(Ok(view(previousAnswer, mode)))
+      } else {
+        // TODO: Build org affinity group screen
+        Future.successful(Redirect(routes.RepaymentClaimTypeController.onPageLoad(mode)))
       }
     }
 

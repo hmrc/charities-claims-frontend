@@ -304,7 +304,7 @@ POST        /maximum-claims-limit-reached                       controllers.repa
 
 
 
-GET         /enter-the-chartity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /change-the-chartity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /enter-the-chartity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /change-the-chartity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /enter-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /enter-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onSubmit(mode: Mode = Mode.CheckMode)
