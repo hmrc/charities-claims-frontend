@@ -40,7 +40,8 @@ class AboutGiftAidSmallDonationsSchemeController @Inject() (
             true
           ) || RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
         then {
-          Future.successful(Ok(view()))
+          val isAgent = request.isAgent
+          Future.successful(Ok(view(isAgent)))
         } else {
           Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
         }

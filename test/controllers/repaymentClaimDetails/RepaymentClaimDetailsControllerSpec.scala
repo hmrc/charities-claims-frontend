@@ -87,7 +87,8 @@ class RepaymentClaimDetailsControllerSpec extends ControllerSpec {
           )
         }
       }
-      "should redirect to the next page (R1.1)" in {
+      "should redirect to the next page (R1.9)" in {
+        // TODO: Create screen R1.9, currently redirecting to R1.8
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -97,7 +98,7 @@ class RepaymentClaimDetailsControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.RepaymentClaimTypeController.onPageLoad(NormalMode).url)
+          redirectLocation(result) shouldEqual Some(routes.EnterCharityNameController.onPageLoad(NormalMode).url)
         }
       }
     }

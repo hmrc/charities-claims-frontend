@@ -46,7 +46,8 @@ class RepaymentClaimDetailsControllerISpec extends ComponentSpecHelper with Test
 
   "POST /repayment-claim-details" should {
 
-    "redirect to repayment claim type page" in {
+    "redirect to repayment claim claim reference number page" in {
+      // TODO: Create screen R1.9, currently redirecting to R1.8
       stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
@@ -55,7 +56,7 @@ class RepaymentClaimDetailsControllerISpec extends ComponentSpecHelper with Test
       val result = post("/repayment-claim-details")(Map.empty[String, Seq[String]])
 
       result.status               shouldBe SEE_OTHER
-      result.header(LOCATION).value shouldBe routes.RepaymentClaimTypeController.onPageLoad(NormalMode).url
+      result.header(LOCATION).value shouldBe routes.EnterCharityNameController.onPageLoad(NormalMode).url
     }
   }
 }

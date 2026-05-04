@@ -29,10 +29,11 @@ import play.api.test.*
 import play.api.{inject, Application}
 import repositories.SessionCache
 import services.{ClaimsService, SaveService}
+import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.http.HeaderCarrier
 import util.*
 
-import scala.concurrent.Future
+import _root_.scala.concurrent.Future
 
 trait ControllerSpec
     extends BaseSpec
@@ -52,7 +53,10 @@ trait ControllerSpec
 
   given defaultSessionData: SessionData = SessionData.empty(testCharitiesReference)
 
-  protected def applicationBuilder(sessionData: SessionData = defaultSessionData): GuiceApplicationBuilder =
+  protected def applicationBuilder(
+    sessionData: SessionData = defaultSessionData,
+    affinityGroup: AffinityGroup = AffinityGroup.Organisation
+  ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
         List[GuiceableModule](
@@ -64,7 +68,7 @@ trait ControllerSpec
             .toInstance(new FakeRefreshDataAction(sessionData)),
           inject
             .bind[AuthorisedAction]
-            .toInstance(new FakeAuthorisedAction)
+            .toInstance(new FakeAuthorisedAction(affinityGroup))
         ) ++
           additionalBindings*
       )
@@ -74,7 +78,11 @@ trait ControllerSpec
         "metric.enabled"                 -> false
       )
 
-  protected def applicationBuilder(claim: Claim, uploads: Seq[UploadSummary]): GuiceApplicationBuilder = {
+  protected def applicationBuilder(
+    claim: Claim,
+    uploads: Seq[UploadSummary],
+    affinityGroup: AffinityGroup
+  ): GuiceApplicationBuilder = {
     val sessionData = SessionData.from(claim, "org-123", Some(GetUploadSummaryResponse(uploads)))
     new GuiceApplicationBuilder()
       .overrides(
@@ -90,7 +98,7 @@ trait ControllerSpec
             .toInstance(new FakeClaimsValidationConnector(uploads)),
           inject
             .bind[AuthorisedAction]
-            .toInstance(new FakeAuthorisedAction)
+            .toInstance(new FakeAuthorisedAction(affinityGroup))
         ) ++
           additionalBindings*
       )

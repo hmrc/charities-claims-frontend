@@ -40,6 +40,6 @@ class RepaymentClaimDetailsController @Inject() (
 
   def onSubmit: Action[AnyContent] =
     actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)).async { implicit request =>
-      Future.successful(Redirect(routes.RepaymentClaimTypeController.onPageLoad(NormalMode)))
+      Future.successful(Redirect(routes.EnterCharityNameController.onPageLoad(NormalMode)))
     }
 }

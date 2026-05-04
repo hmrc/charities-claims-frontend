@@ -21,6 +21,7 @@ import play.api.mvc.{Security as _, *}
 import play.api.Application
 import models.{SessionData, *}
 import play.api.libs.json.Json
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class ClaimsTaskListControllerSpec extends ControllerSpec {
 
@@ -79,7 +80,9 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
       val upscanResponse = Json.parse(responseJson).as[UpscanInitiateResponse]
 
       "should render the page with correct heading" in {
-        given application: Application = applicationBuilder(TestClaims.testClaimUnsubmitted, Seq.empty).build()
+        given application: Application =
+          applicationBuilder(TestClaims.testClaimUnsubmitted, Seq.empty, affinityGroup = AffinityGroup.Organisation)
+            .build()
 
         running(application) {
           val request = FakeRequest(GET, url)
