@@ -533,7 +533,7 @@ repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.label = GASDS claim type
 repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.topup = GASDS top-up payment
 repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.communityBuildings = Community building top-up payment
 repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.connectedCharity = Connected charity or CASC claim
-repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS = Top up payments for small cash donations under Gift Aid Small Donations Scheme
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS = Top-up payments for small cash donations under Gift Aid Small Donations Scheme (GASDS)
 repaymentClaimDetailsCheckYourAnswers.title = Check your repayment claim
 
 repaymentClaimDetailsIncompleteAnswers.heading = This claim cannot be setup
