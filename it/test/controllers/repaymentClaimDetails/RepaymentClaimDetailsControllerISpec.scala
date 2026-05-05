@@ -29,7 +29,7 @@ class RepaymentClaimDetailsControllerISpec extends ComponentSpecHelper with Test
 
   "GET /repayment-claim-details" should {
 
-    "render the repayment claim details page" in {
+    "render the repayment claim details page for an organisation" in {
       stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
@@ -40,14 +40,27 @@ class RepaymentClaimDetailsControllerISpec extends ComponentSpecHelper with Test
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.title() should include(msg("repaymentClaimDetails.title"))
+      doc.getElementsByClass("govuk-caption-l").text() should include(msg("repaymentClaimDetails.subheading"))
     }
+
+/*    "render the repayment claim details page for an agent" in {
+      stubAgentAuthRequest()
+      stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+      stubGetClaims(claimId)(OK, Json.toJson(claim))
+      stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
+
+      val result = get("/repayment-claim-details")
+
+      result.status shouldBe OK
+
+      val doc = Jsoup.parse(result.body)
+      doc.getElementsByClass("govuk-caption-l").text() should include(msg("repaymentClaimDetails.agent.subheading"))
+    }*/
   }
 
   "POST /repayment-claim-details" should {
 
-    "redirect to repayment claim claim reference number page" in {
-      // TODO: Create screen R1.9, currently redirecting to R1.8
+    "redirect to repayment claim type page for an organisation" in {
       stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
@@ -56,7 +69,20 @@ class RepaymentClaimDetailsControllerISpec extends ComponentSpecHelper with Test
       val result = post("/repayment-claim-details")(Map.empty[String, Seq[String]])
 
       result.status               shouldBe SEE_OTHER
-      result.header(LOCATION).value shouldBe routes.EnterCharityNameController.onPageLoad(NormalMode).url
+      result.header(LOCATION).value shouldBe routes.RepaymentClaimTypeController.onPageLoad(NormalMode).url
     }
+
+/*    "redirect to repayment claim claim reference number page for an agent" in {
+      // TODO: Need to change Create screen R1.9, currently redirecting to R1.8
+      stubAgentAuthRequest()
+      stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+      stubGetClaims(claimId)(OK, Json.toJson(claim))
+      stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
+
+      val result = post("/repayment-claim-details")(Map.empty[String, Seq[String]])
+
+      result.status shouldBe SEE_OTHER
+      result.header(LOCATION).value shouldBe controllers.routes.ClaimsTaskListController.onPageLoad.url
+    }*/
   }
 }

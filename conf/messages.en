@@ -533,12 +533,14 @@ registerCharityWithARegulator.title = Registering your charity with a regulator
 registerCharityWithARegulator.warning = You have made claims for Gift Aid repayments on donations of £{1} or more in the last 12 months.
 
 repaymentClaimDetails.bullet1 = tax repayments on Gift Aid donations
-repaymentClaimDetails.bullet2 = top-up payments under the Gift Aid Small Donations Scheme
+repaymentClaimDetails.bullet2 = top-up payments under the Gift Aid Small Donations Scheme (GASDS)
 repaymentClaimDetails.bullet3 = UK tax deducted from Other Income
 repaymentClaimDetails.heading = Repayment claim details
 repaymentClaimDetails.p1 = Use this service to claim:
 repaymentClaimDetails.subheading = Provide repayment claim details
 repaymentClaimDetails.title = Repayment claim details
+repaymentClaimDetails.agent.subheading = Provide charity repayment claim details
+repaymentClaimDetails.agent.p1 = Use this service to claim the following for the charity:
 
 repaymentClaimDetailsCheckYourAnswers.caption = Provide repayment claim details
 repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label = Change Gift Aid Small Donations Scheme claim
