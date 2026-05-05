@@ -32,7 +32,7 @@ class ClaimingReferenceNumberControllerISpec
     with AuthStub
     with ClaimsValidationStub {
 
-  "GET /claim-reference-number" should {
+  "GET /claim-reference-number-check" should {
 
     "render the claiming reference number page" in {
       stubAuthRequest()
@@ -40,7 +40,7 @@ class ClaimingReferenceNumberControllerISpec
       stubGetClaims(claimId)(OK, Json.toJson(claim))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
-      val result = get("/claim-reference-number")
+      val result = get("/claim-reference-number-check")
 
       result.status shouldBe OK
 
@@ -49,7 +49,7 @@ class ClaimingReferenceNumberControllerISpec
     }
   }
 
-  "POST /claiming-reference-number" should {
+  "POST /claim-reference-number-check" should {
 
     "redirect to enter claim reference number when user selects yes" in {
       stubAuthRequest()
@@ -58,7 +58,7 @@ class ClaimingReferenceNumberControllerISpec
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
       val result =
-        post("/claim-reference-number")(
+        post("/claim-reference-number-check")(
           Json.obj("value" -> true)
         )
 
@@ -73,7 +73,7 @@ class ClaimingReferenceNumberControllerISpec
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
       val result =
-        post("/claim-reference-number")(
+        post("/claim-reference-number-check")(
           Json.obj("value" -> false)
         )
 
@@ -88,7 +88,7 @@ class ClaimingReferenceNumberControllerISpec
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
       val result =
-        post("/claim-reference-number")(Json.obj())
+        post("/claim-reference-number-check")(Json.obj())
 
       result.status shouldBe BAD_REQUEST
     }

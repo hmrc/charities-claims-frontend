@@ -80,11 +80,11 @@ cannotViewOrManageClaim.title = You cannot manage this claim
 
 changePreviousGASDSClaim.caption = Provide repayment claim details
 changePreviousGASDSClaim.error.required = Select ‘Yes’ if you want to change a previous Gift Aid Small Donations Scheme claim
-changePreviousGASDSClaim.heading = Gift Aid Small Donations Scheme claim
-changePreviousGASDSClaim.legend = Do you want to change a previous Gift Aid Small Donations Scheme claim?
+changePreviousGASDSClaim.heading = Gift Aid Small Donations Scheme (GASDS) details
+changePreviousGASDSClaim.legend = Do you want to make an adjustment to the GASDS claim?
 changePreviousGASDSClaim.missingDetails = confirm if you want to change a previous Gift Aid Small Donations Scheme claim
-changePreviousGASDSClaim.paragraph = If a Community Amateur Sports Club has received an over-payment, we will deduct the over-payment from this claim.
-changePreviousGASDSClaim.title = Gift Aid Small Donations Scheme claim
+changePreviousGASDSClaim.paragraph = If your charity or CASC has received an over-payment, we will deduct the over-payment from this claim.
+changePreviousGASDSClaim.title = Gift Aid Small Donations Scheme (GASDS) details
 
 charityExcepted.bullet.1 = a church or chapel
 charityExcepted.bullet.2 = a charity that provides premises for schools
@@ -197,13 +197,6 @@ claimDeclaration.paragraph = By submitting this claim, I confirm that:
 claimDeclaration.title = Declaration
 claimDeclaration.submit = Confirm and submit claim
 
-claimGASDS.caption = Provide repayment claim details
-claimGASDS.error.required = Select ‘Yes’ if you are claiming under the Gift Aid Small Donations Scheme
-claimGASDS.heading = Do you want to claim a top-up payment under the Gift Aid Small Donations Scheme?
-claimGASDS.hint = For donations of £20 or less that were not collected in a community building.
-claimGASDS.missingDetails = confirm if you are claiming a top-up payment under the Gift Aid Small Donations Scheme
-claimGASDS.title = Do you want to claim a top-up payment under the Gift Aid Small Donations Scheme?
-
 claimReferenceNumber.caption = Provide repayment claim details
 claimReferenceNumber.error.length = Claim reference number must be 20 characters or less
 claimReferenceNumber.error.regex = This can be up to 20 characters including numbers and capital letters
@@ -225,18 +218,15 @@ claimReferenceNumberInput.missingDetails = provide a claim reference number
 claimReferenceNumberInput.paragraph = You do not have to complete this box but you can use it to show your claim reference if you use one. The reference that you quote will appear on the payment advice note you receive from us when we pay the claim.
 claimReferenceNumberInput.title = What is your claim reference number?
 
-claimingCommunityBuildingDonations.caption = Provide repayment claim details
-claimingCommunityBuildingDonations.error.required = Select ‘Yes’ if you are claiming for donations collected in community buildings
-claimingCommunityBuildingDonations.heading = Do you want to claim for donations collected in community buildings?
-claimingCommunityBuildingDonations.hint =  For donations of £20 or less that were collected in a community building during charitable activities.
-claimingCommunityBuildingDonations.missingDetails = confirm if you are claiming for donations collected in community buildings
-claimingCommunityBuildingDonations.title = Do you want to claim for donations collected in community buildings?
-
 claimingGiftAid.error.required = Select ‘Yes’ if you are claiming Gift Aid.
 claimingGiftAid.heading = Are you claiming Gift Aid?
 claimingGiftAid.hint = Select ‘Yes’ if you want to claim tax repayment on donations from a Gift Aid declaration.
 claimingGiftAid.legend = Are you claiming Gift Aid?
 claimingGiftAid.title = Are you claiming Gift Aid?
+
+claimGASDS.missingDetails = confirm if you are claiming a top-up payment under the Gift Aid Small Donations Scheme
+claimingCommunityBuildingDonations.missingDetails = confirm if you are claiming for donations collected in community buildings
+connectedToAnyOtherCharities.missingDetails = confirm if you are connected to other charities or a Community Amateur Sports Club
 
 claimingGiftAidSmallDonations.error.required = Select ‘Yes’ if you are claiming for the Gift Aid Small Donations Scheme.
 claimingGiftAidSmallDonations.heading = Gift Aid Small Donations Scheme
@@ -279,14 +269,6 @@ claimsTaskList.task.otherIncomeSchedule = Add other income schedule
 claimsTaskList.task.readDeclaration = Read declaration
 claimsTaskList.task.repaymentClaimDetails = Provide repayment claim details
 claimsTaskList.title = Make a charity repayment claim
-
-connectedToAnyOtherCharities.caption = Provide repayment claim details
-connectedToAnyOtherCharities.error.required = Select ‘Yes’ if you are connected to other charities or a Community Amateur Sports Club
-connectedToAnyOtherCharities.heading = Connected charities and Community Amateur Sports Clubs
-connectedToAnyOtherCharities.legend = Are you connected to other charities or a Community Amateur Sports Club?
-connectedToAnyOtherCharities.missingDetails = confirm if you are connected to other charities or a Community Amateur Sports Club
-connectedToAnyOtherCharities.paragraph = If connected charities and Community Amateur Sports Clubs claim a top-up payment, they will share the maximum £1,250 payment limit for the tax year.
-connectedToAnyOtherCharities.title = Connected charities and Community Amateur Sports Clubs
 
 corporateTrusteeAddress.caption = Provide organisation details
 corporateTrusteeAddress.error.required = Select ‘Yes’ if the corporate trustee has a UK address
@@ -543,17 +525,18 @@ repaymentClaimDetails.agent.subheading = Provide charity repayment claim details
 repaymentClaimDetails.agent.p1 = Use this service to claim the following for the charity:
 
 repaymentClaimDetailsCheckYourAnswers.caption = Provide repayment claim details
-repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label = Change Gift Aid Small Donations Scheme claim
-repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label = Reference number
-repaymentClaimDetailsCheckYourAnswers.claimingDonationsCollectedInCommunityBuildings.label = Donations from community buildings
-repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label = Gift Aid Small Donations Scheme Payment
-repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label = Claim reference number
-repaymentClaimDetailsCheckYourAnswers.connectToAnyOtherCharity.label = Connected to charities or Community Amateur Sports Clubs
+repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label = GASDS adjustment
+repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label = Claim reference number
+repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label = Claim reference provided
 repaymentClaimDetailsCheckYourAnswers.heading = Check your repayment claim
 repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome = UK tax deducted from Other Income
 repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid = Gift Aid
 repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label = Repayment claim type
-repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS = Top up payments for small cash donations under Gift Aid Small Donations Scheme
+repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.label = GASDS claim type
+repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.topup = GASDS top-up payment
+repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.communityBuildings = Community building top-up payment
+repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.connectedCharity = Connected charity or CASC claim
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS = Top-up payments for small cash donations under Gift Aid Small Donations Scheme (GASDS)
 repaymentClaimDetailsCheckYourAnswers.title = Check your repayment claim
 
 repaymentClaimDetailsIncompleteAnswers.heading = This claim cannot be setup
@@ -565,11 +548,11 @@ repaymentClaimDetailsIncompleteAnswers.warning = This claim cannot be setup beca
 repaymentClaimType.caption = Provide repayment claim details
 repaymentClaimType.error.required = Select repayment claim type
 repaymentClaimType.heading = Which type of repayment claim do you want to make?
-repaymentClaimType.hint = Select all that apply
+repaymentClaimType.hint = Select at least one
 repaymentClaimType.hint.claimingUnderGiftAidSmallDonationsScheme = These are not your Gift Aid donations
 repaymentClaimType.label.claimingGiftAid = Tax repayments on Gift Aid donations
 repaymentClaimType.label.claimingTaxDeducted = UK tax deducted from Other Income
-repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme = Top up payments for donations under the Gift Aid Small Donations Scheme
+repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme = Top-up payments for donations under the Gift Aid Small Donations Scheme (GASDS)
 repaymentClaimType.missingDetails = select repayment claim type
 repaymentClaimType.title = Which type of repayment claim do you want to make?
 

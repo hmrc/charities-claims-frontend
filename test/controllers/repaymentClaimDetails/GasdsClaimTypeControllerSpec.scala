@@ -17,26 +17,30 @@
 package controllers.repaymentClaimDetails
 
 import controllers.ControllerSpec
-import forms.GasdsClaimTypeFormProvider
+import forms.{GasdsClaimTypeFormProvider, YesNoFormProvider}
 import models.Mode.*
 import models.{GasdsClaimType, RepaymentClaimDetailsAnswers}
 import play.api.Application
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
-import views.html.GasdsClaimTypeView
+import views.html.{GasdsClaimTypeView, UpdateRepaymentClaimView}
 
 class GasdsClaimTypeControllerSpec extends ControllerSpec {
 
-  private val form: Form[GasdsClaimType] =
-    new GasdsClaimTypeFormProvider()()
+  private val form: Form[GasdsClaimType] = new GasdsClaimTypeFormProvider()()
+
+  private val baseSessionData =
+    RepaymentClaimDetailsAnswers
+      .setClaimingUnderGiftAidSmallDonationsScheme(true)
 
   "GasdsClaimTypeController" - {
 
     "onPageLoad" - {
 
       "should render the page with empty form when no existing data" in {
-        given application: Application = applicationBuilder().build()
+        given application: Application =
+          applicationBuilder(sessionData = baseSessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -51,10 +55,16 @@ class GasdsClaimTypeControllerSpec extends ControllerSpec {
       }
 
       "should pre-populate form when data exists" in {
-        val sessionData =
-          RepaymentClaimDetailsAnswers.setGasdsClaimType(
-            GasdsClaimType(topUp = false, communityBuildings = false, connectedCharity = true)
+        val sessionData = baseSessionData.copy(
+          repaymentClaimDetailsAnswers = baseSessionData.repaymentClaimDetailsAnswers.map(
+            _.copy(
+              claimingUnderGiftAidSmallDonationsScheme = Some(true),
+              claimingDonationsNotFromCommunityBuilding = Some(false),
+              claimingDonationsCollectedInCommunityBuildings = Some(false),
+              connectedToAnyOtherCharities = Some(true)
+            )
           )
+        )
 
         given application: Application =
           applicationBuilder(sessionData = sessionData).build()
@@ -68,21 +78,28 @@ class GasdsClaimTypeControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(
-            form.fill(GasdsClaimType(topUp = false, communityBuildings = false, connectedCharity = true)),
+            form.fill(GasdsClaimType(false, false, true)),
             NormalMode,
             false
           ).body
         }
       }
 
-      "should remove communityBuildings when CASC reference" in {
-        val sessionData =
-          RepaymentClaimDetailsAnswers.setGasdsClaimType(
-            GasdsClaimType(topUp = false, communityBuildings = true, connectedCharity = false)
-          )
+      "should remove communityBuildings when it is CASC reference" in {
+        val sessionData = baseSessionData.copy(
+          repaymentClaimDetailsAnswers = baseSessionData.repaymentClaimDetailsAnswers.map(
+            _.copy(
+              claimingUnderGiftAidSmallDonationsScheme = Some(true),
+              claimingDonationsNotFromCommunityBuilding = Some(false),
+              claimingDonationsCollectedInCommunityBuildings = Some(true),
+              connectedToAnyOtherCharities = Some(false)
+            )
+          ),
+          charitiesReference = "CH-123"
+        )
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData.copy(charitiesReference = "CH-123")).build()
+          applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -105,12 +122,13 @@ class GasdsClaimTypeControllerSpec extends ControllerSpec {
     "onSubmit" - {
 
       "should return BAD_REQUEST when form is invalid" in {
-        given application: Application = applicationBuilder().build()
+        given application: Application =
+          applicationBuilder(sessionData = baseSessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.GasdsClaimTypeController.onSubmit(NormalMode).url)
-              .withFormUrlEncodedBody("value" -> "")
+              .withFormUrlEncodedBody()
 
           val result = route(application, request).value
 
@@ -118,15 +136,14 @@ class GasdsClaimTypeControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to ClaimingReferenceNumberController when connectedCharity = true in NormalMode" in {
-        given application: Application = applicationBuilder().build()
+      "should redirect to ClaimingReferenceNumberController when only connectedCharity selected in NormalMode" in {
+        given application: Application =
+          applicationBuilder(sessionData = baseSessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.GasdsClaimTypeController.onSubmit(NormalMode).url)
-              .withFormUrlEncodedBody(
-                "value[2]" -> "connectedCharity"
-              )
+              .withFormUrlEncodedBody("value[]" -> "connectedCharity")
 
           val result = route(application, request).value
 
@@ -137,13 +154,14 @@ class GasdsClaimTypeControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to ChangePreviousGASDSClaimController when top up payment or community building is true in NormalMode" in {
-        given application: Application = applicationBuilder().build()
+      "should redirect to ChangePreviousGASDSClaimController when topUp selected in NormalMode" in {
+        given application: Application =
+          applicationBuilder(sessionData = baseSessionData).build()
 
         running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+          val request =
             FakeRequest(POST, routes.GasdsClaimTypeController.onSubmit(NormalMode).url)
-              .withFormUrlEncodedBody("value[0]" -> "topUp")
+              .withFormUrlEncodedBody("value[]" -> "topUp")
 
           val result = route(application, request).value
 
@@ -154,19 +172,126 @@ class GasdsClaimTypeControllerSpec extends ControllerSpec {
         }
       }
 
-      "should always redirect to CYA in CheckMode" in {
-        given application: Application = applicationBuilder().build()
+      "should redirect to ChangePreviousGASDSClaimController when communityBuildings selected in NormalMode" in {
+        given application: Application =
+          applicationBuilder(sessionData = baseSessionData).build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, routes.GasdsClaimTypeController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value[]" -> "communityBuildings")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should render confirmation view when removing an option in CheckMode" in {
+        val sessionData = baseSessionData.copy(
+          repaymentClaimDetailsAnswers = baseSessionData.repaymentClaimDetailsAnswers.map(
+            _.copy(
+              claimingDonationsNotFromCommunityBuilding = Some(true)
+            )
+          )
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.GasdsClaimTypeController.onSubmit(CheckMode).url)
-              .withFormUrlEncodedBody("value[1]" -> "communityBuildings")
+              .withFormUrlEncodedBody("value[]" -> "connectedCharity")
+
+          val view              = application.injector.instanceOf[UpdateRepaymentClaimView]
+          val yesNoFormProvider = application.injector.instanceOf[YesNoFormProvider]
+          val confirmForm       = yesNoFormProvider("updateRepaymentClaim.error.required")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(
+            confirmForm,
+            routes.GasdsClaimTypeController.onSubmit(CheckMode),
+            Seq("connectedCharity")
+          ).body
+        }
+      }
+
+      "should return BAD_REQUEST and re-render confirmation view when confirmation missing" in {
+        given application: Application =
+          applicationBuilder(sessionData = baseSessionData).build()
+
+        running(application) {
+          val view              = application.injector.instanceOf[UpdateRepaymentClaimView]
+          val yesNoFormProvider = application.injector.instanceOf[YesNoFormProvider]
+
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.GasdsClaimTypeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody(
+                "confirmingUpdate" -> "true",
+                "value[]"          -> "topUp"
+              )
+
+          val result = route(application, request).value
+
+          val expectedForm =
+            yesNoFormProvider("updateRepaymentClaim.error.required").bind(Map("confirmingUpdate" -> "true"))
+
+          status(result) shouldEqual BAD_REQUEST
+
+          contentAsString(result) shouldEqual view(
+            expectedForm,
+            routes.GasdsClaimTypeController.onSubmit(CheckMode),
+            Seq("topUp")
+          ).body
+        }
+      }
+
+      "should redirect to CYA when confirmation = NO" in {
+        given application: Application =
+          applicationBuilder(sessionData = baseSessionData).build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, routes.GasdsClaimTypeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody(
+                "confirmingUpdate" -> "true",
+                "value[]"          -> "topUp",
+                "value"            -> "false"
+              )
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
             routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "should save and redirect when confirmation = YES" in {
+        given application: Application =
+          applicationBuilder(sessionData = baseSessionData).build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, routes.GasdsClaimTypeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody(
+                "confirmingUpdate" -> "true",
+                "value[]"          -> "topUp",
+                "value"            -> "true"
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.ChangePreviousGASDSClaimController.onPageLoad(CheckMode).url
           )
         }
       }

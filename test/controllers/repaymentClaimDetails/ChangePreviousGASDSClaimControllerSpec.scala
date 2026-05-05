@@ -172,7 +172,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
           )
         }
       }
-      "normalMode: should redirect to ConnectedToAnyOtherCharitiesController when the value is true" in {
+      "normalMode: should redirect to ClaimingReferenceNumberController when the value is true" in {
         val sessionData                = RepaymentClaimDetailsAnswers
           .setClaimingUnderGiftAidSmallDonationsScheme(true)
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
@@ -187,12 +187,12 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
+            routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url
           )
         }
       }
 
-      "normalMode: should redirect to ConnectedToAnyOtherCharitiesController when the value is false" in {
+      "normalMode: should redirect to GasdsClaimTypeController when the value is false" in {
         val sessionData                = RepaymentClaimDetailsAnswers
           .setClaimingUnderGiftAidSmallDonationsScheme(true)
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true))
@@ -207,7 +207,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
+            routes.GasdsClaimTypeController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -246,12 +246,12 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
+            routes.GasdsClaimTypeController.onPageLoad(NormalMode).url
           )
         }
       }
 
-      "checkMode: should redirect to ConnectedToAnyOtherCharitiesController when the value is true" in {
+      "checkMode: should redirect to RepaymentClaimDetailsCheckYourAnswersController when the value is true" in {
         val sessionData                = RepaymentClaimDetailsAnswers
           .setClaimingUnderGiftAidSmallDonationsScheme(true)
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
@@ -266,12 +266,12 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode).url
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
           )
         }
       }
 
-      "checkMode: should redirect to ConnectedToAnyOtherCharitiesController when the value is false" in {
+      "checkMode: should redirect to RepaymentClaimDetailsCheckYourAnswersController when the value is false" in {
         val sessionData                = RepaymentClaimDetailsAnswers
           .setClaimingUnderGiftAidSmallDonationsScheme(true)
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
@@ -286,12 +286,12 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode).url
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
           )
         }
       }
 
-      "checkMode: should redirect to ConnectedToAnyOtherCharitiesController when the value is changed to true from false" in {
+      "checkMode: should redirect to RepaymentClaimDetailsCheckYourAnswersController when the value is changed to true from false" in {
         val sessionData = RepaymentClaimDetailsAnswers
           .setClaimingUnderGiftAidSmallDonationsScheme(true)
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
@@ -308,7 +308,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode).url
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
           )
         }
       }
@@ -437,7 +437,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode).url
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
           )
         }
       }
@@ -487,7 +487,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.ConnectedToAnyOtherCharitiesController.onPageLoad(CheckMode).url
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
           )
         }
       }

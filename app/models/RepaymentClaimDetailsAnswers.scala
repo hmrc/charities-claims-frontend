@@ -191,15 +191,29 @@ object RepaymentClaimDetailsAnswers {
   }
 
   def getGasdsClaimType(using session: SessionData): Option[GasdsClaimType] =
-    session.repaymentClaimDetailsAnswers.map { answers =>
-      GasdsClaimType(
-        topUp = answers.claimingDonationsNotFromCommunityBuilding.contains(true),
-        communityBuildings = answers.claimingDonationsCollectedInCommunityBuildings.contains(true),
-        connectedCharity = answers.connectedToAnyOtherCharities.contains(true)
-      )
+    session.repaymentClaimDetailsAnswers.flatMap { answers =>
+
+      val hasAnyAnswer =
+        answers.claimingDonationsNotFromCommunityBuilding.isDefined ||
+          answers.claimingDonationsCollectedInCommunityBuildings.isDefined ||
+          answers.connectedToAnyOtherCharities.isDefined
+
+      if (hasAnyAnswer)
+        Some(
+          GasdsClaimType(
+            topUp = answers.claimingDonationsNotFromCommunityBuilding.contains(true),
+            communityBuildings = answers.claimingDonationsCollectedInCommunityBuildings.contains(true),
+            connectedCharity = answers.connectedToAnyOtherCharities.contains(true)
+          )
+        )
+      else
+        None
     }
 
-  def setGasdsClaimType(value: GasdsClaimType)(using session: SessionData): SessionData = {
+  def setGasdsClaimType(
+    value: GasdsClaimType,
+    prevAnswer: Option[GasdsClaimType]
+  )(using session: SessionData): SessionData = {
 
     val updatedSession = set(value) { (a, v) =>
       a.copy(
@@ -208,7 +222,15 @@ object RepaymentClaimDetailsAnswers {
         connectedToAnyOtherCharities = Some(v.connectedCharity)
       )
     }
-    updatedSession
+
+    if (
+      prevAnswer.exists(p => p.topUp || p.communityBuildings) &&
+      !value.topUp && !value.communityBuildings
+    )
+      clearMakingAdjustmentToPreviousClaim(using updatedSession).copy(
+        giftAidSmallDonationsSchemeDonationDetailsAnswers = None
+      )
+    else updatedSession
   }
 
   private def clearRepaymentClaimTypeFlow(using session: SessionData): SessionData =

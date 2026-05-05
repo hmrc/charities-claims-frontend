@@ -10,25 +10,20 @@ GET         /timed-out                                          controllers.Star
 GET         /page-not-found                                     controllers.PageNotFoundController.onPageLoad
 GET         /there-is-a-problem-access-denied                   controllers.AccessDeniedController.onPageLoad
 
-GET         /change-previous-gasds-claim                        controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onPageLoad(mode: Mode = Mode.NormalMode)
-POST        /change-previous-gasds-claim                        controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onSubmit(mode: Mode = Mode.NormalMode)
-GET         /change-change-previous-gasds-claim                 controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /change-change-previous-gasds-claim                 controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /change-previous-gift-aid-small-donations-scheme-claim                        controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onPageLoad(mode: Mode = Mode.NormalMode)
+POST        /change-previous-gift-aid-small-donations-scheme-claim                        controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onSubmit(mode: Mode = Mode.NormalMode)
+GET         /change-change-previous-gift-aid-small-donations-scheme-claim                 controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /change-change-previous-gift-aid-small-donations-scheme-claim                 controllers.repaymentClaimDetails.ChangePreviousGASDSClaimController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /claim-reference-number                             controllers.repaymentClaimDetails.ClaimingReferenceNumberController.onPageLoad(mode: Mode = Mode.NormalMode)
-POST        /claim-reference-number                             controllers.repaymentClaimDetails.ClaimingReferenceNumberController.onSubmit(mode: Mode = Mode.NormalMode)
-GET         /change-claim-reference-number                      controllers.repaymentClaimDetails.ClaimingReferenceNumberController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /change-claim-reference-number                      controllers.repaymentClaimDetails.ClaimingReferenceNumberController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /claim-reference-number-check                             controllers.repaymentClaimDetails.ClaimingReferenceNumberController.onPageLoad(mode: Mode = Mode.NormalMode)
+POST        /claim-reference-number-check                             controllers.repaymentClaimDetails.ClaimingReferenceNumberController.onSubmit(mode: Mode = Mode.NormalMode)
+GET         /change-claim-reference-number-check                      controllers.repaymentClaimDetails.ClaimingReferenceNumberController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /change-claim-reference-number-check                      controllers.repaymentClaimDetails.ClaimingReferenceNumberController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /connected-to-charities                             controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onPageLoad(mode: Mode = Mode.NormalMode)
-POST        /connected-to-charities                             controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onSubmit(mode: Mode = Mode.NormalMode)
-GET         /change-connected-to-charities                      controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /change-connected-to-charities                      controllers.repaymentClaimDetails.ConnectedToAnyOtherCharitiesController.onSubmit(mode: Mode = Mode.CheckMode)
-
-GET         /repayment-claim-type                               controllers.repaymentClaimDetails.RepaymentClaimTypeController.onPageLoad(mode: Mode = Mode.NormalMode)
-POST        /repayment-claim-type                               controllers.repaymentClaimDetails.RepaymentClaimTypeController.onSubmit(mode: Mode = Mode.NormalMode)
-GET         /change-repayment-claim-type                        controllers.repaymentClaimDetails.RepaymentClaimTypeController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /change-repayment-claim-type                        controllers.repaymentClaimDetails.RepaymentClaimTypeController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /select-repayment-claim-type                        controllers.repaymentClaimDetails.RepaymentClaimTypeController.onPageLoad(mode: Mode = Mode.NormalMode)
+POST        /select-repayment-claim-type                        controllers.repaymentClaimDetails.RepaymentClaimTypeController.onSubmit(mode: Mode = Mode.NormalMode)
+GET         /change-select-repayment-claim-type                 controllers.repaymentClaimDetails.RepaymentClaimTypeController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /change-select-repayment-claim-type                 controllers.repaymentClaimDetails.RepaymentClaimTypeController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /about-the-organisation                         controllers.organisationDetails.AboutTheOrganisationController.onPageLoad
 POST        /about-the-organisation                         controllers.organisationDetails.AboutTheOrganisationController.onSubmit
@@ -98,23 +93,12 @@ GET         /change-enter-claim-reference-number            controllers.repaymen
 POST        /enter-claim-reference-number                   controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-enter-claim-reference-number            controllers.repaymentClaimDetails.ClaimReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /claim-gasds-payment                            controllers.repaymentClaimDetails.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /change-claim-gasds-payment                     controllers.repaymentClaimDetails.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /claim-gasds-payment                            controllers.repaymentClaimDetails.ClaimGiftAidSmallDonationsSchemeController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /change-claim-gasds-payment                     controllers.repaymentClaimDetails.ClaimGiftAidSmallDonationsSchemeController.onSubmit(mode: Mode = Mode.CheckMode)
-
 GET         /cannot-view-or-manage-claim                    controllers.organisationDetails.CannotViewOrManageClaimController.onPageLoad
 
 GET         /registering-your-charity-with-a-regulator      controllers.RegisterCharityWithARegulatorController.onPageLoad
 POST        /registering-your-charity-with-a-regulator      controllers.RegisterCharityWithARegulatorController.onSubmit
 
 GET         /make-a-charity-repayment-claim                 controllers.ClaimsTaskListController.onPageLoad
-
-GET         /claim-community-building-donations             controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onPageLoad(mode: Mode = Mode.NormalMode)
-POST        /claim-community-building-donations             controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onSubmit(mode: Mode = Mode.NormalMode)
-
-GET         /change-claim-community-building-donations      controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /change-claim-community-building-donations      controllers.repaymentClaimDetails.ClaimingCommunityBuildingDonationsController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /check-your-repayment-claim                     controllers.repaymentClaimDetails.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 POST        /check-your-repayment-claim                     controllers.repaymentClaimDetails.RepaymentClaimDetailsCheckYourAnswersController.onSubmit
