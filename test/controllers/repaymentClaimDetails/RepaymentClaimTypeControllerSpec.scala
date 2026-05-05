@@ -22,6 +22,7 @@ import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import models.{RepaymentClaimDetailsAnswers, RepaymentClaimType, SessionData}
+import uk.gov.hmrc.auth.core.AffinityGroup
 import forms.CheckBoxListFormProvider
 import play.api.data.Form
 import views.html.RepaymentClaimTypeView
@@ -50,7 +51,7 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
   "RepaymentClaimTypeController" - {
     "onPageLoad" - {
-      "should render the page correctly" in {
+      "should render the page correctly for an organisation" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -61,11 +62,26 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[RepaymentClaimTypeView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form, NormalMode).body
+          contentAsString(result) shouldEqual view(form, NormalMode, false).body
         }
       }
 
-      "should render the page and pre-populate correctly with all checked" in {
+      "should render the page correctly for an agent" in {
+        given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimTypeController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[RepaymentClaimTypeView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form, NormalMode, true).body
+        }
+      }
+
+      "should render the page and pre-populate correctly with all checked for an organisation" in {
         val sessionData =
           RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
 
@@ -79,11 +95,30 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[RepaymentClaimTypeView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(dataWithAllChecked), NormalMode).body
+          contentAsString(result) shouldEqual view(form.fill(dataWithAllChecked), NormalMode, false).body
         }
       }
 
-      "should render the page and pre-populate correctly with none checked" in {
+      "should render the page and pre-populate correctly with all checked for an agent" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimTypeController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[RepaymentClaimTypeView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(dataWithAllChecked), NormalMode, true).body
+        }
+      }
+
+      "should render the page and pre-populate correctly with none checked for an organisation" in {
         val sessionData =
           RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithNoneChecked, Some(dataWithAllChecked))
 
@@ -97,9 +132,29 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[RepaymentClaimTypeView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(dataWithNoneChecked), NormalMode).body
+          contentAsString(result) shouldEqual view(form.fill(dataWithNoneChecked), NormalMode, false).body
         }
       }
+
+      "should render the page and pre-populate correctly with none checked for an agent" in {
+        val sessionData =
+          RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithNoneChecked, Some(dataWithAllChecked))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimTypeController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[RepaymentClaimTypeView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(dataWithNoneChecked), NormalMode, true).body
+        }
+      }
+
       "should render ClaimCompleteController if submissionReference is defined" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
@@ -145,6 +200,7 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
           )
         }
       }
+
       "should redirect to the next page when the value is all are checked" in {
         given application: Application = applicationBuilder().mockSaveSession.build()
 

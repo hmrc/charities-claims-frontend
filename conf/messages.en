@@ -546,6 +546,7 @@ repaymentClaimDetailsIncompleteAnswers.title = This claim cannot be setup
 repaymentClaimDetailsIncompleteAnswers.warning = This claim cannot be setup because some details are missing.
 
 repaymentClaimType.caption = Provide repayment claim details
+repaymentClaimType.agent.caption = Provide charity repayment claim details
 repaymentClaimType.error.required = Select repayment claim type
 repaymentClaimType.heading = Which type of repayment claim do you want to make?
 repaymentClaimType.hint = Select at least one

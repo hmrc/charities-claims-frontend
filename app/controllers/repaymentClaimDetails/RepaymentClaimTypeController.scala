@@ -50,7 +50,7 @@ class RepaymentClaimTypeController @Inject() (
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)).async { implicit request =>
       val previousAnswer = RepaymentClaimDetailsAnswers.getRepaymentClaimType
-      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+      Future.successful(Ok(view(form.withDefault(previousAnswer), mode, request.isAgent)))
     }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
@@ -58,16 +58,16 @@ class RepaymentClaimTypeController @Inject() (
       if (isConfirmingUpdate) {
         handleUpdateConfirmationSubmit(mode)
       } else {
-        handleQuestionSubmit(mode)
+        handleQuestionSubmit(mode, request.isAgent)
       }
     }
 
-  def handleQuestionSubmit(mode: Mode)(implicit request: DataRequest[AnyContent]) = {
+  def handleQuestionSubmit(mode: Mode, isAgent: Boolean)(implicit request: DataRequest[AnyContent]) = {
     val previousAnswer: Option[RepaymentClaimType] = RepaymentClaimDetailsAnswers.getRepaymentClaimType
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, isAgent))),
         repaymentClaimType =>
           if (needsUpdateConfirmationForRepaymentClaimType(mode, previousAnswer, repaymentClaimType)) {
             val checkboxValues = formProvider.toSet(repaymentClaimType).toSeq
