@@ -20,9 +20,11 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import controllers.BaseController
 import controllers.actions.{Actions, GuardAction}
+import forms.RadioListFormProvider
 import models.SessionData
+import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import views.html.Warning11MaxClaimsReachedView
+import views.html.WhoShouldSendThePaymentToView
 
 import scala.concurrent.Future
 
@@ -30,16 +32,21 @@ class WhoShouldSendThePaymentToController @Inject()(
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
   guard: GuardAction,
-  view: Warning11MaxClaimsReachedView,
-  appConfig: FrontendAppConfig
+  view: WhoShouldSendThePaymentToView,
+  appConfig: FrontendAppConfig,
+  formProvider: RadioListFormProvider,
 ) extends BaseController {
+
+  val form: Form[Boolean] = formProvider("whoShouldSendThePaymentTo.error.required")
 
   def onPageLoad: Action[AnyContent] =
     actions
       .authAndGetData()
       .andThen(guard(SessionData.isClaimNotSubmitted))
       .async { implicit request =>
-        Future.successful(Ok(view()))
+        val previousAnswer: Option[String] = OrganisationDetailsAnswers.getNameOfCharityRegulator
+        
+        Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
       }
 
   def onSubmit: Action[AnyContent] =
