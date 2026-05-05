@@ -61,7 +61,7 @@ class DeleteRepaymentClaimControllerISpec
       val result = get(url)
 
       result.status shouldBe SEE_OTHER
-      result.header(LOCATION).value should include("/charity-repayment-dashboard")
+      result.header(LOCATION).value should include("/manage-charity-repayment-claim")
     }
   }
 
@@ -102,7 +102,7 @@ class DeleteRepaymentClaimControllerISpec
       val cached = await(sessionCache.get())
       cached.value.unsubmittedClaimId shouldBe None
       result.status shouldBe SEE_OTHER
-      result.header(LOCATION).value should include("/charity-repayment-dashboard")
+      result.header(LOCATION).value should include("/manage-charity-repayment-claim")
     }
   }
 
