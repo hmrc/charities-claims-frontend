@@ -38,6 +38,7 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
   "CharitiesReferenceNumberInputController" - {
 
     "onPageLoad" - {
+
       // TODO: UPDATE URL
       "should render the page correctly when the user provides a HMRC Charities Reference number" in {
         val answers = RepaymentClaimDetailsAnswers(
@@ -93,9 +94,6 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
           val appConfig = application.injector.instanceOf[FrontendAppConfig]
 
           status(result) shouldEqual SEE_OTHER
-//          redirectLocation(result) shouldEqual Some(
-//            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
-//          )
           redirectLocation(result) shouldEqual Some(appConfig.charityRepaymentDashboardUrl)
 
         }
