@@ -34,13 +34,25 @@ import scala.util.{Failure, Success, Try}
 import java.time.{Clock, ZoneOffset}
 import javax.inject.{Inject, Singleton}
 import java.net.URL
+import play.api.i18n.Langs
+import play.api.i18n.DefaultMessagesApiProvider
+import play.api.http.HttpConfiguration
+import play.api.i18n.MessagesApi
+import play.api.i18n.DefaultLangsProvider
+import play.api.i18n.DefaultMessagesApi
+import play.api.mvc.Cookie.SameSite
+import play.api.i18n.Lang
 
 class Module extends play.api.inject.Module {
 
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[?]] =
     Seq(
       bind[Clock].toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC)),
-      bind[HttpClientV2].to(classOf[DebuggingHttpClientV2])
+      bind[HttpClientV2].to(classOf[DebuggingHttpClientV2]),
+      bind[MessagesApi].toProvider[DebuggingMessagesApiProvider],
+      bind[Langs].toProvider[DefaultLangsProvider],
+      bind[play.i18n.MessagesApi].toSelf,
+      bind[play.i18n.Langs].toSelf
     )
 
 }
@@ -115,3 +127,56 @@ class DebuggingHttpClientV2 @Inject() (
       config = config,
       hooks = Seq(httpAuditing.AuditingHook, new DebuggingHook(config))
     )
+
+@Singleton
+class DebuggingMessagesApiProvider @Inject() (
+  environment: Environment,
+  config: Configuration,
+  langs: Langs,
+  httpConfiguration: HttpConfiguration
+) extends DefaultMessagesApiProvider(
+      environment,
+      config,
+      langs,
+      httpConfiguration
+    ) {
+
+  override lazy val get: MessagesApi =
+    new DebuggingMessagesApi(
+      loadAllMessages,
+      langs,
+      langCookieName = langCookieName,
+      langCookieSecure = langCookieSecure,
+      langCookieHttpOnly = langCookieHttpOnly,
+      langCookieSameSite = langCookieSameSite,
+      httpConfiguration = httpConfiguration,
+      langCookieMaxAge = langCookieMaxAge
+    )
+}
+
+@Singleton
+class DebuggingMessagesApi @Inject() (
+  messages: Map[String, Map[String, String]],
+  langs: Langs,
+  langCookieName: String,
+  langCookieSecure: Boolean,
+  langCookieHttpOnly: Boolean,
+  langCookieSameSite: Option[SameSite] = None,
+  httpConfiguration: HttpConfiguration,
+  langCookieMaxAge: Option[Int]
+) extends DefaultMessagesApi(
+      messages,
+      langs,
+      langCookieName,
+      langCookieSecure,
+      langCookieHttpOnly,
+      langCookieSameSite,
+      httpConfiguration,
+      langCookieMaxAge
+    ) {
+
+  override def apply(key: String, args: Any*)(implicit lang: Lang): String =
+    val message = super.apply(key, args*)
+    println(s"$key\t$message")
+    message
+}
