@@ -71,13 +71,21 @@ class GasdsClaimTypeController @Inject() (
       }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
-    actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)).async { implicit request =>
-      if (isConfirmingUpdate) {
-        handleUpdateConfirmationSubmit(mode)
-      } else {
-        handleQuestionSubmit(mode)
+    actions
+      .authAndGetData()
+      .andThen(
+        guard(
+          SessionData.isClaimNotSubmitted &&
+            RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
+        )
+      )
+      .async { implicit request =>
+        if (isConfirmingUpdate) {
+          handleUpdateConfirmationSubmit(mode)
+        } else {
+          handleQuestionSubmit(mode)
+        }
       }
-    }
 
   def handleQuestionSubmit(mode: Mode)(implicit request: DataRequest[AnyContent]): Future[Result] = {
     val previousAnswer: Option[GasdsClaimType] = RepaymentClaimDetailsAnswers.getGasdsClaimType

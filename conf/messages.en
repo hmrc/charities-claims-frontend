@@ -224,6 +224,10 @@ claimingGiftAid.hint = Select ‘Yes’ if you want to claim tax repayment on do
 claimingGiftAid.legend = Are you claiming Gift Aid?
 claimingGiftAid.title = Are you claiming Gift Aid?
 
+claimGASDS.missingDetails = confirm if you are claiming a top-up payment under the Gift Aid Small Donations Scheme
+claimingCommunityBuildingDonations.missingDetails = confirm if you are claiming for donations collected in community buildings
+connectedToAnyOtherCharities.missingDetails = confirm if you are connected to other charities or a Community Amateur Sports Club
+
 claimingGiftAidSmallDonations.error.required = Select ‘Yes’ if you are claiming for the Gift Aid Small Donations Scheme.
 claimingGiftAidSmallDonations.heading = Gift Aid Small Donations Scheme
 claimingGiftAidSmallDonations.legend =  Are you claiming for the Gift Aid Small Donations Scheme?
@@ -521,10 +525,7 @@ repaymentClaimDetails.title = Repayment claim details
 repaymentClaimDetailsCheckYourAnswers.caption = Provide repayment claim details
 repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label = GASDS adjustment
 repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label = Claim reference number
-repaymentClaimDetailsCheckYourAnswers.claimingDonationsCollectedInCommunityBuildings.label = Donations from community buildings
-repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label = Gift Aid Small Donations Scheme Payment
 repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label = Claim reference provided
-repaymentClaimDetailsCheckYourAnswers.connectToAnyOtherCharity.label = Connected to charities or Community Amateur Sports Clubs
 repaymentClaimDetailsCheckYourAnswers.heading = Check your repayment claim
 repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome = UK tax deducted from Other Income
 repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid = Gift Aid

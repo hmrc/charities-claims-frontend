@@ -140,7 +140,7 @@ object ChangePreviousGASDSClaimController {
       case (true, NormalMode, _) =>
         routes.ClaimingReferenceNumberController.onPageLoad(NormalMode)
 
-      case (_, NormalMode, _) =>
+      case (false, NormalMode, _) =>
         routes.GasdsClaimTypeController.onPageLoad(NormalMode)
 
       case (_, CheckMode, _) =>

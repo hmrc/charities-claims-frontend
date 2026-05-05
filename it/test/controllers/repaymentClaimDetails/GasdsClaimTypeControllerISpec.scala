@@ -33,19 +33,19 @@ class GasdsClaimTypeControllerISpec
     with ClaimsValidationStub {
 
   private val url = "/select-gift-aid-small-donations-scheme-claim-type"
+  private val updatedClaim =
+    claim.copy(
+      claimData = claim.claimData.copy(
+        repaymentClaimDetails =
+          claim.claimData.repaymentClaimDetails.copy(
+            claimingUnderGiftAidSmallDonationsScheme = true
+          )
+      )
+    )
 
   "GET /select-gift-aid-small-donations-scheme-claim-type" should {
 
     "render the GASDS claim type page" in {
-      val updatedClaim =
-        claim.copy(
-          claimData = claim.claimData.copy(
-            repaymentClaimDetails =
-              claim.claimData.repaymentClaimDetails.copy(
-                claimingUnderGiftAidSmallDonationsScheme = true
-              )
-          )
-        )
       stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(updatedClaim))
@@ -65,7 +65,7 @@ class GasdsClaimTypeControllerISpec
     "redirect to change previous gasds claim page when connected charities NOT selected" in {
       stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
-      stubGetClaims(claimId)(OK, Json.toJson(claim))
+      stubGetClaims(claimId)(OK, Json.toJson(updatedClaim))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
       val result = post(url)(
