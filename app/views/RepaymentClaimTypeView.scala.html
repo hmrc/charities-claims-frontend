@@ -26,7 +26,7 @@
     govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[RepaymentClaimType], mode: Mode)(implicit request: Request[?], messages: Messages)
+@(form: Form[RepaymentClaimType], mode: Mode, isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = title(form, messages("repaymentClaimType.title"))
@@ -36,7 +36,11 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="govuk-caption-l">@messages("repaymentClaimType.caption")</span>
+    @if(isAgent) {
+        <span class="govuk-caption-l">@messages("repaymentClaimDetails.agent.subheading")</span>
+    } else {
+        <span class="govuk-caption-l">@messages("repaymentClaimType.caption")</span>
+    }
 
     @formHelper(action = routes.RepaymentClaimTypeController.onSubmit(mode),Symbol("autoComplete") -> "on") {
 
