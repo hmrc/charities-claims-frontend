@@ -43,16 +43,13 @@ class EnterCharityNameController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)).async { implicit request =>
-      if (request.isAgent) {
-        val previousAnswer = RepaymentClaimDetailsAnswers.getNameOfCharity match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
-        Future.successful(Ok(view(previousAnswer, mode)))
-      } else {
-        // TODO: Build org affinity group screen
-        Future.successful(Redirect(routes.RepaymentClaimTypeController.onPageLoad(mode)))
+
+      val previousAnswer = RepaymentClaimDetailsAnswers.getNameOfCharity match {
+        case None        => form
+        case Some(value) => form.fill(value)
       }
+      Future.successful(Ok(view(previousAnswer, mode)))
+
     }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =

@@ -810,7 +810,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val content = contentAsString(result)
 
           content should include("Go to manage charity repayment claims")
-          content should include("http://localhost:8033/charities-management/charity-repayment-dashboard")
+          content should include("http://localhost:8033/charities-management/manage-charity-repayment-claim")
         }
       }
 

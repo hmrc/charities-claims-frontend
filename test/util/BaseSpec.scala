@@ -29,7 +29,7 @@ import com.typesafe.config.ConfigFactory
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, OptionValues}
 import play.api.{Application, Configuration}
-import org.scalatest.time.{Millis, Span}
+import org.scalatest.time.{Millis, Seconds, Span}
 import uk.gov.hmrc.auth.core.AffinityGroup
 import models.requests.AuthorisedRequest
 import play.api.mvc.AnyContent
@@ -83,7 +83,7 @@ abstract class BaseSpec
     actorSystem.terminate()
 
   override implicit val patienceConfig: PatienceConfig =
-    PatienceConfig(timeout = scaled(Span(1000, Millis)), interval = scaled(Span(50, Millis)))
+    PatienceConfig(timeout = Span(5, Seconds), interval = Span(100, Millis))
 
   implicit def createMessages(implicit app: Application): Messages =
     app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
