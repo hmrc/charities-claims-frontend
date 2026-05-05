@@ -24,6 +24,7 @@ import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
+import uk.gov.hmrc.auth.core.AffinityGroup
 import views.html.DonationAmountYouAreClaimingView
 
 class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
@@ -66,116 +67,243 @@ class DonationAmountYouAreClaimingControllerSpec extends ControllerSpec {
   "DonationAmountYouAreClaimingController" - {
 
     "onPageLoad" - {
+      "Organisation user" - {
+        val isAgent = false
+        "should render the page correctly first time" in {
+          given application: Application =
+            applicationBuilder(sessionData = baseSession).build()
 
-      "should render the page correctly first time" in {
-        given application: Application =
-          applicationBuilder(sessionData = baseSession).build()
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.DonationAmountYouAreClaimingController.onPageLoad(index, NormalMode).url)
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DonationAmountYouAreClaimingController.onPageLoad(index, NormalMode).url)
+            val result = route(application, request).value
 
-          val result = route(application, request).value
+            val view         = application.injector.instanceOf[DonationAmountYouAreClaimingView]
+            val formProvider = application.injector.instanceOf[AmountFormProvider]
 
-          val view         = application.injector.instanceOf[DonationAmountYouAreClaimingView]
-          val formProvider = application.injector.instanceOf[AmountFormProvider]
-          given Messages   = messages(application)
+            given Messages = messages(application)
 
-          val label = messages("taxYear.first")
+            val label = messages("taxYear.first")
 
-          val form = formProvider(
-            errorRequired = messages("donationAmountYouAreClaiming.error.required", label),
-            formatErrorMsg = messages("donationAmountYouAreClaiming.error.invalid", label),
-            maxLengthErrorMsg = messages("donationAmountYouAreClaiming.error.maxLength"),
-            allowZero = true
-          )
+            val form = formProvider(
+              errorRequired = messages("donationAmountYouAreClaiming.error.required", label),
+              formatErrorMsg = messages("donationAmountYouAreClaiming.error.invalid", label),
+              maxLengthErrorMsg = messages("donationAmountYouAreClaiming.error.maxLength"),
+              allowZero = true
+            )
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form, index, NormalMode).body
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, index, NormalMode, isAgent).body
+          }
+        }
+
+        "should pre-fill existing amount" in {
+          val session = withClaim(baseSession, BigDecimal(123.45))
+
+          given application: Application =
+            applicationBuilder(sessionData = session).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.DonationAmountYouAreClaimingController.onPageLoad(index, NormalMode).url)
+
+            val result = route(application, request).value
+
+            val view         = application.injector.instanceOf[DonationAmountYouAreClaimingView]
+            val formProvider = application.injector.instanceOf[AmountFormProvider]
+
+            given Messages = messages(application)
+
+            val label = messages("taxYear.first")
+
+            val form = formProvider(
+              errorRequired = messages("donationAmountYouAreClaiming.error.required", label),
+              formatErrorMsg = messages("donationAmountYouAreClaiming.error.invalid", label),
+              maxLengthErrorMsg = messages("donationAmountYouAreClaiming.error.maxLength"),
+              allowZero = true
+            )
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form.fill(BigDecimal(123.45)), index, NormalMode, isAgent).body
+          }
         }
       }
+      "Agent user" - {
+        val isAgent = true
+        "should render the page correctly first time" in {
+          given application: Application =
+            applicationBuilder(sessionData = baseSession, affinityGroup = AffinityGroup.Agent).build()
 
-      "should pre-fill existing amount" in {
-        val session = withClaim(baseSession, BigDecimal(123.45))
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.DonationAmountYouAreClaimingController.onPageLoad(index, NormalMode).url)
 
-        given application: Application =
-          applicationBuilder(sessionData = session).build()
+            val result = route(application, request).value
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DonationAmountYouAreClaimingController.onPageLoad(index, NormalMode).url)
+            val view         = application.injector.instanceOf[DonationAmountYouAreClaimingView]
+            val formProvider = application.injector.instanceOf[AmountFormProvider]
 
-          val result = route(application, request).value
+            given Messages = messages(application)
 
-          val view         = application.injector.instanceOf[DonationAmountYouAreClaimingView]
-          val formProvider = application.injector.instanceOf[AmountFormProvider]
-          given Messages   = messages(application)
+            val label = messages("taxYear.first")
 
-          val label = messages("taxYear.first")
+            val form = formProvider(
+              errorRequired = messages("donationAmountYouAreClaiming.error.required", label),
+              formatErrorMsg = messages("donationAmountYouAreClaiming.error.invalid", label),
+              maxLengthErrorMsg = messages("donationAmountYouAreClaiming.error.maxLength"),
+              allowZero = true
+            )
 
-          val form = formProvider(
-            errorRequired = messages("donationAmountYouAreClaiming.error.required", label),
-            formatErrorMsg = messages("donationAmountYouAreClaiming.error.invalid", label),
-            maxLengthErrorMsg = messages("donationAmountYouAreClaiming.error.maxLength"),
-            allowZero = true
-          )
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, index, NormalMode, isAgent).body
+          }
+        }
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(BigDecimal(123.45)), index, NormalMode).body
+        "should pre-fill existing amount" in {
+          val session = withClaim(baseSession, BigDecimal(123.45))
+
+          given application: Application =
+            applicationBuilder(sessionData = session, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.DonationAmountYouAreClaimingController.onPageLoad(index, NormalMode).url)
+
+            val result = route(application, request).value
+
+            val view         = application.injector.instanceOf[DonationAmountYouAreClaimingView]
+            val formProvider = application.injector.instanceOf[AmountFormProvider]
+
+            given Messages = messages(application)
+
+            val label = messages("taxYear.first")
+
+            val form = formProvider(
+              errorRequired = messages("donationAmountYouAreClaiming.error.required", label),
+              formatErrorMsg = messages("donationAmountYouAreClaiming.error.invalid", label),
+              maxLengthErrorMsg = messages("donationAmountYouAreClaiming.error.maxLength"),
+              allowZero = true
+            )
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form.fill(BigDecimal(123.45)), index, NormalMode, isAgent).body
+          }
         }
       }
     }
 
     "onSubmit" - {
 
-      "should redirect when valid amount is submitted" in {
-        val session = withClaim(baseSession)
+      "Organisation user" - {
+        val isAgent = false
 
-        given application: Application =
-          applicationBuilder(sessionData = session).build()
+        "should redirect when valid amount is submitted" in {
+          val session = withClaim(baseSession)
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DonationAmountYouAreClaimingController.onSubmit(index, NormalMode).url)
-              .withFormUrlEncodedBody("amount" -> "123.45")
+          given application: Application =
+            applicationBuilder(sessionData = session).build()
 
-          val result = route(application, request).value
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.DonationAmountYouAreClaimingController.onSubmit(index, NormalMode).url)
+                .withFormUrlEncodedBody("amount" -> "123.45")
 
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.ClaimDetailsForTaxYearCheckYourAnswersController.onPageLoad(index).url
-          )
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.ClaimDetailsForTaxYearCheckYourAnswersController.onPageLoad(index).url
+            )
+          }
+        }
+
+        "should return BAD_REQUEST when amount is empty" in {
+          val session = withClaim(baseSession)
+
+          given application: Application =
+            applicationBuilder(sessionData = session).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.DonationAmountYouAreClaimingController.onSubmit(index, NormalMode).url)
+                .withFormUrlEncodedBody("amount" -> "")
+
+            val result = route(application, request).value
+
+            val view         = application.injector.instanceOf[DonationAmountYouAreClaimingView]
+            val formProvider = application.injector.instanceOf[AmountFormProvider]
+
+            given Messages = messages(application)
+
+            val label = messages("taxYear.first")
+
+            val form = formProvider(
+              errorRequired = messages("donationAmountYouAreClaiming.error.required", label),
+              formatErrorMsg = messages("donationAmountYouAreClaiming.error.invalid", label),
+              maxLengthErrorMsg = messages("donationAmountYouAreClaiming.error.maxLength"),
+              allowZero = true
+            )
+
+            status(result) shouldEqual BAD_REQUEST
+            contentAsString(result) shouldEqual view(form.bind(Map("amount" -> "")), index, NormalMode, isAgent).body
+          }
         }
       }
 
-      "should return BAD_REQUEST when amount is empty" in {
-        val session = withClaim(baseSession)
+      "Agent user" - {
+        val isAgent = true
 
-        given application: Application =
-          applicationBuilder(sessionData = session).build()
+        "should redirect when valid amount is submitted" in {
+          val session = withClaim(baseSession)
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DonationAmountYouAreClaimingController.onSubmit(index, NormalMode).url)
-              .withFormUrlEncodedBody("amount" -> "")
+          given application: Application =
+            applicationBuilder(sessionData = session, AffinityGroup.Agent).build()
 
-          val result = route(application, request).value
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.DonationAmountYouAreClaimingController.onSubmit(index, NormalMode).url)
+                .withFormUrlEncodedBody("amount" -> "123.45")
 
-          val view         = application.injector.instanceOf[DonationAmountYouAreClaimingView]
-          val formProvider = application.injector.instanceOf[AmountFormProvider]
-          given Messages   = messages(application)
+            val result = route(application, request).value
 
-          val label = messages("taxYear.first")
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.ClaimDetailsForTaxYearCheckYourAnswersController.onPageLoad(index).url
+            )
+          }
+        }
 
-          val form = formProvider(
-            errorRequired = messages("donationAmountYouAreClaiming.error.required", label),
-            formatErrorMsg = messages("donationAmountYouAreClaiming.error.invalid", label),
-            maxLengthErrorMsg = messages("donationAmountYouAreClaiming.error.maxLength"),
-            allowZero = true
-          )
+        "should return BAD_REQUEST when amount is empty" in {
+          val session = withClaim(baseSession)
 
-          status(result) shouldEqual BAD_REQUEST
-          contentAsString(result) shouldEqual view(form.bind(Map("amount" -> "")), index, NormalMode).body
+          given application: Application =
+            applicationBuilder(sessionData = session, AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.DonationAmountYouAreClaimingController.onSubmit(index, NormalMode).url)
+                .withFormUrlEncodedBody("amount" -> "")
+
+            val result = route(application, request).value
+
+            val view         = application.injector.instanceOf[DonationAmountYouAreClaimingView]
+            val formProvider = application.injector.instanceOf[AmountFormProvider]
+
+            given Messages = messages(application)
+
+            val label = messages("taxYear.first")
+
+            val form = formProvider(
+              errorRequired = messages("donationAmountYouAreClaiming.error.required", label),
+              formatErrorMsg = messages("donationAmountYouAreClaiming.error.invalid", label),
+              maxLengthErrorMsg = messages("donationAmountYouAreClaiming.error.maxLength"),
+              allowZero = true
+            )
+
+            status(result) shouldEqual BAD_REQUEST
+            contentAsString(result) shouldEqual view(form.bind(Map("amount" -> "")), index, NormalMode, isAgent).body
+          }
         }
       }
 
