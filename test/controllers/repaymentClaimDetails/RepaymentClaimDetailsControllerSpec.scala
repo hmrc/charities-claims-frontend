@@ -23,12 +23,13 @@ import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.RepaymentClaimDetailsView
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class RepaymentClaimDetailsControllerSpec extends ControllerSpec {
 
   "RepaymentClaimDetailsController" - {
     "onPageLoad" - {
-      "should render the page correctly" in {
+      "should render the page correctly for an organisation" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -39,9 +40,26 @@ class RepaymentClaimDetailsControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[RepaymentClaimDetailsView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view().body
+          contentAsString(result) shouldEqual view(false).body
         }
       }
+
+      "should render the page correctly for an agent" in {
+        given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimDetailsController.onPageLoad.url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[RepaymentClaimDetailsView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(true).body
+        }
+      }
+
       "should render ClaimCompleteController if submissionReference is defined" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
@@ -87,7 +105,8 @@ class RepaymentClaimDetailsControllerSpec extends ControllerSpec {
           )
         }
       }
-      "should redirect to the next page (R1.9)" in {
+
+      "should redirect to the next page (R1.1) for an organisation" in {
         // TODO: Create screen R1.9, currently redirecting to R1.8
         given application: Application = applicationBuilder().build()
 
@@ -98,7 +117,22 @@ class RepaymentClaimDetailsControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.EnterCharityNameController.onPageLoad(NormalMode).url)
+          redirectLocation(result) shouldEqual Some(routes.RepaymentClaimTypeController.onPageLoad(NormalMode).url)
+        }
+      }
+
+      "should redirect to the next page (R1.9) for an agent" in {
+        // TODO: Need to change test once screen R1.9 is ready, currently redirecting to R2
+        given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.RepaymentClaimDetailsController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }

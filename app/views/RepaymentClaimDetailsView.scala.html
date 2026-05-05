@@ -22,16 +22,28 @@ formHelper: FormWithCSRF,
 govukButton: GovukButton
 )
 
-@()(implicit request: Request[?], messages: Messages)
+@(isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
-pageTitle = titleNoForm(messages("repaymentClaimDetails.title"))
+    pageTitle = titleNoForm(messages("repaymentClaimDetails.title"))
 ) {
 
-<span class="govuk-caption-l">@messages("repaymentClaimDetails.subheading")</span>
+
+@if(isAgent) {
+    <span class="govuk-caption-l">@messages("repaymentClaimDetails.agent.subheading")</span>
+} else {
+    <span class="govuk-caption-l">@messages("repaymentClaimDetails.subheading")</span>
+}
+
 <h1 class="govuk-heading-l">@messages("repaymentClaimDetails.heading")</h1>
 
-<p class="govuk-body">@messages("repaymentClaimDetails.p1")</p>
+@if(isAgent) {
+    <p class="govuk-body">@messages("repaymentClaimDetails.agent.p1")</p>
+} else {
+    <p class="govuk-body">@messages("repaymentClaimDetails.p1")</p>
+}
+
+
 
 <ul class="govuk-list govuk-list--bullet">
     <li>@messages("repaymentClaimDetails.bullet1")</li>

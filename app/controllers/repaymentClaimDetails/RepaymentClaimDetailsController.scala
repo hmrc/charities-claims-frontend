@@ -35,11 +35,15 @@ class RepaymentClaimDetailsController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)).async { implicit request =>
-      Future.successful(Ok(view()))
+      Future.successful(Ok(view(request.isAgent)))
     }
 
   def onSubmit: Action[AnyContent] =
     actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)).async { implicit request =>
-      Future.successful(Redirect(routes.EnterCharityNameController.onPageLoad(NormalMode)))
+      if (request.isAgent)
+        // TODO: Need to update when R1.9 route is available. Currently pointing to R2.
+        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      else
+        Future.successful(Redirect(routes.RepaymentClaimTypeController.onPageLoad(NormalMode)))
     }
 }
