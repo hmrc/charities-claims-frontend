@@ -37,9 +37,18 @@ class GasdsClaimTypeControllerISpec
   "GET /select-gift-aid-small-donations-scheme-claim-type" should {
 
     "render the GASDS claim type page" in {
+      val updatedClaim =
+        claim.copy(
+          claimData = claim.claimData.copy(
+            repaymentClaimDetails =
+              claim.claimData.repaymentClaimDetails.copy(
+                claimingUnderGiftAidSmallDonationsScheme = true
+              )
+          )
+        )
       stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
-      stubGetClaims(claimId)(OK, Json.toJson(claim))
+      stubGetClaims(claimId)(OK, Json.toJson(updatedClaim))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
       val result = get(url)

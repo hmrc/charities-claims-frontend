@@ -151,14 +151,12 @@ object RepaymentClaimTypeController {
 
       // NormalMode
       case (value, NormalMode, _)   =>
-        if value.claimingUnderGiftAidSmallDonationsScheme then
-          routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(NormalMode)
+        if value.claimingUnderGiftAidSmallDonationsScheme then routes.GasdsClaimTypeController.onPageLoad(NormalMode)
         else routes.ClaimingReferenceNumberController.onPageLoad(NormalMode)
 
       // CheckMode: New data
       case (value, CheckMode, None) =>
-        if value.claimingUnderGiftAidSmallDonationsScheme then
-          routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(CheckMode)
+        if value.claimingUnderGiftAidSmallDonationsScheme then routes.GasdsClaimTypeController.onPageLoad(CheckMode)
         else routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 
       // CheckMode: Changed GASDS from No to Yes
@@ -166,7 +164,7 @@ object RepaymentClaimTypeController {
           if newVal.claimingUnderGiftAidSmallDonationsScheme && prev.claimingUnderGiftAidSmallDonationsScheme.eq(
             false
           ) =>
-        routes.ClaimGiftAidSmallDonationsSchemeController.onPageLoad(CheckMode)
+        routes.GasdsClaimTypeController.onPageLoad(CheckMode)
 
       // CheckMode: Answer unchanged
       case (_, CheckMode, _)        =>

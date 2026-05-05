@@ -32,7 +32,7 @@ class RepaymentClaimTypeControllerISpec
     with AuthStub
     with ClaimsValidationStub {
 
-  "GET /repayment-claim-type" should {
+  "GET /select-repayment-claim-type" should {
 
     "render the repayment claim type page" in {
       stubAuthRequest()
@@ -40,7 +40,7 @@ class RepaymentClaimTypeControllerISpec
       stubGetClaims(claimId)(OK, Json.toJson(claim))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
-      val result = get("/repayment-claim-type")
+      val result = get("/select-repayment-claim-type")
 
       result.status shouldBe OK
 
@@ -49,7 +49,7 @@ class RepaymentClaimTypeControllerISpec
     }
   }
 
-  "POST /repayment-claim-type" should {
+  "POST /select-repayment-claim-type" should {
 
     "redirect to next page when valid data submitted" in {
       stubAuthRequest()
@@ -58,7 +58,7 @@ class RepaymentClaimTypeControllerISpec
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
       val result =
-        post("/repayment-claim-type")(
+        post("/select-repayment-claim-type")(
           Map(
             "value[0]" -> "claimingGiftAid"
           )
@@ -75,7 +75,7 @@ class RepaymentClaimTypeControllerISpec
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
       val result =
-        post("/repayment-claim-type")(Map.empty[String, Seq[String]])
+        post("/select-repayment-claim-type")(Map.empty[String, Seq[String]])
 
       result.status shouldBe BAD_REQUEST
     }
@@ -87,7 +87,7 @@ class RepaymentClaimTypeControllerISpec
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
       val result =
-        post("/change-repayment-claim-type")(
+        post("/change-select-repayment-claim-type")(
           Map(
             "value[1]" -> "claimingUnderGiftAidSmallDonationsScheme"
           )

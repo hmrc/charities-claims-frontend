@@ -31,12 +31,12 @@ class ChangePreviousGASDSClaimControllerISpec
     with ClaimsStub
     with ClaimsValidationStub {
 
-  "GET /change-previous-gasds-claim" should {
+  "GET /change-previous-gift-aid-small-donations-scheme-claim" should {
 
     "render the change previous GASDS claim page" in {
       stubBackend()
 
-      val result = get("/change-previous-gasds-claim")
+      val result = get("/change-previous-gift-aid-small-donations-scheme-claim")
 
       result.status shouldBe OK
 
@@ -45,25 +45,25 @@ class ChangePreviousGASDSClaimControllerISpec
     }
   }
 
-  "POST /change-previous-gasds-claim" should {
+  "POST /change-previous-gift-aid-small-donations-scheme-claim" should {
 
-    "redirect to connected charities page when user submits valid answer" in {
+    "redirect to claiming reference number page when user submits valid answer" in {
       stubBackend()
 
       val result =
-        post("/change-previous-gasds-claim")(
+        post("/change-previous-gift-aid-small-donations-scheme-claim")(
           Json.obj("value" -> true)
         )
 
       result.status shouldBe SEE_OTHER
-      result.header(LOCATION).value shouldBe routes.ConnectedToAnyOtherCharitiesController.onPageLoad(NormalMode).url
+      result.header(LOCATION).value shouldBe routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url
     }
 
     "return BadRequest when form submission is invalid" in {
       stubBackend()
 
       val result =
-        post("/change-previous-gasds-claim")(Json.obj())
+        post("/change-previous-gift-aid-small-donations-scheme-claim")(Json.obj())
 
       result.status shouldBe BAD_REQUEST
     }
@@ -72,7 +72,7 @@ class ChangePreviousGASDSClaimControllerISpec
       stubBackend()
 
       val result =
-        post("/change-change-previous-gasds-claim")(
+        post("/change-change-previous-gift-aid-small-donations-scheme-claim")(
           Json.obj("value" -> false)
         )
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,101 +26,51 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 object RepaymentClaimDetailsCheckYourAnswersHelper {
 
   def buildSummaryList(answers: Option[RepaymentClaimDetailsAnswers])(implicit messages: Messages): SummaryList = {
+
     val rows = answers match {
+
       case Some(buildList) =>
         Seq(
-          (
-            buildList.claimingGiftAid,
-            buildList.claimingUnderGiftAidSmallDonationsScheme,
-            buildList.claimingTaxDeducted
-          ) match {
-            case (Some(true), Some(true), Some(true)) | (Some(true), Some(true), _) | (Some(true), _, Some(true)) |
-                (_, Some(true), Some(true)) =>
+          {
+            val values = Seq(
+              buildList.claimingGiftAid.contains(true)                          ->
+                messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid"),
+              buildList.claimingUnderGiftAidSmallDonationsScheme.contains(true) ->
+                messages(
+                  "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS"
+                ),
+              buildList.claimingTaxDeducted.contains(true)                      ->
+                messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome")
+            ).collect { case (true, msg) => msg }
+
+            if (values.nonEmpty) {
               Some(
                 summaryRowHTML(
                   messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"),
-                  if buildList.claimingGiftAid.contains(true) && buildList.claimingUnderGiftAidSmallDonationsScheme
-                      .contains(true) && buildList.claimingTaxDeducted.contains(true)
-                  then
-                    messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid")
-                      + "<br>" + "<br>" +
-                      messages(
-                        "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS"
-                      )
-                      + "<br>" + "<br>" +
-                      messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome")
-                  else if buildList.claimingGiftAid.contains(true) && buildList.claimingTaxDeducted.contains(true) then
-                    messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid")
-                      + "<br>" + "<br>" +
-                      messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome")
-                  else if buildList.claimingGiftAid.contains(true) && buildList.claimingUnderGiftAidSmallDonationsScheme
-                      .contains(true)
-                  then
-                    messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid") + "<br>" + "<br>" +
-                      messages(
-                        "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS"
-                      )
-                  else
-                    messages(
-                      "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS"
-                    ) + "<br>" + "<br>" +
-                      messages(
-                        "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome"
-                      )
-                  ,
+                  values.mkString("<br><br>"),
                   controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
                     .onPageLoad(CheckMode)
                     .url,
                   messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
                 )
               )
-
-            case (_, _, _) =>
-              if buildList.claimingGiftAid.contains(true) || buildList.claimingUnderGiftAidSmallDonationsScheme
-                  .contains(true) || buildList.claimingTaxDeducted.contains(true)
-              then
-                Some(
-                  summaryRow(
-                    messages(
-                      "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"
-                    ),
-                    if buildList.claimingGiftAid.contains(true) then
-                      messages(
-                        "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid"
-                      )
-                    else if buildList.claimingTaxDeducted.contains(true) then
-                      messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome")
-                    else
-                      messages(
-                        "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS"
-                      )
-                    ,
-                    controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
-                      .onPageLoad(CheckMode)
-                      .url,
-                    messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
-                  )
+            } else {
+              Some(
+                missingDataRow(
+                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"),
+                  controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
+                    .onPageLoad(CheckMode)
+                    .url,
+                  messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
                 )
-              else
-                Some(
-                  missingDataRow(
-                    messages(
-                      "repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"
-                    ),
-                    controllers.repaymentClaimDetails.routes.RepaymentClaimTypeController
-                      .onPageLoad(CheckMode)
-                      .url,
-                    messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label")
-                  )
-                )
+              )
+            }
           },
           buildList.claimingReferenceNumber match {
             case Some(value) =>
               Some(
                 summaryRow(
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label"
-                  ),
+                  messages("repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label"),
                   if (value) messages("site.yes") else messages("site.no"),
                   controllers.repaymentClaimDetails.routes.ClaimingReferenceNumberController
                     .onPageLoad(CheckMode)
@@ -128,12 +78,11 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   messages("repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label")
                 )
               )
-            case _           =>
+
+            case None =>
               Some(
                 missingDataRow(
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label"
-                  ),
+                  messages("repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label"),
                   controllers.repaymentClaimDetails.routes.ClaimingReferenceNumberController
                     .onPageLoad(CheckMode)
                     .url,
@@ -145,9 +94,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
             case (Some(true), Some(refNumber)) =>
               Some(
                 summaryRow(
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label"
-                  ),
+                  messages("repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label"),
                   refNumber,
                   controllers.repaymentClaimDetails.routes.ClaimReferenceNumberInputController
                     .onPageLoad(CheckMode)
@@ -155,158 +102,90 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   messages("repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label")
                 )
               )
-            case (Some(true), _)               =>
+            case (Some(true), None)            =>
               Some(
                 missingDataRow(
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label"
-                  ),
+                  messages("repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label"),
                   controllers.repaymentClaimDetails.routes.ClaimReferenceNumberInputController
                     .onPageLoad(CheckMode)
                     .url,
                   messages("repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label")
                 )
               )
-            case (_, _)                        =>
-              None
+
+            case _ => None
           },
-          (
-            buildList.claimingDonationsNotFromCommunityBuilding,
-            buildList.claimingUnderGiftAidSmallDonationsScheme
-          ) match {
-            case (Some(value), Some(true)) =>
-              Some(
-                summaryRow(
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label"
-                  ),
-                  if (value) messages("site.yes") else messages("site.no"),
-                  controllers.repaymentClaimDetails.routes.ClaimGiftAidSmallDonationsSchemeController
-                    .onPageLoad(CheckMode)
-                    .url,
-                  messages("repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label")
-                )
-              )
-            case (_, Some(true))           =>
-              Some(
-                missingDataRow(
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label"
-                  ),
-                  controllers.repaymentClaimDetails.routes.ClaimGiftAidSmallDonationsSchemeController
-                    .onPageLoad(CheckMode)
-                    .url,
-                  messages("repaymentClaimDetailsCheckYourAnswers.claimingDonationsNotFromCommunityBuilding.label")
-                )
-              )
-            case (_, _)                    => None
-          },
-          (
-            buildList.claimingDonationsCollectedInCommunityBuildings,
-            buildList.claimingUnderGiftAidSmallDonationsScheme
-          ) match {
-            case (Some(value), Some(true)) =>
-              Some(
-                summaryRow(
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.claimingDonationsCollectedInCommunityBuildings.label"
-                  ),
-                  if (value) messages("site.yes") else messages("site.no"),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
-                    .onPageLoad(CheckMode)
-                    .url,
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.claimingDonationsCollectedInCommunityBuildings.label"
-                  )
-                )
-              )
-            case (_, Some(true))           =>
-              Some(
-                missingDataRow(
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.claimingDonationsCollectedInCommunityBuildings.label"
-                  ),
-                  controllers.repaymentClaimDetails.routes.ClaimingCommunityBuildingDonationsController
-                    .onPageLoad(CheckMode)
-                    .url,
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.claimingDonationsCollectedInCommunityBuildings.label"
-                  )
-                )
-              )
-            case (_, _)                    => None
-          },
-          (buildList.makingAdjustmentToPreviousClaim, buildList.claimingUnderGiftAidSmallDonationsScheme) match {
-            case (Some(value), Some(true)) =>
-              if (
-                buildList.claimingDonationsCollectedInCommunityBuildings
-                  .contains(true) || buildList.claimingDonationsNotFromCommunityBuilding.contains(true)
-              )
+          buildList.claimingUnderGiftAidSmallDonationsScheme match {
+            case Some(true) =>
+              val values = Seq(
+                buildList.claimingDonationsNotFromCommunityBuilding.contains(true)      ->
+                  messages("repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.topup"),
+                buildList.claimingDonationsCollectedInCommunityBuildings.contains(true) ->
+                  messages("repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.communityBuildings"),
+                buildList.connectedToAnyOtherCharities.contains(true)                   ->
+                  messages("repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.connectedCharity")
+              ).collect { case (true, msg) => msg }
+
+              if (values.nonEmpty) {
                 Some(
-                  summaryRow(
-                    messages(
-                      "repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label"
-                    ),
-                    if (value) messages("site.yes") else messages("site.no"),
-                    controllers.repaymentClaimDetails.routes.ChangePreviousGASDSClaimController
+                  summaryRowHTML(
+                    messages("repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.label"),
+                    values.mkString("<br><br>"),
+                    controllers.repaymentClaimDetails.routes.GasdsClaimTypeController
                       .onPageLoad(CheckMode)
                       .url,
-                    messages("repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label")
+                    messages("repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.label")
                   )
                 )
-              else None
-            case (_, Some(true))           =>
-              if (
-                buildList.claimingDonationsCollectedInCommunityBuildings
-                  .contains(true) || buildList.claimingDonationsNotFromCommunityBuilding.contains(true)
-              )
+              } else {
                 Some(
                   missingDataRow(
-                    messages(
-                      "repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label"
-                    ),
-                    controllers.repaymentClaimDetails.routes.ChangePreviousGASDSClaimController
+                    messages("repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.label"),
+                    controllers.repaymentClaimDetails.routes.GasdsClaimTypeController
                       .onPageLoad(CheckMode)
                       .url,
-                    messages("repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label")
+                    messages("repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.label")
                   )
                 )
-              else
-                None
-            case (_, _)                    =>
-              None
+              }
 
+            case Some(false) => None
+            case None        => None
           },
-          (buildList.connectedToAnyOtherCharities, buildList.claimingUnderGiftAidSmallDonationsScheme) match {
-            case (Some(value), Some(true)) =>
+          (buildList.makingAdjustmentToPreviousClaim, buildList.claimingUnderGiftAidSmallDonationsScheme) match {
+
+            case (Some(value), Some(true))
+                if buildList.claimingDonationsCollectedInCommunityBuildings.contains(true) ||
+                  buildList.claimingDonationsNotFromCommunityBuilding.contains(true) =>
               Some(
                 summaryRow(
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.connectToAnyOtherCharity.label"
-                  ),
+                  messages("repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label"),
                   if (value) messages("site.yes") else messages("site.no"),
-                  controllers.repaymentClaimDetails.routes.ConnectedToAnyOtherCharitiesController
+                  controllers.repaymentClaimDetails.routes.ChangePreviousGASDSClaimController
                     .onPageLoad(CheckMode)
                     .url,
-                  messages("repaymentClaimDetailsCheckYourAnswers.connectToAnyOtherCharity.label")
+                  messages("repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label")
                 )
               )
-            case (_, Some(true))           =>
+
+            case (None, Some(true))
+                if buildList.claimingDonationsCollectedInCommunityBuildings.contains(true) ||
+                  buildList.claimingDonationsNotFromCommunityBuilding.contains(true) =>
               Some(
                 missingDataRow(
-                  messages(
-                    "repaymentClaimDetailsCheckYourAnswers.connectToAnyOtherCharity.label"
-                  ),
-                  controllers.repaymentClaimDetails.routes.ConnectedToAnyOtherCharitiesController
+                  messages("repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label"),
+                  controllers.repaymentClaimDetails.routes.ChangePreviousGASDSClaimController
                     .onPageLoad(CheckMode)
                     .url,
-                  messages("repaymentClaimDetailsCheckYourAnswers.connectToAnyOtherCharity.label")
+                  messages("repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label")
                 )
               )
-            case (_, _)                    => None
+
+            case _ => None
           }
         ).flatten
-      case _               =>
+
+      case None =>
         Seq(
           missingDataRow(
             messages("repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label"),

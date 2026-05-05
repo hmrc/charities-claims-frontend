@@ -230,7 +230,7 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
         )
       }
 
-      "should treat None values as false" in {
+      "should return None when all GASDS fields are None" in {
         given session: SessionData = SessionData
           .empty(testCharitiesReference)
           .copy(
@@ -243,12 +243,22 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
             )
           )
 
-        RepaymentClaimDetailsAnswers.getGasdsClaimType shouldBe Some(
-          GasdsClaimType(
-            topUp = false,
-            communityBuildings = false,
-            connectedCharity = false
+        RepaymentClaimDetailsAnswers.getGasdsClaimType shouldBe None
+      }
+
+      "should return Some(false, false, false) when at least one field is defined but false" in {
+        given session: SessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingDonationsNotFromCommunityBuilding = Some(false)
+              )
+            )
           )
+
+        RepaymentClaimDetailsAnswers.getGasdsClaimType shouldBe Some(
+          GasdsClaimType(false, false, false)
         )
       }
 
@@ -285,7 +295,8 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
             topUp = true,
             communityBuildings = true,
             connectedCharity = true
-          )
+          ),
+          None
         )
 
         val answers = result.repaymentClaimDetailsAnswers.value
@@ -303,7 +314,8 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
             topUp = false,
             communityBuildings = false,
             connectedCharity = false
-          )
+          ),
+          None
         )
 
         val answers = result.repaymentClaimDetailsAnswers.value
@@ -331,7 +343,8 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
             topUp = true,
             communityBuildings = false,
             connectedCharity = true
-          )
+          ),
+          None
         )
 
         val answers = result.repaymentClaimDetailsAnswers.value
@@ -339,6 +352,50 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
         answers.claimingDonationsNotFromCommunityBuilding      shouldBe Some(true)
         answers.claimingDonationsCollectedInCommunityBuildings shouldBe Some(false)
         answers.connectedToAnyOtherCharities                   shouldBe Some(true)
+      }
+
+      "should clear adjustment and GASDS details when removing topUp and communityBuildings" in {
+        val prevAnswer = Some(GasdsClaimType(topUp = true, communityBuildings = true, connectedCharity = false))
+
+        given session: SessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            giftAidSmallDonationsSchemeDonationDetailsAnswers =
+              Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
+          )
+
+        val result = RepaymentClaimDetailsAnswers.setGasdsClaimType(
+          GasdsClaimType(
+            topUp = false,
+            communityBuildings = false,
+            connectedCharity = true
+          ),
+          prevAnswer
+        )
+
+        result.giftAidSmallDonationsSchemeDonationDetailsAnswers shouldBe None
+      }
+
+      "should NOT clear GASDS details when topUp or communityBuildings still selected" in {
+        val prevAnswer = Some(GasdsClaimType(topUp = true, communityBuildings = false, connectedCharity = false))
+
+        given session: SessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            giftAidSmallDonationsSchemeDonationDetailsAnswers =
+              Some(GiftAidSmallDonationsSchemeDonationDetailsAnswers())
+          )
+
+        val result = RepaymentClaimDetailsAnswers.setGasdsClaimType(
+          GasdsClaimType(
+            topUp = true, // still selected
+            communityBuildings = false,
+            connectedCharity = true
+          ),
+          prevAnswer
+        )
+
+        result.giftAidSmallDonationsSchemeDonationDetailsAnswers shouldBe defined
       }
     }
 
