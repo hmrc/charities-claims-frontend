@@ -24,13 +24,13 @@
    govukButton: GovukButton
 )
 
-@(answers: Option[GiftAidSmallDonationsSchemeClaimAnswers], index: Int)(implicit request: Request[?], messages: Messages)
+@(answers: Option[GiftAidSmallDonationsSchemeClaimAnswers], index: Int,isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
-   pageTitle = titleNoForm(messages("claimForTaxYearCheckYourAnswers.title", index))) {
+   pageTitle = titleNoForm(messages(if(isAgent) "claimForTaxYearCheckYourAnswers.title.agent" else "claimForTaxYearCheckYourAnswers.title", index))) {
 
    <span class="govuk-caption-l">@messages("claimForTaxYearCheckYourAnswers.caption")</span>
-   <h1 class="govuk-heading-l">@messages("claimForTaxYearCheckYourAnswers.heading", index)</h1>
+   <h1 class="govuk-heading-l">@messages(if(isAgent) "claimForTaxYearCheckYourAnswers.heading.agent" else"claimForTaxYearCheckYourAnswers.heading", index)</h1>
 
    @govukSummaryList(ClaimDetailsForTaxYearCheckYourAnswersHelper.buildSummaryList(answers, index))
 

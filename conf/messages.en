@@ -807,6 +807,8 @@ taxYear.third = third
 claimForTaxYearCheckYourAnswers.caption = Provide GASDS donation details
 claimForTaxYearCheckYourAnswers.title = Check your claim details for tax year {0}
 claimForTaxYearCheckYourAnswers.heading = Check your claim details for tax year {0}
+claimForTaxYearCheckYourAnswers.title.agent = Check claim details for tax year {0}
+claimForTaxYearCheckYourAnswers.heading.agent = Check claim details for tax year {0}
 claimForTaxYearCheckYourAnswers.taxYear.label = Tax year
 claimForTaxYearCheckYourAnswers.donationAmount.label = Donation amount
 
