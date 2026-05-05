@@ -24,10 +24,10 @@ govukInput: GovukInput,
 govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[?], index: Int, mode: Mode)(implicit request: Request[?], messages: Messages)
+@(form: Form[?], index: Int, mode: Mode,isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = title(form, messages("whichTaxYearAreYouClaimingFor.title"))
+        pageTitle = title(form, messages(if(isAgent) "whichTaxYearAreYouClaimingFor.title.agent" else "whichTaxYearAreYouClaimingFor.title" ))
 ) {
 
     @if(form.hasErrors) {
@@ -35,7 +35,8 @@ govukErrorSummary: GovukErrorSummary
     }
 
     <span class="govuk-caption-l">@messages("whichTaxYearAreYouClaimingFor.caption", if(index == 1) "" else s"- Tax year $index")</span>
-    <h1 class="govuk-heading-l">@messages("whichTaxYearAreYouClaimingFor.heading")</h1>
+
+    <h1 class="govuk-heading-l">@messages(if (isAgent) "whichTaxYearAreYouClaimingFor.heading.agent" else "whichTaxYearAreYouClaimingFor.heading")</h1>
 
     <p class="govuk-body">
         @messages("whichTaxYearAreYouClaimingFor.paragraph")
@@ -45,7 +46,7 @@ govukErrorSummary: GovukErrorSummary
     @govukInput(
         InputViewModel(
             field = form("value"),
-            label = Label(content = Text(messages("whichTaxYearAreYouClaimingFor.heading")), isPageHeading = false, classes = "govuk-visually-hidden")
+            label = Label(content = Text(messages(if(isAgent) "whichTaxYearAreYouClaimingFor.heading.agent" else "whichTaxYearAreYouClaimingFor.heading")), isPageHeading = false, classes = "govuk-visually-hidden")
         ).withHint(
             HintViewModel(Text(messages("whichTaxYearAreYouClaimingFor.hint")))
             .withId("value-hint")

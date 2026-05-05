@@ -24,6 +24,7 @@ import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
+import uk.gov.hmrc.auth.core.AffinityGroup
 import views.html.WhichTaxYearAreYouClaimingForView
 
 class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
@@ -64,57 +65,120 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
 
     "onPageLoad" - {
 
-      "should render page for first year" in {
-        given application: Application =
-          applicationBuilder(sessionData = baseSession).build()
+      "Organisation user" - {
+        val isAgent = false
+        "should render page for first year" in {
+          given application: Application =
+            applicationBuilder(sessionData = baseSession).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.WhichTaxYearAreYouClaimingForController.onPageLoad(index, NormalMode).url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.WhichTaxYearAreYouClaimingForController.onPageLoad(index, NormalMode).url)
 
-          val result = route(application, request).value
+            val result = route(application, request).value
 
-          val view         = application.injector.instanceOf[WhichTaxYearAreYouClaimingForView]
-          val formProvider = application.injector.instanceOf[TaxYearFormProvider]
-          given Messages   = messages(application)
+            val view         = application.injector.instanceOf[WhichTaxYearAreYouClaimingForView]
+            val formProvider = application.injector.instanceOf[TaxYearFormProvider]
 
-          val label = messages("taxYear.first")
+            given Messages = messages(application)
 
-          val form = formProvider(
-            requiredKey = messages("whichTaxYearAreYouClaimingFor.error.required", label),
-            invalidKey = messages("whichTaxYearAreYouClaimingFor.error.invalid", label)
-          )
+            val label = messages("taxYear.first")
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form, index, NormalMode).body
+            val form = formProvider(
+              requiredKey = messages("whichTaxYearAreYouClaimingFor.error.required", label),
+              invalidKey = messages("whichTaxYearAreYouClaimingFor.error.invalid", label)
+            )
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, index, NormalMode, isAgent).body
+          }
+        }
+
+        "should pre-fill existing tax year" in {
+          val session = withClaim(baseSession, validYear)
+
+          given application: Application =
+            applicationBuilder(sessionData = session).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.WhichTaxYearAreYouClaimingForController.onPageLoad(index, NormalMode).url)
+
+            val result = route(application, request).value
+
+            val view         = application.injector.instanceOf[WhichTaxYearAreYouClaimingForView]
+            val formProvider = application.injector.instanceOf[TaxYearFormProvider]
+
+            given Messages = messages(application)
+
+            val label = messages("taxYear.first")
+
+            val form = formProvider(
+              requiredKey = messages("whichTaxYearAreYouClaimingFor.error.required", label),
+              invalidKey = messages("whichTaxYearAreYouClaimingFor.error.invalid", label)
+            )
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form.fill(validYear), index, NormalMode, isAgent).body
+          }
         }
       }
+      "Agent user" - {
+        val isAgent = true
+        "should render page for first year" in {
+          given application: Application =
+            applicationBuilder(sessionData = baseSession, affinityGroup = AffinityGroup.Agent).build()
 
-      "should pre-fill existing tax year" in {
-        val session = withClaim(baseSession, validYear)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.WhichTaxYearAreYouClaimingForController.onPageLoad(index, NormalMode).url)
 
-        given application: Application =
-          applicationBuilder(sessionData = session).build()
+            val result = route(application, request).value
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.WhichTaxYearAreYouClaimingForController.onPageLoad(index, NormalMode).url)
+            val view         = application.injector.instanceOf[WhichTaxYearAreYouClaimingForView]
+            val formProvider = application.injector.instanceOf[TaxYearFormProvider]
 
-          val result = route(application, request).value
+            given Messages = messages(application)
 
-          val view         = application.injector.instanceOf[WhichTaxYearAreYouClaimingForView]
-          val formProvider = application.injector.instanceOf[TaxYearFormProvider]
-          given Messages   = messages(application)
+            val label = messages("taxYear.first")
 
-          val label = messages("taxYear.first")
+            val form = formProvider(
+              requiredKey = messages("whichTaxYearAreYouClaimingFor.error.required", label),
+              invalidKey = messages("whichTaxYearAreYouClaimingFor.error.invalid", label)
+            )
 
-          val form = formProvider(
-            requiredKey = messages("whichTaxYearAreYouClaimingFor.error.required", label),
-            invalidKey = messages("whichTaxYearAreYouClaimingFor.error.invalid", label)
-          )
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, index, NormalMode, isAgent).body
+          }
+        }
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(validYear), index, NormalMode).body
+        "should pre-fill existing tax year" in {
+          val session = withClaim(baseSession, validYear)
+
+          given application: Application =
+            applicationBuilder(sessionData = session, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.WhichTaxYearAreYouClaimingForController.onPageLoad(index, NormalMode).url)
+
+            val result = route(application, request).value
+
+            val view         = application.injector.instanceOf[WhichTaxYearAreYouClaimingForView]
+            val formProvider = application.injector.instanceOf[TaxYearFormProvider]
+
+            given Messages = messages(application)
+
+            val label = messages("taxYear.first")
+
+            val form = formProvider(
+              requiredKey = messages("whichTaxYearAreYouClaimingFor.error.required", label),
+              invalidKey = messages("whichTaxYearAreYouClaimingFor.error.invalid", label)
+            )
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form.fill(validYear), index, NormalMode, isAgent).body
+          }
         }
       }
     }
@@ -160,30 +224,65 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
         }
       }
 
-      "should return BAD_REQUEST when empty" in {
-        given application: Application =
-          applicationBuilder(sessionData = baseSession).build()
+      "Agent user" - {
+        val isAgent = true
+        "should return BAD_REQUEST when empty" in {
+          given application: Application =
+            applicationBuilder(sessionData = baseSession, affinityGroup = AffinityGroup.Agent).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.WhichTaxYearAreYouClaimingForController.onSubmit(index, NormalMode).url)
-              .withFormUrlEncodedBody("value" -> "")
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.WhichTaxYearAreYouClaimingForController.onSubmit(index, NormalMode).url)
+                .withFormUrlEncodedBody("value" -> "")
 
-          val result = route(application, request).value
+            val result = route(application, request).value
 
-          val view         = application.injector.instanceOf[WhichTaxYearAreYouClaimingForView]
-          val formProvider = application.injector.instanceOf[TaxYearFormProvider]
-          given Messages   = messages(application)
+            val view         = application.injector.instanceOf[WhichTaxYearAreYouClaimingForView]
+            val formProvider = application.injector.instanceOf[TaxYearFormProvider]
 
-          val label = messages("taxYear.first")
+            given Messages = messages(application)
 
-          val form = formProvider(
-            requiredKey = messages("whichTaxYearAreYouClaimingFor.error.required", label),
-            invalidKey = messages("whichTaxYearAreYouClaimingFor.error.invalid", label)
-          )
+            val label = messages("taxYear.first")
 
-          status(result) shouldEqual BAD_REQUEST
-          contentAsString(result) shouldEqual view(form.bind(Map("value" -> "")), index, NormalMode).body
+            val form = formProvider(
+              requiredKey = messages("whichTaxYearAreYouClaimingFor.error.required", label),
+              invalidKey = messages("whichTaxYearAreYouClaimingFor.error.invalid", label)
+            )
+
+            status(result) shouldEqual BAD_REQUEST
+            contentAsString(result) shouldEqual view(form.bind(Map("value" -> "")), index, NormalMode, isAgent).body
+          }
+        }
+      }
+
+      "organisation user" - {
+        val isAgent = false
+        "should return BAD_REQUEST when empty" in {
+          given application: Application =
+            applicationBuilder(sessionData = baseSession).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.WhichTaxYearAreYouClaimingForController.onSubmit(index, NormalMode).url)
+                .withFormUrlEncodedBody("value" -> "")
+
+            val result = route(application, request).value
+
+            val view         = application.injector.instanceOf[WhichTaxYearAreYouClaimingForView]
+            val formProvider = application.injector.instanceOf[TaxYearFormProvider]
+
+            given Messages = messages(application)
+
+            val label = messages("taxYear.first")
+
+            val form = formProvider(
+              requiredKey = messages("whichTaxYearAreYouClaimingFor.error.required", label),
+              invalidKey = messages("whichTaxYearAreYouClaimingFor.error.invalid", label)
+            )
+
+            status(result) shouldEqual BAD_REQUEST
+            contentAsString(result) shouldEqual view(form.bind(Map("value" -> "")), index, NormalMode, isAgent).body
+          }
         }
       }
 

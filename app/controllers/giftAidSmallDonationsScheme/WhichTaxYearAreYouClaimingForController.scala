@@ -72,7 +72,7 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
             .map(_.taxYear)
 
         Future.successful(
-          Ok(view(preparedForm.withDefault(existingValue), index, mode))
+          Ok(view(preparedForm.withDefault(existingValue), index, mode, request.isAgent))
         )
       }
 
@@ -94,7 +94,7 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
         preparedForm
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, index, mode))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, index, mode, request.isAgent))),
             taxYear => {
 
               val existingYears =
@@ -110,7 +110,7 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
                       .fill(taxYear)
                       .withError("value", mapErrorToMessage(error))
 
-                  Future.successful(BadRequest(view(formWithError, index, mode)))
+                  Future.successful(BadRequest(view(formWithError, index, mode, request.isAgent)))
 
                 case None =>
                   val claim =
