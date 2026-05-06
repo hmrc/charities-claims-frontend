@@ -79,11 +79,13 @@ cannotViewOrManageClaim.paragraph = This claim is being updated by someone else.
 cannotViewOrManageClaim.title = You cannot manage this claim
 
 changePreviousGASDSClaim.caption = Provide repayment claim details
+changePreviousGASDSClaim.caption.agent = Provide charity repayment claim details
 changePreviousGASDSClaim.error.required = Select ‘Yes’ if you want to change a previous Gift Aid Small Donations Scheme claim
 changePreviousGASDSClaim.heading = Gift Aid Small Donations Scheme (GASDS) details
 changePreviousGASDSClaim.legend = Do you want to make an adjustment to the GASDS claim?
 changePreviousGASDSClaim.missingDetails = confirm if you want to change a previous Gift Aid Small Donations Scheme claim
 changePreviousGASDSClaim.paragraph = If your charity or CASC has received an over-payment, we will deduct the over-payment from this claim.
+changePreviousGASDSClaim.paragraph.agent = If the charity or CASC has received an over-payment, we will deduct the over-payment from this claim.
 changePreviousGASDSClaim.title = Gift Aid Small Donations Scheme (GASDS) details
 
 charityExcepted.bullet.1 = a church or chapel

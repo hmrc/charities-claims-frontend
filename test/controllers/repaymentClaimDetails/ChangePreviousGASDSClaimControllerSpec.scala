@@ -27,86 +27,170 @@ import forms.YesNoFormProvider
 import models.Mode.*
 import play.api.data.Form
 import views.html.ChangePreviousGASDSClaimView
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
   private val form: Form[Boolean] = new YesNoFormProvider()()
   "ChangePreviousGASDSClaimController" - {
     "onPageLoad" - {
-      "should render the page correctly when setClaimingUnderGiftAidSmallDonationsScheme & setClaimingDonationsCollectedInCommunityBuildings are true" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingUnderGiftAidSmallDonationsScheme(true)
-          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
+      "Organisation user" - {
+        val isAgent = false
+        "should render the page correctly when setClaimingUnderGiftAidSmallDonationsScheme & setClaimingDonationsCollectedInCommunityBuildings are true" in {
+          val sessionData = RepaymentClaimDetailsAnswers
+            .setClaimingUnderGiftAidSmallDonationsScheme(true)
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
 
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form, NormalMode).body
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, NormalMode, isAgent).body
+          }
+        }
+
+        "should render the page correctly when setClaimingUnderGiftAidSmallDonationsScheme & setClaimingDonationsNotFromCommunityBuilding are true" in {
+          val sessionData = RepaymentClaimDetailsAnswers
+            .setClaimingUnderGiftAidSmallDonationsScheme(true)
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true, None))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, NormalMode, isAgent).body
+          }
+        }
+
+        "should render the page and pre-populate correctly with true value" in {
+          val sessionData = RepaymentClaimDetailsAnswers
+            .setClaimingUnderGiftAidSmallDonationsScheme(true)
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
+            .and(RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(true))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form.fill(true), NormalMode, isAgent).body
+          }
+        }
+
+        "should render the page and pre-populate correctly with false value" in {
+          val sessionData = RepaymentClaimDetailsAnswers
+            .setClaimingUnderGiftAidSmallDonationsScheme(true)
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
+            .and(RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(false))
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form.fill(false), NormalMode, isAgent).body
+          }
         }
       }
+      "Agent user" - {
+        val isAgent = true
+        "should render the page correctly when setClaimingUnderGiftAidSmallDonationsScheme & setClaimingDonationsCollectedInCommunityBuildings are true" in {
+          val sessionData = RepaymentClaimDetailsAnswers
+            .setClaimingUnderGiftAidSmallDonationsScheme(true)
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
 
-      "should render the page correctly when setClaimingUnderGiftAidSmallDonationsScheme & setClaimingDonationsNotFromCommunityBuilding are true" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingUnderGiftAidSmallDonationsScheme(true)
-          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true, None))
+          given application: Application = applicationBuilder(sessionData = sessionData, AffinityGroup.Agent).build()
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
 
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form, NormalMode).body
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, NormalMode, isAgent).body
+          }
         }
-      }
 
-      "should render the page and pre-populate correctly with true value" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingUnderGiftAidSmallDonationsScheme(true)
-          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
-          .and(RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(true))
+        "should render the page correctly when setClaimingUnderGiftAidSmallDonationsScheme & setClaimingDonationsNotFromCommunityBuilding are true" in {
+          val sessionData = RepaymentClaimDetailsAnswers
+            .setClaimingUnderGiftAidSmallDonationsScheme(true)
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsNotFromCommunityBuilding(true, None))
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          given application: Application = applicationBuilder(sessionData = sessionData, AffinityGroup.Agent).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
 
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, NormalMode, isAgent).body
+          }
         }
-      }
 
-      "should render the page and pre-populate correctly with false value" in {
-        val sessionData = RepaymentClaimDetailsAnswers
-          .setClaimingUnderGiftAidSmallDonationsScheme(true)
-          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
-          .and(RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(false))
+        "should render the page and pre-populate correctly with true value" in {
+          val sessionData = RepaymentClaimDetailsAnswers
+            .setClaimingUnderGiftAidSmallDonationsScheme(true)
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
+            .and(RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(true))
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          given application: Application = applicationBuilder(sessionData = sessionData, AffinityGroup.Agent).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
 
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form.fill(true), NormalMode, isAgent).body
+          }
+        }
+
+        "should render the page and pre-populate correctly with false value" in {
+          val sessionData = RepaymentClaimDetailsAnswers
+            .setClaimingUnderGiftAidSmallDonationsScheme(true)
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
+            .and(RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(false))
+
+          given application: Application = applicationBuilder(sessionData = sessionData, AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ChangePreviousGASDSClaimController.onPageLoad(NormalMode).url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[ChangePreviousGASDSClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form.fill(false), NormalMode, isAgent).body
+          }
         }
       }
 
