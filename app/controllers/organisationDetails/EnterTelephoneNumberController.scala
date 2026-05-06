@@ -44,10 +44,12 @@ class EnterTelephoneNumberController @Inject() (
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetData()
-      .andThen(guard(
-        predicate = SessionData.isClaimNotSubmitted,
-        access = AccessType.AgentOnly
-      ))
+      .andThen(
+        guard(
+          predicate = SessionData.isClaimNotSubmitted,
+          access = AccessType.AgentOnly
+        )
+      )
       .async { implicit request =>
         val previousAnswer = OrganisationDetailsAnswers.getTelephoneNumber
         Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
@@ -56,10 +58,12 @@ class EnterTelephoneNumberController @Inject() (
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetData()
-      .andThen(guard(
-        predicate = SessionData.isClaimNotSubmitted,
-        access = AccessType.AgentOnly
-      ))
+      .andThen(
+        guard(
+          predicate = SessionData.isClaimNotSubmitted,
+          access = AccessType.AgentOnly
+        )
+      )
       .async { implicit request =>
         form
           .bindFromRequest()
@@ -68,7 +72,9 @@ class EnterTelephoneNumberController @Inject() (
             value =>
               saveService
                 .save(OrganisationDetailsAnswers.setTelephoneNumber(value))
-                .map(_ => Redirect("/charities-claims/do-you-have-a-uk-address"))// TODO: Integrate this page once the corresponding page is implemented
+                .map(_ =>
+                  Redirect("/charities-claims/do-you-have-a-uk-address")
+                ) // TODO: Integrate this page once the corresponding page is implemented
           )
       }
 }

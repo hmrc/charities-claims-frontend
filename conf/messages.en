@@ -92,7 +92,7 @@ charityExcepted.bullet.3 = a scout or guide group
 charityExcepted.bullet.4 = a charitable service of the armed forces
 charityExcepted.bullet.5 = a students’ union
 charityExcepted.heading = Your charity is excepted
-charityExcepted.p1 = Your charity is excepted as the charity’s income is £100,000 or less and is classed as one of the following:
+charityExcepted.p1 = Your charity is excepted as the charity's income is £100,000 or less and is classed as one of the following:
 charityExcepted.title = Your charity is excepted
 
 charityExempt.bullet.1 = university or school
@@ -516,6 +516,11 @@ registerCharityWithARegulator.radio.no.label = No, continue with claim
 registerCharityWithARegulator.radio.yes.label = Yes
 registerCharityWithARegulator.title = Registering your charity with a regulator
 registerCharityWithARegulator.warning = You have made claims for Gift Aid repayments on donations of £{1} or more in the last 12 months.
+registerCharityWithARegulator.agent.heading = Registering the charity with a regulator
+registerCharityWithARegulator.agent.legend = Do you need to register this charity with a regulator?
+registerCharityWithARegulator.agent.paragraph = If the charity's annual income is £{1} or more, you need to <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">register this charity with a regulator (opens in new tab)</a>.
+registerCharityWithARegulator.agent.title = Registering the charity with a regulator
+registerCharityWithARegulator.agent.warning = The charity has made claims for Gift Aid repayments on donations of £{1} or more in the last 12 months.
 
 repaymentClaimDetails.bullet1 = tax repayments on Gift Aid donations
 repaymentClaimDetails.bullet2 = top-up payments under the Gift Aid Small Donations Scheme (GASDS)
@@ -715,7 +720,7 @@ adjustmentToThisClaim.error.length = Adjustments must be 350 characters or less
 adjustmentToThisClaim.error.regex = Enter an adjustment in the correct format
 adjustmentToThisClaim.error.required = Enter an adjustment to Gift Aid, Other Income or a donation under the Gift Aid Small Donations Scheme
 adjustmentToThisClaim.heading = What adjustments have you made to this claim?
-adjustmentToThisClaim.para = If you have included any adjustments in this claim, you must enter an explanation below. You can also provide any other information regarding your charity’s repayment claim.
+adjustmentToThisClaim.para = If you have included any adjustments in this claim, you must enter an explanation below. You can also provide any other information regarding your charity's repayment claim.
 adjustmentToThisClaim.hint = You can enter up to 350 characters
 adjustmentToThisClaim.title = What adjustments have you made to this claim?
 
