@@ -16,34 +16,35 @@
 
 package controllers.repaymentClaimDetails
 
-import models.Mode.*
-import services.SaveService
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
+import config.FrontendAppConfig
 import controllers.BaseController
-import views.html.ClaimReferenceNumberInputView
 import controllers.actions.{Actions, GuardAction}
 import forms.TextInputFormProvider
+import models.Mode.*
 import models.{Mode, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
-import controllers.repaymentClaimDetails.routes
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.SaveService
+import views.html.CharitiesReferenceNumberInputView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimReferenceNumberInputController @Inject() (
+class CharitiesReferenceNumberInputController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: ClaimReferenceNumberInputView,
+  view: CharitiesReferenceNumberInputView,
   actions: Actions,
   guard: GuardAction,
   formProvider: TextInputFormProvider,
-  saveService: SaveService
+  saveService: SaveService,
+  appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)
     extends BaseController {
 
   val form: Form[String] = formProvider(
-    "claimReferenceNumber.error.required",
-    (20, "claimReferenceNumber.error.length"),
-    "claimReferenceNumber.error.regex"
+    "charitiesReferenceNumber.error.required",
+    (7, "charitiesReferenceNumber.error.length"),
+    "charitiesReferenceNumber.error.regex"
   )
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
@@ -52,10 +53,11 @@ class ClaimReferenceNumberInputController @Inject() (
       .andThen(guard(RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true)))
       .andThen(guard(SessionData.isClaimNotSubmitted))
       .async { implicit request =>
-        val previousAnswer = RepaymentClaimDetailsAnswers.getClaimReferenceNumber
-        Future.successful(Ok(view(form.withDefault(previousAnswer), mode, request.isAgent)))
+        val previousAnswer = Some("")
+        Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
       }
 
+  // TODO: UPDATE REDIRECT to R1.7
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetData()
@@ -65,11 +67,11 @@ class ClaimReferenceNumberInputController @Inject() (
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, request.isAgent))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               saveService
-                .save(RepaymentClaimDetailsAnswers.setClaimReferenceNumber(value))
-                .map(_ => Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad))
+                .save(RepaymentClaimDetailsAnswers.setHmrcCharitiesReference(value))
+                .map(_ => Redirect(appConfig.charityRepaymentDashboardUrl))
           )
       }
 }

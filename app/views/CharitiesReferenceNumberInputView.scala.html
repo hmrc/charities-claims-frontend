@@ -24,41 +24,26 @@ govukInput: GovukInput,
 govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[?], mode: Mode, isAgent: Boolean)(implicit request: Request[?], messages: Messages)
-
-@titleMessage = @{
-    if (isAgent) "claimReferenceNumber.agent.title"
-    else "claimReferenceNumber.title"
-}
-
-@captionMessage = @{
-    if (isAgent) "claimReferenceNumber.agent.caption"
-    else "claimReferenceNumber.caption"
-}
-
-@headingMessage = @{
-    if (isAgent) "claimReferenceNumber.agent.heading"
-    else "claimReferenceNumber.heading"
-}
+@(form: Form[?], mode: Mode)(implicit request: Request[?], messages: Messages)
 
 @layout(
-   pageTitle = title(form, messages(titleMessage))
+   pageTitle = title(form, messages("charitiesReferenceNumber.title"))
 ) {
 
    @if(form.errors.nonEmpty) {
        @govukErrorSummary(ErrorSummaryViewModel(form))
    }
 
-    <span class="govuk-caption-l">@messages(captionMessage)</span>
+    <span class="govuk-caption-l">@messages("charitiesReferenceNumber.caption")</span>
 
-   @formHelper(action = routes.ClaimReferenceNumberInputController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+   @formHelper(action = routes.CharitiesReferenceNumberInputController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = Label(content = Text(messages(headingMessage)),isPageHeading = true,classes = "govuk-fieldset__legend--l")
+                label = Label(content = Text(messages("charitiesReferenceNumber.heading")),isPageHeading = true,classes = "govuk-fieldset__legend--l")
                 ).withHint(
-                    HintViewModel(Text(messages("claimReferenceNumber.hint")))
+                    HintViewModel(Text(messages("charitiesReferenceNumber.hint")))
                         .withId("value-hint")
                 )
                 .withCssClass("govuk-input--width-20")

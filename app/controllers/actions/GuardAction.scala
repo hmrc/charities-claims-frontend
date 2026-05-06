@@ -25,16 +25,23 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class GuardAction @Inject() ()(using ec: ExecutionContext) {
 
-  def apply(predicate: SessionData ?=> Boolean): ActionFilter[DataRequest] =
+  def apply(predicate: SessionData ?=> Boolean, access: AccessType = AccessType.Both): ActionFilter[DataRequest] =
     new ActionFilter[DataRequest] {
       override def executionContext: ExecutionContext = ec
 
       override protected def filter[A](request: DataRequest[A]): Future[Option[Result]] = {
         given sessionData: SessionData = request.sessionData
+
+        val hasAccess = access match
+          case AccessType.AgentOnly        => request.isAgent
+          case AccessType.OrganisationOnly => request.isOrganisation
+          case AccessType.Both             => true
+
         Future.successful {
-          if sessionData.submissionReference.isDefined
-          then Some(Results.Redirect(controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad))
-          else if predicate then None
+          if sessionData.submissionReference.isDefined then
+            Some(Results.Redirect(controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad))
+          else if !hasAccess then Some(Results.Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+          else if predicate(using sessionData) then None
           else Some(Results.Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
         }
       }
