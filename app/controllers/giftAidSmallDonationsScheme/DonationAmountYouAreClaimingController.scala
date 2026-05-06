@@ -69,7 +69,7 @@ class DonationAmountYouAreClaimingController @Inject() (
             .flatMap(_.amountOfDonationsReceived)
 
         Future.successful(
-          Ok(view(preparedForm.withDefault(existingValue), index, mode))
+          Ok(view(preparedForm.withDefault(existingValue), index, mode, request.isAgent))
         )
       }
 
@@ -88,7 +88,7 @@ class DonationAmountYouAreClaimingController @Inject() (
         preparedForm
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, index, mode))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, index, mode, request.isAgent))),
             value =>
               GiftAidSmallDonationsSchemeDonationDetailsAnswers
                 .getClaim(zeroIndex(index))
