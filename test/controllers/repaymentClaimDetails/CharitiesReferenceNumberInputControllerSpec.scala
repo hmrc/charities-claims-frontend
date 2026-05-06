@@ -40,7 +40,7 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
 
     "onPageLoad" - {
 
-      //TODO restore unit tests for organisation and agent
+      // TODO restore unit tests for organisation and agent
       /*"should render the page correctly for an organisation" in {
         given application: Application = applicationBuilder().build()
 
@@ -176,7 +176,7 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
         }
       }
 
-      //TODO fix redirect url
+      // TODO fix redirect url
       /*"should redirect to the next page (R1.1) for an organisation" in {
         given application: Application = applicationBuilder().build()
 
