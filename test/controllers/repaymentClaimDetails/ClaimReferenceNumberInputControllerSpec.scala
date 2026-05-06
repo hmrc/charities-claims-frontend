@@ -22,6 +22,7 @@ import views.html.ClaimReferenceNumberInputView
 import play.api.Application
 import forms.TextInputFormProvider
 import models.{RepaymentClaimDetailsAnswers, SessionData}
+import uk.gov.hmrc.auth.core.AffinityGroup
 import play.api.data.Form
 import play.api.test.FakeRequest
 import models.Mode.*
@@ -37,7 +38,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
   "ClaimReferenceNumberInputController" - {
 
     "onPageLoad" - {
-      "should render the page correctly when the user has said YES to having a reference number" in {
+      "should render the page correctly when the user has said YES to having a reference number for an organisation" in {
         val sessionData                = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(true)
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -49,7 +50,24 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ClaimReferenceNumberInputView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form, NormalMode).body
+          contentAsString(result) shouldEqual view(form, NormalMode, false).body
+        }
+      }
+
+      "should render the page correctly when the user has said YES to having a reference number for an agent" in {
+        val sessionData = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(true)
+
+        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view = application.injector.instanceOf[ClaimReferenceNumberInputView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form, NormalMode, true).body
         }
       }
 
@@ -89,7 +107,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render the page and pre-populate correctly" in {
+      "should render the page and pre-populate correctly for an organisation" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           repaymentClaimDetailsAnswers = Some(
@@ -107,7 +125,29 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ClaimReferenceNumberInputView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill("123456"), NormalMode).body
+          contentAsString(result) shouldEqual view(form.fill("123456"), NormalMode, false).body
+        }
+      }
+
+      "should render the page and pre-populate correctly for an agent" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswers = Some(
+            RepaymentClaimDetailsAnswers(claimingReferenceNumber = Some(true), claimReferenceNumber = Some("123456"))
+          )
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view = application.injector.instanceOf[ClaimReferenceNumberInputView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill("123456"), NormalMode, true).body
         }
       }
 
@@ -134,6 +174,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
           redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
+
       "should render ClaimCompleteController if submissionReference is defined" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
