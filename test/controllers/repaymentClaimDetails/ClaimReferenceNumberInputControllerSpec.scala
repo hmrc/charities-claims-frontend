@@ -57,14 +57,15 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
       "should render the page correctly when the user has said YES to having a reference number for an agent" in {
         val sessionData = RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(true)
 
-        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view = application.injector.instanceOf[ClaimReferenceNumberInputView]
+          val view   = application.injector.instanceOf[ClaimReferenceNumberInputView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form, NormalMode, true).body
@@ -137,14 +138,15 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
           )
         )
 
-        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view = application.injector.instanceOf[ClaimReferenceNumberInputView]
+          val view   = application.injector.instanceOf[ClaimReferenceNumberInputView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form.fill("123456"), NormalMode, true).body
