@@ -243,9 +243,12 @@ claimingOtherIncome.paragraph =  Tax relief can include:
 claimingOtherIncome.title = Are you claiming tax deducted from other income?
 
 claimingReferenceNumber.caption = Provide repayment claim details
+claimingReferenceNumber.agent.caption = Provide charity repayment claim details
 claimingReferenceNumber.error.required = Select ‘Yes’ if you have a claim reference number
 claimingReferenceNumber.heading = Do you have a claim reference number?
+claimingReferenceNumber.agent.heading = Does the charity have a claim reference number?
 claimingReferenceNumber.title = Do you have a claim reference number?
+claimingReferenceNumber.agent.title = Does the charity have a claim reference number?
 
 claimsTaskList.caption = HMRC Charities reference: {0}
 claimsTaskList.declaration.warning = You must complete every section before you can declare.

@@ -47,7 +47,7 @@ class ClaimingReferenceNumberController @Inject() (
     .andThen(guard(SessionData.isClaimNotSubmitted))
     .async { implicit request =>
       val previousAnswer = RepaymentClaimDetailsAnswers.getClaimingReferenceNumber
-      Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+      Future.successful(Ok(view(form.withDefault(previousAnswer), mode, request.isAgent)))
     }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] = actions
@@ -58,7 +58,7 @@ class ClaimingReferenceNumberController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, request.isAgent))),
           value =>
             saveService
               .save(RepaymentClaimDetailsAnswers.setClaimingReferenceNumber(value))
