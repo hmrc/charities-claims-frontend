@@ -76,7 +76,8 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController @Inject() (
           Ok(
             view(
               oSummaryListForAdjustmentToGiftAidOverclaimed,
-              oSummaryListForNumberOfTaxYearsAdded
+              oSummaryListForNumberOfTaxYearsAdded,
+              request.isAgent
             )
           )
         )
