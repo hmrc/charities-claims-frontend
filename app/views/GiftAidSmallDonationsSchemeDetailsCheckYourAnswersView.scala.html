@@ -26,14 +26,14 @@
     govukButton: GovukButton
 )
 
-@(oSummaryListForAdjustmentToGiftAidOverclaimed: Option[SummaryList], oSummaryListForNumberOfTaxYearsAdded: Option[SummaryList])(implicit request: Request[?], messages: Messages)
+@(oSummaryListForAdjustmentToGiftAidOverclaimed: Option[SummaryList], oSummaryListForNumberOfTaxYearsAdded: Option[SummaryList],isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleNoForm(messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.title"))
+    pageTitle = titleNoForm(messages(if(isAgent) "giftAidSmallDonationsSchemeDetailsCheckYourAnswers.title.agent" else "giftAidSmallDonationsSchemeDetailsCheckYourAnswers.title"))
 ) {
 
     <span class="govuk-caption-l">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.caption")</span>
-    <h1 class="govuk-heading-l">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading")</h1>
+    <h1 class="govuk-heading-l">@messages(if(isAgent) "giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading.agent" else "giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading")</h1>
     @if(oSummaryListForAdjustmentToGiftAidOverclaimed.isDefined) {
         <h2 class="govuk-heading-m">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.1")</h2>
         @govukSummaryList(oSummaryListForAdjustmentToGiftAidOverclaimed.get)

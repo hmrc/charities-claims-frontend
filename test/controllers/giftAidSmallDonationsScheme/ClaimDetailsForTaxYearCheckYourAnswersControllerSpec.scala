@@ -17,10 +17,11 @@
 package controllers.giftAidSmallDonationsScheme
 
 import controllers.ControllerSpec
-import models._
+import models.*
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import uk.gov.hmrc.auth.core.AffinityGroup
 import views.html.ClaimDetailsForTaxYearCheckYourAnswersView
 
 class ClaimDetailsForTaxYearCheckYourAnswersControllerSpec extends ControllerSpec {
@@ -71,7 +72,31 @@ class ClaimDetailsForTaxYearCheckYourAnswersControllerSpec extends ControllerSpe
           val view = application.injector.instanceOf[ClaimDetailsForTaxYearCheckYourAnswersView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(Some(claim), 1).body
+          contentAsString(result) shouldEqual view(Some(claim), 1, false).body
+        }
+      }
+
+      "should render page with claim when present (index = 1) - for Agent" in {
+        val sessionData = baseSession.copy(
+          giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+            GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+              claims = Some(Seq(Some(claim)))
+            )
+          )
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData, AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ClaimDetailsForTaxYearCheckYourAnswersController.onPageLoad(1).url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[ClaimDetailsForTaxYearCheckYourAnswersView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(Some(claim), 1, true).body
         }
       }
 

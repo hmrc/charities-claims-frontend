@@ -48,7 +48,7 @@ class ClaimDetailsForTaxYearCheckYourAnswersController @Inject() (
             .flatMap(_.claims)
             .flatMap(_.lift(index - 1))
             .flatten
-        Future.successful(Ok(view(claimOpt, index)))
+        Future.successful(Ok(view(claimOpt, index, request.isAgent)))
       }
 
   def onSubmit(index: Int): Action[AnyContent] =
