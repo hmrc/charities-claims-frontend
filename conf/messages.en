@@ -864,3 +864,11 @@ enterCharityName.error.required = Enter a charity or Community Amateur Sports Cl
 enterCharityName.error.length = Charity or Community Amateur Sports Club (CASC) name must be 160 characters or less
 enterCharityName.error.regex = Enter a charity or Community Amateur Sports Club (CASC) name in the correct format
 
+enterTelephoneNumber.title = What is your telephone number?
+enterTelephoneNumber.heading = What is your telephone number?
+enterTelephoneNumber.caption = Provide organisation details
+enterTelephoneNumber.hint = For international numbers include the country code
+enterTelephoneNumber.p = You must provide a phone number so HM Revenue & Customs can get in touch about this claim.
+enterTelephoneNumber.error.required = Enter a telephone number
+enterTelephoneNumber.error.length = Telephone number must be 35 characters or less
+enterTelephoneNumber.error.format = Enter a telephone number in the correct format

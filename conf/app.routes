@@ -286,9 +286,12 @@ POST        /change-select-gift-aid-small-donations-scheme-claim-type        con
 GET         /maximum-claims-limit-reached                       controllers.repaymentClaimDetails.Warning11MaxClaimsReachedController.onPageLoad
 POST        /maximum-claims-limit-reached                       controllers.repaymentClaimDetails.Warning11MaxClaimsReachedController.onSubmit
 
-
-
 GET         /enter-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onPageLoad(mode: Mode = Mode.NormalMode)
 GET         /change-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /enter-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onSubmit(mode: Mode = Mode.CheckMode)
+
+GET         /enter-a-telephone-number                                    controllers.organisationDetails.EnterTelephoneNumberController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-enter-a-telephone-number                                    controllers.organisationDetails.EnterTelephoneNumberController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /enter-a-telephone-number                                    controllers.organisationDetails.EnterTelephoneNumberController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-enter-a-telephone-number                                   controllers.organisationDetails.EnterTelephoneNumberController.onSubmit(mode: Mode = Mode.CheckMode)

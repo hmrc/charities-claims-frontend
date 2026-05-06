@@ -1,0 +1,58 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.organisationDetails.routes
+
+@this(
+layout: templates.Layout,
+formHelper: FormWithCSRF,
+govukButton: GovukButton,
+govukInput: GovukInput,
+govukErrorSummary: GovukErrorSummary
+)
+
+@(form: Form[?], mode: Mode)(implicit request: Request[?], messages: Messages)
+
+@layout(
+   pageTitle = title(form, messages("enterTelephoneNumber.title"))
+) {
+
+   @if(form.errors.nonEmpty) {
+       @govukErrorSummary(ErrorSummaryViewModel(form))
+   }
+
+    <span class="govuk-caption-l">@messages("enterTelephoneNumber.caption")</span>
+    <h1 class="govuk-heading-l">@messages("enterTelephoneNumber.heading")</h1>
+    <p class="govuk-body">
+        @messages("enterTelephoneNumber.p")
+    </p>
+   @formHelper(action = routes.EnterTelephoneNumberController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+
+        @govukInput(
+            InputViewModel(
+                field = form("value"),
+                label = Label(content = Text(messages("enterTelephoneNumber.heading")), isPageHeading = false, classes = "govuk-visually-hidden")
+                ).withHint(
+                    HintViewModel(Text(messages("enterTelephoneNumber.hint")))
+                        .withId("value-hint")
+                )
+                .withCssClass("govuk-input--width-20")
+                .withAutocomplete("off")
+        )
+
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+    }
+}
