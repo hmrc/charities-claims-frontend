@@ -872,3 +872,11 @@ enterTelephoneNumber.p = You must provide a phone number so HM Revenue & Customs
 enterTelephoneNumber.error.required = Enter a telephone number
 enterTelephoneNumber.error.length = Telephone number must be 35 characters or less
 enterTelephoneNumber.error.format = Enter a telephone number in the correct format
+
+charitiesReferenceNumber.caption = Provide charity repayment claim details
+charitiesReferenceNumber.error.length = HMRC charities reference number must be 7 characters or less
+charitiesReferenceNumber.error.regex = Enter an HMRC charities reference number in the correct format
+charitiesReferenceNumber.error.required = Enter a HMRC charities reference number
+charitiesReferenceNumber.heading = What is the HMRC charities reference number?
+charitiesReferenceNumber.hint = This will begin with either one or two letters from A to Z and can include up to 5 numbers like 12345. For example, CF10034.
+charitiesReferenceNumber.title = What is the HMRC charities reference number?
