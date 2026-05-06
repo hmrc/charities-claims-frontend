@@ -25,6 +25,7 @@ import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import views.html.{GasdsClaimTypeView, UpdateRepaymentClaimView}
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class GasdsClaimTypeControllerSpec extends ControllerSpec {
 
@@ -37,84 +38,174 @@ class GasdsClaimTypeControllerSpec extends ControllerSpec {
   "GasdsClaimTypeController" - {
 
     "onPageLoad" - {
+      "organisation user" - {
+        val isAgent = false
 
-      "should render the page with empty form when no existing data" in {
-        given application: Application =
-          applicationBuilder(sessionData = baseSessionData).build()
+        "should render the page with empty form when no existing data" in {
+          given application: Application =
+            applicationBuilder(sessionData = baseSessionData).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.GasdsClaimTypeController.onPageLoad(NormalMode).url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.GasdsClaimTypeController.onPageLoad(NormalMode).url)
 
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[GasdsClaimTypeView]
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[GasdsClaimTypeView]
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form, NormalMode, false).body
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, NormalMode, false, isAgent).body
+          }
         }
-      }
 
-      "should pre-populate form when data exists" in {
-        val sessionData = baseSessionData.copy(
-          repaymentClaimDetailsAnswers = baseSessionData.repaymentClaimDetailsAnswers.map(
-            _.copy(
-              claimingUnderGiftAidSmallDonationsScheme = Some(true),
-              claimingDonationsNotFromCommunityBuilding = Some(false),
-              claimingDonationsCollectedInCommunityBuildings = Some(false),
-              connectedToAnyOtherCharities = Some(true)
+        "should pre-populate form when data exists" in {
+          val sessionData = baseSessionData.copy(
+            repaymentClaimDetailsAnswers = baseSessionData.repaymentClaimDetailsAnswers.map(
+              _.copy(
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = Some(false),
+                claimingDonationsCollectedInCommunityBuildings = Some(false),
+                connectedToAnyOtherCharities = Some(true)
+              )
             )
           )
-        )
 
-        given application: Application =
-          applicationBuilder(sessionData = sessionData).build()
+          given application: Application =
+            applicationBuilder(sessionData = sessionData).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.GasdsClaimTypeController.onPageLoad(NormalMode).url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.GasdsClaimTypeController.onPageLoad(NormalMode).url)
 
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[GasdsClaimTypeView]
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[GasdsClaimTypeView]
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(
-            form.fill(GasdsClaimType(false, false, true)),
-            NormalMode,
-            false
-          ).body
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(
+              form.fill(GasdsClaimType(false, false, true)),
+              NormalMode,
+              false,
+              isAgent
+            ).body
+          }
+        }
+
+        "should remove communityBuildings when it is CASC reference" in {
+          val sessionData = baseSessionData.copy(
+            repaymentClaimDetailsAnswers = baseSessionData.repaymentClaimDetailsAnswers.map(
+              _.copy(
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = Some(false),
+                claimingDonationsCollectedInCommunityBuildings = Some(true),
+                connectedToAnyOtherCharities = Some(false)
+              )
+            ),
+            charitiesReference = "CH-123"
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.GasdsClaimTypeController.onPageLoad(NormalMode).url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[GasdsClaimTypeView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(
+              form.fill(GasdsClaimType(false, false, false)),
+              NormalMode,
+              true,
+              isAgent
+            ).body
+          }
         }
       }
+      "Agent user" - {
+        val isAgent = true
 
-      "should remove communityBuildings when it is CASC reference" in {
-        val sessionData = baseSessionData.copy(
-          repaymentClaimDetailsAnswers = baseSessionData.repaymentClaimDetailsAnswers.map(
-            _.copy(
-              claimingUnderGiftAidSmallDonationsScheme = Some(true),
-              claimingDonationsNotFromCommunityBuilding = Some(false),
-              claimingDonationsCollectedInCommunityBuildings = Some(true),
-              connectedToAnyOtherCharities = Some(false)
+        "should render the page with empty form when no existing data" in {
+          given application: Application =
+            applicationBuilder(sessionData = baseSessionData, AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.GasdsClaimTypeController.onPageLoad(NormalMode).url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[GasdsClaimTypeView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, NormalMode, false, isAgent).body
+          }
+        }
+
+        "should pre-populate form when data exists" in {
+          val sessionData = baseSessionData.copy(
+            repaymentClaimDetailsAnswers = baseSessionData.repaymentClaimDetailsAnswers.map(
+              _.copy(
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = Some(false),
+                claimingDonationsCollectedInCommunityBuildings = Some(false),
+                connectedToAnyOtherCharities = Some(true)
+              )
             )
-          ),
-          charitiesReference = "CH-123"
-        )
+          )
 
-        given application: Application =
-          applicationBuilder(sessionData = sessionData).build()
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, AffinityGroup.Agent).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.GasdsClaimTypeController.onPageLoad(NormalMode).url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.GasdsClaimTypeController.onPageLoad(NormalMode).url)
 
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[GasdsClaimTypeView]
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[GasdsClaimTypeView]
 
-          status(result) shouldEqual OK
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(
+              form.fill(GasdsClaimType(false, false, true)),
+              NormalMode,
+              false,
+              isAgent
+            ).body
+          }
+        }
 
-          contentAsString(result) shouldEqual view(
-            form.fill(GasdsClaimType(false, false, false)),
-            NormalMode,
-            true
-          ).body
+        "should remove communityBuildings when it is CASC reference" in {
+          val sessionData = baseSessionData.copy(
+            repaymentClaimDetailsAnswers = baseSessionData.repaymentClaimDetailsAnswers.map(
+              _.copy(
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = Some(false),
+                claimingDonationsCollectedInCommunityBuildings = Some(true),
+                connectedToAnyOtherCharities = Some(false)
+              )
+            ),
+            charitiesReference = "CH-123"
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.GasdsClaimTypeController.onPageLoad(NormalMode).url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[GasdsClaimTypeView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(
+              form.fill(GasdsClaimType(false, false, false)),
+              NormalMode,
+              true,
+              isAgent
+            ).body
+          }
         }
       }
     }

@@ -67,7 +67,7 @@ class GasdsClaimTypeController @Inject() (
 
         val preparedForm = cleanedPrevious.fold(form)(form.fill)
 
-        Future.successful(Ok(view(preparedForm, mode, isCASCCharityReference)))
+        Future.successful(Ok(view(preparedForm, mode, isCASCCharityReference, request.isAgent)))
       }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
@@ -93,7 +93,8 @@ class GasdsClaimTypeController @Inject() (
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, isCASCCharityReference))),
+        formWithErrors =>
+          Future.successful(BadRequest(view(formWithErrors, mode, isCASCCharityReference, request.isAgent))),
         gasdsClaimType =>
           if (needsUpdateConfirmation(mode, previousAnswer, gasdsClaimType)) {
             val checkboxValues = formProvider.toSet(gasdsClaimType).toSeq
