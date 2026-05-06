@@ -24,26 +24,31 @@
     govukButton: GovukButton
 )
 
-@(registerCharityWithARegulatorUrl: String, formattedLimit: String)(form: Form[Boolean])(implicit request: Request[?], messages: Messages)
+@(registerCharityWithARegulatorUrl: String, formattedLimit: String, isAgent: Boolean)(form: Form[Boolean])(implicit request: Request[?], messages: Messages)
+
+@messageKey(key: String) = @{
+    if(isAgent) messages(s"registerCharityWithARegulator.agent.$key", registerCharityWithARegulatorUrl, formattedLimit)
+    else messages(s"registerCharityWithARegulator.$key", registerCharityWithARegulatorUrl, formattedLimit)
+}
 
 @layout(
-    pageTitle = title(form, messages("registerCharityWithARegulator.title"))
+    pageTitle = title(form, messageKey("title"))
 ) {
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <h1 class="govuk-heading-l">@messages("registerCharityWithARegulator.heading")</h1>
+    <h1 class="govuk-heading-l">@messageKey("heading")</h1>
 
     <div class="govuk-warning-text">
         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
         <strong class="govuk-warning-text__text">
             <span class="govuk-visually-hidden">@messages("warning.text")</span>
-            @Html(messages("registerCharityWithARegulator.warning", registerCharityWithARegulatorUrl, formattedLimit))
+            @Html(messageKey("warning"))
         </strong>
     </div>
 
-    <p class="govuk-body govuk-!-margin-bottom-8">@Html(messages("registerCharityWithARegulator.paragraph", registerCharityWithARegulatorUrl, formattedLimit))</p>
+    <p class="govuk-body govuk-!-margin-bottom-8">@Html(messageKey("paragraph"))</p>
 
     @formHelper(action = routes.RegisterCharityWithARegulatorController.onSubmit, Symbol("autoComplete") -> "off") {
 
@@ -63,7 +68,7 @@
                     )
                 ),
                 Fieldset(
-                    legend = Some(Legend(content = Text(messages("registerCharityWithARegulator.legend")), isPageHeading = false,
+                    legend = Some(Legend(content = Text(messageKey("legend")), isPageHeading = false,
                     classes = "govuk-fieldset__legend--m"))
                 )
             )

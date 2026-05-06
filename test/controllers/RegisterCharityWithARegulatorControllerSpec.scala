@@ -26,6 +26,7 @@ import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import services.{SaveService, UnregulatedDonationsService, UnregulatedLimitExceeded}
+import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
@@ -43,8 +44,12 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
     def getApplicableLimit(using DataRequest[?]): Option[String]                                             = applicableLimit
   }
 
-  def appWithFakeService(sessionData: SessionData, service: UnregulatedDonationsService): Application =
-    applicationBuilder(sessionData = sessionData)
+  def appWithFakeService(
+    sessionData: SessionData,
+    service: UnregulatedDonationsService,
+    affinityGroup: AffinityGroup = AffinityGroup.Organisation
+  ): Application =
+    applicationBuilder(sessionData = sessionData, affinityGroup = affinityGroup)
       .overrides(bind[UnregulatedDonationsService].toInstance(service))
       .build()
 
@@ -253,6 +258,53 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
           contentAsString(result) should include("100,000")
           contentAsString(result) should include("Registering your charity with a regulator")
           contentAsString(result) should include("Do you need to register your charity with a regulator")
+        }
+      }
+    }
+
+    "WRN12 agent screen content" - {
+
+      "should display agent heading and LowIncome limit content for agent user" in {
+        val fakeService                = new FakeUnregulatedDonationsService(
+          limitExceeded = Some(UnregulatedLimitExceeded(5000, "5,000")),
+          applicableLimit = Some("5,000")
+        )
+        given application: Application =
+          appWithFakeService(sessionDataLowIncome, fakeService, AffinityGroup.Agent)
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RegisterCharityWithARegulatorController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result)          shouldBe OK
+          contentAsString(result) should include("5,000")
+          contentAsString(result) should include("Registering the charity with a regulator")
+          contentAsString(result) should include("Do you need to register this charity with a regulator")
+          contentAsString(result) should include("The charity has made claims")
+          contentAsString(result) should include("the charity's annual income")
+        }
+      }
+
+      "should display agent heading and Excepted limit content for agent user" in {
+        val fakeService                = new FakeUnregulatedDonationsService(
+          limitExceeded = Some(UnregulatedLimitExceeded(100000, "100,000")),
+          applicableLimit = Some("100,000")
+        )
+        given application: Application =
+          appWithFakeService(sessionDataExcepted, fakeService, AffinityGroup.Agent)
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RegisterCharityWithARegulatorController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result)          shouldBe OK
+          contentAsString(result) should include("100,000")
+          contentAsString(result) should include("Registering the charity with a regulator")
+          contentAsString(result) should include("Do you need to register this charity with a regulator")
         }
       }
     }

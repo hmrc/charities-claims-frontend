@@ -516,6 +516,11 @@ registerCharityWithARegulator.radio.no.label = No, continue with claim
 registerCharityWithARegulator.radio.yes.label = Yes
 registerCharityWithARegulator.title = Registering your charity with a regulator
 registerCharityWithARegulator.warning = You have made claims for Gift Aid repayments on donations of £{1} or more in the last 12 months.
+registerCharityWithARegulator.agent.heading = Registering the charity with a regulator
+registerCharityWithARegulator.agent.legend = Do you need to register this charity with a regulator?
+registerCharityWithARegulator.agent.paragraph = If the charity’’s annual income is £{1} or more, you need to <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">register this charity with a regulator (opens in new tab)</a>.
+registerCharityWithARegulator.agent.title = Registering the charity with a regulator
+registerCharityWithARegulator.agent.warning = The charity has made claims for Gift Aid repayments on donations of £{1} or more in the last 12 months.
 
 repaymentClaimDetails.bullet1 = tax repayments on Gift Aid donations
 repaymentClaimDetails.bullet2 = top-up payments under the Gift Aid Small Donations Scheme (GASDS)
