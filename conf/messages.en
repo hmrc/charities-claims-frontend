@@ -198,12 +198,15 @@ claimDeclaration.title = Declaration
 claimDeclaration.submit = Confirm and submit claim
 
 claimReferenceNumber.caption = Provide repayment claim details
+claimReferenceNumber.agent.caption = Provide charity repayment claim details
 claimReferenceNumber.error.length = Claim reference number must be 20 characters or less
 claimReferenceNumber.error.regex = This can be up to 20 characters including numbers and capital letters
 claimReferenceNumber.error.required = Enter your claim reference number
 claimReferenceNumber.heading = What is your claim reference number?
+claimReferenceNumber.agent.heading = What is the charity’s claim reference number?
 claimReferenceNumber.hint = This can be up to 20 characters and include numerical characters like 123456789 and letters from A to Z. It can be found on the payment advice note when the claim is paid.
 claimReferenceNumber.title = What is your claim reference number?
+claimReferenceNumber.agent.title = What is the charity’s claim reference number?
 
 claimReferenceNumberCheck.error.required = Select ‘Yes’ if you have a reference number for this claim.
 claimReferenceNumberCheck.heading = Do you have a claim reference number?
