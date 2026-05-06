@@ -92,7 +92,7 @@ charityExcepted.bullet.3 = a scout or guide group
 charityExcepted.bullet.4 = a charitable service of the armed forces
 charityExcepted.bullet.5 = a students’ union
 charityExcepted.heading = Your charity is excepted
-charityExcepted.p1 = Your charity is excepted as the charity's income is £100,000 or less and is classed as one of the following:
+charityExcepted.p1 = Your charity is excepted as the charity’s income is £100,000 or less and is classed as one of the following:
 charityExcepted.title = Your charity is excepted
 
 charityExempt.bullet.1 = university or school
@@ -521,7 +521,7 @@ registerCharityWithARegulator.title = Registering your charity with a regulator
 registerCharityWithARegulator.warning = You have made claims for Gift Aid repayments on donations of £{1} or more in the last 12 months.
 registerCharityWithARegulator.agent.heading = Registering the charity with a regulator
 registerCharityWithARegulator.agent.legend = Do you need to register this charity with a regulator?
-registerCharityWithARegulator.agent.paragraph = If the charity's annual income is £{1} or more, you need to <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">register this charity with a regulator (opens in new tab)</a>.
+registerCharityWithARegulator.agent.paragraph = If the charity’s annual income is £{1} or more, you need to <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">register this charity with a regulator (opens in new tab)</a>.
 registerCharityWithARegulator.agent.title = Registering the charity with a regulator
 registerCharityWithARegulator.agent.warning = The charity has made claims for Gift Aid repayments on donations of £{1} or more in the last 12 months.
 
@@ -723,7 +723,7 @@ adjustmentToThisClaim.error.length = Adjustments must be 350 characters or less
 adjustmentToThisClaim.error.regex = Enter an adjustment in the correct format
 adjustmentToThisClaim.error.required = Enter an adjustment to Gift Aid, Other Income or a donation under the Gift Aid Small Donations Scheme
 adjustmentToThisClaim.heading = What adjustments have you made to this claim?
-adjustmentToThisClaim.para = If you have included any adjustments in this claim, you must enter an explanation below. You can also provide any other information regarding your charity's repayment claim.
+adjustmentToThisClaim.para = If you have included any adjustments in this claim, you must enter an explanation below. You can also provide any other information regarding your charity’s repayment claim.
 adjustmentToThisClaim.hint = You can enter up to 350 characters
 adjustmentToThisClaim.title = What adjustments have you made to this claim?
 
@@ -844,8 +844,11 @@ giftAidSmallDonationsSchemeDetailsCheckYourAnswers.numberOfTaxYearsAdded.label =
 gasdsClaimType.title = Gift Aid Small Donations Scheme (GASDS) details
 gasdsClaimType.heading = Gift Aid Small Donations Scheme (GASDS) details
 gasdsClaimType.caption = Provide repayment claim details
+gasdsClaimType.caption.agent = Provide charity repayment claim details
 gasdsClaimType.description = We need to know what you want to claim under GASDS.
+gasdsClaimType.description.agent = We need to know what the charity is claiming under GASDS.
 gasdsClaimType.youCanClaim = You can claim:
+gasdsClaimType.youCanClaim.agent = The charity can claim:
 gasdsClaimType.topUp = GASDS top-up payments
 gasdsClaimType.topUp.desc = For donations of £30 or less that were not collected in a community building.
 gasdsClaimType.community = Community buildings top-up payments
@@ -853,6 +856,7 @@ gasdsClaimType.community.desc = For donations of £30 or less that were collecte
 gasdsClaimType.connected = Connected charity or CASC claims
 gasdsClaimType.connected.desc = If your client is connected to other charities or Community Amateur Sports Clubs (CASCs), the £2,000 payment limit is shared across all connected organisations.
 gasdsClaimType.question = Which type of GASDS claim(s) do you want to make?
+gasdsClaimType.question.agent = Which type of GASDS claim(s) do you want to make for the charity?
 gasdsClaimType.hint = Select at least one
 gasdsClaimType.label.topUp = GASDS top-up payment
 gasdsClaimType.label.communityBuildings = Community buildings top-up payment
