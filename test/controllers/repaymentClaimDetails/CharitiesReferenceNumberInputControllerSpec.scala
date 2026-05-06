@@ -1,0 +1,211 @@
+/*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package controllers.repaymentClaimDetails
+
+import config.FrontendAppConfig
+import controllers.ControllerSpec
+import forms.TextInputFormProvider
+import models.Mode.*
+import models.{RepaymentClaimDetailsAnswers, SessionData}
+import play.api.Application
+import play.api.data.Form
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
+import play.api.test.FakeRequest
+import views.html.CharitiesReferenceNumberInputView
+import uk.gov.hmrc.auth.core.AffinityGroup
+
+class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
+
+  private val form: Form[String] = new TextInputFormProvider()(
+    "charitiesReferenceNumber.error.required",
+    (7, "charitiesReferenceNumber.error.length"),
+    "charitiesReferenceNumber.error.regex"
+  )
+
+  "CharitiesReferenceNumberInputController" - {
+
+    "onPageLoad" - {
+
+      // TODO restore unit tests for organisation and agent
+      /*"should render the page correctly for an organisation" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CharitiesReferenceNumberInputController.onPageLoad().url)
+
+          val result = route(application, request).value
+          val view = application.injector.instanceOf[CharitiesReferenceNumberInputView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(""), NormalMode).body
+        }
+      }
+
+      "should render the page correctly for an agent" in {
+        given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CharitiesReferenceNumberInputController.onPageLoad().url)
+
+          val result = route(application, request).value
+          val view = application.injector.instanceOf[CharitiesReferenceNumberInputView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(""), NormalMode).body
+        }
+      }*/
+
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CharitiesReferenceNumberInputController.onPageLoad().url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
+
+      // TODO: UPDATE URL
+      "should render the page correctly when the user provides a HMRC Charities Reference number" in {
+        val answers = RepaymentClaimDetailsAnswers(
+          claimingReferenceNumber = Some(true),
+          hmrcCharitiesReference = Some("AA12356")
+        )
+
+        val sessionData = SessionData
+          .empty("AA12356")
+          .copy(
+            repaymentClaimDetailsAnswers = Some(answers)
+          )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CharitiesReferenceNumberInputController.onPageLoad().url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[CharitiesReferenceNumberInputView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(""), NormalMode).body
+        }
+      }
+    }
+
+    "onSubmit" - {
+
+      // TODO: UPDATE REDIRECT URL
+      "should redirect to R17 Agent About Repayment page when in NormalMode" in {
+        val answers = RepaymentClaimDetailsAnswers(
+          claimingReferenceNumber = Some(true),
+          hmrcCharitiesReference = Some("AA12356")
+        )
+
+        val sessionData = SessionData
+          .empty("AA12356")
+          .copy(
+            repaymentClaimDetailsAnswers = Some(answers)
+          )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.CharitiesReferenceNumberInputController.onSubmit().url)
+              .withFormUrlEncodedBody("value" -> "AA12356")
+
+          val result = route(application, request).value
+
+          val appConfig = application.injector.instanceOf[FrontendAppConfig]
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(appConfig.charityRepaymentDashboardUrl)
+
+        }
+      }
+
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.CharitiesReferenceNumberInputController.onSubmit().url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
+      }
+
+      // TODO fix redirect url
+      /*"should redirect to the next page (R1.1) for an organisation" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.CharitiesReferenceNumberInputController.onSubmit().url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.RepaymentClaimTypeController.onPageLoad(NormalMode).url)
+        }
+      }*/
+
+      "should redirect to the next page (R1.9) for an agent" in {
+        // TODO: Need to change test once screen R1.9 is ready, currently redirecting to R2
+        given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.CharitiesReferenceNumberInputController.onSubmit().url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
+
+    }
+  }
+}

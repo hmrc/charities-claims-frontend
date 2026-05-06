@@ -79,11 +79,13 @@ cannotViewOrManageClaim.paragraph = This claim is being updated by someone else.
 cannotViewOrManageClaim.title = You cannot manage this claim
 
 changePreviousGASDSClaim.caption = Provide repayment claim details
+changePreviousGASDSClaim.caption.agent = Provide charity repayment claim details
 changePreviousGASDSClaim.error.required = Select ‘Yes’ if you want to change a previous Gift Aid Small Donations Scheme claim
 changePreviousGASDSClaim.heading = Gift Aid Small Donations Scheme (GASDS) details
 changePreviousGASDSClaim.legend = Do you want to make an adjustment to the GASDS claim?
 changePreviousGASDSClaim.missingDetails = confirm if you want to change a previous Gift Aid Small Donations Scheme claim
 changePreviousGASDSClaim.paragraph = If your charity or CASC has received an over-payment, we will deduct the over-payment from this claim.
+changePreviousGASDSClaim.paragraph.agent = If the charity or CASC has received an over-payment, we will deduct the over-payment from this claim.
 changePreviousGASDSClaim.title = Gift Aid Small Donations Scheme (GASDS) details
 
 charityExcepted.bullet.1 = a church or chapel
@@ -198,12 +200,15 @@ claimDeclaration.title = Declaration
 claimDeclaration.submit = Confirm and submit claim
 
 claimReferenceNumber.caption = Provide repayment claim details
+claimReferenceNumber.agent.caption = Provide charity repayment claim details
 claimReferenceNumber.error.length = Claim reference number must be 20 characters or less
 claimReferenceNumber.error.regex = This can be up to 20 characters including numbers and capital letters
 claimReferenceNumber.error.required = Enter your claim reference number
 claimReferenceNumber.heading = What is your claim reference number?
+claimReferenceNumber.agent.heading = What is the charity’s claim reference number?
 claimReferenceNumber.hint = This can be up to 20 characters and include numerical characters like 123456789 and letters from A to Z. It can be found on the payment advice note when the claim is paid.
 claimReferenceNumber.title = What is your claim reference number?
+claimReferenceNumber.agent.title = What is the charity’s claim reference number?
 
 claimReferenceNumberCheck.error.required = Select ‘Yes’ if you have a reference number for this claim.
 claimReferenceNumberCheck.heading = Do you have a claim reference number?
@@ -243,9 +248,12 @@ claimingOtherIncome.paragraph =  Tax relief can include:
 claimingOtherIncome.title = Are you claiming tax deducted from other income?
 
 claimingReferenceNumber.caption = Provide repayment claim details
+claimingReferenceNumber.agent.caption = Provide charity repayment claim details
 claimingReferenceNumber.error.required = Select ‘Yes’ if you have a claim reference number
 claimingReferenceNumber.heading = Do you have a claim reference number?
+claimingReferenceNumber.agent.heading = Does the charity have a claim reference number?
 claimingReferenceNumber.title = Do you have a claim reference number?
+claimingReferenceNumber.agent.title = Does the charity have a claim reference number?
 
 claimsTaskList.caption = HMRC Charities reference: {0}
 claimsTaskList.declaration.warning = You must complete every section before you can declare.
@@ -513,6 +521,11 @@ registerCharityWithARegulator.radio.no.label = No, continue with claim
 registerCharityWithARegulator.radio.yes.label = Yes
 registerCharityWithARegulator.title = Registering your charity with a regulator
 registerCharityWithARegulator.warning = You have made claims for Gift Aid repayments on donations of £{1} or more in the last 12 months.
+registerCharityWithARegulator.agent.heading = Registering the charity with a regulator
+registerCharityWithARegulator.agent.legend = Do you need to register this charity with a regulator?
+registerCharityWithARegulator.agent.paragraph = If the charity’s annual income is £{1} or more, you need to <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">register this charity with a regulator (opens in new tab)</a>.
+registerCharityWithARegulator.agent.title = Registering the charity with a regulator
+registerCharityWithARegulator.agent.warning = The charity has made claims for Gift Aid repayments on donations of £{1} or more in the last 12 months.
 
 repaymentClaimDetails.bullet1 = tax repayments on Gift Aid donations
 repaymentClaimDetails.bullet2 = top-up payments under the Gift Aid Small Donations Scheme (GASDS)
@@ -835,8 +848,11 @@ giftAidSmallDonationsSchemeDetailsCheckYourAnswers.numberOfTaxYearsAdded.label =
 gasdsClaimType.title = Gift Aid Small Donations Scheme (GASDS) details
 gasdsClaimType.heading = Gift Aid Small Donations Scheme (GASDS) details
 gasdsClaimType.caption = Provide repayment claim details
+gasdsClaimType.caption.agent = Provide charity repayment claim details
 gasdsClaimType.description = We need to know what you want to claim under GASDS.
+gasdsClaimType.description.agent = We need to know what the charity is claiming under GASDS.
 gasdsClaimType.youCanClaim = You can claim:
+gasdsClaimType.youCanClaim.agent = The charity can claim:
 gasdsClaimType.topUp = GASDS top-up payments
 gasdsClaimType.topUp.desc = For donations of £30 or less that were not collected in a community building.
 gasdsClaimType.community = Community buildings top-up payments
@@ -844,6 +860,7 @@ gasdsClaimType.community.desc = For donations of £30 or less that were collecte
 gasdsClaimType.connected = Connected charity or CASC claims
 gasdsClaimType.connected.desc = If your client is connected to other charities or Community Amateur Sports Clubs (CASCs), the £2,000 payment limit is shared across all connected organisations.
 gasdsClaimType.question = Which type of GASDS claim(s) do you want to make?
+gasdsClaimType.question.agent = Which type of GASDS claim(s) do you want to make for the charity?
 gasdsClaimType.hint = Select at least one
 gasdsClaimType.label.topUp = GASDS top-up payment
 gasdsClaimType.label.communityBuildings = Community buildings top-up payment
@@ -863,3 +880,19 @@ enterCharityName.error.required = Enter a charity or Community Amateur Sports Cl
 enterCharityName.error.length = Charity or Community Amateur Sports Club (CASC) name must be 160 characters or less
 enterCharityName.error.regex = Enter a charity or Community Amateur Sports Club (CASC) name in the correct format
 
+enterTelephoneNumber.title = What is your telephone number?
+enterTelephoneNumber.heading = What is your telephone number?
+enterTelephoneNumber.caption = Provide organisation details
+enterTelephoneNumber.hint = For international numbers include the country code
+enterTelephoneNumber.p = You must provide a phone number so HM Revenue & Customs can get in touch about this claim.
+enterTelephoneNumber.error.required = Enter a telephone number
+enterTelephoneNumber.error.length = Telephone number must be 35 characters or less
+enterTelephoneNumber.error.format = Enter a telephone number in the correct format
+
+charitiesReferenceNumber.caption = Provide charity repayment claim details
+charitiesReferenceNumber.error.length = HMRC charities reference number must be 7 characters or less
+charitiesReferenceNumber.error.regex = Enter an HMRC charities reference number in the correct format
+charitiesReferenceNumber.error.required = Enter a HMRC charities reference number
+charitiesReferenceNumber.heading = What is the HMRC charities reference number?
+charitiesReferenceNumber.hint = This will begin with either one or two letters from A to Z and can include up to 5 numbers like 12345. For example, CF10034.
+charitiesReferenceNumber.title = What is the HMRC charities reference number?
