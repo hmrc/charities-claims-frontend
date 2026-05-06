@@ -19,7 +19,7 @@ package controllers.repaymentClaimDetails
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.{Actions, GuardAction}
-import models.Mode.{CheckMode, NormalMode}
+import models.Mode.NormalMode
 import models.SessionData
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.RepaymentClaimDetailsView

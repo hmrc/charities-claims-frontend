@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import controllers.BaseController
 import controllers.actions.{Actions, GuardAction}
-import forms.TextInputFormProvider
+import forms.CharitiesReferenceTextInputFormProvider
 import models.Mode.*
 import models.{Mode, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
@@ -35,7 +35,7 @@ class CharitiesReferenceNumberInputController @Inject() (
   view: CharitiesReferenceNumberInputView,
   actions: Actions,
   guard: GuardAction,
-  formProvider: TextInputFormProvider,
+  formProvider: CharitiesReferenceTextInputFormProvider,
   saveService: SaveService,
   appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)

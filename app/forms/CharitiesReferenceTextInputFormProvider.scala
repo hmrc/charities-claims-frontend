@@ -16,13 +16,13 @@
 
 package forms
 
-import play.api.data.Forms.*
 import forms.{Mappings, Validation}
 import play.api.data.Form
+import play.api.data.Forms.*
 
 import javax.inject.Inject
 
-class TextInputFormProvider @Inject() extends Mappings {
+class CharitiesReferenceTextInputFormProvider @Inject() extends Mappings {
 
   def apply(
     errorRequired: String,
@@ -36,7 +36,7 @@ class TextInputFormProvider @Inject() extends Mappings {
           .verifying(
             firstError(
               maxLength(maxInputLength, maxInputLengthErrorMessage),
-              regexp(Validation.claimReferenceNumberPattern, regexPatternError)
+              regexp(Validation.charityReferenceNumberPattern, regexPatternError)
             )
           )
       )
