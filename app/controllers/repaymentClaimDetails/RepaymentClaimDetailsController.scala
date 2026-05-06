@@ -19,7 +19,7 @@ package controllers.repaymentClaimDetails
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.{Actions, GuardAction}
-import models.Mode.NormalMode
+import models.Mode.{CheckMode, NormalMode}
 import models.SessionData
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.RepaymentClaimDetailsView
@@ -41,8 +41,7 @@ class RepaymentClaimDetailsController @Inject() (
   def onSubmit: Action[AnyContent] =
     actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)).async { implicit request =>
       if (request.isAgent)
-        // TODO: Need to update when R1.9 route is available. Currently pointing to R2.
-        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+        Future.successful(Redirect(routes.CharitiesReferenceNumberInputController.onPageLoad(NormalMode)))
       else
         Future.successful(Redirect(routes.RepaymentClaimTypeController.onPageLoad(NormalMode)))
     }

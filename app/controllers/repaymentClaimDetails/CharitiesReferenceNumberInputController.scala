@@ -24,7 +24,7 @@ import forms.TextInputFormProvider
 import models.Mode.*
 import models.{Mode, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
 import views.html.CharitiesReferenceNumberInputView
 
@@ -50,18 +50,15 @@ class CharitiesReferenceNumberInputController @Inject() (
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetData()
-      .andThen(guard(RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true)))
       .andThen(guard(SessionData.isClaimNotSubmitted))
       .async { implicit request =>
         val previousAnswer = Some("")
         Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
       }
 
-  // TODO: UPDATE REDIRECT to R1.7
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetData()
-      .andThen(guard(RepaymentClaimDetailsAnswers.getClaimingReferenceNumber.contains(true)))
       .andThen(guard(SessionData.isClaimNotSubmitted))
       .async { implicit request =>
         form
@@ -71,7 +68,14 @@ class CharitiesReferenceNumberInputController @Inject() (
             value =>
               saveService
                 .save(RepaymentClaimDetailsAnswers.setHmrcCharitiesReference(value))
-                .map(_ => Redirect(appConfig.charityRepaymentDashboardUrl))
+                .map(_ => Redirect(navigator(mode)))
           )
       }
+
+  def navigator(mode: Mode): Call = mode match {
+    case NormalMode =>
+      routes.EnterCharityNameController.onPageLoad(mode)
+    case CheckMode  =>
+      routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+  }
 }

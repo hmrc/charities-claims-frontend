@@ -107,7 +107,6 @@ class RepaymentClaimDetailsControllerSpec extends ControllerSpec {
       }
 
       "should redirect to the next page (R1.1) for an organisation" in {
-        // TODO: Create screen R1.9, currently redirecting to R1.8
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -122,7 +121,6 @@ class RepaymentClaimDetailsControllerSpec extends ControllerSpec {
       }
 
       "should redirect to the next page (R1.9) for an agent" in {
-        // TODO: Need to change test once screen R1.9 is ready, currently redirecting to R2
         given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
@@ -132,7 +130,9 @@ class RepaymentClaimDetailsControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(
+            routes.CharitiesReferenceNumberInputController.onPageLoad(NormalMode).url
+          )
         }
       }
     }

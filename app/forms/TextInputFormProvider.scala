@@ -36,7 +36,7 @@ class TextInputFormProvider @Inject() extends Mappings {
           .verifying(
             firstError(
               maxLength(maxInputLength, maxInputLengthErrorMessage),
-              regexp(Validation.claimReferenceNumberPattern, regexPatternError)
+              regexp(Validation.charityReferenceNumberPattern, regexPatternError)
             )
           )
       )
