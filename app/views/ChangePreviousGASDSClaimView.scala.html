@@ -24,7 +24,7 @@
     govukButton: GovukButton,
 )
 
-@(form: Form[?], mode: Mode)(implicit request: Request[?], messages: Messages)
+@(form: Form[?], mode: Mode,isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = title(form, messages("changePreviousGASDSClaim.title"))
@@ -33,12 +33,12 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="govuk-caption-l">@messages("changePreviousGASDSClaim.caption")</span>
+    <span class="govuk-caption-l">@messages(if(isAgent) "changePreviousGASDSClaim.caption.agent" else "changePreviousGASDSClaim.caption")</span>
 
     @formHelper(action = routes.ChangePreviousGASDSClaimController.onSubmit(mode), Symbol("autoComplete") -> "off") {
         <h1 class="govuk-heading-l">@messages("changePreviousGASDSClaim.heading")</h1>
 
-        <p class="govuk-body">@messages("changePreviousGASDSClaim.paragraph")</p>
+        <p class="govuk-body">@messages(if(isAgent) "changePreviousGASDSClaim.paragraph.agent" else "changePreviousGASDSClaim.paragraph")</p>
 
         @govukRadios(
             RadiosViewModel.yesNo(

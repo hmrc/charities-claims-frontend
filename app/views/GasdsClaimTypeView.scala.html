@@ -25,7 +25,7 @@ govukCheckboxes: GovukCheckboxes,
 govukErrorSummary: GovukErrorSummary
 )
 
-@(form: Form[GasdsClaimType], mode: Mode, isCASCCharityReference: Boolean)(implicit request: Request[?], messages: Messages)
+@(form: Form[GasdsClaimType], mode: Mode, isCASCCharityReference: Boolean, isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
 pageTitle = title(form, messages("gasdsClaimType.title"))
@@ -35,12 +35,12 @@ pageTitle = title(form, messages("gasdsClaimType.title"))
     @govukErrorSummary(ErrorSummaryViewModel(form))
 }
 
-<span class="govuk-caption-l">@messages("gasdsClaimType.caption")</span>
+<span class="govuk-caption-l">@messages(if(isAgent) "gasdsClaimType.caption.agent" else "gasdsClaimType.caption")</span>
 <h1 class="govuk-heading-l">@messages("gasdsClaimType.heading")</h1>
 
-<p class="govuk-body">@messages("gasdsClaimType.description")</p>
+<p class="govuk-body">@messages(if(isAgent) "gasdsClaimType.description.agent" else "gasdsClaimType.description")</p>
 
-<h2 class="govuk-heading-m">@messages("gasdsClaimType.youCanClaim")</h2>
+<h2 class="govuk-heading-m">@messages(if(isAgent) "gasdsClaimType.youCanClaim.agent" else "gasdsClaimType.youCanClaim")</h2>
 
 <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-6">
     <li class="govuk-!-margin-bottom-3">
@@ -82,7 +82,7 @@ pageTitle = title(form, messages("gasdsClaimType.title"))
               fieldset = Fieldset(
                 legend = Some(
                   Legend(
-                    content = Text(messages("gasdsClaimType.question")),
+                    content = Text(messages(if(isAgent) "gasdsClaimType.question.agent" else "gasdsClaimType.question")),
                     isPageHeading = false,
                     classes = "govuk-fieldset__legend--m"
                   )
