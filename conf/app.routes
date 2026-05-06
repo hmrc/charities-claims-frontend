@@ -295,3 +295,6 @@ GET         /enter-a-telephone-number                                    control
 GET         /change-enter-a-telephone-number                                    controllers.organisationDetails.EnterTelephoneNumberController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /enter-a-telephone-number                                    controllers.organisationDetails.EnterTelephoneNumberController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-enter-a-telephone-number                                   controllers.organisationDetails.EnterTelephoneNumberController.onSubmit(mode: Mode = Mode.CheckMode)
+
+GET         /enter-charities-reference-number                    controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onPageLoad(mode: Mode = Mode.NormalMode)
+POST        /enter-charities-reference-number                    controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
