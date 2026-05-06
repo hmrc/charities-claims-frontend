@@ -207,6 +207,7 @@ claimReferenceNumber.agent.heading = What is the charity’s claim reference num
 claimReferenceNumber.hint = This can be up to 20 characters and include numerical characters like 123456789 and letters from A to Z. It can be found on the payment advice note when the claim is paid.
 claimReferenceNumber.title = What is your claim reference number?
 claimReferenceNumber.agent.title = What is the charity’s claim reference number?
+claimReferenceNumber.agent.missingDetails = a claim reference number
 
 claimReferenceNumberCheck.error.required = Select ‘Yes’ if you have a reference number for this claim.
 claimReferenceNumberCheck.heading = Do you have a claim reference number?
@@ -229,6 +230,8 @@ claimingGiftAid.title = Are you claiming Gift Aid?
 
 claimGASDS.missingDetails = confirm if you are claiming a top-up payment under the Gift Aid Small Donations Scheme
 claimingCommunityBuildingDonations.missingDetails = confirm if you are claiming for donations collected in community buildings
+claimingTaxDeducted.agent.missingDetails = confirm if the charity is claiming UK tax deducted from Other Income
+claimingUnderGiftAidSmallDonationsScheme.agent.missingDetails = confirm if the charity is claiming under the Gift Aid Small Donations Scheme
 connectedToAnyOtherCharities.missingDetails = confirm if you are connected to other charities or a Community Amateur Sports Club
 
 claimingGiftAidSmallDonations.error.required = Select ‘Yes’ if you are claiming for the Gift Aid Small Donations Scheme.
@@ -553,6 +556,7 @@ repaymentClaimDetailsCheckYourAnswers.title = Check your repayment claim
 repaymentClaimDetailsIncompleteAnswers.heading = This claim cannot be setup
 repaymentClaimDetailsIncompleteAnswers.message = You need to provide the following details to continue:
 repaymentClaimDetailsIncompleteAnswers.returnLink = Go back to provide the missing details for your claim
+repaymentClaimDetailsIncompleteAnswers.agent.returnLink = Go back to provide the missing details for this claim
 repaymentClaimDetailsIncompleteAnswers.title = This claim cannot be setup
 repaymentClaimDetailsIncompleteAnswers.warning = This claim cannot be setup because some details are missing.
 

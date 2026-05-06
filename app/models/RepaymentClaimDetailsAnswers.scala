@@ -68,6 +68,13 @@ final case class RepaymentClaimDetailsAnswers(
       ) && claimReferenceNumber.isEmpty)                           -> "claimReferenceNumberInput.missingDetails"
     ).collect { case (true, key) => key }
 
+  def agentMissingFields: List[String] =
+    List(
+      claimingTaxDeducted.isEmpty                      -> "claimingTaxDeducted.agent.missingDetails",
+      claimingUnderGiftAidSmallDonationsScheme.isEmpty -> "claimingUnderGiftAidSmallDonationsScheme.agent.missingDetails",
+      claimReferenceNumber.isEmpty                     -> "claimReferenceNumber.agent.missingDetails"
+    ).collect { case (true, key) => key }
+
   def hasRepaymentClaimDetailsCompleteAnswers: Boolean = missingFields.isEmpty
 }
 
@@ -110,6 +117,17 @@ object RepaymentClaimDetailsAnswers {
   private val defaultMissingFields: List[String] = List(
     "repaymentClaimType.missingDetails",
     "claimReferenceNumberCheck.missingDetails"
+  )
+
+  def getMissingFieldsForAgent(answers: Option[RepaymentClaimDetailsAnswers]): List[String] =
+    answers match
+      case Some(a) => a.agentMissingFields
+      case None    => defaultAgentMissingFields
+
+  private val defaultAgentMissingFields: List[String] = List(
+    "claimingTaxDeducted.agent.missingDetails",
+    "claimingUnderGiftAidSmallDonationsScheme.agent.missingDetails",
+    "claimReferenceNumber.agent.missingDetails"
   )
 
   def getClaimingTaxDeducted(using session: SessionData): Option[Boolean] = get(_.claimingTaxDeducted)
