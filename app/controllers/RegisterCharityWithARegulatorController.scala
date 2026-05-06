@@ -57,7 +57,7 @@ class RegisterCharityWithARegulatorController @Inject() (
       // flag and redirect rather than showing WRN5 incorrectly.
       unregulatedDonationsService.checkUnregulatedLimit.flatMap {
         case Some(_) =>
-          Future.successful(Ok(view(appConfig.registerCharityWithARegulatorUrl, formattedLimit)(form)))
+          Future.successful(Ok(view(appConfig.registerCharityWithARegulatorUrl, formattedLimit, request.isAgent)(form)))
         case None    =>
           val updatedSession = request.sessionData.copy(unregulatedLimitExceeded = false)
           saveService.save(updatedSession).map { _ =>
@@ -76,7 +76,11 @@ class RegisterCharityWithARegulatorController @Inject() (
         .fold(
           formWithErrors =>
             Future
-              .successful(BadRequest(view(appConfig.registerCharityWithARegulatorUrl, formattedLimit)(formWithErrors))),
+              .successful(
+                BadRequest(
+                  view(appConfig.registerCharityWithARegulatorUrl, formattedLimit, request.isAgent)(formWithErrors)
+                )
+              ),
           {
             case true =>
               // user selected Yes - reset the flag and redirect back to claims task list

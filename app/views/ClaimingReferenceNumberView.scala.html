@@ -24,16 +24,31 @@
     govukButton: GovukButton
 )
 
-@(form: Form[?], mode: Mode)(implicit request: Request[?], messages: Messages)
+@(form: Form[?], mode: Mode, isAgent: Boolean)(implicit request: Request[?], messages: Messages)
+
+@titleMessage = @{
+    if (isAgent) "claimingReferenceNumber.agent.title"
+    else "claimingReferenceNumber.title"
+}
+
+@radioLegendMessage = @{
+    if (isAgent) "claimingReferenceNumber.agent.heading"
+    else "claimingReferenceNumber.heading"
+}
+
+@captionMessage = @{
+    if (isAgent) "claimingReferenceNumber.agent.caption"
+    else "claimingReferenceNumber.caption"
+}
 
 @layout(
-    pageTitle    = title(form, messages("claimingReferenceNumber.title"))
+    pageTitle    = title(form, messages(titleMessage))
 ) {
 
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
-    <span class="govuk-caption-l">@messages("claimingReferenceNumber.caption")</span>
+    <span class="govuk-caption-l">@messages(captionMessage)</span>
 
     @formHelper(action = routes.ClaimingReferenceNumberController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -41,7 +56,7 @@
             RadiosViewModel.yesNo(
                 form("value"),
                 Fieldset(
-                    legend = Some(Legend(content = Text(messages("claimingReferenceNumber.heading")), isPageHeading = true,
+                    legend = Some(Legend(content = Text(messages(radioLegendMessage)), isPageHeading = true,
                     classes = "govuk-fieldset__legend--l"))
                 )
             )

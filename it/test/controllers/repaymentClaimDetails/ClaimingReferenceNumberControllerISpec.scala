@@ -34,7 +34,7 @@ class ClaimingReferenceNumberControllerISpec
 
   "GET /claim-reference-number-check" should {
 
-    "render the claiming reference number page" in {
+    "render the claiming reference number page for an organisation" in {
       stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
@@ -45,8 +45,22 @@ class ClaimingReferenceNumberControllerISpec
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.title() should include(msg("claimingReferenceNumber.title"))
+      doc.getElementsByClass("govuk-caption-l").text() should include(msg("claimingReferenceNumber.caption"))
     }
+
+/*    "render the claiming reference number page for an agent" in {
+      stubAgentAuthRequest()
+      stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+      stubGetClaims(claimId)(OK, Json.toJson(claim))
+      stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
+
+      val result = get("/claim-reference-number-check")
+
+      result.status shouldBe OK
+
+      val doc = Jsoup.parse(result.body)
+      doc.getElementsByClass("govuk-caption-l").text() should include(msg("claimingReferenceNumber.agent.caption"))
+    }*/
   }
 
   "POST /claim-reference-number-check" should {
