@@ -76,7 +76,11 @@ class RegisterCharityWithARegulatorController @Inject() (
         .fold(
           formWithErrors =>
             Future
-              .successful(BadRequest(view(appConfig.registerCharityWithARegulatorUrl, formattedLimit, request.isAgent)(formWithErrors))),
+              .successful(
+                BadRequest(
+                  view(appConfig.registerCharityWithARegulatorUrl, formattedLimit, request.isAgent)(formWithErrors)
+                )
+              ),
           {
             case true =>
               // user selected Yes - reset the flag and redirect back to claims task list

@@ -27,8 +27,8 @@
 @(registerCharityWithARegulatorUrl: String, formattedLimit: String, isAgent: Boolean)(form: Form[Boolean])(implicit request: Request[?], messages: Messages)
 
 @messageKey(key: String) = @{
-    if(isAgent) messages(s"registerCharityWithARegulator.agent.$key", registerCharityWithARegulatorUrl, formattedLimit)
-    else messages(s"registerCharityWithARegulator.$key", registerCharityWithARegulatorUrl, formattedLimit)
+if(isAgent) messages(s"registerCharityWithARegulator.agent.$key", registerCharityWithARegulatorUrl, formattedLimit)
+else messages(s"registerCharityWithARegulator.$key", registerCharityWithARegulatorUrl, formattedLimit)
 }
 
 @layout(

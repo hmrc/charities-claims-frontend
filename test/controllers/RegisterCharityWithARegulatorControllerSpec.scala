@@ -278,12 +278,12 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result)          shouldBe OK
+          status(result)        shouldBe OK
           contentAsString(result) should include("5,000")
           contentAsString(result) should include("Registering the charity with a regulator")
           contentAsString(result) should include("Do you need to register this charity with a regulator")
           contentAsString(result) should include("The charity has made claims")
-          contentAsString(result) should include("the charity's annual income")
+          contentAsString(result) should include("register this charity with a regulator (opens in new tab)")
         }
       }
 
@@ -301,7 +301,7 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result)          shouldBe OK
+          status(result)        shouldBe OK
           contentAsString(result) should include("100,000")
           contentAsString(result) should include("Registering the charity with a regulator")
           contentAsString(result) should include("Do you need to register this charity with a regulator")
