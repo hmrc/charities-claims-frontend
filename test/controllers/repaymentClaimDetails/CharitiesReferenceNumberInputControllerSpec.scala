@@ -114,7 +114,7 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[CharitiesReferenceNumberInputView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(""), NormalMode).body
+          contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
     }
