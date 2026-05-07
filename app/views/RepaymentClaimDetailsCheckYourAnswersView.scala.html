@@ -25,13 +25,34 @@
     govukButton: GovukButton
 )
 
-@(answers: Option[RepaymentClaimDetailsAnswers])(implicit request: Request[?], messages: Messages)
+@(answers: Option[RepaymentClaimDetailsAnswers], isAgent: Boolean)(implicit request: Request[?], messages: Messages)
+
+@titleMessage = @{
+    if (isAgent) "repaymentClaimDetailsCheckYourAnswers.agent.title"
+    else "repaymentClaimDetailsCheckYourAnswers.title"
+}
+
+@captionMessage = @{
+    if (isAgent) "repaymentClaimDetailsCheckYourAnswers.agent.caption"
+    else "repaymentClaimDetailsCheckYourAnswers.caption"
+}
+
+@headingMessage = @{
+    if (isAgent) "repaymentClaimDetailsCheckYourAnswers.agent.heading"
+    else "repaymentClaimDetailsCheckYourAnswers.heading"
+}
 
 @layout(
-    pageTitle = titleNoForm(messages("repaymentClaimDetailsCheckYourAnswers.title"))) {
+    pageTitle = titleNoForm(messages(titleMessage))) {
 
-    <span class="govuk-caption-l">@messages("repaymentClaimDetailsCheckYourAnswers.caption")</span>
-    <h1 class="govuk-heading-l">@messages("repaymentClaimDetailsCheckYourAnswers.heading")</h1>
+    <span class="govuk-caption-l">@messages(captionMessage)</span>
+    <h1 class="govuk-heading-l">@messages(headingMessage)</h1>
+
+    @if(isAgent) {
+        <h2 class="govuk-heading-m">@messages("repaymentClaimDetailsCheckYourAnswers.agent.heading2.1")</h2>
+        @govukSummaryList(RepaymentClaimDetailsCheckYourAnswersHelper.buildSummaryListForAgent(answers))
+        <h2 class="govuk-heading-m">@messages("repaymentClaimDetailsCheckYourAnswers.agent.heading2.2")</h2>
+    }
 
     @govukSummaryList(RepaymentClaimDetailsCheckYourAnswersHelper.buildSummaryList(answers))
 

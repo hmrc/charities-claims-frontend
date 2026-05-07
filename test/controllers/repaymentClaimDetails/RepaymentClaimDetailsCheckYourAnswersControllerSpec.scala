@@ -61,7 +61,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
             status(result) shouldEqual OK
 
-            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, false).body
           }
         }
 
@@ -96,7 +96,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
             status(result) shouldEqual OK
 
-            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, false).body
           }
         }
         "should render the page correctly when claimingTaxDeducted is true " in {
@@ -130,7 +130,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
             status(result) shouldEqual OK
 
-            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, false).body
           }
         }
 
@@ -165,7 +165,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
             status(result) shouldEqual OK
 
-            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, false).body
           }
         }
 
@@ -200,7 +200,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
             status(result) shouldEqual OK
 
-            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, false).body
           }
         }
 
@@ -235,7 +235,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
             status(result) shouldEqual OK
 
-            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, false).body
           }
         }
 
@@ -272,7 +272,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
             status(result) shouldEqual OK
 
-            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, false).body
           }
         }
         "should render the page correctly when claimingGiftAid & claimingTaxDeducted is true " in {
@@ -306,7 +306,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
             status(result) shouldEqual OK
 
-            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, false).body
           }
         }
       }
@@ -342,7 +342,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
           status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, false).body
 
         }
       }
@@ -378,7 +378,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
           status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, false).body
 
         }
       }
@@ -413,7 +413,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
           status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, false).body
 
         }
       }
@@ -449,7 +449,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
           status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, false).body
 
         }
       }
@@ -485,7 +485,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
           status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers).body
+          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, false).body
 
         }
       }

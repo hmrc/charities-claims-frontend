@@ -14,52 +14,56 @@
  * limitations under the License.
  */
 
-package controllers.repaymentClaimDetails
+package controllers.organisationDetails
 
 import com.google.inject.Inject
-import config.FrontendAppConfig
 import controllers.BaseController
-import controllers.actions.{Actions, GuardAction}
-import forms.CharitiesReferenceTextInputFormProvider
+import controllers.actions.{AccessType, Actions, GuardAction}
+import forms.RadioListFormProvider
 import models.Mode.*
-import models.{Mode, RepaymentClaimDetailsAnswers, SessionData}
+import models.{AgentUserOrganisationDetailsAnswers, Mode, SessionData, WhoShouldHmrcSendPaymentTo}
 import play.api.data.Form
-import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.CharitiesReferenceNumberInputView
+import views.html.WhoShouldWeSendPaymentToView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CharitiesReferenceNumberInputController @Inject() (
+class WhoShouldWeSendPaymentToController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: CharitiesReferenceNumberInputView,
+  view: WhoShouldWeSendPaymentToView,
   actions: Actions,
   guard: GuardAction,
-  formProvider: CharitiesReferenceTextInputFormProvider,
-  saveService: SaveService,
-  appConfig: FrontendAppConfig
+  formProvider: RadioListFormProvider,
+  saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[String] = formProvider(
-    "charitiesReferenceNumber.error.required",
-    (7, "charitiesReferenceNumber.error.length"),
-    "charitiesReferenceNumber.error.regex"
-  )
+  val form: Form[WhoShouldHmrcSendPaymentTo] = formProvider("whoShouldWeSendPaymentTo.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetData()
-      .andThen(guard(SessionData.isClaimNotSubmitted))
+      .andThen(
+        guard(
+          predicate = SessionData.isClaimNotSubmitted,
+          access = AccessType.AgentOnly
+        )
+      )
       .async { implicit request =>
-        val previousAnswer = Some("")
+        val previousAnswer = AgentUserOrganisationDetailsAnswers.getWhoShouldHmrcSendPaymentTo
         Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
       }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetData()
-      .andThen(guard(SessionData.isClaimNotSubmitted))
+      .andThen(
+        guard(
+          predicate = SessionData.isClaimNotSubmitted,
+          access = AccessType.AgentOnly
+        )
+      )
       .async { implicit request =>
         form
           .bindFromRequest()
@@ -67,15 +71,8 @@ class CharitiesReferenceNumberInputController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               saveService
-                .save(RepaymentClaimDetailsAnswers.setHmrcCharitiesReference(value))
-                .map(_ => Redirect(navigator(mode)))
+                .save(AgentUserOrganisationDetailsAnswers.setWhoShouldHmrcSendPaymentTo(value))
+                .map(_ => Redirect(routes.EnterTelephoneNumberController.onPageLoad(mode)))
           )
       }
-
-  def navigator(mode: Mode): Call = mode match {
-    case NormalMode =>
-      routes.EnterCharityNameController.onPageLoad(mode)
-    case CheckMode  =>
-      routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
-  }
 }

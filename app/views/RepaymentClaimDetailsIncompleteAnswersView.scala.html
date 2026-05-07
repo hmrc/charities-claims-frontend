@@ -20,7 +20,12 @@
     layout: templates.Layout
 )
 
-@(repaymentClaimDetailsCheckYourAnswersUrl: String, missingFields: Seq[String])(implicit request: Request[?], messages: Messages)
+@(repaymentClaimDetailsCheckYourAnswersUrl: String, missingFields: Seq[String], isAgent: Boolean)(implicit request: Request[?], messages: Messages)
+
+@returnLinkMessage = @{
+    if (isAgent) "repaymentClaimDetailsIncompleteAnswers.agent.returnLink"
+    else "repaymentClaimDetailsIncompleteAnswers.returnLink"
+}
 
 @layout(
     pageTitle = titleNoForm(messages("repaymentClaimDetailsIncompleteAnswers.title"))) {
@@ -47,7 +52,7 @@
 
     <p class="govuk-body">
         <a class="govuk-link" href="@repaymentClaimDetailsCheckYourAnswersUrl">
-            @messages("repaymentClaimDetailsIncompleteAnswers.returnLink")
+            @messages(returnLinkMessage)
         </a>
     </p>
 }

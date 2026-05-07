@@ -21,7 +21,7 @@ import controllers.BaseController
 import controllers.actions.{AccessType, Actions, GuardAction}
 import forms.PhoneNumberFormProvider
 import models.Mode.*
-import models.{Mode, OrganisationDetailsAnswers, SessionData}
+import models.{AgentUserOrganisationDetailsAnswers, Mode, OrganisationDetailsAnswers, SessionData}
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
@@ -51,7 +51,7 @@ class EnterTelephoneNumberController @Inject() (
         )
       )
       .async { implicit request =>
-        val previousAnswer = OrganisationDetailsAnswers.getTelephoneNumber
+        val previousAnswer = AgentUserOrganisationDetailsAnswers.getDaytimeTelephoneNumber
         Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
       }
 
@@ -71,7 +71,7 @@ class EnterTelephoneNumberController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               saveService
-                .save(OrganisationDetailsAnswers.setTelephoneNumber(value))
+                .save(AgentUserOrganisationDetailsAnswers.setDaytimeTelephoneNumber(value))
                 .map(_ =>
                   Redirect("/charities-claims/do-you-have-a-uk-address")
                 ) // TODO: Integrate this page once the corresponding page is implemented

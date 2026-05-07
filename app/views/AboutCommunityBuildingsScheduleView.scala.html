@@ -22,7 +22,12 @@
     govukButton: GovukButton
 )
 
-@(communityBuildingsScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl: String)(implicit request: Request[?], messages: Messages)
+@(communityBuildingsScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl: String, isAgent: Boolean)(implicit request: Request[?], messages: Messages)
+
+@paragraphOneMessage = @{
+    if (isAgent) "aboutCommunityBuildingsSchedule.agent.paragraph.one"
+    else "aboutCommunityBuildingsSchedule.paragraph.one"
+}
 
 @layout(
     pageTitle    = titleNoForm(messages("aboutCommunityBuildingsSchedule.title"))
@@ -31,7 +36,7 @@
     <span class="govuk-caption-l">@messages("aboutCommunityBuildingsSchedule.caption")</span>
     <h1 class="govuk-heading-l">@messages("aboutCommunityBuildingsSchedule.heading")</h1>
 
-    <p class="govuk-body">@messages("aboutCommunityBuildingsSchedule.paragraph.one")</p>
+    <p class="govuk-body">@messages(paragraphOneMessage)</p>
     <p class="govuk-body">@messages("aboutCommunityBuildingsSchedule.paragraph.two")</p>
     <p class="govuk-body">@Html(messages("aboutCommunityBuildingsSchedule.paragraph.url", communityBuildingsScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl))</p>
 
