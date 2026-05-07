@@ -22,6 +22,7 @@ uploadCommunityBuildingsSchedule.error.file-upload.EntityTooLarge = The selected
 aboutGiftAidSchedule.caption = Add Gift Aid schedule
 aboutGiftAidSchedule.heading = About Gift Aid schedule
 aboutGiftAidSchedule.paragraph.one = Use this service to add a Gift Aid schedule.
+aboutGiftAidSchedule.paragraph.agent.one = Use this service to add a Gift Aid schedule for your client.
 aboutGiftAidSchedule.paragraph.two = You can upload a Gift Aid schedule in a .ods format.
 aboutGiftAidSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Gift Aid schedule here (opens in new tab)</a>. You can submit 1 file at a time, and each file can be up to 250KB.
 aboutGiftAidSchedule.title = About Gift Aid schedule

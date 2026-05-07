@@ -44,7 +44,7 @@ class AboutGiftAidScheduleController @Inject() (
           then {
             Future.successful(Redirect(routes.YourGiftAidScheduleUploadController.onPageLoad))
           } else {
-            Future.successful(Ok(view(appConfig.giftAidScheduleSpreadsheetGuidanceUrl)))
+            Future.successful(Ok(view(appConfig.giftAidScheduleSpreadsheetGuidanceUrl, request.isAgent)))
           }
         } else {
           Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))

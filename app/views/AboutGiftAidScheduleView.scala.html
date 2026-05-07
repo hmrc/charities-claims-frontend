@@ -22,7 +22,7 @@
     govukButton: GovukButton
 )
 
-@(giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl: String)(implicit request: Request[?], messages: Messages)
+@(giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl: String, isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle    = titleNoForm(messages("aboutGiftAidSchedule.title"))
@@ -30,8 +30,12 @@
 
     <span class="govuk-caption-l">@messages("aboutGiftAidSchedule.caption")</span>
     <h1 class="govuk-heading-l">@messages("aboutGiftAidSchedule.heading")</h1>
-
-    <p class="govuk-body">@messages("aboutGiftAidSchedule.paragraph.one")</p>
+    @if(isAgent) {
+        <p class="govuk-body">@messages("aboutGiftAidSchedule.paragraph.agent.one")</p>
+    } else {
+        <p class="govuk-body">@messages("aboutGiftAidSchedule.paragraph.one")</p>
+    }
+    
     <p class="govuk-body">@messages("aboutGiftAidSchedule.paragraph.two")</p>
     <p class="govuk-body">@Html(messages("aboutGiftAidSchedule.paragraph.url", giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl))</p>
 
