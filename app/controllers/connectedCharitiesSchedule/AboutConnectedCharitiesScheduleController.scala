@@ -44,7 +44,7 @@ class AboutConnectedCharitiesScheduleController @Inject() (
           then {
             Future.successful(Redirect(routes.YourConnectedCharitiesScheduleUploadController.onPageLoad))
           } else {
-            Future.successful(Ok(view(appConfig.connectedCharitiesScheduleSpreadsheetGuidanceUrl)))
+            Future.successful(Ok(view(appConfig.connectedCharitiesScheduleSpreadsheetGuidanceUrl, request.isAgent)))
           }
         } else {
           Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
