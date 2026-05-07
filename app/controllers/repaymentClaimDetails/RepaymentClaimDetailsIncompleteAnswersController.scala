@@ -33,7 +33,10 @@ class RepaymentClaimDetailsIncompleteAnswersController @Inject() (
   def onPageLoad: Action[AnyContent] =
     actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)) { implicit request =>
       val missingFields =
-        RepaymentClaimDetailsAnswers.getMissingFields(request.sessionData.repaymentClaimDetailsAnswers)
-      Ok(view(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url, missingFields))
+        if (request.isAgent)
+          RepaymentClaimDetailsAnswers.getMissingFieldsForAgent(request.sessionData.repaymentClaimDetailsAnswers)
+        else
+          RepaymentClaimDetailsAnswers.getMissingFields(request.sessionData.repaymentClaimDetailsAnswers)
+      Ok(view(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url, missingFields, request.isAgent))
     }
 }

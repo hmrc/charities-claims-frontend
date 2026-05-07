@@ -2,6 +2,7 @@
 aboutCommunityBuildingsSchedule.caption = Add Community Buildings schedule
 aboutCommunityBuildingsSchedule.heading = About Community Buildings schedule
 aboutCommunityBuildingsSchedule.paragraph.one = Use this service to add a Community Buildings schedule.
+aboutCommunityBuildingsSchedule.agent.paragraph.one = Use this service to add a Community Buildings schedule for your client
 aboutCommunityBuildingsSchedule.paragraph.two = You can upload a Community Buildings schedule in a .ods format.
 aboutCommunityBuildingsSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Community Buildings schedule here (opens in new tab)</a>. You can submit 1 file at a time, and each file can be up to 250KB.
 aboutCommunityBuildingsSchedule.title = About Community Buildings schedule
@@ -209,6 +210,7 @@ claimReferenceNumber.agent.heading = What is the charity’s claim reference num
 claimReferenceNumber.hint = This can be up to 20 characters and include numerical characters like 123456789 and letters from A to Z. It can be found on the payment advice note when the claim is paid.
 claimReferenceNumber.title = What is your claim reference number?
 claimReferenceNumber.agent.title = What is the charity’s claim reference number?
+claimReferenceNumber.agent.missingDetails = a claim reference number
 
 claimReferenceNumberCheck.error.required = Select ‘Yes’ if you have a reference number for this claim.
 claimReferenceNumberCheck.heading = Do you have a claim reference number?
@@ -231,6 +233,8 @@ claimingGiftAid.title = Are you claiming Gift Aid?
 
 claimGASDS.missingDetails = confirm if you are claiming a top-up payment under the Gift Aid Small Donations Scheme
 claimingCommunityBuildingDonations.missingDetails = confirm if you are claiming for donations collected in community buildings
+claimingTaxDeducted.agent.missingDetails = confirm if the charity is claiming UK tax deducted from Other Income
+claimingUnderGiftAidSmallDonationsScheme.agent.missingDetails = confirm if the charity is claiming under the Gift Aid Small Donations Scheme
 connectedToAnyOtherCharities.missingDetails = confirm if you are connected to other charities or a Community Amateur Sports Club
 
 claimingGiftAidSmallDonations.error.required = Select ‘Yes’ if you are claiming for the Gift Aid Small Donations Scheme.
@@ -538,10 +542,12 @@ repaymentClaimDetails.agent.subheading = Provide charity repayment claim details
 repaymentClaimDetails.agent.p1 = Use this service to claim the following for the charity:
 
 repaymentClaimDetailsCheckYourAnswers.caption = Provide repayment claim details
+repaymentClaimDetailsCheckYourAnswers.agent.caption = Provide charity repayment claim details
 repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label = GASDS adjustment
 repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label = Claim reference number
 repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label = Claim reference provided
 repaymentClaimDetailsCheckYourAnswers.heading = Check your repayment claim
+repaymentClaimDetailsCheckYourAnswers.agent.heading = Check repayment claim details
 repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome = UK tax deducted from Other Income
 repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid = Gift Aid
 repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label = Repayment claim type
@@ -551,10 +557,16 @@ repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.communityBuildings = Commun
 repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.connectedCharity = Connected charity or CASC claim
 repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS = Top-up payments for small cash donations under Gift Aid Small Donations Scheme (GASDS)
 repaymentClaimDetailsCheckYourAnswers.title = Check your repayment claim
+repaymentClaimDetailsCheckYourAnswers.agent.title = Check repayment claim details
+repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityName.label = Charity name
+repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityReference.label = HMRC Charities reference
+repaymentClaimDetailsCheckYourAnswers.agent.heading2.1 = Charity details
+repaymentClaimDetailsCheckYourAnswers.agent.heading2.2 = Claim details
 
 repaymentClaimDetailsIncompleteAnswers.heading = This claim cannot be setup
 repaymentClaimDetailsIncompleteAnswers.message = You need to provide the following details to continue:
 repaymentClaimDetailsIncompleteAnswers.returnLink = Go back to provide the missing details for your claim
+repaymentClaimDetailsIncompleteAnswers.agent.returnLink = Go back to provide the missing details for this claim
 repaymentClaimDetailsIncompleteAnswers.title = This claim cannot be setup
 repaymentClaimDetailsIncompleteAnswers.warning = This claim cannot be setup because some details are missing.
 
@@ -902,3 +914,10 @@ charitiesReferenceNumber.error.required = Enter a HMRC charities reference numbe
 charitiesReferenceNumber.heading = What is the HMRC charities reference number?
 charitiesReferenceNumber.hint = This will begin with either one or two letters from A to Z and can include up to 5 numbers like 12345. For example, CF10034.
 charitiesReferenceNumber.title = What is the HMRC charities reference number?
+
+whoShouldWeSendPaymentTo.title = Who should HMRC send payment to?
+whoShouldWeSendPaymentTo.heading = Who should HMRC send payment to?
+whoShouldWeSendPaymentTo.caption = Provide organisation details
+whoShouldWeSendPaymentTo.radio.charityOrCasc = Charity/Community Amateur Sports Club (CASC)
+whoShouldWeSendPaymentTo.radio.agentOrNominee = Agent/Nominee
+whoShouldWeSendPaymentTo.error.required = Select who HMRC should send payment to

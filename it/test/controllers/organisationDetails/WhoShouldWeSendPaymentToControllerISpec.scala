@@ -16,7 +16,8 @@
 
 package controllers.organisationDetails
 
-import models.Claim
+import models.Mode.NormalMode
+import models.{Claim, WhoShouldHmrcSendPaymentTo}
 import org.jsoup.Jsoup
 import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.http.HeaderNames.LOCATION
@@ -28,18 +29,19 @@ import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import util.TestUsers
 import utils.{ComponentSpecHelper, TestDataUtils}
 
-class EnterTelephoneNumberControllerISpec extends ComponentSpecHelper
-  with AuthStub
-  with TestDataUtils
-  with ClaimsStub
-  with ClaimsValidationStub {
+class WhoShouldWeSendPaymentToControllerISpec
+  extends ComponentSpecHelper
+    with AuthStub
+    with TestDataUtils
+    with ClaimsStub
+    with ClaimsValidationStub {
 
-  private val normalUrl = "/enter-a-telephone-number?claimId=123"
+  private val normalUrl = "/who-should-we-send-the-payment-to?claimId=123"
 
   lazy val sessionCache: SessionCache =
     app.injector.instanceOf[SessionCache]
 
-  "GET /enter-a-telephone-number" should {
+  "GET /who-should-we-send-the-payment-to" should {
 
     "render the page for agent user" in {
       stubBackend()
@@ -49,30 +51,34 @@ class EnterTelephoneNumberControllerISpec extends ComponentSpecHelper
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.title should include(msg("enterTelephoneNumber.title"))
+      doc.title should include(msg("whoShouldWeSendPaymentTo.title"))
     }
   }
 
-  "POST /enter-a-telephone-number" should {
+  "POST /who-should-we-send-the-payment-to" should {
 
-    "save telephone number in session and redirect" in {
+    "save selection in session and redirect" in {
       stubBackend()
 
       val result =
         post(normalUrl)(
-          Json.obj("value" -> "123456789")
+          Json.obj(
+            "value" -> WhoShouldHmrcSendPaymentTo.AgentOrNominee.value
+          )
         )
 
       result.status shouldBe SEE_OTHER
-      result.header(LOCATION).value should include("/charities-claims/do-you-have-a-uk-address")
+      result.header(LOCATION).value shouldBe routes.EnterTelephoneNumberController.onPageLoad(NormalMode).url
 
       given HeaderCarrier =
-      HeaderCarrier(sessionId = Some(SessionId("mock-sessionid")))
+        HeaderCarrier(sessionId = Some(SessionId("mock-sessionid")))
 
       val cached = await(sessionCache.get())
 
       cached.value.agentUserOrganisationDetailsAnswers
-        .flatMap(_.daytimeTelephoneNumber) shouldBe Some("123456789")
+        .flatMap(_.whoShouldHmrcSendPaymentTo) shouldBe Some(
+        WhoShouldHmrcSendPaymentTo.AgentOrNominee
+      )
     }
   }
 
