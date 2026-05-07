@@ -192,6 +192,10 @@ class YourConnectedCharitiesScheduleUploadControllerSpec extends ControllerSpec 
               isAgent
             ).body
 
+            contentAsString(result)  should include(messages("yourConnectedCharitiesScheduleUpload.paragraph.one"))
+            (contentAsString(result) should not).include(
+              messages("yourConnectedCharitiesScheduleUpload.paragraph.one.agent")
+            )
           }
         }
 
@@ -325,6 +329,9 @@ class YourConnectedCharitiesScheduleUploadControllerSpec extends ControllerSpec 
               routes.YourConnectedCharitiesScheduleUploadController.onPageLoad,
               isAgent
             ).body
+
+            contentAsString(result)  should include(messages("yourConnectedCharitiesScheduleUpload.paragraph.one.agent"))
+            (contentAsString(result) should not).include(messages("yourConnectedCharitiesScheduleUpload.paragraph.one"))
 
           }
         }
