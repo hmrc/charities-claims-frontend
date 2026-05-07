@@ -39,7 +39,8 @@ final case class OrganisationDetailsAnswers(
   authorisedOfficialTrusteeLastName: Option[String] = None,
   corporateTrusteeDetails: Option[CorporateTrusteeDetails] = None,
   authorisedOfficialDetails: Option[AuthorisedOfficialDetails] = None,
-  telephoneNumber: Option[String] = None
+  telephoneNumber: Option[String] = None,
+  agentPostcode: Option[String] = None
 ) {
   def missingFields(isCASCCharityRef: Boolean): List[String] =
     List(
@@ -265,6 +266,11 @@ object OrganisationDetailsAnswers {
 
   def setTelephoneNumber(value: String)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(telephoneNumber = Some(v)))
+
+  def getAgentPostcode(using session: SessionData): Option[String] = get(_.agentPostcode)
+
+  def setAgentPostcode(value: String)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(agentPostcode = Some(v)))
 
   def toOrganisationDetails(answers: OrganisationDetailsAnswers, isCASCCharity: Boolean): Try[OrganisationDetails] =
     for {

@@ -849,7 +849,12 @@ giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.2 = GASDS claims
 giftAidSmallDonationsSchemeDetailsCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Amount of GASDS previously overclaimed
 giftAidSmallDonationsSchemeDetailsCheckYourAnswers.numberOfTaxYearsAdded.label = Number of tax years added
 
-
+agentPostcode.title = What is your postcode?
+agentPostcode.heading = What is your postcode?
+agentPostcode.caption = Provide organisation details
+agentPostcode.error.format = Enter a postcode in the correct format
+agentPostcode.error.length = Postcode must be 8 characters or less
+agentPostcode.error.required = Enter a postcode
 
 gasdsClaimType.title = Gift Aid Small Donations Scheme (GASDS) details
 gasdsClaimType.heading = Gift Aid Small Donations Scheme (GASDS) details
