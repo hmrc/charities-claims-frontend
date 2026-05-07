@@ -22,6 +22,7 @@ import controllers.ControllerSpec
 import views.html.RepaymentClaimDetailsIncompleteAnswersView
 import play.api.Application
 import models.{RepaymentClaimDetailsAnswers, SessionData}
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpec {
 
@@ -66,7 +67,8 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
 
           contentAsString(result) shouldEqual view(
             routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url,
-            defaultMissingFields
+            defaultMissingFields,
+            isAgent = false
           ).body
         }
       }
@@ -96,7 +98,8 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
 
           contentAsString(result) shouldEqual view(
             routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url,
-            expectedMissingFields
+            expectedMissingFields,
+            isAgent = false
           ).body
         }
       }
@@ -134,7 +137,8 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
 
           contentAsString(result) shouldEqual view(
             routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url,
-            Seq.empty
+            Seq.empty,
+            isAgent = false
           ).body
         }
       }
@@ -172,7 +176,8 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
 
           contentAsString(result) shouldEqual view(
             routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url,
-            Seq.empty
+            Seq.empty,
+            isAgent = false
           ).body
         }
       }
@@ -208,7 +213,8 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
 
           contentAsString(result) shouldEqual view(
             routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url,
-            expectedMissingFields
+            expectedMissingFields,
+            isAgent = false
           ).body
 
           expectedMissingFields should contain("claimGASDS.missingDetails")
@@ -247,7 +253,8 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
 
           contentAsString(result) shouldEqual view(
             routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url,
-            expectedMissingFields
+            expectedMissingFields,
+            isAgent = false
           ).body
 
           expectedMissingFields        should contain("claimReferenceNumberCheck.missingDetails")
@@ -286,11 +293,71 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
 
           contentAsString(result) shouldEqual view(
             routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url,
-            expectedMissingFields
+            expectedMissingFields,
+            isAgent = false
           ).body
 
           expectedMissingFields        should contain("claimReferenceNumberInput.missingDetails")
           expectedMissingFields.size shouldBe 1
+        }
+      }
+
+      "should render agent page with default missing fields when no session data present" in {
+
+        given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Agent).build()
+
+        val defaultMissingFields = RepaymentClaimDetailsAnswers.getMissingFieldsForAgent(None)
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[RepaymentClaimDetailsIncompleteAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url,
+            defaultMissingFields,
+            isAgent = true
+          ).body
+        }
+      }
+
+      "should render agent page with agent-specific missing fields when answers are incomplete" in {
+        val incompleteAnswers = RepaymentClaimDetailsAnswers()
+        val sessionData       = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some("123"),
+          lastUpdatedReference = Some("123"),
+          repaymentClaimDetailsAnswers = Some(incompleteAnswers)
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view                  = application.injector.instanceOf[RepaymentClaimDetailsIncompleteAnswersView]
+          val expectedMissingFields = incompleteAnswers.agentMissingFields
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url,
+            expectedMissingFields,
+            isAgent = true
+          ).body
+
+          expectedMissingFields should contain("claimingTaxDeducted.agent.missingDetails")
+          expectedMissingFields should contain("claimingUnderGiftAidSmallDonationsScheme.agent.missingDetails")
+          expectedMissingFields should contain("claimReferenceNumber.agent.missingDetails")
         }
       }
     }
