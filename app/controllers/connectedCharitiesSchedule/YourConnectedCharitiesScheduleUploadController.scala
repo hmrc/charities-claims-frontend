@@ -66,7 +66,8 @@ class YourConnectedCharitiesScheduleUploadController @Inject() (
                         screenLocked = true,
                         uploadStatusCall = routes.ConnectedCharitiesScheduleUploadStatusController.status,
                         refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
-                        reloadPageCall = routes.YourConnectedCharitiesScheduleUploadController.onPageLoad
+                        reloadPageCall = routes.YourConnectedCharitiesScheduleUploadController.onPageLoad,
+                        isAgent = request.isAgent
                       )
                     )
 
@@ -79,7 +80,8 @@ class YourConnectedCharitiesScheduleUploadController @Inject() (
                         screenLocked = true,
                         uploadStatusCall = routes.ConnectedCharitiesScheduleUploadStatusController.status,
                         refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
-                        reloadPageCall = routes.YourConnectedCharitiesScheduleUploadController.onPageLoad
+                        reloadPageCall = routes.YourConnectedCharitiesScheduleUploadController.onPageLoad,
+                        isAgent = request.isAgent
                       )
                     )
 
@@ -96,7 +98,8 @@ class YourConnectedCharitiesScheduleUploadController @Inject() (
                         screenLocked = false,
                         uploadStatusCall = routes.ConnectedCharitiesScheduleUploadStatusController.status,
                         refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
-                        reloadPageCall = routes.YourConnectedCharitiesScheduleUploadController.onPageLoad
+                        reloadPageCall = routes.YourConnectedCharitiesScheduleUploadController.onPageLoad,
+                        isAgent = request.isAgent
                       )
                     )
 
@@ -109,7 +112,8 @@ class YourConnectedCharitiesScheduleUploadController @Inject() (
                         screenLocked = false,
                         uploadStatusCall = routes.ConnectedCharitiesScheduleUploadStatusController.status,
                         refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
-                        reloadPageCall = routes.YourConnectedCharitiesScheduleUploadController.onPageLoad
+                        reloadPageCall = routes.YourConnectedCharitiesScheduleUploadController.onPageLoad,
+                        isAgent = request.isAgent
                       )
                     )
                 }

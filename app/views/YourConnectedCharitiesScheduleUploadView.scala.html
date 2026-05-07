@@ -32,7 +32,8 @@
     screenLocked: Boolean,
     uploadStatusCall: Call,
     refreshIntervalSeconds: Int,
-    reloadPageCall: Call
+    reloadPageCall: Call,
+    isAgent: Boolean
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
@@ -43,7 +44,7 @@
 
     <span class="govuk-caption-l">@messages("yourConnectedCharitiesScheduleUpload.caption")</span>
     <h1 class="govuk-heading-l">@messages("yourConnectedCharitiesScheduleUpload.heading")</h1>
-    <p class="govuk-body">@messages("yourConnectedCharitiesScheduleUpload.paragraph.one")</p>
+    <p class="govuk-body">@messages(if(isAgent) "yourConnectedCharitiesScheduleUpload.paragraph.one.agent" else "yourConnectedCharitiesScheduleUpload.paragraph.one")</p>
 
     @if(screenLocked) {
         <p class="govuk-body" id="refreshLink">
