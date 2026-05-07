@@ -538,10 +538,12 @@ repaymentClaimDetails.agent.subheading = Provide charity repayment claim details
 repaymentClaimDetails.agent.p1 = Use this service to claim the following for the charity:
 
 repaymentClaimDetailsCheckYourAnswers.caption = Provide repayment claim details
+repaymentClaimDetailsCheckYourAnswers.agent.caption = Provide charity repayment claim details
 repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label = GASDS adjustment
 repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label = Claim reference number
 repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label = Claim reference provided
 repaymentClaimDetailsCheckYourAnswers.heading = Check your repayment claim
+repaymentClaimDetailsCheckYourAnswers.agent.heading = Check repayment claim details
 repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome = UK tax deducted from Other Income
 repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid = Gift Aid
 repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label = Repayment claim type
@@ -551,6 +553,11 @@ repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.communityBuildings = Commun
 repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.connectedCharity = Connected charity or CASC claim
 repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS = Top-up payments for small cash donations under Gift Aid Small Donations Scheme (GASDS)
 repaymentClaimDetailsCheckYourAnswers.title = Check your repayment claim
+repaymentClaimDetailsCheckYourAnswers.agent.title = Check repayment claim details
+repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityName.label = Charity name
+repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityReference.label = HMRC Charities reference
+repaymentClaimDetailsCheckYourAnswers.agent.heading2.1 = Charity details
+repaymentClaimDetailsCheckYourAnswers.agent.heading2.2 = Claim details
 
 repaymentClaimDetailsIncompleteAnswers.heading = This claim cannot be setup
 repaymentClaimDetailsIncompleteAnswers.message = You need to provide the following details to continue:

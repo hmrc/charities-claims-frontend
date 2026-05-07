@@ -296,8 +296,10 @@ GET         /change-enter-a-telephone-number                                    
 POST        /enter-a-telephone-number                                    controllers.organisationDetails.EnterTelephoneNumberController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-enter-a-telephone-number                                   controllers.organisationDetails.EnterTelephoneNumberController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /enter-charities-reference-number                    controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onPageLoad(mode: Mode = Mode.NormalMode)
-POST        /enter-charities-reference-number                    controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
+GET         /enter-charities-reference-number                       controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onPageLoad(mode: Mode = Mode.NormalMode)
+POST        /enter-charities-reference-number                       controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
+GET         /change-charities-reference-number                      controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /change-charities-reference-number                      controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /who-should-we-send-the-payment-to                                    controllers.organisationDetails.WhoShouldWeSendPaymentToController.onPageLoad(mode: Mode = Mode.NormalMode)
 GET         /change-who-should-we-send-the-payment-to                                    controllers.organisationDetails.WhoShouldWeSendPaymentToController.onPageLoad(mode: Mode = Mode.CheckMode)

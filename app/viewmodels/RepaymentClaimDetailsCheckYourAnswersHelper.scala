@@ -207,6 +207,85 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
     SummaryList(rows)
   }
 
+  def buildSummaryListForAgent(
+    answers: Option[RepaymentClaimDetailsAnswers]
+  )(implicit messages: Messages): SummaryList = {
+
+    val rows = answers match {
+      case Some(repaymentClaimDetailsAnswers) =>
+        Seq(
+          repaymentClaimDetailsAnswers.nameOfCharity match {
+            case Some(nameOfCharity) =>
+              Some(
+                summaryRow(
+                  messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityName.label"),
+                  nameOfCharity,
+                  controllers.repaymentClaimDetails.routes.EnterCharityNameController
+                    .onPageLoad(CheckMode)
+                    .url,
+                  messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityName.label")
+                )
+              )
+
+            case None =>
+              Some(
+                missingDataRow(
+                  messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityName.label"),
+                  controllers.repaymentClaimDetails.routes.EnterCharityNameController
+                    .onPageLoad(CheckMode)
+                    .url,
+                  messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityName.label")
+                )
+              )
+          },
+          repaymentClaimDetailsAnswers.hmrcCharitiesReference match {
+            case Some(hmrcCharitiesReference) =>
+              Some(
+                summaryRow(
+                  messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityReference.label"),
+                  hmrcCharitiesReference,
+                  controllers.repaymentClaimDetails.routes.CharitiesReferenceNumberInputController
+                    .onPageLoad()
+                    .url,
+                  messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityReference.label")
+                )
+              )
+
+            case None =>
+              Some(
+                missingDataRow(
+                  messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityReference.label"),
+                  controllers.repaymentClaimDetails.routes.CharitiesReferenceNumberInputController
+                    .onPageLoad()
+                    .url,
+                  messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityReference.label")
+                )
+              )
+          }
+        ).flatten
+
+      case None =>
+        Seq(
+          missingDataRow(
+            messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityName.label"),
+            controllers.repaymentClaimDetails.routes.EnterCharityNameController
+              .onPageLoad(CheckMode)
+              .url,
+            messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityName.label")
+          ),
+          missingDataRow(
+            messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityReference.label"),
+            controllers.repaymentClaimDetails.routes.CharitiesReferenceNumberInputController
+              .onPageLoad()
+              .url,
+            messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityReference.label")
+          )
+        )
+    }
+
+    SummaryList(rows)
+  }
+
   private def summaryRow(label: String, value: String, href: String, hiddenText: String)(implicit
     messages: Messages
   ): SummaryListRow =
