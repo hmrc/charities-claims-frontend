@@ -37,8 +37,14 @@
     communityBuildingsScheduleData: CommunityBuildingsScheduleData,
     communityBuildings: Seq[CommunityBuilding],
     paginationViewModel: PaginationViewModel,
-    paginationStatus: PaginationStatus
+    paginationStatus: PaginationStatus,
+    isAgent: Boolean
 )(implicit request: Request[?], messages: Messages)
+
+@headingMessage = @{
+    if (isAgent) "checkYourCommunityBuildingsSchedule.agent.heading"
+    else "checkYourCommunityBuildingsSchedule.heading"
+}
 
 @layout(
     pageTitle = titleWithPagination(form, messages("checkYourCommunityBuildingsSchedule.title"), paginationStatus),
@@ -50,7 +56,7 @@
     }
 
     <span class="govuk-caption-l">@messages("checkYourCommunityBuildingsSchedule.caption")</span>
-    <h1 class="govuk-heading-l">@messages("checkYourCommunityBuildingsSchedule.heading")</h1>
+    <h1 class="govuk-heading-l">@messages(headingMessage)</h1>
 
     @govukSummaryList(SummaryList(
         card = Some(Card(

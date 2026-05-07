@@ -63,7 +63,8 @@ class CheckYourCommunityBuildingsScheduleController @Inject() (
                 communityBuildingsScheduleData = communityBuildingsScheduleData,
                 communityBuildings = paginationResult.paginatedData,
                 paginationViewModel = paginationResult.paginationViewModel,
-                paginationStatus = paginationResult
+                paginationStatus = paginationResult,
+                isAgent = request.isAgent
               )
             )
           }
@@ -92,7 +93,8 @@ class CheckYourCommunityBuildingsScheduleController @Inject() (
                         communityBuildingsScheduleData = communityBuildingsScheduleData,
                         communityBuildings = paginationResult.paginatedData,
                         paginationViewModel = paginationResult.paginationViewModel,
-                        paginationStatus = paginationResult
+                        paginationStatus = paginationResult,
+                        isAgent = request.isAgent
                       )
                     )
                   )
