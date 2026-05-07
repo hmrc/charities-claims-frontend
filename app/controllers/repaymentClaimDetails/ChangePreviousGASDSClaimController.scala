@@ -137,11 +137,8 @@ object ChangePreviousGASDSClaimController {
   def nextPage(value: Boolean, mode: Mode, previousAnswer: Option[Boolean]): Call =
     (value, mode, previousAnswer) match {
       // NormalMode
-      case (true, NormalMode, _) =>
+      case (_, NormalMode, _) =>
         routes.ClaimingReferenceNumberController.onPageLoad(NormalMode)
-
-      case (false, NormalMode, _) =>
-        routes.GasdsClaimTypeController.onPageLoad(NormalMode)
 
       case (_, CheckMode, _) =>
         routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
