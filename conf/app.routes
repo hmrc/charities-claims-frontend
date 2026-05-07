@@ -298,3 +298,8 @@ POST        /change-enter-a-telephone-number                                   c
 
 GET         /enter-charities-reference-number                    controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onPageLoad(mode: Mode = Mode.NormalMode)
 POST        /enter-charities-reference-number                    controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
+
+GET         /who-should-we-send-the-payment-to                                    controllers.organisationDetails.WhoShouldWeSendPaymentToController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-who-should-we-send-the-payment-to                                    controllers.organisationDetails.WhoShouldWeSendPaymentToController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /who-should-we-send-the-payment-to                                    controllers.organisationDetails.WhoShouldWeSendPaymentToController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-who-should-we-send-the-payment-to                                   controllers.organisationDetails.WhoShouldWeSendPaymentToController.onSubmit(mode: Mode = Mode.CheckMode)
