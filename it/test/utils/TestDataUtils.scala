@@ -55,6 +55,14 @@ trait TestDataUtils {
           corporateTrusteeDaytimeTelephoneNumber = Some("0122314321")
         )
       ),
+      agentUserOrganisationDetails = Some(AgentUserOrganisationDetails(
+        nameOfCharityRegulator = NameOfCharityRegulator.EnglandAndWales,
+        unregulatedReason = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+        charityRegistrationNumber = Some("123456"),
+        whoShouldHmrcSendPaymentTo = WhoShouldHmrcSendPaymentTo.AgentOrNominee,
+        daytimeTelephoneNumber = "07123456789",
+        doYouHaveAgentUKAddress = true,
+        postcode = Some("AA1 1AA"))),
       giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference"))
     )
   )

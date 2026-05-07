@@ -19,10 +19,9 @@ package controllers.organisationDetails
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.{AccessType, Actions, GuardAction}
-import controllers.repaymentClaimDetails.routes
 import forms.AgentPostcodeFormProvider
 import models.Mode.*
-import models.{Mode, OrganisationDetailsAnswers, SessionData}
+import models.{AgentUserOrganisationDetailsAnswers, Mode, SessionData}
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
@@ -53,8 +52,10 @@ class AgentPostcodeController @Inject() (
         )
       )
       .async { implicit request =>
-        val previousAnswer = OrganisationDetailsAnswers.getAgentPostcode
-        Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+        if AgentUserOrganisationDetailsAnswers.getDoYouHaveAgentUKAddress.contains(true) then
+          val previousAnswer = AgentUserOrganisationDetailsAnswers.getPostcode
+          Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+        else Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
       }
 
   // TODO - add dataguard to check that agent has UK postcode
@@ -74,8 +75,8 @@ class AgentPostcodeController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               saveService
-                .save(OrganisationDetailsAnswers.setAgentPostcode(value))
-                .map(_ => Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad))
+                .save(AgentUserOrganisationDetailsAnswers.setPostcode(value))
+                .map(_ => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad))
           )
       }
 }

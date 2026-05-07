@@ -23,7 +23,7 @@ class AgentPostcodeFormProvider @Inject() extends Mappings {
 
   private val maxLength            = 8
   private val addressPostcodeRegex =
-    "^\\\\s*((GIR 0AA)|((([a-zA-Z][0-9][0-9]?)|(([a-zA-Z][a-hj-yA-HJ-Y][0-9][0-9]?)|(([a-zA-Z][0-9][a-zA-Z])|([a-zA-Z][a-hj-yA-HJ-Y][0-9]?[a-zA-Z]))))\\\\s?[0-9][a-zA-Z]{2})\\\\s*)$"
+    "^\\s*((GIR 0AA)|((([a-zA-Z][0-9][0-9]?)|(([a-zA-Z][a-hj-yA-HJ-Y][0-9][0-9]?)|(([a-zA-Z][0-9][a-zA-Z])|([a-zA-Z][a-hj-yA-HJ-Y][0-9]?[a-zA-Z]))))\\s?[0-9][a-zA-Z]{2})\\s*)$"
   def apply(): Form[String]        = Form(
     "value" -> text("agentPostcode.error.required")
       .verifying(

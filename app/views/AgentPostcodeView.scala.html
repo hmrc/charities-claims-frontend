@@ -37,15 +37,16 @@
     <span class="govuk-caption-l">@messages("agentPostcode.caption")</span>
 
     @formHelper(action = routes.AgentPostcodeController.onSubmit(mode), Symbol("autoComplete") -> "off") {
-
+    <div class = "govuk-form-group">
     @govukInput(
         InputViewModel(
             field = form("value"),
-            label = Label(content = Text(messages("agentPostcode.heading")), isPageHeading = true)
+            label = Label(content = Text(messages("agentPostcode.heading")), isPageHeading = true,classes = "govuk-fieldset__legend--l")
             )
             .withCssClass("govuk-input--width-10")
             .withAutocomplete("postal-code")
         )
+    </div>
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
     }
