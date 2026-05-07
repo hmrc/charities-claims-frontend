@@ -28,7 +28,11 @@ class CharityNameFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "value" -> text("enterCharityName.error.required")
-        .verifying(regexp(charityNameRegex, "enterCharityName.error.regex"))
-        .verifying(maxLength(maxCharityNameLength, "enterCharityName.error.length"))
+        .verifying(
+          firstError(
+            maxLength(maxCharityNameLength, "enterCharityName.error.length"),
+            regexp(charityNameRegex, "enterCharityName.error.regex")
+          )
+        )
     )
 }
