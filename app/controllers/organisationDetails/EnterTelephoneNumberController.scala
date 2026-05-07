@@ -16,16 +16,16 @@
 
 package controllers.organisationDetails
 
+import models.Mode.*
+import services.SaveService
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
+import views.html.EnterTelephoneNumberView
 import controllers.actions.{AccessType, Actions, GuardAction}
 import forms.PhoneNumberFormProvider
-import models.Mode.*
-import models.{AgentUserOrganisationDetailsAnswers, Mode, OrganisationDetailsAnswers, SessionData}
+import models.{AgentUserOrganisationDetailsAnswers, Mode, SessionData}
 import play.api.data.Form
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.SaveService
-import views.html.EnterTelephoneNumberView
 
 import scala.concurrent.{ExecutionContext, Future}
 

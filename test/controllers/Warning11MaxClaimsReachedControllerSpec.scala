@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package controllers.repaymentClaimDetails
+package controllers
 
-import config.FrontendAppConfig
-import controllers.ControllerSpec
-import models.Mode.NormalMode
-import models.SessionData
-import play.api.Application
-import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
+import controllers.ControllerSpec
+import config.FrontendAppConfig
 import views.html.Warning11MaxClaimsReachedView
+import play.api.Application
 
 class Warning11MaxClaimsReachedControllerSpec extends ControllerSpec {
 
@@ -31,6 +29,7 @@ class Warning11MaxClaimsReachedControllerSpec extends ControllerSpec {
     "onPageLoad" - {
       "should render the page correctly" in {
         given application: Application = applicationBuilder().build()
+        val appConfig                  = application.injector.instanceOf[FrontendAppConfig]
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -40,7 +39,7 @@ class Warning11MaxClaimsReachedControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[Warning11MaxClaimsReachedView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view().body
+          contentAsString(result) shouldEqual view(appConfig.agentUnsubmittedClaimLimit).body
         }
       }
     }

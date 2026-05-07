@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import controllers.repaymentClaimDetails.routes
+@import controllers.routes
 @import models.*
 @import views.html.components.*
 
@@ -24,7 +24,7 @@
     govukButton: GovukButton
 )
 
-@()(implicit request: Request[?], messages: Messages)
+@(agentUnsubmittedClaimLimit: Int)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("warning11MaxClaimsReached.title")),
@@ -35,7 +35,7 @@
         @messages("warning11MaxClaimsReached.message.1")
     </h1>
 
-    <p class="govuk-body">@messages("warning11MaxClaimsReached.message.2")</p>
+    <p class="govuk-body">@messages("warning11MaxClaimsReached.message.2", agentUnsubmittedClaimLimit)</p>
 
     @formHelper(action = routes.Warning11MaxClaimsReachedController.onSubmit) {
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))

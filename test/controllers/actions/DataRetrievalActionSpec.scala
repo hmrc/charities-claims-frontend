@@ -33,9 +33,13 @@ import connectors.ClaimsValidationConnector
 
 class DataRetrievalActionSpec extends BaseSpec {
 
-  val request                       = FakeRequest("GET", "/test")
-  val authorisedRequestOrganisation = AuthorisedRequest(request, AffinityGroup.Organisation, testCharitiesReference)
-  val authorisedRequestAgent        = AuthorisedRequest(request, AffinityGroup.Agent, testCharitiesReference)
+  val request                                            = FakeRequest("GET", "/test")
+  val authorisedRequestOrganisation                      = AuthorisedRequest(request, AffinityGroup.Organisation, testCharitiesReference)
+  val authorisedRequestAgent                             = AuthorisedRequest(request, AffinityGroup.Agent, testCharitiesReference)
+  def authorisedRequestAgentWithClaimId(claimId: String) =
+    AuthorisedRequest(FakeRequest("GET", "/test?claimId=" + claimId), AffinityGroup.Agent, testCharitiesReference)
+  val authorisedRequestAgentWithBlankClaimId             =
+    AuthorisedRequest(FakeRequest("GET", "/test?claimId=blank"), AffinityGroup.Agent, testCharitiesReference)
 
   given SessionData = SessionData.empty(testCharitiesReference)
 
@@ -343,15 +347,142 @@ class DataRetrievalActionSpec extends BaseSpec {
         .expects(*)
         .returning(Future.successful(None))
 
+      (mockSessionCache
+        .store(_: SessionData)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(Future.successful(()))
+
       (mockClaimsConnector
         .retrieveUnsubmittedClaims(using _: HeaderCarrier))
         .expects(*)
         .returning(Future.successful(GetClaimsResponse(claimsCount = 2, claimsList = Nil)))
 
       val result =
-        action.invokeBlock(authorisedRequestAgent, (_: DataRequest[?]) => ???) // never going to be executed
+        action.invokeBlock(
+          authorisedRequestAgent,
+          (req: DataRequest[?]) =>
+            req.sessionData shouldBe SessionData.empty(testCharitiesReference)
+            Future.successful(Ok)
+        )
+      status(result) shouldBe OK
+    }
+
+    "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and claimId is provided with 'blank' value for agent" in {
+      val mockSessionCache              = mock[SessionCache]
+      val mockClaimsConnector           = mock[ClaimsConnector]
+      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+
+      val action = new DefaultDataRetrievalAction(
+        mockSessionCache,
+        mockClaimsConnector,
+        mockClaimsValidationConnector,
+        testFrontendAppConfig
+      )
+
+      (mockSessionCache
+        .get()(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(None))
+
+      (mockSessionCache
+        .store(_: SessionData)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(Future.successful(()))
+
+      (mockClaimsConnector
+        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(GetClaimsResponse(claimsCount = 2, claimsList = Nil)))
+
+      val result =
+        action.invokeBlock(
+          authorisedRequestAgentWithBlankClaimId,
+          (req: DataRequest[?]) =>
+            req.sessionData shouldBe SessionData.empty(testCharitiesReference)
+            Future.successful(Ok)
+        )
+      status(result) shouldBe OK
+    }
+
+    "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and claimId is provided with non-existing value for agent" in {
+      val mockSessionCache              = mock[SessionCache]
+      val mockClaimsConnector           = mock[ClaimsConnector]
+      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+
+      val action = new DefaultDataRetrievalAction(
+        mockSessionCache,
+        mockClaimsConnector,
+        mockClaimsValidationConnector,
+        testFrontendAppConfig
+      )
+
+      (mockSessionCache
+        .get()(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(None))
+
+      (mockClaimsConnector
+        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(GetClaimsResponse(claimsCount = 1, claimsList = List(TestClaims.testClaimInfo()))))
+
+      val result =
+        action.invokeBlock(
+          authorisedRequestAgentWithClaimId("456"),
+          (_: DataRequest[?]) => ??? // never going to be executed
+        )
       status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("http://foo.com/charity-repayment-dashboard")
+    }
+
+    "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and claimId is provided with existing value for agent" in {
+      val mockSessionCache              = mock[SessionCache]
+      val mockClaimsConnector           = mock[ClaimsConnector]
+      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+
+      val action = new DefaultDataRetrievalAction(
+        mockSessionCache,
+        mockClaimsConnector,
+        mockClaimsValidationConnector,
+        testFrontendAppConfig
+      )
+
+      (mockSessionCache
+        .get()(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(None))
+
+      (mockSessionCache
+        .store(_: SessionData)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(Future.successful(()))
+
+      (mockClaimsConnector
+        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(GetClaimsResponse(claimsCount = 1, claimsList = List(TestClaims.testClaimInfo()))))
+
+      (mockClaimsConnector
+        .getClaim(_: String)(using _: HeaderCarrier))
+        .expects("123", *)
+        .returning(Future.successful(Some(TestClaims.testClaimWithRepaymentClaimDetailsOnly())))
+
+      (mockClaimsValidationConnector
+        .getUploadSummary(_: String)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(Future.successful(GetUploadSummaryResponse(uploads = Nil)))
+
+      val result =
+        action.invokeBlock(
+          authorisedRequestAgentWithClaimId("123"),
+          (req: DataRequest[?]) =>
+            req.sessionData shouldBe SessionData.from(
+              TestClaims.testClaimWithRepaymentClaimDetailsOnly(),
+              testCharitiesReference
+            )
+            Future.successful(Ok)
+        )
+      status(result) shouldBe OK
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and no claims are retrieved from backend and equal to limit for agent" in {
@@ -378,8 +509,8 @@ class DataRetrievalActionSpec extends BaseSpec {
 
       val result =
         action.invokeBlock(authorisedRequestAgent, (_: DataRequest[?]) => ???) // never going to be executed
-      status(result)           shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("http://foo.com/charity-repayment-dashboard")
+      status(result)             shouldBe SEE_OTHER
+      redirectLocation(result).get should include("/maximum-claims-limit-reached")
     }
   }
 }

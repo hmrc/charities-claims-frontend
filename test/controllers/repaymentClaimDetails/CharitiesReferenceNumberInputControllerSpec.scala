@@ -16,17 +16,15 @@
 
 package controllers.repaymentClaimDetails
 
-import config.FrontendAppConfig
+import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
-import forms.TextInputFormProvider
-import models.Mode.*
-import models.{RepaymentClaimDetailsAnswers, SessionData}
-import play.api.Application
-import play.api.data.Form
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
-import play.api.test.FakeRequest
 import views.html.CharitiesReferenceNumberInputView
-import uk.gov.hmrc.auth.core.AffinityGroup
+import play.api.Application
+import forms.TextInputFormProvider
+import models.{RepaymentClaimDetailsAnswers, SessionData}
+import play.api.data.Form
+import play.api.test.FakeRequest
+import models.Mode.*
 
 class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
 

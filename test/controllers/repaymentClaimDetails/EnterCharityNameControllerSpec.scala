@@ -16,14 +16,13 @@
 
 package controllers.repaymentClaimDetails
 
+import models.Mode.*
 import controllers.ControllerSpec
-import models.RepaymentClaimDetailsAnswers
+import views.html.EnterCharityNameView
 import play.api.Application
 import forms.CharityNameFormProvider
-import models.Mode.*
+import models.RepaymentClaimDetailsAnswers
 import play.api.data.Form
-import uk.gov.hmrc.auth.core.AffinityGroup
-import views.html.EnterCharityNameView
 
 class EnterCharityNameControllerSpec extends ControllerSpec {
 
@@ -47,7 +46,7 @@ class EnterCharityNameControllerSpec extends ControllerSpec {
         val view = application.injector.instanceOf[EnterCharityNameView]
 
         status(result) shouldEqual OK
-        contentAsString(result) shouldEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) shouldEqual view(form, NormalMode)(using request, messages(application)).toString
       }
     }
 
@@ -65,7 +64,7 @@ class EnterCharityNameControllerSpec extends ControllerSpec {
         val view = application.injector.instanceOf[EnterCharityNameView]
 
         status(result) shouldEqual OK
-        contentAsString(result) shouldEqual view(form.fill("Test Name"), NormalMode)(
+        contentAsString(result) shouldEqual view(form.fill("Test Name"), NormalMode)(using
           request,
           messages(application)
         ).toString
@@ -87,7 +86,7 @@ class EnterCharityNameControllerSpec extends ControllerSpec {
         val view = application.injector.instanceOf[EnterCharityNameView]
 
         status(result) shouldEqual BAD_REQUEST
-        contentAsString(result) shouldEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) shouldEqual view(boundForm, NormalMode)(using request, messages(application)).toString
       }
     }
 
@@ -106,7 +105,7 @@ class EnterCharityNameControllerSpec extends ControllerSpec {
         val view = application.injector.instanceOf[EnterCharityNameView]
 
         status(result) shouldEqual BAD_REQUEST
-        contentAsString(result) shouldEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) shouldEqual view(boundForm, NormalMode)(using request, messages(application)).toString
       }
     }
 
@@ -125,7 +124,7 @@ class EnterCharityNameControllerSpec extends ControllerSpec {
         val view = application.injector.instanceOf[EnterCharityNameView]
 
         status(result) shouldEqual BAD_REQUEST
-        contentAsString(result) shouldEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) shouldEqual view(boundForm, NormalMode)(using request, messages(application)).toString
       }
     }
   }
