@@ -20,7 +20,9 @@ import com.google.inject.Inject
 import models.requests.DataRequest
 import play.api.mvc.{ActionBuilder, AnyContent, DefaultActionBuilder}
 import models.SessionData
+import javax.inject.Singleton
 
+@Singleton
 class Actions @Inject() (
   actionBuilder: DefaultActionBuilder,
   identify: AuthorisedAction,

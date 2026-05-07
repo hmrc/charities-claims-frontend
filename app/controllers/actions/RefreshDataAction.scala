@@ -18,6 +18,7 @@ package controllers.actions
 
 import play.api.mvc.*
 import com.google.inject.ImplementedBy
+import javax.inject.Singleton
 import connectors.{ClaimsConnector, ClaimsValidationConnector}
 import models.SessionData
 import repositories.SessionCache
@@ -34,6 +35,7 @@ import config.FrontendAppConfig
 @ImplementedBy(classOf[DefaultRefreshDataAction])
 trait RefreshDataAction extends ActionRefiner[AuthorisedRequest, DataRequest]
 
+@Singleton
 class DefaultRefreshDataAction @Inject() (
   cache: SessionCache,
   claimsConnector: ClaimsConnector,
@@ -54,8 +56,10 @@ class DefaultRefreshDataAction @Inject() (
           case None          => proceedWithCurrentClaim(request)
         }
       case AffinityGroup.Organisation =>
-        proceedWithCurrentClaim(request)
-
+        request.underlying.getQueryString("claimId") match {
+          case Some(claimId) if claimId == "blank" => tryCreateNewClaim(request)
+          case _                                   => proceedWithCurrentClaim(request)
+        }
     }
   }
 
@@ -123,5 +127,59 @@ class DefaultRefreshDataAction @Inject() (
         } else {
           Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
         }
+      }
+
+  private def tryCreateNewClaim[A](request: AuthorisedRequest[A])(using HeaderCarrier) =
+    cache
+      .get()
+      .flatMap {
+        case Some(sessionData) if sessionData.submissionReference.isDefined =>
+          // in case when session data exists and claim has been submitted
+          // we should start a new claim
+          val newSessionData = SessionData.empty(request.charitiesReference)
+          cache
+            .store(newSessionData)
+            .map(_ => Right(DataRequest(request, newSessionData)))
+
+        case Some(sessionData) if sessionData.unsubmittedClaimId.isDefined =>
+          // in case when session data exists and an unsubmitted claim is associated with it
+          // we should open that claim
+          claimsConnector
+            .getClaim(sessionData.unsubmittedClaimId.get)
+            .flatMap {
+              case Some(claim) =>
+                claimsValidationConnector
+                  .getUploadSummary(claim.claimId)
+                  .flatMap { uploadsSummary =>
+                    val refreshedSessionData =
+                      SessionData
+                        .from(claim, request.charitiesReference, Some(uploadsSummary))
+                        .copy(
+                          unregulatedLimitExceeded = sessionData.unregulatedLimitExceeded,
+                          unregulatedWarningBypassed = sessionData.unregulatedWarningBypassed
+                        )
+                    cache
+                      .store(refreshedSessionData)
+                      .map(_ => Right(DataRequest(request, refreshedSessionData)))
+                  }
+              case None        =>
+                Future
+                  .failed(
+                    new RuntimeException(s"claimId ${sessionData.unsubmittedClaimId} could not be found in backend")
+                  )
+            }
+
+        case Some(_) =>
+          // in case when session data exists but no claim is associated with it
+          // we should proceed with the current claim
+          dataRetrievalAction.refine(request)
+
+        case None =>
+          // in case when session data does not exist
+          // we should start a new claim
+          val newSessionData = SessionData.empty(request.charitiesReference)
+          cache
+            .store(newSessionData)
+            .map(_ => Right(DataRequest(request, newSessionData)))
       }
 }
