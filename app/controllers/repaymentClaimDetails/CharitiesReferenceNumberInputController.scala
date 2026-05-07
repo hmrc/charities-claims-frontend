@@ -50,7 +50,7 @@ class CharitiesReferenceNumberInputController @Inject() (
       .authAndGetData()
       .andThen(guard(SessionData.isClaimNotSubmitted))
       .async { implicit request =>
-        val previousAnswer = RepaymentClaimDetailsAnswers.getNameOfCharity match {
+        val previousAnswer = RepaymentClaimDetailsAnswers.getHmrcCharitiesReference match {
           case None        => form
           case Some(value) => form.fill(value)
         }
