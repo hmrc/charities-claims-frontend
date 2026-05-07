@@ -909,7 +909,7 @@ enterTelephoneNumber.error.format = Enter a telephone number in the correct form
 doYouHaveAgentUKAddress.title = Do you have a UK address?
 doYouHaveAgentUKAddress.heading = Do you have a UK address?
 doYouHaveAgentUKAddress.caption = Provide organisation details
-doYouHaveAgentUKAddress.error.required = Select 'Yes' if you have a UK address
+doYouHaveAgentUKAddress.error.required = Select ‘Yes’ if you have a UK address
 
 charitiesReferenceNumber.caption = Provide charity repayment claim details
 charitiesReferenceNumber.error.length = HMRC charities reference number must be 7 characters or less
