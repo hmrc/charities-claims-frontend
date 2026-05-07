@@ -22,12 +22,12 @@
     govukButton: GovukButton
 )
 
+@(communityBuildingsScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl: String, isAgent: Boolean)(implicit request: Request[?], messages: Messages)
+
 @paragraphOneMessage = @{
     if (isAgent) "aboutCommunityBuildingsSchedule.agent.paragraph.one"
     else "aboutCommunityBuildingsSchedule.paragraph.one"
 }
-
-@(communityBuildingsScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl: String)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle    = titleNoForm(messages("aboutCommunityBuildingsSchedule.title"))

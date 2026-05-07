@@ -56,7 +56,7 @@ class AboutCommunityBuildingsScheduleController @Inject() (
       then {
         Future.successful(Redirect(routes.YourCommunityBuildingsScheduleUploadController.onPageLoad))
       } else {
-        Future.successful(Ok(view(appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl), request.isAgent))
+        Future.successful(Ok(view(appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl, request.isAgent)))
       }
     }
 
