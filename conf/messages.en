@@ -906,6 +906,11 @@ enterTelephoneNumber.error.required = Enter a telephone number
 enterTelephoneNumber.error.length = Telephone number must be 35 characters or less
 enterTelephoneNumber.error.format = Enter a telephone number in the correct format
 
+doYouHaveAgentUKAddress.title = Do you have a UK address?
+doYouHaveAgentUKAddress.heading = Do you have a UK address?
+doYouHaveAgentUKAddress.caption = Provide organisation details
+doYouHaveAgentUKAddress.error.required = Select 'Yes' if you have a UK address
+
 charitiesReferenceNumber.caption = Provide charity repayment claim details
 charitiesReferenceNumber.error.length = HMRC charities reference number must be 7 characters or less
 charitiesReferenceNumber.error.regex = Enter an HMRC charities reference number in the correct format
