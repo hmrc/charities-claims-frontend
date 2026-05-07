@@ -74,9 +74,13 @@ class AgentHasUKAddressController @Inject() (
                 .save(AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(value))
                 .map(_ =>
                   if value then
-                    Redirect("/charities-claims/agent-postcode") // TODO: Integrate this page once the corresponding page is implemented
+                    Redirect(
+                      "/charities-claims/agent-postcode"
+                    ) // TODO: Integrate this page once the corresponding page is implemented
                   else
-                    Redirect("/charities-claims/check-your-agent-organisation-details") // TODO: Integrate this page once the corresponding page is implemented
+                    Redirect(
+                      "/charities-claims/check-your-agent-organisation-details"
+                    ) // TODO: Integrate this page once the corresponding page is implemented
                 )
           )
       }
