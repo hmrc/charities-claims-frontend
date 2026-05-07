@@ -305,3 +305,8 @@ GET         /who-should-we-send-the-payment-to                                  
 GET         /change-who-should-we-send-the-payment-to                                    controllers.organisationDetails.WhoShouldWeSendPaymentToController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /who-should-we-send-the-payment-to                                    controllers.organisationDetails.WhoShouldWeSendPaymentToController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-who-should-we-send-the-payment-to                                   controllers.organisationDetails.WhoShouldWeSendPaymentToController.onSubmit(mode: Mode = Mode.CheckMode)
+
+GET         /do-you-have-a-uk-address                                    controllers.organisationDetails.AgentHasUKAddressController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-do-you-have-a-uk-address                             controllers.organisationDetails.AgentHasUKAddressController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /do-you-have-a-uk-address                                    controllers.organisationDetails.AgentHasUKAddressController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-do-you-have-a-uk-address                             controllers.organisationDetails.AgentHasUKAddressController.onSubmit(mode: Mode = Mode.CheckMode)

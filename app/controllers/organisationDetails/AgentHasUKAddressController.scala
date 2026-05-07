@@ -16,30 +16,30 @@
 
 package controllers.organisationDetails
 
-import models.Mode.*
-import services.SaveService
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
-import views.html.EnterTelephoneNumberView
 import controllers.actions.{AccessType, Actions, GuardAction}
-import forms.PhoneNumberFormProvider
+import forms.YesNoFormProvider
+import models.Mode.*
 import models.{AgentUserOrganisationDetailsAnswers, Mode, SessionData}
 import play.api.data.Form
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.SaveService
+import views.html.AgentHasUKAddressView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EnterTelephoneNumberController @Inject() (
+class AgentHasUKAddressController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: EnterTelephoneNumberView,
+  view: AgentHasUKAddressView,
   actions: Actions,
   guard: GuardAction,
-  formProvider: PhoneNumberFormProvider,
+  formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[String] = formProvider()
+  val form: Form[Boolean] = formProvider("doYouHaveAgentUKAddress.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions
@@ -51,7 +51,7 @@ class EnterTelephoneNumberController @Inject() (
         )
       )
       .async { implicit request =>
-        val previousAnswer = AgentUserOrganisationDetailsAnswers.getDaytimeTelephoneNumber
+        val previousAnswer = AgentUserOrganisationDetailsAnswers.getDoYouHaveAgentUKAddress
         Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
       }
 
@@ -71,8 +71,17 @@ class EnterTelephoneNumberController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               saveService
-                .save(AgentUserOrganisationDetailsAnswers.setDaytimeTelephoneNumber(value))
-                .map(_ => Redirect(routes.AgentHasUKAddressController.onPageLoad(NormalMode)))
+                .save(AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(value))
+                .map(_ =>
+                  if value then
+                    Redirect(
+                      "/charities-claims/agent-postcode"
+                    ) // TODO: Integrate this page once the corresponding page is implemented
+                  else
+                    Redirect(
+                      "/charities-claims/check-your-agent-organisation-details"
+                    ) // TODO: Integrate this page once the corresponding page is implemented
+                )
           )
       }
 }
