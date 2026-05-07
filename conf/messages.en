@@ -935,3 +935,9 @@ whoShouldWeSendPaymentTo.caption = Provide organisation details
 whoShouldWeSendPaymentTo.radio.charityOrCasc = Charity/Community Amateur Sports Club (CASC)
 whoShouldWeSendPaymentTo.radio.agentOrNominee = Agent/Nominee
 whoShouldWeSendPaymentTo.error.required = Select who HMRC should send payment to
+
+deleteAgentRepaymentClaim.title = Are you sure you want to delete this repayment claim?
+deleteAgentRepaymentClaim.heading = Delete repayment claim
+deleteAgentRepaymentClaim.body = You are about to delete the repayment claim for {0}.
+deleteAgentRepaymentClaim.caution = Are you sure you want to delete this repayment claim?
+deleteAgentRepaymentClaim.error.required = Select ‘Yes’ if you want to to delete this repayment claim

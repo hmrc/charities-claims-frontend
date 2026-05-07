@@ -315,3 +315,6 @@ GET         /do-you-have-a-uk-address                                    control
 GET         /change-do-you-have-a-uk-address                             controllers.organisationDetails.AgentHasUKAddressController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /do-you-have-a-uk-address                                    controllers.organisationDetails.AgentHasUKAddressController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-do-you-have-a-uk-address                             controllers.organisationDetails.AgentHasUKAddressController.onSubmit(mode: Mode = Mode.CheckMode)
+
+GET         /delete-charity-repayment-claim                        controllers.DeleteAgentRepaymentClaimController.onPageLoad
+POST        /delete-charity-repayment-claim                        controllers.DeleteAgentRepaymentClaimController.onSubmit
