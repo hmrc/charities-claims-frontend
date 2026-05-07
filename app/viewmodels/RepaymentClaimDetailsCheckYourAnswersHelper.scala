@@ -245,7 +245,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                   messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityReference.label"),
                   hmrcCharitiesReference,
                   controllers.repaymentClaimDetails.routes.CharitiesReferenceNumberInputController
-                    .onPageLoad()
+                    .onPageLoad(CheckMode)
                     .url,
                   messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityReference.label")
                 )
@@ -256,7 +256,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
                 missingDataRow(
                   messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityReference.label"),
                   controllers.repaymentClaimDetails.routes.CharitiesReferenceNumberInputController
-                    .onPageLoad()
+                    .onPageLoad(CheckMode)
                     .url,
                   messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityReference.label")
                 )
@@ -276,7 +276,7 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
           missingDataRow(
             messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityReference.label"),
             controllers.repaymentClaimDetails.routes.CharitiesReferenceNumberInputController
-              .onPageLoad()
+              .onPageLoad(CheckMode)
               .url,
             messages("repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityReference.label")
           )

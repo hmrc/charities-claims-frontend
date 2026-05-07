@@ -19,27 +19,27 @@ package controllers.organisationDetails
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.{AccessType, Actions, GuardAction}
-import forms.PhoneNumberFormProvider
+import forms.RadioListFormProvider
 import models.Mode.*
-import models.{AgentUserOrganisationDetailsAnswers, Mode, OrganisationDetailsAnswers, SessionData}
+import models.{AgentUserOrganisationDetailsAnswers, Mode, SessionData, WhoShouldHmrcSendPaymentTo}
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SaveService
-import views.html.EnterTelephoneNumberView
+import views.html.WhoShouldWeSendPaymentToView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EnterTelephoneNumberController @Inject() (
+class WhoShouldWeSendPaymentToController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: EnterTelephoneNumberView,
+  view: WhoShouldWeSendPaymentToView,
   actions: Actions,
   guard: GuardAction,
-  formProvider: PhoneNumberFormProvider,
+  formProvider: RadioListFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form: Form[String] = formProvider()
+  val form: Form[WhoShouldHmrcSendPaymentTo] = formProvider("whoShouldWeSendPaymentTo.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions
@@ -51,7 +51,7 @@ class EnterTelephoneNumberController @Inject() (
         )
       )
       .async { implicit request =>
-        val previousAnswer = AgentUserOrganisationDetailsAnswers.getDaytimeTelephoneNumber
+        val previousAnswer = AgentUserOrganisationDetailsAnswers.getWhoShouldHmrcSendPaymentTo
         Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
       }
 
@@ -71,10 +71,8 @@ class EnterTelephoneNumberController @Inject() (
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               saveService
-                .save(AgentUserOrganisationDetailsAnswers.setDaytimeTelephoneNumber(value))
-                .map(_ =>
-                  Redirect("/charities-claims/do-you-have-a-uk-address")
-                ) // TODO: Integrate this page once the corresponding page is implemented
+                .save(AgentUserOrganisationDetailsAnswers.setWhoShouldHmrcSendPaymentTo(value))
+                .map(_ => Redirect(routes.EnterTelephoneNumberController.onPageLoad(mode)))
           )
       }
 }

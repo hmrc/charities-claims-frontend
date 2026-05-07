@@ -913,3 +913,10 @@ charitiesReferenceNumber.error.required = Enter a HMRC charities reference numbe
 charitiesReferenceNumber.heading = What is the HMRC charities reference number?
 charitiesReferenceNumber.hint = This will begin with either one or two letters from A to Z and can include up to 5 numbers like 12345. For example, CF10034.
 charitiesReferenceNumber.title = What is the HMRC charities reference number?
+
+whoShouldWeSendPaymentTo.title = Who should HMRC send payment to?
+whoShouldWeSendPaymentTo.heading = Who should HMRC send payment to?
+whoShouldWeSendPaymentTo.caption = Provide organisation details
+whoShouldWeSendPaymentTo.radio.charityOrCasc = Charity/Community Amateur Sports Club (CASC)
+whoShouldWeSendPaymentTo.radio.agentOrNominee = Agent/Nominee
+whoShouldWeSendPaymentTo.error.required = Select who HMRC should send payment to

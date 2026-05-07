@@ -19,7 +19,7 @@ package models
 import play.api.libs.json.{Format, Json}
 import utils.Required.*
 
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 final case class SessionData(
   // claimId of the unsubmitted claim stored in the backend,
@@ -33,6 +33,7 @@ final case class SessionData(
   lastUpdatedReference: Option[String] = None,
   repaymentClaimDetailsAnswers: Option[RepaymentClaimDetailsAnswers] = None,
   organisationDetailsAnswers: Option[OrganisationDetailsAnswers] = None,
+  agentUserOrganisationDetailsAnswers: Option[AgentUserOrganisationDetailsAnswers] = None,
   understandFalseStatements: Option[Boolean] = None,
   includedAnyAdjustmentsInClaimPrompt: Option[String] = None,
   giftAidSmallDonationsSchemeDonationDetailsAnswers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers] = None,
@@ -83,6 +84,8 @@ object SessionData {
       lastUpdatedReference = Some(claim.lastUpdatedReference),
       repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers.from(claim.claimData.repaymentClaimDetails)),
       organisationDetailsAnswers = claim.claimData.organisationDetails.map(OrganisationDetailsAnswers.from),
+      agentUserOrganisationDetailsAnswers =
+        claim.claimData.agentUserOrganisationDetails.map(AgentUserOrganisationDetailsAnswers.from),
       includedAnyAdjustmentsInClaimPrompt = claim.claimData.includedAnyAdjustmentsInClaimPrompt,
       understandFalseStatements = claim.claimData.understandFalseStatements,
       adjustmentForOtherIncomePreviousOverClaimed = claim.claimData.adjustmentForOtherIncomePreviousOverClaimed,
@@ -120,7 +123,9 @@ object SessionData {
 
   def toUpdateClaimRequest(sessionData: SessionData): Try[UpdateClaimRequest] =
     for {
-      lastUpdatedReference                       <- required(sessionData)(_.lastUpdatedReference)
+      lastUpdatedReference                       <- sessionData.lastUpdatedReference
+                                                      .map(Success(_))
+                                                      .getOrElse(Failure(new RuntimeException("Missing lastUpdatedReference")))
       adjustmentForOtherIncomePreviousOverClaimed = sessionData.adjustmentForOtherIncomePreviousOverClaimed
       includedAnyAdjustmentsInClaimPrompt         = sessionData.includedAnyAdjustmentsInClaimPrompt
       understandFalseStatements                   = sessionData.understandFalseStatements
