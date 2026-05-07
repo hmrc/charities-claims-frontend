@@ -51,7 +51,7 @@ trait ControllerSpec
 
   val testOnwardRoute: Call = Call("GET", "/foo")
 
-  given defaultSessionData: SessionData = SessionData.empty(testCharitiesReference)
+  given defaultSessionData: SessionData = SessionData.empty(testCharitiesReference, false)
 
   protected def applicationBuilder(
     sessionData: SessionData = defaultSessionData,
@@ -83,7 +83,7 @@ trait ControllerSpec
     uploads: Seq[UploadSummary],
     affinityGroup: AffinityGroup
   ): GuiceApplicationBuilder = {
-    val sessionData = SessionData.from(claim, "org-123", Some(GetUploadSummaryResponse(uploads)))
+    val sessionData = SessionData.from(claim, "org-123", Some(GetUploadSummaryResponse(uploads)), false)
     new GuiceApplicationBuilder()
       .overrides(
         List[GuiceableModule](

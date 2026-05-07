@@ -70,12 +70,32 @@ final case class RepaymentClaimDetailsAnswers(
 
   def agentMissingFields: List[String] =
     List(
-      claimingTaxDeducted.isEmpty                      -> "claimingTaxDeducted.agent.missingDetails",
-      claimingUnderGiftAidSmallDonationsScheme.isEmpty -> "claimingUnderGiftAidSmallDonationsScheme.agent.missingDetails",
-      claimReferenceNumber.isEmpty                     -> "claimReferenceNumber.agent.missingDetails"
+      hmrcCharitiesReference.isEmpty                               -> "repaymentClaimDetails.agent.missingCharitiesReference",
+      nameOfCharity.isEmpty                                        -> "repaymentClaimDetails.agent.missingCharityName",
+      (claimingGiftAid.isEmpty
+        && claimingTaxDeducted.isEmpty
+        && claimingUnderGiftAidSmallDonationsScheme.isEmpty)       -> "repaymentClaimType.agent.missingDetails",
+      (claimingUnderGiftAidSmallDonationsScheme.contains(true)
+        && claimingDonationsNotFromCommunityBuilding.isEmpty)      -> "claimGASDS.agent.missingDetails",
+      (claimingUnderGiftAidSmallDonationsScheme.contains(true)
+        && claimingDonationsCollectedInCommunityBuildings.isEmpty) -> "claimingCommunityBuildingDonations.agent.missingDetails",
+      (claimingUnderGiftAidSmallDonationsScheme.contains(true)
+        && ((claimingDonationsNotFromCommunityBuilding.contains(true)
+          || claimingDonationsCollectedInCommunityBuildings.contains(true))
+          && makingAdjustmentToPreviousClaim.isEmpty))             -> "changePreviousGASDSClaim.agent.missingDetails",
+      (claimingUnderGiftAidSmallDonationsScheme.contains(true)
+        && connectedToAnyOtherCharities.isEmpty)                   -> "connectedToAnyOtherCharities.agent.missingDetails",
+      claimingReferenceNumber.isEmpty                              -> "claimReferenceNumberCheck.agent.missingDetails",
+      (claimingReferenceNumber.contains(true)
+        && claimReferenceNumber.isEmpty)                           -> "claimReferenceNumberInput.agent.missingDetails"
     ).collect { case (true, key) => key }
 
-  def hasRepaymentClaimDetailsCompleteAnswers: Boolean = missingFields.isEmpty
+  def hasRepaymentClaimDetailsCompleteAnswers(isAgent: Boolean = false): Boolean =
+    if (isAgent)
+      agentMissingFields.isEmpty
+    else
+      missingFields.isEmpty
+
 }
 
 object RepaymentClaimDetailsAnswers {
@@ -124,10 +144,17 @@ object RepaymentClaimDetailsAnswers {
       case Some(a) => a.agentMissingFields
       case None    => defaultAgentMissingFields
 
-  private val defaultAgentMissingFields: List[String] = List(
+  /*  private val defaultAgentMissingFields: List[String] = List(
     "claimingTaxDeducted.agent.missingDetails",
     "claimingUnderGiftAidSmallDonationsScheme.agent.missingDetails",
     "claimReferenceNumber.agent.missingDetails"
+  )*/
+
+  private val defaultAgentMissingFields: List[String] = List(
+    "repaymentClaimDetails.agent.missingCharitiesReference",
+    "repaymentClaimDetails.agent.missingCharityName",
+    "repaymentClaimType.agent.missingDetails",
+    "claimReferenceNumberCheck.agent.missingDetails"
   )
 
   def getClaimingTaxDeducted(using session: SessionData): Option[Boolean] = get(_.claimingTaxDeducted)

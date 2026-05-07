@@ -78,7 +78,12 @@ class DefaultRefreshDataAction @Inject() (
                   .flatMap { uploadsSummary =>
                     val refreshedSessionData =
                       SessionData
-                        .from(claim, request.charitiesReference, Some(uploadsSummary))
+                        .from(
+                          claim,
+                          request.charitiesReference,
+                          Some(uploadsSummary),
+                          request.affinityGroup == AffinityGroup.Agent
+                        )
                         .copy(
                           unregulatedLimitExceeded = sessionData.unregulatedLimitExceeded,
                           unregulatedWarningBypassed = sessionData.unregulatedWarningBypassed
@@ -113,7 +118,12 @@ class DefaultRefreshDataAction @Inject() (
                   .getUploadSummary(claim.claimId)
                   .flatMap { uploadsSummary =>
                     val sessionData =
-                      SessionData.from(claim, request.charitiesReference, Some(uploadsSummary))
+                      SessionData.from(
+                        claim,
+                        request.charitiesReference,
+                        Some(uploadsSummary),
+                        request.affinityGroup == AffinityGroup.Agent
+                      )
                     cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
                   }
 

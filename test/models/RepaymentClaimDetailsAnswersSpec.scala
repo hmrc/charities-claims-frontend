@@ -97,7 +97,7 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           claimingReferenceNumber = Some(false)
         )
 
-        answers.hasRepaymentClaimDetailsCompleteAnswers shouldBe true
+        answers.hasRepaymentClaimDetailsCompleteAnswers() shouldBe true
       }
     }
 

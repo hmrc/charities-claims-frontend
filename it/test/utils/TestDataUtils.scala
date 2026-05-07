@@ -40,7 +40,9 @@ trait TestDataUtils {
         claimingTaxDeducted = false,
         claimingGiftAid = true,
         claimingUnderGiftAidSmallDonationsScheme = false,
-        claimReferenceNumber = Some("claim-ref-123")
+        claimReferenceNumber = Some("claim-ref-123"),
+        hmrcCharitiesReference = Some("AB6356"),
+        nameOfCharity = Some("Test charity")
       ),
       organisationDetails = Some(
         OrganisationDetails(
@@ -66,6 +68,7 @@ trait TestDataUtils {
       giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference"))
     )
   )
+  
   val getClaimsResponse =
     GetClaimsResponse(
       claimsCount = 1,

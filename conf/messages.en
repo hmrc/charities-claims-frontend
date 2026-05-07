@@ -86,6 +86,7 @@ changePreviousGASDSClaim.error.required = Select ‘Yes’ if you want to change
 changePreviousGASDSClaim.heading = Gift Aid Small Donations Scheme (GASDS) details
 changePreviousGASDSClaim.legend = Do you want to make an adjustment to the GASDS claim?
 changePreviousGASDSClaim.missingDetails = confirm if you want to change a previous Gift Aid Small Donations Scheme claim
+changePreviousGASDSClaim.agent.missingDetails = confirm if you want to change a previous Gift Aid Small Donations Scheme claim
 changePreviousGASDSClaim.paragraph = If your charity or CASC has received an over-payment, we will deduct the over-payment from this claim.
 changePreviousGASDSClaim.paragraph.agent = If the charity or CASC has received an over-payment, we will deduct the over-payment from this claim.
 changePreviousGASDSClaim.title = Gift Aid Small Donations Scheme (GASDS) details
@@ -217,6 +218,7 @@ claimReferenceNumber.agent.missingDetails = a claim reference number
 claimReferenceNumberCheck.error.required = Select ‘Yes’ if you have a reference number for this claim.
 claimReferenceNumberCheck.heading = Do you have a claim reference number?
 claimReferenceNumberCheck.missingDetails = confirm if you have a claim reference number
+claimReferenceNumberCheck.agent.missingDetails = confirm if the charity has a claim reference number
 claimReferenceNumberCheck.title = Do you have a claim reference number?
 
 claimReferenceNumberInput.error.length = Claim reference number must be 20 characters or less
@@ -224,6 +226,7 @@ claimReferenceNumberInput.error.regex = Include characters from Western European
 claimReferenceNumberInput.error.required = Enter your claim reference number
 claimReferenceNumberInput.heading = What is your claim reference number?
 claimReferenceNumberInput.missingDetails = provide a claim reference number
+claimReferenceNumberInput.agent.missingDetails = provide the charity’s claim reference number
 claimReferenceNumberInput.paragraph = You do not have to complete this box but you can use it to show your claim reference if you use one. The reference that you quote will appear on the payment advice note you receive from us when we pay the claim.
 claimReferenceNumberInput.title = What is your claim reference number?
 
@@ -234,10 +237,13 @@ claimingGiftAid.legend = Are you claiming Gift Aid?
 claimingGiftAid.title = Are you claiming Gift Aid?
 
 claimGASDS.missingDetails = confirm if you are claiming a top-up payment under the Gift Aid Small Donations Scheme
+claimGASDS.agent.missingDetails = confirm if you are claiming a top-up payment under the Gift Aid Small Donations Scheme
 claimingCommunityBuildingDonations.missingDetails = confirm if you are claiming for donations collected in community buildings
+claimingCommunityBuildingDonations.agent.missingDetails = confirm if you are claiming for donations collected in community buildings
 claimingTaxDeducted.agent.missingDetails = confirm if the charity is claiming UK tax deducted from Other Income
 claimingUnderGiftAidSmallDonationsScheme.agent.missingDetails = confirm if the charity is claiming under the Gift Aid Small Donations Scheme
 connectedToAnyOtherCharities.missingDetails = confirm if you are connected to other charities or a Community Amateur Sports Club
+connectedToAnyOtherCharities.agent.missingDetails = confirm if you are connected to other charities or a Community Amateur Sports Club
 
 claimingGiftAidSmallDonations.error.required = Select ‘Yes’ if you are claiming for the Gift Aid Small Donations Scheme.
 claimingGiftAidSmallDonations.heading = Gift Aid Small Donations Scheme
@@ -542,6 +548,8 @@ repaymentClaimDetails.subheading = Provide repayment claim details
 repaymentClaimDetails.title = Repayment claim details
 repaymentClaimDetails.agent.subheading = Provide charity repayment claim details
 repaymentClaimDetails.agent.p1 = Use this service to claim the following for the charity:
+repaymentClaimDetails.agent.missingCharityName = confirm charity or Community Amateur Sports Club (CASC) name
+repaymentClaimDetails.agent.missingCharitiesReference = confirm the HMRC Charities reference number
 
 repaymentClaimDetailsCheckYourAnswers.caption = Provide repayment claim details
 repaymentClaimDetailsCheckYourAnswers.agent.caption = Provide charity repayment claim details
@@ -582,6 +590,7 @@ repaymentClaimType.label.claimingGiftAid = Tax repayments on Gift Aid donations
 repaymentClaimType.label.claimingTaxDeducted = UK tax deducted from Other Income
 repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme = Top-up payments for donations under the Gift Aid Small Donations Scheme (GASDS)
 repaymentClaimType.missingDetails = select repayment claim type
+repaymentClaimType.agent.missingDetails = confirm the repayment claim type
 repaymentClaimType.title = Which type of repayment claim do you want to make?
 
 scheduleUploadFailure.continue = Upload a new schedule

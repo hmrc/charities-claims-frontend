@@ -84,7 +84,7 @@ class DefaultDataRetrievalAction @Inject() (
                 case AffinityGroup.Agent =>
                   getClaimsResponse.claimsCount match {
                     case 0 =>
-                      val sessionData = SessionData.empty(request.charitiesReference)
+                      val sessionData = SessionData.empty(request.charitiesReference, true)
                       cache
                         .store(sessionData)
                         .map(_ => Right(DataRequest(request, sessionData)))
@@ -100,7 +100,7 @@ class DefaultDataRetrievalAction @Inject() (
                                 .getUploadSummary(claim.claimId)
                                 .flatMap { uploadsSummary =>
                                   val sessionData =
-                                    SessionData.from(claim, request.charitiesReference, Some(uploadsSummary))
+                                    SessionData.from(claim, request.charitiesReference, Some(uploadsSummary), true)
                                   cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
                                 }
 
@@ -112,7 +112,7 @@ class DefaultDataRetrievalAction @Inject() (
                             if claimId == "blank" && unsubmittedClaimsCount < config.agentUnsubmittedClaimLimit =>
                           // in case when the claimId is blank and unsubmitted claims count is less than a limit
                           // we should start a new claim
-                          val sessionData = SessionData.empty(request.charitiesReference)
+                          val sessionData = SessionData.empty(request.charitiesReference, true)
                           cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
 
                         case Some(claimId)
@@ -182,7 +182,12 @@ class DefaultDataRetrievalAction @Inject() (
                   .getUploadSummary(claim.claimId)
                   .flatMap { uploadsSummary =>
                     val sessionData =
-                      SessionData.from(claim, request.charitiesReference, Some(uploadsSummary))
+                      SessionData.from(
+                        claim,
+                        request.charitiesReference,
+                        Some(uploadsSummary),
+                        request.affinityGroup == AffinityGroup.Agent
+                      )
                     cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
                   }
 
@@ -191,7 +196,8 @@ class DefaultDataRetrievalAction @Inject() (
             }
         else if claimId == "blank" then {
           if getClaimsResponse.claimsCount < config.agentUnsubmittedClaimLimit then {
-            val sessionData = SessionData.empty(request.charitiesReference)
+            val sessionData =
+              SessionData.empty(request.charitiesReference, request.affinityGroup == AffinityGroup.Agent)
             cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
           } else {
             Future.successful(

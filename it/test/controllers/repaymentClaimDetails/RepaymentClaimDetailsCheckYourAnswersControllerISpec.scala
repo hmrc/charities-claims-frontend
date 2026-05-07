@@ -23,6 +23,7 @@ import play.api.libs.json.Json
 import play.api.test.Helpers.*
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
+import util.TestUsers
 
 class RepaymentClaimDetailsCheckYourAnswersControllerISpec
     extends ComponentSpecHelper with TestDataUtils with AuthStub
@@ -31,7 +32,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerISpec
 
   "GET /check-your-repayment-claim" should {
 
-    "render the check your answers page" in {
+    "render the check your answers page for an organisation" in {
       stubBackend()
 
       val result = get("/check-your-repayment-claim")
@@ -41,11 +42,23 @@ class RepaymentClaimDetailsCheckYourAnswersControllerISpec
       val doc = Jsoup.parse(result.body)
       doc.title should include(msg("repaymentClaimDetailsCheckYourAnswers.title"))
     }
+
+    "render the check your answers page for an agent" in {
+      stubAgentBackend()
+
+      val result = get("/check-your-repayment-claim")
+
+      result.status shouldBe OK
+
+      val doc = Jsoup.parse(result.body)
+      doc.title should include(msg("repaymentClaimDetailsCheckYourAnswers.agent.title"))
+    }
+
   }
 
   "POST /check-your-repayment-claim" should {
 
-    "redirect to task list when answers are complete" in {
+    "redirect to task list when answers are complete for an organisation" in {
 
       stubBackend()
 
@@ -54,6 +67,16 @@ class RepaymentClaimDetailsCheckYourAnswersControllerISpec
       result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value shouldBe controllers.routes.ClaimsTaskListController.onPageLoad.url
     }
+
+/*    "redirect to task list when answers are complete for an agent" in {
+
+      stubAgentBackend()
+
+      val result = post("/check-your-repayment-claim")(Json.obj())
+
+      result.status shouldBe SEE_OTHER
+      result.header(LOCATION).value shouldBe controllers.routes.ClaimsTaskListController.onPageLoad.url
+    }*/
 
     "redirect to incomplete answers page when answers are incomplete" in {
 
@@ -70,6 +93,14 @@ class RepaymentClaimDetailsCheckYourAnswersControllerISpec
     stubAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
     stubGetClaims(claimId)(OK, Json.toJson(claim))
+    stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
+    stubUpdateClaim(claimId)(OK, Json.toJson(updateClaimResponse))
+  }
+
+  private def stubAgentBackend(): Unit = {
+    stubAgentAuthRequest()
+    stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+    stubGetClaims(claimId)(OK, Json.toJson(claim.copy(userId = TestUsers.agent1)))
     stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
     stubUpdateClaim(claimId)(OK, Json.toJson(updateClaimResponse))
   }
