@@ -16,17 +16,16 @@
 
 package controllers.repaymentClaimDetails
 
+import models.Mode.*
+import services.SaveService
+import play.api.mvc.*
 import com.google.inject.Inject
-import config.FrontendAppConfig
 import controllers.BaseController
+import views.html.CharitiesReferenceNumberInputView
 import controllers.actions.{Actions, GuardAction}
 import forms.CharitiesReferenceTextInputFormProvider
-import models.Mode.*
 import models.{Mode, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
-import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
-import services.SaveService
-import views.html.CharitiesReferenceNumberInputView
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,8 +35,7 @@ class CharitiesReferenceNumberInputController @Inject() (
   actions: Actions,
   guard: GuardAction,
   formProvider: CharitiesReferenceTextInputFormProvider,
-  saveService: SaveService,
-  appConfig: FrontendAppConfig
+  saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 

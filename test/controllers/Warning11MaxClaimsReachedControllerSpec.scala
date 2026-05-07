@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package controllers.repaymentClaimDetails
+package controllers
 
-import config.FrontendAppConfig
-import controllers.ControllerSpec
-import models.Mode.NormalMode
-import models.SessionData
-import play.api.Application
-import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import play.api.mvc.AnyContentAsEmpty
+import controllers.ControllerSpec
+import config.FrontendAppConfig
 import views.html.Warning11MaxClaimsReachedView
+import play.api.Application
 
 class Warning11MaxClaimsReachedControllerSpec extends ControllerSpec {
 

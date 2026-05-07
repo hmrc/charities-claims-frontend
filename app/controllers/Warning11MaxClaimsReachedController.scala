@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.repaymentClaimDetails
+package controllers
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
