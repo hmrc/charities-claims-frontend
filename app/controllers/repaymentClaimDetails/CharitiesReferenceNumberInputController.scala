@@ -52,8 +52,11 @@ class CharitiesReferenceNumberInputController @Inject() (
       .authAndGetData()
       .andThen(guard(SessionData.isClaimNotSubmitted))
       .async { implicit request =>
-        val previousAnswer = Some("")
-        Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+        val previousAnswer = RepaymentClaimDetailsAnswers.getNameOfCharity match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
+        Future.successful(Ok(view(previousAnswer, mode)))
       }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
