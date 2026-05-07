@@ -39,7 +39,7 @@ class Warning11MaxClaimsReachedController @Inject() (
       .authAndGetData()
       .andThen(guard(SessionData.isClaimNotSubmitted))
       .async { implicit request =>
-        Future.successful(Ok(view()))
+        Future.successful(Ok(view(appConfig.agentUnsubmittedClaimLimit)))
       }
 
   def onSubmit: Action[AnyContent] =
