@@ -89,9 +89,11 @@ class DefaultDataRetrievalAction @Inject() (
                         .store(sessionData)
                         .map(_ => Right(DataRequest(request, sessionData)))
 
-                    case x if x > 0 && x < config.agentUnsubmittedClaimLimit =>
+                    case unsubmittedClaimsCount =>
                       request.underlying.getQueryString("claimId") match {
                         case Some(claimId) if getClaimsResponse.claimsList.exists(_.claimId == claimId) =>
+                          // in case when the claimId is provided and exists in the backend
+                          // we should open that claim
                           claimsConnector.getClaim(claimId).flatMap {
                             case Some(claim) =>
                               claimsValidationConnector
@@ -105,16 +107,46 @@ class DefaultDataRetrievalAction @Inject() (
                             case None =>
                               Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
                           }
-                        case Some(claimId) if claimId == "blank"                                        =>
+
+                        case Some(claimId)
+                            if claimId == "blank" && unsubmittedClaimsCount < config.agentUnsubmittedClaimLimit =>
+                          // in case when the claimId is blank and unsubmitted claims count is less than a limit
+                          // we should start a new claim
                           val sessionData = SessionData.empty(request.charitiesReference)
                           cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
 
-                        case _ =>
-                          Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
-                      }
+                        case Some(claimId)
+                            if claimId == "blank" && unsubmittedClaimsCount >= config.agentUnsubmittedClaimLimit =>
+                          // in case when the claimId is blank and the unsubmitted claims count is greater than or equal to the limit
+                          // we should redirect to the warning page
+                          Future.successful(
+                            Left(
+                              Results.Redirect(controllers.routes.Warning11MaxClaimsReachedController.onPageLoad.url)
+                            )
+                          )
 
-                    case _ =>
-                      Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
+                        case Some(_) =>
+                          // in case when the claimId is provided but does not exist in the backend
+                          // we should redirect to the dashboard
+                          Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
+
+                        case None if unsubmittedClaimsCount >= config.agentUnsubmittedClaimLimit =>
+                          // in case when no claimId is provided and the unsubmitted claims count is greater than or equal to the limit
+                          // we should redirect to the warning page
+                          Future.successful(
+                            Left(
+                              Results.Redirect(controllers.routes.Warning11MaxClaimsReachedController.onPageLoad.url)
+                            )
+                          )
+
+                        case None =>
+                          // in case when no claimId is provided and unsubmitted claims count is less than a limit
+                          // we should start a new claim
+                          val sessionData = SessionData.empty(request.charitiesReference)
+                          cache
+                            .store(sessionData)
+                            .map(_ => Right(DataRequest(request, sessionData)))
+                      }
                   }
               }
             }
@@ -140,31 +172,31 @@ class DefaultDataRetrievalAction @Inject() (
   private def tryOpenAgentClaimById(request: AuthorisedRequest[?], claimId: String)(using HeaderCarrier) =
     claimsConnector.retrieveUnsubmittedClaims
       .flatMap { getClaimsResponse =>
-        if getClaimsResponse.claimsCount > 0
-          && getClaimsResponse.claimsCount < config.agentUnsubmittedClaimLimit
-        then {
-          if getClaimsResponse.claimsList.exists(_.claimId == claimId)
-          then
-            claimsConnector
-              .getClaim(claimId)
-              .flatMap {
-                case Some(claim) =>
-                  claimsValidationConnector
-                    .getUploadSummary(claim.claimId)
-                    .flatMap { uploadsSummary =>
-                      val sessionData =
-                        SessionData.from(claim, request.charitiesReference, Some(uploadsSummary))
-                      cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
-                    }
+        if getClaimsResponse.claimsList.exists(_.claimId == claimId)
+        then
+          claimsConnector
+            .getClaim(claimId)
+            .flatMap {
+              case Some(claim) =>
+                claimsValidationConnector
+                  .getUploadSummary(claim.claimId)
+                  .flatMap { uploadsSummary =>
+                    val sessionData =
+                      SessionData.from(claim, request.charitiesReference, Some(uploadsSummary))
+                    cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
+                  }
 
-                case None =>
-                  Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
-              }
-          else if claimId == "blank" then {
+              case None =>
+                Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
+            }
+        else if claimId == "blank" then {
+          if getClaimsResponse.claimsCount < config.agentUnsubmittedClaimLimit then {
             val sessionData = SessionData.empty(request.charitiesReference)
             cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
           } else {
-            Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
+            Future.successful(
+              Left(Results.Redirect(controllers.routes.Warning11MaxClaimsReachedController.onPageLoad.url))
+            )
           }
         } else {
           Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))

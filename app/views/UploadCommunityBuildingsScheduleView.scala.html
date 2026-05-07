@@ -30,8 +30,14 @@
     upscanInitiateResponse: UpscanInitiateResponse,
     allowedFileTypesHint: String,
     filePickerAcceptFilter: String,
-    errorCode: Option[String]
+    errorCode: Option[String],
+    isAgent: Boolean
 )(using request: Request[?], messages: Messages)
+
+@paragraphOneMessage = @{
+    if (isAgent) "uploadCommunityBuildingsSchedule.agent.paragraph.one"
+    else "uploadCommunityBuildingsSchedule.paragraph.one"
+}
 
 @layout(
     pageTitle = titleWithErrorOpt(errorCode, messages("uploadCommunityBuildingsSchedule.title")), showBackLink = true
@@ -51,7 +57,7 @@
     <span class="govuk-caption-l">@messages("uploadCommunityBuildingsSchedule.caption")</span>
     <h1 class="govuk-heading-l">@messages("uploadCommunityBuildingsSchedule.heading")</h1>
 
-    <p class="govuk-body">@messages("uploadCommunityBuildingsSchedule.paragraph.one")</p>
+    <p class="govuk-body">@messages(paragraphOneMessage)</p>
     <p class="govuk-body">@Html(messages("uploadCommunityBuildingsSchedule.paragraph.url", communityBuildingsScheduleSpreadsheetGuidancesUrl))</p>
 
 
