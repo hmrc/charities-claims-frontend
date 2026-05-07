@@ -21,13 +21,13 @@ import controllers.BaseController
 import controllers.actions.{Actions, GuardAction}
 import controllers.repaymentClaimDetails.routes
 import forms.YesNoFormProvider
-import models.{Mode, RepaymentClaimDetailsAnswers, SessionData}
+import models.Mode.*
 import models.requests.DataRequest
+import models.{Mode, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
 import views.html.{ChangePreviousGASDSClaimView, UpdateRepaymentClaimView}
-import models.Mode.*
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -92,7 +92,7 @@ class ChangePreviousGASDSClaimController @Inject() (
               )
               .map(_ =>
                 Redirect(
-                  ChangePreviousGASDSClaimController.nextPage(newAnswer, mode, previousAnswer)
+                  ChangePreviousGASDSClaimController.nextPage(mode)
                 )
               )
           }
@@ -114,15 +114,13 @@ class ChangePreviousGASDSClaimController @Inject() (
           ),
         {
           case true =>
-            val previousAnswer = RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim
-
             saveService
               .save(
                 RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(false)
               )
               .map(_ =>
                 Redirect(
-                  ChangePreviousGASDSClaimController.nextPage(false, mode, previousAnswer)
+                  ChangePreviousGASDSClaimController.nextPage(mode)
                 )
               )
 
@@ -134,16 +132,9 @@ class ChangePreviousGASDSClaimController @Inject() (
 
 object ChangePreviousGASDSClaimController {
 
-  def nextPage(value: Boolean, mode: Mode, previousAnswer: Option[Boolean]): Call =
-    (value, mode, previousAnswer) match {
-      // NormalMode
-      case (true, NormalMode, _) =>
-        routes.ClaimingReferenceNumberController.onPageLoad(NormalMode)
-
-      case (false, NormalMode, _) =>
-        routes.GasdsClaimTypeController.onPageLoad(NormalMode)
-
-      case (_, CheckMode, _) =>
-        routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
+  def nextPage(mode: Mode): Call =
+    mode match {
+      case NormalMode => routes.ClaimingReferenceNumberController.onPageLoad(mode)
+      case CheckMode  => routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
     }
 }

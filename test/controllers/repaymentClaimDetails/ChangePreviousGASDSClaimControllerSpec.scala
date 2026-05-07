@@ -291,7 +291,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.GasdsClaimTypeController.onPageLoad(NormalMode).url
+            routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url
           )
         }
       }
@@ -330,7 +330,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.GasdsClaimTypeController.onPageLoad(NormalMode).url
+            routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url
           )
         }
       }
