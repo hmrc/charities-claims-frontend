@@ -46,7 +46,7 @@ class RepaymentClaimDetailsCheckYourAnswersController @Inject() (
     .andThen(guard(SessionData.isClaimNotSubmitted))
     .async { implicit request =>
       val previousAnswers = request.sessionData.repaymentClaimDetailsAnswers
-      Future.successful(Ok(view(previousAnswers)))
+      Future.successful(Ok(view(previousAnswers, request.isAgent)))
     }
 
   def onSubmit: Action[AnyContent] = actions
