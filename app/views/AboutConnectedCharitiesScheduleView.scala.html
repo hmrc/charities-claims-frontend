@@ -22,7 +22,7 @@
     govukButton: GovukButton
 )
 
-@(connectedCharitiesScheduleSpreadsheetGuidanceUrl: String)(implicit request: Request[?], messages: Messages)
+@(connectedCharitiesScheduleSpreadsheetGuidanceUrl: String, isAgent:Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle    = titleNoForm(messages("aboutConnectedCharitiesSchedule.title"))
@@ -31,7 +31,7 @@
     <span class="govuk-caption-l">@messages("aboutConnectedCharitiesSchedule.caption")</span>
     <h1 class="govuk-heading-l">@messages("aboutConnectedCharitiesSchedule.heading")</h1>
 
-    <p class="govuk-body">@messages("aboutConnectedCharitiesSchedule.paragraph.one")</p>
+    <p class="govuk-body">@messages(if(isAgent) "aboutConnectedCharitiesSchedule.paragraph.one.agent" else "aboutConnectedCharitiesSchedule.paragraph.one")</p>
     <p class="govuk-body">@messages("aboutConnectedCharitiesSchedule.paragraph.two")</p>
     <p class="govuk-body">@Html(messages("aboutConnectedCharitiesSchedule.paragraph.url", connectedCharitiesScheduleSpreadsheetGuidanceUrl))</p>
 

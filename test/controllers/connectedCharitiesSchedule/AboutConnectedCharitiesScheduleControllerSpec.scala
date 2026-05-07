@@ -22,6 +22,7 @@ import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class AboutConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
   "AboutConnectedCharitiesScheduleController" - {
@@ -83,6 +84,47 @@ class AboutConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
           contentAsString(result) should include("https://test.example.com/connected-charities-schedule")
+        }
+      }
+
+      "should render the page correctly when user is Organisation (isAgent = false)" in {
+        val sessionData = completeGasdsSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation).build()
+
+        val customConfig = "https://test.example.com/connected-charities-schedule"
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.AboutConnectedCharitiesScheduleController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual OK
+
+          contentAsString(result)  should include(messages("aboutConnectedCharitiesSchedule.paragraph.one"))
+          (contentAsString(result) should not).include(messages("aboutConnectedCharitiesSchedule.paragraph.one.agent"))
+        }
+      }
+
+      "should render the page correctly when user is Agent (isAgent = true)" in {
+        val sessionData = completeGasdsSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        val customConfig = "https://test.example.com/connected-charities-schedule"
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.AboutConnectedCharitiesScheduleController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual OK
+
+          contentAsString(result)  should include(messages("aboutConnectedCharitiesSchedule.paragraph.one.agent"))
+          (contentAsString(result) should not).include(messages("aboutConnectedCharitiesSchedule.paragraph.one"))
         }
       }
 
