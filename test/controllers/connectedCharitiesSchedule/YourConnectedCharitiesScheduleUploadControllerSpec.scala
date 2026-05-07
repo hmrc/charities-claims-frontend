@@ -30,6 +30,7 @@ import util.TestResources
 import views.html.YourConnectedCharitiesScheduleUploadView
 
 import scala.concurrent.Future
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class YourConnectedCharitiesScheduleUploadControllerSpec extends ControllerSpec {
 
@@ -158,131 +159,279 @@ class YourConnectedCharitiesScheduleUploadControllerSpec extends ControllerSpec 
         }
       }
 
-      "unsubmitted Claim ID & file reference are defined - result = Awaiting (other) - display the screen" in {
-        val sessionData = session(fileRef = Some(fileUploadReference))
+      "organisation user" - {
+        val isAgent = false
+        "unsubmitted Claim ID & file reference are defined - result = Awaiting (other) - display the screen" in {
+          val sessionData = session(fileRef = Some(fileUploadReference))
 
-        (mockConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testAwaitingResponse))
+          (mockConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(claimId, fileUploadReference, *)
+            .returning(Future.successful(testAwaitingResponse))
 
-        given application: Application = applicationBuilder(sessionData = sessionData)
-          .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
-          .build()
+          given application: Application = applicationBuilder(sessionData = sessionData)
+            .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+            .build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
 
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[YourConnectedCharitiesScheduleUploadView]
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[YourConnectedCharitiesScheduleUploadView]
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(
-            claimId,
-            testAwaitingResponse,
-            None,
-            false,
-            routes.ConnectedCharitiesScheduleUploadStatusController.status,
-            3,
-            routes.YourConnectedCharitiesScheduleUploadController.onPageLoad
-          ).body
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(
+              claimId,
+              testAwaitingResponse,
+              None,
+              false,
+              routes.ConnectedCharitiesScheduleUploadStatusController.status,
+              3,
+              routes.YourConnectedCharitiesScheduleUploadController.onPageLoad,
+              isAgent
+            ).body
 
+            contentAsString(result)  should include(messages("yourConnectedCharitiesScheduleUpload.paragraph.one"))
+            (contentAsString(result) should not).include(
+              messages("yourConnectedCharitiesScheduleUpload.paragraph.one.agent")
+            )
+          }
+        }
+
+        "unsubmitted Claim ID & file reference are defined - result = Verifying" in {
+          val sessionData = session(fileRef = Some(fileUploadReference))
+
+          (mockConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(claimId, fileUploadReference, *)
+            .returning(Future.successful(testVerifyingResponse))
+
+          given application: Application = applicationBuilder(sessionData = sessionData)
+            .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+            .build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[YourConnectedCharitiesScheduleUploadView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(
+              claimId,
+              testVerifyingResponse,
+              None,
+              true,
+              routes.ConnectedCharitiesScheduleUploadStatusController.status,
+              3,
+              routes.YourConnectedCharitiesScheduleUploadController.onPageLoad,
+              isAgent
+            ).body
+          }
+        }
+
+        "unsubmitted Claim ID & file reference are defined - result = Validating" in {
+          val sessionData = session(fileRef = Some(fileUploadReference))
+
+          (mockConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(claimId, fileUploadReference, *)
+            .returning(Future.successful(testValidatingResponse))
+
+          given application: Application = applicationBuilder(sessionData = sessionData)
+            .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+            .build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[YourConnectedCharitiesScheduleUploadView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(
+              claimId,
+              testValidatingResponse,
+              None,
+              true,
+              routes.ConnectedCharitiesScheduleUploadStatusController.status,
+              3,
+              routes.YourConnectedCharitiesScheduleUploadController.onPageLoad,
+              isAgent
+            ).body
+          }
+        }
+        "unsubmitted Claim ID & file reference are defined - result = Verification Failed" in {
+          val sessionData = session(fileRef = Some(fileUploadReference))
+
+          (mockConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(claimId, fileUploadReference, *)
+            .returning(Future.successful(testVerificationFailedResponse))
+
+          given application: Application = applicationBuilder(sessionData = sessionData)
+            .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+            .build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[YourConnectedCharitiesScheduleUploadView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(
+              claimId,
+              testVerificationFailedResponse,
+              None,
+              false,
+              routes.ConnectedCharitiesScheduleUploadStatusController.status,
+              3,
+              routes.YourConnectedCharitiesScheduleUploadController.onPageLoad,
+              isAgent
+            ).body
+          }
         }
       }
+      "agent user" - {
+        val isAgent = true
+        "unsubmitted Claim ID & file reference are defined - result = Awaiting (other) - display the screen" in {
+          val sessionData = session(fileRef = Some(fileUploadReference))
 
-      "unsubmitted Claim ID & file reference are defined - result = Verifying" in {
-        val sessionData = session(fileRef = Some(fileUploadReference))
+          (mockConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(claimId, fileUploadReference, *)
+            .returning(Future.successful(testAwaitingResponse))
 
-        (mockConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testVerifyingResponse))
+          given application: Application = applicationBuilder(sessionData = sessionData, AffinityGroup.Agent)
+            .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+            .build()
 
-        given application: Application = applicationBuilder(sessionData = sessionData)
-          .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
-          .build()
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[YourConnectedCharitiesScheduleUploadView]
 
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[YourConnectedCharitiesScheduleUploadView]
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(
+              claimId,
+              testAwaitingResponse,
+              None,
+              false,
+              routes.ConnectedCharitiesScheduleUploadStatusController.status,
+              3,
+              routes.YourConnectedCharitiesScheduleUploadController.onPageLoad,
+              isAgent
+            ).body
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(
-            claimId,
-            testVerifyingResponse,
-            None,
-            true,
-            routes.ConnectedCharitiesScheduleUploadStatusController.status,
-            3,
-            routes.YourConnectedCharitiesScheduleUploadController.onPageLoad
-          ).body
+            contentAsString(result)  should include(messages("yourConnectedCharitiesScheduleUpload.paragraph.one.agent"))
+            (contentAsString(result) should not).include(messages("yourConnectedCharitiesScheduleUpload.paragraph.one"))
+
+          }
         }
-      }
 
-      "unsubmitted Claim ID & file reference are defined - result = Validating" in {
-        val sessionData = session(fileRef = Some(fileUploadReference))
+        "unsubmitted Claim ID & file reference are defined - result = Verifying" in {
+          val sessionData = session(fileRef = Some(fileUploadReference))
 
-        (mockConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testValidatingResponse))
+          (mockConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(claimId, fileUploadReference, *)
+            .returning(Future.successful(testVerifyingResponse))
 
-        given application: Application = applicationBuilder(sessionData = sessionData)
-          .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
-          .build()
+          given application: Application = applicationBuilder(sessionData = sessionData, AffinityGroup.Agent)
+            .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+            .build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
 
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[YourConnectedCharitiesScheduleUploadView]
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[YourConnectedCharitiesScheduleUploadView]
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(
-            claimId,
-            testValidatingResponse,
-            None,
-            true,
-            routes.ConnectedCharitiesScheduleUploadStatusController.status,
-            3,
-            routes.YourConnectedCharitiesScheduleUploadController.onPageLoad
-          ).body
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(
+              claimId,
+              testVerifyingResponse,
+              None,
+              true,
+              routes.ConnectedCharitiesScheduleUploadStatusController.status,
+              3,
+              routes.YourConnectedCharitiesScheduleUploadController.onPageLoad,
+              isAgent
+            ).body
+          }
         }
-      }
-      "unsubmitted Claim ID & file reference are defined - result = Verification Failed" in {
-        val sessionData = session(fileRef = Some(fileUploadReference))
 
-        (mockConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testVerificationFailedResponse))
+        "unsubmitted Claim ID & file reference are defined - result = Validating" in {
+          val sessionData = session(fileRef = Some(fileUploadReference))
 
-        given application: Application = applicationBuilder(sessionData = sessionData)
-          .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
-          .build()
+          (mockConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(claimId, fileUploadReference, *)
+            .returning(Future.successful(testValidatingResponse))
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
+          given application: Application = applicationBuilder(sessionData = sessionData, AffinityGroup.Agent)
+            .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+            .build()
 
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[YourConnectedCharitiesScheduleUploadView]
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
 
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(
-            claimId,
-            testVerificationFailedResponse,
-            None,
-            false,
-            routes.ConnectedCharitiesScheduleUploadStatusController.status,
-            3,
-            routes.YourConnectedCharitiesScheduleUploadController.onPageLoad
-          ).body
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[YourConnectedCharitiesScheduleUploadView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(
+              claimId,
+              testValidatingResponse,
+              None,
+              true,
+              routes.ConnectedCharitiesScheduleUploadStatusController.status,
+              3,
+              routes.YourConnectedCharitiesScheduleUploadController.onPageLoad,
+              isAgent
+            ).body
+          }
+        }
+        "unsubmitted Claim ID & file reference are defined - result = Verification Failed" in {
+          val sessionData = session(fileRef = Some(fileUploadReference))
+
+          (mockConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(claimId, fileUploadReference, *)
+            .returning(Future.successful(testVerificationFailedResponse))
+
+          given application: Application = applicationBuilder(sessionData = sessionData, AffinityGroup.Agent)
+            .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+            .build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[YourConnectedCharitiesScheduleUploadView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(
+              claimId,
+              testVerificationFailedResponse,
+              None,
+              false,
+              routes.ConnectedCharitiesScheduleUploadStatusController.status,
+              3,
+              routes.YourConnectedCharitiesScheduleUploadController.onPageLoad,
+              isAgent
+            ).body
+          }
         }
       }
       "unsubmitted Claim ID & file reference are defined - recoverWith" in {
