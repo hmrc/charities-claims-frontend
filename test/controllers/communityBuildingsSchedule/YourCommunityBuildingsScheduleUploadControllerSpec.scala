@@ -153,6 +153,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
 
       "unsubmitted Claim ID & file reference are defined - result = Awaiting (other) - display the screen" in {
         val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
+        val isAgent     = false
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -178,7 +179,8 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
             false,
             routes.CommunityBuildingsScheduleUploadStatusController.status,
             3,
-            routes.YourCommunityBuildingsScheduleUploadController.onPageLoad
+            routes.YourCommunityBuildingsScheduleUploadController.onPageLoad,
+            isAgent
           ).body
 
         }
@@ -186,6 +188,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
 
       "unsubmitted Claim ID & file reference are defined - result = Verifying" in {
         val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
+        val isAgent     = false
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -211,13 +214,15 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
             true,
             routes.CommunityBuildingsScheduleUploadStatusController.status,
             3,
-            routes.YourCommunityBuildingsScheduleUploadController.onPageLoad
+            routes.YourCommunityBuildingsScheduleUploadController.onPageLoad,
+            isAgent
           ).body
         }
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Validating" in {
         val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
+        val isAgent     = false
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -243,13 +248,15 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
             true,
             routes.CommunityBuildingsScheduleUploadStatusController.status,
             3,
-            routes.YourCommunityBuildingsScheduleUploadController.onPageLoad
+            routes.YourCommunityBuildingsScheduleUploadController.onPageLoad,
+            isAgent
           ).body
         }
       }
 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed - REJECTED" in {
         val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
+        val isAgent     = false
 
         (mockConnector
           .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
@@ -275,7 +282,8 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
             false,
             routes.CommunityBuildingsScheduleUploadStatusController.status,
             3,
-            routes.YourCommunityBuildingsScheduleUploadController.onPageLoad
+            routes.YourCommunityBuildingsScheduleUploadController.onPageLoad,
+            isAgent
           ).body
         }
       }
