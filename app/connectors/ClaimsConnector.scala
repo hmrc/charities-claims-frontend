@@ -97,7 +97,9 @@ class ClaimsConnectorImpl @Inject() (
       claimingDonationsCollectedInCommunityBuildings =
         repaymentClaimDetails.claimingDonationsCollectedInCommunityBuildings,
       connectedToAnyOtherCharities = repaymentClaimDetails.connectedToAnyOtherCharities,
-      makingAdjustmentToPreviousClaim = repaymentClaimDetails.makingAdjustmentToPreviousClaim
+      makingAdjustmentToPreviousClaim = repaymentClaimDetails.makingAdjustmentToPreviousClaim,
+      hmrcCharitiesReference = repaymentClaimDetails.hmrcCharitiesReference,
+      nameOfCharity = repaymentClaimDetails.nameOfCharity
     )
 
     callCharitiesClaimsBackend[SaveClaimRequest, SaveClaimResponse](
