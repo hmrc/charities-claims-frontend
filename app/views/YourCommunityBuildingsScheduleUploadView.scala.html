@@ -32,8 +32,14 @@
     screenLocked: Boolean,
     uploadStatusCall: Call,
     refreshIntervalSeconds: Int,
-    reloadPageCall: Call
+    reloadPageCall: Call,
+    isAgent: Boolean
 )(implicit request: Request[?], messages: Messages)
+
+@headingMessage = @{
+    if (isAgent) "yourCommunityBuildingsScheduleUpload.agent.heading"
+    else "yourCommunityBuildingsScheduleUpload.heading"
+}
 
 @layout(
     pageTitle = titleNoForm(messages("yourCommunityBuildingsScheduleUpload.title")),
@@ -42,7 +48,7 @@
 ) {
 
     <span class="govuk-caption-l">@messages("yourCommunityBuildingsScheduleUpload.caption")</span>
-    <h1 class="govuk-heading-l">@messages("yourCommunityBuildingsScheduleUpload.heading")</h1>
+    <h1 class="govuk-heading-l">@messages(headingMessage)</h1>
     <p class="govuk-body">@messages("yourCommunityBuildingsScheduleUpload.paragraph.one")</p>
 
     @if(screenLocked) {

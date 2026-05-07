@@ -67,7 +67,8 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
                         screenLocked = true,
                         uploadStatusCall = routes.CommunityBuildingsScheduleUploadStatusController.status,
                         refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
-                        reloadPageCall = routes.YourCommunityBuildingsScheduleUploadController.onPageLoad
+                        reloadPageCall = routes.YourCommunityBuildingsScheduleUploadController.onPageLoad,
+                        isAgent = request.isAgent
                       )
                     )
 
@@ -80,7 +81,8 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
                         screenLocked = true,
                         uploadStatusCall = routes.CommunityBuildingsScheduleUploadStatusController.status,
                         refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
-                        reloadPageCall = routes.YourCommunityBuildingsScheduleUploadController.onPageLoad
+                        reloadPageCall = routes.YourCommunityBuildingsScheduleUploadController.onPageLoad,
+                        isAgent = request.isAgent
                       )
                     )
 
@@ -97,7 +99,8 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
                         screenLocked = false,
                         uploadStatusCall = routes.CommunityBuildingsScheduleUploadStatusController.status,
                         refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
-                        reloadPageCall = routes.YourCommunityBuildingsScheduleUploadController.onPageLoad
+                        reloadPageCall = routes.YourCommunityBuildingsScheduleUploadController.onPageLoad,
+                        isAgent = request.isAgent
                       )
                     )
 
@@ -110,7 +113,8 @@ class YourCommunityBuildingsScheduleUploadController @Inject() (
                         screenLocked = false,
                         uploadStatusCall = routes.CommunityBuildingsScheduleUploadStatusController.status,
                         refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
-                        reloadPageCall = routes.YourCommunityBuildingsScheduleUploadController.onPageLoad
+                        reloadPageCall = routes.YourCommunityBuildingsScheduleUploadController.onPageLoad,
+                        isAgent = request.isAgent
                       )
                     )
                 }
