@@ -291,6 +291,11 @@ GET         /change-the-charity-name                                    controll
 POST        /enter-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onSubmit(mode: Mode = Mode.CheckMode)
 
+GET         /what-is-your-postcode                                    controllers.organisationDetails.AgentPostcodeController.onPageLoad(mode: Mode = Mode.NormalMode)
+GET         /change-what-is-your-postcode                             controllers.organisationDetails.AgentPostcodeController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /what-is-your-postcode                                    controllers.organisationDetails.AgentPostcodeController.onSubmit(mode: Mode = Mode.NormalMode)
+POST        /change-what-is-your-postcode                             controllers.organisationDetails.AgentPostcodeController.onSubmit(mode: Mode = Mode.CheckMode)
+
 GET         /enter-a-telephone-number                                    controllers.organisationDetails.EnterTelephoneNumberController.onPageLoad(mode: Mode = Mode.NormalMode)
 GET         /change-enter-a-telephone-number                                    controllers.organisationDetails.EnterTelephoneNumberController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /enter-a-telephone-number                                    controllers.organisationDetails.EnterTelephoneNumberController.onSubmit(mode: Mode = Mode.NormalMode)
