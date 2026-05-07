@@ -31,6 +31,7 @@ import play.api.{inject, Application, Configuration}
 import services.{ClaimsValidationService, SaveService}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import util.HttpV2Support
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import scala.concurrent.Future
 
@@ -182,7 +183,7 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
         }
       }
 
-      "should render page when upscan initiation exists in session" in {
+      "should render page when upscan initiation exists in session - for Organisation user" in {
 
         val upscan = response
 
@@ -200,7 +201,32 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
           val result = route(application, request).value
 
           status(result) shouldEqual OK
-          contentAsString(result) should include("claim-1234567890")
+          contentAsString(result)  should include("claim-1234567890")
+          contentAsString(result)  should include(messages("uploadConnectedCharitiesSchedule.paragraph.one"))
+          (contentAsString(result) should not).include(messages("uploadConnectedCharitiesSchedule.paragraph.one.agent"))
+        }
+      }
+
+      "should render page when upscan initiation exists in session - for Agent user" in {
+        val upscan = response
+
+        val sessionData =
+          completeGasdsSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+            .copy(connectedCharitiesScheduleUpscanInitialization = Some(upscan))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, AffinityGroup.Agent).build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual OK
+          contentAsString(result)  should include("claim-1234567890")
+          contentAsString(result)  should include(messages("uploadConnectedCharitiesSchedule.paragraph.one.agent"))
+          (contentAsString(result) should not).include(messages("uploadConnectedCharitiesSchedule.paragraph.one"))
         }
       }
 
@@ -337,6 +363,72 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
         }
       }
 
+      "should update status and redirect when reference exists for Agent user" in {
+
+        val sessionData =
+          completeGasdsSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+
+        (mockClaimsValidationService
+          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(ValidationType.ConnectedCharities, true, *, *)
+          .returning(Future.successful(Some(FileUploadReference("ref-123"))))
+
+        (mockClaimsValidationService
+          .updateUploadStatus(_: String, _: FileUploadReference, _: ValidationType)(using
+            _: DataRequest[?],
+            _: HeaderCarrier
+          ))
+          .expects("test-claim-id", FileUploadReference("ref-123"), ValidationType.ConnectedCharities, *, *)
+          .returning(Future.successful(true))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, AffinityGroup.Agent)
+            .overrides(
+              inject.bind[ClaimsValidationService].toInstance(mockClaimsValidationService)
+            )
+            .build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onUploadSuccess.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual
+            Some(routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url)
+        }
+      }
+
+      "should redirect back when no reference found for Agent user" in {
+
+        val sessionData =
+          completeGasdsSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+
+        (mockClaimsValidationService
+          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(ValidationType.ConnectedCharities, true, *, *)
+          .returning(Future.successful(None))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, AffinityGroup.Agent)
+            .overrides(
+              inject.bind[ClaimsValidationService].toInstance(mockClaimsValidationService)
+            )
+            .build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onUploadSuccess.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual
+            Some(routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
+        }
+      }
+
       "should redirect back when no reference found" in {
 
         val sessionData =
@@ -368,7 +460,7 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
 
     }
 
-    "onUploadError" - {
+    "onUploadError user: Organisation" - {
 
       "should redirect when upscan initialization does not exist in session" in {
 
@@ -441,6 +533,79 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
         }
       }
 
+    }
+    "onUploadError user:Agent" - {
+
+      "should redirect when upscan initialization does not exist in session" in {
+
+        val sessionData =
+          completeGasdsSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, AffinityGroup.Agent)
+            .overrides(
+              inject.bind[ClaimsValidationService].toInstance(mockClaimsValidationService)
+            )
+            .build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onUploadError.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual
+            Some(routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
+        }
+      }
+
+      "should render error page when upscan exists in session" in {
+
+        val sessionData =
+          completeGasdsSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+            .copy(connectedCharitiesScheduleUpscanInitialization = Some(response))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, AffinityGroup.Agent)
+            .overrides(
+              inject.bind[ClaimsValidationService].toInstance(mockClaimsValidationService)
+            )
+            .build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onUploadError.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual BAD_REQUEST
+        }
+      }
+
+      "should redirect when no upscan and no reference" in {
+
+        val sessionData =
+          completeGasdsSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, AffinityGroup.Agent)
+            .overrides(
+              inject.bind[ClaimsValidationService].toInstance(mockClaimsValidationService)
+            )
+            .build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.UploadConnectedCharitiesScheduleController.onUploadError.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual
+            Some(routes.UploadConnectedCharitiesScheduleController.onPageLoad.url)
+        }
+      }
     }
 
   }
