@@ -52,7 +52,6 @@ class WhoShouldWeSendPaymentToController @Inject() (
       )
       .async { implicit request =>
         val previousAnswer = AgentUserOrganisationDetailsAnswers.getWhoShouldHmrcSendPaymentTo
-        println("\n\n\n previousAnswer : " + previousAnswer)
         Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
       }
 
