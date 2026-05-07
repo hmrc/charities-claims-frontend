@@ -383,10 +383,10 @@ nameOfCharityRegulator.radio.three = Charity is not registered with a regulator
 nameOfCharityRegulator.radio.two = Charity Commission for Northern Ireland
 nameOfCharityRegulator.title = What is the name of the charity regulator?
 
-organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.change.hidden = change authorised official details
+organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.change.hidden = change authorised official’s details
 organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.label = Authorised official’s details
 organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.change.hidden = change authorised official’s UK address
-organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.label = Authorised official UK address
+organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.label = Authorised official’s UK address
 organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.change.hidden = change corporate trustee claim
 organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label = Corporate trustee claim
 organisationDetailsCheckYourAnswers.CorporateTrusteeDetails.change.hidden = change corporate trustee details
