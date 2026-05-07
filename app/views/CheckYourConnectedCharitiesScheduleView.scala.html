@@ -34,11 +34,12 @@
     form: Form[?],
     connectedCharities: Seq[ConnectedCharity],
     paginationViewModel: PaginationViewModel,
-    paginationStatus: PaginationStatus
+    paginationStatus: PaginationStatus,
+    isAgent: Boolean
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleWithPagination(form, messages("checkYourConnectedCharitiesSchedule.title"), paginationStatus),
+    pageTitle = titleWithPagination(form, messages(if(isAgent) "checkYourConnectedCharitiesSchedule.title.agent" else "checkYourConnectedCharitiesSchedule.title"), paginationStatus),
     showBackLink = true
 ) {
 
@@ -47,7 +48,7 @@
     }
 
     <span class="govuk-caption-l">@messages("checkYourConnectedCharitiesSchedule.caption")</span>
-    <h1 class="govuk-heading-l">@messages("checkYourConnectedCharitiesSchedule.heading")</h1>
+    <h1 class="govuk-heading-l">@messages(if(isAgent) "checkYourConnectedCharitiesSchedule.heading.agent" else "checkYourConnectedCharitiesSchedule.heading")</h1>
 
     @connectedCharitiesTable(connectedCharities)
 
