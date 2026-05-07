@@ -711,6 +711,7 @@ uploadConnectedCharitiesSchedule.title = Upload a Connected Charities schedule
 yourConnectedCharitiesScheduleUpload.caption = Add Connected Charities schedule
 yourConnectedCharitiesScheduleUpload.heading = Your Connected Charities schedule upload
 yourConnectedCharitiesScheduleUpload.paragraph.one = You can upload your Connected Charities schedule as a spreadsheet. The selected file must be smaller than 250KB.
+yourConnectedCharitiesScheduleUpload.paragraph.one.agent = You can upload the Connected Charities schedule as a spreadsheet. The selected file must be smaller than 250KB.
 yourConnectedCharitiesScheduleUpload.table.key = Connected Charities Schedule
 yourConnectedCharitiesScheduleUpload.title = Your Connected Charities schedule upload
 
