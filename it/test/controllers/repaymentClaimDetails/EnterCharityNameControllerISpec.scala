@@ -28,15 +28,17 @@ import utils.{ComponentSpecHelper, TestDataUtils}
 class EnterCharityNameControllerISpec
   extends ComponentSpecHelper with TestDataUtils with ClaimsStub with AuthStub with ClaimsValidationStub {
 
+  val normalUrl = "/enter-the-charity-name?claimId=123"
+  val changelUrl = "/change-the-charity-name?claimId=123"
   "GET /enter-the-charity-name" should {
 
     "render the enter charity name page" in {
-      stubAuthRequest()
+      stubAgentAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
-      val result = get("/enter-the-charity-name")
+      val result = get(normalUrl)
 
       result.status shouldBe OK
 
@@ -48,12 +50,12 @@ class EnterCharityNameControllerISpec
   "GET /change-the-charity-name" should {
 
     "render the change charity name page" in {
-      stubAuthRequest()
+      stubAgentAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
-      val result = get("/change-the-charity-name")
+      val result = get(changelUrl)
 
       result.status shouldBe OK
 
@@ -65,13 +67,13 @@ class EnterCharityNameControllerISpec
   "POST /enter-the-charity-name" should {
 
     "redirect to the repayment claim type page when valid value submitted" in {
-      stubAuthRequest()
+      stubAgentAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
       val result =
-        post("/enter-the-charity-name")(
+        post(normalUrl)(
           Json.obj("value" -> "Test Name")
         )
 
@@ -84,13 +86,13 @@ class EnterCharityNameControllerISpec
   "POST /change-the-charity-name" should {
 
     "redirect to the check your answers page when valid value submitted" in {
-      stubAuthRequest()
+      stubAgentAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
       val result =
-        post("/change-the-charity-name")(
+        post(changelUrl)(
           Json.obj("value" -> "Test Name")
         )
 

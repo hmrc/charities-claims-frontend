@@ -283,8 +283,8 @@ GET         /change-select-gift-aid-small-donations-scheme-claim-type        con
 POST        /select-gift-aid-small-donations-scheme-claim-type        controllers.repaymentClaimDetails.GasdsClaimTypeController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-select-gift-aid-small-donations-scheme-claim-type        controllers.repaymentClaimDetails.GasdsClaimTypeController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /maximum-claims-limit-reached                       controllers.repaymentClaimDetails.Warning11MaxClaimsReachedController.onPageLoad
-POST        /maximum-claims-limit-reached                       controllers.repaymentClaimDetails.Warning11MaxClaimsReachedController.onSubmit
+GET         /maximum-claims-limit-reached                       controllers.Warning11MaxClaimsReachedController.onPageLoad
+POST        /maximum-claims-limit-reached                       controllers.Warning11MaxClaimsReachedController.onSubmit
 
 GET         /enter-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onPageLoad(mode: Mode = Mode.NormalMode)
 GET         /change-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onPageLoad(mode: Mode = Mode.CheckMode)
@@ -303,7 +303,7 @@ POST        /change-enter-a-telephone-number                                   c
 
 GET         /enter-charities-reference-number                       controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onPageLoad(mode: Mode = Mode.NormalMode)
 POST        /enter-charities-reference-number                       controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
-GET         /change-charities-reference-number                      controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onPageLoad(mode: Mode = Mode.CheckMode)
+  GET         /change-charities-reference-number                      controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /change-charities-reference-number                      controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /who-should-we-send-the-payment-to                                    controllers.organisationDetails.WhoShouldWeSendPaymentToController.onPageLoad(mode: Mode = Mode.NormalMode)

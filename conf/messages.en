@@ -11,6 +11,7 @@ uploadCommunityBuildingsSchedule.caption = Add Community Buildings schedule
 uploadCommunityBuildingsSchedule.title = Upload a Community Buildings schedule
 uploadCommunityBuildingsSchedule.heading = Upload a Community Buildings schedule
 uploadCommunityBuildingsSchedule.paragraph.one = To claim Community Buildings top-up payment, you need to upload a completed Community Buildings schedule with details of the community building(s) where donations were collected and amounts received. You can save your claim without uploading the Community Buildings schedule, but you need to upload a Community Buildings schedule before submitting your claim.
+uploadCommunityBuildingsSchedule.agent.paragraph.one = To claim Community Buildings top-up payment for your client, upload a completed Community Buildings schedule with details of the community building(s) where donations were collected and amounts received. You can save this claim without uploading the Community Buildings schedule, but you need to upload a Community Buildings schedule before submitting this claim.
 uploadCommunityBuildingsSchedule.paragraph.url = If you have not completed a Community Buildings schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Community Buildings schedule here (opens in new tab)</a>.
 uploadCommunityBuildingsSchedule.input.label = Upload a file
 uploadCommunityBuildingsSchedule.form.upload-file.submit = Continue
@@ -891,7 +892,7 @@ gasdsClaimType.label.connectedCharity = Connected charity or CASC claim
 gasdsClaimType.error.required = Select which type of GASDS claim(s) you want to make
 
 warning11MaxClaimsReached.message.1 = You have reached the maximum number of draft claims
-warning11MaxClaimsReached.message.2 = You can have 120 claims in progress at one time. Please delete an existing claim to make a new claim.
+warning11MaxClaimsReached.message.2 = You can have {0} claims in progress at one time. Please delete an existing claim to make a new claim.
 warning11MaxClaimsReached.title = You cannot manage this claim
 
 enterCharityName.title = What is the name of the charity or Community Amateur Sports Club (CASC)?
