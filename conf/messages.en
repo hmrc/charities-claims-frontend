@@ -704,6 +704,7 @@ uploadConnectedCharitiesSchedule.form.upload-file.submit = Continue
 uploadConnectedCharitiesSchedule.heading = Upload a Connected Charities schedule
 uploadConnectedCharitiesSchedule.input.label = Upload a file
 uploadConnectedCharitiesSchedule.paragraph.one = To claim Connected Charities, you need to upload a completed Connected Charities schedule with details of your Connected Charities or Community Amateur Sports Clubs (CASC). You can save your claim without uploading the Connected Charities schedule, but you need to upload a Connected Charities schedule before submitting your claim.
+uploadConnectedCharitiesSchedule.paragraph.one.agent = To claim Connected Charities for your client, upload a completed Connected Charities schedule with details of the connected charities or Community Amateur Sports Clubs (CASC). You can save this claim without uploading the Connected Charities schedule, but you need to upload a Connected Charities schedule before submitting this claim.
 uploadConnectedCharitiesSchedule.paragraph.url = If you have not completed a Connected Charities schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Connected Charities schedule here (opens in new tab)</a>.
 uploadConnectedCharitiesSchedule.title = Upload a Connected Charities schedule
 

@@ -30,7 +30,8 @@
     upscanInitiateResponse: UpscanInitiateResponse, 
     allowedFileTypesHint: String, 
     filePickerAcceptFilter: String, 
-    errorCode: Option[String]
+    errorCode: Option[String],
+    isAgent: Boolean
 )(using request: Request[?], messages: Messages)
 
 @layout(
@@ -50,7 +51,7 @@
     <span class="govuk-caption-l">@messages("uploadConnectedCharitiesSchedule.caption")</span>
     <h1 class="govuk-heading-l">@messages("uploadConnectedCharitiesSchedule.heading")</h1>
 
-    <p class="govuk-body">@messages("uploadConnectedCharitiesSchedule.paragraph.one")</p>
+    <p class="govuk-body">@messages(if(isAgent) "uploadConnectedCharitiesSchedule.paragraph.one.agent" else "uploadConnectedCharitiesSchedule.paragraph.one")</p>
     <p class="govuk-body">@Html(messages("uploadConnectedCharitiesSchedule.paragraph.url", connectedCharitiesScheduleSpreadsheetGuidanceUrl))</p>
 
     <form action="@upscanInitiateResponse.uploadRequest.href" method="POST" enctype="multipart/form-data" class="js-form file-upload" novalidate>
