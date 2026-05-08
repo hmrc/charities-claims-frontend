@@ -34,16 +34,27 @@
     errors: Seq[ValidationError],
     paginationViewModel: PaginationViewModel,
     paginationStatus: PaginationStatus,
-    communityBuildingsScheduleSpreadsheetGuidanceUrl: String
+    communityBuildingsScheduleSpreadsheetGuidanceUrl: String,
+    isAgent: Boolean
 )(implicit request: Request[?], messages: Messages)
 
+@pageTitleMessage = @{
+    if (isAgent) "problemWithCommunityBuildingsSchedule.agent.title"
+    else "problemWithCommunityBuildingsSchedule.title"
+}
+
+@headingMessage = @{
+    if (isAgent) "problemWithCommunityBuildingsSchedule.agent.heading"
+    else "problemWithCommunityBuildingsSchedule.heading"
+}
+
 @layout(
-    pageTitle = titleWithPagination(messages("problemWithCommunityBuildingsSchedule.title"), paginationStatus),
+    pageTitle = titleWithPagination(messages(pageTitleMessage), paginationStatus),
     showBackLink = true
 ) {
 
     <span class="govuk-caption-l">@messages("problemWithCommunityBuildingsSchedule.caption")</span>
-    <h1 class="govuk-heading-l">@messages("problemWithCommunityBuildingsSchedule.heading")</h1>
+    <h1 class="govuk-heading-l">@messages(headingMessage)</h1>
 
     <div class="govuk-warning-text">
         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
