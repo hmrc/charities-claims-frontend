@@ -35,7 +35,8 @@ class ProblemUpdatingCommunityBuildingsScheduleRejectedController @Inject() (
         view(
           messagesKeyPrefix = "problemUpdatingCommunityBuildingsScheduleRejected",
           submitAction = routes.ProblemUpdatingCommunityBuildingsScheduleRejectedController.onSubmit,
-          dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad
+          dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad,
+          isAgent = request.isAgent
         )
       )
     }

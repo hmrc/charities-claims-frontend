@@ -35,7 +35,8 @@ class ProblemUpdatingGiftAidScheduleRejectedController @Inject() (
         view(
           messagesKeyPrefix = "problemUpdatingGiftAidScheduleRejected",
           submitAction = routes.ProblemUpdatingGiftAidScheduleRejectedController.onSubmit,
-          dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad
+          dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad,
+          isAgent = request.isAgent
         )
       )
     }
