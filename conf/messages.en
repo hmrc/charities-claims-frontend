@@ -38,6 +38,7 @@ aboutTheOrganisation.caption = Provide organisation details
 aboutTheOrganisation.heading = About the organisation
 aboutTheOrganisation.paragraph.one = You need to provide information about the organisation you are claiming for.
 aboutTheOrganisation.paragraph.two = The person making this claim must be an approved official or corporate trustee recognised by HM Revenue & Customs.
+aboutTheOrganisation.agent.paragraph.two = The agent making this claim must provide a phone number so HM Revenue & Customs can get in touch about this claim.
 aboutTheOrganisation.title = About the organisation
 
 addSchedule.heading = Add Schedule
@@ -734,24 +735,29 @@ uploadConnectedCharitiesSchedule.title = Upload a Connected Charities schedule
 
 yourConnectedCharitiesScheduleUpload.caption = Add Connected Charities schedule
 yourConnectedCharitiesScheduleUpload.heading = Your Connected Charities schedule upload
+yourConnectedCharitiesScheduleUpload.heading.agent = Connected Charities schedule upload
 yourConnectedCharitiesScheduleUpload.paragraph.one = You can upload your Connected Charities schedule as a spreadsheet. The selected file must be smaller than 250KB.
 yourConnectedCharitiesScheduleUpload.paragraph.one.agent = You can upload the Connected Charities schedule as a spreadsheet. The selected file must be smaller than 250KB.
 yourConnectedCharitiesScheduleUpload.table.key = Connected Charities Schedule
 yourConnectedCharitiesScheduleUpload.title = Your Connected Charities schedule upload
+yourConnectedCharitiesScheduleUpload.title.agent = Connected Charities schedule upload
 
 problemUpdatingConnectedCharitiesScheduleRejected.heading = There is a problem uploading your Connected Charities schedule
 problemUpdatingConnectedCharitiesScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
 problemUpdatingConnectedCharitiesScheduleRejected.title = There is a problem uploading your Connected Charities schedule
 
 problemWithConnectedCharitiesSchedule.title = There is a problem with the data in your Connected Charities schedule
+problemWithConnectedCharitiesSchedule.title.agent = There is a problem with the data in this Connected Charities schedule
 problemWithConnectedCharitiesSchedule.caption = Add Connected Charities schedule
 problemWithConnectedCharitiesSchedule.heading = There is a problem with the data in your Connected Charities schedule
+problemWithConnectedCharitiesSchedule.heading.agent = There is a problem with the data in this Connected Charities schedule
 problemWithConnectedCharitiesSchedule.warning = We cannot accept the file because it has errors. You must fix these errors and upload the updated file before you can continue.
 problemWithConnectedCharitiesSchedule.subheading.1 = What you can do next
 problemWithConnectedCharitiesSchedule.subheading.2 = Summary of errors
 problemWithConnectedCharitiesSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Connected Charities donations (opens in new tab)</a>.
 problemWithConnectedCharitiesSchedule.list.item.2 = Delete this Connected Charities schedule.
 problemWithConnectedCharitiesSchedule.list.item.3 = Update your spreadsheet.
+problemWithConnectedCharitiesSchedule.list.item.3.agent = Update the spreadsheet.
 problemWithConnectedCharitiesSchedule.list.item.4 = Upload the updated spreadsheet.
 problemWithConnectedCharitiesSchedule.table.column.1 = Row
 problemWithConnectedCharitiesSchedule.table.column.2 = Error

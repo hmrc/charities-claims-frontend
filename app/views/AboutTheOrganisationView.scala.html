@@ -22,17 +22,21 @@ formHelper: FormWithCSRF,
 govukButton: GovukButton
 )
 
-@()(implicit request: Request[?], messages: Messages)
+@(isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
+@paragraphTwoMessage = @{
+    if (isAgent) "aboutTheOrganisation.agent.paragraph.two"
+    else "aboutTheOrganisation.paragraph.two"
+}
 @layout(
-pageTitle    = titleNoForm(messages("aboutTheOrganisation.title"))
+    pageTitle    = titleNoForm(messages("aboutTheOrganisation.title"))
 ) {
 
 <span class="govuk-caption-l">@messages("aboutTheOrganisation.caption")</span>
 <h1 class="govuk-heading-l">@messages("aboutTheOrganisation.heading")</h1>
 
 <p class="govuk-body">@messages("aboutTheOrganisation.paragraph.one")</p>
-<p class="govuk-body">@messages("aboutTheOrganisation.paragraph.two")</p>
+<p class="govuk-body">@messages(paragraphTwoMessage)</p>
 
 
 @formHelper(action = routes.AboutTheOrganisationController.onSubmit) {

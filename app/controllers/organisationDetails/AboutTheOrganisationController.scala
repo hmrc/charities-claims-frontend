@@ -37,15 +37,25 @@ class AboutTheOrganisationController @Inject() (
 
   val onPageLoad: Action[AnyContent] = actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete) {
     implicit request =>
-      Ok(view())
+      Ok(view(request.isAgent))
   }
 
   val onSubmit: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
 
       given sessionData: SessionData = request.sessionData
-      if isCASCCharityReference then
-        Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
-      else Future.successful(Redirect(routes.NameOfCharityRegulatorController.onPageLoad(NormalMode)))
+
+      val redirectCall =
+        (isCASCCharityReference, request.isAgent) match
+          case (true, true) =>
+            routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode)
+
+          case (true, false) =>
+            routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)
+
+          case (false, _) =>
+            routes.NameOfCharityRegulatorController.onPageLoad(NormalMode)
+
+      Future.successful(Redirect(redirectCall))
     }
 }

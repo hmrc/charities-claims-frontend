@@ -37,13 +37,13 @@
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleNoForm(messages("yourConnectedCharitiesScheduleUpload.title")),
+    pageTitle = titleNoForm(messages(if(isAgent) "yourConnectedCharitiesScheduleUpload.title.agent" else "yourConnectedCharitiesScheduleUpload.title")),
     showBackLink = false,
     scriptsBlock = if (screenLocked) Some(checkUploadStatusScript(uploadStatusCall, refreshIntervalSeconds)) else None
 ) {
 
     <span class="govuk-caption-l">@messages("yourConnectedCharitiesScheduleUpload.caption")</span>
-    <h1 class="govuk-heading-l">@messages("yourConnectedCharitiesScheduleUpload.heading")</h1>
+    <h1 class="govuk-heading-l">@messages(if(isAgent) "yourConnectedCharitiesScheduleUpload.heading.agent" else "yourConnectedCharitiesScheduleUpload.heading")</h1>
     <p class="govuk-body">@messages(if(isAgent) "yourConnectedCharitiesScheduleUpload.paragraph.one.agent" else "yourConnectedCharitiesScheduleUpload.paragraph.one")</p>
 
     @if(screenLocked) {
