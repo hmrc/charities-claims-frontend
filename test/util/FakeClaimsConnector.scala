@@ -75,4 +75,10 @@ class FakeClaimsConnector(
 
   override def updateLastVisitedAt(claimId: String)(using hc: HeaderCarrier): Future[Unit] =
     Future.successful(())
+
+  override def hasUnsubmittedClaim(charitiesReference: String)(using hc: HeaderCarrier): Future[Boolean] =
+    Future.successful(
+      !claim.claimSubmitted
+        && claim.claimData.repaymentClaimDetails.hmrcCharitiesReference.contains(charitiesReference)
+    )
 }

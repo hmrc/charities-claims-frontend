@@ -16,24 +16,17 @@
 
 package controllers.organisationDetails
 
-import controllers.ControllerSpec
-import forms.PhoneNumberFormProvider
-import models.Mode.*
-import models.{
-  AgentUserOrganisationDetails,
-  AgentUserOrganisationDetailsAnswers,
-  NameOfCharityRegulator,
-  ReasonNotRegisteredWithRegulator,
-  SessionData,
-  WhoShouldHmrcSendPaymentTo
-}
-import play.api.Application
-import play.api.data.Form
-import play.api.i18n.MessagesApi
 import play.api.mvc.AnyContentAsEmpty
-import play.api.test.FakeRequest
-import uk.gov.hmrc.auth.core.AffinityGroup
+import controllers.ControllerSpec
 import views.html.AgentPostcodeView
+import uk.gov.hmrc.auth.core.AffinityGroup
+import play.api.Application
+import forms.PhoneNumberFormProvider
+import models.{AgentUserOrganisationDetailsAnswers, SessionData}
+import play.api.i18n.MessagesApi
+import play.api.data.Form
+import play.api.test.FakeRequest
+import models.Mode.*
 
 class AgentPostcodeControllerSpec extends ControllerSpec {
   val formProvider       = new PhoneNumberFormProvider()

@@ -120,6 +120,14 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       response = response
     )
 
+  def givenGetUnsubmittedClaimEndpointReturns(
+    response: HttpResponse
+  ): CallHandler[Future[HttpResponse]] =
+    givenGetReturns(
+      expectedUrl = "http://foo.bar.com:1234/foo-claims/claims/charities/123/unsubmitted",
+      response = response
+    )
+
   given HeaderCarrier = HeaderCarrier()
 
   "ClaimsConnector" - {
@@ -429,6 +437,25 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       givenGetSubmissionClaimSummaryEndpointReturns(HttpResponse(404, "Not Found")).once()
       a[Exception] should be thrownBy {
         await(connector.getSubmissionClaimSummary("123"))
+      }
+    }
+  }
+
+  "hasUnsubmittedClaim" - {
+    "should send a get request and return true on success" in {
+      givenGetUnsubmittedClaimEndpointReturns(HttpResponse(204, ""))
+      await(connector.hasUnsubmittedClaim("123")) shouldBe true
+    }
+
+    "should send a get request and return false on not found" in {
+      givenGetUnsubmittedClaimEndpointReturns(HttpResponse(404, "Not Found"))
+      await(connector.hasUnsubmittedClaim("123")) shouldBe false
+    }
+
+    "should throw an exception if the service returns 500 status" in {
+      givenGetUnsubmittedClaimEndpointReturns(HttpResponse(500, ""))
+      a[Exception] should be thrownBy {
+        await(connector.hasUnsubmittedClaim("123"))
       }
     }
   }
