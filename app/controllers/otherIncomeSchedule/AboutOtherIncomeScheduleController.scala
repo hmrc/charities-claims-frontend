@@ -44,7 +44,7 @@ class AboutOtherIncomeScheduleController @Inject() (
           then {
             Future.successful(Redirect(routes.YourOtherIncomeScheduleUploadController.onPageLoad))
           } else {
-            Future.successful(Ok(view(appConfig.otherIncomeScheduleSpreadsheetGuidanceUrl)))
+            Future.successful(Ok(view(appConfig.otherIncomeScheduleSpreadsheetGuidanceUrl, request.isAgent)))
           }
         } else {
           Future.successful(Redirect(controllers.routes.PageNotFoundController.onPageLoad))
