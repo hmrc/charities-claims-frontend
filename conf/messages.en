@@ -365,6 +365,7 @@ fileUpload.refreshPageLink = Refresh page to see update of uploading file
 
 giftAidScheduleUploadSuccessful.message.1 = Upload successful
 giftAidScheduleUploadSuccessful.message.2 = You have successfully attached your Gift Aid schedule.
+giftAidScheduleUploadSuccessful.agent.message.2 = You have successfully attached this Gift Aid schedule.
 giftAidScheduleUploadSuccessful.title = Upload successful
 giftAidScheduleUploadSuccessful.title = Upload successful
 
