@@ -38,6 +38,7 @@ aboutTheOrganisation.caption = Provide organisation details
 aboutTheOrganisation.heading = About the organisation
 aboutTheOrganisation.paragraph.one = You need to provide information about the organisation you are claiming for.
 aboutTheOrganisation.paragraph.two = The person making this claim must be an approved official or corporate trustee recognised by HM Revenue & Customs.
+aboutTheOrganisation.agent.paragraph.two = The agent making this claim must provide a phone number so HM Revenue & Customs can get in touch about this claim.
 aboutTheOrganisation.title = About the organisation
 
 addSchedule.heading = Add Schedule
