@@ -947,7 +947,7 @@ gasdsClaimType.error.required = Select which type of GASDS claim(s) you want to 
 
 warning11MaxClaimsReached.message.1 = You have reached the maximum number of draft claims
 warning11MaxClaimsReached.message.2 = You can have {0} claims in progress at one time. Please delete an existing claim to make a new claim.
-warning11MaxClaimsReached.title = You cannot manage this claim
+warning11MaxClaimsReached.title = You have reached the maximum number of draft claims
 
 enterCharityName.title = What is the name of the charity or Community Amateur Sports Club (CASC)?
 enterCharityName.heading = What is the name of the charity or Community Amateur Sports Club (CASC)?
@@ -987,7 +987,7 @@ whoShouldWeSendPaymentTo.radio.charityOrCasc = Charity/Community Amateur Sports 
 whoShouldWeSendPaymentTo.radio.agentOrNominee = Agent/Nominee
 whoShouldWeSendPaymentTo.error.required = Select who HMRC should send payment to
 
-deleteAgentRepaymentClaim.title = Are you sure you want to delete this repayment claim?
+deleteAgentRepaymentClaim.title =  Delete repayment claim
 deleteAgentRepaymentClaim.heading = Delete repayment claim
 deleteAgentRepaymentClaim.body = You are about to delete the repayment claim for {0}.
 deleteAgentRepaymentClaim.caution = Are you sure you want to delete this repayment claim?
