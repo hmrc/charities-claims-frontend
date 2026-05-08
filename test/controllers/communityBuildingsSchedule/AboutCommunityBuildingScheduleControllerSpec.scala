@@ -29,14 +29,8 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
     "onPageLoad" - {
 
       "should render content for organisation" in {
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          lastUpdatedReference = Some(testCharitiesReference),
-          submissionReference = Some(testCharitiesReference)
-        )
-
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation).build()
+          applicationBuilder(sessionData = completeGasdsSession, affinityGroup = AffinityGroup.Organisation).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -52,14 +46,8 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
       }
 
       "should render content for agent" in {
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          lastUpdatedReference = Some(testCharitiesReference),
-          submissionReference = Some(testCharitiesReference)
-        )
-
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+          applicationBuilder(sessionData = completeGasdsSession, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
           val request = FakeRequest(GET, routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
