@@ -29,6 +29,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.inject
 import services.ClaimsValidationService
+import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.http.HeaderCarrier
 import util.TestResources
 
@@ -172,6 +173,52 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
 
           status(result) shouldEqual OK
           content should include("ERROR:")
+        }
+      }
+
+      "As Organisation, should display error messages in the table" in {
+        (mockClaimsValidationConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(testClaimId, testFileUploadReference, *)
+          .returning(Future.successful(testValidationFailedResponse))
+
+        given application: Application =
+          applicationBuilder(sessionData = validSessionData, affinityGroup = AffinityGroup.Organisation).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ProblemWithCommunityBuildingsScheduleController.onPageLoad.url)
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          content should include("ERROR:")
+          content should include(messages("problemWithCommunityBuildingsSchedule.heading"))
+          content shouldNot include(messages("problemWithCommunityBuildingsSchedule.agent.heading"))
+        }
+      }
+
+      "As Agent, should display error messages in the table" in {
+        (mockClaimsValidationConnector
+          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+          .expects(testClaimId, testFileUploadReference, *)
+          .returning(Future.successful(testValidationFailedResponse))
+
+        given application: Application =
+          applicationBuilder(sessionData = validSessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ProblemWithCommunityBuildingsScheduleController.onPageLoad.url)
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          content should include("ERROR:")
+          content should include(messages("problemWithCommunityBuildingsSchedule.agent.heading"))
+          content shouldNot include(messages("problemWithCommunityBuildingsSchedule.heading"))
         }
       }
 
