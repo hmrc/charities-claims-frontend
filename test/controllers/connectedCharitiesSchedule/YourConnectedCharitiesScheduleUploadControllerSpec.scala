@@ -196,6 +196,9 @@ class YourConnectedCharitiesScheduleUploadControllerSpec extends ControllerSpec 
             (contentAsString(result) should not).include(
               messages("yourConnectedCharitiesScheduleUpload.paragraph.one.agent")
             )
+            contentAsString(result)  should include(messages("yourConnectedCharitiesScheduleUpload.title"))
+            contentAsString(result)  should include(messages("yourConnectedCharitiesScheduleUpload.heading"))
+
           }
         }
 
@@ -332,6 +335,10 @@ class YourConnectedCharitiesScheduleUploadControllerSpec extends ControllerSpec 
 
             contentAsString(result)  should include(messages("yourConnectedCharitiesScheduleUpload.paragraph.one.agent"))
             (contentAsString(result) should not).include(messages("yourConnectedCharitiesScheduleUpload.paragraph.one"))
+            contentAsString(result)  should include(messages("yourConnectedCharitiesScheduleUpload.title.agent"))
+            (contentAsString(result) should not).include(messages("yourConnectedCharitiesScheduleUpload.title"))
+            contentAsString(result)  should include(messages("yourConnectedCharitiesScheduleUpload.heading.agent"))
+            (contentAsString(result) should not).include(messages("yourConnectedCharitiesScheduleUpload.heading"))
 
           }
         }
