@@ -164,6 +164,7 @@ checkYourConnectedCharitiesSchedule.title.agent = Check this Connected Charities
 checkYourGiftAidSchedule.caption = Add Gift Aid schedule
 checkYourGiftAidSchedule.error.required = Select ‘Yes’ if you need to update this Gift Aid schedule
 checkYourGiftAidSchedule.heading = Check your Gift Aid schedule
+checkYourGiftAidSchedule.agent.heading = Check this Gift Aid schedule
 checkYourGiftAidSchedule.hint = Do you need to update this Gift Aid schedule?
 checkYourGiftAidSchedule.radios.no = No, continue with Gift Aid schedule
 checkYourGiftAidSchedule.summary.item.1 = Earliest donation date
@@ -181,6 +182,8 @@ checkYourGiftAidSchedule.table.column.7 = Aggregated donations
 checkYourGiftAidSchedule.table.column.8 = Sponsored event
 checkYourGiftAidSchedule.table.column.9 = Donation date
 checkYourGiftAidSchedule.title = Check your Gift Aid schedule
+checkYourGiftAidSchedule.agent.title = Check this Gift Aid schedule
+
 
 checkYourOtherIncomeSchedule.caption = Add Other Income schedule
 checkYourOtherIncomeSchedule.error.required = Select ‘Yes’ if you need to update this Other Income schedule

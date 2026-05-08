@@ -63,7 +63,8 @@ class CheckYourGiftAidScheduleController @Inject() (
                 giftAidScheduleData = giftAidScheduleData,
                 donations = paginationResult.paginatedData,
                 paginationViewModel = paginationResult.paginationViewModel,
-                paginationStatus = paginationResult
+                paginationStatus = paginationResult,
+                isAgent = request.isAgent
               )
             )
           }
@@ -92,7 +93,8 @@ class CheckYourGiftAidScheduleController @Inject() (
                         giftAidScheduleData = giftAidScheduleData,
                         donations = paginationResult.paginatedData,
                         paginationViewModel = paginationResult.paginationViewModel,
-                        paginationStatus = paginationResult
+                        paginationStatus = paginationResult,
+                        isAgent = request.isAgent
                       )
                     )
                   )
@@ -112,7 +114,8 @@ class CheckYourGiftAidScheduleController @Inject() (
                                  request.sessionData.copy(
                                    giftAidScheduleCompleted = true,
                                    giftAidScheduleData = None,
-                                   prevOverclaimedGiftAid = giftAidScheduleData.prevOverclaimedGiftAid
+                                   prevOverclaimedGiftAid = giftAidScheduleData.prevOverclaimedGiftAid,
+                                   isAgent = request.isAgent
                                  )
                                )
                           _ <- claimsService.save
