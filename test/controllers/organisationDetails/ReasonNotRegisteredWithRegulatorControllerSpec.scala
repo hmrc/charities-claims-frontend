@@ -27,6 +27,7 @@ import play.api.data.Form
 import models.Mode.*
 import models.NameOfCharityRegulator.{EnglandAndWales, None, NorthernIreland, Scottish}
 import models.ReasonNotRegisteredWithRegulator.*
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
 
@@ -289,7 +290,8 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
           )
         }
       }
-      "should redirect to CharityExceptedController when the value is Excepted in NormalMode" in {
+
+      "should redirect to CharityExceptedController when the value is Excepted for an organisation" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -307,7 +309,27 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to CharityExemptController when the value is Exempt in NormalMode" in {
+      "should redirect to CharityExceptedController when the value is Excepted for an agent" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "Excepted")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.CharityExceptedController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to CharityExemptController when the value is Exempt for an organisation" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -325,7 +347,27 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to the next page when the value is lowIncome" in {
+      "should redirect to CharityExemptController when the value is Exempt for an agent" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "Exempt")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.CharityExemptController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to CorporateTrusteeClaimController when the value is lowIncome for an organisation" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -343,7 +385,27 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to the next page when the value is waiting" in {
+      "should redirect to WhoShouldWeSendPaymentToController when the value is lowIncome for an agent" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "LowIncome")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to CorporateTrusteeClaimController when the value is waiting for an organisation" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -361,7 +423,27 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to CharityExceptedController when the value is Excepted in CheckMode" in {
+      "should redirect to WhoShouldWeSendPaymentToController when the value is waiting for an agent" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "Waiting")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode).url
+          )
+        }
+      }
+
+      "should redirect to CharityExceptedController when the value is Excepted in CheckMode for an organisation" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -379,7 +461,26 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to CharityExemptController when the value is Exempt in CheckMode" in {
+      "should redirect to CharityExceptedController when the value is Excepted in CheckMode for an agent" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "Excepted")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.CharityExceptedController.onPageLoad(CheckMode).url
+          )
+        }
+      }
+
+      "should redirect to CharityExemptController when the value is Exempt in CheckMode for an organisation" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -397,7 +498,26 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect back to CYA when the value is lowIncome" in {
+      "should redirect to CharityExemptController when the value is Exempt in CheckMode for an agent" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "Exempt")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.CharityExemptController.onPageLoad(CheckMode).url
+          )
+        }
+      }
+
+      "should redirect to OrganisationDetailsCheckYourAnswersController when the value is lowIncome in CheckMode for an organisation" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
 
@@ -415,9 +535,47 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect back to CYA when the value is waiting" in {
+      "should redirect to OrganisationDetailsCheckYourAnswersController when the value is lowIncome in CheckMode for an agent" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "LowIncome")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect to OrganisationDetailsCheckYourAnswersController when the value is waiting in CheckMode for an organisation" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
         given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.ReasonNotRegisteredWithRegulatorController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "Waiting")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect to OrganisationDetailsCheckYourAnswersController when the value is waiting in CheckMode for an agent" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
