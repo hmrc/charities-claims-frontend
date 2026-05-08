@@ -74,8 +74,9 @@ class ProblemUpdatingCommunityBuildingsScheduleQuarantineControllerSpec extends 
       }
 
       "should render the agent page correctly" in {
-        given application: Application = applicationBuilder(sessionData = completeGasdsSession, affinityGroup = AffinityGroup.Agent)
-          .build()
+        given application: Application =
+          applicationBuilder(sessionData = completeGasdsSession, affinityGroup = AffinityGroup.Agent)
+            .build()
 
         running(application) {
           val request: FakeRequest[AnyContentAsEmpty.type] =

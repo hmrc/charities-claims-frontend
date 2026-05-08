@@ -80,8 +80,9 @@ class ProblemUpdatingConnectedCharitiesScheduleQuarantineControllerSpec extends 
         val sessionData                =
           completeRepaymentDetailsAnswersSession
             .and(RepaymentClaimDetailsAnswers.setClaimingConnectedCharities(true))
-        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent)
-          .build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent)
+            .build()
 
         running(application) {
           val request: FakeRequest[AnyContentAsEmpty.type] =

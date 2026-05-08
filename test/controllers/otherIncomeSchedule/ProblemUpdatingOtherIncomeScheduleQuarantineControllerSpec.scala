@@ -80,8 +80,9 @@ class ProblemUpdatingOtherIncomeScheduleQuarantineControllerSpec extends Control
         val sessionData                =
           completeRepaymentDetailsAnswersSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
-        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent)
-          .build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent)
+            .build()
 
         running(application) {
           val request: FakeRequest[AnyContentAsEmpty.type] =
