@@ -46,10 +46,15 @@ class AboutTheOrganisationController @Inject() (
       given sessionData: SessionData = request.sessionData
 
       val redirectCall =
-        if isCASCCharityReference && request.isAgent then
-          routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode)
-        else if isCASCCharityReference then routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)
-        else routes.NameOfCharityRegulatorController.onPageLoad(NormalMode)
+        (isCASCCharityReference, request.isAgent) match
+          case (true, true) =>
+            routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode)
+
+          case (true, false) =>
+            routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)
+
+          case (false, _) =>
+            routes.NameOfCharityRegulatorController.onPageLoad(NormalMode)
 
       Future.successful(Redirect(redirectCall))
     }

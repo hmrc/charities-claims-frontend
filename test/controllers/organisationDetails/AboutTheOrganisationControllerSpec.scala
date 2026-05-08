@@ -126,7 +126,8 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
           )
         }
       }
-      "should redirect to the next page" in {
+
+      "should redirect to the NameOfCharityRegulatorController if charity ref does not start with CH or CF for an organisation" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -141,7 +142,23 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to the CorporateTrusteeClaimController if charity ref start with CH" in {
+      "should redirect to the NameOfCharityRegulatorController if charity ref does not start with CH or CF for an agent" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.AboutTheOrganisationController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.NameOfCharityRegulatorController.onPageLoad(NormalMode).url)
+        }
+      }
+
+      "should redirect to the CorporateTrusteeClaimController if charity ref does start with CH for an organisation" in {
         val testCharitiesReference: String                      = "CH-test-charities-ref"
         val completeRepaymentDetailsAnswersSession: SessionData = SessionData(
           charitiesReference = testCharitiesReference,
@@ -163,7 +180,29 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to the CorporateTrusteeClaimController if charity ref start with CF" in {
+      "should redirect to the WhoShouldWeSendPaymentToController if charity ref does start with CH for an agent" in {
+        val testCharitiesReference: String = "CH-test-charities-ref"
+        val completeRepaymentDetailsAnswersSession: SessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some("test-claim-id"),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers)
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = completeRepaymentDetailsAnswersSession, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.AboutTheOrganisationController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode).url)
+        }
+      }
+
+      "should redirect to the CorporateTrusteeClaimController if charity ref does start with CF for an organisation" in {
         val testCharitiesReference: String                      = "CF-test-charities-ref"
         val completeRepaymentDetailsAnswersSession: SessionData = SessionData(
           charitiesReference = testCharitiesReference,
@@ -182,6 +221,28 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
+        }
+      }
+
+      "should redirect to the WhoShouldWeSendPaymentToController if charity ref does start with CF for an agent" in {
+        val testCharitiesReference: String = "CF-test-charities-ref"
+        val completeRepaymentDetailsAnswersSession: SessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some("test-claim-id"),
+          repaymentClaimDetailsAnswers = Some(completeRepaymentClaimDetailsAnswers)
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = completeRepaymentDetailsAnswersSession, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.AboutTheOrganisationController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode).url)
         }
       }
 
