@@ -67,7 +67,8 @@ class ProblemWithGiftAidScheduleController @Inject() (
                       errors = paginationResult.paginatedData,
                       paginationViewModel = paginationResult.paginationViewModel,
                       paginationStatus = paginationResult,
-                      giftAidScheduleSpreadsheetGuidanceUrl = appConfig.giftAidScheduleSpreadsheetGuidanceUrl
+                      giftAidScheduleSpreadsheetGuidanceUrl = appConfig.giftAidScheduleSpreadsheetGuidanceUrl,
+                      isAgent = request.isAgent
                     )
                   )
 
