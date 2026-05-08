@@ -30,7 +30,7 @@ class CheckYourGiftAidScheduleControllerISpec
       with ClaimsValidationStub
     with ClaimsStub {
 
-  private val url     = "/check-your-gift-aid-schedule"
+  private val url     = "/check-your-gift-aid-schedule?claimId=123"
 
   "GET /check-your-gift-aid-schedule" should {
 
@@ -42,6 +42,15 @@ class CheckYourGiftAidScheduleControllerISpec
       result.status                shouldBe OK
       Jsoup.parse(result.body).title should include(msg("checkYourGiftAidSchedule.title"))
     }
+  }
+
+  "render the agent check your gift aid schedule page" in {
+    stubAgentBackend()
+
+    val result = get(url)
+
+    result.status shouldBe OK
+    Jsoup.parse(result.body).text should include(msg("checkYourGiftAidSchedule.agent.heading"))
   }
 
   "POST /check-your-gift-aid-schedule" should {
@@ -84,6 +93,17 @@ class CheckYourGiftAidScheduleControllerISpec
 
   private def stubBackend(fileRefOpt: Option[FileUploadReference] = Some(giftAidFileRef)): Unit = {
     stubAuthRequest()
+    stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+    stubGetClaims(
+      claimId
+    )(OK, Json.toJson(claimWithGiftAid(fileRefOpt)))
+
+    stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryGiftAidValidatedResponse))
+    stubGetUploadResult(claimId, giftAidFileRef)(OK, getUploadResultGiftAidValidatedJson)
+  }
+
+  private def stubAgentBackend(fileRefOpt: Option[FileUploadReference] = Some(giftAidFileRef)): Unit = {
+    stubAgentAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
     stubGetClaims(
       claimId
