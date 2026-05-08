@@ -21,13 +21,15 @@ import models.*
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.FakeRequest
 import play.api.Application
+import uk.gov.hmrc.auth.core.AffinityGroup
 import views.html.ClaimCompleteView
 
 class ClaimCompleteControllerSpec extends ControllerSpec {
 
   val testClaimId = testCharitiesReference
 
-  val nextPage: Call = Call("GET", "/charities-claims/charity-repayment-claim-summary")
+  val nextPage: Call         = Call("GET", "/charities-claims/charity-repayment-claim-summary")
+  val nextPageString: String = "/charities-claims/charity-repayment-claim-summary"
 
   val repaymentClaimDetailsAnswersCompleted: RepaymentClaimDetailsAnswers =
     RepaymentClaimDetailsAnswers(
@@ -53,145 +55,310 @@ class ClaimCompleteControllerSpec extends ControllerSpec {
 
   "ClaimCompleteController" - {
     "on pageLoad" - {
-      "should render the page correctly when isClaimDetailsComplete condition is met" in {
-        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-          claimingUnderGiftAidSmallDonationsScheme = Some(false),
-          claimingDonationsNotFromCommunityBuilding = Some(false),
-          claimingDonationsCollectedInCommunityBuildings = Some(true),
-          connectedToAnyOtherCharities = Some(false),
-          makingAdjustmentToPreviousClaim = Some(false)
-        )
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          lastUpdatedReference = Some(testCharitiesReference),
-          submissionReference = Some(testCharitiesReference),
-          unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswers = Some(answers)
-        ).copy(
-          communityBuildingsScheduleCompleted = true,
-          understandFalseStatements = Some(true),
-          organisationDetailsAnswers = Some(organisationDetailsAnswers)
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimCompleteController.onPageLoad.url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimCompleteView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(nextPage, testClaimId).body
-        }
-      }
-
-      "should render the page correctly when isClaimDetailsComplete condition is met when prev overpayment for giftAid  & otherIncome> 0.0 & prompt is entered  " in {
-        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-          claimingUnderGiftAidSmallDonationsScheme = Some(false),
-          claimingDonationsNotFromCommunityBuilding = Some(false),
-          claimingDonationsCollectedInCommunityBuildings = Some(true),
-          connectedToAnyOtherCharities = Some(false),
-          makingAdjustmentToPreviousClaim = Some(false)
-        )
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          lastUpdatedReference = Some(testCharitiesReference),
-          submissionReference = Some(testCharitiesReference),
-          unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswers = Some(answers)
-        ).copy(
-          communityBuildingsScheduleCompleted = true,
-          understandFalseStatements = Some(true),
-          prevOverclaimedGiftAid = Some(BigDecimal(1.0)),
-          adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(2.0)),
-          includedAnyAdjustmentsInClaimPrompt = Some("test"),
-          organisationDetailsAnswers = Some(organisationDetailsAnswers)
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimCompleteController.onPageLoad.url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimCompleteView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(nextPage, testClaimId).body
-        }
-      }
-
-      "should render the page correctly when isClaimDetailsComplete condition is met when prev overpayment for otherIncome > 0 & prompt is entered  " in {
-        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-          claimingUnderGiftAidSmallDonationsScheme = Some(false),
-          claimingDonationsNotFromCommunityBuilding = Some(false),
-          claimingDonationsCollectedInCommunityBuildings = Some(true),
-          connectedToAnyOtherCharities = Some(false),
-          makingAdjustmentToPreviousClaim = Some(false)
-        )
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          lastUpdatedReference = Some(testCharitiesReference),
-          submissionReference = Some(testCharitiesReference),
-          unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswers = Some(answers)
-        ).copy(
-          communityBuildingsScheduleCompleted = true,
-          understandFalseStatements = Some(true),
-          adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(1.0)),
-          includedAnyAdjustmentsInClaimPrompt = Some("test"),
-          organisationDetailsAnswers = Some(organisationDetailsAnswers)
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimCompleteController.onPageLoad.url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[ClaimCompleteView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(nextPage, testClaimId).body
-        }
-      }
-      "should render the page correctly when isClaimDetailsComplete condition is met & submissionReference is not defined  " in {
-        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-          claimingUnderGiftAidSmallDonationsScheme = Some(false),
-          claimingDonationsNotFromCommunityBuilding = Some(false),
-          claimingDonationsCollectedInCommunityBuildings = Some(true),
-          connectedToAnyOtherCharities = Some(false),
-          makingAdjustmentToPreviousClaim = Some(false)
-        )
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          lastUpdatedReference = Some(testCharitiesReference),
-          unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswers = Some(answers)
-        ).copy(
-          communityBuildingsScheduleCompleted = true,
-          understandFalseStatements = Some(false),
-          adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(1.0)),
-          includedAnyAdjustmentsInClaimPrompt = Some("test"),
-          organisationDetailsAnswers = Some(organisationDetailsAnswers)
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ClaimCompleteController.onPageLoad.url)
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            controllers.routes.ClaimsTaskListController.onPageLoad.url
+      "organisation user" - {
+        val isAgent = false
+        "should render the page correctly when isClaimDetailsComplete condition is met" in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(true),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
           )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            lastUpdatedReference = Some(testCharitiesReference),
+            submissionReference = Some(testCharitiesReference),
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            communityBuildingsScheduleCompleted = true,
+            understandFalseStatements = Some(true),
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ClaimCompleteController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[ClaimCompleteView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(nextPage, testClaimId, isAgent).body
+            contentAsString(result)  should include(messages("claimComplete.para.1"))
+            contentAsString(result)  should include(messages("claimComplete.para.2"))
+            contentAsString(result)  should include(messages("claimComplete.printSummaryLink", nextPageString))
+            (contentAsString(result) should not).include(messages("claimComplete.para.1.agent"))
+            (contentAsString(result) should not).include(messages("claimComplete.para.2.agent"))
+            (contentAsString(result) should not).include(
+              messages("claimComplete.printSummaryLink.agent", nextPageString)
+            )
+          }
+        }
+
+        "should render the page correctly when isClaimDetailsComplete condition is met when prev overpayment for giftAid  & otherIncome> 0.0 & prompt is entered  " in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(true),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            lastUpdatedReference = Some(testCharitiesReference),
+            submissionReference = Some(testCharitiesReference),
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            communityBuildingsScheduleCompleted = true,
+            understandFalseStatements = Some(true),
+            prevOverclaimedGiftAid = Some(BigDecimal(1.0)),
+            adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(2.0)),
+            includedAnyAdjustmentsInClaimPrompt = Some("test"),
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ClaimCompleteController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[ClaimCompleteView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(nextPage, testClaimId, isAgent).body
+          }
+        }
+
+        "should render the page correctly when isClaimDetailsComplete condition is met when prev overpayment for otherIncome > 0 & prompt is entered  " in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(true),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            lastUpdatedReference = Some(testCharitiesReference),
+            submissionReference = Some(testCharitiesReference),
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            communityBuildingsScheduleCompleted = true,
+            understandFalseStatements = Some(true),
+            adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(1.0)),
+            includedAnyAdjustmentsInClaimPrompt = Some("test"),
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ClaimCompleteController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[ClaimCompleteView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(nextPage, testClaimId, isAgent).body
+          }
+        }
+        "should render the page correctly when isClaimDetailsComplete condition is met & submissionReference is not defined  " in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(true),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            lastUpdatedReference = Some(testCharitiesReference),
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            communityBuildingsScheduleCompleted = true,
+            understandFalseStatements = Some(false),
+            adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(1.0)),
+            includedAnyAdjustmentsInClaimPrompt = Some("test"),
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ClaimCompleteController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              controllers.routes.ClaimsTaskListController.onPageLoad.url
+            )
+          }
+        }
+      }
+      "agent user" - {
+        val isAgent = true
+        "should render the page correctly when isClaimDetailsComplete condition is met" in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(true),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            lastUpdatedReference = Some(testCharitiesReference),
+            submissionReference = Some(testCharitiesReference),
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            communityBuildingsScheduleCompleted = true,
+            understandFalseStatements = Some(true),
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ClaimCompleteController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[ClaimCompleteView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(nextPage, testClaimId, isAgent).body
+            contentAsString(result)  should include(messages("claimComplete.para.1.agent"))
+            contentAsString(result)  should include(messages("claimComplete.para.2.agent"))
+            contentAsString(result)  should include(messages("claimComplete.printSummaryLink.agent", nextPageString))
+            (contentAsString(result) should not).include(messages("claimComplete.para.1"))
+            (contentAsString(result) should not).include(messages("claimComplete.para.2"))
+            (contentAsString(result) should not).include(messages("claimComplete.printSummaryLink", nextPageString))
+          }
+        }
+
+        "should render the page correctly when isClaimDetailsComplete condition is met when prev overpayment for giftAid  & otherIncome> 0.0 & prompt is entered  " in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(true),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            lastUpdatedReference = Some(testCharitiesReference),
+            submissionReference = Some(testCharitiesReference),
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            communityBuildingsScheduleCompleted = true,
+            understandFalseStatements = Some(true),
+            prevOverclaimedGiftAid = Some(BigDecimal(1.0)),
+            adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(2.0)),
+            includedAnyAdjustmentsInClaimPrompt = Some("test"),
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ClaimCompleteController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[ClaimCompleteView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(nextPage, testClaimId, isAgent).body
+          }
+        }
+
+        "should render the page correctly when isClaimDetailsComplete condition is met when prev overpayment for otherIncome > 0 & prompt is entered  " in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(true),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            lastUpdatedReference = Some(testCharitiesReference),
+            submissionReference = Some(testCharitiesReference),
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            communityBuildingsScheduleCompleted = true,
+            understandFalseStatements = Some(true),
+            adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(1.0)),
+            includedAnyAdjustmentsInClaimPrompt = Some("test"),
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ClaimCompleteController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[ClaimCompleteView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(nextPage, testClaimId, isAgent).body
+          }
+        }
+        "should render the page correctly when isClaimDetailsComplete condition is met & submissionReference is not defined  " in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(true),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            lastUpdatedReference = Some(testCharitiesReference),
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            communityBuildingsScheduleCompleted = true,
+            understandFalseStatements = Some(false),
+            adjustmentForOtherIncomePreviousOverClaimed = Some(BigDecimal(1.0)),
+            includedAnyAdjustmentsInClaimPrompt = Some("test"),
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ClaimCompleteController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              controllers.routes.ClaimsTaskListController.onPageLoad.url
+            )
+          }
         }
       }
     }

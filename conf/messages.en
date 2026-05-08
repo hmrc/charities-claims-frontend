@@ -826,6 +826,9 @@ claimComplete.claimRefNumber = {0}
 claimComplete.para.1 = We’ve sent your charity repayment claim to HMRC.
 claimComplete.para.2 = They will contact you to confirm your repayment, or to ask for more information.
 claimComplete.printSummaryLink = <a class="govuk-link" href="{0}">Print a summary of your claim</a>
+claimComplete.para.1.agent = We’ve sent this charity repayment claim to HMRC.
+claimComplete.para.2.agent = They will contact you to confirm your client’s repayment or to ask more for information.
+claimComplete.printSummaryLink.agent = <a class="govuk-link" href="{0}">Print a summary of this claim</a>
 
 aboutGiftAidSmallDonationsScheme.caption = Provide GASDS donation details
 aboutGiftAidSmallDonationsScheme.heading = About Gift Aid Small Donations Scheme schedule
