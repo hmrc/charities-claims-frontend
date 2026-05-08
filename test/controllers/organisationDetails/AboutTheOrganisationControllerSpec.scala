@@ -145,7 +145,8 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
       "should redirect to the NameOfCharityRegulatorController if charity ref does not start with CH or CF for an agent" in {
         val sessionData = completeRepaymentDetailsAnswersSession
 
-        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -181,7 +182,7 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
       }
 
       "should redirect to the WhoShouldWeSendPaymentToController if charity ref does start with CH for an agent" in {
-        val testCharitiesReference: String = "CH-test-charities-ref"
+        val testCharitiesReference: String                      = "CH-test-charities-ref"
         val completeRepaymentDetailsAnswersSession: SessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("test-claim-id"),
@@ -189,7 +190,8 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
         )
 
         given application: Application =
-          applicationBuilder(sessionData = completeRepaymentDetailsAnswersSession, affinityGroup = AffinityGroup.Agent).build()
+          applicationBuilder(sessionData = completeRepaymentDetailsAnswersSession, affinityGroup = AffinityGroup.Agent)
+            .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -198,7 +200,9 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode).url)
+          redirectLocation(result) shouldEqual Some(
+            routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode).url
+          )
         }
       }
 
@@ -225,7 +229,7 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
       }
 
       "should redirect to the WhoShouldWeSendPaymentToController if charity ref does start with CF for an agent" in {
-        val testCharitiesReference: String = "CF-test-charities-ref"
+        val testCharitiesReference: String                      = "CF-test-charities-ref"
         val completeRepaymentDetailsAnswersSession: SessionData = SessionData(
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("test-claim-id"),
@@ -233,7 +237,8 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
         )
 
         given application: Application =
-          applicationBuilder(sessionData = completeRepaymentDetailsAnswersSession, affinityGroup = AffinityGroup.Agent).build()
+          applicationBuilder(sessionData = completeRepaymentDetailsAnswersSession, affinityGroup = AffinityGroup.Agent)
+            .build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -242,7 +247,9 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode).url)
+          redirectLocation(result) shouldEqual Some(
+            routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode).url
+          )
         }
       }
 

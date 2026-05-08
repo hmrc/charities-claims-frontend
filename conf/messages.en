@@ -711,6 +711,7 @@ problemUpdatingOtherIncomeScheduleRejected.title = There is a problem uploading 
 connectedCharitiesScheduleUploadSuccessful.title = Upload successful
 connectedCharitiesScheduleUploadSuccessful.message.1 = Upload successful
 connectedCharitiesScheduleUploadSuccessful.message.2 = You have successfully attached your Connected Charities schedule.
+connectedCharitiesScheduleUploadSuccessful.message.2.agent = You have successfully attached this Connected Charities schedule.
 
 uploadConnectedCharitiesSchedule.caption = Add Connected Charities schedule
 uploadConnectedCharitiesSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250KB
