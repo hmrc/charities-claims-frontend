@@ -62,7 +62,8 @@ class UploadGiftAidScheduleController @Inject() (
                   upscanInitiateResponse = upscanInitiateResponse,
                   allowedFileTypesHint = appConfig.allowedFileTypesHint,
                   filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-                  errorCode = None
+                  errorCode = None,
+                  isAgent = request.isAgent
                 )
               )
             )
@@ -86,7 +87,8 @@ class UploadGiftAidScheduleController @Inject() (
                       upscanInitiateResponse = upscanInitiateResponse,
                       allowedFileTypesHint = appConfig.allowedFileTypesHint,
                       filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-                      errorCode = None
+                      errorCode = None,
+                      isAgent = request.isAgent
                     )
                   )
               }
@@ -175,7 +177,8 @@ class UploadGiftAidScheduleController @Inject() (
                   upscanInitiateResponse = upscanInitiateResponse,
                   allowedFileTypesHint = appConfig.allowedFileTypesHint,
                   filePickerAcceptFilter = appConfig.filePickerAcceptFilter,
-                  errorCode = errorCode
+                  errorCode = errorCode,
+                  isAgent = request.isAgent
                 )
               )
             )
