@@ -35,7 +35,8 @@ class ProblemUpdatingGiftAidScheduleQuarantineController @Inject() (
         view(
           messagesKeyPrefix = "problemUpdatingGiftAidScheduleQuarantine",
           submitAction = routes.ProblemUpdatingGiftAidScheduleQuarantineController.onSubmit,
-          dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad
+          dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad,
+          isAgent = request.isAgent
         )
       )
     }

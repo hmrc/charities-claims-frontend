@@ -23,6 +23,7 @@ import views.html.ScheduleUploadFailureView
 import play.api.Application
 import models.{RepaymentClaimDetailsAnswers, SessionData}
 import models.SessionData.and
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class ProblemUpdatingCommunityBuildingsScheduleQuarantineControllerSpec extends ControllerSpec {
 
@@ -66,7 +67,32 @@ class ProblemUpdatingCommunityBuildingsScheduleQuarantineControllerSpec extends 
           contentAsString(result) shouldBe view(
             messagesKeyPrefix = "problemUpdatingCommunityBuildingsScheduleQuarantine",
             submitAction = routes.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onSubmit,
-            dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad
+            dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad,
+            isAgent = false
+          )(using request, msgs).body
+        }
+      }
+
+      "should render the agent page correctly" in {
+        given application: Application =
+          applicationBuilder(sessionData = completeGasdsSession, affinityGroup = AffinityGroup.Agent)
+            .build()
+
+        running(application) {
+          val request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onPageLoad.url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ScheduleUploadFailureView]
+          val msgs   = application.injector.instanceOf[play.api.i18n.MessagesApi].preferred(request)
+
+          status(result) shouldBe OK
+
+          contentAsString(result) shouldBe view(
+            messagesKeyPrefix = "problemUpdatingCommunityBuildingsScheduleQuarantine",
+            submitAction = routes.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onSubmit,
+            dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad,
+            isAgent = true
           )(using request, msgs).body
         }
       }

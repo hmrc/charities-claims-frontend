@@ -22,6 +22,7 @@ import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import uk.gov.hmrc.auth.core.AffinityGroup
 import views.html.ScheduleUploadFailureView
 
 class ProblemUpdatingConnectedCharitiesScheduleQuarantineControllerSpec extends ControllerSpec {
@@ -69,7 +70,35 @@ class ProblemUpdatingConnectedCharitiesScheduleQuarantineControllerSpec extends 
           contentAsString(result) shouldBe view(
             messagesKeyPrefix = "problemUpdatingConnectedCharitiesScheduleQuarantine",
             submitAction = routes.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onSubmit,
-            dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad
+            dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad,
+            isAgent = false
+          )(using request, msgs).body
+        }
+      }
+
+      "should render the agent page correctly" in {
+        val sessionData                =
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingConnectedCharities(true))
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent)
+            .build()
+
+        running(application) {
+          val request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onPageLoad.url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ScheduleUploadFailureView]
+          val msgs   = application.injector.instanceOf[play.api.i18n.MessagesApi].preferred(request)
+
+          status(result) shouldBe OK
+
+          contentAsString(result) shouldBe view(
+            messagesKeyPrefix = "problemUpdatingConnectedCharitiesScheduleQuarantine",
+            submitAction = routes.ProblemUpdatingConnectedCharitiesScheduleQuarantineController.onSubmit,
+            dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad,
+            isAgent = true
           )(using request, msgs).body
         }
       }

@@ -20,16 +20,18 @@
     govukButton: GovukButton
 )
 
-@(messagesKeyPrefix: String, submitAction: Call, dashboardLink: Call)(implicit request: Request[?], messages: Messages)
+@(messagesKeyPrefix: String, submitAction: Call, dashboardLink: Call, isAgent: Boolean = false)(implicit request: Request[?], messages: Messages)
+
+@agentPrefix = @{ if (isAgent) ".agent" else "" }
 
 @layout(
-    pageTitle = titleNoForm(messages(messagesKeyPrefix + ".title")), showBackLink = false
+    pageTitle = titleNoForm(messages(messagesKeyPrefix + agentPrefix + ".title")), showBackLink = false
 ) {
-    <h1 class="govuk-heading-l">@messages(messagesKeyPrefix + ".heading")</h1>
+    <h1 class="govuk-heading-l">@messages(messagesKeyPrefix + agentPrefix + ".heading")</h1>
 
     @formHelper(action = submitAction, Symbol("autoComplete") -> "off") {
 
-        <p class="govuk-body">@messages(messagesKeyPrefix + ".hint")</p>
+        <p class="govuk-body">@messages(messagesKeyPrefix + agentPrefix + ".hint")</p>
         
         @govukButton(
             ButtonViewModel(Text(messages("scheduleUploadFailure.continue")))

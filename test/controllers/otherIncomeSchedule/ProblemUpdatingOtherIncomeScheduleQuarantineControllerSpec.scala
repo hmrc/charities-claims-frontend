@@ -23,6 +23,7 @@ import views.html.ScheduleUploadFailureView
 import play.api.Application
 import models.RepaymentClaimDetailsAnswers
 import models.SessionData
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class ProblemUpdatingOtherIncomeScheduleQuarantineControllerSpec extends ControllerSpec {
 
@@ -69,7 +70,35 @@ class ProblemUpdatingOtherIncomeScheduleQuarantineControllerSpec extends Control
           contentAsString(result) shouldBe view(
             messagesKeyPrefix = "problemUpdatingOtherIncomeScheduleQuarantine",
             submitAction = routes.ProblemUpdatingOtherIncomeScheduleQuarantineController.onSubmit,
-            dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad
+            dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad,
+            isAgent = false
+          )(using request, msgs).body
+        }
+      }
+
+      "should render the agent page correctly" in {
+        val sessionData                =
+          completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent)
+            .build()
+
+        running(application) {
+          val request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ProblemUpdatingOtherIncomeScheduleQuarantineController.onPageLoad.url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ScheduleUploadFailureView]
+          val msgs   = application.injector.instanceOf[play.api.i18n.MessagesApi].preferred(request)
+
+          status(result) shouldBe OK
+
+          contentAsString(result) shouldBe view(
+            messagesKeyPrefix = "problemUpdatingOtherIncomeScheduleQuarantine",
+            submitAction = routes.ProblemUpdatingOtherIncomeScheduleQuarantineController.onSubmit,
+            dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad,
+            isAgent = true
           )(using request, msgs).body
         }
       }

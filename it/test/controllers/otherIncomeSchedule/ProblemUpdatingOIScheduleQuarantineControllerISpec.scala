@@ -44,6 +44,17 @@ class ProblemUpdatingOIScheduleQuarantineControllerISpec
       val doc = Jsoup.parse(result.body)
       doc.title should include(msg("problemUpdatingOtherIncomeScheduleQuarantine.title"))
     }
+
+    "render the agent quarantine failure page" in {
+      stubAgentBackend()
+
+      val result = get(s"$url?claimId=$claimId")
+
+      result.status shouldBe OK
+
+      val doc = Jsoup.parse(result.body)
+      doc.title should include(msg("problemUpdatingOtherIncomeScheduleQuarantine.agent.title"))
+    }
   }
 
   "POST /problem-uploading-other-income-schedule-quarantine" should {
@@ -70,6 +81,13 @@ class ProblemUpdatingOIScheduleQuarantineControllerISpec
       Json.toJson(claimWithOtherIncomeSchedule)
     )
 
+    stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryOtherIncomeValidatedResponse))
+  }
+
+  private def stubAgentBackend(): Unit = {
+    stubAgentAuthRequest()
+    stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+    stubGetClaims(claimId)(OK, Json.toJson(claimWithOtherIncomeSchedule))
     stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryOtherIncomeValidatedResponse))
   }
 
