@@ -66,7 +66,8 @@ class YourOtherIncomeScheduleUploadController @Inject() (
                         screenLocked = true,
                         uploadStatusCall = routes.OtherIncomeScheduleUploadStatusController.status,
                         refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
-                        reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad
+                        reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad,
+                        isAgent = request.isAgent
                       )
                     )
 
@@ -79,7 +80,8 @@ class YourOtherIncomeScheduleUploadController @Inject() (
                         screenLocked = true,
                         uploadStatusCall = routes.OtherIncomeScheduleUploadStatusController.status,
                         refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
-                        reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad
+                        reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad,
+                        isAgent = request.isAgent
                       )
                     )
 
@@ -96,7 +98,8 @@ class YourOtherIncomeScheduleUploadController @Inject() (
                         screenLocked = false,
                         uploadStatusCall = routes.OtherIncomeScheduleUploadStatusController.status,
                         refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
-                        reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad
+                        reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad,
+                        isAgent = request.isAgent
                       )
                     )
 
@@ -109,7 +112,8 @@ class YourOtherIncomeScheduleUploadController @Inject() (
                         screenLocked = false,
                         uploadStatusCall = routes.OtherIncomeScheduleUploadStatusController.status,
                         refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
-                        reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad
+                        reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad,
+                        isAgent = request.isAgent
                       )
                     )
                 }
