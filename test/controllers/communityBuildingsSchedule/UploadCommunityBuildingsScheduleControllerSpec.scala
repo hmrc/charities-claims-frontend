@@ -31,6 +31,7 @@ import play.api.inject.guice.GuiceableModule
 import com.typesafe.config.ConfigFactory
 import play.api.{inject, Application, Configuration}
 import play.api.libs.json.Json
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 import scala.concurrent.Future
 
@@ -266,6 +267,53 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
           val result = route(application, request).value
 
           status(result) shouldEqual OK
+        }
+      }
+
+      "should render content for organisation" in {
+
+        val upscan = response
+
+        val sessionData =
+          completeGasdsSession
+            .copy(communityBuildingsScheduleUpscanInitialization = Some(upscan))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation).build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.UploadCommunityBuildingsScheduleController.onPageLoad.url)
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          content should include(messages("uploadCommunityBuildingsSchedule.paragraph.one"))
+          content shouldNot include(messages("uploadCommunityBuildingsSchedule.agent.paragraph.one"))
+        }
+      }
+
+      "should render content for agent" in {
+
+        val upscan = response
+
+        val sessionData =
+          completeGasdsSession
+            .copy(communityBuildingsScheduleUpscanInitialization = Some(upscan))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.UploadCommunityBuildingsScheduleController.onPageLoad.url)
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          content should include(messages("uploadCommunityBuildingsSchedule.agent.paragraph.one"))
+          content shouldNot include(messages("uploadCommunityBuildingsSchedule.paragraph.one"))
+
         }
       }
     }
