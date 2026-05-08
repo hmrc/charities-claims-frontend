@@ -22,6 +22,7 @@ uploadCommunityBuildingsSchedule.error.file-upload.EntityTooLarge = The selected
 aboutGiftAidSchedule.caption = Add Gift Aid schedule
 aboutGiftAidSchedule.heading = About Gift Aid schedule
 aboutGiftAidSchedule.paragraph.one = Use this service to add a Gift Aid schedule.
+aboutGiftAidSchedule.paragraph.agent.one = Use this service to add a Gift Aid schedule for your client.
 aboutGiftAidSchedule.paragraph.two = You can upload a Gift Aid schedule in a .ods format.
 aboutGiftAidSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Gift Aid schedule here (opens in new tab)</a>. You can submit 1 file at a time, and each file can be up to 250KB.
 aboutGiftAidSchedule.title = About Gift Aid schedule
@@ -664,6 +665,7 @@ uploadGiftAidSchedule.form.upload-file.submit = Continue
 uploadGiftAidSchedule.heading = Upload a Gift Aid schedule
 uploadGiftAidSchedule.input.label = Upload a file
 uploadGiftAidSchedule.paragraph.one = To claim Gift Aid, you need to upload a completed Gift Aid schedule with details of your donors and donations. You can save your claim without uploading the Gift Aid schedule, but you need to upload a Gift Aid schedule before submitting your claim.
+uploadGiftAidSchedule.agent.paragraph.one = To claim Gift Aid for your client, you need to upload a completed Gift Aid schedule with details of donors and donations. You can save this claim without uploading the Gift Aid schedule, but you need to upload a Gift Aid schedule before before submitting this claim.
 uploadGiftAidSchedule.paragraph.url = If you have not completed a Gift Aid schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Gift Aid schedule here (opens in new tab)</a>.
 uploadGiftAidSchedule.title = Upload a Gift Aid schedule
 
@@ -683,7 +685,9 @@ warning.text = Warning
 yourGiftAidScheduleUpload.caption = Add Gift Aid schedule
 yourGiftAidScheduleUpload.file = Gift Aid Schedule
 yourGiftAidScheduleUpload.heading = Your Gift Aid schedule upload
+yourGiftAidScheduleUpload.agent.heading = Gift Aid schedule upload
 yourGiftAidScheduleUpload.paragraph.one = You can upload your Gift Aid schedule as a spreadsheet. The selected file must be smaller than 250KB.
+yourGiftAidScheduleUpload.agent.paragraph.one = You can upload the Gift Aid schedule as a spreadsheet. The selected file must be smaller than 250KB.
 yourGiftAidScheduleUpload.title = Your Gift Aid schedule upload
 
 yourCommunityBuildingsScheduleUpload.caption = Add Community Buildings schedule

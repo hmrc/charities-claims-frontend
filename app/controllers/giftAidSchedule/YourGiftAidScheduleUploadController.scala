@@ -67,7 +67,8 @@ class YourGiftAidScheduleUploadController @Inject() (
                         screenLocked = true,
                         uploadStatusCall = routes.GiftAidScheduleUploadStatusController.status,
                         refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
-                        reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad
+                        reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad,
+                        isAgent = request.isAgent
                       )
                     )
 
@@ -80,7 +81,8 @@ class YourGiftAidScheduleUploadController @Inject() (
                         screenLocked = true,
                         uploadStatusCall = routes.GiftAidScheduleUploadStatusController.status,
                         refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
-                        reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad
+                        reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad,
+                        isAgent = request.isAgent
                       )
                     )
 
@@ -97,7 +99,8 @@ class YourGiftAidScheduleUploadController @Inject() (
                         screenLocked = false,
                         uploadStatusCall = routes.GiftAidScheduleUploadStatusController.status,
                         refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
-                        reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad
+                        reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad,
+                        isAgent = request.isAgent
                       )
                     )
 
@@ -110,7 +113,8 @@ class YourGiftAidScheduleUploadController @Inject() (
                         screenLocked = false,
                         uploadStatusCall = routes.GiftAidScheduleUploadStatusController.status,
                         refreshIntervalSeconds = appConfig.uploadStatusRefreshIntervalSeconds,
-                        reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad
+                        reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad,
+                        isAgent = request.isAgent
                       )
                     )
                 }

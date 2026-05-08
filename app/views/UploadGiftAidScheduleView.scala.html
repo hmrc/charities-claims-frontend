@@ -30,8 +30,9 @@
     upscanInitiateResponse: UpscanInitiateResponse, 
     allowedFileTypesHint: String, 
     filePickerAcceptFilter: String, 
-    errorCode: Option[String]
-)(using request: Request[?], messages: Messages)
+    errorCode: Option[String],
+        isAgent: Boolean
+)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = titleWithErrorOpt(errorCode, messages("uploadGiftAidSchedule.title")), showBackLink = true
@@ -50,7 +51,11 @@
     <span class="govuk-caption-l">@messages("uploadGiftAidSchedule.caption")</span>
     <h1 class="govuk-heading-l">@messages("uploadGiftAidSchedule.heading")</h1>
 
-    <p class="govuk-body">@messages("uploadGiftAidSchedule.paragraph.one")</p>
+    @if(isAgent) {
+        <p class="govuk-body">@messages("uploadGiftAidSchedule.agent.paragraph.one")</p>
+    } else {
+        <p class="govuk-body">@messages("uploadGiftAidSchedule.paragraph.one")</p>
+    }
     <p class="govuk-body">@Html(messages("uploadGiftAidSchedule.paragraph.url", giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl))</p>
 
     <form action="@upscanInitiateResponse.uploadRequest.href" method="POST" enctype="multipart/form-data" class="js-form file-upload" novalidate>

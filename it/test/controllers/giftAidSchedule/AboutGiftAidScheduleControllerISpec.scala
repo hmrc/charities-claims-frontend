@@ -30,7 +30,7 @@ class AboutGiftAidScheduleControllerISpec
     with AuthStub
     with ClaimsValidationStub {
 
-  private val url = "/about-gift-aid-schedule"
+  private val url = "/about-gift-aid-schedule?claimId=123"
 
   "GET /about-gift-aid-schedule" should {
 
@@ -41,6 +41,15 @@ class AboutGiftAidScheduleControllerISpec
 
       result.status shouldBe OK
       Jsoup.parse(result.body).title should include(msg("aboutGiftAidSchedule.title"))
+    }
+
+    "render the page for Agent when claiming gift aid and schedule not completed" in {
+      stubAgentBackend(claimWithGiftAid())
+
+      val result = get(url)
+
+      result.status shouldBe OK
+      Jsoup.parse(result.body).text should include(msg("aboutGiftAidSchedule.paragraph.agent.one"))
     }
 
     "redirect to upload summary when schedule already completed" in {
@@ -76,6 +85,13 @@ class AboutGiftAidScheduleControllerISpec
 
   private def stubBackend(testClaim: Claim): Unit = {
     stubAuthRequest()
+    stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+    stubGetClaims(claimId)(OK, Json.toJson(testClaim))
+    stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
+  }
+
+  private def stubAgentBackend(testClaim: Claim): Unit = {
+    stubAgentAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
     stubGetClaims(claimId)(OK, Json.toJson(testClaim))
     stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
