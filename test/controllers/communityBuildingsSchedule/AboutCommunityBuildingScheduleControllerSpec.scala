@@ -62,8 +62,7 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
           applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
+          val request = FakeRequest(GET, routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
           val content = contentAsString(result)
@@ -84,8 +83,7 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
+          val request = FakeRequest(GET, routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
