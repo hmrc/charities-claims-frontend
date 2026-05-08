@@ -25,6 +25,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import util.TestScheduleData
 import views.html.ConnectedCharitiesScheduleUploadSuccessfulView
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class ConnectedCharitiesScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
 
@@ -51,7 +52,8 @@ class ConnectedCharitiesScheduleUploadSuccessfulControllerSpec extends Controlle
           )
         }
       }
-      "should render page successfully" in {
+      "should render page successfully - organisation user" in {
+        val isAgent     = false
         val sessionData = completeRepaymentDetailsAnswersSession
           .and(RepaymentClaimDetailsAnswers.setClaimingConnectedCharities(true))
           .copy(
@@ -69,7 +71,35 @@ class ConnectedCharitiesScheduleUploadSuccessfulControllerSpec extends Controlle
 
           val result = route(application, request).value
           status(result) shouldEqual OK
-          contentAsString(result) shouldBe view()(using request, messages).body
+          contentAsString(result) shouldBe view(isAgent)(using request, messages).body
+          contentAsString(result)   should include(messages("connectedCharitiesScheduleUploadSuccessful.message.2"))
+          (contentAsString(result)  should not).include(
+            messages("connectedCharitiesScheduleUploadSuccessful.message.2.agent")
+          )
+        }
+      }
+      "should render page successfully - Agent user" in {
+        val isAgent     = true
+        val sessionData = completeRepaymentDetailsAnswersSession
+          .and(RepaymentClaimDetailsAnswers.setClaimingConnectedCharities(true))
+          .copy(
+            connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+            connectedCharitiesScheduleData = Some(TestScheduleData.exampleConnectedCharitiesScheduleData),
+            connectedCharitiesScheduleCompleted = true
+          )
+
+        val application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+        val view        = application.injector.instanceOf[ConnectedCharitiesScheduleUploadSuccessfulView]
+        val messages    = application.injector.instanceOf[MessagesApi].preferred(Seq(Lang("en")))
+
+        running(application) {
+          val request = FakeRequest(GET, routes.ConnectedCharitiesScheduleUploadSuccessfulController.onPageLoad.url)
+
+          val result = route(application, request).value
+          status(result) shouldEqual OK
+          contentAsString(result) shouldBe view(isAgent)(using request, messages).body
+          contentAsString(result)   should include(messages("connectedCharitiesScheduleUploadSuccessful.message.2.agent"))
+          (contentAsString(result)  should not).include(messages("connectedCharitiesScheduleUploadSuccessful.message.2"))
         }
       }
       "should redirect to ClaimsTaskListController (there is no validated file completion status) " in {
