@@ -71,16 +71,23 @@ class ReasonNotRegisteredWithRegulatorController @Inject() (
             saveService
               .save(OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(value))
               .map { _ =>
-                (value, mode) match {
-                  // Excepted/Exempt always flow through A2.3/A2.4 (conditional pages)
-                  case (ReasonNotRegisteredWithRegulator.Excepted, _) =>
+                value match
+                  case ReasonNotRegisteredWithRegulator.Excepted =>
                     Redirect(routes.CharityExceptedController.onPageLoad(mode))
-                  case (ReasonNotRegisteredWithRegulator.Exempt, _)   =>
+
+                  case ReasonNotRegisteredWithRegulator.Exempt =>
                     Redirect(routes.CharityExemptController.onPageLoad(mode))
-                  // LowIncome/Waiting skip A2.3/A2.4
-                  case (_, CheckMode)                                 => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
-                  case (_, NormalMode)                                => Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
-                }
+
+                  case _ =>
+                    mode match
+                      case CheckMode =>
+                        Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
+
+                      case NormalMode if request.isAgent =>
+                        Redirect(routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode))
+
+                      case NormalMode =>
+                        Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
               }
         )
     }
