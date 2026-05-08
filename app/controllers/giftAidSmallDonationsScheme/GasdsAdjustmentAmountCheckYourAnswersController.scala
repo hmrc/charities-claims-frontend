@@ -44,7 +44,7 @@ class GasdsAdjustmentAmountCheckYourAnswersController @Inject() (
       )
       .async { implicit request =>
         val giftAidDonationsAnswers = request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
-        Future.successful(Ok(view(giftAidDonationsAnswers, mode)))
+        Future.successful(Ok(view(giftAidDonationsAnswers, mode, request.isAgent)))
       }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =

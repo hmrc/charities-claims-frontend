@@ -24,13 +24,13 @@
    govukButton: GovukButton
 )
 
-@(answers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers], mode: Mode)(implicit request: Request[?], messages: Messages)
+@(answers: Option[GiftAidSmallDonationsSchemeDonationDetailsAnswers], mode: Mode, isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
-   pageTitle = titleNoForm(messages("gasdsAdjustmentAmountCheckYourAnswers.title"))) {
+   pageTitle = titleNoForm(messages(if(isAgent) "gasdsAdjustmentAmountCheckYourAnswers.title.agent" else "gasdsAdjustmentAmountCheckYourAnswers.title"))) {
 
    <span class="govuk-caption-l">@messages("gasdsAdjustmentAmountCheckYourAnswers.caption")</span>
-   <h1 class="govuk-heading-l">@messages("gasdsAdjustmentAmountCheckYourAnswers.heading")</h1>
+   <h1 class="govuk-heading-l">@messages(if(isAgent) "gasdsAdjustmentAmountCheckYourAnswers.heading.agent" else "gasdsAdjustmentAmountCheckYourAnswers.heading")</h1>
 
    @govukSummaryList(GasdsAdjustmentAmountCheckYourAnswersHelper.buildSummaryList(answers))
 

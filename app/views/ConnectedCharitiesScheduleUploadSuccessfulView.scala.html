@@ -24,7 +24,7 @@
     govukButton: GovukButton
 )
 
-@()(implicit request: Request[?], messages: Messages)
+@(isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("connectedCharitiesScheduleUploadSuccessful.title")),
@@ -38,7 +38,7 @@
         </h1>
     </div>
 
-    <p class="govuk-body">@messages("connectedCharitiesScheduleUploadSuccessful.message.2")</p>
+    <p class="govuk-body">@messages(if(isAgent) "connectedCharitiesScheduleUploadSuccessful.message.2.agent" else "connectedCharitiesScheduleUploadSuccessful.message.2")</p>
 
     @formHelper(action = routes.ConnectedCharitiesScheduleUploadSuccessfulController.onSubmit) {
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
