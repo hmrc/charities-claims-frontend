@@ -665,6 +665,7 @@ uploadGiftAidSchedule.form.upload-file.submit = Continue
 uploadGiftAidSchedule.heading = Upload a Gift Aid schedule
 uploadGiftAidSchedule.input.label = Upload a file
 uploadGiftAidSchedule.paragraph.one = To claim Gift Aid, you need to upload a completed Gift Aid schedule with details of your donors and donations. You can save your claim without uploading the Gift Aid schedule, but you need to upload a Gift Aid schedule before submitting your claim.
+uploadGiftAidSchedule.agent.paragraph.one = To claim Gift Aid for your client, you need to upload a completed Gift Aid schedule with details of donors and donations. You can save this claim without uploading the Gift Aid schedule, but you need to upload a Gift Aid schedule before before submitting this claim.
 uploadGiftAidSchedule.paragraph.url = If you have not completed a Gift Aid schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Gift Aid schedule here (opens in new tab)</a>.
 uploadGiftAidSchedule.title = Upload a Gift Aid schedule
 

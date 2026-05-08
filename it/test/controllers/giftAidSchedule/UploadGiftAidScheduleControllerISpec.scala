@@ -31,7 +31,7 @@ class UploadGiftAidScheduleControllerISpec
       with ClaimsValidationStub
     with UpscanInitiateStub {
 
-  private val url = "/upload-gift-aid-schedule"
+  private val url = "/upload-gift-aid-schedule?claimId=123"
 
   "GET /upload-gift-aid-schedule" should {
 
@@ -43,6 +43,16 @@ class UploadGiftAidScheduleControllerISpec
       result.status                shouldBe OK
       Jsoup.parse(result.body).title should include(msg("uploadGiftAidSchedule.title"))
     }
+
+    "render the page for Agent when upscan is already initialised" in {
+      stubAgentBackend(withUpscan = true)
+
+      val result = get(url)
+
+      result.status shouldBe OK
+      Jsoup.parse(result.body).text should include(msg("uploadGiftAidSchedule.agent.paragraph.one"))
+    }
+
 
     "redirect to your upload page when file reference already exists" in {
       stubBackend(withReference = true)
@@ -86,6 +96,41 @@ class UploadGiftAidScheduleControllerISpec
       result.header(LOCATION).value should include("/upload-gift-aid-schedule")
     }
   }
+
+  private def stubAgentBackend(
+                           withUpscan: Boolean = false,
+                           withReference: Boolean = false
+                         ): Unit = {
+
+    stubAgentAuthRequest()
+    stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+
+    val claimResponse =
+      claim.copy(
+        claimData = claim.claimData.copy(
+          repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
+            claimingGiftAid = true
+          ),
+          giftAidScheduleFileUploadReference = if withReference then Some(giftAidFileRef) else None
+        )
+      )
+
+    stubGetClaims(claimId)(OK, Json.toJson(claimResponse))
+
+    stubGetUploadSummary(claimId)(
+      OK,
+      Json.toJson(uploadSummary(withUpscan))
+    )
+
+    if withReference then
+      stubGetUploadResult(
+        claimId,
+        giftAidFileRef
+      )(OK, getUploadResultGiftAidValidatedJson)
+
+    if withUpscan then stubCreateUploadTracking(claimId)(OK, Json.toJson(SuccessResponse(success = true)))
+  }
+
 
   private def stubBackend(
     withUpscan: Boolean = false,
