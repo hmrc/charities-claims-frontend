@@ -58,7 +58,8 @@ final case class SessionData(
   unregulatedWarningBypassed: Boolean = false,
   adjustmentForOtherIncomePreviousOverClaimed: Option[BigDecimal] = None,
   prevOverclaimedGiftAid: Option[BigDecimal] = None,
-  submissionReference: Option[String] = None
+  submissionReference: Option[String] = None,
+  isAgent: Boolean = false
 )
 
 object SessionData {
@@ -69,14 +70,16 @@ object SessionData {
 
   extension (sd: SessionData) def and(f: SessionData ?=> SessionData): SessionData = f(using sd)
 
-  def empty(charitiesRef: String): SessionData = SessionData(
-    charitiesReference = charitiesRef
+  def empty(charitiesRef: String, isAgent: Boolean = false): SessionData = SessionData(
+    charitiesReference = charitiesRef,
+    isAgent = isAgent
   )
 
   def from(
     claim: Claim,
     charitiesRef: String,
-    uploadsSummaryOpt: Option[GetUploadSummaryResponse] = None
+    uploadsSummaryOpt: Option[GetUploadSummaryResponse] = None,
+    isAgent: Boolean = false
   ): SessionData =
     SessionData(
       unsubmittedClaimId = Some(claim.claimId),
@@ -118,7 +121,8 @@ object SessionData {
         .flatMap(_.findUpload(ValidationType.ConnectedCharities))
         .flatMap(_.asUpscanInitiateResponse),
       connectedCharitiesScheduleCompleted = claim.claimData.connectedCharitiesScheduleFileUploadReference.isDefined,
-      submissionReference = claim.submissionDetails.map(_.submissionReference)
+      submissionReference = claim.submissionDetails.map(_.submissionReference),
+      isAgent = isAgent
     )
 
   def toUpdateClaimRequest(sessionData: SessionData): Try[UpdateClaimRequest] =
@@ -179,7 +183,7 @@ object SessionData {
 
   def isRepaymentClaimDetailsComplete(using session: SessionData): Boolean =
     session.unsubmittedClaimId.isDefined
-      && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
+      && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers(session.isAgent))
 
   def isClaimNotSubmitted(using session: SessionData): Boolean =
     session.submissionReference.isEmpty
@@ -189,7 +193,7 @@ object SessionData {
 
   def isClaimDetailsComplete(using session: SessionData): Boolean =
     session.unsubmittedClaimId.isDefined
-      && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
+      && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers(session.isAgent))
       && session.organisationDetailsAnswers.exists(
         _.hasOrganisationDetailsCompleteAnswers(isCASCCharityReference(using session))
       )

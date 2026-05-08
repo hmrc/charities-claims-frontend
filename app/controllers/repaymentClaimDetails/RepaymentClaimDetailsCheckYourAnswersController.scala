@@ -54,7 +54,9 @@ class RepaymentClaimDetailsCheckYourAnswersController @Inject() (
     .andThen(guard(SessionData.isClaimNotSubmitted))
     .async { implicit request =>
       val checkAnswers =
-        request.sessionData.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers)
+        request.sessionData.repaymentClaimDetailsAnswers.exists(
+          _.hasRepaymentClaimDetailsCompleteAnswers(request.isAgent)
+        )
       if checkAnswers
       then
         val newSessionData = SessionData.syncUploadReferencesAndFlagsWithCheckboxes(using request.sessionData)

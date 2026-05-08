@@ -354,10 +354,10 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
             expectedMissingFields,
             isAgent = true
           ).body
-
-          expectedMissingFields should contain("claimingTaxDeducted.agent.missingDetails")
-          expectedMissingFields should contain("claimingUnderGiftAidSmallDonationsScheme.agent.missingDetails")
-          expectedMissingFields should contain("claimReferenceNumber.agent.missingDetails")
+          expectedMissingFields should contain("repaymentClaimDetails.agent.missingCharitiesReference")
+          expectedMissingFields should contain("repaymentClaimDetails.agent.missingCharityName")
+          expectedMissingFields should contain("repaymentClaimType.agent.missingDetails")
+          expectedMissingFields should contain("claimReferenceNumberCheck.agent.missingDetails")
         }
       }
     }

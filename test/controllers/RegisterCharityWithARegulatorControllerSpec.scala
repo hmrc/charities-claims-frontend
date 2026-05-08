@@ -57,7 +57,7 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
   val sessionDataLowIncome: SessionData = OrganisationDetailsAnswers
     .setReasonNotRegisteredWithRegulator(
       ReasonNotRegisteredWithRegulator.LowIncome
-    )(using SessionData.empty(testCharitiesReference))
+    )(using SessionData.empty(testCharitiesReference, false))
     .copy(unregulatedLimitExceeded = true)
 
   val sessionDataExcepted: SessionData = OrganisationDetailsAnswers

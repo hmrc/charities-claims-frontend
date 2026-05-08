@@ -24,13 +24,14 @@ import play.api.Application
 import play.api.test.Helpers.*
 import models.RepaymentClaimDetailsAnswers
 import models.*
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
 
   "RepaymentClaimDetailsCheckYourAnswersController" - {
     "onPageLoad" - {
       "claimingUnderGiftAidSmallDonationsScheme is true" - {
-        "should render the page correctly when claimingUnderGiftAidSmallDonationsScheme is true" in {
+        "should render the page correctly when claimingUnderGiftAidSmallDonationsScheme is true for an organisation" in {
 
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
@@ -65,7 +66,43 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
           }
         }
 
-        "should render the page correctly when claimingGiftAid is true" in {
+        "should render the page correctly when claimingUnderGiftAidSmallDonationsScheme is true for an agent" in {
+
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(false),
+                claimingTaxDeducted = Some(false),
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = Some(true),
+                claimingDonationsCollectedInCommunityBuildings = Some(true),
+                connectedToAnyOtherCharities = Some(true),
+                makingAdjustmentToPreviousClaim = Some(true),
+                claimingReferenceNumber = Some(true),
+                claimReferenceNumber = Some("12345678AB")
+              )
+            )
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, true).body
+          }
+        }
+
+        "should render the page correctly when claimingGiftAid is true for an organisation" in {
 
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
@@ -99,7 +136,44 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
             contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, false).body
           }
         }
-        "should render the page correctly when claimingTaxDeducted is true " in {
+
+        "should render the page correctly when claimingGiftAid is true for an agent" in {
+
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(true),
+                claimingTaxDeducted = Some(false),
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = Some(false),
+                claimingDonationsCollectedInCommunityBuildings = Some(false),
+                connectedToAnyOtherCharities = Some(false),
+                makingAdjustmentToPreviousClaim = Some(false),
+                claimingReferenceNumber = Some(true),
+                claimReferenceNumber = Some("12345678AB")
+              )
+            )
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, true).body
+          }
+        }
+
+        "should render the page correctly when claimingTaxDeducted is true for an organisation" in {
 
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
@@ -134,7 +208,43 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
           }
         }
 
-        "should render the page correctly when claimingGiftAid & claimingTaxDeducted are true" in {
+        "should render the page correctly when claimingTaxDeducted is true for an agent" in {
+
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(false),
+                claimingTaxDeducted = Some(true),
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = Some(false),
+                claimingDonationsCollectedInCommunityBuildings = Some(false),
+                connectedToAnyOtherCharities = Some(false),
+                makingAdjustmentToPreviousClaim = Some(false),
+                claimingReferenceNumber = Some(true),
+                claimReferenceNumber = Some("12345678AB")
+              )
+            )
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, true).body
+          }
+        }
+
+        "should render the page correctly when claimingGiftAid & claimingTaxDeducted are true for an organisation" in {
 
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
@@ -169,7 +279,43 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
           }
         }
 
-        "should render the page correctly when claimingGiftAid & claimingTaxDeducted are true and some answers is not defined" in {
+        "should render the page correctly when claimingGiftAid & claimingTaxDeducted are true for an agent" in {
+
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(true),
+                claimingTaxDeducted = Some(true),
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = Some(false),
+                claimingDonationsCollectedInCommunityBuildings = Some(false),
+                connectedToAnyOtherCharities = Some(false),
+                makingAdjustmentToPreviousClaim = Some(false),
+                claimingReferenceNumber = Some(true),
+                claimReferenceNumber = Some("12345678AB")
+              )
+            )
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, true).body
+          }
+        }
+
+        "should render the page correctly when claimingGiftAid & claimingTaxDeducted are true and some answers is not defined for an organisation" in {
 
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
@@ -204,7 +350,43 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
           }
         }
 
-        "should render the page correctly when makingAdjustmentToPreviousClaim are false and some answers is not defined" in {
+        "should render the page correctly when claimingGiftAid & claimingTaxDeducted are true and some answers is not defined for an agent" in {
+
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(true),
+                claimingTaxDeducted = Some(true),
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = None,
+                claimingDonationsCollectedInCommunityBuildings = None,
+                connectedToAnyOtherCharities = None,
+                makingAdjustmentToPreviousClaim = None,
+                claimingReferenceNumber = Some(true),
+                claimReferenceNumber = Some("12345678AB")
+              )
+            )
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, true).body
+          }
+        }
+
+        "should render the page correctly when makingAdjustmentToPreviousClaim are false and some answers is not defined for an organisation" in {
 
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
@@ -239,9 +421,46 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
           }
         }
 
+        "should render the page correctly when makingAdjustmentToPreviousClaim are false and some answers is not defined for an agent" in {
+
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(true),
+                claimingTaxDeducted = Some(true),
+                claimingUnderGiftAidSmallDonationsScheme = Some(true),
+                claimingDonationsNotFromCommunityBuilding = None,
+                claimingDonationsCollectedInCommunityBuildings = None,
+                connectedToAnyOtherCharities = None,
+                makingAdjustmentToPreviousClaim = Some(false),
+                claimingReferenceNumber = Some(true),
+                claimReferenceNumber = Some("12345678AB")
+              )
+            )
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, true).body
+          }
+        }
+
       }
+
       "claimingUnderGiftAidSmallDonationsScheme is false" - {
-        "should render the page correctly when claimingGiftAid is true " in {
+        "should render the page correctly when claimingGiftAid is true for an organisation" in {
 
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
@@ -275,7 +494,44 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
             contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, false).body
           }
         }
-        "should render the page correctly when claimingGiftAid & claimingTaxDeducted is true " in {
+
+        "should render the page correctly when claimingGiftAid is true for an agent" in {
+
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(true),
+                claimingTaxDeducted = Some(false),
+                claimingUnderGiftAidSmallDonationsScheme = Some(false),
+                claimingDonationsNotFromCommunityBuilding = Some(false),
+                claimingDonationsCollectedInCommunityBuildings = Some(false),
+                connectedToAnyOtherCharities = Some(false),
+                makingAdjustmentToPreviousClaim = Some(false),
+                claimingReferenceNumber = Some(false),
+                claimReferenceNumber = None
+              )
+            )
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, true).body
+          }
+        }
+
+        "should render the page correctly when claimingGiftAid & claimingTaxDeducted is true for an organisation" in {
 
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
@@ -309,9 +565,45 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
             contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, false).body
           }
         }
+
+        "should render the page correctly when claimingGiftAid & claimingTaxDeducted is true for an agent" in {
+
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingGiftAid = Some(true),
+                claimingTaxDeducted = Some(true),
+                claimingUnderGiftAidSmallDonationsScheme = Some(false),
+                claimingDonationsNotFromCommunityBuilding = Some(false),
+                claimingDonationsCollectedInCommunityBuildings = Some(false),
+                connectedToAnyOtherCharities = Some(false),
+                makingAdjustmentToPreviousClaim = Some(false),
+                claimingReferenceNumber = Some(true),
+                claimReferenceNumber = None
+              )
+            )
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+            status(result) shouldEqual OK
+
+            contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, true).body
+          }
+        }
       }
 
-      "should render the page correctly when some answers are missing & claimingGiftAid is true" in {
+      "should render the page correctly when some answers are missing & claimingGiftAid is true for an organisation" in {
 
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
@@ -347,7 +639,44 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
         }
       }
 
-      "should render the page correctly when some answers are missing & claimingTaxDeducted is true" in {
+      "should render the page correctly when some answers are missing & claimingGiftAid is true for an agent" in {
+
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswers = Some(
+            RepaymentClaimDetailsAnswers(
+              claimingGiftAid = Some(true),
+              claimingTaxDeducted = None,
+              claimingUnderGiftAidSmallDonationsScheme = Some(false),
+              claimingDonationsNotFromCommunityBuilding = None,
+              claimingDonationsCollectedInCommunityBuildings = Some(false),
+              connectedToAnyOtherCharities = Some(false),
+              makingAdjustmentToPreviousClaim = Some(false),
+              claimingReferenceNumber = None,
+              claimReferenceNumber = Some("12345678AB")
+            )
+          )
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, true).body
+
+        }
+      }
+
+      "should render the page correctly when some answers are missing & claimingTaxDeducted is true for an organisation" in {
 
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
@@ -382,7 +711,45 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
         }
       }
-      "should render the page correctly when some answers are missing & claimingUnderGiftAidSmallDonationsScheme missing" in {
+
+      "should render the page correctly when some answers are missing & claimingTaxDeducted is true for an agent" in {
+
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswers = Some(
+            RepaymentClaimDetailsAnswers(
+              claimingGiftAid = None,
+              claimingTaxDeducted = Some(true),
+              claimingUnderGiftAidSmallDonationsScheme = Some(false),
+              claimingDonationsNotFromCommunityBuilding = None,
+              claimingDonationsCollectedInCommunityBuildings = Some(false),
+              connectedToAnyOtherCharities = Some(false),
+              makingAdjustmentToPreviousClaim = Some(false),
+              claimingReferenceNumber = None,
+              claimReferenceNumber = Some("12345678AB")
+            )
+          )
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, true).body
+
+        }
+      }
+
+      "should render the page correctly when some answers are missing & claimingUnderGiftAidSmallDonationsScheme missing for an organisation" in {
 
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
@@ -418,7 +785,44 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
         }
       }
 
-      "should render the page correctly when claimingUnderGiftAidSmallDonationsScheme & claimingGiftAid & claimingTaxDeducted are missing" in {
+      "should render the page correctly when some answers are missing & claimingUnderGiftAidSmallDonationsScheme missing for an agent" in {
+
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswers = Some(
+            RepaymentClaimDetailsAnswers(
+              claimingGiftAid = None,
+              claimingTaxDeducted = Some(true),
+              claimingUnderGiftAidSmallDonationsScheme = None,
+              claimingDonationsNotFromCommunityBuilding = None,
+              claimingDonationsCollectedInCommunityBuildings = Some(false),
+              connectedToAnyOtherCharities = Some(false),
+              makingAdjustmentToPreviousClaim = Some(false),
+              claimingReferenceNumber = None,
+              claimReferenceNumber = Some("12345678AB")
+            )
+          )
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, true).body
+
+        }
+      }
+
+      "should render the page correctly when claimingUnderGiftAidSmallDonationsScheme & claimingGiftAid & claimingTaxDeducted are missing for an organisation" in {
 
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
@@ -454,7 +858,44 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
         }
       }
 
-      "should render the page correctly when all are missing" in {
+      "should render the page correctly when claimingUnderGiftAidSmallDonationsScheme & claimingGiftAid & claimingTaxDeducted are missing for an agent" in {
+
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswers = Some(
+            RepaymentClaimDetailsAnswers(
+              claimingGiftAid = None,
+              claimingTaxDeducted = None,
+              claimingUnderGiftAidSmallDonationsScheme = None,
+              claimingDonationsNotFromCommunityBuilding = None,
+              claimingDonationsCollectedInCommunityBuildings = Some(false),
+              connectedToAnyOtherCharities = Some(false),
+              makingAdjustmentToPreviousClaim = Some(false),
+              claimingReferenceNumber = None,
+              claimReferenceNumber = Some("12345678AB")
+            )
+          )
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, true).body
+
+        }
+      }
+
+      "should render the page correctly when all are missing for an organisation" in {
 
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
@@ -490,11 +931,48 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
         }
       }
 
+      "should render the page correctly when all are missing for an agent" in {
+
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswers = Some(
+            RepaymentClaimDetailsAnswers(
+              claimingGiftAid = None,
+              claimingTaxDeducted = None,
+              claimingUnderGiftAidSmallDonationsScheme = None,
+              claimingDonationsNotFromCommunityBuilding = None,
+              claimingDonationsCollectedInCommunityBuildings = None,
+              connectedToAnyOtherCharities = None,
+              makingAdjustmentToPreviousClaim = None,
+              claimingReferenceNumber = None,
+              claimReferenceNumber = None
+            )
+          )
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[RepaymentClaimDetailsCheckYourAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(sessionData.repaymentClaimDetailsAnswers, true).body
+
+        }
+      }
+
     }
   }
 
   "onSubmit" - {
-    "should save the claim and redirect to the next page" in {
+    "should save the claim and redirect to the next page for an organisation" in {
 
       val sessionData = SessionData(
         charitiesReference = testCharitiesReference,
@@ -531,7 +1009,46 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
       }
     }
 
-    "should redirect to the incomplete answers page if the answers are not complete" in {
+    "should save the claim and redirect to the next page for an agent" in {
+
+      val sessionData = SessionData(
+        charitiesReference = testCharitiesReference,
+        repaymentClaimDetailsAnswers = Some(
+          RepaymentClaimDetailsAnswers(
+            claimingGiftAid = Some(true),
+            claimingTaxDeducted = Some(true),
+            claimingUnderGiftAidSmallDonationsScheme = Some(true),
+            claimingReferenceNumber = Some(true),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false),
+            claimReferenceNumber = Some("12345678AB"),
+            hmrcCharitiesReference = Some("AB1234"),
+            nameOfCharity = Some("Test Charity")
+          )
+        )
+      )
+
+      given application: Application =
+        applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveClaim.build()
+
+      running(application) {
+        given request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(POST, routes.RepaymentClaimDetailsCheckYourAnswersController.onSubmit.url)
+
+        val result = route(application, request).value
+
+        status(result) shouldEqual SEE_OTHER
+
+        redirectLocation(result) shouldEqual Some(
+          controllers.routes.ClaimsTaskListController.onPageLoad.url
+        )
+
+      }
+    }
+
+    "should redirect to the incomplete answers page if the answers are not complete for an organisation" in {
 
       val sessionData = SessionData(
         charitiesReference = testCharitiesReference,
@@ -567,6 +1084,44 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
 
       }
     }
+
+    "should redirect to the incomplete answers page if the answers are not complete for an agent" in {
+
+      val sessionData = SessionData(
+        charitiesReference = testCharitiesReference,
+        repaymentClaimDetailsAnswers = Some(
+          RepaymentClaimDetailsAnswers(
+            claimingGiftAid = Some(true),
+            claimingTaxDeducted = None,
+            claimingUnderGiftAidSmallDonationsScheme = Some(true),
+            claimingDonationsNotFromCommunityBuilding = None,
+            claimingDonationsCollectedInCommunityBuildings = None,
+            connectedToAnyOtherCharities = None,
+            makingAdjustmentToPreviousClaim = None,
+            claimingReferenceNumber = Some(true),
+            claimReferenceNumber = Some("12345678AB")
+          )
+        )
+      )
+
+      given application: Application =
+        applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+      running(application) {
+        given request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(POST, routes.RepaymentClaimDetailsCheckYourAnswersController.onSubmit.url)
+
+        val result = route(application, request).value
+
+        status(result) shouldEqual SEE_OTHER
+
+        redirectLocation(result) shouldEqual Some(
+          routes.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad.url
+        )
+
+      }
+    }
+
     "should render ClaimCompleteController if submissionReference is defined" in {
       val sessionData = SessionData(
         charitiesReference = testCharitiesReference,

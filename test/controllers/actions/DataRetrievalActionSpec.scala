@@ -324,7 +324,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       val result = action.invokeBlock(
         authorisedRequestAgent,
         (req: DataRequest[?]) =>
-          req.sessionData shouldBe SessionData.empty(testCharitiesReference)
+          req.sessionData shouldBe SessionData.empty(testCharitiesReference, true)
           Future.successful(Ok)
       )
       status(result) shouldBe OK
@@ -398,7 +398,7 @@ class DataRetrievalActionSpec extends BaseSpec {
         action.invokeBlock(
           authorisedRequestAgentWithBlankClaimId,
           (req: DataRequest[?]) =>
-            req.sessionData shouldBe SessionData.empty(testCharitiesReference)
+            req.sessionData shouldBe SessionData.empty(testCharitiesReference, true)
             Future.successful(Ok)
         )
       status(result) shouldBe OK
@@ -478,7 +478,8 @@ class DataRetrievalActionSpec extends BaseSpec {
           (req: DataRequest[?]) =>
             req.sessionData shouldBe SessionData.from(
               TestClaims.testClaimWithRepaymentClaimDetailsOnly(),
-              testCharitiesReference
+              testCharitiesReference,
+              isAgent = true
             )
             Future.successful(Ok)
         )

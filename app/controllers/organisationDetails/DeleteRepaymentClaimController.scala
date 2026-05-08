@@ -83,7 +83,12 @@ class DeleteRepaymentClaimController @Inject() (
 
               case (true, Some(claimId)) =>
                 (for {
-                  _ <- saveService.save(SessionData(charitiesReference = request.sessionData.charitiesReference))
+                  _ <- saveService.save(
+                         SessionData(
+                           charitiesReference = request.sessionData.charitiesReference,
+                           isAgent = request.sessionData.isAgent
+                         )
+                       )
 
                   deleted <- claimsConnector.deleteClaim(claimId)
 

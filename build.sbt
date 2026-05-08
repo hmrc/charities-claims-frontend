@@ -35,6 +35,7 @@ lazy val root = Project(appName, file("."))
     PlayKeys.playDefaultPort := 8030,
     scalacOptions ++= Seq(
       "-feature",
+      "-Xmax-inlines:64",
       "-Wconf:cat=deprecation:e,cat=feature:w,src=target/.*:s"
     ),
     libraryDependencies ++= AppDependencies(),
