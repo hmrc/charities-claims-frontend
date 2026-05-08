@@ -464,7 +464,8 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
       "should redirect to CharityExceptedController when the value is Excepted in CheckMode for an agent" in {
         val sessionData = completeRepaymentDetailsAnswersSession
 
-        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -501,7 +502,8 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
       "should redirect to CharityExemptController when the value is Exempt in CheckMode for an agent" in {
         val sessionData = completeRepaymentDetailsAnswersSession
 
-        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -538,7 +540,8 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
       "should redirect to OrganisationDetailsCheckYourAnswersController when the value is lowIncome in CheckMode for an agent" in {
         val sessionData = completeRepaymentDetailsAnswersSession
 
-        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -575,7 +578,8 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
       "should redirect to OrganisationDetailsCheckYourAnswersController when the value is waiting in CheckMode for an agent" in {
         val sessionData = completeRepaymentDetailsAnswersSession
 
-        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =

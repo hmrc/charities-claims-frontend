@@ -110,9 +110,7 @@ class DefaultRefreshDataAction @Inject() (
   private def tryOpenAgentClaimById(request: AuthorisedRequest[?], claimId: String)(using HeaderCarrier) =
     claimsConnector.retrieveUnsubmittedClaims
       .flatMap { getClaimsResponse =>
-        if getClaimsResponse.claimsCount > 0
-          && getClaimsResponse.claimsCount < config.agentUnsubmittedClaimLimit
-          && getClaimsResponse.claimsList.exists(_.claimId == claimId)
+        if getClaimsResponse.claimsList.exists(_.claimId == claimId)
         then {
           claimsConnector
             .getClaim(claimId)
