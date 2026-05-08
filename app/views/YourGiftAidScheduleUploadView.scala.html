@@ -32,7 +32,8 @@
     screenLocked: Boolean,
     uploadStatusCall: Call,
     refreshIntervalSeconds: Int,
-    reloadPageCall: Call
+    reloadPageCall: Call,
+        isAgent: Boolean
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
@@ -42,8 +43,14 @@
 ) {
 
     <span class="govuk-caption-l">@messages("yourGiftAidScheduleUpload.caption")</span>
-    <h1 class="govuk-heading-l">@messages("yourGiftAidScheduleUpload.heading")</h1>
-    <p class="govuk-body">@messages("yourGiftAidScheduleUpload.paragraph.one")</p>
+    @if(isAgent) {
+        <h1 class="govuk-heading-l">@messages("yourGiftAidScheduleUpload.agent.heading")</h1>
+        <p class="govuk-body">@messages("yourGiftAidScheduleUpload.agent.paragraph.one")</p>
+    } else {
+        <h1 class="govuk-heading-l">@messages("yourGiftAidScheduleUpload.heading")</h1>
+        <p class="govuk-body">@messages("yourGiftAidScheduleUpload.paragraph.one")</p>
+    }
+
 
     @if(screenLocked) {
         <p class="govuk-body" id="refreshLink">

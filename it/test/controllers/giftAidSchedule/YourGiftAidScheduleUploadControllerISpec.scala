@@ -31,7 +31,7 @@ class YourGiftAidScheduleUploadControllerISpec
     with AuthStub
     with ClaimsValidationStub {
 
-  private val pageUrl   = "/your-gift-aid-schedule-upload"
+  private val pageUrl   = "/your-gift-aid-schedule-upload?claimId=123"
   private val removeUrl = "/your-gift-aid-schedule-upload/remove"
   private val submitUrl = "/your-gift-aid-schedule-upload"
 
@@ -49,6 +49,19 @@ class YourGiftAidScheduleUploadControllerISpec
 
     "render the page when upload result exists" in {
       stubBackend()
+      stubUploadSummary()
+      stubGetUploadResult(claimId, giftAidFileRef)(OK, Json.toJson(getUploadResultVerifying))
+
+      val result = get(pageUrl)
+
+      result.status shouldBe OK
+
+      val doc = Jsoup.parse(result.body)
+      doc.title should include(msg("yourGiftAidScheduleUpload.title"))
+    }
+
+    "render the page for agents when upload result exists" in {
+      stubAgentBackend()
       stubUploadSummary()
       stubGetUploadResult(claimId, giftAidFileRef)(OK, Json.toJson(getUploadResultVerifying))
 
@@ -92,6 +105,23 @@ class YourGiftAidScheduleUploadControllerISpec
 
   private def stubBackend(withReference: Boolean = true): Unit = {
     stubAuthRequest()
+    stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+
+    val claimResponse =
+      claim.copy(
+        claimData = claim.claimData.copy(
+          repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
+            claimingGiftAid = true
+          ),
+          giftAidScheduleFileUploadReference = if withReference then Some(giftAidFileRef) else None
+        )
+      )
+
+    stubGetClaims(claimId)(OK, Json.toJson(claimResponse))
+  }
+
+  private def stubAgentBackend(withReference: Boolean = true): Unit = {
+    stubAgentAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
 
     val claimResponse =

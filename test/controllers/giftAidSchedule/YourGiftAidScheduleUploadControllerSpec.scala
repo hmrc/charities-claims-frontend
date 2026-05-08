@@ -171,7 +171,8 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
             false,
             routes.GiftAidScheduleUploadStatusController.status,
             3,
-            routes.YourGiftAidScheduleUploadController.onPageLoad
+            routes.YourGiftAidScheduleUploadController.onPageLoad,
+            false
           ).body
 
         }
@@ -206,7 +207,8 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
             screenLocked = true,
             uploadStatusCall = routes.GiftAidScheduleUploadStatusController.status,
             refreshIntervalSeconds = 3,
-            reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad
+            reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad,
+            false
           ).body
         }
       }
@@ -240,7 +242,8 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
             true,
             routes.GiftAidScheduleUploadStatusController.status,
             3,
-            routes.YourGiftAidScheduleUploadController.onPageLoad
+            routes.YourGiftAidScheduleUploadController.onPageLoad,
+            false
           ).body
         }
       }
@@ -274,7 +277,8 @@ class YourGiftAidScheduleUploadControllerSpec extends ControllerSpec {
             screenLocked = false,
             uploadStatusCall = routes.GiftAidScheduleUploadStatusController.status,
             refreshIntervalSeconds = 3,
-            reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad
+            reloadPageCall = routes.YourGiftAidScheduleUploadController.onPageLoad,
+            false
           ).body
         }
       }

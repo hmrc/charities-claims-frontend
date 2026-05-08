@@ -685,7 +685,9 @@ warning.text = Warning
 yourGiftAidScheduleUpload.caption = Add Gift Aid schedule
 yourGiftAidScheduleUpload.file = Gift Aid Schedule
 yourGiftAidScheduleUpload.heading = Your Gift Aid schedule upload
+yourGiftAidScheduleUpload.agent.heading = Gift Aid schedule upload
 yourGiftAidScheduleUpload.paragraph.one = You can upload your Gift Aid schedule as a spreadsheet. The selected file must be smaller than 250KB.
+yourGiftAidScheduleUpload.agent.paragraph.one = You can upload the Gift Aid schedule as a spreadsheet. The selected file must be smaller than 250KB.
 yourGiftAidScheduleUpload.title = Your Gift Aid schedule upload
 
 yourCommunityBuildingsScheduleUpload.caption = Add Community Buildings schedule
