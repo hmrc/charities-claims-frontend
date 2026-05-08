@@ -185,7 +185,8 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
             screenLocked = false,
             uploadStatusCall = routes.OtherIncomeScheduleUploadStatusController.status,
             refreshIntervalSeconds = 3,
-            reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad
+            reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad,
+            false
           ).body
 
         }
@@ -218,7 +219,8 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
             screenLocked = true,
             uploadStatusCall = routes.OtherIncomeScheduleUploadStatusController.status,
             refreshIntervalSeconds = 3,
-            reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad
+            reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad,
+            false
           ).body
         }
       }
@@ -250,7 +252,8 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
             screenLocked = true,
             uploadStatusCall = routes.OtherIncomeScheduleUploadStatusController.status,
             refreshIntervalSeconds = 3,
-            reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad
+            reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad,
+            false
           ).body
         }
       }
@@ -281,7 +284,8 @@ class YourOtherIncomeScheduleUploadControllerSpec extends ControllerSpec {
             screenLocked = false,
             uploadStatusCall = routes.OtherIncomeScheduleUploadStatusController.status,
             refreshIntervalSeconds = 3,
-            reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad
+            reloadPageCall = routes.YourOtherIncomeScheduleUploadController.onPageLoad,
+            false
           ).body
         }
       }

@@ -31,7 +31,7 @@ class YourOtherIncomeScheduleUploadControllerISpec
     with ClaimsStub
     with ClaimsValidationStub {
 
-  private val pageUrl   = "/your-other-income-schedule-upload"
+  private val pageUrl   = "/your-other-income-schedule-upload?claimId=123"
   private val removeUrl = "/your-other-income-schedule-upload/remove"
   private val submitUrl = "/your-other-income-schedule-upload"
 
@@ -58,6 +58,20 @@ class YourOtherIncomeScheduleUploadControllerISpec
 
       val doc = Jsoup.parse(result.body)
       doc.title should include(msg("yourOtherIncomeScheduleUpload.title"))
+    }
+
+    "render the agent page when upload result exists" in {
+      stubAgentBackend()
+      stubUploadSummary()
+      stubGetUploadResult(claimId, otherIncomefileRef)(OK, Json.toJson(getUploadResultVerifying))
+
+      val result = get(pageUrl)
+
+      result.status shouldBe OK
+
+      val doc = Jsoup.parse(result.body)
+      doc.text should include(msg("yourOtherIncomeScheduleUpload.agent.heading"))
+      doc.text should include(msg("yourOtherIncomeScheduleUpload.agent.paragraph.one"))
     }
   }
 
@@ -106,6 +120,23 @@ class YourOtherIncomeScheduleUploadControllerISpec
 
     stubGetClaims(claimId)(OK, Json.toJson(claimResponse))
   }
+  
+  private def stubAgentBackend(withReference: Boolean = true): Unit = {
+      stubAgentAuthRequest()
+      stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+  
+      val claimResponse =
+        claim.copy(
+          claimData = claim.claimData.copy(
+            repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
+              claimingTaxDeducted = true
+            ),
+            otherIncomeScheduleFileUploadReference = if withReference then Some(otherIncomefileRef) else None
+          )
+        )
+  
+      stubGetClaims(claimId)(OK, Json.toJson(claimResponse))
+    }
 
   private def stubUploadSummary(): Unit =
     stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryOtherIncomeValidatedResponse))
