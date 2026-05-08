@@ -149,12 +149,14 @@ checkYourCommunityBuildingsSchedule.title = Check your Community Buildings sched
 checkYourConnectedCharitiesSchedule.caption = Add Connected Charities schedule
 checkYourConnectedCharitiesSchedule.error.required = Select ‘Yes’ if you need to update this Connected Charities schedule
 checkYourConnectedCharitiesSchedule.heading = Check your Connected Charities schedule
+checkYourConnectedCharitiesSchedule.heading.agent = Check this Connected Charities schedule
 checkYourConnectedCharitiesSchedule.hint = Do you need to update this Connected Charities schedule?
 checkYourConnectedCharitiesSchedule.radios.no = No, continue with Connected Charities schedule
 checkYourConnectedCharitiesSchedule.table.column.1 = Item
 checkYourConnectedCharitiesSchedule.table.column.2 = Name of charity
 checkYourConnectedCharitiesSchedule.table.column.3 = HMRC Charities reference
 checkYourConnectedCharitiesSchedule.title = Check your Connected Charities schedule
+checkYourConnectedCharitiesSchedule.title.agent = Check this Connected Charities schedule
 
 checkYourGiftAidSchedule.caption = Add Gift Aid schedule
 checkYourGiftAidSchedule.error.required = Select ‘Yes’ if you need to update this Gift Aid schedule

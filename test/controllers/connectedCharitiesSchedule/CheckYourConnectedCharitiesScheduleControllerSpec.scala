@@ -32,6 +32,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import util.TestResources
 
 import scala.concurrent.Future
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class CheckYourConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
 
@@ -109,7 +110,7 @@ class CheckYourConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render the page when schedule data is available" in {
+      "should render the page when schedule data is available - organisation user" in {
         (mockClaimsValidationService
           .getConnectedCharitiesScheduleData(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
@@ -124,7 +125,33 @@ class CheckYourConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual OK
-          contentAsString(result) should include("Check your Connected Charities schedule")
+          contentAsString(result)  should include(messages("checkYourConnectedCharitiesSchedule.title"))
+          (contentAsString(result) should not).include("checkYourConnectedCharitiesSchedule.title.agent")
+          contentAsString(result)  should include(messages("checkYourConnectedCharitiesSchedule.heading"))
+          (contentAsString(result) should not).include("checkYourConnectedCharitiesSchedule.heading.agent")
+        }
+      }
+
+      "should render the page when schedule data is available - agent user" in {
+        (mockClaimsValidationService
+          .getConnectedCharitiesScheduleData(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(testValidatedResponse.connectedCharitiesData))
+
+        given application: Application =
+          applicationBuilder(sessionData = validSessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CheckYourConnectedCharitiesScheduleController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual OK
+          contentAsString(result)  should include(messages("checkYourConnectedCharitiesSchedule.title.agent"))
+          (contentAsString(result) should not).include("checkYourConnectedCharitiesSchedule.title")
+          contentAsString(result)  should include(messages("checkYourConnectedCharitiesSchedule.heading.agent"))
+          (contentAsString(result) should not).include("checkYourConnectedCharitiesSchedule.heading")
         }
       }
 
@@ -192,7 +219,7 @@ class CheckYourConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
           )
         }
       }
-      "should return BadRequest when form onSubmit has errors and display error message" in {
+      "should return BadRequest when form onSubmit has errors and display error message - organisation user" in {
         (mockClaimsValidationService
           .getConnectedCharitiesScheduleData(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
@@ -209,8 +236,37 @@ class CheckYourConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
           val content = contentAsString(result)
 
           status(result) shouldEqual BAD_REQUEST
-          content should include("Check your Connected Charities schedule")
-          content should include("Select ‘Yes’ if you need to update this Connected Charities schedule")
+          contentAsString(result)  should include(messages("checkYourConnectedCharitiesSchedule.title"))
+          (contentAsString(result) should not).include("checkYourConnectedCharitiesSchedule.title.agent")
+          contentAsString(result)  should include(messages("checkYourConnectedCharitiesSchedule.heading"))
+          (contentAsString(result) should not).include("checkYourConnectedCharitiesSchedule.heading.agent")
+          content                  should include("Select ‘Yes’ if you need to update this Connected Charities schedule")
+        }
+      }
+
+      "should return BadRequest when form onSubmit has errors and display error message - agent user" in {
+        (mockClaimsValidationService
+          .getConnectedCharitiesScheduleData(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(testValidatedResponse.connectedCharitiesData))
+
+        given application: Application =
+          applicationBuilder(sessionData = validSessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.CheckYourConnectedCharitiesScheduleController.onSubmit.url)
+              .withFormUrlEncodedBody("other" -> "field")
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual BAD_REQUEST
+          contentAsString(result)  should include(messages("checkYourConnectedCharitiesSchedule.title.agent"))
+          (contentAsString(result) should not).include("checkYourConnectedCharitiesSchedule.title")
+          contentAsString(result)  should include(messages("checkYourConnectedCharitiesSchedule.heading.agent"))
+          (contentAsString(result) should not).include("checkYourConnectedCharitiesSchedule.heading")
+          content                  should include("Select ‘Yes’ if you need to update this Connected Charities schedule")
         }
       }
 

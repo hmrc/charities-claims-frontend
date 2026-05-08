@@ -62,7 +62,8 @@ class CheckYourConnectedCharitiesScheduleController @Inject() (
                 form = form,
                 connectedCharities = paginationResult.paginatedData,
                 paginationViewModel = paginationResult.paginationViewModel,
-                paginationStatus = paginationResult
+                paginationStatus = paginationResult,
+                isAgent = request.isAgent
               )
             )
           }
@@ -90,7 +91,8 @@ class CheckYourConnectedCharitiesScheduleController @Inject() (
                         form = formWithErrors,
                         connectedCharities = paginationResult.paginatedData,
                         paginationViewModel = paginationResult.paginationViewModel,
-                        paginationStatus = paginationResult
+                        paginationStatus = paginationResult,
+                        isAgent = request.isAgent
                       )
                     )
                   )
