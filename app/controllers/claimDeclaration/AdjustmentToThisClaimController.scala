@@ -62,7 +62,7 @@ class AdjustmentToThisClaimController @Inject() (
             val updatedSession = request.sessionData.copy(unregulatedWarningBypassed = false)
             val previousAnswer = request.sessionData.includedAnyAdjustmentsInClaimPrompt
             saveService.save(updatedSession).map { _ =>
-              Ok(view(form.withDefault(Some(previousAnswer))))
+              Ok(view(form.withDefault(Some(previousAnswer)), isAgent = request.isAgent))
             }
           else
             unregulatedDonationsService.checkUnregulatedLimit.flatMap {
@@ -76,12 +76,12 @@ class AdjustmentToThisClaimController @Inject() (
                 val updatedSession = request.sessionData.copy(unregulatedLimitExceeded = false)
                 val previousAnswer = request.sessionData.includedAnyAdjustmentsInClaimPrompt
                 saveService.save(updatedSession).map { _ =>
-                  Ok(view(form.withDefault(Some(previousAnswer))))
+                  Ok(view(form.withDefault(Some(previousAnswer)), isAgent = request.isAgent))
                 }
             }
         else {
           val previousAnswer = request.sessionData.includedAnyAdjustmentsInClaimPrompt
-          Future.successful(Ok(view(form.withDefault(Some(previousAnswer)))))
+          Future.successful(Ok(view(form.withDefault(Some(previousAnswer)), isAgent = request.isAgent)))
         }
       }
 
@@ -100,7 +100,7 @@ class AdjustmentToThisClaimController @Inject() (
         form
           .bindFromRequest()
           .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors))),
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, isAgent = request.isAgent))),
             value =>
               for {
                 _ <- saveService

@@ -29,6 +29,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import views.html.AdjustmentToThisClaimView
 
 import scala.concurrent.Future
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
 
@@ -83,414 +84,842 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
   "ClaimReferenceNumberInputController" - {
 
     "onPageLoad" - {
-      "should render the page correctly when isClaimDetailsComplete condition is met due communityBuildingsScheduleCompleted " in {
-        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-          claimingUnderGiftAidSmallDonationsScheme = Some(false),
-          claimingDonationsNotFromCommunityBuilding = Some(false),
-          claimingDonationsCollectedInCommunityBuildings = Some(true),
-          claimingGiftAid = Some(false),
-          connectedToAnyOtherCharities = Some(false),
-          makingAdjustmentToPreviousClaim = Some(false)
-        )
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswers = Some(answers)
-        ).copy(
-          communityBuildingsScheduleCompleted = true,
-          organisationDetailsAnswers = Some(organisationDetailsAnswers)
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
-        }
-      }
-
-      "should render the page correctly when isClaimDetailsComplete condition is met due giftAidScheduleCompleted " in {
-        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-          claimingUnderGiftAidSmallDonationsScheme = Some(true),
-          claimingDonationsNotFromCommunityBuilding = Some(false),
-          claimingDonationsCollectedInCommunityBuildings = Some(false),
-          connectedToAnyOtherCharities = Some(false),
-          makingAdjustmentToPreviousClaim = Some(false)
-        )
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswers = Some(answers)
-        ).copy(
-          giftAidScheduleCompleted = true,
-          organisationDetailsAnswers = Some(organisationDetailsAnswers)
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
-        }
-      }
-
-      "should render the page correctly when isClaimDetailsComplete condition is met due otherIncomeScheduleCompleted " in {
-        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-          claimingUnderGiftAidSmallDonationsScheme = Some(false),
-          claimingDonationsNotFromCommunityBuilding = Some(true),
-          claimingDonationsCollectedInCommunityBuildings = Some(false),
-          claimingGiftAid = Some(false),
-          connectedToAnyOtherCharities = Some(false),
-          makingAdjustmentToPreviousClaim = Some(false)
-        )
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswers = Some(answers)
-        ).copy(
-          otherIncomeScheduleCompleted = true,
-          organisationDetailsAnswers = Some(organisationDetailsAnswers)
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
-        }
-      }
-
-      "should render the page correctly when isClaimDetailsComplete condition is met due connectedCharitiesScheduleCompleted " in {
-        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-          claimingUnderGiftAidSmallDonationsScheme = Some(false),
-          claimingDonationsNotFromCommunityBuilding = Some(false),
-          claimingDonationsCollectedInCommunityBuildings = Some(false),
-          claimingGiftAid = Some(false),
-          connectedToAnyOtherCharities = Some(true),
-          makingAdjustmentToPreviousClaim = Some(false)
-        )
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswers = Some(answers)
-        ).copy(
-          connectedCharitiesScheduleCompleted = true,
-          organisationDetailsAnswers = Some(organisationDetailsAnswers)
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
-        }
-      }
-
-      "should render the page correctly when isClaimDetailsComplete condition is met due unregulatedLimitExceeded is true" in {
-        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-          claimingUnderGiftAidSmallDonationsScheme = Some(false),
-          claimingDonationsNotFromCommunityBuilding = Some(false),
-          claimingDonationsCollectedInCommunityBuildings = Some(false),
-          connectedToAnyOtherCharities = Some(true),
-          makingAdjustmentToPreviousClaim = Some(false)
-        )
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some(testClaimId),
-          unregulatedLimitExceeded = true,
-          repaymentClaimDetailsAnswers = Some(answers)
-        ).copy(
-          connectedCharitiesScheduleCompleted = true,
-          organisationDetailsAnswers = Some(organisationDetailsAnswers)
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
-        }
-      }
-
-      "should render ClaimsTaskListController if isClaimDetailsComplete is false" in {
-        val sessionData = SessionData
-          .empty(testCharitiesReference)
-          .copy(
-            includedAnyAdjustmentsInClaimPrompt = Some("some text ....")
+      "organisation user" - {
+        val isAgent = false
+        "should render the page correctly when isClaimDetailsComplete condition is met due communityBuildingsScheduleCompleted " in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(true),
+            claimingGiftAid = Some(false),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            communityBuildingsScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
           )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
 
-          val result = route(application, request).value
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
 
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, isAgent).body
+          }
         }
-      }
 
-      "should render the page and pre-populate correctly" in {
-        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-          claimingUnderGiftAidSmallDonationsScheme = Some(false),
-          claimingDonationsNotFromCommunityBuilding = Some(false),
-          claimingDonationsCollectedInCommunityBuildings = Some(false),
-          connectedToAnyOtherCharities = Some(true),
-          claimingGiftAid = Some(false),
-          makingAdjustmentToPreviousClaim = Some(false)
-        )
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswers = Some(answers),
-          includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
-        ).copy(
-          connectedCharitiesScheduleCompleted = true,
-          organisationDetailsAnswers = Some(organisationDetailsAnswers)
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(Some("123456ABC"))).body
-        }
-      }
-
-      "should render the page when unregulatedWarningBypassed is true (user just bypassed WRN5)" in {
-        val mockSaveService = mock[SaveService]
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(where { (sessionData: SessionData, _: HeaderCarrier) =>
-            !sessionData.unregulatedWarningBypassed
-          })
-          .returning(Future.successful(()))
-
-        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-          claimingUnderGiftAidSmallDonationsScheme = Some(false),
-          claimingDonationsNotFromCommunityBuilding = Some(false),
-          claimingDonationsCollectedInCommunityBuildings = Some(false),
-          connectedToAnyOtherCharities = Some(true),
-          claimingGiftAid = Some(true),
-          makingAdjustmentToPreviousClaim = Some(false)
-        )
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some(testClaimId),
-          unregulatedLimitExceeded = true,
-          unregulatedWarningBypassed = true,
-          repaymentClaimDetailsAnswers = Some(answers)
-        ).copy(
-          connectedCharitiesScheduleCompleted = true,
-          giftAidScheduleCompleted = true,
-          organisationDetailsAnswers = Some(organisationDetailsAnswers2)
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData)
-          .overrides(inject.bind[SaveService].toInstance(mockSaveService))
-          .build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form).body
-        }
-      }
-
-      "should redirect to the warning page when unregulatedWarningBypassed is false and limit is exceeded (re-visit after bypass)" in {
-        (mockConnector
-          .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
-          .expects(testCharitiesReference, *)
-          .returning(Future.successful(Some(BigDecimal(5001))))
-          .once()
-
-        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-          claimingUnderGiftAidSmallDonationsScheme = Some(false),
-          claimingDonationsNotFromCommunityBuilding = Some(false),
-          claimingDonationsCollectedInCommunityBuildings = Some(false),
-          connectedToAnyOtherCharities = Some(true),
-          claimingGiftAid = Some(true),
-          makingAdjustmentToPreviousClaim = Some(false)
-        )
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some(testClaimId),
-          unregulatedLimitExceeded = true,
-          unregulatedWarningBypassed = false,
-          repaymentClaimDetailsAnswers = Some(answers)
-        ).copy(
-          connectedCharitiesScheduleCompleted = true,
-          giftAidScheduleCompleted = true,
-          organisationDetailsAnswers = Some(organisationDetailsAnswers2)
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData)
-          .overrides(inject.bind[UnregulatedDonationsConnector].toInstance(mockConnector))
-          .build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            controllers.routes.RegisterCharityWithARegulatorController.onPageLoad.url
+        "should render the page correctly when isClaimDetailsComplete condition is met due giftAidScheduleCompleted " in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(true),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
           )
-        }
-      }
-
-      "should render the page and pre-populate correctly when Some(UnregulatedLimitExceeded) when total donations less than the Low Income limit" in {
-        (mockConnector
-          .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
-          .expects(testCharitiesReference, *)
-          .returning(Future.successful(Some(BigDecimal(3000))))
-          .once()
-
-        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-          claimingUnderGiftAidSmallDonationsScheme = Some(false),
-          claimingDonationsNotFromCommunityBuilding = Some(false),
-          claimingDonationsCollectedInCommunityBuildings = Some(false),
-          connectedToAnyOtherCharities = Some(true),
-          claimingGiftAid = Some(true),
-          makingAdjustmentToPreviousClaim = Some(false)
-        )
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswers = Some(answers),
-          includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
-        ).copy(
-          connectedCharitiesScheduleCompleted = true,
-          giftAidScheduleCompleted = true,
-          organisationDetailsAnswers = Some(organisationDetailsAnswers2)
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData)
-          .overrides(inject.bind[UnregulatedDonationsConnector].toInstance(mockConnector))
-          .build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(Some("123456ABC"))).body
-        }
-      }
-
-      "should render the page and pre-populate correctly when Some(UnregulatedLimitExceeded) when total donations exceed the Low Income limit" in {
-        (mockConnector
-          .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
-          .expects(testCharitiesReference, *)
-          .returning(Future.successful(Some(BigDecimal(5001))))
-          .once()
-
-        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
-          claimingUnderGiftAidSmallDonationsScheme = Some(false),
-          claimingDonationsNotFromCommunityBuilding = Some(false),
-          claimingDonationsCollectedInCommunityBuildings = Some(false),
-          connectedToAnyOtherCharities = Some(true),
-          claimingGiftAid = Some(true),
-          makingAdjustmentToPreviousClaim = Some(false)
-        )
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          unsubmittedClaimId = Some(testClaimId),
-          repaymentClaimDetailsAnswers = Some(answers),
-          includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
-        ).copy(
-          connectedCharitiesScheduleCompleted = true,
-          giftAidScheduleCompleted = true,
-          organisationDetailsAnswers = Some(organisationDetailsAnswers2)
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData)
-          .overrides(inject.bind[UnregulatedDonationsConnector].toInstance(mockConnector))
-          .build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            controllers.routes.RegisterCharityWithARegulatorController.onPageLoad.url
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            giftAidScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
           )
 
-        }
-      }
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-      "should render the ClaimsTaskListController and incorrectly pre-populate data" in {
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          repaymentClaimDetailsAnswers = Some(
-            RepaymentClaimDetailsAnswers(
-              claimingReferenceNumber = Some(false),
-              claimReferenceNumber = Some("123456")
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, isAgent).body
+          }
+        }
+
+        "should render the page correctly when isClaimDetailsComplete condition is met due otherIncomeScheduleCompleted " in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(true),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            claimingGiftAid = Some(false),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            otherIncomeScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, isAgent).body
+          }
+        }
+
+        "should render the page correctly when isClaimDetailsComplete condition is met due connectedCharitiesScheduleCompleted " in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            claimingGiftAid = Some(false),
+            connectedToAnyOtherCharities = Some(true),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            connectedCharitiesScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, isAgent).body
+          }
+        }
+
+        "should render the page correctly when isClaimDetailsComplete condition is met due unregulatedLimitExceeded is true" in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            connectedToAnyOtherCharities = Some(true),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            unregulatedLimitExceeded = true,
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            connectedCharitiesScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, isAgent).body
+          }
+        }
+
+        "should render ClaimsTaskListController if isClaimDetailsComplete is false" in {
+          val sessionData = SessionData
+            .empty(testCharitiesReference)
+            .copy(
+              includedAnyAdjustmentsInClaimPrompt = Some("some text ....")
+            )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+          }
+        }
+
+        "should render the page and pre-populate correctly" in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            connectedToAnyOtherCharities = Some(true),
+            claimingGiftAid = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers),
+            includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
+          ).copy(
+            connectedCharitiesScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form.fill(Some("123456ABC")), isAgent).body
+          }
+        }
+
+        "should render the page when unregulatedWarningBypassed is true (user just bypassed WRN5)" in {
+          val mockSaveService = mock[SaveService]
+          (mockSaveService
+            .save(_: SessionData)(using _: HeaderCarrier))
+            .expects(where { (sessionData: SessionData, _: HeaderCarrier) =>
+              !sessionData.unregulatedWarningBypassed
+            })
+            .returning(Future.successful(()))
+
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            connectedToAnyOtherCharities = Some(true),
+            claimingGiftAid = Some(true),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            unregulatedLimitExceeded = true,
+            unregulatedWarningBypassed = true,
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            connectedCharitiesScheduleCompleted = true,
+            giftAidScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers2)
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData)
+            .overrides(inject.bind[SaveService].toInstance(mockSaveService))
+            .build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, isAgent).body
+          }
+        }
+
+        "should redirect to the warning page when unregulatedWarningBypassed is false and limit is exceeded (re-visit after bypass)" in {
+          (mockConnector
+            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
+            .expects(testCharitiesReference, *)
+            .returning(Future.successful(Some(BigDecimal(5001))))
+            .once()
+
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            connectedToAnyOtherCharities = Some(true),
+            claimingGiftAid = Some(true),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            unregulatedLimitExceeded = true,
+            unregulatedWarningBypassed = false,
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            connectedCharitiesScheduleCompleted = true,
+            giftAidScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers2)
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData)
+            .overrides(inject.bind[UnregulatedDonationsConnector].toInstance(mockConnector))
+            .build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              controllers.routes.RegisterCharityWithARegulatorController.onPageLoad.url
+            )
+          }
+        }
+
+        "should render the page and pre-populate correctly when Some(UnregulatedLimitExceeded) when total donations less than the Low Income limit" in {
+          (mockConnector
+            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
+            .expects(testCharitiesReference, *)
+            .returning(Future.successful(Some(BigDecimal(3000))))
+            .once()
+
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            connectedToAnyOtherCharities = Some(true),
+            claimingGiftAid = Some(true),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers),
+            includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
+          ).copy(
+            connectedCharitiesScheduleCompleted = true,
+            giftAidScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers2)
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData)
+            .overrides(inject.bind[UnregulatedDonationsConnector].toInstance(mockConnector))
+            .build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form.fill(Some("123456ABC")), isAgent).body
+          }
+        }
+
+        "should render the page and pre-populate correctly when Some(UnregulatedLimitExceeded) when total donations exceed the Low Income limit" in {
+          (mockConnector
+            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
+            .expects(testCharitiesReference, *)
+            .returning(Future.successful(Some(BigDecimal(5001))))
+            .once()
+
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            connectedToAnyOtherCharities = Some(true),
+            claimingGiftAid = Some(true),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers),
+            includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
+          ).copy(
+            connectedCharitiesScheduleCompleted = true,
+            giftAidScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers2)
+          )
+
+          given application: Application = applicationBuilder(sessionData = sessionData)
+            .overrides(inject.bind[UnregulatedDonationsConnector].toInstance(mockConnector))
+            .build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              controllers.routes.RegisterCharityWithARegulatorController.onPageLoad.url
+            )
+
+          }
+        }
+
+        "should render the ClaimsTaskListController and incorrectly pre-populate data" in {
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingReferenceNumber = Some(false),
+                claimReferenceNumber = Some("123456")
+              )
             )
           )
-        )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
 
-          val result = route(application, request).value
+            val result = route(application, request).value
 
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+          }
+        }
+      }
+      "Agent user" - {
+        val isAgent = true
+        "should render the page correctly when isClaimDetailsComplete condition is met due communityBuildingsScheduleCompleted " in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(true),
+            claimingGiftAid = Some(false),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            communityBuildingsScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, isAgent).body
+          }
+        }
+
+        "should render the page correctly when isClaimDetailsComplete condition is met due giftAidScheduleCompleted " in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(true),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            giftAidScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, isAgent).body
+          }
+        }
+
+        "should render the page correctly when isClaimDetailsComplete condition is met due otherIncomeScheduleCompleted " in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(true),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            claimingGiftAid = Some(false),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            otherIncomeScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, isAgent).body
+          }
+        }
+
+        "should render the page correctly when isClaimDetailsComplete condition is met due connectedCharitiesScheduleCompleted " in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            claimingGiftAid = Some(false),
+            connectedToAnyOtherCharities = Some(true),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            connectedCharitiesScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, isAgent).body
+          }
+        }
+
+        "should render the page correctly when isClaimDetailsComplete condition is met due unregulatedLimitExceeded is true" in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            connectedToAnyOtherCharities = Some(true),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            unregulatedLimitExceeded = true,
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            connectedCharitiesScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, isAgent).body
+          }
+        }
+
+        "should render ClaimsTaskListController if isClaimDetailsComplete is false" in {
+          val sessionData = SessionData
+            .empty(testCharitiesReference)
+            .copy(
+              includedAnyAdjustmentsInClaimPrompt = Some("some text ....")
+            )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+          }
+        }
+
+        "should render the page and pre-populate correctly" in {
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            connectedToAnyOtherCharities = Some(true),
+            claimingGiftAid = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers),
+            includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
+          ).copy(
+            connectedCharitiesScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form.fill(Some("123456ABC")), isAgent).body
+          }
+        }
+
+        "should render the page when unregulatedWarningBypassed is true (user just bypassed WRN5)" in {
+          val mockSaveService = mock[SaveService]
+          (mockSaveService
+            .save(_: SessionData)(using _: HeaderCarrier))
+            .expects(where { (sessionData: SessionData, _: HeaderCarrier) =>
+              !sessionData.unregulatedWarningBypassed
+            })
+            .returning(Future.successful(()))
+
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            connectedToAnyOtherCharities = Some(true),
+            claimingGiftAid = Some(true),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            unregulatedLimitExceeded = true,
+            unregulatedWarningBypassed = true,
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            connectedCharitiesScheduleCompleted = true,
+            giftAidScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers2)
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent)
+              .overrides(inject.bind[SaveService].toInstance(mockSaveService))
+              .build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form, isAgent).body
+          }
+        }
+
+        "should redirect to the warning page when unregulatedWarningBypassed is false and limit is exceeded (re-visit after bypass)" in {
+          (mockConnector
+            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
+            .expects(testCharitiesReference, *)
+            .returning(Future.successful(Some(BigDecimal(5001))))
+            .once()
+
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            connectedToAnyOtherCharities = Some(true),
+            claimingGiftAid = Some(true),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            unregulatedLimitExceeded = true,
+            unregulatedWarningBypassed = false,
+            repaymentClaimDetailsAnswers = Some(answers)
+          ).copy(
+            connectedCharitiesScheduleCompleted = true,
+            giftAidScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers2)
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent)
+              .overrides(inject.bind[UnregulatedDonationsConnector].toInstance(mockConnector))
+              .build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              controllers.routes.RegisterCharityWithARegulatorController.onPageLoad.url
+            )
+          }
+        }
+
+        "should render the page and pre-populate correctly when Some(UnregulatedLimitExceeded) when total donations less than the Low Income limit" in {
+          (mockConnector
+            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
+            .expects(testCharitiesReference, *)
+            .returning(Future.successful(Some(BigDecimal(3000))))
+            .once()
+
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            connectedToAnyOtherCharities = Some(true),
+            claimingGiftAid = Some(true),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers),
+            includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
+          ).copy(
+            connectedCharitiesScheduleCompleted = true,
+            giftAidScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers2)
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent)
+              .overrides(inject.bind[UnregulatedDonationsConnector].toInstance(mockConnector))
+              .build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+            val view   = application.injector.instanceOf[AdjustmentToThisClaimView]
+
+            status(result) shouldEqual OK
+            contentAsString(result) shouldEqual view(form.fill(Some("123456ABC")), isAgent).body
+          }
+        }
+
+        "should render the page and pre-populate correctly when Some(UnregulatedLimitExceeded) when total donations exceed the Low Income limit" in {
+          (mockConnector
+            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
+            .expects(testCharitiesReference, *)
+            .returning(Future.successful(Some(BigDecimal(5001))))
+            .once()
+
+          val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsCollectedInCommunityBuildings = Some(false),
+            connectedToAnyOtherCharities = Some(true),
+            claimingGiftAid = Some(true),
+            makingAdjustmentToPreviousClaim = Some(false)
+          )
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some(testClaimId),
+            repaymentClaimDetailsAnswers = Some(answers),
+            includedAnyAdjustmentsInClaimPrompt = Some("123456ABC")
+          ).copy(
+            connectedCharitiesScheduleCompleted = true,
+            giftAidScheduleCompleted = true,
+            organisationDetailsAnswers = Some(organisationDetailsAnswers2)
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent)
+              .overrides(inject.bind[UnregulatedDonationsConnector].toInstance(mockConnector))
+              .build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              controllers.routes.RegisterCharityWithARegulatorController.onPageLoad.url
+            )
+
+          }
+        }
+
+        "should render the ClaimsTaskListController and incorrectly pre-populate data" in {
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                claimingReferenceNumber = Some(false),
+                claimReferenceNumber = Some("123456")
+              )
+            )
+          )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+          }
         }
       }
     }

@@ -768,6 +768,7 @@ adjustmentToThisClaim.error.regex = Enter an adjustment in the correct format
 adjustmentToThisClaim.error.required = Enter an adjustment to Gift Aid, Other Income or a donation under the Gift Aid Small Donations Scheme
 adjustmentToThisClaim.heading = What adjustments have you made to this claim?
 adjustmentToThisClaim.para = If you have included any adjustments in this claim, you must enter an explanation below. You can also provide any other information regarding your charity’s repayment claim.
+adjustmentToThisClaim.para.agent = If you have included any adjustments in this claim, you must enter an explanation below. You can also provide any other information regarding the charity’s repayment claim.
 adjustmentToThisClaim.hint = You can enter up to 350 characters
 adjustmentToThisClaim.title = What adjustments have you made to this claim?
 
