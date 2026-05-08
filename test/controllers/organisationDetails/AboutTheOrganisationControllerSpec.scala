@@ -23,6 +23,7 @@ import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.AboutTheOrganisationView
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class AboutTheOrganisationControllerSpec extends ControllerSpec {
   "AboutTheOrganisationController" - {
@@ -48,7 +49,8 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
           )
         }
       }
-      "should render the page correctly" in {
+
+      "should render the page correctly for an organisation" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -62,7 +64,28 @@ class AboutTheOrganisationControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
 
-          contentAsString(result) shouldEqual view().body
+          contentAsString(result) shouldEqual view(false).body
+        }
+      }
+
+      "should render the page correctly for an agent" in {
+
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.AboutTheOrganisationController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[AboutTheOrganisationView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(true).body
         }
       }
 
