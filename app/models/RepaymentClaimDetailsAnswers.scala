@@ -51,43 +51,39 @@ final case class RepaymentClaimDetailsAnswers(
     List(
       (claimingGiftAid.isEmpty
         && claimingTaxDeducted.isEmpty
-        && claimingUnderGiftAidSmallDonationsScheme.isEmpty)       -> "repaymentClaimType.missingDetails",
+        && claimingUnderGiftAidSmallDonationsScheme.isEmpty) -> "repaymentClaimType.missingDetails",
       (claimingUnderGiftAidSmallDonationsScheme.contains(true)
-        && claimingDonationsNotFromCommunityBuilding.isEmpty)      -> "claimGASDS.missingDetails",
-      (claimingUnderGiftAidSmallDonationsScheme.contains(true)
-        && claimingDonationsCollectedInCommunityBuildings.isEmpty) -> "claimingCommunityBuildingDonations.missingDetails",
+        && claimingDonationsNotFromCommunityBuilding.isEmpty &&
+        claimingDonationsCollectedInCommunityBuildings.isEmpty &&
+        connectedToAnyOtherCharities.isEmpty)                -> "claimGASDS.missingDetails",
       (claimingUnderGiftAidSmallDonationsScheme.contains(true)
         && ((claimingDonationsNotFromCommunityBuilding.contains(true)
           || claimingDonationsCollectedInCommunityBuildings.contains(true))
-          && makingAdjustmentToPreviousClaim.isEmpty))             -> "changePreviousGASDSClaim.missingDetails",
-      (claimingUnderGiftAidSmallDonationsScheme.contains(true)
-        && connectedToAnyOtherCharities.isEmpty)                   -> "connectedToAnyOtherCharities.missingDetails",
-      claimingReferenceNumber.isEmpty                              -> "claimReferenceNumberCheck.missingDetails",
+          && makingAdjustmentToPreviousClaim.isEmpty))       -> "changePreviousGASDSClaim.missingDetails",
+      claimingReferenceNumber.isEmpty                        -> "claimReferenceNumberCheck.missingDetails",
       (claimingReferenceNumber.contains(
         true
-      ) && claimReferenceNumber.isEmpty)                           -> "claimReferenceNumberInput.missingDetails"
+      ) && claimReferenceNumber.isEmpty)                     -> "claimReferenceNumberInput.missingDetails"
     ).collect { case (true, key) => key }
 
   def agentMissingFields: List[String] =
     List(
-      hmrcCharitiesReference.isEmpty                               -> "repaymentClaimDetails.agent.missingCharitiesReference",
-      nameOfCharity.isEmpty                                        -> "repaymentClaimDetails.agent.missingCharityName",
+      hmrcCharitiesReference.isEmpty                         -> "repaymentClaimDetails.agent.missingCharitiesReference",
+      nameOfCharity.isEmpty                                  -> "repaymentClaimDetails.agent.missingCharityName",
       (claimingGiftAid.isEmpty
         && claimingTaxDeducted.isEmpty
-        && claimingUnderGiftAidSmallDonationsScheme.isEmpty)       -> "repaymentClaimType.agent.missingDetails",
+        && claimingUnderGiftAidSmallDonationsScheme.isEmpty) -> "repaymentClaimType.agent.missingDetails",
       (claimingUnderGiftAidSmallDonationsScheme.contains(true)
-        && claimingDonationsNotFromCommunityBuilding.isEmpty)      -> "claimGASDS.agent.missingDetails",
-      (claimingUnderGiftAidSmallDonationsScheme.contains(true)
-        && claimingDonationsCollectedInCommunityBuildings.isEmpty) -> "claimingCommunityBuildingDonations.agent.missingDetails",
+        && claimingDonationsNotFromCommunityBuilding.isEmpty &&
+        claimingDonationsCollectedInCommunityBuildings.isEmpty &&
+        !connectedToAnyOtherCharities.contains(true))        -> "claimGASDS.agent.missingDetails",
       (claimingUnderGiftAidSmallDonationsScheme.contains(true)
         && ((claimingDonationsNotFromCommunityBuilding.contains(true)
           || claimingDonationsCollectedInCommunityBuildings.contains(true))
-          && makingAdjustmentToPreviousClaim.isEmpty))             -> "changePreviousGASDSClaim.agent.missingDetails",
-      (claimingUnderGiftAidSmallDonationsScheme.contains(true)
-        && connectedToAnyOtherCharities.isEmpty)                   -> "connectedToAnyOtherCharities.agent.missingDetails",
-      claimingReferenceNumber.isEmpty                              -> "claimReferenceNumberCheck.agent.missingDetails",
+          && makingAdjustmentToPreviousClaim.isEmpty))       -> "changePreviousGASDSClaim.agent.missingDetails",
+      claimingReferenceNumber.isEmpty                        -> "claimReferenceNumberCheck.agent.missingDetails",
       (claimingReferenceNumber.contains(true)
-        && claimReferenceNumber.isEmpty)                           -> "claimReferenceNumberInput.agent.missingDetails"
+        && claimReferenceNumber.isEmpty)                     -> "claimReferenceNumberInput.agent.missingDetails"
     ).collect { case (true, key) => key }
 
   def hasRepaymentClaimDetailsCompleteAnswers(isAgent: Boolean = false): Boolean =

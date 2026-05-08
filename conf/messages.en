@@ -240,14 +240,14 @@ claimingGiftAid.hint = Select ‘Yes’ if you want to claim tax repayment on do
 claimingGiftAid.legend = Are you claiming Gift Aid?
 claimingGiftAid.title = Are you claiming Gift Aid?
 
-claimGASDS.missingDetails = confirm if you are claiming a top-up payment under the Gift Aid Small Donations Scheme
-claimGASDS.agent.missingDetails = confirm if you are claiming a top-up payment under the Gift Aid Small Donations Scheme
+claimGASDS.missingDetails = confirm which type of GASDS claim(s) you want to make
+claimGASDS.agent.missingDetails = confirm which type of GASDS claim(s) you want to make
 claimingCommunityBuildingDonations.missingDetails = confirm if you are claiming for donations collected in community buildings
 claimingCommunityBuildingDonations.agent.missingDetails = confirm if you are claiming for donations collected in community buildings
-claimingTaxDeducted.agent.missingDetails = confirm if the charity is claiming UK tax deducted from Other Income
-claimingUnderGiftAidSmallDonationsScheme.agent.missingDetails = confirm if the charity is claiming under the Gift Aid Small Donations Scheme
 connectedToAnyOtherCharities.missingDetails = confirm if you are connected to other charities or a Community Amateur Sports Club
 connectedToAnyOtherCharities.agent.missingDetails = confirm if you are connected to other charities or a Community Amateur Sports Club
+claimingTaxDeducted.agent.missingDetails = confirm if the charity is claiming UK tax deducted from Other Income
+claimingUnderGiftAidSmallDonationsScheme.agent.missingDetails = confirm if the charity is claiming under the Gift Aid Small Donations Scheme
 
 claimingGiftAidSmallDonations.error.required = Select ‘Yes’ if you are claiming for the Gift Aid Small Donations Scheme.
 claimingGiftAidSmallDonations.heading = Gift Aid Small Donations Scheme
