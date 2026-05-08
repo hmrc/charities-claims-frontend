@@ -31,7 +31,7 @@ class UploadOtherIncomeScheduleControllerISpec
     with ClaimsValidationStub
     with UpscanInitiateStub {
 
-  private val url = "/upload-other-income-schedule"
+  private val url = "/upload-other-income-schedule?claimId=123"
 
   "GET /upload-other-income-schedule" should {
 
@@ -43,6 +43,15 @@ class UploadOtherIncomeScheduleControllerISpec
       result.status shouldBe OK
       Jsoup.parse(result.body).title should include(msg("uploadOtherIncomeSchedule.title"))
     }
+    
+   "render the agent upload page when upscan is already initialised" in {
+        stubAgentBackend(withUpscan = true)
+  
+        val result = get(url)
+  
+        result.status shouldBe OK
+        Jsoup.parse(result.body).text should include(msg("uploadOtherIncomeSchedule.agent.paragraph.one"))
+      }
 
     "redirect to your upload page when file reference already exists" in {
       stubBackend(withReference = true)
@@ -93,6 +102,43 @@ class UploadOtherIncomeScheduleControllerISpec
                          ): Unit = {
 
     stubAuthRequest()
+    stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+
+    val claimResponse =
+      claim.copy(
+        claimData = claim.claimData.copy(
+          repaymentClaimDetails =
+            claim.claimData.repaymentClaimDetails.copy(
+              claimingTaxDeducted = true
+            ),
+          otherIncomeScheduleFileUploadReference =
+            if withReference then Some(otherIncomefileRef) else None
+        )
+      )
+
+    stubGetClaims(claimId)(OK, Json.toJson(claimResponse))
+
+    stubGetUploadSummary(claimId)(
+      OK,
+      Json.toJson(uploadSummary(withUpscan))
+    )
+
+    if withReference then
+      stubGetUploadResult(
+        claimId,
+        otherIncomefileRef
+      )(OK, validatedOtherIncomeJson)
+
+    if withUpscan then
+      stubCreateUploadTracking(claimId)(OK, Json.toJson(SuccessResponse(success = true)))
+  }
+  
+private def stubAgentBackend(
+                           withUpscan: Boolean = false,
+                           withReference: Boolean = false
+                         ): Unit = {
+
+    stubAgentAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
 
     val claimResponse =
