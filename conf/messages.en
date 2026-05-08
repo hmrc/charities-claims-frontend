@@ -457,6 +457,9 @@ problemUpdatingCommunityBuildingsScheduleQuarantine.agent.title = There is a pro
 problemUpdatingCommunityBuildingsScheduleRejected.heading = There is a problem uploading your Community Buildings schedule
 problemUpdatingCommunityBuildingsScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
 problemUpdatingCommunityBuildingsScheduleRejected.title = There is a problem uploading your Community Buildings schedule
+problemUpdatingCommunityBuildingsScheduleRejected.agent.heading = There is a problem uploading this schedule
+problemUpdatingCommunityBuildingsScheduleRejected.agent.hint = This file must be an ODS file. Save this schedule as an ODS file and try uploading it again.
+problemUpdatingCommunityBuildingsScheduleRejected.agent.title = There is a problem uploading this schedule
 
 problemUpdatingOtherIncomeScheduleQuarantine.heading = There is a problem uploading your Other Income schedule
 problemUpdatingOtherIncomeScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
@@ -487,6 +490,9 @@ problemUpdatingGiftAidScheduleQuarantine.agent.title = There is a problem upload
 problemUpdatingGiftAidScheduleRejected.heading = There is a problem uploading your Gift Aid schedule
 problemUpdatingGiftAidScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
 problemUpdatingGiftAidScheduleRejected.title = There is a problem uploading your Gift Aid schedule
+problemUpdatingGiftAidScheduleRejected.agent.heading = There is a problem uploading this schedule
+problemUpdatingGiftAidScheduleRejected.agent.hint = This file must be an ODS file. Save this schedule as an ODS file and try uploading it again.
+problemUpdatingGiftAidScheduleRejected.agent.title = There is a problem uploading this schedule
 
 problemWithCommunityBuildingsSchedule.caption = Add Community Buildings schedule
 problemWithCommunityBuildingsSchedule.heading = There is a problem with the data in your Community Buildings schedule
@@ -728,6 +734,9 @@ yourOtherIncomeScheduleUpload.title = Your Other Income schedule upload
 problemUpdatingOtherIncomeScheduleRejected.heading = There is a problem uploading your Other Income schedule
 problemUpdatingOtherIncomeScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
 problemUpdatingOtherIncomeScheduleRejected.title = There is a problem uploading your Other Income schedule
+problemUpdatingOtherIncomeScheduleRejected.agent.heading = There is a problem uploading this schedule
+problemUpdatingOtherIncomeScheduleRejected.agent.hint = This file must be an ODS file. Save this schedule as an ODS file and try uploading it again.
+problemUpdatingOtherIncomeScheduleRejected.agent.title = There is a problem uploading this schedule
 
 connectedCharitiesScheduleUploadSuccessful.title = Upload successful
 connectedCharitiesScheduleUploadSuccessful.message.1 = Upload successful
@@ -758,6 +767,9 @@ yourConnectedCharitiesScheduleUpload.title.agent = Connected Charities schedule 
 problemUpdatingConnectedCharitiesScheduleRejected.heading = There is a problem uploading your Connected Charities schedule
 problemUpdatingConnectedCharitiesScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
 problemUpdatingConnectedCharitiesScheduleRejected.title = There is a problem uploading your Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleRejected.agent.heading = There is a problem uploading this schedule
+problemUpdatingConnectedCharitiesScheduleRejected.agent.hint = This file must be an ODS file. Save this schedule as an ODS file and try uploading it again.
+problemUpdatingConnectedCharitiesScheduleRejected.agent.title = There is a problem uploading this schedule
 
 problemWithConnectedCharitiesSchedule.title = There is a problem with the data in your Connected Charities schedule
 problemWithConnectedCharitiesSchedule.title.agent = There is a problem with the data in this Connected Charities schedule
