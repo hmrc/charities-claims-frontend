@@ -821,6 +821,8 @@ adjustmentToGiftAidOverclaimed.error.maxLength = Adjustment amount must be £1,0
 gasdsAdjustmentAmountCheckYourAnswers.caption = Provide GASDS donation details
 gasdsAdjustmentAmountCheckYourAnswers.heading = Check your GASDS adjustment amount
 gasdsAdjustmentAmountCheckYourAnswers.title = Check your GASDS adjustment amount
+gasdsAdjustmentAmountCheckYourAnswers.heading.agent = Check this GASDS adjustment amount
+gasdsAdjustmentAmountCheckYourAnswers.title.agent = Check this GASDS adjustment amount
 gasdsAdjustmentAmountCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Amount of GASDS previously overclaimed
 
 donationAmountYouAreClaiming.caption = Provide GASDS donation details {0}
