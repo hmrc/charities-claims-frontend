@@ -35,7 +35,8 @@ class ProblemUpdatingCommunityBuildingsScheduleQuarantineController @Inject() (
         view(
           messagesKeyPrefix = "problemUpdatingCommunityBuildingsScheduleQuarantine",
           submitAction = routes.ProblemUpdatingCommunityBuildingsScheduleQuarantineController.onSubmit,
-          dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad
+          dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad,
+          isAgent = request.isAgent
         )
       )
     }
