@@ -68,7 +68,8 @@ class ProblemWithCommunityBuildingsScheduleController @Inject() (
                       paginationViewModel = paginationResult.paginationViewModel,
                       paginationStatus = paginationResult,
                       communityBuildingsScheduleSpreadsheetGuidanceUrl =
-                        appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl
+                        appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl,
+                      isAgent = request.isAgent
                     )
                   )
 
