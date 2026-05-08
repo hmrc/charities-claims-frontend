@@ -48,7 +48,7 @@ class ProblemUpdatingCBScheduleQuarantineControllerISpec
     "render the agent quarantine failure page" in {
       stubAgentBackend()
 
-      val result = get(url)
+      val result = get(s"$url?claimId=$claimId")
 
       result.status shouldBe OK
 
