@@ -30,7 +30,7 @@ class AboutOtherIncomeScheduleControllerISpec
     with AuthStub
     with ClaimsValidationStub {
 
-  private val url = "/about-other-income-schedule"
+  private val url = "/about-other-income-schedule?claimId=123"
 
   "GET /about-other-income-schedule" should {
 
@@ -41,6 +41,15 @@ class AboutOtherIncomeScheduleControllerISpec
 
       result.status shouldBe OK
       Jsoup.parse(result.body).title should include(msg("aboutOtherIncomeSchedule.title"))
+    }
+    
+    "render the agent page when claiming tax deducted and schedule not completed" in {
+      stubAgentBackend(claimWithTaxDeducted())
+
+      val result = get(url)
+
+      result.status shouldBe OK
+      Jsoup.parse(result.body).text should include(msg("aboutOtherIncomeSchedule.agent.paragraph.one"))
     }
 
     "redirect to upload summary when schedule already completed" in {
@@ -76,6 +85,13 @@ class AboutOtherIncomeScheduleControllerISpec
 
   private def stubBackend(testClaim: Claim): Unit = {
     stubAuthRequest()
+    stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+    stubGetClaims(claimId)(OK, Json.toJson(testClaim))
+    stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
+  }
+  
+ private def stubAgentBackend(testClaim: Claim): Unit = {
+    stubAgentAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
     stubGetClaims(claimId)(OK, Json.toJson(testClaim))
     stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))

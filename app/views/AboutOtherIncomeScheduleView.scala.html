@@ -22,7 +22,7 @@
     govukButton: GovukButton
 )
 
-@(otherIncomeScheduleSpreadsheetsUrl: String)(implicit request: Request[?], messages: Messages)
+@(otherIncomeScheduleSpreadsheetsUrl: String, isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle    = titleNoForm(messages("aboutOtherIncomeSchedule.title"))
@@ -30,8 +30,11 @@
 
     <span class="govuk-caption-l">@messages("aboutOtherIncomeSchedule.caption")</span>
     <h1 class="govuk-heading-l">@messages("aboutOtherIncomeSchedule.heading")</h1>
-
-    <p class="govuk-body">@messages("aboutOtherIncomeSchedule.paragraph.one")</p>
+    @if(isAgent){
+        <p class="govuk-body">@messages("aboutOtherIncomeSchedule.agent.paragraph.one")</p>
+    }else {
+        <p class="govuk-body">@messages("aboutOtherIncomeSchedule.paragraph.one")</p>
+    }
     <p class="govuk-body">@messages("aboutOtherIncomeSchedule.paragraph.two")</p>
     <p class="govuk-body">@Html(messages("aboutOtherIncomeSchedule.paragraph.url", otherIncomeScheduleSpreadsheetsUrl))</p>
 

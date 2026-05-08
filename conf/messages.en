@@ -30,6 +30,7 @@ aboutGiftAidSchedule.title = About Gift Aid schedule
 aboutOtherIncomeSchedule.caption = Add Other Income schedule
 aboutOtherIncomeSchedule.heading = About Other Income schedule
 aboutOtherIncomeSchedule.paragraph.one = Use this service to add an Other Income schedule.
+aboutOtherIncomeSchedule.agent.paragraph.one = Use this service to add an Other Income schedule for your client.
 aboutOtherIncomeSchedule.paragraph.two = You can upload an Other Income schedule in a .ods format.
 aboutOtherIncomeSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download an Other Income schedule here (opens in new tab)</a>. You can submit 1 file at a time, and each file can be up to 250KB.
 aboutOtherIncomeSchedule.title = About Other Income schedule
