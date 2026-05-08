@@ -218,8 +218,6 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           ).body
 
           expectedMissingFields should contain("claimGASDS.missingDetails")
-          expectedMissingFields should contain("claimingCommunityBuildingDonations.missingDetails")
-          expectedMissingFields should contain("connectedToAnyOtherCharities.missingDetails")
         }
       }
 

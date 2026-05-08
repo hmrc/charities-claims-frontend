@@ -969,216 +969,216 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
       }
 
     }
-  }
 
-  "onSubmit" - {
-    "should save the claim and redirect to the next page for an organisation" in {
+    "onSubmit" - {
+      "should save the claim and redirect to the next page for an organisation" in {
 
-      val sessionData = SessionData(
-        charitiesReference = testCharitiesReference,
-        repaymentClaimDetailsAnswers = Some(
-          RepaymentClaimDetailsAnswers(
-            claimingGiftAid = Some(true),
-            claimingTaxDeducted = Some(true),
-            claimingUnderGiftAidSmallDonationsScheme = Some(true),
-            claimingReferenceNumber = Some(true),
-            claimingDonationsNotFromCommunityBuilding = Some(false),
-            claimingDonationsCollectedInCommunityBuildings = Some(false),
-            connectedToAnyOtherCharities = Some(false),
-            makingAdjustmentToPreviousClaim = Some(false),
-            claimReferenceNumber = Some("12345678AB")
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswers = Some(
+            RepaymentClaimDetailsAnswers(
+              claimingGiftAid = Some(true),
+              claimingTaxDeducted = Some(true),
+              claimingUnderGiftAidSmallDonationsScheme = Some(true),
+              claimingReferenceNumber = Some(true),
+              claimingDonationsNotFromCommunityBuilding = Some(false),
+              claimingDonationsCollectedInCommunityBuildings = Some(false),
+              connectedToAnyOtherCharities = Some(false),
+              makingAdjustmentToPreviousClaim = Some(false),
+              claimReferenceNumber = Some("12345678AB")
+            )
           )
         )
-      )
 
-      given application: Application =
-        applicationBuilder(sessionData = sessionData).mockSaveClaim.build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData).mockSaveClaim.build()
 
-      running(application) {
-        given request: FakeRequest[AnyContentAsEmpty.type] =
-          FakeRequest(POST, routes.RepaymentClaimDetailsCheckYourAnswersController.onSubmit.url)
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.RepaymentClaimDetailsCheckYourAnswersController.onSubmit.url)
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) shouldEqual SEE_OTHER
+          status(result) shouldEqual SEE_OTHER
 
-        redirectLocation(result) shouldEqual Some(
-          controllers.routes.ClaimsTaskListController.onPageLoad.url
-        )
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
+          )
 
+        }
       }
-    }
 
-    "should save the claim and redirect to the next page for an agent" in {
+      "should save the claim and redirect to the next page for an agent" in {
 
-      val sessionData = SessionData(
-        charitiesReference = testCharitiesReference,
-        repaymentClaimDetailsAnswers = Some(
-          RepaymentClaimDetailsAnswers(
-            claimingGiftAid = Some(true),
-            claimingTaxDeducted = Some(true),
-            claimingUnderGiftAidSmallDonationsScheme = Some(true),
-            claimingReferenceNumber = Some(true),
-            claimingDonationsNotFromCommunityBuilding = Some(false),
-            claimingDonationsCollectedInCommunityBuildings = Some(false),
-            connectedToAnyOtherCharities = Some(false),
-            makingAdjustmentToPreviousClaim = Some(false),
-            claimReferenceNumber = Some("12345678AB"),
-            hmrcCharitiesReference = Some("AB1234"),
-            nameOfCharity = Some("Test Charity")
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswers = Some(
+            RepaymentClaimDetailsAnswers(
+              claimingGiftAid = Some(true),
+              claimingTaxDeducted = Some(true),
+              claimingUnderGiftAidSmallDonationsScheme = Some(true),
+              claimingReferenceNumber = Some(true),
+              claimingDonationsNotFromCommunityBuilding = Some(false),
+              claimingDonationsCollectedInCommunityBuildings = Some(false),
+              connectedToAnyOtherCharities = Some(false),
+              makingAdjustmentToPreviousClaim = Some(false),
+              claimReferenceNumber = Some("12345678AB"),
+              hmrcCharitiesReference = Some("AB1234"),
+              nameOfCharity = Some("Test Charity")
+            )
           )
         )
-      )
 
-      given application: Application =
-        applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveClaim.build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveClaim.build()
 
-      running(application) {
-        given request: FakeRequest[AnyContentAsEmpty.type] =
-          FakeRequest(POST, routes.RepaymentClaimDetailsCheckYourAnswersController.onSubmit.url)
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.RepaymentClaimDetailsCheckYourAnswersController.onSubmit.url)
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) shouldEqual SEE_OTHER
+          status(result) shouldEqual SEE_OTHER
 
-        redirectLocation(result) shouldEqual Some(
-          controllers.routes.ClaimsTaskListController.onPageLoad.url
-        )
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
+          )
 
+        }
       }
-    }
 
-    "should redirect to the incomplete answers page if the answers are not complete for an organisation" in {
+      "should redirect to the incomplete answers page if the answers are not complete for an organisation" in {
 
-      val sessionData = SessionData(
-        charitiesReference = testCharitiesReference,
-        repaymentClaimDetailsAnswers = Some(
-          RepaymentClaimDetailsAnswers(
-            claimingGiftAid = Some(true),
-            claimingTaxDeducted = None,
-            claimingUnderGiftAidSmallDonationsScheme = Some(true),
-            claimingDonationsNotFromCommunityBuilding = None,
-            claimingDonationsCollectedInCommunityBuildings = None,
-            connectedToAnyOtherCharities = None,
-            makingAdjustmentToPreviousClaim = None,
-            claimingReferenceNumber = Some(true),
-            claimReferenceNumber = Some("12345678AB")
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswers = Some(
+            RepaymentClaimDetailsAnswers(
+              claimingGiftAid = Some(true),
+              claimingTaxDeducted = None,
+              claimingUnderGiftAidSmallDonationsScheme = Some(true),
+              claimingDonationsNotFromCommunityBuilding = None,
+              claimingDonationsCollectedInCommunityBuildings = None,
+              connectedToAnyOtherCharities = None,
+              makingAdjustmentToPreviousClaim = None,
+              claimingReferenceNumber = Some(true),
+              claimReferenceNumber = Some("12345678AB")
+            )
           )
         )
-      )
 
-      given application: Application =
-        applicationBuilder(sessionData = sessionData).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData).build()
 
-      running(application) {
-        given request: FakeRequest[AnyContentAsEmpty.type] =
-          FakeRequest(POST, routes.RepaymentClaimDetailsCheckYourAnswersController.onSubmit.url)
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.RepaymentClaimDetailsCheckYourAnswersController.onSubmit.url)
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) shouldEqual SEE_OTHER
+          status(result) shouldEqual SEE_OTHER
 
-        redirectLocation(result) shouldEqual Some(
-          routes.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad.url
-        )
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad.url
+          )
 
+        }
       }
-    }
 
-    "should redirect to the incomplete answers page if the answers are not complete for an agent" in {
+      "should redirect to the incomplete answers page if the answers are not complete for an agent" in {
 
-      val sessionData = SessionData(
-        charitiesReference = testCharitiesReference,
-        repaymentClaimDetailsAnswers = Some(
-          RepaymentClaimDetailsAnswers(
-            claimingGiftAid = Some(true),
-            claimingTaxDeducted = None,
-            claimingUnderGiftAidSmallDonationsScheme = Some(true),
-            claimingDonationsNotFromCommunityBuilding = None,
-            claimingDonationsCollectedInCommunityBuildings = None,
-            connectedToAnyOtherCharities = None,
-            makingAdjustmentToPreviousClaim = None,
-            claimingReferenceNumber = Some(true),
-            claimReferenceNumber = Some("12345678AB")
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswers = Some(
+            RepaymentClaimDetailsAnswers(
+              claimingGiftAid = Some(true),
+              claimingTaxDeducted = None,
+              claimingUnderGiftAidSmallDonationsScheme = Some(true),
+              claimingDonationsNotFromCommunityBuilding = None,
+              claimingDonationsCollectedInCommunityBuildings = None,
+              connectedToAnyOtherCharities = None,
+              makingAdjustmentToPreviousClaim = None,
+              claimingReferenceNumber = Some(true),
+              claimReferenceNumber = Some("12345678AB")
+            )
           )
         )
-      )
 
-      given application: Application =
-        applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
-      running(application) {
-        given request: FakeRequest[AnyContentAsEmpty.type] =
-          FakeRequest(POST, routes.RepaymentClaimDetailsCheckYourAnswersController.onSubmit.url)
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.RepaymentClaimDetailsCheckYourAnswersController.onSubmit.url)
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) shouldEqual SEE_OTHER
+          status(result) shouldEqual SEE_OTHER
 
-        redirectLocation(result) shouldEqual Some(
-          routes.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad.url
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsIncompleteAnswersController.onPageLoad.url
+          )
+
+        }
+      }
+
+      "should render ClaimCompleteController if submissionReference is defined" in {
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          lastUpdatedReference = Some(testCharitiesReference),
+          submissionReference = Some(testCharitiesReference)
         )
 
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+          )
+        }
       }
-    }
 
-    "should render ClaimCompleteController if submissionReference is defined" in {
-      val sessionData = SessionData(
-        charitiesReference = testCharitiesReference,
-        lastUpdatedReference = Some(testCharitiesReference),
-        submissionReference = Some(testCharitiesReference)
-      )
+      "should redirect to CannotViewOrManageClaim page when UpdatedByAnotherUserException is thrown" in {
 
-      given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-      running(application) {
-        given request: FakeRequest[AnyContentAsEmpty.type] =
-          FakeRequest(GET, routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url)
-
-        val result = route(application, request).value
-
-        status(result) shouldEqual SEE_OTHER
-        redirectLocation(result) shouldEqual Some(
-          controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
-        )
-      }
-    }
-
-    "should redirect to CannotViewOrManageClaim page when UpdatedByAnotherUserException is thrown" in {
-
-      val sessionData = SessionData(
-        charitiesReference = testCharitiesReference,
-        repaymentClaimDetailsAnswers = Some(
-          RepaymentClaimDetailsAnswers(
-            claimingGiftAid = Some(true),
-            claimingTaxDeducted = Some(false),
-            claimingUnderGiftAidSmallDonationsScheme = Some(false),
-            claimingReferenceNumber = Some(true),
-            claimReferenceNumber = Some("12345678AB")
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          repaymentClaimDetailsAnswers = Some(
+            RepaymentClaimDetailsAnswers(
+              claimingGiftAid = Some(true),
+              claimingTaxDeducted = Some(false),
+              claimingUnderGiftAidSmallDonationsScheme = Some(false),
+              claimingReferenceNumber = Some(true),
+              claimReferenceNumber = Some("12345678AB")
+            )
           )
         )
-      )
 
-      val mockClaimsService = mock[services.ClaimsService]
-      (mockClaimsService
-        .save(using _: uk.gov.hmrc.http.HeaderCarrier))
-        .expects(*)
-        .returning(scala.concurrent.Future.failed(UpdatedByAnotherUserException()))
+        val mockClaimsService = mock[services.ClaimsService]
+        (mockClaimsService
+          .save(using _: uk.gov.hmrc.http.HeaderCarrier))
+          .expects(*)
+          .returning(scala.concurrent.Future.failed(UpdatedByAnotherUserException()))
 
-      given application: Application =
-        applicationBuilder(sessionData = sessionData)
-          .overrides(play.api.inject.bind[services.ClaimsService].toInstance(mockClaimsService))
-          .build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData)
+            .overrides(play.api.inject.bind[services.ClaimsService].toInstance(mockClaimsService))
+            .build()
 
-      running(application) {
-        val request     = FakeRequest(POST, routes.RepaymentClaimDetailsCheckYourAnswersController.onSubmit.url)
-        val caught      = intercept[UpdatedByAnotherUserException](await(route(application, request).value))
-        val errorResult = application.injector.instanceOf[handlers.ErrorHandler].resolveError(request, caught)
+        running(application) {
+          val request     = FakeRequest(POST, routes.RepaymentClaimDetailsCheckYourAnswersController.onSubmit.url)
+          val caught      = intercept[UpdatedByAnotherUserException](await(route(application, request).value))
+          val errorResult = application.injector.instanceOf[handlers.ErrorHandler].resolveError(request, caught)
 
-        status(errorResult) shouldEqual SEE_OTHER
-        redirectLocation(errorResult) shouldEqual Some(
-          controllers.organisationDetails.routes.CannotViewOrManageClaimController.onPageLoad.url
-        )
+          status(errorResult) shouldEqual SEE_OTHER
+          redirectLocation(errorResult) shouldEqual Some(
+            controllers.organisationDetails.routes.CannotViewOrManageClaimController.onPageLoad.url
+          )
+        }
       }
     }
   }
