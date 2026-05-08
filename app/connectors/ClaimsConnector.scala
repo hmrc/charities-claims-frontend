@@ -27,6 +27,10 @@ import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import play.api.http.Status.NOT_FOUND
+import play.api.http.Status.NO_CONTENT
+import play.api.http.Status.OK
+import play.api.http.Status.BAD_REQUEST
 
 import java.net.URL
 import javax.inject.Inject
@@ -54,6 +58,8 @@ trait ClaimsConnector {
   def getSubmissionClaimSummary(claimId: String)(using hc: HeaderCarrier): Future[SubmissionSummaryResponse]
 
   def updateLastVisitedAt(claimId: String)(using hc: HeaderCarrier): Future[Unit]
+
+  def hasUnsubmittedClaim(charitiesReference: String)(using hc: HeaderCarrier): Future[Boolean]
 }
 
 class ClaimsConnectorImpl @Inject() (
@@ -160,6 +166,19 @@ class ClaimsConnectorImpl @Inject() (
       payload = None
     )
 
+  final def hasUnsubmittedClaim(charitiesReference: String)(using hc: HeaderCarrier): Future[Boolean] =
+    val url: String = s"$claimsApiUrl/charities/$charitiesReference/unsubmitted"
+    logger.info(s"GET $url [requestId=${hc.requestId.map(_.value).getOrElse("-")}]")
+    retry(retryIntervals*)(shouldRetry, retryReason) {
+      http.get(URL(url)).execute[HttpResponse]
+    }.map(response =>
+      response.status match {
+        case NOT_FOUND  => false
+        case NO_CONTENT => true
+        case _          => throw Exception(s"Request to $url failed because of $response ${response.body}")
+      }
+    )
+
   private def callCharitiesClaimsBackend[I, O](
     method: String,
     url: String,
@@ -185,7 +204,7 @@ class ClaimsConnectorImpl @Inject() (
         .fold(request)(p => request.withBody(Json.toJson(p)))
         .execute[HttpResponse]
     }.flatMap(response =>
-      if response.status == 200 then
+      if response.status == OK then
         response
           .parseJSON[O]()
           .fold(
@@ -195,8 +214,8 @@ class ClaimsConnectorImpl @Inject() (
             },
             Future.successful
           )
-      else if noneOnNotFound && response.status == 404 then Future.successful(noneValue)
-      else if response.status == 400 then
+      else if noneOnNotFound && response.status == NOT_FOUND then Future.successful(noneValue)
+      else if response.status == BAD_REQUEST then
         response
           .parseJSON[ClaimError]()
           .fold(

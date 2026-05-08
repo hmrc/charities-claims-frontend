@@ -19,16 +19,14 @@ package connectors
 import models.*
 import org.scalatest.OptionValues.convertOptionToValuable
 import org.scalatest.wordspec.AnyWordSpec
-import play.api.http.Status.{NOT_FOUND, OK}
+import play.api.http.Status.{NOT_FOUND, NO_CONTENT, OK}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{ComponentSpecHelper, TestDataUtils, WiremockMethods}
 
-class ClaimsConnectorISpec
-  extends ComponentSpecHelper
-    with WiremockMethods with TestDataUtils {
+class ClaimsConnectorISpec extends ComponentSpecHelper with WiremockMethods with TestDataUtils {
 
   private val connector = app.injector.instanceOf[ClaimsConnector]
-  given HeaderCarrier = HeaderCarrier()
+  given HeaderCarrier   = HeaderCarrier()
 
   "retrieveUnsubmittedClaims" should {
 
@@ -73,7 +71,7 @@ class ClaimsConnectorISpec
 
       val result = connector.saveClaim(repaymentDetails).futureValue
 
-      result.claimId shouldBe claimId
+      result.claimId              shouldBe claimId
       result.lastUpdatedReference shouldBe "test-ref"
     }
   }
@@ -109,7 +107,7 @@ class ClaimsConnectorISpec
         claimingUnderGiftAidSmallDonationsScheme = false,
         claimReferenceNumber = Some("1234567890")
       )
-      val request =
+      val request          =
         UpdateClaimRequest(
           lastUpdatedReference = "1234567890",
           repaymentClaimDetails = repaymentDetails
@@ -160,7 +158,7 @@ class ClaimsConnectorISpec
       when(POST, "/charities-claims/chris", request)
         .thenReturn(OK, response)
 
-      val result = connector.submitClaim("claim-1","1234567890","en").futureValue
+      val result = connector.submitClaim("claim-1", "1234567890", "en").futureValue
 
       result shouldBe response
     }
@@ -171,13 +169,13 @@ class ClaimsConnectorISpec
     "return submission summary response when backend returns 200" in {
 
       val response = SubmissionSummaryResponse(
-          ClaimDetails("test charity", "test ref", "2026-04-07T11:34:21.147Z", "Mr John"),
-          None,
-          None,
-          None,
-          None,
-          "sub ref"
-        )
+        ClaimDetails("test charity", "test ref", "2026-04-07T11:34:21.147Z", "Mr John"),
+        None,
+        None,
+        None,
+        None,
+        "sub ref"
+      )
 
       when(GET, "/charities-claims/submission-summary/claim-1")
         .thenReturn(OK, response)
@@ -185,6 +183,27 @@ class ClaimsConnectorISpec
       val result = connector.getSubmissionClaimSummary("claim-1").futureValue
 
       result shouldBe response
+    }
+  }
+
+  "hasUnsubmittedClaim" should {
+
+    "return true when backend returns 204" in {
+      when(GET, "/charities-claims/claims/charities/123/unsubmitted")
+        .thenReturn(NO_CONTENT)
+
+      val result = connector.hasUnsubmittedClaim("123").futureValue
+
+      result shouldBe true
+    }
+
+    "return false when backend returns 404" in {
+      when(GET, "/charities-claims/claims/charities/123/unsubmitted")
+        .thenReturn(NOT_FOUND)
+
+      val result = connector.hasUnsubmittedClaim("123").futureValue
+
+      result shouldBe false
     }
   }
 }
