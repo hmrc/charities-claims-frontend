@@ -36,7 +36,7 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
 
-          val result = route(application, request).value
+          val result  = route(application, request).value
           val content = contentAsString(result)
 
           status(result) shouldEqual OK
@@ -52,7 +52,7 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
         running(application) {
           val request = FakeRequest(GET, routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
 
-          val result = route(application, request).value
+          val result  = route(application, request).value
           val content = contentAsString(result)
 
           status(result) shouldEqual OK
