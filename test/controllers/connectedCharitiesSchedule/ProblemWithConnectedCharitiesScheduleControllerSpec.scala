@@ -32,6 +32,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import util.TestResources
 
 import scala.concurrent.Future
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class ProblemWithConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
 
@@ -77,242 +78,497 @@ class ProblemWithConnectedCharitiesScheduleControllerSpec extends ControllerSpec
 
     "onPageLoad" - {
 
-      // Redirect Tests:
-      "should render ClaimCompleteController if submissionReference is defined" in {
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          lastUpdatedReference = Some(testCharitiesReference),
-          submissionReference = Some(testCharitiesReference)
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+      "Organisation user:" - {
+        // Redirect Tests:
+        "should render ClaimCompleteController if submissionReference is defined" in {
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            lastUpdatedReference = Some(testCharitiesReference),
+            submissionReference = Some(testCharitiesReference)
           )
+
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+            )
+          }
+        }
+        "should redirect to PageNotFound when data guard fails" in {
+          given application: Application = applicationBuilder(sessionData = sessionDataFailingGuard).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              controllers.routes.ClaimsTaskListController.onPageLoad.url
+            )
+          }
+        }
+
+        "should redirect to UploadConnectedCharitiesScheduleController when no file upload reference in session data" in {
+          given application: Application = applicationBuilder(sessionData = validSessionDataWithoutFileRef).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.UploadConnectedCharitiesScheduleController.onPageLoad.url
+            )
+          }
+        }
+
+        "should render page with validation errors when upload has VALIDATION_FAILED status" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidationFailedResponse))
+
+          given application: Application = applicationBuilder(sessionData = validSessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual OK
+            contentAsString(result) should include(
+              messages("problemWithConnectedCharitiesSchedule.heading")
+            )
+          }
+        }
+
+        "should display error messages in the table" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidationFailedResponse))
+
+          given application: Application = applicationBuilder(sessionData = validSessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+
+            val result  = route(application, request).value
+            val content = contentAsString(result)
+
+            status(result) shouldEqual OK
+            content should include("ERROR:")
+          }
+        }
+
+        "should display number 0 in row column for string field errors" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidationFailedResponse))
+
+          given application: Application = applicationBuilder(sessionData = validSessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+
+            val result  = route(application, request).value
+            val content = contentAsString(result)
+
+            status(result) shouldEqual OK
+            val zeroRowPattern = ">16<".r
+            zeroRowPattern.findAllIn(content).length should be >= 1
+          }
+        }
+
+        "should default to page 1 of pagination when page query parameter is not a valid integer" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidationFailedResponse))
+
+          given application: Application = applicationBuilder(sessionData = validSessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url + "?page=invalid")
+
+            val result  = route(application, request).value
+            val content = contentAsString(result)
+
+            status(result) shouldEqual OK
+            content should include("ERROR:")
+            content should include("Item 3 Name of charity is in an invalid format")
+          }
+        }
+
+        "should include the connectedCharitiesScheduleSpreadsheetGuidanceUrl link" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidationFailedResponse))
+
+          given application: Application = applicationBuilder(sessionData = validSessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+
+            val result  = route(application, request).value
+            val content = contentAsString(result)
+
+            status(result) shouldEqual OK
+            content should include("schedule-spreadsheet-for-connected-charities-gasds-claims")
+          }
+        }
+
+        "should include the (attach updated schedule) button" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidationFailedResponse))
+
+          given application: Application = applicationBuilder(sessionData = validSessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+
+            val result  = route(application, request).value
+            val content = contentAsString(result)
+
+            status(result) shouldEqual OK
+            content  should include(messages("problemWithConnectedCharitiesSchedule.list.item.3"))
+            (content should not).include(messages("problemWithConnectedCharitiesSchedule.list.item.3.agent"))
+          }
+        }
+
+        "should include the delete schedule link" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidationFailedResponse))
+
+          given application: Application = applicationBuilder(sessionData = validSessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+
+            val result  = route(application, request).value
+            val content = contentAsString(result)
+
+            status(result) shouldEqual OK
+            content should include("Delete schedule")
+            content should include("delete-gasds-connected-charities-schedule")
+          }
+        }
+
+        "should redirect to YourConnectedCharitiesScheduleUploadController when upload result is VALIDATED (fallback case)" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidatedResponse))
+
+          given application: Application = applicationBuilder(sessionData = validSessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url
+            )
+          }
+        }
+
+        "should NOT render problem page when upload has VALIDATED status (should redirect)" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidatedResponse))
+
+          given application: Application = applicationBuilder(sessionData = validSessionData).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+
+            val result  = route(application, request).value
+            val content = contentAsString(result)
+
+            status(result) shouldEqual SEE_OTHER
+            (content should not).include(messages("problemWithConnectedCharitiesSchedule.heading"))
+          }
         }
       }
-      "should redirect to PageNotFound when data guard fails" in {
-        given application: Application = applicationBuilder(sessionData = sessionDataFailingGuard).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            controllers.routes.ClaimsTaskListController.onPageLoad.url
+      "Agent user:" - {
+        // Redirect Tests:
+        "should render ClaimCompleteController if submissionReference is defined" in {
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            lastUpdatedReference = Some(testCharitiesReference),
+            submissionReference = Some(testCharitiesReference)
           )
+
+          given application: Application = applicationBuilder(sessionData = sessionData, AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+            )
+          }
         }
-      }
+        "should redirect to PageNotFound when data guard fails" in {
+          given application: Application =
+            applicationBuilder(sessionData = sessionDataFailingGuard, AffinityGroup.Agent).build()
 
-      "should redirect to UploadConnectedCharitiesScheduleController when no file upload reference in session data" in {
-        given application: Application = applicationBuilder(sessionData = validSessionDataWithoutFileRef).build()
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+            val result = route(application, request).value
 
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.UploadConnectedCharitiesScheduleController.onPageLoad.url
-          )
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              controllers.routes.ClaimsTaskListController.onPageLoad.url
+            )
+          }
         }
-      }
 
-      "should render page with validation errors when upload has VALIDATION_FAILED status" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        "should redirect to UploadConnectedCharitiesScheduleController when no file upload reference in session data" in {
+          given application: Application =
+            applicationBuilder(sessionData = validSessionDataWithoutFileRef, AffinityGroup.Agent).build()
 
-        given application: Application = applicationBuilder(sessionData = validSessionData).build()
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+            val result = route(application, request).value
 
-          val result = route(application, request).value
-
-          status(result) shouldEqual OK
-          contentAsString(result) should include(
-            "There is a problem with the data in your Connected Charities schedule"
-          )
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.UploadConnectedCharitiesScheduleController.onPageLoad.url
+            )
+          }
         }
-      }
 
-      "should display error messages in the table" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        "should render page with validation errors when upload has VALIDATION_FAILED status" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidationFailedResponse))
 
-        given application: Application = applicationBuilder(sessionData = validSessionData).build()
+          given application: Application =
+            applicationBuilder(sessionData = validSessionData, AffinityGroup.Agent).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
 
-          val result  = route(application, request).value
-          val content = contentAsString(result)
+            val result = route(application, request).value
 
-          status(result) shouldEqual OK
-          content should include("ERROR:")
+            status(result) shouldEqual OK
+            contentAsString(result) should include(
+              messages("problemWithConnectedCharitiesSchedule.heading.agent")
+            )
+          }
         }
-      }
 
-      "should display number 0 in row column for string field errors" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        "should display error messages in the table" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidationFailedResponse))
 
-        given application: Application = applicationBuilder(sessionData = validSessionData).build()
+          given application: Application =
+            applicationBuilder(sessionData = validSessionData, AffinityGroup.Agent).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
 
-          val result  = route(application, request).value
-          val content = contentAsString(result)
+            val result  = route(application, request).value
+            val content = contentAsString(result)
 
-          status(result) shouldEqual OK
-          val zeroRowPattern = ">16<".r
-          zeroRowPattern.findAllIn(content).length should be >= 1
+            status(result) shouldEqual OK
+            content should include("ERROR:")
+          }
         }
-      }
 
-      "should default to page 1 of pagination when page query parameter is not a valid integer" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        "should display number 0 in row column for string field errors" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidationFailedResponse))
 
-        given application: Application = applicationBuilder(sessionData = validSessionData).build()
+          given application: Application =
+            applicationBuilder(sessionData = validSessionData, AffinityGroup.Agent).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url + "?page=invalid")
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
 
-          val result  = route(application, request).value
-          val content = contentAsString(result)
+            val result  = route(application, request).value
+            val content = contentAsString(result)
 
-          status(result) shouldEqual OK
-          content should include("ERROR:")
-          content should include("Item 3 Name of charity is in an invalid format")
+            status(result) shouldEqual OK
+            val zeroRowPattern = ">16<".r
+            zeroRowPattern.findAllIn(content).length should be >= 1
+          }
         }
-      }
 
-      "should include the connectedCharitiesScheduleSpreadsheetGuidanceUrl link" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        "should default to page 1 of pagination when page query parameter is not a valid integer" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidationFailedResponse))
 
-        given application: Application = applicationBuilder(sessionData = validSessionData).build()
+          given application: Application =
+            applicationBuilder(sessionData = validSessionData, AffinityGroup.Agent).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url + "?page=invalid")
 
-          val result  = route(application, request).value
-          val content = contentAsString(result)
+            val result  = route(application, request).value
+            val content = contentAsString(result)
 
-          status(result) shouldEqual OK
-          content should include("schedule-spreadsheet-for-connected-charities-gasds-claims")
+            status(result) shouldEqual OK
+            content  should include("ERROR:")
+            content  should include(messages("problemWithConnectedCharitiesSchedule.list.item.3.agent"))
+            (content should not).include(messages("problemWithConnectedCharitiesSchedule.list.item.3"))
+          }
         }
-      }
 
-      "should include the (attach updated schedule) button" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        "should include the connectedCharitiesScheduleSpreadsheetGuidanceUrl link" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidationFailedResponse))
 
-        given application: Application = applicationBuilder(sessionData = validSessionData).build()
+          given application: Application =
+            applicationBuilder(sessionData = validSessionData, AffinityGroup.Agent).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
 
-          val result  = route(application, request).value
-          val content = contentAsString(result)
+            val result  = route(application, request).value
+            val content = contentAsString(result)
 
-          status(result) shouldEqual OK
-          content should include("Attach an updated Connected Charities schedule")
+            status(result) shouldEqual OK
+            content should include("schedule-spreadsheet-for-connected-charities-gasds-claims")
+          }
         }
-      }
 
-      "should include the delete schedule link" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        "should include the (attach updated schedule) button" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidationFailedResponse))
 
-        given application: Application = applicationBuilder(sessionData = validSessionData).build()
+          given application: Application =
+            applicationBuilder(sessionData = validSessionData, AffinityGroup.Agent).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
 
-          val result  = route(application, request).value
-          val content = contentAsString(result)
+            val result  = route(application, request).value
+            val content = contentAsString(result)
 
-          status(result) shouldEqual OK
-          content should include("Delete schedule")
-          content should include("delete-gasds-connected-charities-schedule")
+            status(result) shouldEqual OK
+            content should include("Attach an updated Connected Charities schedule")
+          }
         }
-      }
 
-      "should redirect to YourConnectedCharitiesScheduleUploadController when upload result is VALIDATED (fallback case)" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidatedResponse))
+        "should include the delete schedule link" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidationFailedResponse))
 
-        given application: Application = applicationBuilder(sessionData = validSessionData).build()
+          given application: Application =
+            applicationBuilder(sessionData = validSessionData, AffinityGroup.Agent).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
 
-          val result = route(application, request).value
+            val result  = route(application, request).value
+            val content = contentAsString(result)
 
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url
-          )
+            status(result) shouldEqual OK
+            content should include("Delete schedule")
+            content should include("delete-gasds-connected-charities-schedule")
+          }
         }
-      }
 
-      "should NOT render problem page when upload has VALIDATED status (should redirect)" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidatedResponse))
+        "should redirect to YourConnectedCharitiesScheduleUploadController when upload result is VALIDATED (fallback case)" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidatedResponse))
 
-        given application: Application = applicationBuilder(sessionData = validSessionData).build()
+          given application: Application =
+            applicationBuilder(sessionData = validSessionData, AffinityGroup.Agent).build()
 
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
 
-          val result  = route(application, request).value
-          val content = contentAsString(result)
+            val result = route(application, request).value
 
-          status(result) shouldEqual SEE_OTHER
-          (content should not).include("There is a problem with the data in your Connected Charities schedule")
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.YourConnectedCharitiesScheduleUploadController.onPageLoad.url
+            )
+          }
+        }
+
+        "should NOT render problem page when upload has VALIDATED status (should redirect)" in {
+          (mockClaimsValidationConnector
+            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+            .expects(testClaimId, testFileUploadReference, *)
+            .returning(Future.successful(testValidatedResponse))
+
+          given application: Application =
+            applicationBuilder(sessionData = validSessionData, AffinityGroup.Agent).build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(GET, routes.ProblemWithConnectedCharitiesScheduleController.onPageLoad.url)
+
+            val result  = route(application, request).value
+            val content = contentAsString(result)
+
+            status(result) shouldEqual SEE_OTHER
+            (content should not).include(messages("problemWithConnectedCharitiesSchedule.heading.agent"))
+          }
         }
       }
     }

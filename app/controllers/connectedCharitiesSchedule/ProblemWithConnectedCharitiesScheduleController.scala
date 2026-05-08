@@ -67,7 +67,8 @@ class ProblemWithConnectedCharitiesScheduleController @Inject() (
                       paginationViewModel = paginationResult.paginationViewModel,
                       paginationStatus = paginationResult,
                       connectedCharitiesScheduleSpreadsheetGuidanceUrl =
-                        appConfig.connectedCharitiesScheduleSpreadsheetGuidanceUrl
+                        appConfig.connectedCharitiesScheduleSpreadsheetGuidanceUrl,
+                      isAgent = request.isAgent
                     )
                   )
 

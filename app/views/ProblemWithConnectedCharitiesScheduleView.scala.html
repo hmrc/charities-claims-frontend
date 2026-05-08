@@ -34,16 +34,17 @@
     errors: Seq[ValidationError],
     paginationViewModel: PaginationViewModel,
     paginationStatus: PaginationStatus,
-    connectedCharitiesScheduleSpreadsheetGuidanceUrl: String
+    connectedCharitiesScheduleSpreadsheetGuidanceUrl: String,
+    isAgent: Boolean
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleWithPagination(messages("problemWithConnectedCharitiesSchedule.title"), paginationStatus),
+    pageTitle = titleWithPagination(messages(if(isAgent) "problemWithConnectedCharitiesSchedule.title.agent" else "problemWithConnectedCharitiesSchedule.title"), paginationStatus),
     showBackLink = true
 ) {
 
     <span class="govuk-caption-l">@messages("problemWithConnectedCharitiesSchedule.caption")</span>
-    <h1 class="govuk-heading-l">@messages("problemWithConnectedCharitiesSchedule.heading")</h1>
+    <h1 class="govuk-heading-l">@messages(if(isAgent) "problemWithConnectedCharitiesSchedule.heading.agent" else "problemWithConnectedCharitiesSchedule.heading")</h1>
 
     <div class="govuk-warning-text">
         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
@@ -58,7 +59,7 @@
     <ol class="govuk-list govuk-list--number govuk-!-margin-bottom-9">
         <li>@Html(messages("problemWithConnectedCharitiesSchedule.list.item.1", connectedCharitiesScheduleSpreadsheetGuidanceUrl))</li>
         <li>@messages("problemWithConnectedCharitiesSchedule.list.item.2")</li>
-        <li>@messages("problemWithConnectedCharitiesSchedule.list.item.3")</li>
+        <li>@messages(if(isAgent) "problemWithConnectedCharitiesSchedule.list.item.3.agent" else "problemWithConnectedCharitiesSchedule.list.item.3")</li>
         <li>@messages("problemWithConnectedCharitiesSchedule.list.item.4")</li>
     </ol>
 
