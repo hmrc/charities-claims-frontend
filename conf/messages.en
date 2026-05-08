@@ -506,11 +506,13 @@ problemWithCommunityBuildingsSchedule.warning = We cannot accept the file becaus
 
 problemWithGiftAidSchedule.caption = Add Gift Aid schedule
 problemWithGiftAidSchedule.heading = There is a problem with the data in your Gift Aid schedule
+problemWithGiftAidSchedule.agent.heading = There is a problem with the data in this Gift Aid schedule
 problemWithGiftAidSchedule.link.attachUpdatedSchedule = Attach an updated Gift Aid schedule
 problemWithGiftAidSchedule.link.deleteSchedule = Delete schedule
 problemWithGiftAidSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Gift Aid donations (opens in new tab)</a>.
 problemWithGiftAidSchedule.list.item.2 = Delete this Gift Aid schedule.
 problemWithGiftAidSchedule.list.item.3 = Update your spreadsheet.
+problemWithGiftAidSchedule.agent.list.item.3 = Update the spreadsheet.
 problemWithGiftAidSchedule.list.item.4 = Upload the updated spreadsheet.
 problemWithGiftAidSchedule.subheading.1 = What you can do next
 problemWithGiftAidSchedule.subheading.2 = Summary of errors

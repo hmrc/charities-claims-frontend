@@ -31,7 +31,7 @@ class ProblemWithGiftAidScheduleControllerISpec
     with AuthStub
     with ClaimsValidationStub {
 
-  private val pageUrl = "/problem-with-gift-aid-schedule"
+  private val pageUrl = "/problem-with-gift-aid-schedule?claimId=123"
 
   "GET /problem-with-gift-aid-schedule" should {
 
@@ -45,6 +45,19 @@ class ProblemWithGiftAidScheduleControllerISpec
 
       result.status                shouldBe OK
       Jsoup.parse(result.body).title should include(msg("problemWithGiftAidSchedule.title"))
+    }
+    
+    "render the agent page when validation errors exist" in {
+      stubAgentBackend()
+      stubClaimWithGiftAid()
+      stubUploadSummary()
+      stubValidationFailed()
+
+      val result = get(pageUrl)
+
+      result.status                shouldBe OK
+      Jsoup.parse(result.body).text should include(msg("problemWithGiftAidSchedule.agent.heading"))
+      Jsoup.parse(result.body).text should include(msg("problemWithGiftAidSchedule.agent.list.item.3"))
     }
 
     "redirect to upload summary when upload result is not validation failed" in {
@@ -83,6 +96,12 @@ class ProblemWithGiftAidScheduleControllerISpec
 
   private def stubBackend(): Unit = {
     stubAuthRequest()
+    stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+    stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
+  }
+
+  private def stubAgentBackend(): Unit = {
+    stubAgentAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
     stubUpdateClaim(claimId)(OK, Json.toJson(UpdateClaimResponse(success = true, claimId)))
   }
