@@ -108,6 +108,7 @@ charityExempt.bullet.2 = museum or gallery
 charityExempt.bullet.3 = housing association
 charityExempt.heading = Your charity is exempt
 charityExempt.p1 = The charity is exempt from registering with a regulator because it is a:
+charityExempt.agent.p1 = Your charity is exempt from registering with a regulator because it is a:
 charityExempt.title = Your charity is exempt
 
 charityRegulatorNumber.caption = Provide organisation details
