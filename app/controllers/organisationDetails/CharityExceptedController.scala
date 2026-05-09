@@ -49,9 +49,13 @@ class CharityExceptedController @Inject() (
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      mode match {
-        case CheckMode  => Future.successful(Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad))
-        case NormalMode => Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
+      (mode, request.isAgent) match {
+        case (CheckMode, _)      =>
+          Future.successful(Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad))
+        case (NormalMode, false) =>
+          Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
+        case (NormalMode, true)  =>
+          Future.successful(Redirect(routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode)))
       }
     }
 }
