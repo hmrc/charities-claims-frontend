@@ -186,7 +186,7 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.CheckYourCommunityBuildingsScheduleController.onPageLoad.url)
 
-          val result = route(application, request).value
+          val result  = route(application, request).value
           val content = contentAsString(result)
 
           status(result) shouldEqual OK
