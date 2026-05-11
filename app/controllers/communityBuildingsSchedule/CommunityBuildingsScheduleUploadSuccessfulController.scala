@@ -33,7 +33,7 @@ class CommunityBuildingsScheduleUploadSuccessfulController @Inject() (
 
   val onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.shouldUploadCommunityBuildingsSchedule).async { implicit request =>
-      if request.sessionData.communityBuildingsScheduleCompleted then Future.successful(Ok(view()))
+      if request.sessionData.communityBuildingsScheduleCompleted then Future.successful(Ok(view(request.isAgent)))
       else Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
     }
 

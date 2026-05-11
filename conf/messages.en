@@ -664,6 +664,7 @@ site.remove = Remove
 
 communityBuildingsScheduleUploadSuccessful.message.1 = Upload successful
 communityBuildingsScheduleUploadSuccessful.message.2 = You have successfully attached your Community Buildings schedule.
+communityBuildingsScheduleUploadSuccessful.agent.message.2 = You have successfully attached this Community Buildings schedule.
 communityBuildingsScheduleUploadSuccessful.title = Upload successful
 
 updateCommunityBuildingsSchedule.error.required = Select ‘Yes’ if you want to update this Community Buildings schedule
