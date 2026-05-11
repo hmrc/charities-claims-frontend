@@ -329,7 +329,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
         if (details.nonEmpty) {
           summaryRow(
             messages("organisationDetailsCheckYourAnswers.CorporateTrusteeDetails.label"),
-            HtmlContent(details.mkString("<br>")),
+            HtmlContent(details.mkString("<br><br>")),
             controllers.organisationDetails.routes.CorporateTrusteeDetailsController
               .onPageLoad(CheckMode)
               .url,
@@ -376,20 +376,23 @@ object OrganisationDetailsCheckYourAnswersHelper {
       ),
       answers.doYouHaveAuthorisedOfficialTrusteeUKAddress.map { hasUkAddress =>
 
+        val fullName =
+          Seq(
+            answers.authorisedOfficialTrusteeTitle,
+            answers.authorisedOfficialTrusteeFirstName,
+            answers.authorisedOfficialTrusteeLastName
+          ).flatten.mkString(" ")
+
         val details =
           if (hasUkAddress) {
             Seq(
-              answers.authorisedOfficialTrusteeTitle,
-              answers.authorisedOfficialTrusteeFirstName,
-              answers.authorisedOfficialTrusteeLastName,
+              Some(fullName).filter(_.nonEmpty),
               answers.authorisedOfficialTrusteeDaytimeTelephoneNumber,
               answers.authorisedOfficialTrusteePostcode
             ).flatten
           } else {
             Seq(
-              answers.authorisedOfficialTrusteeTitle,
-              answers.authorisedOfficialTrusteeFirstName,
-              answers.authorisedOfficialTrusteeLastName,
+              Some(fullName).filter(_.nonEmpty),
               answers.authorisedOfficialTrusteeDaytimeTelephoneNumber
             ).flatten
           }
@@ -397,7 +400,7 @@ object OrganisationDetailsCheckYourAnswersHelper {
         if (details.nonEmpty) {
           summaryRow(
             messages("organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.label"),
-            HtmlContent(details.mkString("<br>")),
+            HtmlContent(details.mkString("<br><br>")),
             controllers.organisationDetails.routes.AuthorisedOfficialDetailsController
               .onPageLoad(CheckMode)
               .url,

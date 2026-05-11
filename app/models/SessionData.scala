@@ -198,7 +198,14 @@ object SessionData {
     session.submissionReference.isEmpty
 
   def isCASCCharityReference(using session: SessionData): Boolean =
-    session.charitiesReference.startsWith("CH") || session.charitiesReference.startsWith("CF")
+    if (session.isAgent) {
+      session.repaymentClaimDetailsAnswers
+        .flatMap(_.hmrcCharitiesReference)
+        .exists(ref => ref.startsWith("CH") || ref.startsWith("CF"))
+    } else {
+      session.charitiesReference.startsWith("CH") ||
+      session.charitiesReference.startsWith("CF")
+    }
 
   def isClaimDetailsComplete(using session: SessionData): Boolean =
     session.unsubmittedClaimId.isDefined

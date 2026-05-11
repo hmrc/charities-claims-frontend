@@ -160,9 +160,16 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
             agentOrgUserAnswers.whoShouldHmrcSendPaymentTo match {
 
               case Some(value) =>
+                val paymentRecipientMessageKey = value match {
+                  case WhoShouldHmrcSendPaymentTo.CharityOrCASC =>
+                    "whoShouldWeSendPaymentTo.radio.charityOrCasc"
+
+                  case WhoShouldHmrcSendPaymentTo.AgentOrNominee =>
+                    "whoShouldWeSendPaymentTo.radio.agentOrNominee"
+                }
                 summaryRow(
                   messages("agentOrganisationDetailsCheckYourAnswers.charityDetails.sendPaymentTo.label"),
-                  Text(value.value),
+                  Text(messages(paymentRecipientMessageKey)),
                   controllers.organisationDetails.routes.WhoShouldWeSendPaymentToController
                     .onPageLoad(CheckMode)
                     .url
