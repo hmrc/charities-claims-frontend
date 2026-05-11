@@ -190,6 +190,7 @@ checkYourGiftAidSchedule.agent.title = Check this Gift Aid schedule
 checkYourOtherIncomeSchedule.caption = Add Other Income schedule
 checkYourOtherIncomeSchedule.error.required = Select ‘Yes’ if you need to update this Other Income schedule
 checkYourOtherIncomeSchedule.heading = Check your Other Income schedule
+checkYourOtherIncomeSchedule.agent.heading = Check this Other Income schedule
 checkYourOtherIncomeSchedule.hint = Do you need to update this Other Income schedule?
 checkYourOtherIncomeSchedule.radios.no = No, continue with Other Income schedule
 checkYourOtherIncomeSchedule.summary.item.1 = Adjustment for Other Income previously over-claimed
