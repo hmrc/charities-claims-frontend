@@ -18,7 +18,8 @@ package controllers.organisationDetails
 
 import com.google.inject.Inject
 import controllers.BaseController
-import controllers.actions.Actions
+import controllers.actions.AccessType.OrganisationOnly
+import controllers.actions.{Actions, GuardAction}
 import forms.YesNoFormProvider
 import models.{Mode, OrganisationDetailsAnswers, SessionData}
 import models.Mode.*
@@ -34,6 +35,7 @@ class AuthorisedOfficialAddressController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: AuthorisedOfficialAddressView,
   actions: Actions,
+  guard: GuardAction,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
@@ -42,28 +44,34 @@ class AuthorisedOfficialAddressController @Inject() (
   val form: Form[Boolean] = formProvider("authorisedOfficialAddress.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      if OrganisationDetailsAnswers.getAreYouACorporateTrustee.contains(false)
-      then {
-        val previousAnswer = OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress
-        Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
-      } else { Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)) }
-    }
+    actions
+      .authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete)
+      .andThen(guard(predicate = SessionData.isClaimNotSubmitted, access = OrganisationOnly))
+      .async { implicit request =>
+        if OrganisationDetailsAnswers.getAreYouACorporateTrustee.contains(false)
+        then {
+          val previousAnswer = OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress
+          Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+        } else { Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)) }
+      }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      val previousAnswer = OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress
+    actions
+      .authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete)
+      .andThen(guard(predicate = SessionData.isClaimNotSubmitted, access = OrganisationOnly))
+      .async { implicit request =>
+        val previousAnswer = OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress
 
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            saveService
-              .save(OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(value))
-              .map(_ => Redirect(AuthorisedOfficialAddressController.nextPage(value, mode, previousAnswer)))
-        )
-    }
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value =>
+              saveService
+                .save(OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(value))
+                .map(_ => Redirect(AuthorisedOfficialAddressController.nextPage(value, mode, previousAnswer)))
+          )
+      }
 }
 
 object AuthorisedOfficialAddressController {

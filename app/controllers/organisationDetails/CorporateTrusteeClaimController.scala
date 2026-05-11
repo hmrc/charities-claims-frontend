@@ -18,7 +18,8 @@ package controllers.organisationDetails
 
 import com.google.inject.Inject
 import controllers.BaseController
-import controllers.actions.Actions
+import controllers.actions.AccessType.OrganisationOnly
+import controllers.actions.{Actions, GuardAction}
 import forms.YesNoFormProvider
 import models.{Mode, OrganisationDetailsAnswers, SessionData}
 import models.Mode.*
@@ -34,6 +35,7 @@ class CorporateTrusteeClaimController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: CorporateTrusteeClaimView,
   actions: Actions,
+  guard: GuardAction,
   formProvider: YesNoFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
@@ -42,25 +44,30 @@ class CorporateTrusteeClaimController @Inject() (
   val form: Form[Boolean] = formProvider("corporateTrusteeClaim.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete) { implicit request =>
-      val previousAnswer = OrganisationDetailsAnswers.getAreYouACorporateTrustee
-      Ok(view(form.withDefault(previousAnswer), mode))
-    }
+    actions
+      .authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete)
+      .andThen(guard(predicate = SessionData.isClaimNotSubmitted, access = OrganisationOnly)) { implicit request =>
+        val previousAnswer = OrganisationDetailsAnswers.getAreYouACorporateTrustee
+        Ok(view(form.withDefault(previousAnswer), mode))
+      }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      val previousAnswer: Option[Boolean] = OrganisationDetailsAnswers.getAreYouACorporateTrustee
+    actions
+      .authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete)
+      .andThen(guard(predicate = SessionData.isClaimNotSubmitted, access = OrganisationOnly))
+      .async { implicit request =>
+        val previousAnswer: Option[Boolean] = OrganisationDetailsAnswers.getAreYouACorporateTrustee
 
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            saveService
-              .save(OrganisationDetailsAnswers.setAreYouACorporateTrustee(value, previousAnswer))
-              .map(_ => Redirect(CorporateTrusteeClaimController.nextPage(value, mode, previousAnswer)))
-        )
-    }
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value =>
+              saveService
+                .save(OrganisationDetailsAnswers.setAreYouACorporateTrustee(value, previousAnswer))
+                .map(_ => Redirect(CorporateTrusteeClaimController.nextPage(value, mode, previousAnswer)))
+          )
+      }
 }
 
 object CorporateTrusteeClaimController {
