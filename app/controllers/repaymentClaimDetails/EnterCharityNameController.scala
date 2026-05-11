@@ -18,6 +18,7 @@ package controllers.repaymentClaimDetails
 
 import com.google.inject.Inject
 import controllers.BaseController
+import controllers.actions.AccessType.AgentOnly
 import controllers.actions.{Actions, GuardAction}
 import models.Mode.{CheckMode, NormalMode}
 import forms.CharityNameFormProvider
@@ -42,28 +43,34 @@ class EnterCharityNameController @Inject() (
   val form: Form[String] = formProvider()
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
-    actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)).async { implicit request =>
+    actions
+      .authAndGetData()
+      .andThen(guard(predicate = SessionData.isClaimNotSubmitted, access = AgentOnly))
+      .async { implicit request =>
 
-      val previousAnswer = RepaymentClaimDetailsAnswers.getNameOfCharity match {
-        case None        => form
-        case Some(value) => form.fill(value)
+        val previousAnswer = RepaymentClaimDetailsAnswers.getNameOfCharity match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
+        Future.successful(Ok(view(previousAnswer, mode)))
+
       }
-      Future.successful(Ok(view(previousAnswer, mode)))
-
-    }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
-    actions.authAndGetData().andThen(guard(SessionData.isClaimNotSubmitted)).async { implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            saveService
-              .save(RepaymentClaimDetailsAnswers.setNameOfCharity(value))
-              .map(_ => Redirect(navigator(mode)))
-        )
-    }
+    actions
+      .authAndGetData()
+      .andThen(guard(predicate = SessionData.isClaimNotSubmitted, access = AgentOnly))
+      .async { implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value =>
+              saveService
+                .save(RepaymentClaimDetailsAnswers.setNameOfCharity(value))
+                .map(_ => Redirect(navigator(mode)))
+          )
+      }
 
   def navigator(mode: Mode): Call = mode match {
     case NormalMode =>
