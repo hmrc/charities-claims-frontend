@@ -456,15 +456,15 @@ agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.Nor
 agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.Scottish.label = Office of the Scottish Charity Regulator
 agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.None.label = Charity is not registered with a regulator
 
-reasonNotRegistered.excepted.heading=The charity is excepted.
+reasonNotRegistered.excepted.heading = The charity is excepted.
 
-reasonNotRegistered.excepted.description=The charity is excepted as the charity’s annual income is £100,000 or less and is classed as one of the following:
+reasonNotRegistered.excepted.description = The charity is excepted as the charity’s annual income is £100,000 or less and is classed as one of the following:
 
-reasonNotRegistered.excepted.bullet1=a church or chapel
-reasonNotRegistered.excepted.bullet2=a charity that provides premises for schools
-reasonNotRegistered.excepted.bullet3=a scout or guide group
-reasonNotRegistered.excepted.bullet4=a charitable service of the armed forces
-reasonNotRegistered.excepted.bullet5=a students’ union
+reasonNotRegistered.excepted.bullet1 = a church or chapel
+reasonNotRegistered.excepted.bullet2 = a charity that provides premises for schools
+reasonNotRegistered.excepted.bullet3 = a scout or guide group
+reasonNotRegistered.excepted.bullet4 = a charitable service of the armed forces
+reasonNotRegistered.excepted.bullet5 = a students’ union
 
 reasonNotRegistered.exempt.heading=The charity is exempt.
 

@@ -19,17 +19,11 @@ package controllers.organisationDetails
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
-import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
-import views.html.CharityExemptView
-import models.{
-  AgentUserOrganisationDetailsAnswers,
-  Mode,
-  OrganisationDetailsAnswers,
-  ReasonNotRegisteredWithRegulator,
-  SessionData
-}
 import models.Mode.*
 import models.SessionData.isCASCCharityReference
+import models.*
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
+import views.html.CharityExemptView
 
 import scala.concurrent.Future
 

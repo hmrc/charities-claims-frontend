@@ -22,13 +22,7 @@ import controllers.actions.Actions
 import forms.CharityRegulatorNumberFormProvider
 import models.Mode.*
 import models.SessionData.isCASCCharityReference
-import models.{
-  AgentUserOrganisationDetailsAnswers,
-  Mode,
-  NameOfCharityRegulator,
-  OrganisationDetailsAnswers,
-  SessionData
-}
+import models.*
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
 import views.html.CharityRegulatorNumberView

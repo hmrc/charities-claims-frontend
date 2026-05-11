@@ -16,20 +16,14 @@
 
 package controllers.organisationDetails
 
-import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
-import views.html.CharityExceptedView
 import controllers.actions.Actions
-import models.{
-  AgentUserOrganisationDetailsAnswers,
-  Mode,
-  OrganisationDetailsAnswers,
-  ReasonNotRegisteredWithRegulator,
-  SessionData
-}
 import models.Mode.*
 import models.SessionData.isCASCCharityReference
+import models.*
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
+import views.html.CharityExceptedView
 
 import scala.concurrent.Future
 
