@@ -19,10 +19,9 @@
 @import play.api.i18n.Messages
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.timeoutdialog.TimeoutDialog
 @import uk.gov.hmrc.hmrcfrontend.views.Aliases.UserResearchBanner
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.*
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.backlink.BackLink
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardPage
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.*
 @import config.FrontendAppConfig
 
@@ -31,6 +30,7 @@
         hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
         hmrcTimeoutDialog: uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcTimeoutDialog,
         timeoutDialogConfig: uk.gov.hmrc.hmrcfrontend.config.TimeoutDialogConfig,
+        hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet
 )(using config: FrontendAppConfig)
 
 @(
