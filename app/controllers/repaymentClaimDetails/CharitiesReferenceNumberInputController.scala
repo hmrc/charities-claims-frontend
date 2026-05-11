@@ -21,6 +21,7 @@ import services.SaveService
 import play.api.mvc.*
 import com.google.inject.Inject
 import controllers.BaseController
+import controllers.actions.AccessType.AgentOnly
 import views.html.CharitiesReferenceNumberInputView
 import controllers.actions.{Actions, GuardAction}
 import forms.CharitiesReferenceTextInputFormProvider
@@ -48,7 +49,7 @@ class CharitiesReferenceNumberInputController @Inject() (
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetData()
-      .andThen(guard(SessionData.isClaimNotSubmitted))
+      .andThen(guard(predicate = SessionData.isClaimNotSubmitted, access = AgentOnly))
       .async { implicit request =>
         val previousAnswer = RepaymentClaimDetailsAnswers.getHmrcCharitiesReference match {
           case None        => form
@@ -60,7 +61,7 @@ class CharitiesReferenceNumberInputController @Inject() (
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetData()
-      .andThen(guard(SessionData.isClaimNotSubmitted))
+      .andThen(guard(predicate = SessionData.isClaimNotSubmitted, access = AgentOnly))
       .async { implicit request =>
         form
           .bindFromRequest()

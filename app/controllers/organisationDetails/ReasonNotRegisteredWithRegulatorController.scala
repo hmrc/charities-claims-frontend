@@ -78,11 +78,12 @@ class ReasonNotRegisteredWithRegulatorController @Inject() (
                   case ReasonNotRegisteredWithRegulator.Exempt   =>
                     Redirect(routes.CharityExemptController.onPageLoad(mode))
                   // LowIncome/Waiting skip A2.3/A2.4
-                  case _                                =>
+                  case _                                         =>
                     mode match
-                      case CheckMode => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
-                      case NormalMode if request.isAgent => Redirect(routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode))
-                      case _ => Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
+                      case CheckMode                     => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
+                      case NormalMode if request.isAgent =>
+                        Redirect(routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode))
+                      case _                             => Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
                 }
               }
         )
