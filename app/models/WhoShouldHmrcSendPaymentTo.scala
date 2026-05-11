@@ -19,8 +19,8 @@ package models
 import play.api.libs.json.*
 
 enum WhoShouldHmrcSendPaymentTo(val value: String):
-  case CharityOrCASC extends WhoShouldHmrcSendPaymentTo("Charity/CASC")
-  case AgentOrNominee extends WhoShouldHmrcSendPaymentTo("Agent/Nominee")
+  case CharityOrCASC extends WhoShouldHmrcSendPaymentTo("business")
+  case AgentOrNominee extends WhoShouldHmrcSendPaymentTo("taxAgent")
 
   override def toString: String = value
 

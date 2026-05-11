@@ -108,6 +108,7 @@ charityExempt.bullet.2 = museum or gallery
 charityExempt.bullet.3 = housing association
 charityExempt.heading = Your charity is exempt
 charityExempt.p1 = The charity is exempt from registering with a regulator because it is a:
+charityExempt.agent.p1 = Your charity is exempt from registering with a regulator because it is a:
 charityExempt.title = Your charity is exempt
 
 charityRegulatorNumber.caption = Provide organisation details
@@ -117,6 +118,7 @@ charityRegulatorNumber.error.required = Enter a charity regulator number
 charityRegulatorNumber.heading = What is the charity regulator number?
 charityRegulatorNumber.hint = This can be up to 20 numerical characters like 123456789 and does not include letters.
 charityRegulatorNumber.missingDetails = confirm your charity regulator number
+charityRegulatorNumber.agent.missingDetails = confirm the charity regulator number
 charityRegulatorNumber.title = What is the charity regulator number?
 
 charityRepaymentDashboard.heading = Charity Repayment Dashboard
@@ -149,6 +151,7 @@ checkYourCommunityBuildingsSchedule.table.column.6 = Amount of donations receive
 checkYourCommunityBuildingsSchedule.table.column.7 = Tax year 2 ending 5 April
 checkYourCommunityBuildingsSchedule.table.column.8 = Amount of donations received in tax year 2 (£)
 checkYourCommunityBuildingsSchedule.title = Check your Community Buildings schedule
+checkYourCommunityBuildingsSchedule.agent.title = Check this Community Buildings schedule
 
 checkYourConnectedCharitiesSchedule.caption = Add Connected Charities schedule
 checkYourConnectedCharitiesSchedule.error.required = Select ‘Yes’ if you need to update this Connected Charities schedule
@@ -189,6 +192,7 @@ checkYourGiftAidSchedule.agent.title = Check this Gift Aid schedule
 checkYourOtherIncomeSchedule.caption = Add Other Income schedule
 checkYourOtherIncomeSchedule.error.required = Select ‘Yes’ if you need to update this Other Income schedule
 checkYourOtherIncomeSchedule.heading = Check your Other Income schedule
+checkYourOtherIncomeSchedule.agent.heading = Check this Other Income schedule
 checkYourOtherIncomeSchedule.hint = Do you need to update this Other Income schedule?
 checkYourOtherIncomeSchedule.radios.no = No, continue with Other Income schedule
 checkYourOtherIncomeSchedule.summary.item.1 = Adjustment for Other Income previously over-claimed
@@ -395,22 +399,26 @@ nameOfCharityRegulator.error.required = Select the name of the charity regulator
 nameOfCharityRegulator.heading = What is the name of the charity regulator?
 nameOfCharityRegulator.legend = What is the name of the charity regulator?
 nameOfCharityRegulator.missingDetails = confirm your charity regulator name
+nameOfCharityRegulator.agent.missingDetails = confirm the charity regulator name
 nameOfCharityRegulator.radio.four = Office of the Scottish Charity Regulator
 nameOfCharityRegulator.radio.one = Charity Commission for England and Wales
 nameOfCharityRegulator.radio.three = Charity is not registered with a regulator
 nameOfCharityRegulator.radio.two = Charity Commission for Northern Ireland
 nameOfCharityRegulator.title = What is the name of the charity regulator?
 
+organisationDetailsCheckYourAnswers.charityDetails.subheader = Charity details
+organisationDetailsCheckYourAnswers.authorisedOfficialDetails.subheader = Authorised Official’s details
 organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.change.hidden = change authorised official’s details
-organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.label = Authorised official’s details
+organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.label = Official’s details
 organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.change.hidden = change authorised official’s UK address
-organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.label = Authorised official’s UK address
+organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.label = UK address
+organisationDetailsCheckYourAnswers.corporateTrusteeDetails.subheader = Corporate Trustee’s details
 organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.change.hidden = change corporate trustee claim
-organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label = Corporate trustee claim
+organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label = Is the corporate trustee making this claim?
 organisationDetailsCheckYourAnswers.CorporateTrusteeDetails.change.hidden = change corporate trustee details
-organisationDetailsCheckYourAnswers.CorporateTrusteeDetails.label = Corporate trustee details
+organisationDetailsCheckYourAnswers.CorporateTrusteeDetails.label = Trustee’s details
 organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.change.hidden = change corporate trustee UK address
-organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label = Corporate trustee UK address
+organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label = UK address
 organisationDetailsCheckYourAnswers.caption = Provide organisation details
 organisationDetailsCheckYourAnswers.charityRegulatorName.EnglandAndWales.label = Charity Commission for England and Wales
 organisationDetailsCheckYourAnswers.charityRegulatorName.NorthernIreland.label = Charity Commission for Northern Ireland
@@ -425,10 +433,49 @@ organisationDetailsCheckYourAnswers.heading = Check your organisation details
 organisationDetailsCheckYourAnswers.reasonNotRegistered.excepted.label = Your charity is excepted
 organisationDetailsCheckYourAnswers.reasonNotRegistered.exempt.label = Your charity is exempt
 organisationDetailsCheckYourAnswers.reasonNotRegistered.label = Registered with regulator
-organisationDetailsCheckYourAnswers.reasonNotRegistered.lowIncome.label = Your charity is located in England or Wales and your income is less than £5,000 per year
+organisationDetailsCheckYourAnswers.reasonNotRegistered.LowIncome.label = Your charity is located in England or Wales and your income is less than £5,000 per year
 organisationDetailsCheckYourAnswers.reasonNotRegistered.missing.label = missing value
-organisationDetailsCheckYourAnswers.reasonNotRegistered.waiting.label = Your charity is based in Northern Ireland and you are awaiting registration with the Charity Commission for Northern Ireland (CCNI)
+organisationDetailsCheckYourAnswers.reasonNotRegistered.Waiting.label = Your charity is based in Northern Ireland and you are awaiting registration with the Charity Commission for Northern Ireland (CCNI)
 organisationDetailsCheckYourAnswers.title = Check your organisation details
+
+agentOrganisationDetailsCheckYourAnswers.caption = Provide organisation details
+agentOrganisationDetailsCheckYourAnswers.title = Check your organisation details
+agentOrganisationDetailsCheckYourAnswers.heading = Check your organisation details
+agentOrganisationDetailsCheckYourAnswers.charityDetails.subheader = Charity details
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.label = Charity regulator name
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorNumber.label = Charity regulator number
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.label = Reason for not registering
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.LowIncome.label = The charity is located in England or Wales and your income is less than £5,000 per year
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.Excepted.label = The charity is excepted.
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.Exempt.label = The charity is exempt.
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.Waiting.label = The charity is based in Northern Ireland and you are awaiting registration with the Charity Commission for Northern Ireland (CCNI)
+agentOrganisationDetailsCheckYourAnswers.charityDetails.sendPaymentTo.label = Send payment to
+agentOrganisationDetailsCheckYourAnswers.agentDetails.subheader = Agent details
+agentOrganisationDetailsCheckYourAnswers.agentDetails.telephoneNumber.label = Telephone number
+agentOrganisationDetailsCheckYourAnswers.agentDetails.ukAddress.label = UK address
+agentOrganisationDetailsCheckYourAnswers.agentDetails.postcode.label = Postcode
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.EnglandAndWales.label = Charity Commission for England and Wales
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.NorthernIreland.label = Charity Commission for Northern Ireland
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.Scottish.label = Office of the Scottish Charity Regulator
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.None.label = Charity is not registered with a regulator
+
+reasonNotRegistered.excepted.heading = The charity is excepted.
+
+reasonNotRegistered.excepted.description = The charity is excepted as the charity’s annual income is £100,000 or less and is classed as one of the following:
+
+reasonNotRegistered.excepted.bullet1 = a church or chapel
+reasonNotRegistered.excepted.bullet2 = a charity that provides premises for schools
+reasonNotRegistered.excepted.bullet3 = a scout or guide group
+reasonNotRegistered.excepted.bullet4 = a charitable service of the armed forces
+reasonNotRegistered.excepted.bullet5 = a students’ union
+
+reasonNotRegistered.exempt.heading=The charity is exempt.
+
+reasonNotRegistered.exempt.description=The charity is exempt from registering with a regulator because it is a:
+
+reasonNotRegistered.exempt.bullet1 = university or school
+reasonNotRegistered.exempt.bullet2 = museum or gallery
+reasonNotRegistered.exempt.bullet3 = housing association
 
 organisationDetailsIncompleteAnswers.heading = This claim cannot be setup
 organisationDetailsIncompleteAnswers.message = You need to provide the following details to continue:
@@ -438,6 +485,7 @@ organisationDetailsIncompleteAnswers.warning = This claim cannot be setup becaus
 
 otherIncomeScheduleUploadSuccessful.message.1 = Upload successful
 otherIncomeScheduleUploadSuccessful.message.2 = You have successfully attached your Other Income schedule.
+otherIncomeScheduleUploadSuccessful.agent.message.2 = You have successfully attached this Other Income schedule.
 otherIncomeScheduleUploadSuccessful.title = Upload successful
 
 phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in new tab)</a> will help us to improve it.
@@ -446,6 +494,9 @@ phasebanner.phase=Beta
 problemUpdatingCommunityBuildingsScheduleUnknownError.heading = There is a problem uploading your Community Buildings schedule
 problemUpdatingCommunityBuildingsScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
 problemUpdatingCommunityBuildingsScheduleUnknownError.title = There is a problem uploading your Community Buildings schedule
+problemUpdatingCommunityBuildingsScheduleUnknownError.agent.heading = There is a problem uploading this schedule
+problemUpdatingCommunityBuildingsScheduleUnknownError.agent.hint = This file could not be uploaded. You can try uploading the file again.
+problemUpdatingCommunityBuildingsScheduleUnknownError.agent.title = There is a problem uploading this schedule
 
 problemUpdatingCommunityBuildingsScheduleQuarantine.heading = There is a problem uploading your Community Buildings schedule
 problemUpdatingCommunityBuildingsScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
@@ -471,14 +522,23 @@ problemUpdatingOtherIncomeScheduleQuarantine.agent.title = There is a problem up
 problemUpdatingOtherIncomeScheduleUnknownError.heading = There is a problem uploading your Other Income schedule
 problemUpdatingOtherIncomeScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
 problemUpdatingOtherIncomeScheduleUnknownError.title = There is a problem uploading your Other Income schedule
+problemUpdatingOtherIncomeScheduleUnknownError.agent.heading = There is a problem uploading this schedule
+problemUpdatingOtherIncomeScheduleUnknownError.agent.hint = This file could not be uploaded. You can try uploading the file again.
+problemUpdatingOtherIncomeScheduleUnknownError.agent.title = There is a problem uploading this schedule
 
 problemUpdatingConnectedCharitiesScheduleUnknownError.heading = There is a problem uploading your Connected Charities schedule
 problemUpdatingConnectedCharitiesScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
 problemUpdatingConnectedCharitiesScheduleUnknownError.title = There is a problem uploading your Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleUnknownError.agent.heading = There is a problem uploading this schedule
+problemUpdatingConnectedCharitiesScheduleUnknownError.agent.hint = This file could not be uploaded. You can try uploading the file again.
+problemUpdatingConnectedCharitiesScheduleUnknownError.agent.title = There is a problem uploading this schedule
 
 problemUpdatingGiftAidScheduleUnknownError.heading = There is a problem uploading your Gift Aid schedule
 problemUpdatingGiftAidScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
 problemUpdatingGiftAidScheduleUnknownError.title = There is a problem uploading your Gift Aid schedule
+problemUpdatingGiftAidScheduleUnknownError.agent.heading = There is a problem uploading this schedule
+problemUpdatingGiftAidScheduleUnknownError.agent.hint = This file could not be uploaded. You can try uploading the file again.
+problemUpdatingGiftAidScheduleUnknownError.agent.title = There is a problem uploading this schedule
 
 problemUpdatingGiftAidScheduleQuarantine.heading = There is a problem uploading your Gift Aid schedule
 problemUpdatingGiftAidScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
@@ -530,11 +590,13 @@ problemWithGiftAidSchedule.warning = We cannot accept the file because it has er
 
 problemWithOtherIncomeSchedule.caption = Add Other Income schedule
 problemWithOtherIncomeSchedule.heading = There is a problem with the data in your Other Income schedule
+problemWithOtherIncomeSchedule.agent.heading = There is a problem with the data in this Other Income schedule
 problemWithOtherIncomeSchedule.link.attachUpdatedSchedule = Attach an updated Other Income schedule
 problemWithOtherIncomeSchedule.link.deleteSchedule = Delete schedule
 problemWithOtherIncomeSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Other Income donations (opens in new tab)</a>.
 problemWithOtherIncomeSchedule.list.item.2 = Delete this Other Income schedule.
 problemWithOtherIncomeSchedule.list.item.3 = Update your spreadsheet.
+problemWithOtherIncomeSchedule.agent.list.item.3 = Update the spreadsheet.
 problemWithOtherIncomeSchedule.list.item.4 = Upload the updated spreadsheet.
 problemWithOtherIncomeSchedule.subheading.1 = What you can do next
 problemWithOtherIncomeSchedule.subheading.2 = Summary of errors
@@ -547,6 +609,7 @@ reasonNotRegisteredWithRegulator.caption = Provide organisation details
 reasonNotRegisteredWithRegulator.error.required = Select why the charity is not registered with a regulator
 reasonNotRegisteredWithRegulator.heading = Why is the charity not registered with a regulator?
 reasonNotRegisteredWithRegulator.missingDetails = confirm why you’re not registered with a regulator
+reasonNotRegisteredWithRegulator.agent.missingDetails = confirm why the charity is not registered with a regulator
 reasonNotRegisteredWithRegulator.radio.Excepted = Your charity is excepted
 reasonNotRegisteredWithRegulator.radio.Exempt = Your charity is exempt
 reasonNotRegisteredWithRegulator.radio.LowIncome = Your charity is located in England or Wales and your income is less than £5,000 per year
@@ -690,7 +753,7 @@ uploadGiftAidSchedule.form.upload-file.submit = Continue
 uploadGiftAidSchedule.heading = Upload a Gift Aid schedule
 uploadGiftAidSchedule.input.label = Upload a file
 uploadGiftAidSchedule.paragraph.one = To claim Gift Aid, you need to upload a completed Gift Aid schedule with details of your donors and donations. You can save your claim without uploading the Gift Aid schedule, but you need to upload a Gift Aid schedule before submitting your claim.
-uploadGiftAidSchedule.agent.paragraph.one = To claim Gift Aid for your client, you need to upload a completed Gift Aid schedule with details of donors and donations. You can save this claim without uploading the Gift Aid schedule, but you need to upload a Gift Aid schedule before before submitting this claim.
+uploadGiftAidSchedule.agent.paragraph.one = To claim Gift Aid for your client, you need to upload a completed Gift Aid schedule with details of donors and donations. You can save this claim without uploading the Gift Aid schedule, but you need to upload a Gift Aid schedule before submitting this claim.
 uploadGiftAidSchedule.paragraph.url = If you have not completed a Gift Aid schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Gift Aid schedule here (opens in new tab)</a>.
 uploadGiftAidSchedule.title = Upload a Gift Aid schedule
 
@@ -702,7 +765,7 @@ uploadOtherIncomeSchedule.form.upload-file.submit = Continue
 uploadOtherIncomeSchedule.heading = Upload an Other Income schedule
 uploadOtherIncomeSchedule.input.label = Upload a file
 uploadOtherIncomeSchedule.paragraph.one = To claim Other Income, you need to upload a completed Other Income schedule with details of your donors and donations. You can save your claim without uploading the Other Income schedule, but you need to upload an Other Income schedule before submitting your claim.
-uploadOtherIncomeSchedule.agent.paragraph.one = To claim Other Income for your client, you need to upload a completed Gift Aid schedule with details of donors and donations. You can save this claim without uploading the Other Income schedule, but you need to upload a Other Income schedule before before submitting this claim.
+uploadOtherIncomeSchedule.agent.paragraph.one = To claim Other Income for your client, you need to upload a completed Gift Aid schedule with details of donors and donations. You can save this claim without uploading the Other Income schedule, but you need to upload a Other Income schedule before submitting this claim.
 uploadOtherIncomeSchedule.paragraph.url = If you have not completed an Other Income schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download an Other Income schedule here (opens in new tab)</a>.
 uploadOtherIncomeSchedule.title = Upload an Other Income schedule
 
@@ -843,9 +906,8 @@ claimComplete.printSummaryLink = <a class="govuk-link" href="{0}">Print a summar
 aboutGiftAidSmallDonationsScheme.caption = Provide GASDS donation details
 aboutGiftAidSmallDonationsScheme.heading = About Gift Aid Small Donations Scheme schedule
 aboutGiftAidSmallDonationsScheme.title = About Gift Aid Small Donations Scheme schedule
-aboutGiftAidSmallDonationsScheme.paragraph.one.part1 = Use this service to claim payments under the Gift Aid Small Donations Scheme (GASDS)
-aboutGiftAidSmallDonationsScheme.paragraph.one.part2 = . You can add claims for up to 3 tax years.
-aboutGiftAidSmallDonationsScheme.paragraph.one.agent = for your client
+aboutGiftAidSmallDonationsScheme.paragraph.one = Use this service to claim payments under the Gift Aid Small Donations Scheme (GASDS). You can add claims for up to 3 tax years.
+aboutGiftAidSmallDonationsScheme.paragraph.one.agent = Use this service to claim payments under the Gift Aid Small Donations Scheme (GASDS) for your client. You can add claims for up to 3 tax years.
 aboutGiftAidSmallDonationsScheme.paragraph.two = GASDS applies to cash donations of £30 or less where the charity or Community Amateur Sports Club does not have a Gift Aid declaration.
 
 adjustmentToGiftAidOverclaimed.caption = Provide GASDS donation details
@@ -934,6 +996,7 @@ agentPostcode.caption = Provide organisation details
 agentPostcode.error.format = Enter a postcode in the correct format
 agentPostcode.error.length = Postcode must be 8 characters or less
 agentPostcode.error.required = Enter a postcode
+agentPostcode.missingDetails = confirm if you have a postcode
 
 gasdsClaimType.title = Gift Aid Small Donations Scheme (GASDS) details
 gasdsClaimType.heading = Gift Aid Small Donations Scheme (GASDS) details
@@ -978,11 +1041,13 @@ enterTelephoneNumber.p = You must provide a phone number so HM Revenue & Customs
 enterTelephoneNumber.error.required = Enter a telephone number
 enterTelephoneNumber.error.length = Telephone number must be 35 characters or less
 enterTelephoneNumber.error.format = Enter a telephone number in the correct format
+enterTelephoneNumber.missingDetails = confirm a telephone number
 
 doYouHaveAgentUKAddress.title = Do you have a UK address?
 doYouHaveAgentUKAddress.heading = Do you have a UK address?
 doYouHaveAgentUKAddress.caption = Provide organisation details
 doYouHaveAgentUKAddress.error.required = Select ‘Yes’ if you have a UK address
+doYouHaveAgentUKAddress.missingDetails = confirm if you have a UK address
 
 charitiesReferenceNumber.caption = Provide charity repayment claim details
 charitiesReferenceNumber.error.length = HMRC charities reference number must be 7 characters or less
@@ -998,6 +1063,7 @@ whoShouldWeSendPaymentTo.caption = Provide organisation details
 whoShouldWeSendPaymentTo.radio.charityOrCasc = Charity/Community Amateur Sports Club (CASC)
 whoShouldWeSendPaymentTo.radio.agentOrNominee = Agent/Nominee
 whoShouldWeSendPaymentTo.error.required = Select who HMRC should send payment to
+whoShouldWeSendPaymentTo.missingDetails = confirm who HMRC should send payment to
 
 deleteAgentRepaymentClaim.title =  Delete repayment claim
 deleteAgentRepaymentClaim.heading = Delete repayment claim

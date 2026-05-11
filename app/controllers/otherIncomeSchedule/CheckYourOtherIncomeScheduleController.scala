@@ -62,7 +62,8 @@ class CheckYourOtherIncomeScheduleController @Inject() (
                 otherIncomeScheduleData = otherIncomeScheduleData,
                 otherIncomes = paginationResult.paginatedData,
                 paginationViewModel = paginationResult.paginationViewModel,
-                paginationStatus = paginationResult
+                paginationStatus = paginationResult,
+                isAgent = request.isAgent
               )
             )
           }
@@ -91,7 +92,8 @@ class CheckYourOtherIncomeScheduleController @Inject() (
                         otherIncomeScheduleData = otherIncomeScheduleData,
                         otherIncomes = paginationResult.paginatedData,
                         paginationViewModel = paginationResult.paginationViewModel,
-                        paginationStatus = paginationResult
+                        paginationStatus = paginationResult,
+                        isAgent = request.isAgent
                       )
                     )
                   )

@@ -215,6 +215,29 @@ class WhoShouldWeSendPaymentToControllerSpec extends ControllerSpec {
         }
       }
 
+      "should redirect CYA when valid data is submitted in checkmode" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, routes.WhoShouldWeSendPaymentToController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody(
+                "value" -> WhoShouldHmrcSendPaymentTo.AgentOrNominee.value
+              )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+          )
+        }
+      }
+
       "should return BadRequest when no option selected" in {
         val sessionData = completeRepaymentDetailsAnswersSession
 

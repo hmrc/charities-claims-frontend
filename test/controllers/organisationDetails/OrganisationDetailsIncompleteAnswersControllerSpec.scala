@@ -22,6 +22,7 @@ import controllers.ControllerSpec
 import views.html.OrganisationDetailsIncompleteAnswersView
 import models.*
 import play.api.Application
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec {
 
@@ -520,6 +521,103 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
           val result = route(application, request).value
 
           val view = application.injector.instanceOf[OrganisationDetailsIncompleteAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
+            missingFields
+          ).body
+        }
+      }
+
+      "should render the page with default missing fields for agent user when no agent answers present" in {
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(
+            agentUserOrganisationDetailsAnswers = None
+          )
+
+        given application: Application =
+          applicationBuilder(sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        val isCASCCharityRef = false
+
+        val defaultMissingFields =
+          AgentUserOrganisationDetailsAnswers.getMissingFields(
+            None,
+            isCASCCharityRef
+          )
+
+        running(application) {
+
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(
+              GET,
+              routes.OrganisationDetailsIncompleteAnswersController.onPageLoad.url
+            )
+
+          val result = route(application, request).value
+
+          val view =
+            application.injector.instanceOf[OrganisationDetailsIncompleteAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
+            defaultMissingFields
+          ).body
+        }
+      }
+
+      "should render the page with missing fields for incomplete agent answers" in {
+
+        val repaymentClaimDetailsDefaultAnswers =
+          RepaymentClaimDetailsAnswers(
+            claimingGiftAid = Some(true),
+            claimingTaxDeducted = Some(true),
+            claimingUnderGiftAidSmallDonationsScheme = Some(false),
+            claimingReferenceNumber = Some(false)
+          )
+
+        val agentAnswers =
+          AgentUserOrganisationDetailsAnswers(
+            nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales)
+          )
+
+        val sessionData =
+          SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some("123"),
+            lastUpdatedReference = Some("123"),
+            repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsDefaultAnswers),
+            agentUserOrganisationDetailsAnswers = Some(agentAnswers)
+          )
+
+        given application: Application =
+          applicationBuilder(sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        val isCASCCharityRef = false
+
+        val missingFields =
+          AgentUserOrganisationDetailsAnswers.getMissingFields(
+            Some(agentAnswers),
+            isCASCCharityRef
+          )
+
+        running(application) {
+
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(
+              GET,
+              routes.OrganisationDetailsIncompleteAnswersController.onPageLoad.url
+            )
+
+          val result = route(application, request).value
+
+          val view =
+            application.injector.instanceOf[OrganisationDetailsIncompleteAnswersView]
 
           status(result) shouldEqual OK
 

@@ -41,7 +41,6 @@ class AgentPostcodeController @Inject() (
 
   val form: Form[String] = formProvider()
 
-  // TODO - add dataguard to check that agent has UK postcode
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetData()
@@ -58,7 +57,6 @@ class AgentPostcodeController @Inject() (
         else Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
       }
 
-  // TODO - add dataguard to check that agent has UK postcode
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
     actions
       .authAndGetData()

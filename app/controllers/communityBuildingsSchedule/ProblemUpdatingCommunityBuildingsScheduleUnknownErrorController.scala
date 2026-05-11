@@ -35,7 +35,8 @@ class ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController @Inject() 
         view(
           messagesKeyPrefix = "problemUpdatingCommunityBuildingsScheduleUnknownError",
           submitAction = routes.ProblemUpdatingCommunityBuildingsScheduleUnknownErrorController.onSubmit,
-          dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad
+          dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad,
+          isAgent = request.isAgent
         )
       )
     }

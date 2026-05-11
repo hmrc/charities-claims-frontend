@@ -72,7 +72,12 @@ class EnterTelephoneNumberController @Inject() (
             value =>
               saveService
                 .save(AgentUserOrganisationDetailsAnswers.setDaytimeTelephoneNumber(value))
-                .map(_ => Redirect(routes.AgentHasUKAddressController.onPageLoad(NormalMode)))
+                .map(_ =>
+                  mode match {
+                    case NormalMode => Redirect(routes.AgentHasUKAddressController.onPageLoad(mode))
+                    case CheckMode  => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
+                  }
+                )
           )
       }
 }

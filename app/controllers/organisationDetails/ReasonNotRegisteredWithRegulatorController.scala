@@ -20,13 +20,14 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.RadioListFormProvider
-import models.{Mode, NameOfCharityRegulator, OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator, SessionData}
+import models.*
 import models.Mode.*
+import models.SessionData.isCASCCharityReference
+import models.requests.DataRequest
 import play.api.data.Form
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.*
 import services.SaveService
 import views.html.ReasonNotRegisteredWithRegulatorView
-import models.SessionData.isCASCCharityReference
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -44,21 +45,15 @@ class ReasonNotRegisteredWithRegulatorController @Inject() (
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
       given sessionData: SessionData = request.sessionData
-      if isCASCCharityReference then Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+      if isCASCCharityReference then redirectToTaskList
+      else if !isUnregulated(request) then redirectToTaskList
       else {
-        val NameOfCharityAnswer: Option[NameOfCharityRegulator] =
-          OrganisationDetailsAnswers.getNameOfCharityRegulator
-        NameOfCharityAnswer match {
-          case Some(NameOfCharityRegulator.None) =>
-            val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
-              OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
-            Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+        val previousAnswer =
+          if request.isAgent then AgentUserOrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
+          else OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
 
-          case _ =>
-            Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
-        }
+        Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
       }
-
     }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
@@ -68,24 +63,36 @@ class ReasonNotRegisteredWithRegulatorController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
+            val updatedSession = if (request.isAgent) {
+              AgentUserOrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(value)
+            } else {
+              OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(value)
+            }
             saveService
-              .save(OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(value))
-              .map { _ =>
-                value match {
-                  // Excepted/Exempt always flow through A2.3/A2.4 (conditional pages)
-                  case ReasonNotRegisteredWithRegulator.Excepted =>
-                    Redirect(routes.CharityExceptedController.onPageLoad(mode))
-                  case ReasonNotRegisteredWithRegulator.Exempt   =>
-                    Redirect(routes.CharityExemptController.onPageLoad(mode))
-                  // LowIncome/Waiting skip A2.3/A2.4
-                  case _                                         =>
-                    mode match
-                      case CheckMode                     => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
-                      case NormalMode if request.isAgent =>
-                        Redirect(routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode))
-                      case _                             => Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
-                }
-              }
+              .save(updatedSession)
+              .map(_ => Redirect(ReasonNotRegisteredWithRegulatorController.nextPage(value, mode, request.isAgent)))
         )
+    }
+
+  private def redirectToTaskList =
+    Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+
+  private def isUnregulated(request: DataRequest[AnyContent])(using sessionData: SessionData): Boolean = {
+    val regulator =
+      if request.isAgent then AgentUserOrganisationDetailsAnswers.getNameOfCharityRegulator
+      else OrganisationDetailsAnswers.getNameOfCharityRegulator
+
+    regulator.contains(NameOfCharityRegulator.None)
+  }
+}
+
+object ReasonNotRegisteredWithRegulatorController {
+  def nextPage(value: ReasonNotRegisteredWithRegulator, mode: Mode, isAgent: Boolean): Call =
+    (value, mode, isAgent) match {
+      case (ReasonNotRegisteredWithRegulator.Excepted, _, _) => routes.CharityExceptedController.onPageLoad(mode)
+      case (ReasonNotRegisteredWithRegulator.Exempt, _, _)   => routes.CharityExemptController.onPageLoad(mode)
+      case (_, CheckMode, _)                                 => routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
+      case (_, NormalMode, true)                             => routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode)
+      case (_, NormalMode, false)                            => routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)
     }
 }

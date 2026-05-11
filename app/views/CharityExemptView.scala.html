@@ -23,16 +23,21 @@ formHelper: FormWithCSRF,
 govukButton: GovukButton
 )
 
-@(mode: Mode)(implicit request: Request[?], messages: Messages)
+@(mode: Mode, isAgent: Boolean)(implicit request: Request[?], messages: Messages)
+
+@p1Message = @{
+    if (isAgent) "charityExempt.agent.p1"
+    else "charityExempt.p1"
+}
 
 @layout(
-pageTitle = titleNoForm(messages("charityExempt.title"))
+    pageTitle = titleNoForm(messages("charityExempt.title"))
 ) {
 
 <span class="govuk-caption-l">@messages("aboutTheOrganisation.caption")</span>
 <h1 class="govuk-heading-l">@messages("charityExempt.heading")</h1>
 
-<p class="govuk-body">@messages("charityExempt.p1")</p>
+<p class="govuk-body">@messages(p1Message)</p>
 
 <ul class="govuk-list govuk-list--bullet">
     <li>@messages("charityExempt.bullet.1")</li>

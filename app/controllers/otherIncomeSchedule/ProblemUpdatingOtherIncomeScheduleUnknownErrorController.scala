@@ -35,7 +35,8 @@ class ProblemUpdatingOtherIncomeScheduleUnknownErrorController @Inject() (
         view(
           messagesKeyPrefix = "problemUpdatingOtherIncomeScheduleUnknownError",
           submitAction = routes.ProblemUpdatingOtherIncomeScheduleUnknownErrorController.onSubmit,
-          dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad
+          dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad,
+          isAgent = request.isAgent
         )
       )
     }

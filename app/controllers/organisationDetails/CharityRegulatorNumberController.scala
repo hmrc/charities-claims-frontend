@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@
 package controllers.organisationDetails
 
 import com.google.inject.Inject
+import controllers.BaseController
 import controllers.actions.Actions
 import forms.CharityRegulatorNumberFormProvider
 import models.Mode.*
-import controllers.BaseController
 import models.SessionData.isCASCCharityReference
-import models.{Mode, NameOfCharityRegulator, OrganisationDetailsAnswers, SessionData}
+import models.*
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.CharityRegulatorNumberView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,38 +38,98 @@ class CharityRegulatorNumberController @Inject() (
 )(using ec: ExecutionContext)
     extends BaseController {
 
-  val form = formProvider()
+  private val form = formProvider()
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      given sessionData: SessionData = request.sessionData
 
-      if isCASCCharityReference then Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
-      else {
-        val previousAnswer = OrganisationDetailsAnswers.getCharityRegistrationNumber
+      given SessionData = request.sessionData
 
-        val nameOfCharityAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
-        if nameOfCharityAnswer.isEmpty || nameOfCharityAnswer.contains(NameOfCharityRegulator.None)
-        then Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
-        else Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+      if isCASCCharityReference then {
+        Future.successful(
+          Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
+        )
+      } else {
+
+        val regulator = getRegulatorAnswer(request.isAgent)
+
+        if (regulator.isEmpty || regulator.contains(NameOfCharityRegulator.None)) {
+          Future.successful(
+            Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
+          )
+        } else {
+          Future.successful(
+            Ok(
+              view(
+                form.withDefault(getRegistrationNumber(request.isAgent)),
+                mode
+              )
+            )
+          )
+        }
       }
     }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
+
+      given SessionData = request.sessionData
+
       form
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             saveService
-              .save(OrganisationDetailsAnswers.setCharityRegistrationNumber(value))
+              .save(updatedSession(value, request.isAgent))
               .map { _ =>
-                (value, mode) match {
-                  case (_, CheckMode)  => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
-                  case (_, NormalMode) => Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode))
-                }
+                Redirect(
+                  CharityRegulatorNumberController.nextPage(
+                    mode,
+                    request.isAgent
+                  )
+                )
               }
         )
+    }
+
+  private def getRegistrationNumber(isAgent: Boolean)(using
+    SessionData
+  ): Option[String] =
+    if (isAgent)
+      AgentUserOrganisationDetailsAnswers.getCharityRegistrationNumber
+    else
+      OrganisationDetailsAnswers.getCharityRegistrationNumber
+
+  private def getRegulatorAnswer(isAgent: Boolean)(using
+    SessionData
+  ): Option[NameOfCharityRegulator] =
+    if (isAgent)
+      AgentUserOrganisationDetailsAnswers.getNameOfCharityRegulator
+    else
+      OrganisationDetailsAnswers.getNameOfCharityRegulator
+
+  private def updatedSession(
+    value: String,
+    isAgent: Boolean
+  )(using sessionData: SessionData): SessionData =
+    if (isAgent)
+      AgentUserOrganisationDetailsAnswers.setCharityRegistrationNumber(value)
+    else
+      OrganisationDetailsAnswers.setCharityRegistrationNumber(value)
+}
+
+object CharityRegulatorNumberController {
+
+  def nextPage(mode: Mode, isAgent: Boolean): Call =
+    (isAgent, mode) match {
+      case (true, NormalMode) =>
+        routes.WhoShouldWeSendPaymentToController.onSubmit(NormalMode)
+
+      case (false, NormalMode) =>
+        routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)
+
+      case (_, CheckMode) =>
+        routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
     }
 }

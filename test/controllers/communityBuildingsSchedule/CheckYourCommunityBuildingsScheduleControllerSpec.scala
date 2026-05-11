@@ -28,6 +28,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import services.{ClaimsService, ClaimsValidationService, SaveService}
+import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.http.HeaderCarrier
 import util.TestResources
 
@@ -169,6 +170,53 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
           status(result) shouldEqual OK
           // the first community building from test json file should be visible on page 1
           content should include("The Vault")
+        }
+      }
+
+      "should render the page for organisation" in {
+        (mockClaimsValidationService
+          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+
+        given application: Application =
+          applicationBuilder(sessionData = validSessionData, AffinityGroup.Organisation).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CheckYourCommunityBuildingsScheduleController.onPageLoad.url)
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          content should include(messages("checkYourCommunityBuildingsSchedule.heading"))
+          content should include(messages("checkYourCommunityBuildingsSchedule.title"))
+          content shouldNot include(messages("checkYourCommunityBuildingsSchedule.agent.heading"))
+          content shouldNot include(messages("checkYourCommunityBuildingsSchedule.agent.title"))
+        }
+      }
+
+      "should render the page for agent" in {
+        (mockClaimsValidationService
+          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+
+        given application: Application = applicationBuilder(sessionData = validSessionData, AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CheckYourCommunityBuildingsScheduleController.onPageLoad.url)
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          content should include(messages("checkYourCommunityBuildingsSchedule.agent.heading"))
+          content should include(messages("checkYourCommunityBuildingsSchedule.agent.title"))
+          content shouldNot include(messages("checkYourCommunityBuildingsSchedule.heading"))
+          content shouldNot include(messages("checkYourCommunityBuildingsSchedule.title"))
         }
       }
     }
