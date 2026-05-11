@@ -67,7 +67,8 @@ class ProblemWithOtherIncomeScheduleController @Inject() (
                       errors = paginationResult.paginatedData,
                       paginationViewModel = paginationResult.paginationViewModel,
                       paginationStatus = paginationResult,
-                      otherIncomeScheduleSpreadsheetGuidanceUrl = appConfig.otherIncomeScheduleSpreadsheetGuidanceUrl
+                      otherIncomeScheduleSpreadsheetGuidanceUrl = appConfig.otherIncomeScheduleSpreadsheetGuidanceUrl,
+                      isAgent = request.isAgent
                     )
                   )
 

@@ -120,14 +120,15 @@ class CharityExemptControllerSpec extends ControllerSpec {
           OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Exempt)
         )
 
-        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.CharityExemptController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view = application.injector.instanceOf[CharityExemptView]
+          val view   = application.injector.instanceOf[CharityExemptView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(NormalMode, true).body
@@ -230,7 +231,8 @@ class CharityExemptControllerSpec extends ControllerSpec {
       "in NormalMode should redirect to WhoShouldWeSendPaymentToController for an agent" in {
         val sessionData = completeRepaymentDetailsAnswersSession
 
-        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -239,7 +241,9 @@ class CharityExemptControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode).url)
+          redirectLocation(result) shouldEqual Some(
+            routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode).url
+          )
         }
       }
 
