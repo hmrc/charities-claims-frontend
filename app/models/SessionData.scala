@@ -210,8 +210,14 @@ object SessionData {
   def isClaimDetailsComplete(using session: SessionData): Boolean =
     session.unsubmittedClaimId.isDefined
       && session.repaymentClaimDetailsAnswers.exists(_.hasRepaymentClaimDetailsCompleteAnswers(session.isAgent))
-      && session.organisationDetailsAnswers.exists(
-        _.hasOrganisationDetailsCompleteAnswers(isCASCCharityReference(using session))
+      && (if session.isAgent then
+            session.agentUserOrganisationDetailsAnswers.exists(
+              _.hasAgentDetailsCompleteAnswers(isCASCCharityReference(using session))
+            )
+          else
+            session.organisationDetailsAnswers.exists(
+              _.hasOrganisationDetailsCompleteAnswers(isCASCCharityReference(using session))
+            )
       )
       && (!shouldUploadConnectedCharitiesSchedule || session.connectedCharitiesScheduleCompleted)
       && (!shouldUploadOtherIncomeSchedule || session.otherIncomeScheduleCompleted)
