@@ -264,14 +264,23 @@ object RepaymentClaimDetailsAnswers {
       )
     }
 
+    val sessionWithUpdatedClaims =
+      if (prevAnswer.exists(_.topUp) && !value.topUp) {
+        clearGasdsClaims(updatedSession)
+      } else {
+        updatedSession
+      }
+
     if (
       prevAnswer.exists(p => p.topUp || p.communityBuildings) &&
       !value.topUp && !value.communityBuildings
     )
-      clearMakingAdjustmentToPreviousClaim(using updatedSession).copy(
+      clearMakingAdjustmentToPreviousClaim(using sessionWithUpdatedClaims).copy(
         giftAidSmallDonationsSchemeDonationDetailsAnswers = None
       )
-    else updatedSession
+    else {
+      sessionWithUpdatedClaims
+    }
   }
 
   private def clearRepaymentClaimTypeFlow(using session: SessionData): SessionData =

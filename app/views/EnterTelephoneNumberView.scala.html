@@ -50,7 +50,8 @@ govukErrorSummary: GovukErrorSummary
                         .withId("value-hint")
                 )
                 .withCssClass("govuk-input--width-20")
-                .withAutocomplete("off")
+                .withInputType("tel")
+                .withAutocomplete("tel")
         )
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
