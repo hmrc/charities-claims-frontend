@@ -264,16 +264,22 @@ object RepaymentClaimDetailsAnswers {
       )
     }
 
-    val sessionWithClearedClaims = if (!value.topUp) clearGasdsClaims(updatedSession) else updatedSession
+    val sessionWithUpdatedClaims =
+      if (prevAnswer.exists(_.topUp) && !value.topUp) {
+        clearGasdsClaims(updatedSession)
+      } else {
+        updatedSession
+      }
+
     if (
       prevAnswer.exists(p => p.topUp || p.communityBuildings) &&
       !value.topUp && !value.communityBuildings
     )
-      clearMakingAdjustmentToPreviousClaim(using sessionWithClearedClaims).copy(
+      clearMakingAdjustmentToPreviousClaim(using sessionWithUpdatedClaims).copy(
         giftAidSmallDonationsSchemeDonationDetailsAnswers = None
       )
     else {
-      sessionWithClearedClaims
+      sessionWithUpdatedClaims
     }
   }
 

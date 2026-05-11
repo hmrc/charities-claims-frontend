@@ -376,7 +376,15 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
         result.giftAidSmallDonationsSchemeDonationDetailsAnswers shouldBe None
       }
 
-      "should clear GASDS claims when topUp is false" in {
+      "should clear GASDS claims when topUp changes from true to false" in {
+        val prevAnswer = Some(
+          GasdsClaimType(
+            topUp = true,
+            communityBuildings = true,
+            connectedCharity = false
+          )
+        )
+
         given session: SessionData = SessionData
           .empty(testCharitiesReference)
           .copy(
@@ -398,10 +406,12 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
             communityBuildings = true,
             connectedCharity = false
           ),
-          None
+          prevAnswer
         )
 
-        result.giftAidSmallDonationsSchemeDonationDetailsAnswers.value.claims shouldBe Some(Seq.empty)
+        result.giftAidSmallDonationsSchemeDonationDetailsAnswers.value.claims shouldBe Some(
+          Seq.empty
+        )
       }
 
       "should NOT clear GASDS details when topUp or communityBuildings still selected" in {
