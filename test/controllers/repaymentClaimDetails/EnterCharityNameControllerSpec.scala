@@ -51,23 +51,70 @@ class EnterCharityNameControllerSpec extends ControllerSpec {
         contentAsString(result) shouldEqual view(form, NormalMode).body
       }
     }
-//
-//    "should NOT return OK and the correct view for a GET in NormalMode - organisation user" in {
-//      given application: Application = applicationBuilder().build()
-//
-//      running(application) {
-//        given request: FakeRequest[AnyContentAsEmpty.type] =
-//          FakeRequest(GET, routes.EnterCharityNameController.onPageLoad(NormalMode).url)
-//
-//        val result = route(application, request).value
-//        val view   = application.injector.instanceOf[EnterCharityNameView]
-//
-//        status(result) shouldEqual SEE_OTHER
-//        redirectLocation(result) shouldEqual Some(
-//          controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
-//        )
-//      }
-//    }
+
+    "should redirect to claims list for a GET in NormalMode - organisation user" in {
+      given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Organisation).build()
+
+      running(application) {
+        given request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(GET, routes.EnterCharityNameController.onPageLoad(NormalMode).url)
+
+        val result = route(application, request).value
+
+        status(result) shouldEqual SEE_OTHER
+        redirectLocation(result) shouldEqual Some(
+          controllers.routes.ClaimsTaskListController.onPageLoad.url
+        )
+      }
+    }
+
+    "should redirect to claims list for a GET in Checkmode - organisation user" in {
+      given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Organisation).build()
+
+      running(application) {
+        given request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(GET, routes.EnterCharityNameController.onPageLoad(CheckMode).url)
+
+        val result = route(application, request).value
+
+        status(result) shouldEqual SEE_OTHER
+        redirectLocation(result) shouldEqual Some(
+          controllers.routes.ClaimsTaskListController.onPageLoad.url
+        )
+      }
+    }
+
+    "should redirect to claims list for a POST in NormalMode - organisation user" in {
+      given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Organisation).build()
+
+      running(application) {
+        given request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(POST, routes.EnterCharityNameController.onSubmit(NormalMode).url)
+
+        val result = route(application, request).value
+
+        status(result) shouldEqual SEE_OTHER
+        redirectLocation(result) shouldEqual Some(
+          controllers.routes.ClaimsTaskListController.onPageLoad.url
+        )
+      }
+    }
+
+    "should redirect to claims list for a POST in Checkmode - organisation user" in {
+      given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Organisation).build()
+
+      running(application) {
+        given request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(POST, routes.EnterCharityNameController.onSubmit(CheckMode).url)
+
+        val result = route(application, request).value
+
+        status(result) shouldEqual SEE_OTHER
+        redirectLocation(result) shouldEqual Some(
+          controllers.routes.ClaimsTaskListController.onPageLoad.url
+        )
+      }
+    }
 //
 //    "must populate the view correctly on a GET when the question has previously been answered" in {
 //
