@@ -35,7 +35,8 @@ class ProblemUpdatingGiftAidScheduleUnknownErrorController @Inject() (
         view(
           messagesKeyPrefix = "problemUpdatingGiftAidScheduleUnknownError",
           submitAction = routes.ProblemUpdatingGiftAidScheduleUnknownErrorController.onSubmit,
-          dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad
+          dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad,
+          isAgent = request.isAgent
         )
       )
     }
