@@ -127,7 +127,7 @@ class ClaimDetailsForTaxYearCheckYourAnswersControllerSpec extends ControllerSpe
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.ClaimDetailsForTaxYearCheckYourAnswersController.onSubmit(1).url)
+            FakeRequest(POST, routes.ClaimDetailsForTaxYearCheckYourAnswersController.onSubmit.url)
 
           val result = route(application, request).value
 
@@ -146,7 +146,7 @@ class ClaimDetailsForTaxYearCheckYourAnswersControllerSpec extends ControllerSpe
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.ClaimDetailsForTaxYearCheckYourAnswersController.onSubmit(1).url)
+            FakeRequest(POST, routes.ClaimDetailsForTaxYearCheckYourAnswersController.onSubmit.url)
 
           val result = route(application, request).value
 

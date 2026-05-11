@@ -44,9 +44,10 @@ class ClaimDetailsForTaxYearCheckYourAnswersControllerISpec
     }
   }
 
-  "POST /check-claim-details-for-tax-year/:index" should {
+  "POST /check-claim-details-for-tax-year" should {
 
     "redirect to claim added page" in {
+      val url   = "/check-claim-details-for-tax-year"
       stubBackend()
 
       val result = post(url)(Json.obj())

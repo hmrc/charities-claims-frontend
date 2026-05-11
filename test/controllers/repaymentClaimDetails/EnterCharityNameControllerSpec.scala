@@ -16,16 +16,15 @@
 
 package controllers.repaymentClaimDetails
 
-import models.Mode.*
 import controllers.ControllerSpec
-import views.html.EnterCharityNameView
-import play.api.Application
 import forms.CharityNameFormProvider
-import models.RepaymentClaimDetailsAnswers
+import models.Mode.*
+import play.api.Application
 import play.api.data.Form
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.auth.core.AffinityGroup
+import views.html.EnterCharityNameView
 
 class EnterCharityNameControllerSpec extends ControllerSpec {
 
