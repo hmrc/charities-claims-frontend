@@ -439,6 +439,7 @@ organisationDetailsIncompleteAnswers.warning = This claim cannot be setup becaus
 
 otherIncomeScheduleUploadSuccessful.message.1 = Upload successful
 otherIncomeScheduleUploadSuccessful.message.2 = You have successfully attached your Other Income schedule.
+otherIncomeScheduleUploadSuccessful.agent.message.2 = You have successfully attached this Other Income schedule.
 otherIncomeScheduleUploadSuccessful.title = Upload successful
 
 phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in new tab)</a> will help us to improve it.
