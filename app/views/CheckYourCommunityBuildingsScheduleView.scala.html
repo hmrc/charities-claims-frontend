@@ -46,8 +46,13 @@
     else "checkYourCommunityBuildingsSchedule.heading"
 }
 
+@titleMessage = @{
+    if (isAgent) "checkYourCommunityBuildingsSchedule.agent.title"
+    else "checkYourCommunityBuildingsSchedule.title"
+}
+
 @layout(
-    pageTitle = titleWithPagination(form, messages("checkYourCommunityBuildingsSchedule.title"), paginationStatus),
+    pageTitle = titleWithPagination(form, messages(titleMessage), paginationStatus),
     showBackLink = true
 ) {
 
