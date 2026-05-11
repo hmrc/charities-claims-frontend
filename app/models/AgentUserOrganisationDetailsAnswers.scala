@@ -22,7 +22,7 @@ import scala.util.{Failure, Success, Try}
 
 final case class AgentUserOrganisationDetailsAnswers(
   nameOfCharityRegulator: Option[NameOfCharityRegulator] = None,
-  unregulatedReason: Option[ReasonNotRegisteredWithRegulator] = None,
+  reasonNotRegisteredWithRegulator: Option[ReasonNotRegisteredWithRegulator] = None,
   charityRegistrationNumber: Option[String] = None,
   whoShouldHmrcSendPaymentTo: Option[WhoShouldHmrcSendPaymentTo] = None,
   daytimeTelephoneNumber: Option[String] = None,
@@ -32,17 +32,18 @@ final case class AgentUserOrganisationDetailsAnswers(
 
   def missingFields(isCASCCharityRef: Boolean): List[String] =
     List(
-      (nameOfCharityRegulator.isEmpty && !isCASCCharityRef)        ->
-        "nameOfCharityRegulator.missingDetails",
+      (nameOfCharityRegulator.isEmpty && !isCASCCharityRef)            -> "nameOfCharityRegulator.agent.missingDetails",
       (nameOfCharityRegulator.contains(NameOfCharityRegulator.None) &&
-        unregulatedReason.isEmpty && !isCASCCharityRef)            ->
-        "reasonNotRegisteredWithRegulator.missingDetails",
+        reasonNotRegisteredWithRegulator.isEmpty && !isCASCCharityRef) -> "reasonNotRegisteredWithRegulator.agent.missingDetails",
       (nameOfCharityRegulator.exists(r =>
         r == NameOfCharityRegulator.EnglandAndWales ||
           r == NameOfCharityRegulator.Scottish ||
           r == NameOfCharityRegulator.NorthernIreland
-      ) && charityRegistrationNumber.isEmpty && !isCASCCharityRef) ->
-        "charityRegulatorNumber.missingDetails"
+      ) && charityRegistrationNumber.isEmpty && !isCASCCharityRef)     -> "charityRegulatorNumber.agent.missingDetails",
+      whoShouldHmrcSendPaymentTo.isEmpty                               -> "whoShouldWeSendPaymentTo.missingDetails",
+      daytimeTelephoneNumber.isEmpty                                   -> "enterTelephoneNumber.missingDetails",
+      doYouHaveAgentUKAddress.isEmpty                                  -> "doYouHaveAgentUKAddress.missingDetails",
+      (doYouHaveAgentUKAddress.contains(true) && postcode.isEmpty)     -> "agentPostcode.missingDetails"
     ).collect { case (true, key) => key }
 
   def hasAgentDetailsCompleteAnswers(isCASCCharityRef: Boolean): Boolean =
@@ -74,7 +75,7 @@ object AgentUserOrganisationDetailsAnswers {
   def from(agentUserOrganisationDetails: AgentUserOrganisationDetails): AgentUserOrganisationDetailsAnswers =
     AgentUserOrganisationDetailsAnswers(
       nameOfCharityRegulator = Some(agentUserOrganisationDetails.nameOfCharityRegulator),
-      unregulatedReason = agentUserOrganisationDetails.unregulatedReason,
+      reasonNotRegisteredWithRegulator = agentUserOrganisationDetails.reasonNotRegisteredWithRegulator,
       charityRegistrationNumber = agentUserOrganisationDetails.charityRegistrationNumber,
       whoShouldHmrcSendPaymentTo = Some(agentUserOrganisationDetails.whoShouldHmrcSendPaymentTo),
       daytimeTelephoneNumber = Some(agentUserOrganisationDetails.daytimeTelephoneNumber),
@@ -93,12 +94,16 @@ object AgentUserOrganisationDetailsAnswers {
     }
 
   private val defaultMissingFields: List[String] = List(
-    "nameOfCharityRegulator.missingDetails",
-    "corporateTrusteeClaim.missingDetails"
+    "nameOfCharityRegulator.agent.missingDetails",
+    "whoShouldWeSendPaymentTo.missingDetails",
+    "enterTelephoneNumber.missingDetails",
+    "doYouHaveAgentUKAddress.missingDetails"
   )
 
   private val defaultMissingFieldsForCHCF: List[String] = List(
-    "corporateTrusteeClaim.missingDetails"
+    "whoShouldWeSendPaymentTo.missingDetails",
+    "enterTelephoneNumber.missingDetails",
+    "doYouHaveAgentUKAddress.missingDetails"
   )
 
   def getNameOfCharityRegulator(using session: SessionData): Option[NameOfCharityRegulator] =
@@ -107,19 +112,25 @@ object AgentUserOrganisationDetailsAnswers {
   def setNameOfCharityRegulator(value: NameOfCharityRegulator)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(nameOfCharityRegulator = Some(v)))
 
-  def getUnregulatedReason(using session: SessionData): Option[ReasonNotRegisteredWithRegulator] =
-    get(_.unregulatedReason)
+  def getReasonNotRegisteredWithRegulator(using session: SessionData): Option[ReasonNotRegisteredWithRegulator] =
+    get(_.reasonNotRegisteredWithRegulator)
 
-  def setUnregulatedReason(value: ReasonNotRegisteredWithRegulator)(using
+  def setReasonNotRegisteredWithRegulator(value: ReasonNotRegisteredWithRegulator)(using
     session: SessionData
   ): SessionData =
-    set(value)((a, v) => a.copy(unregulatedReason = Some(v)))
+    set(value)((a, v) => a.copy(reasonNotRegisteredWithRegulator = Some(v)))
 
   def getWhoShouldHmrcSendPaymentTo(using session: SessionData): Option[WhoShouldHmrcSendPaymentTo] =
     get(_.whoShouldHmrcSendPaymentTo)
 
   def setWhoShouldHmrcSendPaymentTo(value: WhoShouldHmrcSendPaymentTo)(using session: SessionData): SessionData =
     set(value)((a, v) => a.copy(whoShouldHmrcSendPaymentTo = Some(v)))
+
+  def getCharityRegistrationNumber(using session: SessionData): Option[String] =
+    get(_.charityRegistrationNumber)
+
+  def setCharityRegistrationNumber(value: String)(using session: SessionData): SessionData =
+    set(value)((a, v) => a.copy(charityRegistrationNumber = Some(v)))
 
   def getDoYouHaveAgentUKAddress(using session: SessionData): Option[Boolean] =
     get(_.doYouHaveAgentUKAddress)
@@ -170,8 +181,8 @@ object AgentUserOrganisationDetailsAnswers {
       doYouHaveAgentUKAddress = doYouHaveAgentUKAddress,
       postcode = if doYouHaveAgentUKAddress then answers.postcode else None,
       nameOfCharityRegulator = nameOfCharityRegulator,
-      unregulatedReason =
-        if nameOfCharityRegulator == NameOfCharityRegulator.None then answers.unregulatedReason
+      reasonNotRegisteredWithRegulator =
+        if nameOfCharityRegulator == NameOfCharityRegulator.None then answers.reasonNotRegisteredWithRegulator
         else None,
       charityRegistrationNumber =
         if nameOfCharityRegulator != NameOfCharityRegulator.None then answers.charityRegistrationNumber

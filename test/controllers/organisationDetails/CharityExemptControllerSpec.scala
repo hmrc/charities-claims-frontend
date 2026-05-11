@@ -17,7 +17,7 @@
 package controllers.organisationDetails
 
 import controllers.ControllerSpec
-import models.{OrganisationDetailsAnswers, SessionData}
+import models.{AgentUserOrganisationDetailsAnswers, OrganisationDetailsAnswers, SessionData}
 import models.ReasonNotRegisteredWithRegulator.*
 import models.Mode.*
 import play.api.Application
@@ -117,7 +117,7 @@ class CharityExemptControllerSpec extends ControllerSpec {
 
       "should render the page correctly if exempt for an agent" in {
         val sessionData = completeRepaymentDetailsAnswersSession.and(
-          OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Exempt)
+          AgentUserOrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Exempt)
         )
 
         given application: Application =

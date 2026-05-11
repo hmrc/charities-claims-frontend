@@ -20,16 +20,15 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.RadioListFormProvider
-import models.{Mode, NameOfCharityRegulator, OrganisationDetailsAnswers, SessionData}
+import models.*
 import models.Mode.*
 import models.SessionData.isCASCCharityReference
 import play.api.data.Form
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.SaveService
 import views.html.NameOfCharityRegulatorView
 
 import scala.concurrent.{ExecutionContext, Future}
-import play.api.mvc.Call
 
 class NameOfCharityRegulatorController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -47,26 +46,41 @@ class NameOfCharityRegulatorController @Inject() (
       given sessionData: SessionData = request.sessionData
       if isCASCCharityReference then Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
       else {
-        val previousAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
-        Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+        Future.successful(Ok(view(form.withDefault(previousAnswer(request.isAgent)), mode)))
       }
     }
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      val previousAnswer: Option[NameOfCharityRegulator] = OrganisationDetailsAnswers.getNameOfCharityRegulator
-
       form
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             saveService
-              .save(OrganisationDetailsAnswers.setNameOfCharityRegulator(value))
-              .map(_ => Redirect(NameOfCharityRegulatorController.nextPage(value, mode, previousAnswer)))
+              .save(updatedSession(value, request.isAgent))
+              .map(_ =>
+                Redirect(NameOfCharityRegulatorController.nextPage(value, mode, previousAnswer(request.isAgent)))
+              )
         )
     }
 }
+
+private def updatedSession(
+  value: NameOfCharityRegulator,
+  isAgent: Boolean
+)(using sessionData: SessionData): SessionData =
+  if (isAgent)
+    AgentUserOrganisationDetailsAnswers.setNameOfCharityRegulator(value)
+  else
+    OrganisationDetailsAnswers.setNameOfCharityRegulator(value)
+
+private def previousAnswer(isAgent: Boolean)(using sessionData: SessionData) =
+  if (isAgent) {
+    AgentUserOrganisationDetailsAnswers.getNameOfCharityRegulator
+  } else {
+    OrganisationDetailsAnswers.getNameOfCharityRegulator
+  }
 
 object NameOfCharityRegulatorController {
 

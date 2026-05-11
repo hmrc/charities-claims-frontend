@@ -24,7 +24,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ClaimsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.OrganisationDetailsCheckYourAnswersView
+import views.html.{AgentOrganisationDetailsCheckYourAnswersView, OrganisationDetailsCheckYourAnswersView}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,22 +33,32 @@ class OrganisationDetailsCheckYourAnswersController @Inject() (
   actions: Actions,
   claimsService: ClaimsService,
   val controllerComponents: MessagesControllerComponents,
-  view: OrganisationDetailsCheckYourAnswersView
+  orgView: OrganisationDetailsCheckYourAnswersView,
+  agentView: AgentOrganisationDetailsCheckYourAnswersView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      val previousAnswers = request.sessionData.organisationDetailsAnswers
-      Future.successful(Ok(view(previousAnswers, isCASCCharityReference(using request.sessionData))))
+      if (request.isAgent) {
+        val previousAnswers = request.sessionData.agentUserOrganisationDetailsAnswers
+        Future.successful(Ok(agentView(previousAnswers, isCASCCharityReference(using request.sessionData))))
+      } else {
+        val previousAnswers = request.sessionData.organisationDetailsAnswers
+        Future.successful(Ok(orgView(previousAnswers, isCASCCharityReference(using request.sessionData))))
+      }
     }
 
   def onSubmit: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
       val checkAnswers =
-        request.sessionData.organisationDetailsAnswers
-          .exists(_.hasOrganisationDetailsCompleteAnswers(isCASCCharityReference(using request.sessionData)))
+        if (request.isAgent)
+          request.sessionData.agentUserOrganisationDetailsAnswers
+            .exists(_.hasAgentDetailsCompleteAnswers(isCASCCharityReference(using request.sessionData)))
+        else
+          request.sessionData.organisationDetailsAnswers
+            .exists(_.hasOrganisationDetailsCompleteAnswers(isCASCCharityReference(using request.sessionData)))
       if checkAnswers
       then
         claimsService.save.map { _ =>
