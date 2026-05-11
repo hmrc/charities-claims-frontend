@@ -16,16 +16,17 @@
 
 package controllers.organisationDetails
 
-import models.OrganisationDetailsAnswers
-import play.api.Application
-import play.api.mvc.AnyContentAsEmpty
-import play.api.test.FakeRequest
 import controllers.ControllerSpec
 import models.*
+import models.SessionData.isCASCCharityReference
+import play.api.Application
 import play.api.inject.bind
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
 import services.ClaimsService
+import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.http.HeaderCarrier
-import views.html.OrganisationDetailsCheckYourAnswersView
+import views.html.{AgentOrganisationDetailsCheckYourAnswersView, OrganisationDetailsCheckYourAnswersView}
 
 import _root_.scala.concurrent.Future
 
@@ -51,6 +52,43 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           redirectLocation(result) shouldEqual Some(
             controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
           )
+        }
+      }
+      "should render the agent view when user is an agent" in {
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(
+            agentUserOrganisationDetailsAnswers = Some(
+              AgentUserOrganisationDetailsAnswers(
+                nameOfCharityRegulator = Some(NameOfCharityRegulator.Scottish),
+                charityRegistrationNumber = Some("AGENT123")
+              )
+            )
+          )
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(
+              GET,
+              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
+            )
+
+          val result = route(application, request).value
+
+          val view =
+            application.injector
+              .instanceOf[AgentOrganisationDetailsCheckYourAnswersView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            sessionData.agentUserOrganisationDetailsAnswers,
+            isCASCCharityReference(using sessionData)
+          ).body
         }
       }
       "is CH/CF charity ref " - {
@@ -1219,6 +1257,81 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
             routes.OrganisationDetailsIncompleteAnswersController.onPageLoad.url
           )
 
+        }
+      }
+
+      "should save and redirect to ClaimsTaskListController for agent user with complete answers" in {
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(
+            agentUserOrganisationDetailsAnswers = Some(
+              AgentUserOrganisationDetailsAnswers(
+                nameOfCharityRegulator = Some(NameOfCharityRegulator.EnglandAndWales),
+                charityRegistrationNumber = Some("12345"),
+                whoShouldHmrcSendPaymentTo = Some(WhoShouldHmrcSendPaymentTo.CharityOrCASC),
+                daytimeTelephoneNumber = Some("123445"),
+                doYouHaveAgentUKAddress = Some(false)
+              )
+            )
+          )
+
+        val mockClaimsService: ClaimsService = mock[ClaimsService]
+
+        (mockClaimsService
+          .save(using _: HeaderCarrier))
+          .expects(*)
+          .returning(Future.successful(()))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent)
+            .overrides(bind[ClaimsService].toInstance(mockClaimsService))
+            .build()
+
+        running(application) {
+
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(
+              POST,
+              routes.OrganisationDetailsCheckYourAnswersController.onSubmit.url
+            )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
+          )
+        }
+      }
+
+      "should redirect agent user to incomplete answers page when answers are incomplete" in {
+
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.copy(
+            agentUserOrganisationDetailsAnswers = Some(
+              AgentUserOrganisationDetailsAnswers()
+            )
+          )
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(
+              POST,
+              routes.OrganisationDetailsCheckYourAnswersController.onSubmit.url
+            )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+
+          redirectLocation(result) shouldEqual Some(
+            routes.OrganisationDetailsIncompleteAnswersController.onPageLoad.url
+          )
         }
       }
     }

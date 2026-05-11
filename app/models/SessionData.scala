@@ -139,6 +139,14 @@ object SessionData {
       organisationDetails                        <-
         sessionData.organisationDetailsAnswers
           .flatMapTry(OrganisationDetailsAnswers.toOrganisationDetails(_, isCASCCharityReference(using sessionData)))
+      agentOrganisationDetails                   <-
+        sessionData.agentUserOrganisationDetailsAnswers
+          .flatMapTry(
+            AgentUserOrganisationDetailsAnswers.toAgentUserOrganisationDetails(
+              _,
+              isCASCCharityReference(using sessionData)
+            )
+          )
       giftAidSmallDonationsSchemeDonationDetails <-
         sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
           .flatMapTry(
@@ -148,6 +156,7 @@ object SessionData {
       lastUpdatedReference = lastUpdatedReference,
       repaymentClaimDetails = repaymentClaimDetails,
       organisationDetails = organisationDetails,
+      agentUserOrganisationDetails = agentOrganisationDetails,
       giftAidSmallDonationsSchemeDonationDetails = giftAidSmallDonationsSchemeDonationDetails,
       includedAnyAdjustmentsInClaimPrompt = includedAnyAdjustmentsInClaimPrompt,
       understandFalseStatements = understandFalseStatements,

@@ -16,12 +16,18 @@
 
 package controllers.organisationDetails
 
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
 import views.html.CharityExceptedView
 import controllers.actions.Actions
-import models.{Mode, OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator, SessionData}
+import models.{
+  AgentUserOrganisationDetailsAnswers,
+  Mode,
+  OrganisationDetailsAnswers,
+  ReasonNotRegisteredWithRegulator,
+  SessionData
+}
 import models.Mode.*
 import models.SessionData.isCASCCharityReference
 
@@ -38,8 +44,11 @@ class CharityExceptedController @Inject() (
       given sessionData: SessionData = request.sessionData
       if isCASCCharityReference then Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
       else {
-        val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
+        val previousAnswer: Option[ReasonNotRegisteredWithRegulator] = if (request.isAgent) {
+          AgentUserOrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
+        } else {
           OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
+        }
         previousAnswer match {
           case Some(ReasonNotRegisteredWithRegulator.Excepted) => Future.successful(Ok(view(mode)))
           case _                                               => Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
@@ -49,9 +58,15 @@ class CharityExceptedController @Inject() (
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      mode match {
-        case CheckMode  => Future.successful(Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad))
-        case NormalMode => Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
-      }
+      Future.successful(Redirect(CharityExceptedController.nextPage(mode, request.isAgent)))
+    }
+}
+
+object CharityExceptedController {
+  def nextPage(mode: Mode, isAgent: Boolean): Call =
+    (isAgent, mode) match {
+      case (true, NormalMode)  => routes.WhoShouldWeSendPaymentToController.onSubmit(NormalMode)
+      case (false, NormalMode) => routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)
+      case (_, CheckMode)      => routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
     }
 }

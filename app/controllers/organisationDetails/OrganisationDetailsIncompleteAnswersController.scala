@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.actions.Actions
 import models.SessionData.isCASCCharityReference
-import models.{OrganisationDetailsAnswers, SessionData}
+import models.{AgentUserOrganisationDetailsAnswers, OrganisationDetailsAnswers, SessionData}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import views.html.OrganisationDetailsIncompleteAnswersView
 
@@ -34,7 +34,13 @@ class OrganisationDetailsIncompleteAnswersController @Inject() (
     implicit request =>
       val isCASCCharityRef: Boolean = isCASCCharityReference(using request.sessionData)
       val missingFields             =
-        OrganisationDetailsAnswers.getMissingFields(request.sessionData.organisationDetailsAnswers, isCASCCharityRef)
+        if (request.isAgent)
+          AgentUserOrganisationDetailsAnswers.getMissingFields(
+            request.sessionData.agentUserOrganisationDetailsAnswers,
+            isCASCCharityRef
+          )
+        else
+          OrganisationDetailsAnswers.getMissingFields(request.sessionData.organisationDetailsAnswers, isCASCCharityRef)
       Ok(view(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url, missingFields))
   }
 }

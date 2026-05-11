@@ -22,15 +22,16 @@ import controllers.ControllerSpec
 import views.html.NameOfCharityRegulatorView
 import play.api.Application
 import forms.RadioListFormProvider
-import models.{NameOfCharityRegulator, OrganisationDetailsAnswers, SessionData}
+import models.{AgentUserOrganisationDetailsAnswers, NameOfCharityRegulator, OrganisationDetailsAnswers, SessionData}
 import play.api.data.Form
 import models.Mode.*
 import models.NameOfCharityRegulator.*
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
   private val form: Form[NameOfCharityRegulator] = new RadioListFormProvider()(
-    "NameOfCharityRegulator.error.required"
+    "nameOfCharityRegulator.error.required"
   )
 
   "NameOfCharityRegulatorController" - {
@@ -191,6 +192,41 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form.fill(None), NormalMode).body
+        }
+      }
+
+      "should prepopulate using AgentUserOrganisationDetailsAnswers" in {
+
+        val sessionData = completeRepaymentDetailsAnswersSession.and(
+          AgentUserOrganisationDetailsAnswers.setNameOfCharityRegulator(
+            EnglandAndWales
+          )
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent)
+            .build()
+
+        running(application) {
+
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(
+              GET,
+              routes.NameOfCharityRegulatorController
+                .onPageLoad(NormalMode)
+                .url
+            )
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[NameOfCharityRegulatorView]
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual
+            view(
+              form.fill(EnglandAndWales),
+              NormalMode
+            ).body
         }
       }
     }
@@ -470,6 +506,35 @@ class NameOfCharityRegulatorControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual BAD_REQUEST
+        }
+      }
+
+      "should save using AgentUserOrganisationDetailsAnswers and redirect correctly" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession
+            .build()
+
+        running(application) {
+
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(
+              POST,
+              routes.NameOfCharityRegulatorController
+                .onSubmit(NormalMode)
+                .url
+            ).withFormUrlEncodedBody(
+              "value" -> "EnglandAndWales"
+            )
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+
+          redirectLocation(result) shouldEqual Some(
+            routes.CharityRegulatorNumberController.onPageLoad(NormalMode).url
+          )
         }
       }
     }
