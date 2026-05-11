@@ -24,6 +24,7 @@ import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.CharityExemptView
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class CharityExemptControllerSpec extends ControllerSpec {
 
@@ -50,6 +51,7 @@ class CharityExemptControllerSpec extends ControllerSpec {
           )
         }
       }
+
       "should redirect to the ClaimsTaskListController if charity ref start with CH" in {
         val testCharitiesReference: String                      = "CH-test-charities-ref"
         val completeRepaymentDetailsAnswersSession: SessionData = SessionData(
@@ -93,7 +95,8 @@ class CharityExemptControllerSpec extends ControllerSpec {
           redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
-      "should render the page correctly if exempt" in {
+
+      "should render the page correctly if exempt for an organisation" in {
         val sessionData = completeRepaymentDetailsAnswersSession.and(
           OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Exempt)
         )
@@ -108,7 +111,26 @@ class CharityExemptControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[CharityExemptView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(NormalMode).body
+          contentAsString(result) shouldEqual view(NormalMode, false).body
+        }
+      }
+
+      "should render the page correctly if exempt for an agent" in {
+        val sessionData = completeRepaymentDetailsAnswersSession.and(
+          OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Exempt)
+        )
+
+        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CharityExemptController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view = application.injector.instanceOf[CharityExemptView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(NormalMode, true).body
         }
       }
 
@@ -189,7 +211,8 @@ class CharityExemptControllerSpec extends ControllerSpec {
           )
         }
       }
-      "in NormalMode should redirect to CorporateTrusteeClaimController" in {
+
+      "in NormalMode should redirect to CorporateTrusteeClaimController for an organisation" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -201,6 +224,22 @@ class CharityExemptControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
+        }
+      }
+
+      "in NormalMode should redirect to WhoShouldWeSendPaymentToController for an agent" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application = applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.CharityExemptController.onSubmit(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode).url)
         }
       }
 

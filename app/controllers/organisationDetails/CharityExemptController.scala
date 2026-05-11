@@ -41,7 +41,7 @@ class CharityExemptController @Inject() (
         val previousAnswer: Option[ReasonNotRegisteredWithRegulator] =
           OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
         previousAnswer match {
-          case Some(ReasonNotRegisteredWithRegulator.Exempt) => Future.successful(Ok(view(mode)))
+          case Some(ReasonNotRegisteredWithRegulator.Exempt) => Future.successful(Ok(view(mode, request.isAgent)))
           case _                                             => Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
         }
       }
@@ -49,9 +49,13 @@ class CharityExemptController @Inject() (
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      mode match {
-        case CheckMode  => Future.successful(Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad))
-        case NormalMode => Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
+      (mode, request.isAgent) match {
+        case (CheckMode, _)      =>
+          Future.successful(Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad))
+        case (NormalMode, false) =>
+          Future.successful(Redirect(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)))
+        case (NormalMode, true)  =>
+          Future.successful(Redirect(routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode)))
       }
     }
 }
