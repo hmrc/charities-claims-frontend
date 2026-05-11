@@ -18,7 +18,7 @@ package controllers.communityBuildingsSchedule
 
 import controllers.ControllerSpec
 import models.RepaymentClaimDetailsAnswers
-import play.api.{Application, inject}
+import play.api.{inject, Application}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.libs.json.Json
@@ -348,16 +348,16 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
         .expects(claimId, fileUploadReference, *)
         .returning(Future.successful(testValidatingResponse))
 
-      given application: Application = applicationBuilder(sessionData = sessionData,
-                                        affinityGroup = AffinityGroup.Organisation)
-        .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
-        .build()
+      given application: Application =
+        applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation)
+          .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+          .build()
 
       running(application) {
         given request: FakeRequest[AnyContentAsEmpty.type] =
           FakeRequest(GET, routes.YourCommunityBuildingsScheduleUploadController.onPageLoad.url)
 
-        val result = route(application, request).value
+        val result  = route(application, request).value
         val content = contentAsString(result)
 
         status(result) shouldEqual OK
@@ -374,16 +374,16 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
         .expects(claimId, fileUploadReference, *)
         .returning(Future.successful(testValidatingResponse))
 
-      given application: Application = applicationBuilder(sessionData = sessionData,
-        affinityGroup = AffinityGroup.Agent)
-        .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
-        .build()
+      given application: Application =
+        applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent)
+          .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+          .build()
 
       running(application) {
         given request: FakeRequest[AnyContentAsEmpty.type] =
           FakeRequest(GET, routes.YourCommunityBuildingsScheduleUploadController.onPageLoad.url)
 
-        val result = route(application, request).value
+        val result  = route(application, request).value
         val content = contentAsString(result)
 
         status(result) shouldEqual OK
