@@ -151,6 +151,7 @@ checkYourCommunityBuildingsSchedule.table.column.6 = Amount of donations receive
 checkYourCommunityBuildingsSchedule.table.column.7 = Tax year 2 ending 5 April
 checkYourCommunityBuildingsSchedule.table.column.8 = Amount of donations received in tax year 2 (£)
 checkYourCommunityBuildingsSchedule.title = Check your Community Buildings schedule
+checkYourCommunityBuildingsSchedule.agent.title = Check this Community Buildings schedule
 
 checkYourConnectedCharitiesSchedule.caption = Add Connected Charities schedule
 checkYourConnectedCharitiesSchedule.error.required = Select ‘Yes’ if you need to update this Connected Charities schedule
