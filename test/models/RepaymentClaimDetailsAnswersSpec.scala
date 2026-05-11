@@ -376,6 +376,34 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
         result.giftAidSmallDonationsSchemeDonationDetailsAnswers shouldBe None
       }
 
+      "should clear GASDS claims when topUp is false" in {
+        given session: SessionData = SessionData
+          .empty(testCharitiesReference)
+          .copy(
+            giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+              GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+                adjustmentForGiftAidOverClaimed = Some(BigDecimal(45)),
+                claims = Some(
+                  Seq(
+                    Some(GiftAidSmallDonationsSchemeClaimAnswers(2026, Some(100)))
+                  )
+                )
+              )
+            )
+          )
+
+        val result = RepaymentClaimDetailsAnswers.setGasdsClaimType(
+          GasdsClaimType(
+            topUp = false,
+            communityBuildings = true,
+            connectedCharity = false
+          ),
+          None
+        )
+
+        result.giftAidSmallDonationsSchemeDonationDetailsAnswers.value.claims shouldBe Some(Seq.empty)
+      }
+
       "should NOT clear GASDS details when topUp or communityBuildings still selected" in {
         val prevAnswer = Some(GasdsClaimType(topUp = true, communityBuildings = false, connectedCharity = false))
 
