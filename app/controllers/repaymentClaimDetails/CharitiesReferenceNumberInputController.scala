@@ -20,7 +20,6 @@ import models.Mode.*
 import services.SaveService
 import connectors.ClaimsConnector
 import play.api.mvc.*
-import play.api.Logging
 import com.google.inject.Inject
 import controllers.BaseController
 import views.html.CharitiesReferenceNumberInputView
@@ -40,8 +39,7 @@ class CharitiesReferenceNumberInputController @Inject() (
   claimsConnector: ClaimsConnector,
   saveService: SaveService
 )(using ec: ExecutionContext)
-    extends BaseController
-    with Logging {
+    extends BaseController {
 
   val form: Form[String] = formProvider(
     "charitiesReferenceNumber.error.required",
@@ -73,15 +71,10 @@ class CharitiesReferenceNumberInputController @Inject() (
             value =>
               claimsConnector.hasUnsubmittedClaim(value).flatMap {
                 case response @ true  =>
-                  logger
-                    .error(
-                      s"Charities reference number: $value - already exists, the response was $response"
-                    )
-                  Future.failed(
-                    new RuntimeException(
-                      s"Charities reference number: $value - already exists, the response was $response"
-                    )
-                  )
+                  val formWithErrors = form
+                    .fill(value)
+                    .withError(s"value", "charitiesReferenceNumber.error.exists", value)
+                  Future.successful(BadRequest(view(formWithErrors, mode)))
                 case response @ false =>
                   saveService
                     .save(RepaymentClaimDetailsAnswers.setHmrcCharitiesReference(value))

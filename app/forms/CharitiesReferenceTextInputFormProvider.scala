@@ -19,7 +19,6 @@ package forms
 import forms.{Mappings, Validation}
 import play.api.data.Form
 import play.api.data.Forms.*
-
 import javax.inject.Inject
 
 class CharitiesReferenceTextInputFormProvider @Inject() extends Mappings {
