@@ -44,7 +44,7 @@ class CharityExemptController @Inject() (
           OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
         }
         previousAnswer match {
-          case Some(ReasonNotRegisteredWithRegulator.Exempt) => Future.successful(Ok(view(mode)))
+          case Some(ReasonNotRegisteredWithRegulator.Exempt) => Future.successful(Ok(view(mode, request.isAgent)))
           case _                                             => Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
         }
       }

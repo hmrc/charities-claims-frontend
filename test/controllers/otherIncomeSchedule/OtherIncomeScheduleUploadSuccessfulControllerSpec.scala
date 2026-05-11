@@ -68,7 +68,7 @@ class OtherIncomeScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
           status(result) shouldEqual OK
-          contentAsString(result) shouldBe view()(using request, messages).body
+          contentAsString(result) shouldBe view(false)(using request, messages).body
         }
       }
       "should redirect to ClaimsTaskListController (there is no validated file completion status) " in {

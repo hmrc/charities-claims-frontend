@@ -24,7 +24,7 @@
     govukButton: GovukButton
 )
 
-@()(implicit request: Request[?], messages: Messages)
+@(isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("otherIncomeScheduleUploadSuccessful.title")),
@@ -38,7 +38,11 @@
         </h1>
     </div>
 
-    <p class="govuk-body">@messages("otherIncomeScheduleUploadSuccessful.message.2")</p>
+  @if(isAgent){
+      <p class="govuk-body">@messages("otherIncomeScheduleUploadSuccessful.agent.message.2")</p>
+  }else {
+      <p class="govuk-body">@messages("otherIncomeScheduleUploadSuccessful.message.2")</p>
+  }
 
     @formHelper(action = routes.OtherIncomeScheduleUploadSuccessfulController.onSubmit) {
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))

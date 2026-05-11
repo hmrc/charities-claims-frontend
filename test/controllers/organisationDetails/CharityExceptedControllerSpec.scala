@@ -24,6 +24,7 @@ import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import views.html.CharityExceptedView
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class CharityExceptedControllerSpec extends ControllerSpec {
 
@@ -191,7 +192,8 @@ class CharityExceptedControllerSpec extends ControllerSpec {
           )
         }
       }
-      "in NormalMode should redirect to CorporateTrusteeClaimController" in {
+
+      "in NormalMode should redirect to CorporateTrusteeClaimController for an organisation" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -203,6 +205,25 @@ class CharityExceptedControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
+        }
+      }
+
+      "in NormalMode should redirect to WhoShouldWeSendPaymentToController for an agent" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.CharityExceptedController.onSubmit(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode).url
+          )
         }
       }
 
