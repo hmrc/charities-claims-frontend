@@ -18,7 +18,7 @@ package controllers.communityBuildingsSchedule
 
 import controllers.ControllerSpec
 import models.RepaymentClaimDetailsAnswers
-import play.api.{inject, Application}
+import play.api.{Application, inject}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.libs.json.Json
@@ -32,6 +32,7 @@ import connectors.ClaimsValidationConnector
 import scala.concurrent.Future
 import util.TestResources
 import models.requests.DataRequest
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec {
 
@@ -336,6 +337,58 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
         redirectLocation(result) shouldEqual Some(
           routes.UploadCommunityBuildingsScheduleController.onPageLoad.url
         )
+      }
+    }
+
+    "should render content for organisation" in {
+      val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
+
+      (mockConnector
+        .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+        .expects(claimId, fileUploadReference, *)
+        .returning(Future.successful(testValidatingResponse))
+
+      given application: Application = applicationBuilder(sessionData = sessionData,
+                                        affinityGroup = AffinityGroup.Organisation)
+        .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+        .build()
+
+      running(application) {
+        given request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(GET, routes.YourCommunityBuildingsScheduleUploadController.onPageLoad.url)
+
+        val result = route(application, request).value
+        val content = contentAsString(result)
+
+        status(result) shouldEqual OK
+        content should include(messages("yourCommunityBuildingsScheduleUpload.heading"))
+
+      }
+    }
+
+    "should render content for agent" in {
+      val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
+
+      (mockConnector
+        .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
+        .expects(claimId, fileUploadReference, *)
+        .returning(Future.successful(testValidatingResponse))
+
+      given application: Application = applicationBuilder(sessionData = sessionData,
+        affinityGroup = AffinityGroup.Agent)
+        .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
+        .build()
+
+      running(application) {
+        given request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(GET, routes.YourCommunityBuildingsScheduleUploadController.onPageLoad.url)
+
+        val result = route(application, request).value
+        val content = contentAsString(result)
+
+        status(result) shouldEqual OK
+        content should include(messages("yourCommunityBuildingsScheduleUpload.agent.heading"))
+
       }
     }
 
