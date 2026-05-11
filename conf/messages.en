@@ -543,11 +543,13 @@ problemWithGiftAidSchedule.warning = We cannot accept the file because it has er
 
 problemWithOtherIncomeSchedule.caption = Add Other Income schedule
 problemWithOtherIncomeSchedule.heading = There is a problem with the data in your Other Income schedule
+problemWithOtherIncomeSchedule.agent.heading = There is a problem with the data in this Other Income schedule
 problemWithOtherIncomeSchedule.link.attachUpdatedSchedule = Attach an updated Other Income schedule
 problemWithOtherIncomeSchedule.link.deleteSchedule = Delete schedule
 problemWithOtherIncomeSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Other Income donations (opens in new tab)</a>.
 problemWithOtherIncomeSchedule.list.item.2 = Delete this Other Income schedule.
 problemWithOtherIncomeSchedule.list.item.3 = Update your spreadsheet.
+problemWithOtherIncomeSchedule.agent.list.item.3 = Update the spreadsheet.
 problemWithOtherIncomeSchedule.list.item.4 = Upload the updated spreadsheet.
 problemWithOtherIncomeSchedule.subheading.1 = What you can do next
 problemWithOtherIncomeSchedule.subheading.2 = Summary of errors
