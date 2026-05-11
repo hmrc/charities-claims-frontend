@@ -118,6 +118,7 @@ charityRegulatorNumber.error.required = Enter a charity regulator number
 charityRegulatorNumber.heading = What is the charity regulator number?
 charityRegulatorNumber.hint = This can be up to 20 numerical characters like 123456789 and does not include letters.
 charityRegulatorNumber.missingDetails = confirm your charity regulator number
+charityRegulatorNumber.agent.missingDetails = confirm the charity regulator number
 charityRegulatorNumber.title = What is the charity regulator number?
 
 charityRepaymentDashboard.heading = Charity Repayment Dashboard
@@ -150,6 +151,7 @@ checkYourCommunityBuildingsSchedule.table.column.6 = Amount of donations receive
 checkYourCommunityBuildingsSchedule.table.column.7 = Tax year 2 ending 5 April
 checkYourCommunityBuildingsSchedule.table.column.8 = Amount of donations received in tax year 2 (£)
 checkYourCommunityBuildingsSchedule.title = Check your Community Buildings schedule
+checkYourCommunityBuildingsSchedule.agent.title = Check this Community Buildings schedule
 
 checkYourConnectedCharitiesSchedule.caption = Add Connected Charities schedule
 checkYourConnectedCharitiesSchedule.error.required = Select ‘Yes’ if you need to update this Connected Charities schedule
@@ -397,22 +399,26 @@ nameOfCharityRegulator.error.required = Select the name of the charity regulator
 nameOfCharityRegulator.heading = What is the name of the charity regulator?
 nameOfCharityRegulator.legend = What is the name of the charity regulator?
 nameOfCharityRegulator.missingDetails = confirm your charity regulator name
+nameOfCharityRegulator.agent.missingDetails = confirm the charity regulator name
 nameOfCharityRegulator.radio.four = Office of the Scottish Charity Regulator
 nameOfCharityRegulator.radio.one = Charity Commission for England and Wales
 nameOfCharityRegulator.radio.three = Charity is not registered with a regulator
 nameOfCharityRegulator.radio.two = Charity Commission for Northern Ireland
 nameOfCharityRegulator.title = What is the name of the charity regulator?
 
+organisationDetailsCheckYourAnswers.charityDetails.subheader = Charity details
+organisationDetailsCheckYourAnswers.authorisedOfficialDetails.subheader = Authorised Official’s details
 organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.change.hidden = change authorised official’s details
-organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.label = Authorised official’s details
+organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.label = Official’s details
 organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.change.hidden = change authorised official’s UK address
-organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.label = Authorised official’s UK address
+organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.label = UK address
+organisationDetailsCheckYourAnswers.corporateTrusteeDetails.subheader = Corporate Trustee’s details
 organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.change.hidden = change corporate trustee claim
-organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label = Corporate trustee claim
+organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label = Is the corporate trustee making this claim?
 organisationDetailsCheckYourAnswers.CorporateTrusteeDetails.change.hidden = change corporate trustee details
-organisationDetailsCheckYourAnswers.CorporateTrusteeDetails.label = Corporate trustee details
+organisationDetailsCheckYourAnswers.CorporateTrusteeDetails.label = Trustee’s details
 organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.change.hidden = change corporate trustee UK address
-organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label = Corporate trustee UK address
+organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label = UK address
 organisationDetailsCheckYourAnswers.caption = Provide organisation details
 organisationDetailsCheckYourAnswers.charityRegulatorName.EnglandAndWales.label = Charity Commission for England and Wales
 organisationDetailsCheckYourAnswers.charityRegulatorName.NorthernIreland.label = Charity Commission for Northern Ireland
@@ -427,10 +433,49 @@ organisationDetailsCheckYourAnswers.heading = Check your organisation details
 organisationDetailsCheckYourAnswers.reasonNotRegistered.excepted.label = Your charity is excepted
 organisationDetailsCheckYourAnswers.reasonNotRegistered.exempt.label = Your charity is exempt
 organisationDetailsCheckYourAnswers.reasonNotRegistered.label = Registered with regulator
-organisationDetailsCheckYourAnswers.reasonNotRegistered.lowIncome.label = Your charity is located in England or Wales and your income is less than £5,000 per year
+organisationDetailsCheckYourAnswers.reasonNotRegistered.LowIncome.label = Your charity is located in England or Wales and your income is less than £5,000 per year
 organisationDetailsCheckYourAnswers.reasonNotRegistered.missing.label = missing value
-organisationDetailsCheckYourAnswers.reasonNotRegistered.waiting.label = Your charity is based in Northern Ireland and you are awaiting registration with the Charity Commission for Northern Ireland (CCNI)
+organisationDetailsCheckYourAnswers.reasonNotRegistered.Waiting.label = Your charity is based in Northern Ireland and you are awaiting registration with the Charity Commission for Northern Ireland (CCNI)
 organisationDetailsCheckYourAnswers.title = Check your organisation details
+
+agentOrganisationDetailsCheckYourAnswers.caption = Provide organisation details
+agentOrganisationDetailsCheckYourAnswers.title = Check your organisation details
+agentOrganisationDetailsCheckYourAnswers.heading = Check your organisation details
+agentOrganisationDetailsCheckYourAnswers.charityDetails.subheader = Charity details
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.label = Charity regulator name
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorNumber.label = Charity regulator number
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.label = Reason for not registering
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.LowIncome.label = The charity is located in England or Wales and your income is less than £5,000 per year
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.Excepted.label = The charity is excepted.
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.Exempt.label = The charity is exempt.
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.Waiting.label = The charity is based in Northern Ireland and you are awaiting registration with the Charity Commission for Northern Ireland (CCNI)
+agentOrganisationDetailsCheckYourAnswers.charityDetails.sendPaymentTo.label = Send payment to
+agentOrganisationDetailsCheckYourAnswers.agentDetails.subheader = Agent details
+agentOrganisationDetailsCheckYourAnswers.agentDetails.telephoneNumber.label = Telephone number
+agentOrganisationDetailsCheckYourAnswers.agentDetails.ukAddress.label = UK address
+agentOrganisationDetailsCheckYourAnswers.agentDetails.postcode.label = Postcode
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.EnglandAndWales.label = Charity Commission for England and Wales
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.NorthernIreland.label = Charity Commission for Northern Ireland
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.Scottish.label = Office of the Scottish Charity Regulator
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.None.label = Charity is not registered with a regulator
+
+reasonNotRegistered.excepted.heading = The charity is excepted.
+
+reasonNotRegistered.excepted.description = The charity is excepted as the charity’s annual income is £100,000 or less and is classed as one of the following:
+
+reasonNotRegistered.excepted.bullet1 = a church or chapel
+reasonNotRegistered.excepted.bullet2 = a charity that provides premises for schools
+reasonNotRegistered.excepted.bullet3 = a scout or guide group
+reasonNotRegistered.excepted.bullet4 = a charitable service of the armed forces
+reasonNotRegistered.excepted.bullet5 = a students’ union
+
+reasonNotRegistered.exempt.heading=The charity is exempt.
+
+reasonNotRegistered.exempt.description=The charity is exempt from registering with a regulator because it is a:
+
+reasonNotRegistered.exempt.bullet1 = university or school
+reasonNotRegistered.exempt.bullet2 = museum or gallery
+reasonNotRegistered.exempt.bullet3 = housing association
 
 organisationDetailsIncompleteAnswers.heading = This claim cannot be setup
 organisationDetailsIncompleteAnswers.message = You need to provide the following details to continue:
@@ -564,6 +609,7 @@ reasonNotRegisteredWithRegulator.caption = Provide organisation details
 reasonNotRegisteredWithRegulator.error.required = Select why the charity is not registered with a regulator
 reasonNotRegisteredWithRegulator.heading = Why is the charity not registered with a regulator?
 reasonNotRegisteredWithRegulator.missingDetails = confirm why you’re not registered with a regulator
+reasonNotRegisteredWithRegulator.agent.missingDetails = confirm why the charity is not registered with a regulator
 reasonNotRegisteredWithRegulator.radio.Excepted = Your charity is excepted
 reasonNotRegisteredWithRegulator.radio.Exempt = Your charity is exempt
 reasonNotRegisteredWithRegulator.radio.LowIncome = Your charity is located in England or Wales and your income is less than £5,000 per year
@@ -950,6 +996,7 @@ agentPostcode.caption = Provide organisation details
 agentPostcode.error.format = Enter a postcode in the correct format
 agentPostcode.error.length = Postcode must be 8 characters or less
 agentPostcode.error.required = Enter a postcode
+agentPostcode.missingDetails = confirm if you have a postcode
 
 gasdsClaimType.title = Gift Aid Small Donations Scheme (GASDS) details
 gasdsClaimType.heading = Gift Aid Small Donations Scheme (GASDS) details
@@ -994,11 +1041,13 @@ enterTelephoneNumber.p = You must provide a phone number so HM Revenue & Customs
 enterTelephoneNumber.error.required = Enter a telephone number
 enterTelephoneNumber.error.length = Telephone number must be 35 characters or less
 enterTelephoneNumber.error.format = Enter a telephone number in the correct format
+enterTelephoneNumber.missingDetails = confirm a telephone number
 
 doYouHaveAgentUKAddress.title = Do you have a UK address?
 doYouHaveAgentUKAddress.heading = Do you have a UK address?
 doYouHaveAgentUKAddress.caption = Provide organisation details
 doYouHaveAgentUKAddress.error.required = Select ‘Yes’ if you have a UK address
+doYouHaveAgentUKAddress.missingDetails = confirm if you have a UK address
 
 charitiesReferenceNumber.caption = Provide charity repayment claim details
 charitiesReferenceNumber.error.length = HMRC charities reference number must be 7 characters or less
@@ -1014,6 +1063,7 @@ whoShouldWeSendPaymentTo.caption = Provide organisation details
 whoShouldWeSendPaymentTo.radio.charityOrCasc = Charity/Community Amateur Sports Club (CASC)
 whoShouldWeSendPaymentTo.radio.agentOrNominee = Agent/Nominee
 whoShouldWeSendPaymentTo.error.required = Select who HMRC should send payment to
+whoShouldWeSendPaymentTo.missingDetails = confirm who HMRC should send payment to
 
 deleteAgentRepaymentClaim.title =  Delete repayment claim
 deleteAgentRepaymentClaim.heading = Delete repayment claim

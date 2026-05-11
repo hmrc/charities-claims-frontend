@@ -59,7 +59,7 @@ trait TestDataUtils {
       ),
       agentUserOrganisationDetails = Some(AgentUserOrganisationDetails(
         nameOfCharityRegulator = NameOfCharityRegulator.EnglandAndWales,
-        unregulatedReason = Some(ReasonNotRegisteredWithRegulator.LowIncome),
+        reasonNotRegisteredWithRegulator = Some(ReasonNotRegisteredWithRegulator.LowIncome),
         charityRegistrationNumber = Some("123456"),
         whoShouldHmrcSendPaymentTo = WhoShouldHmrcSendPaymentTo.AgentOrNominee,
         daytimeTelephoneNumber = "07123456789",

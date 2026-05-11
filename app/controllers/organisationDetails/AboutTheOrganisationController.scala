@@ -17,12 +17,12 @@
 package controllers.organisationDetails
 
 import com.google.inject.Inject
-import play.api.i18n.I18nSupport
 import controllers.actions.Actions
 import models.Mode.*
 import models.SessionData
 import models.SessionData.isCASCCharityReference
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.i18n.I18nSupport
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.AboutTheOrganisationView
 
@@ -42,20 +42,16 @@ class AboutTheOrganisationController @Inject() (
 
   val onSubmit: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-
       given sessionData: SessionData = request.sessionData
+      Future.successful(Redirect(AboutTheOrganisationController.nextPage(request.isAgent, isCASCCharityReference)))
+    }
+}
 
-      val redirectCall =
-        (isCASCCharityReference, request.isAgent) match
-          case (true, true) =>
-            routes.WhoShouldWeSendPaymentToController.onPageLoad(NormalMode)
-
-          case (true, false) =>
-            routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)
-
-          case (false, _) =>
-            routes.NameOfCharityRegulatorController.onPageLoad(NormalMode)
-
-      Future.successful(Redirect(redirectCall))
+object AboutTheOrganisationController {
+  def nextPage(isAgent: Boolean, isCASCCharityReference: Boolean): Call =
+    (isAgent, isCASCCharityReference) match {
+      case (true, true)  => routes.WhoShouldWeSendPaymentToController.onSubmit(NormalMode)
+      case (false, true) => routes.CorporateTrusteeClaimController.onPageLoad(NormalMode)
+      case (_, _)        => routes.NameOfCharityRegulatorController.onPageLoad(NormalMode)
     }
 }
