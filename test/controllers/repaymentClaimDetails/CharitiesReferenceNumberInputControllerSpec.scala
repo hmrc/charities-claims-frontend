@@ -202,6 +202,23 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
         }
       }
 
+      "should return BadRequest when invalid data is submitted" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, routes.CharitiesReferenceNumberInputController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "invalid")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual BAD_REQUEST
+        }
+      }
+
       "should redirect to the R2 claims list for an organisation user - checkmode" in {
         given application: Application = applicationBuilder().build()
 
