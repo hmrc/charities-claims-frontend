@@ -379,7 +379,30 @@ object RepaymentClaimDetailsAnswers {
     get(_.hmrcCharitiesReference)
 
   def setHmrcCharitiesReference(value: String)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(hmrcCharitiesReference = Some(v)))
+    val updatedSession = set(value)((a, v) => a.copy(hmrcCharitiesReference = Some(v)))
+    if !SessionData.isCASCCharityReference(using session) &&
+      SessionData.isCASCCharityReference(using updatedSession)
+    then {
+      updatedSession.copy(
+        communityBuildingsScheduleFileUploadReference = None,
+        communityBuildingsScheduleUpscanInitialization = None,
+        communityBuildingsScheduleData = None,
+        communityBuildingsScheduleCompleted = false,
+        repaymentClaimDetailsAnswers = updatedSession.repaymentClaimDetailsAnswers
+          .map(
+            _.copy(
+              claimingDonationsCollectedInCommunityBuildings = None
+            )
+          ),
+        agentUserOrganisationDetailsAnswers = None
+      )
+    } else if SessionData.isCASCCharityReference(using session) &&
+      !SessionData.isCASCCharityReference(using updatedSession)
+    then
+      updatedSession.copy(
+        agentUserOrganisationDetailsAnswers = None
+      )
+    else updatedSession
 
   def getNameOfCharity(using session: SessionData): Option[String] =
     get(_.nameOfCharity)
