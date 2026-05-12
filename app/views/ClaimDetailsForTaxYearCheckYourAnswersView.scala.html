@@ -34,7 +34,7 @@
 
    @govukSummaryList(ClaimDetailsForTaxYearCheckYourAnswersHelper.buildSummaryList(answers, index))
 
-   @formHelper(action = routes.ClaimDetailsForTaxYearCheckYourAnswersController.onSubmit(index)) {
+   @formHelper(action = routes.ClaimDetailsForTaxYearCheckYourAnswersController.onSubmit) {
 
        @govukButton(
            ButtonViewModel(
