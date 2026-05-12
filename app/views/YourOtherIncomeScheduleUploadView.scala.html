@@ -37,7 +37,7 @@
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleNoForm(messages("yourOtherIncomeScheduleUpload.title")),
+    pageTitle = titleNoForm(messages(if(isAgent) "yourOtherIncomeScheduleUpload.agent.title" else "yourOtherIncomeScheduleUpload.title")),
     showBackLink = false,
     scriptsBlock = if (screenLocked) Some(checkUploadStatusScript(uploadStatusCall, refreshIntervalSeconds)) else None
 ) {

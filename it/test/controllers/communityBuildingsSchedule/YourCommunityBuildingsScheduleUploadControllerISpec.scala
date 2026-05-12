@@ -31,7 +31,7 @@ class YourCommunityBuildingsScheduleUploadControllerISpec
     with AuthStub
     with ClaimsValidationStub {
 
-  private val pageUrl   = "/your-community-buildings-schedule-upload"
+  private val pageUrl   = "/your-community-buildings-schedule-upload?claimId=123"
   private val removeUrl = "/your-community-buildings-schedule-upload/remove"
   private val submitUrl = "/your-community-buildings-schedule-upload"
 
@@ -58,6 +58,20 @@ class YourCommunityBuildingsScheduleUploadControllerISpec
 
       val doc = Jsoup.parse(result.body)
       doc.title should include(msg("yourCommunityBuildingsScheduleUpload.title"))
+    }
+    
+    "render the agent page when upload result exists" in {
+      stubAgentBackend()
+      stubUploadSummary()
+      stubGetUploadResult(claimId, communityBuildingsFileRef)(OK, Json.toJson(getUploadResultVerifying))
+
+      val result = get(pageUrl)
+
+      result.status shouldBe OK
+
+      val doc = Jsoup.parse(result.body)
+      doc.title should include(msg("yourCommunityBuildingsScheduleUpload.agent.title"))
+      doc.text should include(msg("yourCommunityBuildingsScheduleUpload.agent.heading"))
     }
   }
 
@@ -95,6 +109,29 @@ class YourCommunityBuildingsScheduleUploadControllerISpec
 
   private def stubBackend(withReference: Boolean = true): Unit = {
     stubAuthRequest()
+    stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+
+    val claimResponse =
+      claim.copy(
+        claimData = claim.claimData.copy(
+          repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
+            claimingDonationsCollectedInCommunityBuildings = Some(true),
+            claimingUnderGiftAidSmallDonationsScheme = true,
+            claimingGiftAid = false,
+            claimingDonationsNotFromCommunityBuilding = Some(false),
+            connectedToAnyOtherCharities = Some(false),
+            makingAdjustmentToPreviousClaim = Some(false)
+          ),
+          communityBuildingsScheduleFileUploadReference =
+            if withReference then Some(communityBuildingsFileRef) else None
+        )
+      )
+
+    stubGetClaims(claimId)(OK, Json.toJson(claimResponse))
+  }
+  
+  private def stubAgentBackend(withReference: Boolean = true): Unit = {
+    stubAgentAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
 
     val claimResponse =

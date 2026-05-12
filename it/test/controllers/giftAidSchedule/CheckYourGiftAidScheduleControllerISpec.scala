@@ -44,12 +44,13 @@ class CheckYourGiftAidScheduleControllerISpec
     }
   }
 
-  "render the agent check your gift aid schedule page" in {
+  "render the agent check this gift aid schedule page" in {
     stubAgentBackend()
 
     val result = get(url)
 
     result.status shouldBe OK
+    Jsoup.parse(result.body).title should include(msg("checkYourGiftAidSchedule.agent.title"))
     Jsoup.parse(result.body).text should include(msg("checkYourGiftAidSchedule.agent.heading"))
   }
 

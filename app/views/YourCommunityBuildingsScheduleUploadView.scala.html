@@ -42,7 +42,7 @@
 }
 
 @layout(
-    pageTitle = titleNoForm(messages("yourCommunityBuildingsScheduleUpload.title")),
+    pageTitle = titleNoForm(messages(if(isAgent)"yourCommunityBuildingsScheduleUpload.agent.title" else "yourCommunityBuildingsScheduleUpload.title")),
     showBackLink = false,
     scriptsBlock = if (screenLocked) Some(checkUploadStatusScript(uploadStatusCall, refreshIntervalSeconds)) else None
 ) {

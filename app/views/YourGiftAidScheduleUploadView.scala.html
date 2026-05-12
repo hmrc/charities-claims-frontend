@@ -37,7 +37,7 @@
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleNoForm(messages("yourGiftAidScheduleUpload.title")), 
+    pageTitle = titleNoForm(messages(if(isAgent) "yourGiftAidScheduleUpload.agent.title" else "yourGiftAidScheduleUpload.title")),
     showBackLink = false,
     scriptsBlock = if (screenLocked) Some(checkUploadStatusScript(uploadStatusCall, refreshIntervalSeconds)) else None
 ) {

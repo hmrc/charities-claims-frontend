@@ -54,6 +54,7 @@ class ProblemWithOtherIncomeScheduleControllerISpec
         result.status shouldBe OK
   
         val doc = Jsoup.parse(result.body)
+        doc.title should include(msg("problemWithOtherIncomeSchedule.agent.title"))
         doc.text should include(msg("problemWithOtherIncomeSchedule.agent.heading"))
         doc.text should include(msg("problemWithOtherIncomeSchedule.agent.list.item.3"))
       }
