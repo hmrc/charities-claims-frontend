@@ -380,8 +380,8 @@ object RepaymentClaimDetailsAnswers {
 
   def setHmrcCharitiesReference(value: String)(using session: SessionData): SessionData =
     val updatedSession = set(value)((a, v) => a.copy(hmrcCharitiesReference = Some(v)))
-    if !SessionData.isCASCCharityReference(using session) &&
-      SessionData.isCASCCharityReference(using updatedSession)
+    if SessionData.isCASCCharityReference(using session) !=
+        SessionData.isCASCCharityReference(using updatedSession)
     then {
       updatedSession.copy(
         communityBuildingsScheduleFileUploadReference = None,
