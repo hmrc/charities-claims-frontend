@@ -70,16 +70,20 @@ class CharitiesReferenceNumberInputController @Inject() (
           .fold(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
-              claimsConnector.hasUnsubmittedClaim(value).flatMap {
-                case response @ true  =>
-                  val formWithErrors = form
-                    .fill(value)
-                    .withError(s"value", "charitiesReferenceNumber.error.exists", value)
-                  Future.successful(BadRequest(view(formWithErrors, mode)))
-                case response @ false =>
-                  saveService
-                    .save(RepaymentClaimDetailsAnswers.setHmrcCharitiesReference(value))
-                    .map(_ => Redirect(navigator(mode)))
+              if (RepaymentClaimDetailsAnswers.getHmrcCharitiesReference.contains(value)) {
+                Future.successful(Redirect(navigator(mode)))
+              } else {
+                claimsConnector.hasUnsubmittedClaim(value).flatMap {
+                  case true  =>
+                    val formWithErrors = form
+                      .fill(value)
+                      .withError(s"value", "charitiesReferenceNumber.error.exists", value)
+                    Future.successful(BadRequest(view(formWithErrors, mode)))
+                  case false =>
+                    saveService
+                      .save(RepaymentClaimDetailsAnswers.setHmrcCharitiesReference(value))
+                      .map(_ => Redirect(navigator(mode)))
+                }
               }
           )
       }
