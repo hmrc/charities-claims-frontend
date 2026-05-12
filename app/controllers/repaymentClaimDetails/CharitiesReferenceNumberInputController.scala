@@ -30,13 +30,18 @@ import models.{Mode, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.data.Form
 
 import scala.concurrent.{ExecutionContext, Future}
+import forms.YesNoFormProvider
+import models.requests.DataRequest
+import views.html.UpdateRepaymentClaimView
 
 class CharitiesReferenceNumberInputController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: CharitiesReferenceNumberInputView,
+  updateRepaymentClaimView: UpdateRepaymentClaimView,
   actions: Actions,
   guard: GuardAction,
   formProvider: CharitiesReferenceTextInputFormProvider,
+  yesNoFormProvider: YesNoFormProvider,
   claimsConnector: ClaimsConnector,
   saveService: SaveService
 )(using ec: ExecutionContext)
@@ -47,6 +52,8 @@ class CharitiesReferenceNumberInputController @Inject() (
     (7, "charitiesReferenceNumber.error.length"),
     "charitiesReferenceNumber.error.regex"
   )
+
+  val confirmUpdateForm: Form[Boolean] = yesNoFormProvider("updateRepaymentClaim.error.required")
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions
@@ -65,28 +72,79 @@ class CharitiesReferenceNumberInputController @Inject() (
       .authAndGetData()
       .andThen(guard(predicate = SessionData.isClaimNotSubmitted, access = AgentOnly))
       .async { implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-            value =>
-              if (RepaymentClaimDetailsAnswers.getHmrcCharitiesReference.contains(value)) {
-                Future.successful(Redirect(navigator(mode)))
-              } else {
-                claimsConnector.hasUnsubmittedClaim(value).flatMap {
-                  case true  =>
-                    val formWithErrors = form
-                      .fill(value)
-                      .withError(s"value", "charitiesReferenceNumber.error.exists", value)
-                    Future.successful(BadRequest(view(formWithErrors, mode)))
-                  case false =>
-                    saveService
-                      .save(RepaymentClaimDetailsAnswers.setHmrcCharitiesReference(value))
-                      .map(_ => Redirect(navigator(mode)))
-                }
-              }
-          )
+        if (isConfirmingUpdate) {
+          handleUpdateConfirmationSubmit(mode)
+        } else {
+          handleQuestionSubmit(mode)
+        }
       }
+
+  def handleQuestionSubmit(mode: Mode)(implicit request: DataRequest[AnyContent]): Future[Result] =
+    val previousAnswer: Option[String] = RepaymentClaimDetailsAnswers.getHmrcCharitiesReference
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+        value =>
+          if (RepaymentClaimDetailsAnswers.getHmrcCharitiesReference.contains(value)) {
+            Future.successful(Redirect(navigator(mode)))
+          } else {
+            claimsConnector.hasUnsubmittedClaim(value).flatMap {
+              case true =>
+                val formWithErrors = form
+                  .fill(value)
+                  .withError(s"value", "charitiesReferenceNumber.error.exists", value)
+                Future.successful(BadRequest(view(formWithErrors, mode)))
+
+              case false =>
+                if needsUpdateConfirmation(mode, previousAnswer, value)
+                then {
+                  Future.successful(
+                    Ok(
+                      updateRepaymentClaimView(
+                        confirmUpdateForm,
+                        routes.CharitiesReferenceNumberInputController.onSubmit(mode),
+                        Seq(value)
+                      )
+                    )
+                  )
+                } else {
+                  saveService
+                    .save(RepaymentClaimDetailsAnswers.setHmrcCharitiesReference(value))
+                    .map(_ => Redirect(navigator(mode)))
+                }
+            }
+          }
+      )
+
+  def handleUpdateConfirmationSubmit(mode: Mode)(implicit request: DataRequest[AnyContent]): Future[Result] =
+    val value = extractAnswerValue.head
+
+    confirmUpdateForm
+      .bindFromRequest()
+      .fold(
+        formWithErrors =>
+          Future.successful(
+            BadRequest(
+              updateRepaymentClaimView(
+                formWithErrors,
+                routes.CharitiesReferenceNumberInputController.onSubmit(mode),
+                Seq(value)
+              )
+            )
+          ),
+        {
+          case true =>
+            saveService
+              .save(RepaymentClaimDetailsAnswers.setHmrcCharitiesReference(value))
+              .map(_ => Redirect(navigator(mode)))
+
+          case false =>
+            Future.successful(
+              Redirect(routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad)
+            )
+        }
+      )
 
   def navigator(mode: Mode): Call = mode match {
     case NormalMode =>
@@ -94,4 +152,27 @@ class CharitiesReferenceNumberInputController @Inject() (
     case CheckMode  =>
       routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
   }
+
+  private def needsUpdateConfirmation(
+    mode: Mode,
+    previousAnswer: Option[String],
+    newAnswer: String
+  ): Boolean =
+    mode match {
+      case CheckMode =>
+        previousAnswer.exists { prevAnswer =>
+          !isCASCCharityReference(prevAnswer) && isCASCCharityReference(newAnswer)
+          || (isCASCCharityReference(prevAnswer) && !isCASCCharityReference(newAnswer))
+        }
+
+      case _ => false
+    }
+
+  private def isCASCCharityReference(value: String): Boolean =
+    value.startsWith("CH") || value.startsWith("CF")
+
+  private def extractAnswerValue(implicit request: DataRequest[AnyContent]): Seq[String] =
+    request.body.asFormUrlEncoded
+      .flatMap(_.get("value[]"))
+      .getOrElse(Seq.empty)
 }
