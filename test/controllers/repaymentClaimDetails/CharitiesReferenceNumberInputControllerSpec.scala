@@ -124,7 +124,7 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
         val hmrcRef = "AA12356"
         val answers = RepaymentClaimDetailsAnswers(
           claimingReferenceNumber = Some(true),
-          hmrcCharitiesReference = Some("AA12356")
+          hmrcCharitiesReference = None
         )
 
         val sessionData = SessionData
@@ -156,7 +156,7 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
         val hmrcRef = "AA12356"
         val answers = RepaymentClaimDetailsAnswers(
           claimingReferenceNumber = Some(true),
-          hmrcCharitiesReference = Some("AA12356")
+          hmrcCharitiesReference = None
         )
 
         val sessionData = SessionData
@@ -192,7 +192,7 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
         val hmrcRef = "AA12356"
         val answers = RepaymentClaimDetailsAnswers(
           claimingReferenceNumber = Some(true),
-          hmrcCharitiesReference = Some("AA12356")
+          hmrcCharitiesReference = Some("AA12355")
         )
 
         val sessionData = SessionData
@@ -205,6 +205,36 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
           .hasUnsubmittedClaim(_: String)(using _: HeaderCarrier))
           .expects(hmrcRef, *)
           .returning(Future(false))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.CharitiesReferenceNumberInputController.onPageLoad(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "AA12356")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(
+            routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+          )
+
+        }
+      }
+
+      "should redirect to R1.9 when in CheckMode and answer does not change" in {
+        val answers = RepaymentClaimDetailsAnswers(
+          claimingReferenceNumber = Some(true),
+          hmrcCharitiesReference = Some("AA12356")
+        )
+
+        val sessionData = SessionData
+          .empty("AA12356")
+          .copy(
+            repaymentClaimDetailsAnswers = Some(answers)
+          )
 
         given application: Application =
           applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
