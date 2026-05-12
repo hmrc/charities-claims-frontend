@@ -49,6 +49,7 @@ class CheckYourOtherIncomeScheduleControllerISpec
     val result = get(url)
 
     result.status                shouldBe OK
+    Jsoup.parse(result.body).title should include(msg("checkYourOtherIncomeSchedule.agent.title"))
     Jsoup.parse(result.body).text should include(msg("checkYourOtherIncomeSchedule.agent.heading"))
   }
   }

@@ -56,6 +56,7 @@ class ProblemWithGiftAidScheduleControllerISpec
       val result = get(pageUrl)
 
       result.status                shouldBe OK
+      Jsoup.parse(result.body).title should include(msg("problemWithGiftAidSchedule.agent.title"))
       Jsoup.parse(result.body).text should include(msg("problemWithGiftAidSchedule.agent.heading"))
       Jsoup.parse(result.body).text should include(msg("problemWithGiftAidSchedule.agent.list.item.3"))
     }
