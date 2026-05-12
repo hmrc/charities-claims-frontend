@@ -494,65 +494,65 @@ phasebanner.phase=Beta
 problemUpdatingCommunityBuildingsScheduleUnknownError.heading = There is a problem uploading your Community Buildings schedule
 problemUpdatingCommunityBuildingsScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
 problemUpdatingCommunityBuildingsScheduleUnknownError.title = There is a problem uploading your Community Buildings schedule
-problemUpdatingCommunityBuildingsScheduleUnknownError.agent.heading = There is a problem uploading this schedule
+problemUpdatingCommunityBuildingsScheduleUnknownError.agent.heading = There is a problem uploading this Community Buildings schedule
 problemUpdatingCommunityBuildingsScheduleUnknownError.agent.hint = This file could not be uploaded. You can try uploading the file again.
-problemUpdatingCommunityBuildingsScheduleUnknownError.agent.title = There is a problem uploading this schedule
+problemUpdatingCommunityBuildingsScheduleUnknownError.agent.title = There is a problem uploading this Community Buildings schedule
 
 problemUpdatingCommunityBuildingsScheduleQuarantine.heading = There is a problem uploading your Community Buildings schedule
 problemUpdatingCommunityBuildingsScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
 problemUpdatingCommunityBuildingsScheduleQuarantine.title = There is a problem uploading your Community Buildings schedule
-problemUpdatingCommunityBuildingsScheduleQuarantine.agent.heading = There is a problem uploading this schedule
+problemUpdatingCommunityBuildingsScheduleQuarantine.agent.heading = There is a problem uploading this Community Buildings schedule
 problemUpdatingCommunityBuildingsScheduleQuarantine.agent.hint = This file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
-problemUpdatingCommunityBuildingsScheduleQuarantine.agent.title = There is a problem uploading this schedule
+problemUpdatingCommunityBuildingsScheduleQuarantine.agent.title = There is a problem uploading this Community Buildings schedule
 
 problemUpdatingCommunityBuildingsScheduleRejected.heading = There is a problem uploading your Community Buildings schedule
 problemUpdatingCommunityBuildingsScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
 problemUpdatingCommunityBuildingsScheduleRejected.title = There is a problem uploading your Community Buildings schedule
-problemUpdatingCommunityBuildingsScheduleRejected.agent.heading = There is a problem uploading this schedule
+problemUpdatingCommunityBuildingsScheduleRejected.agent.heading = There is a problem uploading this Community Buildings schedule
 problemUpdatingCommunityBuildingsScheduleRejected.agent.hint = This file must be an ODS file. Save this schedule as an ODS file and try uploading it again.
-problemUpdatingCommunityBuildingsScheduleRejected.agent.title = There is a problem uploading this schedule
+problemUpdatingCommunityBuildingsScheduleRejected.agent.title = There is a problem uploading this Community Buildings schedule
 
 problemUpdatingOtherIncomeScheduleQuarantine.heading = There is a problem uploading your Other Income schedule
 problemUpdatingOtherIncomeScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
 problemUpdatingOtherIncomeScheduleQuarantine.title = There is a problem uploading your Other Income schedule
-problemUpdatingOtherIncomeScheduleQuarantine.agent.heading = There is a problem uploading this schedule
+problemUpdatingOtherIncomeScheduleQuarantine.agent.heading = There is a problem uploading this Other Income schedule
 problemUpdatingOtherIncomeScheduleQuarantine.agent.hint = This file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
-problemUpdatingOtherIncomeScheduleQuarantine.agent.title = There is a problem uploading this schedule
+problemUpdatingOtherIncomeScheduleQuarantine.agent.title = There is a problem uploading this Other Income schedule
 
 problemUpdatingOtherIncomeScheduleUnknownError.heading = There is a problem uploading your Other Income schedule
 problemUpdatingOtherIncomeScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
 problemUpdatingOtherIncomeScheduleUnknownError.title = There is a problem uploading your Other Income schedule
-problemUpdatingOtherIncomeScheduleUnknownError.agent.heading = There is a problem uploading this schedule
+problemUpdatingOtherIncomeScheduleUnknownError.agent.heading = There is a problem uploading this Other Income schedule
 problemUpdatingOtherIncomeScheduleUnknownError.agent.hint = This file could not be uploaded. You can try uploading the file again.
-problemUpdatingOtherIncomeScheduleUnknownError.agent.title = There is a problem uploading this schedule
+problemUpdatingOtherIncomeScheduleUnknownError.agent.title = There is a problem uploading this Other Income schedule
 
 problemUpdatingConnectedCharitiesScheduleUnknownError.heading = There is a problem uploading your Connected Charities schedule
 problemUpdatingConnectedCharitiesScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
 problemUpdatingConnectedCharitiesScheduleUnknownError.title = There is a problem uploading your Connected Charities schedule
-problemUpdatingConnectedCharitiesScheduleUnknownError.agent.heading = There is a problem uploading this schedule
+problemUpdatingConnectedCharitiesScheduleUnknownError.agent.heading = There is a problem uploading this Connected Charities schedule
 problemUpdatingConnectedCharitiesScheduleUnknownError.agent.hint = This file could not be uploaded. You can try uploading the file again.
-problemUpdatingConnectedCharitiesScheduleUnknownError.agent.title = There is a problem uploading this schedule
+problemUpdatingConnectedCharitiesScheduleUnknownError.agent.title = There is a problem uploading this Connected Charities schedule
 
 problemUpdatingGiftAidScheduleUnknownError.heading = There is a problem uploading your Gift Aid schedule
 problemUpdatingGiftAidScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
 problemUpdatingGiftAidScheduleUnknownError.title = There is a problem uploading your Gift Aid schedule
-problemUpdatingGiftAidScheduleUnknownError.agent.heading = There is a problem uploading this schedule
+problemUpdatingGiftAidScheduleUnknownError.agent.heading = There is a problem uploading this Gift Aid schedule
 problemUpdatingGiftAidScheduleUnknownError.agent.hint = This file could not be uploaded. You can try uploading the file again.
-problemUpdatingGiftAidScheduleUnknownError.agent.title = There is a problem uploading this schedule
+problemUpdatingGiftAidScheduleUnknownError.agent.title = There is a problem uploading this Gift Aid schedule
 
 problemUpdatingGiftAidScheduleQuarantine.heading = There is a problem uploading your Gift Aid schedule
 problemUpdatingGiftAidScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
 problemUpdatingGiftAidScheduleQuarantine.title = There is a problem uploading your Gift Aid schedule
-problemUpdatingGiftAidScheduleQuarantine.agent.heading = There is a problem uploading this schedule
+problemUpdatingGiftAidScheduleQuarantine.agent.heading = There is a problem uploading this Gift Aid schedule
 problemUpdatingGiftAidScheduleQuarantine.agent.hint = This file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
-problemUpdatingGiftAidScheduleQuarantine.agent.title = There is a problem uploading this schedule
+problemUpdatingGiftAidScheduleQuarantine.agent.title = There is a problem uploading this Gift Aid schedule
 
 problemUpdatingGiftAidScheduleRejected.heading = There is a problem uploading your Gift Aid schedule
 problemUpdatingGiftAidScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
 problemUpdatingGiftAidScheduleRejected.title = There is a problem uploading your Gift Aid schedule
-problemUpdatingGiftAidScheduleRejected.agent.heading = There is a problem uploading this schedule
+problemUpdatingGiftAidScheduleRejected.agent.heading = There is a problem uploading this Gift Aid schedule
 problemUpdatingGiftAidScheduleRejected.agent.hint = This file must be an ODS file. Save this schedule as an ODS file and try uploading it again.
-problemUpdatingGiftAidScheduleRejected.agent.title = There is a problem uploading this schedule
+problemUpdatingGiftAidScheduleRejected.agent.title = There is a problem uploading this Gift Aid schedule
 
 problemWithCommunityBuildingsSchedule.caption = Add Community Buildings schedule
 problemWithCommunityBuildingsSchedule.heading = There is a problem with the data in your Community Buildings schedule
@@ -798,9 +798,9 @@ yourOtherIncomeScheduleUpload.title = Your Other Income schedule upload
 problemUpdatingOtherIncomeScheduleRejected.heading = There is a problem uploading your Other Income schedule
 problemUpdatingOtherIncomeScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
 problemUpdatingOtherIncomeScheduleRejected.title = There is a problem uploading your Other Income schedule
-problemUpdatingOtherIncomeScheduleRejected.agent.heading = There is a problem uploading this schedule
+problemUpdatingOtherIncomeScheduleRejected.agent.heading = There is a problem uploading this Other Income schedule
 problemUpdatingOtherIncomeScheduleRejected.agent.hint = This file must be an ODS file. Save this schedule as an ODS file and try uploading it again.
-problemUpdatingOtherIncomeScheduleRejected.agent.title = There is a problem uploading this schedule
+problemUpdatingOtherIncomeScheduleRejected.agent.title = There is a problem uploading this Other Income schedule
 
 connectedCharitiesScheduleUploadSuccessful.title = Upload successful
 connectedCharitiesScheduleUploadSuccessful.message.1 = Upload successful
@@ -831,9 +831,9 @@ yourConnectedCharitiesScheduleUpload.title.agent = Connected Charities schedule 
 problemUpdatingConnectedCharitiesScheduleRejected.heading = There is a problem uploading your Connected Charities schedule
 problemUpdatingConnectedCharitiesScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
 problemUpdatingConnectedCharitiesScheduleRejected.title = There is a problem uploading your Connected Charities schedule
-problemUpdatingConnectedCharitiesScheduleRejected.agent.heading = There is a problem uploading this schedule
+problemUpdatingConnectedCharitiesScheduleRejected.agent.heading = There is a problem uploading this Connected Charities schedule
 problemUpdatingConnectedCharitiesScheduleRejected.agent.hint = This file must be an ODS file. Save this schedule as an ODS file and try uploading it again.
-problemUpdatingConnectedCharitiesScheduleRejected.agent.title = There is a problem uploading this schedule
+problemUpdatingConnectedCharitiesScheduleRejected.agent.title = There is a problem uploading this Connected Charities schedule
 
 problemWithConnectedCharitiesSchedule.title = There is a problem with the data in your Connected Charities schedule
 problemWithConnectedCharitiesSchedule.title.agent = There is a problem with the data in this Connected Charities schedule
@@ -856,9 +856,9 @@ problemWithConnectedCharitiesSchedule.link.deleteSchedule = Delete schedule
 problemUpdatingConnectedCharitiesScheduleQuarantine.heading = There is a problem uploading your Connected Charities schedule
 problemUpdatingConnectedCharitiesScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
 problemUpdatingConnectedCharitiesScheduleQuarantine.title = There is a problem uploading your Connected Charities schedule
-problemUpdatingConnectedCharitiesScheduleQuarantine.agent.heading = There is a problem uploading this schedule
+problemUpdatingConnectedCharitiesScheduleQuarantine.agent.heading = There is a problem uploading this Connected Charities schedule
 problemUpdatingConnectedCharitiesScheduleQuarantine.agent.hint = This file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
-problemUpdatingConnectedCharitiesScheduleQuarantine.agent.title = There is a problem uploading this schedule
+problemUpdatingConnectedCharitiesScheduleQuarantine.agent.title = There is a problem uploading this Connected Charities schedule
 
 adjustmentToThisClaim.caption = Provide repayment claim details
 adjustmentToThisClaim.error.length = Adjustments must be 350 characters or less
