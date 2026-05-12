@@ -920,8 +920,8 @@ gasdsAdjustmentAmountCheckYourAnswers.title.agent = Check this GASDS adjustment 
 gasdsAdjustmentAmountCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Amount of GASDS previously overclaimed
 
 donationAmountYouAreClaiming.caption = Provide GASDS donation details {0}
-donationAmountYouAreClaiming.heading = What donation amount are you claiming under GASDS, in pounds?
-donationAmountYouAreClaiming.title = What donation amount are you claiming under GASDS, in pounds?
+donationAmountYouAreClaiming.heading = What is the donation amount you are claiming, in pounds?
+donationAmountYouAreClaiming.title = What is the donation amount you are claiming, in pounds?
 donationAmountYouAreClaiming.heading.agent = What donation amount is being claimed under GASDS, in pounds?
 donationAmountYouAreClaiming.title.agent = What donation amount is being claimed under GASDS, in pounds?
 donationAmountYouAreClaiming.hint = This can be up to 2 decimal places, for example £1000.00
