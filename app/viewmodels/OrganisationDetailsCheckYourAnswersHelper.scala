@@ -423,11 +423,11 @@ object OrganisationDetailsCheckYourAnswersHelper {
       s"""
          |<div style="max-width: 520px;">
          |  <p class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">
-         |    ${messages("reasonNotRegistered.excepted.heading")}
+         |    ${messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.excepted.label")}
          |  </p>
          |
          |  <p class="govuk-body-s">
-         |    ${messages("reasonNotRegistered.excepted.description")}
+         |    ${messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.excepted.description")}
          |  </p>
          |
          |  <ul class="govuk-list govuk-list--bullet govuk-body-s">
@@ -446,11 +446,11 @@ object OrganisationDetailsCheckYourAnswersHelper {
       s"""
          |<div style="max-width: 520px;">
          |  <p class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">
-         |    ${messages("reasonNotRegistered.exempt.heading")}
+         |    ${messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.exempt.label")}
          |  </p>
          |
          |  <p class="govuk-body-s">
-         |    ${messages("reasonNotRegistered.exempt.description")}
+         |    ${messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.exempt.description")}
          |  </p>
          |
          |  <ul class="govuk-list govuk-list--bullet govuk-body-s">
