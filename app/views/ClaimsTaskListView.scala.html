@@ -22,11 +22,15 @@
     govukTaskList: GovukTaskList
 )
 
-@(viewModel: ClaimsTaskListViewModel)(implicit request: Request[?], messages: Messages)
+@(viewModel: ClaimsTaskListViewModel, isAgent: Boolean, organisationName: Option[String])(implicit request: Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("claimsTaskList.title"))) {
 
-    <span class="govuk-caption-l">@messages("claimsTaskList.caption", viewModel.charitiesReference)</span>
+    @if(isAgent) {
+       @organisationName.map { name =>
+          <span class="govuk-caption-l">@name</span>
+       }
+    }
     <h1 class="govuk-heading-l">@messages("claimsTaskList.heading")</h1>
 
     @for(section <- viewModel.sections) {
@@ -45,3 +49,4 @@
     </p>
 
 }
+    

@@ -90,7 +90,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual OK
           contentAsString(result) should include("Make a charity repayment claim")
-          contentAsString(result) should include("About the claim")
+          contentAsString(result) should include("About this claim")
           contentAsString(result) should include("Provide repayment claim details")
           contentAsString(result) should include("Provide organisation details")
         }
@@ -970,9 +970,12 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         }
       }
 
-      "should display caption with HMRC Charities reference" in {
+      "should display caption with charity name when agent" in {
         given application: Application =
-          applicationBuilder(sessionDataWithClaimId()).mockClaimsConnectorLastVisitedAt.build()
+          applicationBuilder(
+            RepaymentClaimDetailsAnswers.setNameOfCharity("Test Charity Name")(using sessionDataWithClaimId()),
+            affinityGroup = AffinityGroup.Agent
+          ).mockClaimsConnectorLastVisitedAt.build()
 
         running(application) {
           val request = FakeRequest(GET, url)
@@ -980,7 +983,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val content = contentAsString(result)
 
           content should include("""class="govuk-caption-l"""")
-          content should include("HMRC Charities reference:")
+          content should include("Test Charity Name")
         }
       }
 

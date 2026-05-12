@@ -29,6 +29,7 @@ import views.html.ClaimsTaskListView
 import connectors.ClaimsConnector
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
+import models.RepaymentClaimDetailsAnswers
 
 class ClaimsTaskListController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -46,12 +47,24 @@ class ClaimsTaskListController @Inject() (
           claimsConnector
             .updateLastVisitedAt(claimId)
             .map { _ =>
-              Ok(view(ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl)))
+              Ok(
+                view(
+                  viewModel = ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl),
+                  isAgent = request.isAgent,
+                  organisationName = RepaymentClaimDetailsAnswers.getNameOfCharity(using request.sessionData)
+                )
+              )
             }
 
         case None =>
           Future.successful(
-            Ok(view(ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl)))
+            Ok(
+              view(
+                viewModel = ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl),
+                isAgent = request.isAgent,
+                organisationName = RepaymentClaimDetailsAnswers.getNameOfCharity(using request.sessionData)
+              )
+            )
           )
       }
     }
