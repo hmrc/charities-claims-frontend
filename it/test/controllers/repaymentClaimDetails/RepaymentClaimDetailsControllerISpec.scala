@@ -43,19 +43,19 @@ class RepaymentClaimDetailsControllerISpec extends ComponentSpecHelper with Test
       doc.getElementsByClass("govuk-caption-l").text() should include(msg("repaymentClaimDetails.subheading"))
     }
 
-/*    "render the repayment claim details page for an agent" in {
+    "render the repayment claim details page for an agent" in {
       stubAgentAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
-      val result = get("/repayment-claim-details")
+      val result = get("/repayment-claim-details?claimId=123")
 
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
       doc.getElementsByClass("govuk-caption-l").text() should include(msg("repaymentClaimDetails.agent.subheading"))
-    }*/
+    }
   }
 
   "POST /repayment-claim-details" should {

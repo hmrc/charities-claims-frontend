@@ -31,79 +31,73 @@ class CharitiesReferenceNumberInputControllerISpec
     with AuthStub
     with ClaimsValidationStub {
 
-  "GET /claim-reference-number-check" should {
+  val normalUrl = "/enter-charities-reference-number?claimId=123"
+  val changeUrl = "/change-charities-reference-number?claimId=123"
 
-    "render the claiming reference number page for an organisation" in {
-      stubAuthRequest()
-      stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
-      stubGetClaims(claimId)(OK, Json.toJson(claim))
-      stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
+  "GET /enter-charities-reference-number" should {
 
-      val result = get("/claim-reference-number-check")
-
-      result.status shouldBe OK
-
-      val doc = Jsoup.parse(result.body)
-      doc.getElementsByClass("govuk-caption-l").text() should include(msg("claimingReferenceNumber.caption"))
-    }
-
-/*    "render the claiming reference number page for an agent" in {
+    "render the enter charity reference number page for an organisation" in {
       stubAgentAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
-      val result = get("/claim-reference-number-check")
+      val result = get(normalUrl)
 
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.getElementsByClass("govuk-caption-l").text() should include(msg("claimingReferenceNumber.agent.caption"))
-    }*/
+      doc.title() should include(msg("charitiesReferenceNumber.title"))
+    }
+    
   }
 
-  "POST /claim-reference-number-check" should {
+  "POST /enter-charities-reference-number" should {
 
-    "redirect to enter claim reference number when user selects yes" in {
-      stubAuthRequest()
+    "redirect to enter charity name page when valid reference is submitted" in {
+      stubAgentAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
       val result =
-        post("/claim-reference-number-check")(
-          Json.obj("value" -> true)
+        post(normalUrl)(
+          Json.obj("value" -> "A12345")
         )
 
       result.status shouldBe SEE_OTHER
-      result.header(LOCATION).value shouldBe routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode).url
+      result.header(LOCATION).value shouldBe routes.EnterCharityNameController.onPageLoad(NormalMode).url
     }
 
-    "redirect to check your answers when user selects no" in {
-      stubAuthRequest()
-      stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
-      stubGetClaims(claimId)(OK, Json.toJson(claim))
-      stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
-
-      val result =
-        post("/claim-reference-number-check")(
-          Json.obj("value" -> false)
-        )
-
-      result.status shouldBe SEE_OTHER
-      result.header(LOCATION).value shouldBe routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
-    }
 
     "return BadRequest when form submission is invalid" in {
-      stubAuthRequest()
+      stubAgentAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
       val result =
-        post("/claim-reference-number-check")(Json.obj())
+        post(normalUrl)(Json.obj())
 
       result.status shouldBe BAD_REQUEST
+    }
+
+    "POST /change-charities-reference-number" should {
+
+      "redirect to the check your answers page when valid value submitted" in {
+        stubAgentAuthRequest()
+        stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+        stubGetClaims(claimId)(OK, Json.toJson(claim))
+        stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
+
+        val result =
+          post(changeUrl)(
+            Json.obj("value" -> "A12345")
+          )
+
+        result.status shouldBe SEE_OTHER
+        result.header(LOCATION).value shouldBe routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad.url
+      }
     }
   }
 }
