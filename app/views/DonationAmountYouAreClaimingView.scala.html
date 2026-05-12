@@ -28,7 +28,7 @@
 @(form: Form[?], index: Int, mode: Mode,isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = title(form, messages(if(isAgent) "donationAmountYouAreClaiming.title.agant" else "donationAmountYouAreClaiming.title"))
+    pageTitle = title(form, messages(if(isAgent) "donationAmountYouAreClaiming.title.agent" else "donationAmountYouAreClaiming.title"))
 ) {
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
