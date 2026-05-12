@@ -26,6 +26,13 @@ import play.api.data.Form
 import play.api.test.FakeRequest
 import models.Mode.*
 import uk.gov.hmrc.auth.core.AffinityGroup
+import connectors.ClaimsConnector
+import play.api.inject.bind
+import play.api.inject.guice.GuiceableModule
+import uk.gov.hmrc.http.HeaderCarrier
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
 
@@ -33,6 +40,12 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
     "charitiesReferenceNumber.error.required",
     (7, "charitiesReferenceNumber.error.length"),
     "charitiesReferenceNumber.error.regex"
+  )
+
+  val mockClaimsConnector: ClaimsConnector = mock[ClaimsConnector]
+
+  override protected val additionalBindings: List[GuiceableModule] = List(
+    bind[ClaimsConnector].toInstance(mockClaimsConnector)
   )
 
   "CharitiesReferenceNumberInputController" - {
@@ -107,7 +120,8 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
-      "should redirect to R1.9  when in NormalMode" in {
+      "should return bad request when in NormalMode when hrmcref is duplicate ref - " in {
+        val hmrcRef = "AA12356"
         val answers = RepaymentClaimDetailsAnswers(
           claimingReferenceNumber = Some(true),
           hmrcCharitiesReference = Some("AA12356")
@@ -119,8 +133,45 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
             repaymentClaimDetailsAnswers = Some(answers)
           )
 
+        (mockClaimsConnector
+          .hasUnsubmittedClaim(_: String)(using _: HeaderCarrier))
+          .expects(hmrcRef, *)
+          .returning(Future(true))
+
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.CharitiesReferenceNumberInputController.onPageLoad(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "AA12356")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual BAD_REQUEST
+        }
+      }
+
+      "should redirect to R1.9 when in NormalMode" in {
+        val hmrcRef = "AA12356"
+        val answers = RepaymentClaimDetailsAnswers(
+          claimingReferenceNumber = Some(true),
+          hmrcCharitiesReference = Some("AA12356")
+        )
+
+        val sessionData = SessionData
+          .empty("AA12356")
+          .copy(
+            repaymentClaimDetailsAnswers = Some(answers)
+          )
+
+        (mockClaimsConnector
+          .hasUnsubmittedClaim(_: String)(using _: HeaderCarrier))
+          .expects(hmrcRef, *)
+          .returning(Future(false))
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -130,12 +181,15 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.EnterCharityNameController.onPageLoad(NormalMode).url)
+          redirectLocation(result) shouldEqual Some(
+            routes.EnterCharityNameController.onPageLoad(NormalMode).url
+          )
 
         }
       }
 
-      "should redirect to R1.9  when in CheckMode" in {
+      "should redirect to R1.9 when in CheckMode" in {
+        val hmrcRef = "AA12356"
         val answers = RepaymentClaimDetailsAnswers(
           claimingReferenceNumber = Some(true),
           hmrcCharitiesReference = Some("AA12356")
@@ -147,8 +201,13 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
             repaymentClaimDetailsAnswers = Some(answers)
           )
 
+        (mockClaimsConnector
+          .hasUnsubmittedClaim(_: String)(using _: HeaderCarrier))
+          .expects(hmrcRef, *)
+          .returning(Future(false))
+
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -199,6 +258,23 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
+
+      "should return BadRequest when invalid data is submitted" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, routes.CharitiesReferenceNumberInputController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "invalid")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual BAD_REQUEST
         }
       }
 
