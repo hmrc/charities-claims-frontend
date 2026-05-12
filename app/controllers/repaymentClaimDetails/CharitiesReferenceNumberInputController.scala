@@ -18,6 +18,7 @@ package controllers.repaymentClaimDetails
 
 import models.Mode.*
 import services.SaveService
+import connectors.ClaimsConnector
 import play.api.mvc.*
 import com.google.inject.Inject
 import controllers.BaseController
@@ -36,6 +37,7 @@ class CharitiesReferenceNumberInputController @Inject() (
   actions: Actions,
   guard: GuardAction,
   formProvider: CharitiesReferenceTextInputFormProvider,
+  claimsConnector: ClaimsConnector,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
@@ -68,9 +70,17 @@ class CharitiesReferenceNumberInputController @Inject() (
           .fold(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
-              saveService
-                .save(RepaymentClaimDetailsAnswers.setHmrcCharitiesReference(value))
-                .map(_ => Redirect(navigator(mode)))
+              claimsConnector.hasUnsubmittedClaim(value).flatMap {
+                case response @ true  =>
+                  val formWithErrors = form
+                    .fill(value)
+                    .withError(s"value", "charitiesReferenceNumber.error.exists", value)
+                  Future.successful(BadRequest(view(formWithErrors, mode)))
+                case response @ false =>
+                  saveService
+                    .save(RepaymentClaimDetailsAnswers.setHmrcCharitiesReference(value))
+                    .map(_ => Redirect(navigator(mode)))
+              }
           )
       }
 
