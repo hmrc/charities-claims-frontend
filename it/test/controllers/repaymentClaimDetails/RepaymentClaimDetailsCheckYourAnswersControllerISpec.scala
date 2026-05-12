@@ -68,15 +68,15 @@ class RepaymentClaimDetailsCheckYourAnswersControllerISpec
       result.header(LOCATION).value shouldBe controllers.routes.ClaimsTaskListController.onPageLoad.url
     }
 
-/*    "redirect to task list when answers are complete for an agent" in {
+    "redirect to task list when answers are complete for an agent" in {
 
       stubAgentBackend()
 
-      val result = post("/check-your-repayment-claim")(Json.obj())
+      val result = post("/check-your-repayment-claim?claimId=123")(Json.obj())
 
       result.status shouldBe SEE_OTHER
       result.header(LOCATION).value shouldBe controllers.routes.ClaimsTaskListController.onPageLoad.url
-    }*/
+    }
 
     "redirect to incomplete answers page when answers are incomplete" in {
 

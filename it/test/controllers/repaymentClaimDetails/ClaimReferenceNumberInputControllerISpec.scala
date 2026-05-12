@@ -43,19 +43,19 @@ class ClaimReferenceNumberInputControllerISpec
       doc.getElementsByClass("govuk-caption-l").text() should include(msg("claimReferenceNumber.caption"))
     }
 
-/*    "render the claim reference number page for an agent" in {
+    "render the claim reference number page for an agent" in {
       stubAgentAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
-      val result = get("/enter-claim-reference-number")
+      val result = get("/enter-claim-reference-number?claimId=123")
 
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
       doc.getElementsByClass("govuk-caption-l").text() should include(msg("claimReferenceNumber.agent.caption"))
-    }*/
+    }
 
   }
 
