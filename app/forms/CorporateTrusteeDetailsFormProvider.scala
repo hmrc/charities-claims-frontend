@@ -29,8 +29,8 @@ class CorporateTrusteeDetailsFormProvider @Inject() extends Mappings {
   private val nameRegex      = "^([a-zA-Z0-9 ]{1,160})$"
 
   val corporateTrusteeDaytimeTelephoneNumber = "corporateTrusteeDaytimeTelephoneNumber"
-  private val trusteePhoneNumberMaxLength    = 35
-  private val trusteePhoneNumberRegex        = "^[0-9\\(\\)\\-\\s]{1,35}$"
+  private val trusteePhoneNumberMaxLength    = 30
+  private val trusteePhoneNumberRegex        = "^[0-9\\(\\)\\-\\s]{1,30}$"
 
   val corporateTrusteePostcode = "corporateTrusteePostcode"
 

@@ -361,14 +361,31 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
         }
       }
 
-      "should return BadRequest when invalid data (trusteePhoneNumber) is submitted" in {
-        val sessionData                = completeRepaymentDetailsAnswersSession
+      "should return BadRequest when no trusteePhoneNumber is submitted" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.CorporateTrusteeDetailsController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("trusteePhoneNumber" -> "")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual BAD_REQUEST
+        }
+      }
+
+      "should return BadRequest when trusteePhoneNumber exceeding 30 characters is submitted" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.CorporateTrusteeDetailsController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("trusteePhoneNumber" -> "1234567890123456789012345678901234567890")
 
           val result = route(application, request).value
 

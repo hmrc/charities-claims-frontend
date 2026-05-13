@@ -23,8 +23,8 @@ import javax.inject.Inject
 
 class PhoneNumberFormProvider @Inject() extends Mappings {
 
-  private val phoneNumberRegex = "^[0-9\\(\\)\\-\\s]{1,35}$"
-  private val maxLength        = 35
+  private val phoneNumberRegex = "^[0-9\\(\\)\\-\\s]{1,30}$"
+  private val maxLength        = 30
 
   def apply(): Form[String] = Form(
     "value" -> text("enterTelephoneNumber.error.required")
