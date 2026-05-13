@@ -783,6 +783,7 @@ yourCommunityBuildingsScheduleUpload.file = Community Buildings Schedule
 yourCommunityBuildingsScheduleUpload.heading = Your Community Buildings schedule upload
 yourCommunityBuildingsScheduleUpload.agent.heading = Community Buildings schedule upload
 yourCommunityBuildingsScheduleUpload.paragraph.one = You can upload your Community Buildings schedule as a spreadsheet. The selected file must be smaller than 250KB.
+yourCommunityBuildingsScheduleUpload.agent.paragraph.one = You can upload the Community Buildings schedule as a spreadsheet. The selected file must be smaller than 250KB.
 yourCommunityBuildingsScheduleUpload.title = Your Community Buildings schedule upload
 yourCommunityBuildingsScheduleUpload.agent.title = Community Buildings schedule upload
 
