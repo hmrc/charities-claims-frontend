@@ -24,7 +24,7 @@
     govukButton: GovukButton
 )
 
-@(nextPage: Call,claimRefNumber: String)(implicit request: Request[?], messages: Messages)
+@(nextPage: Call,claimRefNumber: String,isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("claimComplete.title")),
@@ -44,8 +44,8 @@
     </div>
     <h2 class="govuk-heading-m">@messages("claimComplete.subheading")</h2>
 
-    <p class="govuk-body">@messages("claimComplete.para.1")</p>
-    <p class="govuk-body">@messages("claimComplete.para.2")</p>
-    <p class="govuk-body">@Html(messages("claimComplete.printSummaryLink", nextPage))</p>
+    <p class="govuk-body">@messages(if(isAgent) "claimComplete.para.1.agent" else "claimComplete.para.1")</p>
+    <p class="govuk-body">@messages(if(isAgent) "claimComplete.para.2.agent" else "claimComplete.para.2")</p>
+    <p class="govuk-body">@Html(messages(if(isAgent) "claimComplete.printSummaryLink.agent" else "claimComplete.printSummaryLink", nextPage))</p>
 
 }

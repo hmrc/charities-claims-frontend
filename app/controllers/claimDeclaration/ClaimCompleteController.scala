@@ -35,7 +35,7 @@ class ClaimCompleteController @Inject() (
       sessionData.submissionReference match {
         case Some(value) =>
           val nextPage: Call = controllers.claimDeclaration.routes.RepaymentClaimSummaryController.onPageLoad
-          Future.successful(Ok(view(nextPage, value)))
+          Future.successful(Ok(view(nextPage, value, isAgent = request.isAgent)))
         case _           => Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
       }
     }
