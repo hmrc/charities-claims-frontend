@@ -20,6 +20,7 @@ import util.BaseSpec
 import util.TestScheduleData
 import connectors.{ClaimsValidationConnector, UnregulatedDonationsConnector}
 import models.{
+  AgentUserOrganisationDetailsAnswers,
   FileUploadReference,
   GetUploadResultValidatedGiftAid,
   GiftAidScheduleData,
@@ -92,6 +93,24 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
 
         val result = UnregulatedDonationsService.getReasonNotRegistered(sessionData)
         result shouldEqual Some(ReasonNotRegisteredWithRegulator.Waiting)
+      }
+
+      "should return Some(LowIncome) when reason is set in agent org details" in {
+        val sessionData = AgentUserOrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
+          ReasonNotRegisteredWithRegulator.LowIncome
+        )(using SessionData.empty(testCharitiesReference))
+
+        val result = UnregulatedDonationsService.getReasonNotRegistered(sessionData)
+        result shouldEqual Some(ReasonNotRegisteredWithRegulator.LowIncome)
+      }
+
+      "should return Some(Excepted) when reason is set in agent org details" in {
+        val sessionData = AgentUserOrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
+          ReasonNotRegisteredWithRegulator.Excepted
+        )(using SessionData.empty(testCharitiesReference))
+
+        val result = UnregulatedDonationsService.getReasonNotRegistered(sessionData)
+        result shouldEqual Some(ReasonNotRegisteredWithRegulator.Excepted)
       }
     }
 
