@@ -556,6 +556,7 @@ problemWithCommunityBuildingsSchedule.link.deleteSchedule = Delete schedule
 problemWithCommunityBuildingsSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Community Buildings donations (opens in new tab)</a>.
 problemWithCommunityBuildingsSchedule.list.item.2 = Delete this Community Buildings schedule.
 problemWithCommunityBuildingsSchedule.list.item.3 = Update your spreadsheet.
+problemWithCommunityBuildingsSchedule.list.item.3.agent = Update the spreadsheet.
 problemWithCommunityBuildingsSchedule.list.item.4 = Upload the updated spreadsheet.
 problemWithCommunityBuildingsSchedule.subheading.1 = What you can do next
 problemWithCommunityBuildingsSchedule.subheading.2 = Summary of errors
@@ -775,13 +776,14 @@ yourGiftAidScheduleUpload.agent.heading = Gift Aid schedule upload
 yourGiftAidScheduleUpload.paragraph.one = You can upload your Gift Aid schedule as a spreadsheet. The selected file must be smaller than 250KB.
 yourGiftAidScheduleUpload.agent.paragraph.one = You can upload the Gift Aid schedule as a spreadsheet. The selected file must be smaller than 250KB.
 yourGiftAidScheduleUpload.title = Your Gift Aid schedule upload
-yourGiftAidScheduleUpload.agent.title = Your Gift Aid schedule upload
+yourGiftAidScheduleUpload.agent.title = Gift Aid schedule upload
 
 yourCommunityBuildingsScheduleUpload.caption = Add Community Buildings schedule
 yourCommunityBuildingsScheduleUpload.file = Community Buildings Schedule
 yourCommunityBuildingsScheduleUpload.heading = Your Community Buildings schedule upload
 yourCommunityBuildingsScheduleUpload.agent.heading = Community Buildings schedule upload
 yourCommunityBuildingsScheduleUpload.paragraph.one = You can upload your Community Buildings schedule as a spreadsheet. The selected file must be smaller than 250KB.
+yourCommunityBuildingsScheduleUpload.agent.paragraph.one = You can upload the Community Buildings schedule as a spreadsheet. The selected file must be smaller than 250KB.
 yourCommunityBuildingsScheduleUpload.title = Your Community Buildings schedule upload
 yourCommunityBuildingsScheduleUpload.agent.title = Community Buildings schedule upload
 
@@ -792,7 +794,7 @@ yourOtherIncomeScheduleUpload.paragraph.one = You can upload your Other Income s
 yourOtherIncomeScheduleUpload.agent.paragraph.one = You can upload the Other Income schedule as a spreadsheet. The selected file must be smaller than 250KB.
 yourOtherIncomeScheduleUpload.table.key = Other Income Schedule
 yourOtherIncomeScheduleUpload.title = Your Other Income schedule upload
-yourOtherIncomeScheduleUpload.title = Other Income schedule upload
+yourOtherIncomeScheduleUpload.agent.title = Other Income schedule upload
 
 problemUpdatingOtherIncomeScheduleRejected.heading = There is a problem uploading your Other Income schedule
 problemUpdatingOtherIncomeScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.

@@ -69,7 +69,7 @@
     <ol class="govuk-list govuk-list--number govuk-!-margin-bottom-9">
         <li>@Html(messages("problemWithCommunityBuildingsSchedule.list.item.1", communityBuildingsScheduleSpreadsheetGuidanceUrl))</li>
         <li>@messages("problemWithCommunityBuildingsSchedule.list.item.2")</li>
-        <li>@messages("problemWithCommunityBuildingsSchedule.list.item.3")</li>
+        <li>@messages(if(isAgent) "problemWithCommunityBuildingsSchedule.list.item.3.agent" else "problemWithCommunityBuildingsSchedule.list.item.3")</li>
         <li>@messages("problemWithCommunityBuildingsSchedule.list.item.4")</li>
     </ol>
 
