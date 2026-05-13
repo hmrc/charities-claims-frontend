@@ -100,16 +100,21 @@ charityExcepted.bullet.3 = a scout or guide group
 charityExcepted.bullet.4 = a charitable service of the armed forces
 charityExcepted.bullet.5 = a students’ union
 charityExcepted.heading = Your charity is excepted
+charityExcepted.agent.heading = The charity is excepted
 charityExcepted.p1 = Your charity is excepted as the charity’s income is £100,000 or less and is classed as one of the following:
+charityExcepted.agent.p1 = The charity is excepted as the charity’s income is £100,000 or less and is classed as one of the following:
 charityExcepted.title = Your charity is excepted
+charityExcepted.agent.title = The charity is excepted
 
 charityExempt.bullet.1 = university or school
 charityExempt.bullet.2 = museum or gallery
 charityExempt.bullet.3 = housing association
 charityExempt.heading = Your charity is exempt
-charityExempt.p1 = The charity is exempt from registering with a regulator because it is a:
-charityExempt.agent.p1 = Your charity is exempt from registering with a regulator because it is a:
+charityExempt.agent.heading = The charity is exempt
+charityExempt.p1 = Your charity is exempt from registering with a regulator because it is a:
+charityExempt.agent.p1 = The charity is exempt from registering with a regulator because it is a:
 charityExempt.title = Your charity is exempt
+charityExempt.agent.title = The charity is exempt
 
 charityRegulatorNumber.caption = Provide organisation details
 charityRegulatorNumber.error.format = Enter a charity regulator number in the correct format
@@ -608,9 +613,13 @@ reasonNotRegisteredWithRegulator.heading = Why is the charity not registered wit
 reasonNotRegisteredWithRegulator.missingDetails = confirm why you’re not registered with a regulator
 reasonNotRegisteredWithRegulator.agent.missingDetails = confirm why the charity is not registered with a regulator
 reasonNotRegisteredWithRegulator.radio.Excepted = Your charity is excepted
+reasonNotRegisteredWithRegulator.agent.radio.Excepted = The charity is excepted
 reasonNotRegisteredWithRegulator.radio.Exempt = Your charity is exempt
+reasonNotRegisteredWithRegulator.agent.radio.Exempt = The charity is exempt
 reasonNotRegisteredWithRegulator.radio.LowIncome = Your charity is located in England or Wales and your income is less than £5,000 per year
+reasonNotRegisteredWithRegulator.agent.radio.LowIncome = The charity is located in England or Wales and its income is less than £5,000 per year
 reasonNotRegisteredWithRegulator.radio.Waiting = Your charity is based in Northern Ireland and you are awaiting registration with the Charity Commission for Northern Ireland (CCNI)
+reasonNotRegisteredWithRegulator.agent.radio.Waiting = The charity is based in Northern Ireland and it is awaiting registration with the Charity Commission for Northern Ireland (CCNI)
 reasonNotRegisteredWithRegulator.title = Why is the charity not registered with a regulator?
 
 registerCharityWithARegulator.error.required = Select ‘Yes’ if you need to register with a regulator

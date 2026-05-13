@@ -17,7 +17,7 @@
 package controllers.organisationDetails
 
 import controllers.ControllerSpec
-import models.{OrganisationDetailsAnswers, SessionData}
+import models.{AgentUserOrganisationDetailsAnswers, OrganisationDetailsAnswers, SessionData}
 import models.ReasonNotRegisteredWithRegulator.*
 import models.Mode.*
 import play.api.Application
@@ -96,7 +96,7 @@ class CharityExceptedControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render the page correctly if excepted" in {
+      "should render the page correctly if excepted for an organisation" in {
         val sessionData = completeRepaymentDetailsAnswersSession.and(
           OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Excepted)
         )
@@ -111,7 +111,27 @@ class CharityExceptedControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[CharityExceptedView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(NormalMode).body
+          contentAsString(result) shouldEqual view(NormalMode, false).body
+        }
+      }
+
+      "should render the page correctly if excepted for an agent" in {
+        val sessionData = completeRepaymentDetailsAnswersSession.and(
+          AgentUserOrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Excepted)
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CharityExceptedController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[CharityExceptedView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(NormalMode, true).body
         }
       }
 

@@ -22,7 +22,12 @@ import controllers.ControllerSpec
 import views.html.ReasonNotRegisteredWithRegulatorView
 import play.api.Application
 import forms.RadioListFormProvider
-import models.{OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator, SessionData}
+import models.{
+  AgentUserOrganisationDetailsAnswers,
+  OrganisationDetailsAnswers,
+  ReasonNotRegisteredWithRegulator,
+  SessionData
+}
 import play.api.data.Form
 import models.Mode.*
 import models.NameOfCharityRegulator.{EnglandAndWales, None, NorthernIreland, Scottish}
@@ -102,7 +107,7 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render the page correctly if name of charity is None" in {
+      "should render the page correctly if name of charity is None for an organisation" in {
         val sessionData                =
           completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setNameOfCharityRegulator(None))
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -115,7 +120,28 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ReasonNotRegisteredWithRegulatorView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form, NormalMode).body
+          contentAsString(result) shouldEqual view(form, NormalMode, false).body
+        }
+      }
+
+      "should render the page correctly if name of charity is None for an agent" in {
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.and(
+            AgentUserOrganisationDetailsAnswers.setNameOfCharityRegulator(None)
+          )
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ReasonNotRegisteredWithRegulatorView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form, NormalMode, true).body
         }
       }
 
@@ -172,7 +198,7 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
         }
       }
 
-      "should render the page and pre-populate correctly with lowIncome value when name of charity is None" in {
+      "should render the page and pre-populate correctly with lowIncome value when name of charity is None for an organisation" in {
 
         val sessionDataWithLowIncome                        = completeRepaymentDetailsAnswersSession.and(
           OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(LowIncome)
@@ -193,12 +219,43 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(
             form.fill(ReasonNotRegisteredWithRegulator.LowIncome),
-            NormalMode
+            NormalMode,
+            false
           ).body
         }
       }
 
-      "should render the page and pre-populate correctly with excepted value when name of charity is None" in {
+      "should render the page and pre-populate correctly with lowIncome value when name of charity is None for an agent" in {
+
+        val sessionDataWithLowIncome                        = completeRepaymentDetailsAnswersSession.and(
+          AgentUserOrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(LowIncome)
+        )
+        val sessionDataWithLowIncomeAndCharityRegulatorNone =
+          AgentUserOrganisationDetailsAnswers.setNameOfCharityRegulator(None)(using sessionDataWithLowIncome)
+
+        given application: Application =
+          applicationBuilder(
+            sessionData = sessionDataWithLowIncomeAndCharityRegulatorNone,
+            affinityGroup = AffinityGroup.Agent
+          ).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ReasonNotRegisteredWithRegulatorView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(
+            form.fill(ReasonNotRegisteredWithRegulator.LowIncome),
+            NormalMode,
+            true
+          ).body
+        }
+      }
+
+      "should render the page and pre-populate correctly with excepted value when name of charity is None for an organisation" in {
 
         val sessionDataWithExcepted                        = completeRepaymentDetailsAnswersSession.and(
           OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Excepted)
@@ -217,11 +274,37 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ReasonNotRegisteredWithRegulatorView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(Excepted), NormalMode).body
+          contentAsString(result) shouldEqual view(form.fill(Excepted), NormalMode, false).body
         }
       }
 
-      "should render the page and pre-populate correctly with exempted value when name of charity is None" in {
+      "should render the page and pre-populate correctly with excepted value when name of charity is None for an agent" in {
+
+        val sessionDataWithExcepted                        = completeRepaymentDetailsAnswersSession.and(
+          AgentUserOrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Excepted)
+        )
+        val sessionDataWithExceptedAndCharityRegulatorNone =
+          AgentUserOrganisationDetailsAnswers.setNameOfCharityRegulator(None)(using sessionDataWithExcepted)
+
+        given application: Application =
+          applicationBuilder(
+            sessionData = sessionDataWithExceptedAndCharityRegulatorNone,
+            affinityGroup = AffinityGroup.Agent
+          ).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ReasonNotRegisteredWithRegulatorView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(Excepted), NormalMode, true).body
+        }
+      }
+
+      "should render the page and pre-populate correctly with exempted value when name of charity is None for an organisation" in {
 
         val sessionDataWithExempt                        = completeRepaymentDetailsAnswersSession.and(
           OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Exempt)
@@ -240,11 +323,37 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ReasonNotRegisteredWithRegulatorView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(Exempt), NormalMode).body
+          contentAsString(result) shouldEqual view(form.fill(Exempt), NormalMode, false).body
         }
       }
 
-      "should render the page and pre-populate correctly with waiting value when name of charity is None" in {
+      "should render the page and pre-populate correctly with exempted value when name of charity is None for an agent" in {
+
+        val sessionDataWithExempt                        = completeRepaymentDetailsAnswersSession.and(
+          AgentUserOrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Exempt)
+        )
+        val sessionDataWithExemptAndCharityRegulatorNone =
+          AgentUserOrganisationDetailsAnswers.setNameOfCharityRegulator(None)(using sessionDataWithExempt)
+
+        given application: Application =
+          applicationBuilder(
+            sessionData = sessionDataWithExemptAndCharityRegulatorNone,
+            affinityGroup = AffinityGroup.Agent
+          ).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ReasonNotRegisteredWithRegulatorView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(Exempt), NormalMode, true).body
+        }
+      }
+
+      "should render the page and pre-populate correctly with waiting value when name of charity is None for an organisation" in {
 
         val sessionDataWithWaiting                        = completeRepaymentDetailsAnswersSession.and(
           OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Waiting)
@@ -263,7 +372,33 @@ class ReasonNotRegisteredWithRegulatorControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[ReasonNotRegisteredWithRegulatorView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(Waiting), NormalMode).body
+          contentAsString(result) shouldEqual view(form.fill(Waiting), NormalMode, false).body
+        }
+      }
+
+      "should render the page and pre-populate correctly with waiting value when name of charity is None for an agent" in {
+
+        val sessionDataWithWaiting                        = completeRepaymentDetailsAnswersSession.and(
+          AgentUserOrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(Waiting)
+        )
+        val sessionDataWithWaitingAndCharityRegulatorNone =
+          AgentUserOrganisationDetailsAnswers.setNameOfCharityRegulator(None)(using sessionDataWithWaiting)
+
+        given application: Application =
+          applicationBuilder(
+            sessionData = sessionDataWithWaitingAndCharityRegulatorNone,
+            affinityGroup = AffinityGroup.Agent
+          ).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[ReasonNotRegisteredWithRegulatorView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(Waiting), NormalMode, true).body
         }
       }
     }

@@ -52,7 +52,7 @@ class ReasonNotRegisteredWithRegulatorController @Inject() (
           if request.isAgent then AgentUserOrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
           else OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator
 
-        Future.successful(Ok(view(form.withDefault(previousAnswer), mode)))
+        Future.successful(Ok(view(form.withDefault(previousAnswer), mode, request.isAgent)))
       }
     }
 
@@ -61,7 +61,7 @@ class ReasonNotRegisteredWithRegulatorController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, request.isAgent))),
           value =>
             val updatedSession = if (request.isAgent) {
               AgentUserOrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(value)
