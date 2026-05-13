@@ -31,7 +31,7 @@ class ProblemWithOtherIncomeScheduleControllerISpec
     with ClaimsStub
     with ClaimsValidationStub {
 
-  private val url = "/problem-with-other-income-schedule"
+  private val url = "/problem-with-other-income-schedule?claimId=123"
 
   "GET /problem-with-other-income-schedule" should {
 
@@ -45,6 +45,19 @@ class ProblemWithOtherIncomeScheduleControllerISpec
       val doc = Jsoup.parse(result.body)
       doc.title should include(msg("problemWithOtherIncomeSchedule.title"))
     }
+    
+   "render the agent page when validation errors exist" in {
+        stubAgentBackendWithValidationErrors()
+  
+        val result = get(url)
+  
+        result.status shouldBe OK
+  
+        val doc = Jsoup.parse(result.body)
+        doc.title should include(msg("problemWithOtherIncomeSchedule.agent.title"))
+        doc.text should include(msg("problemWithOtherIncomeSchedule.agent.heading"))
+        doc.text should include(msg("problemWithOtherIncomeSchedule.agent.list.item.3"))
+      }
 
     "redirect to upload page when file reference is missing" in {
       stubBackendWithoutFileRef()
@@ -82,6 +95,35 @@ class ProblemWithOtherIncomeScheduleControllerISpec
 
   private def stubBackendWithValidationErrors(): Unit = {
     stubAuthRequest()
+    stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+
+    stubGetClaims(
+      claimId
+    )(OK, Json.toJson(claimWithOtherIncome))
+
+    stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryOtherIncomeValidatedResponse))
+
+    val validationFailedJson = Json.parse(
+      s"""
+      {
+        "reference": "$otherIncomefileRef",
+        "validationType": "OtherIncome",
+        "fileStatus": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "payerName",
+            "error": "Invalid payer name"
+          }
+        ]
+      }
+      """
+    )
+
+    stubGetUploadResult(claimId, otherIncomefileRef)(OK, validationFailedJson)
+  }
+
+  private def stubAgentBackendWithValidationErrors(): Unit = {
+    stubAgentAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
 
     stubGetClaims(

@@ -51,7 +51,7 @@ class ClaimDetailsForTaxYearCheckYourAnswersController @Inject() (
         Future.successful(Ok(view(claimOpt, index, request.isAgent)))
       }
 
-  def onSubmit(index: Int): Action[AnyContent] =
+  def onSubmit: Action[AnyContent] =
     actions
       .authAndGetDataWithGuard(
         SessionData.isRepaymentClaimDetailsComplete
@@ -60,7 +60,7 @@ class ClaimDetailsForTaxYearCheckYourAnswersController @Inject() (
       )
       .async { implicit request =>
         Future.successful(
-          Redirect("/charities-claims/claim-added-for-tax-year")
+          Redirect(routes.ClaimAddedForTaxYearController.onPageLoad)
         )
       }
 }

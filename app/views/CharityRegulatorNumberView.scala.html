@@ -36,7 +36,7 @@ govukErrorSummary: GovukErrorSummary
 
     <span class="govuk-caption-l">@messages("charityRegulatorNumber.caption")</span>
 
-    @formHelper(action = routes.CharityRegulatorNumberController.onSubmit(mode), Symbol("autoComplete") -> "on") {
+    @formHelper(action = routes.CharityRegulatorNumberController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
     @govukInput(
         InputViewModel(

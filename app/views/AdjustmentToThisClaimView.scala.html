@@ -25,7 +25,7 @@
     govukTextareaCharacterCount: GovukTextareaCharacterCount
 )
 
-@(form: Form[?])(implicit request: Request[?], messages: Messages)
+@(form: Form[?],isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = title(form, messages("adjustmentToThisClaim.title"))
@@ -43,7 +43,7 @@
             label = Label(content = Text(messages("adjustmentToThisClaim.heading")),isPageHeading = true,classes = "govuk-fieldset__legend--l"),
             maxLength = 350
         ).withHint(
-            HintViewModel(Text(messages("adjustmentToThisClaim.para")))
+            HintViewModel(Text(messages(if(isAgent) "adjustmentToThisClaim.para.agent" else "adjustmentToThisClaim.para")))
         )
         .fullWidth()
     )

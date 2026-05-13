@@ -42,7 +42,7 @@
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleWithPagination(form, messages("checkYourGiftAidSchedule.title"), paginationStatus), 
+    pageTitle = titleWithPagination(form, messages(if(isAgent) "checkYourGiftAidSchedule.agent.title" else "checkYourGiftAidSchedule.title"), paginationStatus),
     showBackLink = true
 ) {
 

@@ -19,27 +19,27 @@ package controllers.organisationDetails
 import play.api.test.FakeRequest
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import controllers.ControllerSpec
-import views.html.CorporateTrusteeClaimView
+import views.html.AgentHasUKAddressView
 import play.api.Application
 import forms.YesNoFormProvider
-import models.{OrganisationDetailsAnswers, SessionData}
+import models.{AgentUserOrganisationDetailsAnswers, SessionData}
 import play.api.data.Form
 import models.Mode.*
 import uk.gov.hmrc.auth.core.AffinityGroup
 
-class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
+class AgentHasUKAddressControllerSpec extends ControllerSpec {
   private val form: Form[Boolean] = new YesNoFormProvider()()
-  "CorporateTrusteeClaimController" - {
+  "AgentHasUKAddressController" - {
     "onPageLoad" - {
-      "should redirect to Claims List for agent user since organisation only screen" in {
+      "should redirect to Claims List for Organisation user since Agent only screen" in {
         val sessionData = completeRepaymentDetailsAnswersSession
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+          applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
+            FakeRequest(GET, routes.AgentHasUKAddressController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -47,15 +47,15 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
           redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
-      "should redirect to Claims List for agent user since organisation only screen - checkmode" in {
+      "should redirect to Claims List for Organisation user since Agent only screen - checkmode" in {
         val sessionData = completeRepaymentDetailsAnswersSession
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+          applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeClaimController.onPageLoad(CheckMode).url)
+            FakeRequest(GET, routes.AgentHasUKAddressController.onPageLoad(CheckMode).url)
 
           val result = route(application, request).value
 
@@ -63,7 +63,6 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
           redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
-
       "should render ClaimCompleteController if submissionReference is defined" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
@@ -71,11 +70,12 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
           submissionReference = Some(testCharitiesReference)
         )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
+            FakeRequest(GET, routes.AgentHasUKAddressController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -87,69 +87,75 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
       }
       "should render the page correctly" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
+            FakeRequest(GET, routes.AgentHasUKAddressController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[CorporateTrusteeClaimView]
+          val view   = application.injector.instanceOf[AgentHasUKAddressView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view(form, NormalMode).body
         }
       }
 
-      "should render the page and pre-populate correctly with true value" in {
-
+      "should render the page and pre-populate correctly with true for UK Address" in {
         val sessionData =
-          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(true))
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[CorporateTrusteeClaimView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
-        }
-      }
-
-      "should render the page and pre-populate correctly with false value" in {
-
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(false))
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CorporateTrusteeClaimController.onPageLoad(NormalMode).url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[CorporateTrusteeClaimView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
-        }
-      }
-    }
-
-    "onSubmit" - {
-      "should redirect to Claims List for agent user since organisation only screen" in {
-        val sessionData = completeRepaymentDetailsAnswersSession
+          completeRepaymentDetailsAnswersSession.and(
+            AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(true)
+          )
 
         given application: Application =
           applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.CorporateTrusteeClaimController.onSubmit(NormalMode).url)
+            FakeRequest(GET, routes.AgentHasUKAddressController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[AgentHasUKAddressView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(true), NormalMode).body
+        }
+      }
+
+      "should render the page and pre-populate correctly with false for UK Address" in {
+        val sessionData =
+          completeRepaymentDetailsAnswersSession.and(
+            AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(false)
+          )
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.AgentHasUKAddressController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[AgentHasUKAddressView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(form.fill(false), NormalMode).body
+        }
+      }
+
+    }
+
+    "onSubmit" - {
+      "should redirect to Claims List for organisation user since Agent only screen - normalmode" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.AgentHasUKAddressController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -157,15 +163,15 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
           redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
-      "should redirect to Claims List for agent user since organisation only screen - checkmode" in {
+      "should redirect to Claims List for Organisation user since Agent only screen - checkmode" in {
         val sessionData = completeRepaymentDetailsAnswersSession
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+          applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.CorporateTrusteeClaimController.onSubmit(CheckMode).url)
+            FakeRequest(POST, routes.AgentHasUKAddressController.onSubmit(CheckMode).url)
 
           val result = route(application, request).value
 
@@ -180,11 +186,12 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
           submissionReference = Some(testCharitiesReference)
         )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.CorporateTrusteeClaimController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.AgentHasUKAddressController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 
@@ -196,97 +203,81 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
       }
       "should redirect to the next page when the value is true" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
-        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.CorporateTrusteeClaimController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.AgentHasUKAddressController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.CorporateTrusteeAddressController.onPageLoad(NormalMode).url
+            routes.AgentPostcodeController.onPageLoad(NormalMode).url
           )
         }
       }
 
       "should redirect to the next page when the value is false" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
-        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.CorporateTrusteeClaimController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.AgentHasUKAddressController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(
-            routes.AuthorisedOfficialAddressController.onPageLoad(NormalMode).url
+            routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
           )
         }
       }
 
-      "in CheckMode when changing from Yes to No" - {
-        "should redirect to AuthorisedOfficialAddressController" in {
-          // Previous answer was true (Yes), now changing to false (No)
-          val sessionData =
-            completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(true))
-
-          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
-
-          running(application) {
-            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-              FakeRequest(POST, routes.CorporateTrusteeClaimController.onSubmit(CheckMode).url)
-                .withFormUrlEncodedBody("value" -> "false")
-
-            val result = route(application, request).value
-
-            status(result) shouldEqual SEE_OTHER
-            redirectLocation(result) shouldEqual Some(
-              routes.AuthorisedOfficialAddressController.onPageLoad(CheckMode).url
-            )
-          }
-        }
-      }
-
       "in CheckMode when changing from No to Yes" - {
-        "should redirect to CorporateTrusteeAddressController" in {
-          // Previous answer was false (No), now changing to true (Yes)
+        "should redirect to CorporateTrusteeDetailsController" in {
           val sessionData =
-            completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(false))
+            completeRepaymentDetailsAnswersSession.and(
+              AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(true)
+            )
 
-          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-              FakeRequest(POST, routes.CorporateTrusteeClaimController.onSubmit(CheckMode).url)
+              FakeRequest(POST, routes.AgentHasUKAddressController.onSubmit(CheckMode).url)
                 .withFormUrlEncodedBody("value" -> "true")
 
             val result = route(application, request).value
 
             status(result) shouldEqual SEE_OTHER
             redirectLocation(result) shouldEqual Some(
-              routes.CorporateTrusteeAddressController.onPageLoad(CheckMode).url
+              routes.AgentPostcodeController.onPageLoad(CheckMode).url
             )
           }
         }
       }
 
-      "in CheckMode when answer is unchanged" - {
-        "should redirect to CYA when value remains true" in {
+      "in CheckMode when changing from Yes to No" - {
+        "should redirect to CorporateTrusteeDetailsController" in {
           val sessionData =
-            completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(true))
+            completeRepaymentDetailsAnswersSession.and(
+              AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(true)
+            )
 
-          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-              FakeRequest(POST, routes.CorporateTrusteeClaimController.onSubmit(CheckMode).url)
-                .withFormUrlEncodedBody("value" -> "true")
+              FakeRequest(POST, routes.AgentHasUKAddressController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "false")
 
             val result = route(application, request).value
 
@@ -296,16 +287,44 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
             )
           }
         }
+      }
 
-        "should redirect to CYA when value remains false" in {
+      "in CheckMode when answer is unchanged" - {
+        "should redirect to CYA when value remains true" in {
           val sessionData =
-            completeRepaymentDetailsAnswersSession.and(OrganisationDetailsAnswers.setAreYouACorporateTrustee(false))
+            completeRepaymentDetailsAnswersSession.and(
+              AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(true)
+            )
 
-          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-              FakeRequest(POST, routes.CorporateTrusteeClaimController.onSubmit(CheckMode).url)
+              FakeRequest(POST, routes.AgentHasUKAddressController.onSubmit(CheckMode).url)
+                .withFormUrlEncodedBody("value" -> "true")
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              routes.AgentPostcodeController.onPageLoad(CheckMode).url
+            )
+          }
+        }
+
+        "should redirect to CYA when value remains false" in {
+          val sessionData =
+            completeRepaymentDetailsAnswersSession.and(
+              AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(false)
+            )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
+
+          running(application) {
+            given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+              FakeRequest(POST, routes.AgentHasUKAddressController.onSubmit(CheckMode).url)
                 .withFormUrlEncodedBody("value" -> "false")
 
             val result = route(application, request).value
@@ -319,38 +338,40 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
       }
 
       "in CheckMode with no previous answer (entering new data)" - {
-        "should redirect to CorporateTrusteeAddressController when selecting Yes" in {
+        "should redirect to AgentPostCode when selecting Yes" in {
           val sessionData                = completeRepaymentDetailsAnswersSession
-          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-              FakeRequest(POST, routes.CorporateTrusteeClaimController.onSubmit(CheckMode).url)
+              FakeRequest(POST, routes.AgentHasUKAddressController.onSubmit(CheckMode).url)
                 .withFormUrlEncodedBody("value" -> "true")
 
             val result = route(application, request).value
 
             status(result) shouldEqual SEE_OTHER
             redirectLocation(result) shouldEqual Some(
-              routes.CorporateTrusteeAddressController.onPageLoad(CheckMode).url
+              routes.AgentPostcodeController.onPageLoad(CheckMode).url
             )
           }
         }
 
-        "should redirect to AuthorisedOfficialAddressController when selecting No" in {
+        "should redirect to CYA when selecting No" in {
           val sessionData                = completeRepaymentDetailsAnswersSession
-          given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+          given application: Application =
+            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession.build()
 
           running(application) {
             given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-              FakeRequest(POST, routes.CorporateTrusteeClaimController.onSubmit(CheckMode).url)
+              FakeRequest(POST, routes.AgentHasUKAddressController.onSubmit(CheckMode).url)
                 .withFormUrlEncodedBody("value" -> "false")
 
             val result = route(application, request).value
 
             status(result) shouldEqual SEE_OTHER
             redirectLocation(result) shouldEqual Some(
-              routes.AuthorisedOfficialAddressController.onPageLoad(CheckMode).url
+              routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
             )
           }
         }
@@ -358,11 +379,12 @@ class CorporateTrusteeClaimControllerSpec extends ControllerSpec {
 
       "should reload the page with errors when a required field is missing" in {
         val sessionData                = completeRepaymentDetailsAnswersSession
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.CorporateTrusteeClaimController.onSubmit(NormalMode).url)
+            FakeRequest(POST, routes.AgentHasUKAddressController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value

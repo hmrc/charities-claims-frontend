@@ -29,6 +29,7 @@ import views.html.ClaimsTaskListView
 import connectors.ClaimsConnector
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
+import models.RepaymentClaimDetailsAnswers
 
 class ClaimsTaskListController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -46,12 +47,24 @@ class ClaimsTaskListController @Inject() (
           claimsConnector
             .updateLastVisitedAt(claimId)
             .map { _ =>
-              Ok(view(ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl)))
+              Ok(
+                view(
+                  viewModel = ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl),
+                  isAgent = request.isAgent,
+                  organisationName = RepaymentClaimDetailsAnswers.getNameOfCharity(using request.sessionData)
+                )
+              )
             }
 
         case None =>
           Future.successful(
-            Ok(view(ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl)))
+            Ok(
+              view(
+                viewModel = ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl),
+                isAgent = request.isAgent,
+                organisationName = RepaymentClaimDetailsAnswers.getNameOfCharity(using request.sessionData)
+              )
+            )
           )
       }
     }
@@ -133,7 +146,11 @@ object ClaimsTaskListController {
 
     Seq(
       Some(buildRepaymentClaimDetailsTask),
-      Some(buildOrganisationDetailsTask),
+      Some(
+        if request.sessionData.isAgent
+        then buildAgentUserOrganisationDetailsTask
+        else buildOrganisationDetailsTask
+      ),
       Option.when(isClaimingGasds)(buildGasdsDetailsTask)
     ).flatten
   }
@@ -189,8 +206,33 @@ object ClaimsTaskListController {
 
   private def buildOrganisationDetailsTask(using request: DataRequest[?], messages: Messages): TaskItem = {
     val isCASCCharityRef: Boolean = isCASCCharityReference(using request.sessionData)
-    val isComplete                = request.sessionData.organisationDetailsAnswers
-      .exists(_.hasOrganisationDetailsCompleteAnswers(isCASCCharityRef))
+    val isComplete                = isOrgDetailsComplete(isCASCCharityRef)
+    val status                    = if (isComplete) TaskStatus.Completed else TaskStatus.NotStarted
+    val href                      = if (isComplete) {
+      organisationDetails.routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
+    } else {
+      organisationDetails.routes.AboutTheOrganisationController.onPageLoad
+    }
+
+    TaskItem(
+      name = messages("claimsTaskList.task.organisationDetails"),
+      href = href,
+      status = status
+    )
+  }
+
+  private def isOrgDetailsComplete(isCASCCharityRef: Boolean)(using request: DataRequest[?]) =
+    if (request.isAgent) {
+      request.sessionData.agentUserOrganisationDetailsAnswers
+        .exists(_.hasAgentDetailsCompleteAnswers(isCASCCharityRef))
+    } else
+      request.sessionData.organisationDetailsAnswers
+        .exists(_.hasOrganisationDetailsCompleteAnswers(isCASCCharityRef))
+
+  private def buildAgentUserOrganisationDetailsTask(using request: DataRequest[?], messages: Messages): TaskItem = {
+    val isCASCCharityRef: Boolean = isCASCCharityReference(using request.sessionData)
+    val isComplete                = request.sessionData.agentUserOrganisationDetailsAnswers
+      .exists(_.hasAgentDetailsCompleteAnswers(isCASCCharityRef))
     val status                    = if (isComplete) TaskStatus.Completed else TaskStatus.NotStarted
     val href                      = if (isComplete) {
       organisationDetails.routes.OrganisationDetailsCheckYourAnswersController.onPageLoad

@@ -70,6 +70,7 @@ class YourOtherIncomeScheduleUploadControllerISpec
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
+      doc.title should include(msg("yourOtherIncomeScheduleUpload.agent.title"))
       doc.text should include(msg("yourOtherIncomeScheduleUpload.agent.heading"))
       doc.text should include(msg("yourOtherIncomeScheduleUpload.agent.paragraph.one"))
     }

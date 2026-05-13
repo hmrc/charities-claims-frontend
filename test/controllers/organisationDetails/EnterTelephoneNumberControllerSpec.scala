@@ -35,6 +35,38 @@ class EnterTelephoneNumberControllerSpec extends ControllerSpec {
   "EnterTelephoneNumberController" - {
 
     "onPageLoad" - {
+      "should redirect to Claims List for Organisation user since Agent only screen" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.EnterTelephoneNumberController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
+      "should redirect to Claims List for Organisation user since Agent only screen - checkmode" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.EnterTelephoneNumberController.onPageLoad(CheckMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
 
       "should redirect to ClaimCompleteController if submissionReference is defined" in {
         val sessionData = SessionData(
@@ -102,6 +134,38 @@ class EnterTelephoneNumberControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
+      "should redirect to Claims List for Organisation user since Agent only screen" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.EnterTelephoneNumberController.onSubmit(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
+      "should redirect to Claims List for Organisation user since Agent only screen - checkmode" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.EnterTelephoneNumberController.onSubmit(CheckMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
 
       "should redirect to ClaimCompleteController if submissionReference is defined" in {
         val sessionData = SessionData(
@@ -139,9 +203,26 @@ class EnterTelephoneNumberControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            "/charities-claims/do-you-have-a-uk-address"
-          ) // TODO: Integrate this page once the corresponding page is implemented
+          redirectLocation(result) shouldEqual Some(routes.AgentHasUKAddressController.onPageLoad(NormalMode).url)
+        }
+      }
+
+      "should redirect CYA when valid data is submitted & in checkmode" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, routes.EnterTelephoneNumberController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value" -> "1234567890")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url)
         }
       }
 

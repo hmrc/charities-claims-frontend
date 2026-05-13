@@ -48,19 +48,19 @@ class RepaymentClaimTypeControllerISpec
       doc.getElementsByClass("govuk-caption-l").text() should include(msg("repaymentClaimType.caption"))
     }
 
-/*    "render the repayment claim type page for an agent" in {
+    "render the repayment claim type page for an agent" in {
       stubAgentAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
       stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
 
-      val result = get("/select-repayment-claim-type")
+      val result = get("/select-repayment-claim-type?claimId=123")
 
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
       doc.getElementsByClass("govuk-caption-l").text() should include(msg("repaymentClaimType.agent.caption"))
-    }*/
+    }
   }
 
   "POST /select-repayment-claim-type" should {

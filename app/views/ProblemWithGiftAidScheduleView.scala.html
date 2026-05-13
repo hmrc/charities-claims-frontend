@@ -39,7 +39,7 @@
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleWithPagination(messages("problemWithGiftAidSchedule.title"), paginationStatus), 
+    pageTitle = titleWithPagination(messages(if(isAgent) "problemWithGiftAidSchedule.agent.title" else "problemWithGiftAidSchedule.title"), paginationStatus),
     showBackLink = true
 ) {
 

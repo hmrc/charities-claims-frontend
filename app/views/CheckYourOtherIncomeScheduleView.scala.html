@@ -37,11 +37,12 @@
     otherIncomeScheduleData: OtherIncomeScheduleData,
     otherIncomes: Seq[OtherIncome],
     paginationViewModel: PaginationViewModel,
-    paginationStatus: PaginationStatus
+    paginationStatus: PaginationStatus,
+        isAgent: Boolean
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleWithPagination(form, messages("checkYourOtherIncomeSchedule.title"), paginationStatus),
+    pageTitle = titleWithPagination(form, messages(if(isAgent) "checkYourOtherIncomeSchedule.agent.title" else "checkYourOtherIncomeSchedule.title"), paginationStatus),
     showBackLink = true
 ) {
 
@@ -50,8 +51,11 @@
     }
 
     <span class="govuk-caption-l">@messages("checkYourOtherIncomeSchedule.caption")</span>
-    <h1 class="govuk-heading-l">@messages("checkYourOtherIncomeSchedule.heading")</h1>
-
+    @if(isAgent){
+        <h1 class="govuk-heading-l">@messages("checkYourOtherIncomeSchedule.agent.heading")</h1>
+    }else {
+      <h1 class="govuk-heading-l">@messages("checkYourOtherIncomeSchedule.heading")</h1>
+    }
     @govukSummaryList(SummaryList(
         card = Some(Card(
             title = Some(CardTitle(

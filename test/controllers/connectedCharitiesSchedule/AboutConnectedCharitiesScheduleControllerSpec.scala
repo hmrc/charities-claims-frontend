@@ -93,7 +93,6 @@ class AboutConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
         given application: Application =
           applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation).build()
 
-        val customConfig = "https://test.example.com/connected-charities-schedule"
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.AboutConnectedCharitiesScheduleController.onPageLoad.url)
@@ -112,8 +111,6 @@ class AboutConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
 
         given application: Application =
           applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
-
-        val customConfig = "https://test.example.com/connected-charities-schedule"
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =

@@ -23,9 +23,44 @@ import models.SessionData.and
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import uk.gov.hmrc.auth.core.AffinityGroup
 class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
   "AboutCommunityBuildingsScheduleController" - {
     "onPageLoad" - {
+
+      "should render content for organisation" in {
+        given application: Application =
+          applicationBuilder(sessionData = completeGasdsSession, affinityGroup = AffinityGroup.Organisation).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          content should include(messages("aboutCommunityBuildingsSchedule.paragraph.one"))
+          content shouldNot include(messages("aboutCommunityBuildingsSchedule.agent.paragraph.one"))
+        }
+      }
+
+      "should render content for agent" in {
+        given application: Application =
+          applicationBuilder(sessionData = completeGasdsSession, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
+
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          content should include(messages("aboutCommunityBuildingsSchedule.agent.paragraph.one"))
+          content shouldNot include(messages("aboutCommunityBuildingsSchedule.paragraph.one"))
+        }
+      }
+
       "should render ClaimCompleteController if submissionReference is defined" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
@@ -36,8 +71,7 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
+          val request = FakeRequest(GET, routes.AboutCommunityBuildingsScheduleController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -151,6 +185,7 @@ class AboutCommunityBuildingScheduleControllerSpec extends ControllerSpec {
           )
         }
       }
+
     }
 
     "onSubmit" - {

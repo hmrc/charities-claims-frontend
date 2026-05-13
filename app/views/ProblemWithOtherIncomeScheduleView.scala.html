@@ -34,17 +34,21 @@
     errors: Seq[ValidationError],
     paginationViewModel: PaginationViewModel,
     paginationStatus: PaginationStatus,
-    otherIncomeScheduleSpreadsheetGuidanceUrl: String
+    otherIncomeScheduleSpreadsheetGuidanceUrl: String,
+        isAgent: Boolean
 )(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = titleWithPagination(messages("problemWithOtherIncomeSchedule.title"), paginationStatus), 
+    pageTitle = titleWithPagination(messages(if(isAgent) "problemWithOtherIncomeSchedule.agent.title" else "problemWithOtherIncomeSchedule.title"), paginationStatus),
     showBackLink = true
 ) {
 
     <span class="govuk-caption-l">@messages("problemWithOtherIncomeSchedule.caption")</span>
-    <h1 class="govuk-heading-l">@messages("problemWithOtherIncomeSchedule.heading")</h1>
-
+    @if(isAgent){
+        <h1 class="govuk-heading-l">@messages("problemWithOtherIncomeSchedule.agent.heading")</h1>
+    }else {
+        <h1 class="govuk-heading-l">@messages("problemWithOtherIncomeSchedule.heading")</h1>
+    }
     <div class="govuk-warning-text">
         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
         <strong class="govuk-warning-text__text">
@@ -58,7 +62,11 @@
     <ol class="govuk-list govuk-list--number govuk-!-margin-bottom-9">
         <li>@Html(messages("problemWithOtherIncomeSchedule.list.item.1", otherIncomeScheduleSpreadsheetGuidanceUrl))</li>
         <li>@messages("problemWithOtherIncomeSchedule.list.item.2")</li>
-        <li>@messages("problemWithOtherIncomeSchedule.list.item.3")</li>
+        @if(isAgent){
+            <li>@messages("problemWithOtherIncomeSchedule.agent.list.item.3")</li>
+        }else {
+            <li>@messages("problemWithOtherIncomeSchedule.list.item.3")</li>
+        }
         <li>@messages("problemWithOtherIncomeSchedule.list.item.4")</li>
     </ol>
 

@@ -33,7 +33,7 @@
 
     @formHelper(action = routes.AboutGiftAidSmallDonationsSchemeController.onSubmit) {
 
-    <p class="govuk-body">@messages("aboutGiftAidSmallDonationsScheme.paragraph.one.part1")@messages(if(isAgent) " " else "")@messages(if(isAgent) "aboutGiftAidSmallDonationsScheme.paragraph.one.agent" else "")@messages("aboutGiftAidSmallDonationsScheme.paragraph.one.part2")
+    <p class="govuk-body">@messages(if(isAgent) "aboutGiftAidSmallDonationsScheme.paragraph.one.agent" else "aboutGiftAidSmallDonationsScheme.paragraph.one")
     <p class="govuk-body">@messages("aboutGiftAidSmallDonationsScheme.paragraph.two")</p>
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))

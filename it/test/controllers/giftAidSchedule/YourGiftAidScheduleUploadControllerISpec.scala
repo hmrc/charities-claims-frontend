@@ -70,6 +70,7 @@ class YourGiftAidScheduleUploadControllerISpec
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
+      Jsoup.parse(result.body).title should include(msg("yourGiftAidScheduleUpload.agent.title"))
       Jsoup.parse(result.body).text should include(msg("yourGiftAidScheduleUpload.agent.paragraph.one"))
     }
   }

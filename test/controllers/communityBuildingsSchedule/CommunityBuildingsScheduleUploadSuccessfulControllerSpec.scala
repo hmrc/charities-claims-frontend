@@ -25,6 +25,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import util.TestScheduleData
 import views.html.CommunityBuildingsScheduleUploadSuccessfulView
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends ControllerSpec {
 
@@ -68,7 +69,7 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
 
           val result = route(application, request).value
           status(result) shouldEqual OK
-          contentAsString(result) shouldBe view()(using request, messages).body
+          contentAsString(result) shouldBe view(isAgent = false)(using request, messages).body
         }
       }
 
@@ -129,6 +130,7 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
           redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
+
       "should redirect to ClaimsTaskListController (does not pass data guard controls) " in {
 
         val application = applicationBuilder().build()
@@ -141,80 +143,131 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
           redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
-    }
 
-    "onSubmit" - {
-      "should render ClaimCompleteController if submissionReference is defined" in {
-        val sessionData = SessionData(
-          charitiesReference = testCharitiesReference,
-          lastUpdatedReference = Some(testCharitiesReference),
-          submissionReference = Some(testCharitiesReference)
-        )
-
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.CommunityBuildingsScheduleUploadSuccessfulController.onSubmit.url)
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
-          )
-        }
-      }
-      "should redirect to the next page" in {
+      "should render content for organisation" in {
         val sessionData = completeGasdsSession
           .copy(
-            connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference"))
+            connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+            communityBuildingsScheduleData = Some(TestScheduleData.exampleCommunityBuildingsScheduleData),
+            communityBuildingsScheduleCompleted = true
           )
 
-        val application: Application = applicationBuilder(sessionData = sessionData).build()
+        val application = applicationBuilder(sessionData = sessionData, AffinityGroup.Organisation).build()
+        // val view = application.injector.instanceOf[CommunityBuildingsScheduleUploadSuccessfulView]
+        val messages    = application.injector.instanceOf[MessagesApi].preferred(Seq(Lang("en")))
 
         running(application) {
-          val request = FakeRequest(POST, routes.CommunityBuildingsScheduleUploadSuccessfulController.onSubmit.url)
+          val request = FakeRequest(GET, routes.CommunityBuildingsScheduleUploadSuccessfulController.onPageLoad.url)
 
-          val result = route(application, request).value
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          content should include(messages("communityBuildingsScheduleUploadSuccessful.message.2"))
+          content shouldNot include(messages("communityBuildingsScheduleUploadSuccessful.agent.message.2"))
+
         }
+
       }
 
-      "should redirect to ClaimsTaskListController when setClaimingUnderGiftAidSmallDonationsScheme= false" in {
-        val sessionData              = completeRepaymentDetailsAnswersSession
-          .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false))
-          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
+      "should render content for agent" in {
+        val sessionData = completeGasdsSession
           .copy(
-            connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference"))
+            connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")),
+            communityBuildingsScheduleData = Some(TestScheduleData.exampleCommunityBuildingsScheduleData),
+            communityBuildingsScheduleCompleted = true
           )
-        val application: Application = applicationBuilder(sessionData = sessionData).build()
+
+        val application = applicationBuilder(sessionData = sessionData, AffinityGroup.Agent).build()
+        // val view = application.injector.instanceOf[CommunityBuildingsScheduleUploadSuccessfulView]
+        val messages    = application.injector.instanceOf[MessagesApi].preferred(Seq(Lang("en")))
 
         running(application) {
-          val request = FakeRequest(POST, routes.CommunityBuildingsScheduleUploadSuccessfulController.onSubmit.url)
+          val request = FakeRequest(GET, routes.CommunityBuildingsScheduleUploadSuccessfulController.onPageLoad.url)
 
-          val result = route(application, request).value
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+          val result  = route(application, request).value
+          val content = contentAsString(result)
+
+          status(result) shouldEqual OK
+          content should include(messages("communityBuildingsScheduleUploadSuccessful.agent.message.2"))
+          content shouldNot include(messages("communityBuildingsScheduleUploadSuccessful.message.2"))
         }
+
       }
 
-      "should redirect to ClaimsTaskListController when setClaimingDonationsCollectedInCommunityBuildings= false" in {
-        val sessionData              = completeRepaymentDetailsAnswersSession
-          .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
-          .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, Some(true)))
-          .copy(
-            connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference"))
+      "onSubmit" - {
+        "should render ClaimCompleteController if submissionReference is defined" in {
+          val sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            lastUpdatedReference = Some(testCharitiesReference),
+            submissionReference = Some(testCharitiesReference)
           )
-        val application: Application = applicationBuilder(sessionData = sessionData).build()
 
-        running(application) {
-          val request = FakeRequest(POST, routes.CommunityBuildingsScheduleUploadSuccessfulController.onSubmit.url)
+          given application: Application = applicationBuilder(sessionData = sessionData).build()
 
-          val result = route(application, request).value
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+          running(application) {
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(POST, routes.CommunityBuildingsScheduleUploadSuccessfulController.onSubmit.url)
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(
+              controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
+            )
+          }
+        }
+        "should redirect to the next page" in {
+          val sessionData = completeGasdsSession
+            .copy(
+              connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference"))
+            )
+
+          val application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            val request = FakeRequest(POST, routes.CommunityBuildingsScheduleUploadSuccessfulController.onSubmit.url)
+
+            val result = route(application, request).value
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+          }
+        }
+
+        "should redirect to ClaimsTaskListController when setClaimingUnderGiftAidSmallDonationsScheme= false" in {
+          val sessionData              = completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(false))
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, Some(true)))
+            .copy(
+              connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference"))
+            )
+          val application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            val request = FakeRequest(POST, routes.CommunityBuildingsScheduleUploadSuccessfulController.onSubmit.url)
+
+            val result = route(application, request).value
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+          }
+        }
+
+        "should redirect to ClaimsTaskListController when setClaimingDonationsCollectedInCommunityBuildings= false" in {
+          val sessionData              = completeRepaymentDetailsAnswersSession
+            .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
+            .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(false, Some(true)))
+            .copy(
+              connectedCharitiesScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference"))
+            )
+          val application: Application = applicationBuilder(sessionData = sessionData).build()
+
+          running(application) {
+            val request = FakeRequest(POST, routes.CommunityBuildingsScheduleUploadSuccessfulController.onSubmit.url)
+
+            val result = route(application, request).value
+            status(result) shouldEqual SEE_OTHER
+            redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+          }
         }
       }
     }

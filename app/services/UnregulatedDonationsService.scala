@@ -43,7 +43,9 @@ object UnregulatedDonationsService {
   private val currencyFormatter = new DecimalFormat("#,###")
 
   def getReasonNotRegistered(sessionData: SessionData): Option[ReasonNotRegisteredWithRegulator] =
-    OrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator(using sessionData)
+    OrganisationDetailsAnswers
+      .getReasonNotRegisteredWithRegulator(using sessionData)
+      .orElse(AgentUserOrganisationDetailsAnswers.getReasonNotRegisteredWithRegulator(using sessionData))
 
   def getGiftAidTotalDonations(data: GiftAidScheduleData): BigDecimal =
     data.totalDonations.getOrElse(BigDecimal(0))

@@ -264,14 +264,23 @@ object RepaymentClaimDetailsAnswers {
       )
     }
 
+    val sessionWithUpdatedClaims =
+      if (prevAnswer.exists(_.topUp) && !value.topUp) {
+        clearGasdsClaims(updatedSession)
+      } else {
+        updatedSession
+      }
+
     if (
       prevAnswer.exists(p => p.topUp || p.communityBuildings) &&
       !value.topUp && !value.communityBuildings
     )
-      clearMakingAdjustmentToPreviousClaim(using updatedSession).copy(
+      clearMakingAdjustmentToPreviousClaim(using sessionWithUpdatedClaims).copy(
         giftAidSmallDonationsSchemeDonationDetailsAnswers = None
       )
-    else updatedSession
+    else {
+      sessionWithUpdatedClaims
+    }
   }
 
   private def clearRepaymentClaimTypeFlow(using session: SessionData): SessionData =
@@ -370,7 +379,30 @@ object RepaymentClaimDetailsAnswers {
     get(_.hmrcCharitiesReference)
 
   def setHmrcCharitiesReference(value: String)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(hmrcCharitiesReference = Some(v)))
+    val updatedSession = set(value)((a, v) => a.copy(hmrcCharitiesReference = Some(v)))
+    if !SessionData.isCASCCharityReference(using session) &&
+      SessionData.isCASCCharityReference(using updatedSession)
+    then {
+      updatedSession.copy(
+        communityBuildingsScheduleFileUploadReference = None,
+        communityBuildingsScheduleUpscanInitialization = None,
+        communityBuildingsScheduleData = None,
+        communityBuildingsScheduleCompleted = false,
+        repaymentClaimDetailsAnswers = updatedSession.repaymentClaimDetailsAnswers
+          .map(
+            _.copy(
+              claimingDonationsCollectedInCommunityBuildings = None
+            )
+          ),
+        agentUserOrganisationDetailsAnswers = None
+      )
+    } else if SessionData.isCASCCharityReference(using session) &&
+      !SessionData.isCASCCharityReference(using updatedSession)
+    then
+      updatedSession.copy(
+        agentUserOrganisationDetailsAnswers = None
+      )
+    else updatedSession
 
   def getNameOfCharity(using session: SessionData): Option[String] =
     get(_.nameOfCharity)

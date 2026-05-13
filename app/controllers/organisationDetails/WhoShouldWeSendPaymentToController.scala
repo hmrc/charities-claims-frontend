@@ -72,7 +72,12 @@ class WhoShouldWeSendPaymentToController @Inject() (
             value =>
               saveService
                 .save(AgentUserOrganisationDetailsAnswers.setWhoShouldHmrcSendPaymentTo(value))
-                .map(_ => Redirect(routes.EnterTelephoneNumberController.onPageLoad(mode)))
+                .map(_ =>
+                  mode match {
+                    case NormalMode => Redirect(routes.EnterTelephoneNumberController.onPageLoad(mode))
+                    case CheckMode  => Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
+                  }
+                )
           )
       }
 }

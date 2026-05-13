@@ -35,7 +35,8 @@ class ProblemUpdatingOtherIncomeScheduleRejectedController @Inject() (
         view(
           messagesKeyPrefix = "problemUpdatingOtherIncomeScheduleRejected",
           submitAction = routes.ProblemUpdatingOtherIncomeScheduleRejectedController.onSubmit,
-          dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad
+          dashboardLink = controllers.routes.ClaimsTaskListController.onPageLoad,
+          isAgent = request.isAgent
         )
       )
     }

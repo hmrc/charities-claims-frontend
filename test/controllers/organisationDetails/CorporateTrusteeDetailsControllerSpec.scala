@@ -25,6 +25,7 @@ import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import views.html.CorporateTrusteeDetailsView
 import models.Mode.*
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
   val uKAddressTrue: Boolean  = true
@@ -57,6 +58,39 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
   "CorporateTrusteeDetailsController" - {
 
     "onPageLoad" - {
+      "should redirect to Claims List for agent user since organisation only screen" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CorporateTrusteeDetailsController.onPageLoad(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
+      "should redirect to Claims List for agent user since organisation only screen - checkmode" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.CorporateTrusteeDetailsController.onPageLoad(CheckMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
+
       "should render ClaimCompleteController if submissionReference is defined" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
@@ -218,6 +252,38 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
+      "should redirect to Claims List for agent user since organisation only screen" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.CorporateTrusteeDetailsController.onSubmit(NormalMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
+      "should redirect to Claims List for agent user since organisation only screen - checkmode" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.CorporateTrusteeDetailsController.onSubmit(CheckMode).url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
       "should render ClaimCompleteController if submissionReference is defined" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,

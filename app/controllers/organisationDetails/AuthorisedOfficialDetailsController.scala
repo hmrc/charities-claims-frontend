@@ -18,7 +18,8 @@ package controllers.organisationDetails
 
 import com.google.inject.Inject
 import controllers.BaseController
-import controllers.actions.Actions
+import controllers.actions.AccessType.OrganisationOnly
+import controllers.actions.{Actions, GuardAction}
 import forms.AuthorisedOfficialDetailsFormProvider
 import models.{Mode, OrganisationDetailsAnswers, SessionData}
 import models.Mode.*
@@ -32,52 +33,59 @@ class AuthorisedOfficialDetailsController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   view: AuthorisedOfficialDetailsView,
   actions: Actions,
+  guard: GuardAction,
   formProvider: AuthorisedOfficialDetailsFormProvider,
   saveService: SaveService
 )(using ec: ExecutionContext)
     extends BaseController {
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      if (
-        OrganisationDetailsAnswers.getAreYouACorporateTrustee
-          .contains(false) && OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress.isDefined
-      ) {
+    actions
+      .authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete)
+      .andThen(guard(predicate = SessionData.isClaimNotSubmitted, access = OrganisationOnly))
+      .async { implicit request =>
+        if (
+          OrganisationDetailsAnswers.getAreYouACorporateTrustee
+            .contains(false) && OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress.isDefined
+        ) {
+          OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress match {
+            case Some(isUkAddress) =>
+              val form           = formProvider(isUkAddress)
+              val previousAnswer = OrganisationDetailsAnswers.getAuthorisedOfficialDetails
+              val preparedForm   = previousAnswer.fold(form)(form.fill)
+
+              Future.successful(Ok(view(preparedForm, isUkAddress, mode)))
+
+            case None =>
+              Future.successful(Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(mode)))
+          }
+        } else {
+          Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+        }
+      }
+
+  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
+    actions
+      .authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete)
+      .andThen(guard(predicate = SessionData.isClaimNotSubmitted, access = OrganisationOnly))
+      .async { implicit request =>
         OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress match {
           case Some(isUkAddress) =>
-            val form           = formProvider(isUkAddress)
-            val previousAnswer = OrganisationDetailsAnswers.getAuthorisedOfficialDetails
-            val preparedForm   = previousAnswer.fold(form)(form.fill)
-
-            Future.successful(Ok(view(preparedForm, isUkAddress, mode)))
+            val form = formProvider(isUkAddress)
+            form
+              .bindFromRequest()
+              .fold(
+                formWithErrors => Future.successful(BadRequest(view(formWithErrors, isUkAddress, mode))),
+                value =>
+                  saveService
+                    .save(OrganisationDetailsAnswers.setAuthorisedOfficialDetails(value))
+                    .map { _ =>
+                      Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
+                    }
+              )
 
           case None =>
             Future.successful(Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(mode)))
         }
-      } else {
-        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
       }
-    }
-
-  def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-      OrganisationDetailsAnswers.getDoYouHaveAuthorisedOfficialTrusteeUKAddress match {
-        case Some(isUkAddress) =>
-          val form = formProvider(isUkAddress)
-          form
-            .bindFromRequest()
-            .fold(
-              formWithErrors => Future.successful(BadRequest(view(formWithErrors, isUkAddress, mode))),
-              value =>
-                saveService
-                  .save(OrganisationDetailsAnswers.setAuthorisedOfficialDetails(value))
-                  .map { _ =>
-                    Redirect(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad)
-                  }
-            )
-
-        case None =>
-          Future.successful(Redirect(routes.AuthorisedOfficialAddressController.onPageLoad(mode)))
-      }
-    }
 }

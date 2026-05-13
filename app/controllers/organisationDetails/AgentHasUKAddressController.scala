@@ -75,12 +75,12 @@ class AgentHasUKAddressController @Inject() (
                 .map(_ =>
                   if value then
                     Redirect(
-                      "/charities-claims/agent-postcode"
-                    ) // TODO: Integrate this page once the corresponding page is implemented
+                      routes.AgentPostcodeController.onPageLoad(mode)
+                    )
                   else
                     Redirect(
-                      "/charities-claims/check-your-agent-organisation-details"
-                    ) // TODO: Integrate this page once the corresponding page is implemented
+                      routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
+                    )
                 )
           )
       }

@@ -35,7 +35,7 @@ class OtherIncomeScheduleUploadSuccessfulController @Inject() (
     actions
       .authAndGetDataWithGuard(SessionData.shouldUploadOtherIncomeSchedule)
       .async { implicit request =>
-        if request.sessionData.otherIncomeScheduleCompleted then Future.successful(Ok(view()))
+        if request.sessionData.otherIncomeScheduleCompleted then Future.successful(Ok(view(isAgent = request.isAgent)))
         else Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
 
       }

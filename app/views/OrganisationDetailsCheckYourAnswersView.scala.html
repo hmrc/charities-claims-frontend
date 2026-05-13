@@ -27,13 +27,39 @@
 
 @(answers: Option[OrganisationDetailsAnswers], isCASCCharityRef :Boolean)(implicit request: Request[?], messages: Messages)
 
+@summary = @{
+    OrganisationDetailsCheckYourAnswersHelper
+    .buildSummaryLists(answers, isCASCCharityRef)
+}
+
 @layout(
    pageTitle = titleNoForm(messages("organisationDetailsCheckYourAnswers.title"))) {
 
    <span class="govuk-caption-l">@messages("organisationDetailsCheckYourAnswers.caption")</span>
    <h1 class="govuk-heading-l">@messages("organisationDetailsCheckYourAnswers.heading")</h1>
 
-   @govukSummaryList(OrganisationDetailsCheckYourAnswersHelper.buildSummaryList(answers, isCASCCharityRef))
+    <h2 class="govuk-heading-m">
+        @messages("organisationDetailsCheckYourAnswers.charityDetails.subheader")
+    </h2>
+   @govukSummaryList(summary.charityDetails)
+
+    @summary.corporateTrusteeDetails.map { list =>
+
+        <h2 class="govuk-heading-m">
+            @messages("organisationDetailsCheckYourAnswers.corporateTrusteeDetails.subheader")
+        </h2>
+
+        @govukSummaryList(list)
+    }
+
+    @summary.authorisedOfficialDetails.map { list =>
+
+        <h2 class="govuk-heading-m">
+            @messages("organisationDetailsCheckYourAnswers.authorisedOfficialDetails.subheader")
+        </h2>
+
+        @govukSummaryList(list)
+    }
 
    @formHelper(action = routes.OrganisationDetailsCheckYourAnswersController.onSubmit) {
 

@@ -30,7 +30,7 @@ class CheckYourOtherIncomeScheduleControllerISpec
       with AuthStub
       with ClaimsStub {
 
-  private val url     = "/check-your-other-income-schedule"
+  private val url     = "/check-your-other-income-schedule?claimId=123"
 
   "GET /check-your-other-income-schedule" should {
 
@@ -42,6 +42,16 @@ class CheckYourOtherIncomeScheduleControllerISpec
       result.status                shouldBe OK
       Jsoup.parse(result.body).title should include(msg("checkYourOtherIncomeSchedule.title"))
     }
+    
+  "render the agent check your other income schedule page" in {
+    stubAgentBackend()
+
+    val result = get(url)
+
+    result.status                shouldBe OK
+    Jsoup.parse(result.body).title should include(msg("checkYourOtherIncomeSchedule.agent.title"))
+    Jsoup.parse(result.body).text should include(msg("checkYourOtherIncomeSchedule.agent.heading"))
+  }
   }
 
   "POST /check-your-other-income-schedule" should {
@@ -84,6 +94,17 @@ class CheckYourOtherIncomeScheduleControllerISpec
 
   private def stubBackend(fileRefOpt: Option[FileUploadReference] = Some(otherIncomefileRef)): Unit = {
     stubAuthRequest()
+    stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
+    stubGetClaims(
+      claimId
+    )(OK, Json.toJson(claimWithTaxDeducted(fileRefOpt)))
+
+    stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryOtherIncomeValidatedResponse))
+    stubGetUploadResult(claimId, otherIncomefileRef)(OK, validatedOtherIncomeJson)
+  }
+  
+ private def stubAgentBackend(fileRefOpt: Option[FileUploadReference] = Some(otherIncomefileRef)): Unit = {
+    stubAgentAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
     stubGetClaims(
       claimId
