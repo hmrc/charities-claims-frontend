@@ -49,7 +49,7 @@
 
     <span class="govuk-caption-l">@messages("yourCommunityBuildingsScheduleUpload.caption")</span>
     <h1 class="govuk-heading-l">@messages(headingMessage)</h1>
-    <p class="govuk-body">@messages(if(isAgent) "yourCommunityBuildingsScheduleUpload.agent.paragraph.one" then "yourCommunityBuildingsScheduleUpload.paragraph.one")</p>
+    <p class="govuk-body">@messages(if(isAgent) "yourCommunityBuildingsScheduleUpload.agent.paragraph.one" else "yourCommunityBuildingsScheduleUpload.paragraph.one")</p>
 
     @if(screenLocked) {
         <p class="govuk-body" id="refreshLink">
