@@ -43,7 +43,7 @@ class EnterTelephoneNumberController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions
-      .authAndGetData()
+      .authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete)
       .andThen(
         guard(
           predicate = SessionData.isClaimNotSubmitted,
@@ -57,7 +57,7 @@ class EnterTelephoneNumberController @Inject() (
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
     actions
-      .authAndGetData()
+      .authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete)
       .andThen(
         guard(
           predicate = SessionData.isClaimNotSubmitted,
