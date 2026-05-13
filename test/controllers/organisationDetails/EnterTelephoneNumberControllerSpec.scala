@@ -259,6 +259,23 @@ class EnterTelephoneNumberControllerSpec extends ControllerSpec {
           status(result) shouldEqual BAD_REQUEST
         }
       }
+
+      "should return BadRequest when a phone number that exceeds 30 characters is submitted" in {
+        val sessionData = completeRepaymentDetailsAnswersSession
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, routes.EnterTelephoneNumberController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("value" -> "1234567890123456789012345678901")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual BAD_REQUEST
+        }
+      }
     }
   }
 }

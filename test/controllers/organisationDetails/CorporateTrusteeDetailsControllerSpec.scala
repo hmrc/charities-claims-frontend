@@ -376,7 +376,7 @@ class CorporateTrusteeDetailsControllerSpec extends ControllerSpec {
           status(result) shouldEqual BAD_REQUEST
         }
       }
-        
+
       "should return BadRequest when trusteePhoneNumber exceeding 30 characters is submitted" in {
         val sessionData = completeRepaymentDetailsAnswersSession
 

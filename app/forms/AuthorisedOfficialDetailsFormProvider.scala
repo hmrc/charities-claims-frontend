@@ -26,7 +26,8 @@ class AuthorisedOfficialDetailsFormProvider @Inject() extends Mappings {
   private val titleRegex     = "^( *[a-zA-Z]{1,4} *)$"
   private val firstNameRegex = "^( *[A-Za-z][A-Za-z'\\-]* *)$"
   private val lastNameRegex  = "^( *[A-Za-z][A-Za-z'\\-]* *)$"
-  private val phoneRegex     = "^[0-9\\(\\)\\-\\s]{1,35}$"
+  private val phoneRegex     = "^[0-9\\(\\)\\-\\s]{1,30}$"
+  private val maxPhoneLength = 30
 
   def apply(isUkAddress: Boolean): Form[AuthorisedOfficialDetails] = Form(
     mapping(
@@ -56,7 +57,7 @@ class AuthorisedOfficialDetailsFormProvider @Inject() extends Mappings {
       "phoneNumber" -> text("authorisedOfficialDetails.phoneNumber.error.required")
         .verifying(
           firstError(
-            maxLength(35, "authorisedOfficialDetails.phoneNumber.error.length"),
+            maxLength(maxPhoneLength, "authorisedOfficialDetails.phoneNumber.error.length"),
             regexp(phoneRegex, "authorisedOfficialDetails.phoneNumber.error.format")
           )
         ),

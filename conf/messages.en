@@ -67,7 +67,7 @@ authorisedOfficialDetails.lastName.error.required = Enter an authorised official
 authorisedOfficialDetails.missingDetails = confirm the authorised official details
 authorisedOfficialDetails.phoneNumber = Phone number
 authorisedOfficialDetails.phoneNumber.error.format = Enter an authorised official phone number in the correct format
-authorisedOfficialDetails.phoneNumber.error.length = Authorised official phone number must be 35 characters or less
+authorisedOfficialDetails.phoneNumber.error.length = Authorised official phone number must be 30 characters or less
 authorisedOfficialDetails.phoneNumber.error.required = Enter an authorised official phone number
 authorisedOfficialDetails.postcode = Postcode
 authorisedOfficialDetails.postcode.error.format = Enter an authorised official postcode in the correct format
@@ -1039,7 +1039,7 @@ enterTelephoneNumber.caption = Provide organisation details
 enterTelephoneNumber.hint = For international numbers include the country code
 enterTelephoneNumber.p = You must provide a phone number so HM Revenue & Customs can get in touch about this claim.
 enterTelephoneNumber.error.required = Enter a telephone number
-enterTelephoneNumber.error.length = Telephone number must be 35 characters or less
+enterTelephoneNumber.error.length = Telephone number must be 30 characters or less
 enterTelephoneNumber.error.format = Enter a telephone number in the correct format
 enterTelephoneNumber.missingDetails = confirm a telephone number
 
