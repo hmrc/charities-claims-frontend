@@ -120,10 +120,10 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           }
         }
 
-        /*        "should render the page correctly when isClaimDetailsComplete condition is met due giftAidScheduleCompleted " in {
+        "should render the page correctly when isClaimDetailsComplete condition is met due giftAidScheduleCompleted " in {
           val answers     = repaymentClaimDetailsAnswersCompleted.copy(
             claimingUnderGiftAidSmallDonationsScheme = Some(true),
-            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(true),
             claimingDonationsCollectedInCommunityBuildings = Some(false),
             connectedToAnyOtherCharities = Some(false),
             makingAdjustmentToPreviousClaim = Some(false)
@@ -149,7 +149,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
             status(result) shouldEqual OK
             contentAsString(result) shouldEqual view(form, isAgent).body
           }
-        }*/
+        }
 
         "should render the page correctly when isClaimDetailsComplete condition is met due otherIncomeScheduleCompleted " in {
           val answers     = repaymentClaimDetailsAnswersCompleted.copy(
@@ -536,10 +536,10 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
           }
         }
 
-        /*        "should render the page correctly when isClaimDetailsComplete condition is met due giftAidScheduleCompleted " in {
+        "should render the page correctly when isClaimDetailsComplete condition is met due giftAidScheduleCompleted " in {
           val answers     = repaymentClaimDetailsAnswersCompleted.copy(
             claimingUnderGiftAidSmallDonationsScheme = Some(true),
-            claimingDonationsNotFromCommunityBuilding = Some(false),
+            claimingDonationsNotFromCommunityBuilding = Some(true),
             claimingDonationsCollectedInCommunityBuildings = Some(false),
             connectedToAnyOtherCharities = Some(false),
             makingAdjustmentToPreviousClaim = Some(false)
@@ -566,7 +566,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
             status(result) shouldEqual OK
             contentAsString(result) shouldEqual view(form, isAgent).body
           }
-        }*/
+        }
 
         "should render the page correctly when isClaimDetailsComplete condition is met due otherIncomeScheduleCompleted " in {
           val answers     = repaymentClaimDetailsAnswersCompleted.copy(
