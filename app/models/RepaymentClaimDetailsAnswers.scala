@@ -391,7 +391,14 @@ object RepaymentClaimDetailsAnswers {
         repaymentClaimDetailsAnswers = updatedSession.repaymentClaimDetailsAnswers
           .map(
             _.copy(
-              claimingDonationsCollectedInCommunityBuildings = None
+              claimingDonationsCollectedInCommunityBuildings = None,
+              makingAdjustmentToPreviousClaim = None
+            )
+          ),
+        giftAidSmallDonationsSchemeDonationDetailsAnswers =
+          updatedSession.giftAidSmallDonationsSchemeDonationDetailsAnswers.map(
+            _.copy(
+              adjustmentForGiftAidOverClaimed = None
             )
           ),
         agentUserOrganisationDetailsAnswers = None
