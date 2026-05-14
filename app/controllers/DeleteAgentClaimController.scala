@@ -113,13 +113,13 @@ class DeleteAgentClaimController @Inject() (
               Future.successful(Redirect(nextUrl))
 
             case true =>
-              formData.data.get("claimId") match {
+              request.sessionData.unsubmittedClaimId match {
                 case Some(claimId) =>
                   claimsConnector.deleteClaim(claimId).flatMap {
                     case true =>
                       saveService
                         .save(SessionData(charitiesReference = request.sessionData.charitiesReference))
-                        .map(_ => Redirect(nextUrl))
+                        .map(_ => Redirect(appConfig.charityRepaymentDashboardUrl))
 
                     case false =>
                       Future.failed(new RuntimeException("Failed to delete claim"))
@@ -128,7 +128,7 @@ class DeleteAgentClaimController @Inject() (
                 case None =>
                   Future.failed(
                     new RuntimeException(
-                      "No claimId found in form data when attempting to delete agent repayment claim"
+                      "No claimId found to delete agent repayment claim"
                     )
                   )
               }

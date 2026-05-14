@@ -132,7 +132,7 @@ class DeleteAgentClaimControllerSpec extends ControllerSpec {
     }
 
     "onSubmit" - {
-      "should delete the claim and redirect to the charity repayment dashboard when the user confirms and claimId is provided" in {
+      "should delete the claim and redirect to the charity repayment dashboard when the user confirms" in {
         val mockClaimsConnector: ClaimsConnector = mock[ClaimsConnector]
         val mockSaveService: SaveService         = mock[SaveService]
 
@@ -176,7 +176,7 @@ class DeleteAgentClaimControllerSpec extends ControllerSpec {
         }
       }
 
-      "should delete the claim and redirect to the claim task list when the user confirms and no claimId is provided" in {
+      "should delete the claim and redirect to the dashboard when the user confirms" in {
         val mockClaimsConnector: ClaimsConnector = mock[ClaimsConnector]
         val mockSaveService: SaveService         = mock[SaveService]
 
@@ -206,6 +206,8 @@ class DeleteAgentClaimControllerSpec extends ControllerSpec {
           .expects(*, *)
           .returning(Future.successful(()))
 
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.DeleteAgentClaimController.onSubmit.url)
@@ -214,7 +216,7 @@ class DeleteAgentClaimControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.ClaimsTaskListController.onPageLoad.url)
+          redirectLocation(result) shouldEqual Some(appConfig.charityRepaymentDashboardUrl)
         }
       }
 
