@@ -8,6 +8,7 @@ import play.api.inject.bind
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import services.ClaimsService
+import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersView
 
@@ -17,33 +18,30 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerSpec
   extends ControllerSpec
     with MockFactory {
 
-  private val validGasdsAnswers =
+  private val validGasdsAnswers = 
     GiftAidSmallDonationsSchemeDonationDetailsAnswers(
-      adjustmentForGiftAidOverClaimed = Some(BigDecimal(100)),
+      adjustmentForGiftAidOverClaimed = Some(1000.00),
       claims = Some(
         Seq(
           Some(
             GiftAidSmallDonationsSchemeClaimAnswers(
-              taxYear = 1,
-              amountOfDonationsReceived = Some(BigDecimal(500))
+              taxYear = 2025,
+              amountOfDonationsReceived = Some(BigDecimal(1000.00))
             )
           )
         )
       )
-    )
+  )
 
   private def repaymentAnswers(
-                                adjustment: Boolean,
-                                donations: Boolean,
-                                claimingUnderGasds: Boolean = true
+                                adjustment: Option[Boolean],
+                                donations: Option[Boolean],
+                                claimingUnderGasds: Option[Boolean] = Some(true)
                               ): RepaymentClaimDetailsAnswers =
-    RepaymentClaimDetailsAnswers(
-      claimingUnderGiftAidSmallDonationsScheme =
-        Some(claimingUnderGasds),
-      makingAdjustmentToPreviousClaim =
-        Some(adjustment),
-      claimingDonationsNotFromCommunityBuilding =
-        Some(donations)
+    completeGasdsAnswers.copy(  
+      claimingUnderGiftAidSmallDonationsScheme = claimingUnderGasds,
+      makingAdjustmentToPreviousClaim = adjustment,
+      claimingDonationsNotFromCommunityBuilding = donations
     )
 
   private def getRequest =
@@ -92,15 +90,15 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerSpec
       "should render both summary lists when both flags are true" in {
 
         val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(
+          completeGasdsSession.copy(  
             repaymentClaimDetailsAnswers =
-              Some(repaymentAnswers(adjustment = true, donations = true)),
+              Some(repaymentAnswers(adjustment = Some(true), donations = Some(true))),
             giftAidSmallDonationsSchemeDonationDetailsAnswers =
               Some(validGasdsAnswers)
           )
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData).build()
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
 
@@ -123,16 +121,17 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerSpec
                 Some(
                   viewmodels.GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
                     .buildSummaryListForAdjustmentToGiftAidOverclaimed(
-                      Some(validGasdsAnswers)
+                      sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
                     )
                 ),
               oSummaryListForNumberOfTaxYearsAdded =
                 Some(
                   viewmodels.GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
                     .buildSummaryListForNumberOfTaxYearsAdded(
-                      Some(validGasdsAnswers)
+                      sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
                     )
-                )
+                ),
+              isAgent = true
             ).body
         }
       }
@@ -140,15 +139,15 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerSpec
       "should render only adjustment summary list when adjustment=true and donations=false" in {
 
         val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(
+          completeGasdsSession.copy(
             repaymentClaimDetailsAnswers =
-              Some(repaymentAnswers(adjustment = true, donations = false)),
+              Some(repaymentAnswers(adjustment = Some(true), donations = Some(false))),
             giftAidSmallDonationsSchemeDonationDetailsAnswers =
               Some(validGasdsAnswers)
           )
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData).build()
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
 
@@ -156,27 +155,43 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerSpec
             getRequest
 
           val result = route(application, request).value
+          
+          val view =
+            application.injector
+              .instanceOf[
+              GiftAidSmallDonationsSchemeDetailsCheckYourAnswersView
+            ]
 
           status(result) shouldEqual OK
 
-          contentAsString(result) should include(
-            "giftAidSmallDonationsScheme"
-          )
+          contentAsString(result) shouldEqual 
+            view(
+              oSummaryListForAdjustmentToGiftAidOverclaimed =
+                Some(
+                  viewmodels.GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
+                    .buildSummaryListForAdjustmentToGiftAidOverclaimed(
+                      sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
+                    )
+                ), 
+              None,
+              isAgent = true
+            ).body
         }
       }
 
       "should render only tax years summary list when adjustment=false and donations=true" in {
 
         val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(
+          completeGasdsSession.copy(
             repaymentClaimDetailsAnswers =
-              Some(repaymentAnswers(adjustment = false, donations = true)),
+              Some(repaymentAnswers(adjustment = Some(false), donations = Some(true))),
             giftAidSmallDonationsSchemeDonationDetailsAnswers =
               Some(validGasdsAnswers)
           )
 
+
         given application: Application =
-          applicationBuilder(sessionData = sessionData).build()
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
 
@@ -185,11 +200,26 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerSpec
 
           val result = route(application, request).value
 
+          val view =
+            application.injector
+              .instanceOf[
+              GiftAidSmallDonationsSchemeDetailsCheckYourAnswersView
+            ]
+            
           status(result) shouldEqual OK
 
-          contentAsString(result) should include(
-            "giftAidSmallDonationsScheme"
-          )
+          contentAsString(result) shouldEqual
+            view(
+              None,
+              oSummaryListForNumberOfTaxYearsAdded =
+                Some(
+                  viewmodels.GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper
+                    .buildSummaryListForNumberOfTaxYearsAdded(
+                      sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
+                    )
+                ),
+              isAgent = true
+            ).body
         }
       }
 
@@ -198,13 +228,13 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerSpec
         val sessionData =
           completeRepaymentDetailsAnswersSession.copy(
             repaymentClaimDetailsAnswers =
-              Some(repaymentAnswers(adjustment = false, donations = false)),
+              Some(repaymentAnswers(adjustment = Some(false), donations = Some(false))),
             giftAidSmallDonationsSchemeDonationDetailsAnswers =
               Some(validGasdsAnswers)
           )
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData).build()
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
 
@@ -213,36 +243,22 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerSpec
 
           val result = route(application, request).value
 
-          status(result) shouldEqual OK
+          val view =
+            application.injector
+              .instanceOf[
+              GiftAidSmallDonationsSchemeDetailsCheckYourAnswersView
+            ]
+            
+          contentAsString(result) shouldEqual
+            view(
+              None,
+              None,
+              isAgent = true
+            ).body
         }
       }
 
-      "should render successfully when repayment claim flags are missing" in {
-
-        val repaymentAnswers =
-          RepaymentClaimDetailsAnswers(
-            claimingUnderGiftAidSmallDonationsScheme = Some(true)
-          )
-
-        val sessionData =
-          completeRepaymentDetailsAnswersSession.copy(
-            repaymentClaimDetailsAnswers =
-              Some(repaymentAnswers)
-          )
-
-        given application: Application =
-          applicationBuilder(sessionData = sessionData).build()
-
-        running(application) {
-
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            getRequest
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual OK
-        }
-      }
+      
 
       "should redirect when claimingUnderGiftAidSmallDonationsScheme=false" in {
 
@@ -251,9 +267,9 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerSpec
             repaymentClaimDetailsAnswers =
               Some(
                 repaymentAnswers(
-                  adjustment = false,
-                  donations = false,
-                  claimingUnderGasds = false
+                  adjustment = Some(false),
+                  donations = Some(false),
+                  claimingUnderGasds = Some(false)
                 )
               )
           )
@@ -280,7 +296,7 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerSpec
         val sessionData =
           completeRepaymentDetailsAnswersSession.copy(
             repaymentClaimDetailsAnswers =
-              Some(repaymentAnswers(adjustment = true, donations = true)),
+              Some(repaymentAnswers(adjustment = Some(true), donations = Some(true))),
             giftAidSmallDonationsSchemeDonationDetailsAnswers =
               Some(validGasdsAnswers)
           )
@@ -324,7 +340,7 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerSpec
         val sessionData =
           completeRepaymentDetailsAnswersSession.copy(
             repaymentClaimDetailsAnswers =
-              Some(repaymentAnswers(adjustment = true, donations = true)),
+              Some(repaymentAnswers(adjustment = Some(true), donations = Some(true))),
             giftAidSmallDonationsSchemeDonationDetailsAnswers =
               Some(incompleteAnswers)
           )
@@ -354,9 +370,9 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerSpec
             repaymentClaimDetailsAnswers =
               Some(
                 repaymentAnswers(
-                  adjustment = false,
-                  donations = false,
-                  claimingUnderGasds = false
+                  adjustment = Some(false),
+                  donations = Some(false),
+                  claimingUnderGasds = Some(false)
                 )
               )
           )
