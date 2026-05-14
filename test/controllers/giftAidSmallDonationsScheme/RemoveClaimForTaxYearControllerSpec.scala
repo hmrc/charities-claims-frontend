@@ -39,7 +39,7 @@ class RemoveClaimForTaxYearControllerSpec extends ControllerSpec {
         claimingTaxDeducted = Some(false),
         claimingUnderGiftAidSmallDonationsScheme = Some(true),
         claimingDonationsNotFromCommunityBuilding = Some(false),
-        claimingDonationsCollectedInCommunityBuildings = Some(false),
+        claimingDonationsCollectedInCommunityBuildings = Some(true),
         makingAdjustmentToPreviousClaim = Some(false),
         connectedToAnyOtherCharities = Some(false),
         claimingReferenceNumber = Some(false)
