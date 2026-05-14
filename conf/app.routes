@@ -82,8 +82,6 @@ GET         /authorised-official-details                    controllers.organisa
 GET         /change-authorised-official-details             controllers.organisationDetails.AuthorisedOfficialDetailsController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-authorised-official-details             controllers.organisationDetails.AuthorisedOfficialDetailsController.onSubmit(mode: Mode = Mode.CheckMode)
-GET         /delete-repayment-claim                         controllers.organisationDetails.DeleteRepaymentClaimController.onPageLoad
-POST        /delete-repayment-claim                         controllers.organisationDetails.DeleteRepaymentClaimController.onSubmit
 
 GET         /repayment-claim-details                        controllers.repaymentClaimDetails.RepaymentClaimDetailsController.onPageLoad
 POST        /repayment-claim-details                        controllers.repaymentClaimDetails.RepaymentClaimDetailsController.onSubmit
@@ -316,5 +314,8 @@ GET         /change-do-you-have-a-uk-address                             control
 POST        /do-you-have-a-uk-address                                    controllers.organisationDetails.AgentHasUKAddressController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-do-you-have-a-uk-address                             controllers.organisationDetails.AgentHasUKAddressController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /delete-charity-repayment-claim                        controllers.DeleteAgentRepaymentClaimController.onPageLoad
-POST        /delete-charity-repayment-claim                        controllers.DeleteAgentRepaymentClaimController.onSubmit
+GET         /delete-repayment-claim                                controllers.DeleteOrganisationClaimController.onPageLoad
+POST        /delete-repayment-claim                                controllers.DeleteOrganisationClaimController.onSubmit
+
+GET         /delete-charity-repayment-claim                        controllers.DeleteAgentClaimController.onPageLoad
+POST        /delete-charity-repayment-claim                        controllers.DeleteAgentClaimController.onSubmit

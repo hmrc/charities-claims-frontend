@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.organisationDetails
+package controllers
 
 import connectors.ClaimsConnector
 import services.SaveService
@@ -27,19 +27,19 @@ import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
-import views.html.DeleteRepaymentClaimView
+import views.html.DeleteOrganisationClaimView
 import config.FrontendAppConfig
 
 import scala.concurrent.Future
 
-class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
+class DeleteOrganisationClaimControllerSpec extends ControllerSpec {
 
   val form: Form[Boolean] = new YesNoFormProvider()()
 
   val mockClaimsConnector: ClaimsConnector = mock[ClaimsConnector]
   val mockSaveService: SaveService         = mock[SaveService]
 
-  "DeleteRepaymentClaimController" - {
+  "DeleteOrganisationClaimController" - {
     "onPageLoad" - {
       "should render ClaimCompleteController if submissionReference is defined" in {
         val sessionData = SessionData(
@@ -52,7 +52,7 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DeleteRepaymentClaimController.onPageLoad.url)
+            FakeRequest(GET, routes.DeleteOrganisationClaimController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -76,7 +76,7 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DeleteRepaymentClaimController.onPageLoad.url)
+            FakeRequest(GET, routes.DeleteOrganisationClaimController.onPageLoad.url)
 
           val result = route(application, request).value
           status(result)           shouldBe SEE_OTHER
@@ -96,10 +96,10 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DeleteRepaymentClaimController.onPageLoad.url)
+            FakeRequest(GET, routes.DeleteOrganisationClaimController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[DeleteRepaymentClaimView]
+          val view   = application.injector.instanceOf[DeleteOrganisationClaimView]
           val msgs   = application.injector.instanceOf[play.api.i18n.MessagesApi].preferred(request)
 
           status(result)                        shouldBe OK
@@ -121,7 +121,7 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(POST, routes.DeleteRepaymentClaimController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteOrganisationClaimController.onSubmit.url)
 
           val result = route(application, request).value
 
@@ -141,7 +141,7 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteRepaymentClaimController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteOrganisationClaimController.onSubmit.url)
               .withFormUrlEncodedBody("other" -> "field")
 
           val result = route(application, request).value
@@ -160,7 +160,7 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteRepaymentClaimController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteOrganisationClaimController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "false")
 
           val result = route(application, request).value
@@ -193,7 +193,7 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteRepaymentClaimController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteOrganisationClaimController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
@@ -226,7 +226,7 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteRepaymentClaimController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteOrganisationClaimController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
@@ -258,7 +258,7 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
         running(application) {
 
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteRepaymentClaimController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteOrganisationClaimController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value
@@ -279,7 +279,7 @@ class DeleteRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteRepaymentClaimController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteOrganisationClaimController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value

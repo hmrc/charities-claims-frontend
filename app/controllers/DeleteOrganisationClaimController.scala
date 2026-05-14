@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.organisationDetails
+package controllers
 
 import play.api.Logging
 import com.google.inject.Inject
@@ -29,13 +29,13 @@ import services.SaveService
 import models.SessionData
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import views.html.DeleteRepaymentClaimView
+import views.html.DeleteOrganisationClaimView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DeleteRepaymentClaimController @Inject() (
+class DeleteOrganisationClaimController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: DeleteRepaymentClaimView,
+  view: DeleteOrganisationClaimView,
   actions: Actions,
   formProvider: YesNoFormProvider,
   claimsConnector: ClaimsConnector,
@@ -45,7 +45,7 @@ class DeleteRepaymentClaimController @Inject() (
     extends BaseController
     with Logging {
 
-  val form: Form[Boolean] = formProvider("deleteRepaymentClaim.error.required")
+  val form: Form[Boolean] = formProvider("deleteOrganisationClaim.error.required")
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
     if request.sessionData.submissionReference.isDefined then
