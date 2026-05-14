@@ -383,6 +383,10 @@ object RepaymentClaimDetailsAnswers {
     if !SessionData.isCASCCharityReference(using session) &&
       SessionData.isCASCCharityReference(using updatedSession)
     then {
+      val shouldResetAdjustment: Boolean =
+        getClaimingDonationsNotFromCommunityBuilding.contains(false)
+          && getMakingAdjustmentToPreviousClaim.contains(true)
+
       updatedSession.copy(
         communityBuildingsScheduleFileUploadReference = None,
         communityBuildingsScheduleUpscanInitialization = None,
@@ -391,7 +395,23 @@ object RepaymentClaimDetailsAnswers {
         repaymentClaimDetailsAnswers = updatedSession.repaymentClaimDetailsAnswers
           .map(
             _.copy(
-              claimingDonationsCollectedInCommunityBuildings = None
+              claimingDonationsCollectedInCommunityBuildings = None,
+              makingAdjustmentToPreviousClaim =
+                if shouldResetAdjustment
+                then Some(false)
+                else updatedSession.repaymentClaimDetailsAnswers.flatMap(_.makingAdjustmentToPreviousClaim)
+            )
+          ),
+        giftAidSmallDonationsSchemeDonationDetailsAnswers =
+          updatedSession.giftAidSmallDonationsSchemeDonationDetailsAnswers.map(
+            _.copy(
+              adjustmentForGiftAidOverClaimed =
+                if shouldResetAdjustment
+                then None
+                else
+                  updatedSession.giftAidSmallDonationsSchemeDonationDetailsAnswers.flatMap(
+                    _.adjustmentForGiftAidOverClaimed
+                  )
             )
           ),
         agentUserOrganisationDetailsAnswers = None
