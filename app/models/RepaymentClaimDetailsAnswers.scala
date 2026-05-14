@@ -53,9 +53,9 @@ final case class RepaymentClaimDetailsAnswers(
         && claimingTaxDeducted.isEmpty
         && claimingUnderGiftAidSmallDonationsScheme.isEmpty) -> "repaymentClaimType.missingDetails",
       (claimingUnderGiftAidSmallDonationsScheme.contains(true)
-        && claimingDonationsNotFromCommunityBuilding.isEmpty &&
-        claimingDonationsCollectedInCommunityBuildings.isEmpty &&
-        connectedToAnyOtherCharities.isEmpty)                -> "claimGASDS.missingDetails",
+        && !claimingDonationsNotFromCommunityBuilding.contains(true) &&
+        !claimingDonationsCollectedInCommunityBuildings.contains(true) &&
+        !connectedToAnyOtherCharities.contains(true))        -> "claimGASDS.missingDetails",
       (claimingUnderGiftAidSmallDonationsScheme.contains(true)
         && ((claimingDonationsNotFromCommunityBuilding.contains(true)
           || claimingDonationsCollectedInCommunityBuildings.contains(true))
@@ -74,8 +74,8 @@ final case class RepaymentClaimDetailsAnswers(
         && claimingTaxDeducted.isEmpty
         && claimingUnderGiftAidSmallDonationsScheme.isEmpty) -> "repaymentClaimType.agent.missingDetails",
       (claimingUnderGiftAidSmallDonationsScheme.contains(true)
-        && claimingDonationsNotFromCommunityBuilding.isEmpty &&
-        claimingDonationsCollectedInCommunityBuildings.isEmpty &&
+        && !claimingDonationsNotFromCommunityBuilding.contains(true) &&
+        !claimingDonationsCollectedInCommunityBuildings.contains(true) &&
         !connectedToAnyOtherCharities.contains(true))        -> "claimGASDS.agent.missingDetails",
       (claimingUnderGiftAidSmallDonationsScheme.contains(true)
         && ((claimingDonationsNotFromCommunityBuilding.contains(true)
