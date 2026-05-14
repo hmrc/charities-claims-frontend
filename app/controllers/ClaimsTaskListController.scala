@@ -49,7 +49,8 @@ class ClaimsTaskListController @Inject() (
             .map { _ =>
               Ok(
                 view(
-                  viewModel = ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl),
+                  viewModel =
+                    ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl, request.isAgent),
                   isAgent = request.isAgent,
                   organisationName = RepaymentClaimDetailsAnswers.getNameOfCharity(using request.sessionData)
                 )
@@ -60,7 +61,8 @@ class ClaimsTaskListController @Inject() (
           Future.successful(
             Ok(
               view(
-                viewModel = ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl),
+                viewModel =
+                  ClaimsTaskListController.buildViewModel(appConfig.charityRepaymentDashboardUrl, request.isAgent),
                 isAgent = request.isAgent,
                 organisationName = RepaymentClaimDetailsAnswers.getNameOfCharity(using request.sessionData)
               )
@@ -73,7 +75,8 @@ class ClaimsTaskListController @Inject() (
 object ClaimsTaskListController {
 
   private def buildViewModel(
-    dashboardUrl: String
+    dashboardUrl: String,
+    isAgent: Boolean
   )(using request: DataRequest[?], messages: Messages): ClaimsTaskListViewModel = {
     val repaymentClaimDetailsComplete = isRepaymentClaimDetailsComplete
     val charitiesReference            = request.sessionData.charitiesReference
@@ -127,7 +130,10 @@ object ClaimsTaskListController {
 
       ClaimsTaskListViewModel(
         sections = sections,
-        deleteClaimUrl = Some(organisationDetails.routes.DeleteRepaymentClaimController.onPageLoad.url),
+        deleteClaimUrl =
+          if isAgent
+          then Some(controllers.routes.DeleteAgentClaimController.onPageLoad.url)
+          else Some(controllers.routes.DeleteOrganisationClaimController.onPageLoad.url),
         charitiesReference = charitiesReference,
         dashboardUrl = dashboardUrl
       )

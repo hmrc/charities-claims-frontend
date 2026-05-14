@@ -32,17 +32,17 @@
 @(form: Form[Boolean], claimId: String, charityName: String)(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = title(form, messages("deleteAgentRepaymentClaim.title"))
+    pageTitle = title(form, messages("deleteAgentClaim.title"))
 ) {
 
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <h1 class="govuk-heading-l">@messages("deleteAgentRepaymentClaim.heading")</h1>
-    <p class="govuk-body">@messages("deleteAgentRepaymentClaim.body", charityName)</p>
+    <h1 class="govuk-heading-l">@messages("deleteAgentClaim.heading")</h1>
+    <p class="govuk-body">@messages("deleteAgentClaim.body", charityName)</p>
 
-    @formHelper(action = routes.DeleteAgentRepaymentClaimController.onSubmit, Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.DeleteAgentClaimController.onSubmit, Symbol("autoComplete") -> "off") {
 
         <input type="hidden" name="claimId" value="@claimId">
 
@@ -50,7 +50,7 @@
             RadiosViewModel.yesNo(
                 form("value"),
                 Fieldset(
-                    legend = Some(Legend(content = Text(messages("deleteAgentRepaymentClaim.caution")), isPageHeading = false,
+                    legend = Some(Legend(content = Text(messages("deleteAgentClaim.caution")), isPageHeading = false,
                     classes = "govuk-fieldset__legend--m"))
                 )
             )

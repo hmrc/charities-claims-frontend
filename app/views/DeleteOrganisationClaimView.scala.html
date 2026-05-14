@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import controllers.organisationDetails.routes
+@import controllers.routes
 
 @this(
     layout: templates.Layout,
@@ -27,20 +27,20 @@
 @(form: Form[Boolean])(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = title(form, messages("deleteRepaymentClaim.title"))
+    pageTitle = title(form, messages("deleteOrganisationClaim.title"))
 ) {
 
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    @formHelper(action = routes.DeleteRepaymentClaimController.onSubmit, Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.DeleteOrganisationClaimController.onSubmit, Symbol("autoComplete") -> "off") {
 
         @govukRadios(
             RadiosViewModel.yesNo(
                 form("value"),
                 Fieldset(
-                    legend = Some(Legend(content = Text(messages("deleteRepaymentClaim.heading")), isPageHeading = true,
+                    legend = Some(Legend(content = Text(messages("deleteOrganisationClaim.heading")), isPageHeading = true,
                     classes = "govuk-fieldset__legend--l"))
                 )
             )

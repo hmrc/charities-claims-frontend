@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.organisationDetails
+package controllers
 
 import models.{DeleteClaimResponse, GetClaimsResponse}
 import org.jsoup.Jsoup
@@ -26,8 +26,9 @@ import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
-class DeleteRepaymentClaimControllerISpec
-  extends ComponentSpecHelper with TestDataUtils
+class DeleteOrganisationClaimControllerISpec
+    extends ComponentSpecHelper
+    with TestDataUtils
     with ClaimsStub
     with AuthStub
     with ClaimsValidationStub {
@@ -45,7 +46,7 @@ class DeleteRepaymentClaimControllerISpec
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.title should include(msg("deleteRepaymentClaim.title"))
+      doc.title should include(msg("deleteOrganisationClaim.title"))
     }
 
     "redirect to dashboard when no unsubmitted claim exists" in {
@@ -60,7 +61,7 @@ class DeleteRepaymentClaimControllerISpec
 
       val result = get(url)
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/manage-charity-repayment-claim")
     }
   }
@@ -83,7 +84,7 @@ class DeleteRepaymentClaimControllerISpec
           Json.obj("value" -> false)
         )
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/make-a-charity-repayment-claim")
     }
 
@@ -101,8 +102,8 @@ class DeleteRepaymentClaimControllerISpec
 
       val cached = await(sessionCache.get())
       cached.value.unsubmittedClaimId shouldBe None
-      result.status shouldBe SEE_OTHER
-      result.header(LOCATION).value should include("/manage-charity-repayment-claim")
+      result.status                   shouldBe SEE_OTHER
+      result.header(LOCATION).value     should include("/manage-charity-repayment-claim")
     }
   }
 
