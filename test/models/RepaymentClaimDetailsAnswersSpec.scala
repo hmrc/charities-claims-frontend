@@ -72,21 +72,21 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
     }
 
     "missingFields" - {
-      "should return empty when GASDS is true but all sub-fields are false" in {
+      "should return empty when GASDS is true and one of sub-fields is true" in {
         val answers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(false),
           claimingTaxDeducted = Some(false),
           claimingUnderGiftAidSmallDonationsScheme = Some(true),
           claimingDonationsNotFromCommunityBuilding = Some(false),
           claimingDonationsCollectedInCommunityBuildings = Some(false),
-          connectedToAnyOtherCharities = Some(false),
+          connectedToAnyOtherCharities = Some(true),
           claimingReferenceNumber = Some(false)
         )
 
         answers.missingFields shouldBe empty
       }
 
-      "should return true for hasRepaymentClaimDetailsCompleteAnswers when GASDS is true but all sub-fields are false" in {
+      "should return missing fields list when GASDS is true but all sub-fields are false" in {
         val answers = RepaymentClaimDetailsAnswers(
           claimingGiftAid = Some(false),
           claimingTaxDeducted = Some(false),
@@ -97,7 +97,35 @@ class RepaymentClaimDetailsAnswersSpec extends BaseSpec {
           claimingReferenceNumber = Some(false)
         )
 
-        answers.hasRepaymentClaimDetailsCompleteAnswers() shouldBe true
+        answers.missingFields shouldBe List("claimGASDS.missingDetails")
+      }
+
+      "should return false for hasRepaymentClaimDetailsCompleteAnswers when GASDS is true and one of sub-fields is true" in {
+        val answers = RepaymentClaimDetailsAnswers(
+          claimingGiftAid = Some(false),
+          claimingTaxDeducted = Some(false),
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(true),
+          connectedToAnyOtherCharities = Some(false),
+          claimingReferenceNumber = Some(false)
+        )
+
+        answers.hasRepaymentClaimDetailsCompleteAnswers() shouldBe false
+      }
+
+      "should return false for hasRepaymentClaimDetailsCompleteAnswers when GASDS is true but all sub-fields are false" in {
+        val answers = RepaymentClaimDetailsAnswers(
+          claimingGiftAid = Some(false),
+          claimingTaxDeducted = Some(false),
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(false),
+          claimingReferenceNumber = Some(false)
+        )
+
+        answers.hasRepaymentClaimDetailsCompleteAnswers() shouldBe false
       }
     }
 

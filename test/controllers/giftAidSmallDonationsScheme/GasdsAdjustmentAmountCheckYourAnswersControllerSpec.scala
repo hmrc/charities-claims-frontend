@@ -36,9 +36,9 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
         claimingTaxDeducted = Some(false),
         claimingUnderGiftAidSmallDonationsScheme = Some(true),
         claimingDonationsNotFromCommunityBuilding = Some(true),
-        claimingDonationsCollectedInCommunityBuildings = Some(false),
+        claimingDonationsCollectedInCommunityBuildings = Some(true),
         makingAdjustmentToPreviousClaim = Some(true),
-        connectedToAnyOtherCharities = Some(false),
+        connectedToAnyOtherCharities = Some(true),
         claimingReferenceNumber = Some(false)
       )
     )

@@ -118,7 +118,8 @@ class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec
           repaymentClaimDetailsAnswers = Some(
             completeRepaymentClaimDetailsAnswers.copy(
               claimingDonationsNotFromCommunityBuilding = Some(false),
-              makingAdjustmentToPreviousClaim = Some(true)
+              makingAdjustmentToPreviousClaim = Some(true),
+              connectedToAnyOtherCharities = Some(true)
             )
           ),
           giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(incompleteAnswers)
