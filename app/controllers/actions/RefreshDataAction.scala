@@ -53,17 +53,19 @@ class DefaultRefreshDataAction @Inject() (
       case AffinityGroup.Agent        =>
         request.underlying.getQueryString("claimId") match {
           case Some(claimId) => tryOpenAgentClaimById(request, claimId)
-          case None          => proceedWithCurrentClaim(request)
+          case None          => proceedWithCurrentClaim(request, acceptDraftOrEmptyClaim = false)
         }
       case AffinityGroup.Organisation =>
         request.underlying.getQueryString("claimId") match {
           case Some(claimId) if claimId == "blank" => tryCreateNewClaim(request)
-          case _                                   => proceedWithCurrentClaim(request)
+          case _                                   => proceedWithCurrentClaim(request, acceptDraftOrEmptyClaim = true)
         }
     }
   }
 
-  private def proceedWithCurrentClaim[A](request: AuthorisedRequest[A])(using HeaderCarrier) =
+  private def proceedWithCurrentClaim[A](request: AuthorisedRequest[A], acceptDraftOrEmptyClaim: Boolean)(using
+    HeaderCarrier
+  ) =
     cache
       .get()
       .flatMap {
@@ -104,7 +106,9 @@ class DefaultRefreshDataAction @Inject() (
             }
 
         case _ =>
-          dataRetrievalAction.refine(request)
+          if acceptDraftOrEmptyClaim
+          then dataRetrievalAction.refine(request)
+          else Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
       }
 
   private def tryOpenAgentClaimById(request: AuthorisedRequest[?], claimId: String)(using HeaderCarrier) =
