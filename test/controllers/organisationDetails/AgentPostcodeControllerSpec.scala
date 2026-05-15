@@ -29,60 +29,83 @@ import play.api.test.FakeRequest
 import models.Mode.*
 
 class AgentPostcodeControllerSpec extends ControllerSpec {
+
   val formProvider       = new PhoneNumberFormProvider()
   val form: Form[String] = formProvider()
 
   "AgentPostcodeController" - {
 
     "onPageLoad" - {
+
       "should redirect to Claims List for Organisation user since Agent only screen" in {
+
         val sessionData = completeRepaymentDetailsAnswersSession
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation).build()
+          applicationBuilder(
+            sessionData = sessionData,
+            affinityGroup = AffinityGroup.Organisation
+          ).build()
 
         running(application) {
+
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.AgentPostcodeController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
+          )
         }
       }
+
       "should redirect to Claims List for Organisation user since Agent only screen - checkmode" in {
+
         val sessionData = completeRepaymentDetailsAnswersSession
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation).build()
+          applicationBuilder(
+            sessionData = sessionData,
+            affinityGroup = AffinityGroup.Organisation
+          ).build()
 
         running(application) {
+
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.AgentPostcodeController.onPageLoad(CheckMode).url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
+          )
         }
       }
 
       "should redirect to ClaimCompleteController if submissionReference is defined" in {
+
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           submissionReference = Some(testCharitiesReference)
         )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
+
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.AgentPostcodeController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
+
           redirectLocation(result) shouldEqual Some(
             controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
           )
@@ -90,18 +113,24 @@ class AgentPostcodeControllerSpec extends ControllerSpec {
       }
 
       "should redirect to ClaimsTaskListController if user is not agent" in {
+
         val sessionData = completeRepaymentDetailsAnswersSession.copy()
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation).build()
+          applicationBuilder(
+            sessionData = sessionData,
+            affinityGroup = AffinityGroup.Organisation
+          ).build()
 
         running(application) {
+
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.AgentPostcodeController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
+
           redirectLocation(result) shouldEqual Some(
             controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
@@ -109,20 +138,29 @@ class AgentPostcodeControllerSpec extends ControllerSpec {
       }
 
       "should redirect to ClaimsTaskListController if UK postcode = false" in {
+
         val sessionData = completeRepaymentDetailsAnswersSession.and(
-          AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(false)
+          AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(
+            value = false,
+            previousAnswer = None
+          )
         )
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+          applicationBuilder(
+            sessionData = sessionData,
+            affinityGroup = AffinityGroup.Agent
+          ).build()
 
         running(application) {
+
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.AgentPostcodeController.onPageLoad(NormalMode).url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
+
           redirectLocation(result) shouldEqual Some(
             controllers.routes.ClaimsTaskListController.onPageLoad.url
           )
@@ -130,14 +168,22 @@ class AgentPostcodeControllerSpec extends ControllerSpec {
       }
 
       "should render the page correctly for agent user" in {
+
         val sessionData = completeRepaymentDetailsAnswersSession.and(
-          AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(true)
+          AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(
+            value = true,
+            previousAnswer = None
+          )
         )
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+          applicationBuilder(
+            sessionData = sessionData,
+            affinityGroup = AffinityGroup.Agent
+          ).build()
 
         running(application) {
+
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.AgentPostcodeController.onPageLoad(NormalMode).url)
 
@@ -148,63 +194,82 @@ class AgentPostcodeControllerSpec extends ControllerSpec {
           status(result) shouldEqual OK
 
           contentAsString(result) shouldEqual
-            view(
-              form,
-              NormalMode
-            )(using request, messages).body
+            view(form, NormalMode)(using request, messages).body
         }
       }
     }
 
     "onSubmit" - {
+
       "should redirect to Claims List for Organisation user since Agent only screen" in {
+
         val sessionData = completeRepaymentDetailsAnswersSession
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation).build()
+          applicationBuilder(
+            sessionData = sessionData,
+            affinityGroup = AffinityGroup.Organisation
+          ).build()
 
         running(application) {
+
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(POST, routes.AgentPostcodeController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
+          )
         }
       }
+
       "should redirect to Claims List for Organisation user since Agent only screen - checkmode" in {
+
         val sessionData = completeRepaymentDetailsAnswersSession
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation).build()
+          applicationBuilder(
+            sessionData = sessionData,
+            affinityGroup = AffinityGroup.Organisation
+          ).build()
 
         running(application) {
+
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(POST, routes.AgentPostcodeController.onSubmit(CheckMode).url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+
+          redirectLocation(result) shouldEqual Some(
+            controllers.routes.ClaimsTaskListController.onPageLoad.url
+          )
         }
       }
 
       "should redirect to ClaimCompleteController if submissionReference is defined" in {
+
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
           submissionReference = Some(testCharitiesReference)
         )
 
-        given application: Application = applicationBuilder(sessionData = sessionData).build()
+        given application: Application =
+          applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
+
           val request =
             FakeRequest(POST, routes.AgentPostcodeController.onSubmit(NormalMode).url)
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
+
           redirectLocation(result) shouldEqual Some(
             controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad.url
           )
@@ -212,15 +277,22 @@ class AgentPostcodeControllerSpec extends ControllerSpec {
       }
 
       "should redirect when valid data is submitted" in {
+
         val sessionData = completeRepaymentDetailsAnswersSession.and(
-          AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(true)
+          AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(
+            value = true,
+            previousAnswer = None
+          )
         )
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).mockSaveSession
-            .build()
+          applicationBuilder(
+            sessionData = sessionData,
+            affinityGroup = AffinityGroup.Agent
+          ).mockSaveSession.build()
 
         running(application) {
+
           val request =
             FakeRequest(POST, routes.AgentPostcodeController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "NE27 0QQ")
@@ -228,6 +300,7 @@ class AgentPostcodeControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
+
           redirectLocation(result) shouldEqual Some(
             routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url
           )
@@ -235,14 +308,22 @@ class AgentPostcodeControllerSpec extends ControllerSpec {
       }
 
       "should return BadRequest when invalid data is submitted" in {
+
         val sessionData = completeRepaymentDetailsAnswersSession.and(
-          AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(true)
+          AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(
+            value = true,
+            previousAnswer = None
+          )
         )
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+          applicationBuilder(
+            sessionData = sessionData,
+            affinityGroup = AffinityGroup.Agent
+          ).build()
 
         running(application) {
+
           val request =
             FakeRequest(POST, routes.EnterTelephoneNumberController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "invalid")
@@ -254,14 +335,22 @@ class AgentPostcodeControllerSpec extends ControllerSpec {
       }
 
       "should return BadRequest when empty data is submitted" in {
+
         val sessionData = completeRepaymentDetailsAnswersSession.and(
-          AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(true)
+          AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(
+            value = true,
+            previousAnswer = None
+          )
         )
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+          applicationBuilder(
+            sessionData = sessionData,
+            affinityGroup = AffinityGroup.Agent
+          ).build()
 
         running(application) {
+
           val request =
             FakeRequest(POST, routes.AgentPostcodeController.onSubmit(NormalMode).url)
               .withFormUrlEncodedBody("value" -> "")
