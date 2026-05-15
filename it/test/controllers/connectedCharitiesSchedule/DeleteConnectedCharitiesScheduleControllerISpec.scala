@@ -32,9 +32,9 @@ class DeleteConnectedCharitiesScheduleControllerISpec
     with ClaimsStub
     with ClaimsValidationStub {
 
-  private val url = "/delete-gasds-connected-charities-schedule"
+  private val url = "/delete-connected-charities-schedule"
 
-  "GET /delete-gasds-connected-charities-schedule" should {
+  "GET /delete-connected-charities-schedule" should {
 
     "render the delete connected charities schedule page" in {
       stubBackend()
@@ -48,7 +48,7 @@ class DeleteConnectedCharitiesScheduleControllerISpec
     }
   }
 
-  "POST /delete-gasds-connected-charities-schedule" should {
+  "POST /delete-connected-charities-schedule" should {
 
     "return BAD_REQUEST when form submission invalid" in {
       stubBackend()

@@ -347,6 +347,20 @@ class AuthorisedOfficialDetailsControllerSpec extends ControllerSpec {
         }
       }
 
+      "should return BadRequest when phone number exceeding 30 characters is submitted" in {
+        given application: Application = applicationBuilder(sessionData = baseSession).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.AuthorisedOfficialDetailsController.onSubmit(NormalMode).url)
+              .withFormUrlEncodedBody("phoneNumber" -> "0123456789012345678901234567890")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual BAD_REQUEST
+        }
+      }
+
       "should return BadRequest when postcode is missing but required (isUkAddress = true)" in {
         val sessionData                = completeRepaymentDetailsAnswersSession.and(
           OrganisationDetailsAnswers.setDoYouHaveAuthorisedOfficialTrusteeUKAddress(true)

@@ -23,7 +23,7 @@ import com.google.inject.Singleton
 import connectors.ClaimsConnector
 import controllers.BaseController
 import config.FrontendAppConfig
-import views.html.DeleteAgentRepaymentClaimView
+import views.html.DeleteAgentClaimView
 import controllers.actions.{AccessType, Actions, GuardAction}
 import play.api.Logging
 import forms.YesNoFormProvider
@@ -33,9 +33,9 @@ import play.api.data.Form
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteAgentRepaymentClaimController @Inject() (
+class DeleteAgentClaimController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  view: DeleteAgentRepaymentClaimView,
+  view: DeleteAgentClaimView,
   actions: Actions,
   guard: GuardAction,
   formProvider: YesNoFormProvider,
@@ -46,7 +46,7 @@ class DeleteAgentRepaymentClaimController @Inject() (
     extends BaseController
     with Logging {
 
-  val form: Form[Boolean] = formProvider("deleteAgentRepaymentClaim.error.required")
+  val form: Form[Boolean] = formProvider("deleteAgentClaim.error.required")
 
   val onPageLoad: Action[AnyContent] =
     actions
@@ -58,6 +58,11 @@ class DeleteAgentRepaymentClaimController @Inject() (
         )
       )
       .async { implicit request =>
+        val nextUrl =
+          if request.getQueryString("claimId").isDefined
+          then appConfig.charityRepaymentDashboardUrl
+          else routes.ClaimsTaskListController.onPageLoad.url
+
         request.sessionData.unsubmittedClaimId match {
           case Some(claimId) =>
             val charityName =
@@ -68,7 +73,7 @@ class DeleteAgentRepaymentClaimController @Inject() (
             Future.successful(Ok(view(form, claimId, charityName)))
 
           case None =>
-            Future.successful(Redirect(appConfig.charityRepaymentDashboardUrl))
+            Future.successful(Redirect(nextUrl))
         }
       }
 
@@ -82,7 +87,13 @@ class DeleteAgentRepaymentClaimController @Inject() (
         )
       )
       .async { implicit request =>
+        val nextUrl =
+          if request.getQueryString("claimId").isDefined
+          then appConfig.charityRepaymentDashboardUrl
+          else routes.ClaimsTaskListController.onPageLoad.url
+
         val formData = form.bindFromRequest()
+
         formData.fold(
           formWithErrors =>
             request.sessionData.unsubmittedClaimId match {
@@ -95,14 +106,14 @@ class DeleteAgentRepaymentClaimController @Inject() (
                 Future.successful(BadRequest(view(formWithErrors, claimId, charityName)))
 
               case None =>
-                Future.successful(Redirect(appConfig.charityRepaymentDashboardUrl))
+                Future.successful(Redirect(nextUrl))
             },
           {
             case false =>
-              Future.successful(Redirect(appConfig.charityRepaymentDashboardUrl))
+              Future.successful(Redirect(nextUrl))
 
             case true =>
-              formData.data.get("claimId") match {
+              request.sessionData.unsubmittedClaimId match {
                 case Some(claimId) =>
                   claimsConnector.deleteClaim(claimId).flatMap {
                     case true =>
@@ -117,7 +128,7 @@ class DeleteAgentRepaymentClaimController @Inject() (
                 case None =>
                   Future.failed(
                     new RuntimeException(
-                      "No claimId found in form data when attempting to delete agent repayment claim"
+                      "No claimId found to delete agent repayment claim"
                     )
                   )
               }

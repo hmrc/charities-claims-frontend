@@ -20,7 +20,7 @@ import play.api.test.FakeRequest
 import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
 import config.FrontendAppConfig
-import views.html.DeleteAgentRepaymentClaimView
+import views.html.DeleteAgentClaimView
 import play.api.Application
 import uk.gov.hmrc.auth.core.AffinityGroup
 import models.SessionData
@@ -33,9 +33,9 @@ import play.api.inject.bind
 import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.Future
 
-class DeleteAgentRepaymentClaimControllerSpec extends ControllerSpec {
+class DeleteAgentClaimControllerSpec extends ControllerSpec {
 
-  "DeleteAgentRepaymentClaimController" - {
+  "DeleteAgentClaimController" - {
     "onPageLoad" - {
       "should render the page correctly for an agent" in {
         given application: Application = applicationBuilder(
@@ -53,10 +53,10 @@ class DeleteAgentRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DeleteAgentRepaymentClaimController.onPageLoad.url + "?claimId=test-claim-123")
+            FakeRequest(GET, routes.DeleteAgentClaimController.onPageLoad.url + "?claimId=test-claim-123")
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[DeleteAgentRepaymentClaimView]
+          val view   = application.injector.instanceOf[DeleteAgentClaimView]
           val form   = application.injector.instanceOf[YesNoFormProvider]
 
           status(result) shouldEqual OK
@@ -69,7 +69,7 @@ class DeleteAgentRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DeleteAgentRepaymentClaimController.onPageLoad.url + "?claimId=test-claim-123")
+            FakeRequest(GET, routes.DeleteAgentClaimController.onPageLoad.url + "?claimId=test-claim-123")
 
           val result = route(application, request).value
 
@@ -78,13 +78,27 @@ class DeleteAgentRepaymentClaimControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to the charity repayment dashboard when unsubmittedClaimId is not present" in {
+      "should redirect to the claim task list when unsubmittedClaimId is not present and no claimId is provided" in {
+        given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.DeleteAgentClaimController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
+
+      "should redirect to the charity repayment dashboard when unsubmittedClaimId is not present and claimId is provided" in {
         given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Agent).build()
         val appConfig                  = application.injector.instanceOf[FrontendAppConfig]
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DeleteAgentRepaymentClaimController.onPageLoad.url)
+            FakeRequest(GET, routes.DeleteAgentClaimController.onPageLoad.url + "?claimId=test-claim-123")
 
           val result = route(application, request).value
 
@@ -105,7 +119,7 @@ class DeleteAgentRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.DeleteAgentRepaymentClaimController.onPageLoad.url)
+            FakeRequest(GET, routes.DeleteAgentClaimController.onPageLoad.url)
 
           val result = route(application, request).value
 
@@ -152,7 +166,7 @@ class DeleteAgentRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteAgentRepaymentClaimController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteAgentClaimController.onSubmit.url + "?claimId=test-claim-123")
               .withFormUrlEncodedBody("value" -> "true", "claimId" -> "test-claim-123")
 
           val result = route(application, request).value
@@ -162,7 +176,51 @@ class DeleteAgentRepaymentClaimControllerSpec extends ControllerSpec {
         }
       }
 
-      "should redirect to the charity repayment dashboard when claim deletion is not confirmed" in {
+      "should delete the claim and redirect to the dashboard when the user confirms" in {
+        val mockClaimsConnector: ClaimsConnector = mock[ClaimsConnector]
+        val mockSaveService: SaveService         = mock[SaveService]
+
+        given application: Application = applicationBuilder(
+          sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some("test-claim-123"),
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                nameOfCharity = Some("Test Charity ABC")
+              )
+            )
+          ),
+          affinityGroup = AffinityGroup.Agent
+        ).overrides(
+          bind[ClaimsConnector].toInstance(mockClaimsConnector),
+          bind[SaveService].toInstance(mockSaveService)
+        ).build()
+
+        (mockClaimsConnector
+          .deleteClaim(_: String)(using _: HeaderCarrier))
+          .expects("test-claim-123", *)
+          .returning(Future.successful(true))
+
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(()))
+
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.DeleteAgentClaimController.onSubmit.url)
+              .withFormUrlEncodedBody("value" -> "true", "claimId" -> "test-claim-123")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(appConfig.charityRepaymentDashboardUrl)
+        }
+      }
+
+      "should redirect to the charity repayment dashboard when claim deletion is not confirmed and claimId is provided" in {
         given application: Application = applicationBuilder(
           sessionData = SessionData(
             charitiesReference = testCharitiesReference,
@@ -180,13 +238,39 @@ class DeleteAgentRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteAgentRepaymentClaimController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteAgentClaimController.onSubmit.url + "?claimId=test-claim-123")
               .withFormUrlEncodedBody("value" -> "false", "claimId" -> "test-claim-123")
 
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(appConfig.charityRepaymentDashboardUrl)
+        }
+      }
+
+      "should redirect to the claim task list when claim deletion is not confirmed and no claimId is provided" in {
+        given application: Application = applicationBuilder(
+          sessionData = SessionData(
+            charitiesReference = testCharitiesReference,
+            unsubmittedClaimId = Some("test-claim-123"),
+            repaymentClaimDetailsAnswers = Some(
+              RepaymentClaimDetailsAnswers(
+                nameOfCharity = Some("Test Charity ABC")
+              )
+            )
+          ),
+          affinityGroup = AffinityGroup.Agent
+        ).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.DeleteAgentClaimController.onSubmit.url)
+              .withFormUrlEncodedBody("value" -> "false", "claimId" -> "test-claim-123")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
 
@@ -206,7 +290,7 @@ class DeleteAgentRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteAgentRepaymentClaimController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteAgentClaimController.onSubmit.url)
               .withFormUrlEncodedBody("claimId" -> "test-claim-123")
 
           val result = route(application, request).value
@@ -230,7 +314,7 @@ class DeleteAgentRepaymentClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
-            FakeRequest(POST, routes.DeleteAgentRepaymentClaimController.onSubmit.url)
+            FakeRequest(POST, routes.DeleteAgentClaimController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
 
           val result = route(application, request).value

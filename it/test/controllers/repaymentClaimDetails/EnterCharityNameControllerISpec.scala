@@ -29,7 +29,7 @@ class EnterCharityNameControllerISpec
   extends ComponentSpecHelper with TestDataUtils with ClaimsStub with AuthStub with ClaimsValidationStub {
 
   val normalUrl = "/enter-the-charity-name?claimId=123"
-  val changelUrl = "/change-the-charity-name?claimId=123"
+  val changelUrl = "/change-enter-the-charity-name?claimId=123"
   "GET /enter-the-charity-name" should {
 
     "render the enter charity name page" in {
@@ -47,7 +47,7 @@ class EnterCharityNameControllerISpec
     }
   }
 
-  "GET /change-the-charity-name" should {
+  "GET /change-enter-the-charity-name" should {
 
     "render the change charity name page" in {
       stubAgentAuthRequest()
@@ -83,7 +83,7 @@ class EnterCharityNameControllerISpec
   }
 
 
-  "POST /change-the-charity-name" should {
+  "POST /change-enter-the-charity-name" should {
 
     "redirect to the check your answers page when valid value submitted" in {
       stubAgentAuthRequest()

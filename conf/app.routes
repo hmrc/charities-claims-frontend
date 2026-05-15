@@ -82,8 +82,6 @@ GET         /authorised-official-details                    controllers.organisa
 GET         /change-authorised-official-details             controllers.organisationDetails.AuthorisedOfficialDetailsController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /authorised-official-details                    controllers.organisationDetails.AuthorisedOfficialDetailsController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-authorised-official-details             controllers.organisationDetails.AuthorisedOfficialDetailsController.onSubmit(mode: Mode = Mode.CheckMode)
-GET         /delete-repayment-claim                         controllers.organisationDetails.DeleteRepaymentClaimController.onPageLoad
-POST        /delete-repayment-claim                         controllers.organisationDetails.DeleteRepaymentClaimController.onSubmit
 
 GET         /repayment-claim-details                        controllers.repaymentClaimDetails.RepaymentClaimDetailsController.onPageLoad
 POST        /repayment-claim-details                        controllers.repaymentClaimDetails.RepaymentClaimDetailsController.onSubmit
@@ -163,16 +161,14 @@ POST        /delete-other-income-schedule                       controllers.othe
 GET         /update-other-income-schedule                       controllers.otherIncomeSchedule.UpdateOtherIncomeScheduleController.onPageLoad
 POST        /update-other-income-schedule                       controllers.otherIncomeSchedule.UpdateOtherIncomeScheduleController.onSubmit
 
-GET         /delete-gasds-community-buildings-schedule          controllers.communityBuildingsSchedule.DeleteCommunityBuildingsScheduleController.onPageLoad
-POST        /delete-gasds-community-buildings-schedule          controllers.communityBuildingsSchedule.DeleteCommunityBuildingsScheduleController.onSubmit
+GET         /delete-community-buildings-schedule          controllers.communityBuildingsSchedule.DeleteCommunityBuildingsScheduleController.onPageLoad
+POST        /delete-community-buildings-schedule          controllers.communityBuildingsSchedule.DeleteCommunityBuildingsScheduleController.onSubmit
 
-GET         /delete-gasds-connected-charities-schedule          controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onPageLoad
-POST        /delete-gasds-connected-charities-schedule          controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onSubmit
 GET         /about-connected-charities-schedule                 controllers.connectedCharitiesSchedule.AboutConnectedCharitiesScheduleController.onPageLoad
 POST        /about-connected-charities-schedule                 controllers.connectedCharitiesSchedule.AboutConnectedCharitiesScheduleController.onSubmit
 
-GET         /delete-gasds-connected-charities-schedule          controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onPageLoad
-POST        /delete-gasds-connected-charities-schedule          controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onSubmit
+GET         /delete-connected-charities-schedule                controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onPageLoad
+POST        /delete-connected-charities-schedule                controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onSubmit
 
 GET         /check-your-other-income-schedule                   controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onPageLoad
 POST        /check-your-other-income-schedule                   controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onSubmit
@@ -287,9 +283,9 @@ GET         /maximum-claims-limit-reached                       controllers.Warn
 POST        /maximum-claims-limit-reached                       controllers.Warning11MaxClaimsReachedController.onSubmit
 
 GET         /enter-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onPageLoad(mode: Mode = Mode.NormalMode)
-GET         /change-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onPageLoad(mode: Mode = Mode.CheckMode)
+GET         /change-enter-the-charity-name                             controllers.repaymentClaimDetails.EnterCharityNameController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /enter-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onSubmit(mode: Mode = Mode.NormalMode)
-POST        /change-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onSubmit(mode: Mode = Mode.CheckMode)
+POST        /change-enter-the-charity-name                             controllers.repaymentClaimDetails.EnterCharityNameController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /what-is-your-postcode                                    controllers.organisationDetails.AgentPostcodeController.onPageLoad(mode: Mode = Mode.NormalMode)
 GET         /change-what-is-your-postcode                             controllers.organisationDetails.AgentPostcodeController.onPageLoad(mode: Mode = Mode.CheckMode)
@@ -303,8 +299,8 @@ POST        /change-enter-a-telephone-number                                   c
 
 GET         /enter-charities-reference-number                       controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onPageLoad(mode: Mode = Mode.NormalMode)
 POST        /enter-charities-reference-number                       controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onSubmit(mode: Mode = Mode.NormalMode)
-GET         /change-charities-reference-number                      controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onPageLoad(mode: Mode = Mode.CheckMode)
-POST        /change-charities-reference-number                      controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
+GET         /change-enter-charities-reference-number                controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onPageLoad(mode: Mode = Mode.CheckMode)
+POST        /change-enter-charities-reference-number                controllers.repaymentClaimDetails.CharitiesReferenceNumberInputController.onSubmit(mode: Mode = Mode.CheckMode)
 
 GET         /who-should-we-send-the-payment-to                                    controllers.organisationDetails.WhoShouldWeSendPaymentToController.onPageLoad(mode: Mode = Mode.NormalMode)
 GET         /change-who-should-we-send-the-payment-to                                    controllers.organisationDetails.WhoShouldWeSendPaymentToController.onPageLoad(mode: Mode = Mode.CheckMode)
@@ -316,5 +312,8 @@ GET         /change-do-you-have-a-uk-address                             control
 POST        /do-you-have-a-uk-address                                    controllers.organisationDetails.AgentHasUKAddressController.onSubmit(mode: Mode = Mode.NormalMode)
 POST        /change-do-you-have-a-uk-address                             controllers.organisationDetails.AgentHasUKAddressController.onSubmit(mode: Mode = Mode.CheckMode)
 
-GET         /delete-charity-repayment-claim                        controllers.DeleteAgentRepaymentClaimController.onPageLoad
-POST        /delete-charity-repayment-claim                        controllers.DeleteAgentRepaymentClaimController.onSubmit
+GET         /delete-repayment-claim                                controllers.DeleteOrganisationClaimController.onPageLoad
+POST        /delete-repayment-claim                                controllers.DeleteOrganisationClaimController.onSubmit
+
+GET         /delete-charity-repayment-claim                        controllers.DeleteAgentClaimController.onPageLoad
+POST        /delete-charity-repayment-claim                        controllers.DeleteAgentClaimController.onSubmit

@@ -25,17 +25,27 @@ govukButton: GovukButton
 
 @(mode: Mode, isAgent: Boolean)(implicit request: Request[?], messages: Messages)
 
+@titleMessage = @{
+    if (isAgent) "charityExempt.agent.title"
+    else "charityExempt.title"
+}
+
+@headingMessage = @{
+    if (isAgent) "charityExempt.agent.heading"
+    else "charityExempt.heading"
+}
+
 @p1Message = @{
     if (isAgent) "charityExempt.agent.p1"
     else "charityExempt.p1"
 }
 
 @layout(
-    pageTitle = titleNoForm(messages("charityExempt.title"))
+    pageTitle = titleNoForm(messages(titleMessage))
 ) {
 
 <span class="govuk-caption-l">@messages("aboutTheOrganisation.caption")</span>
-<h1 class="govuk-heading-l">@messages("charityExempt.heading")</h1>
+<h1 class="govuk-heading-l">@messages(headingMessage)</h1>
 
 <p class="govuk-body">@messages(p1Message)</p>
 

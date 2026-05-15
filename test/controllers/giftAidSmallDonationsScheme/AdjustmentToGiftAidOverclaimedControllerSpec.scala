@@ -38,7 +38,7 @@ class AdjustmentToGiftAidOverclaimedControllerSpec extends ControllerSpec {
         claimingDonationsNotFromCommunityBuilding = Some(false),
         claimingDonationsCollectedInCommunityBuildings = Some(false),
         makingAdjustmentToPreviousClaim = Some(true),
-        connectedToAnyOtherCharities = Some(false),
+        connectedToAnyOtherCharities = Some(true),
         claimingReferenceNumber = Some(false)
       )
     )
