@@ -51,8 +51,7 @@ class GasdsDetailsCheckYourAnswersControllerISpec extends ComponentSpecHelper
   }
   "POST /check-your-gift-aid-small-donations-scheme-donation-details" should {
 
-    "redirect to claim added page" in {
-      val url   = "/check-your-gift-aid-small-donations-scheme-donation-details"
+    "redirect to claims task list page" in {
       stubBackend()
 
       val result = post(url)(Json.obj())
