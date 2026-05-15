@@ -334,7 +334,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val request = FakeRequest(GET, url)
           val result  = route(application, request).value
 
-          contentAsString(result) should include("Add community buildings schedule")
+          contentAsString(result) should include("Add Community Buildings schedule")
         }
       }
 
@@ -362,7 +362,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val result  = route(application, request).value
           val content = contentAsString(result)
 
-          content should include("Add community buildings schedule")
+          content should include("Add Community Buildings schedule")
           content should include("In progress")
         }
       }
@@ -391,7 +391,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val result  = route(application, request).value
           val content = contentAsString(result)
 
-          content should include("Add community buildings schedule")
+          content should include("Add Community Buildings schedule")
           content should include("In progress")
         }
       }
@@ -418,7 +418,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val result  = route(application, request).value
           val content = contentAsString(result)
 
-          content should include("Add community buildings schedule")
+          content should include("Add Community Buildings schedule")
           content should include("Completed")
         }
       }
@@ -431,7 +431,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val request = FakeRequest(GET, url)
           val result  = route(application, request).value
 
-          contentAsString(result) shouldNot include("Add community buildings schedule")
+          contentAsString(result) shouldNot include("Add Community Buildings schedule")
         }
       }
 
@@ -455,7 +455,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val request = FakeRequest(GET, url)
           val result  = route(application, request).value
 
-          contentAsString(result) should include("Add connected charities schedule")
+          contentAsString(result) should include("Add Connected Charities schedule")
         }
       }
 
@@ -483,7 +483,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val result  = route(application, request).value
           val content = contentAsString(result)
 
-          content should include("Add connected charities schedule")
+          content should include("Add Connected Charities schedule")
           content should include("In progress")
         }
       }
@@ -512,7 +512,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val result  = route(application, request).value
           val content = contentAsString(result)
 
-          content should include("Add connected charities schedule")
+          content should include("Add Connected Charities schedule")
           content should include("In progress")
         }
       }
@@ -539,7 +539,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val result  = route(application, request).value
           val content = contentAsString(result)
 
-          content should include("Add connected charities schedule")
+          content should include("Add Connected Charities schedule")
           content should include("Completed")
         }
       }
@@ -552,7 +552,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val request = FakeRequest(GET, url)
           val result  = route(application, request).value
 
-          contentAsString(result) shouldNot include("Add connected charities schedule")
+          contentAsString(result) shouldNot include("Add Connected Charities schedule")
         }
       }
 
