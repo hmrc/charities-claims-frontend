@@ -348,9 +348,9 @@ deleteCommunityBuildingsSchedule.error.required = Select ‘Yes’ if you want t
 deleteCommunityBuildingsSchedule.heading = Do you want to delete this Gift Aid Small Donations Scheme community buildings schedule?
 deleteCommunityBuildingsSchedule.title = Do you want to delete this Gift Aid Small Donations Scheme community buildings schedule?
 
-deleteConnectedCharitiesSchedule.error.required = Select ‘Yes’ if you want to delete this Gift Aid Small Donations Scheme connected charities schedule
-deleteConnectedCharitiesSchedule.heading = Do you want to delete this Gift Aid Small Donations Scheme connected charities schedule?
-deleteConnectedCharitiesSchedule.title = Do you want to delete this Gift Aid Small Donations Scheme connected charities schedule?
+deleteConnectedCharitiesSchedule.error.required = Select ‘Yes’ if you want to delete this Connected Charities schedule
+deleteConnectedCharitiesSchedule.heading = Do you want to delete this Connected Charities schedule?
+deleteConnectedCharitiesSchedule.title = Do you want to delete this Connected Charities schedule?
 
 deleteGiftAidSchedule.error.required = Select ‘Yes’ if you want to delete this Gift Aid schedule
 deleteGiftAidSchedule.heading = Do you want to delete this Gift Aid schedule?

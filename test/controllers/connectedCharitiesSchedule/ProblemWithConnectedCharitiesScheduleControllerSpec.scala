@@ -274,7 +274,7 @@ class ProblemWithConnectedCharitiesScheduleControllerSpec extends ControllerSpec
 
             status(result) shouldEqual OK
             content should include("Delete schedule")
-            content should include("delete-gasds-connected-charities-schedule")
+            content should include("delete-connected-charities-schedule")
           }
         }
 
@@ -524,7 +524,7 @@ class ProblemWithConnectedCharitiesScheduleControllerSpec extends ControllerSpec
 
             status(result) shouldEqual OK
             content should include("Delete schedule")
-            content should include("delete-gasds-connected-charities-schedule")
+            content should include("delete-connected-charities-schedule")
           }
         }
 
