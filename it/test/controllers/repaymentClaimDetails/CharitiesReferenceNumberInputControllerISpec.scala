@@ -32,7 +32,7 @@ class CharitiesReferenceNumberInputControllerISpec
     with ClaimsValidationStub {
 
   val normalUrl = "/enter-charities-reference-number?claimId=123"
-  val changeUrl = "/change-charities-reference-number?claimId=123"
+  val changeUrl = "/change-enter-charities-reference-number?claimId=123"
 
   "GET /enter-charities-reference-number" should {
 
@@ -82,7 +82,7 @@ class CharitiesReferenceNumberInputControllerISpec
       result.status shouldBe BAD_REQUEST
     }
 
-    "POST /change-charities-reference-number" should {
+    "POST /change-enter-charities-reference-number" should {
 
       "redirect to the check your answers page when valid value submitted" in {
         stubAgentAuthRequest()
