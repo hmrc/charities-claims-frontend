@@ -161,8 +161,8 @@ POST        /delete-other-income-schedule                       controllers.othe
 GET         /update-other-income-schedule                       controllers.otherIncomeSchedule.UpdateOtherIncomeScheduleController.onPageLoad
 POST        /update-other-income-schedule                       controllers.otherIncomeSchedule.UpdateOtherIncomeScheduleController.onSubmit
 
-GET         /delete-gasds-community-buildings-schedule          controllers.communityBuildingsSchedule.DeleteCommunityBuildingsScheduleController.onPageLoad
-POST        /delete-gasds-community-buildings-schedule          controllers.communityBuildingsSchedule.DeleteCommunityBuildingsScheduleController.onSubmit
+GET         /delete-community-buildings-schedule          controllers.communityBuildingsSchedule.DeleteCommunityBuildingsScheduleController.onPageLoad
+POST        /delete-community-buildings-schedule          controllers.communityBuildingsSchedule.DeleteCommunityBuildingsScheduleController.onSubmit
 
 GET         /about-connected-charities-schedule                 controllers.connectedCharitiesSchedule.AboutConnectedCharitiesScheduleController.onPageLoad
 POST        /about-connected-charities-schedule                 controllers.connectedCharitiesSchedule.AboutConnectedCharitiesScheduleController.onSubmit

@@ -322,7 +322,7 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
 
           status(result) shouldEqual OK
           content should include("Delete schedule")
-          content should include("delete-gasds-community-buildings-schedule")
+          content should include("delete-community-buildings-schedule")
         }
       }
 
