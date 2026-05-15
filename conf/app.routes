@@ -164,13 +164,11 @@ POST        /update-other-income-schedule                       controllers.othe
 GET         /delete-gasds-community-buildings-schedule          controllers.communityBuildingsSchedule.DeleteCommunityBuildingsScheduleController.onPageLoad
 POST        /delete-gasds-community-buildings-schedule          controllers.communityBuildingsSchedule.DeleteCommunityBuildingsScheduleController.onSubmit
 
-GET         /delete-gasds-connected-charities-schedule          controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onPageLoad
-POST        /delete-gasds-connected-charities-schedule          controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onSubmit
 GET         /about-connected-charities-schedule                 controllers.connectedCharitiesSchedule.AboutConnectedCharitiesScheduleController.onPageLoad
 POST        /about-connected-charities-schedule                 controllers.connectedCharitiesSchedule.AboutConnectedCharitiesScheduleController.onSubmit
 
-GET         /delete-gasds-connected-charities-schedule          controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onPageLoad
-POST        /delete-gasds-connected-charities-schedule          controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onSubmit
+GET         /delete-connected-charities-schedule                controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onPageLoad
+POST        /delete-connected-charities-schedule                controllers.connectedCharitiesSchedule.DeleteConnectedCharitiesScheduleController.onSubmit
 
 GET         /check-your-other-income-schedule                   controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onPageLoad
 POST        /check-your-other-income-schedule                   controllers.otherIncomeSchedule.CheckYourOtherIncomeScheduleController.onSubmit
