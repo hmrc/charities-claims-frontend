@@ -398,7 +398,7 @@ object RepaymentClaimDetailsAnswers {
               claimingDonationsCollectedInCommunityBuildings = None,
               makingAdjustmentToPreviousClaim =
                 if shouldResetAdjustment
-                then Some(false)
+                then None
                 else updatedSession.repaymentClaimDetailsAnswers.flatMap(_.makingAdjustmentToPreviousClaim)
             )
           ),
