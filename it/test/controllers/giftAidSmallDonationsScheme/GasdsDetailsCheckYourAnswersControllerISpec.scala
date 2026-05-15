@@ -16,26 +16,23 @@
 
 package controllers.giftAidSmallDonationsScheme
 
-import models.GiftAidSmallDonationsSchemeDonationDetails
+import models.{GiftAidSmallDonationsSchemeClaim, GiftAidSmallDonationsSchemeDonationDetails}
 import org.jsoup.Jsoup
 import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.libs.json.Json
 import play.api.test.Helpers.{LOCATION, *}
-import repositories.SessionCache
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import util.TestUsers
 import utils.{ComponentSpecHelper, TestDataUtils}
 
-class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerISpec extends ComponentSpecHelper
+// had to rename to GasdsDetailsCheckYourAnswersControllerISpec from GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerISpec because on internal mongo error
+class GasdsDetailsCheckYourAnswersControllerISpec extends ComponentSpecHelper
   with TestDataUtils
   with ClaimsStub
   with AuthStub
   with ClaimsValidationStub {
 
   private val url = s"/check-your-gift-aid-small-donations-scheme-donation-details"
-
-  lazy val sessionCache: SessionCache =
-    app.injector.instanceOf[SessionCache]
 
   "GET /check-your-gift-aid-small-donations-scheme-donation-details" should {
 
@@ -67,12 +64,6 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerISpec extends 
   }
 
   private def stubBackend(): Unit = {
-
-    val existingClaims =
-      claim.claimData.giftAidSmallDonationsSchemeDonationDetails
-        .map(_.claims)
-        .getOrElse(Seq.empty)
-
     val gasdsClaim = claim.copy(
       claimData = claim.claimData.copy(
         repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
@@ -86,7 +77,12 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerISpec extends 
         giftAidSmallDonationsSchemeDonationDetails = Some(
           GiftAidSmallDonationsSchemeDonationDetails(
             adjustmentForGiftAidOverClaimed = BigDecimal(0),
-            claims = existingClaims.take(1)
+            claims = Seq(
+              GiftAidSmallDonationsSchemeClaim(
+                taxYear = 2025,
+                amountOfDonationsReceived = BigDecimal(20.2)
+              )
+            )
           )
         )
       )
@@ -96,6 +92,7 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerISpec extends 
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
     stubGetClaims(claimId)(OK, Json.toJson(gasdsClaim.copy(userId = TestUsers.agent1)))
     stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
+    stubUpdateClaim(claimId)(OK, Json.toJson(updateClaimResponse))
 
   }
 }
