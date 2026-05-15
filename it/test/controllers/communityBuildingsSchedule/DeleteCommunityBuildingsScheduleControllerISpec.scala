@@ -32,9 +32,9 @@ class DeleteCommunityBuildingsScheduleControllerISpec
     with ClaimsStub
     with ClaimsValidationStub {
 
-  private val url = "/delete-gasds-community-buildings-schedule"
+  private val url = "/delete-community-buildings-schedule"
 
-  "GET /delete-gasds-community-buildings-schedule" should {
+  "GET /delete-community-buildings-schedule" should {
 
     "render the delete community buildings schedule page" in {
       stubBackend()
@@ -48,7 +48,7 @@ class DeleteCommunityBuildingsScheduleControllerISpec
     }
   }
 
-  "POST /delete-gasds-community-buildings-schedule" should {
+  "POST /delete-community-buildings-schedule" should {
 
     "return BAD_REQUEST when form submission invalid" in {
       stubBackend()
