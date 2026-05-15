@@ -188,7 +188,7 @@ class RefreshDataActionSpec extends BaseSpec {
       status(result) shouldBe OK
     }
 
-    "refines AuthorisedRequest into a DataRequest when session data object exists but no claim has been submitted yet" in {
+    "refines AuthorisedRequest into a DataRequest when session data object exists but and unsubmitted claim exists too" in {
       val mockSessionCache              = mock[SessionCache]
       val mockClaimsConnector           = mock[ClaimsConnector]
       val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
@@ -205,7 +205,9 @@ class RefreshDataActionSpec extends BaseSpec {
         testFrontendAppConfig
       )
 
-      val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+      val sessionData = RepaymentClaimDetailsAnswers
+        .setClaimingTaxDeducted(true)
+        .and(SessionData.setUnsubmittedClaimId("claim-123"))
 
       (mockSessionCache
         .get()(using _: HeaderCarrier))
@@ -213,15 +215,88 @@ class RefreshDataActionSpec extends BaseSpec {
         .anyNumberOfTimes()
         .returning(Future.successful(Some(sessionData)))
 
+      val claim = TestClaims.testClaimWithRepaymentClaimDetailsOnly()
+
+      (mockClaimsConnector
+        .getClaim(_: String)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(Future.successful(Some(claim)))
+
+      val getUploadSummaryResponseWithGiftAidAwaitingUpload =
+        GetUploadSummaryResponse(uploads =
+          Seq(
+            UploadSummary(
+              reference = FileUploadReference("gift-aid-ref-123"),
+              validationType = ValidationType.GiftAid,
+              fileStatus = FileStatus.AWAITING_UPLOAD,
+              uploadUrl = Some("https://www.foo.bar.com"),
+              fields = Some(Map("key" -> "value"))
+            )
+          )
+        )
+
+      (mockClaimsValidationConnector
+        .getUploadSummary(_: String)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(
+          Future.successful(getUploadSummaryResponseWithGiftAidAwaitingUpload)
+        )
+
+      (mockSessionCache
+        .store(_: SessionData)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(Future.successful(()))
+
       val result = action.invokeBlock(
         authorisedRequestAgent,
         (req: DataRequest[?]) =>
-          req.sessionData shouldBe sessionData
+          req.sessionData shouldEqual SessionData
+            .from(
+              claim,
+              testCharitiesReference,
+              Some(getUploadSummaryResponseWithGiftAidAwaitingUpload)
+            )
+            .copy(isAgent = true)
           Future.successful(Ok)
       )
       status(result) shouldBe OK
     }
 
+  }
+
+  "refines AuthorisedRequest into a DataRequest when session data object exists but no claim has been submitted yet" in {
+    val mockSessionCache              = mock[SessionCache]
+    val mockClaimsConnector           = mock[ClaimsConnector]
+    val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+    val action                        = new DefaultRefreshDataAction(
+      mockSessionCache,
+      mockClaimsConnector,
+      mockClaimsValidationConnector,
+      new DefaultDataRetrievalAction(
+        mockSessionCache,
+        mockClaimsConnector,
+        mockClaimsValidationConnector,
+        testFrontendAppConfig
+      ),
+      testFrontendAppConfig
+    )
+
+    val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
+
+    (mockSessionCache
+      .get()(using _: HeaderCarrier))
+      .expects(*)
+      .anyNumberOfTimes()
+      .returning(Future.successful(Some(sessionData)))
+
+    val result = action.invokeBlock(
+      authorisedRequestAgent,
+      (req: DataRequest[?]) =>
+        req.sessionData shouldBe sessionData
+        Future.successful(Ok)
+    )
+    status(result) shouldBe SEE_OTHER
+    redirectLocation(result) shouldBe Some(testFrontendAppConfig.charityRepaymentDashboardUrl)
   }
 
   "refines AuthorisedRequest into a DataRequest when submitted session data object exists and claimId=blank is provided" in {
