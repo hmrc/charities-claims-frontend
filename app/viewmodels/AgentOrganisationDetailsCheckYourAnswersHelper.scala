@@ -52,7 +52,8 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                     ),
                     controllers.organisationDetails.routes.NameOfCharityRegulatorController
                       .onPageLoad(CheckMode)
-                      .url
+                      .url,
+                    messages("agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.label")
                   )
 
                 case None =>
@@ -60,7 +61,8 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                     messages("agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.label"),
                     controllers.organisationDetails.routes.NameOfCharityRegulatorController
                       .onPageLoad(CheckMode)
-                      .url
+                      .url,
+                    messages("agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.label")
                   )
               }
             )
@@ -84,7 +86,10 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                         Text(value),
                         controllers.organisationDetails.routes.CharityRegulatorNumberController
                           .onPageLoad(CheckMode)
-                          .url
+                          .url,
+                        messages(
+                          "agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorNumber.label"
+                        )
                       )
 
                     case None =>
@@ -94,7 +99,10 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                         ),
                         controllers.organisationDetails.routes.CharityRegulatorNumberController
                           .onPageLoad(CheckMode)
-                          .url
+                          .url,
+                        messages(
+                          "agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorNumber.label"
+                        )
                       )
                   }
                 )
@@ -111,7 +119,10 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                         exceptedReasonContent,
                         controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
                           .onPageLoad(CheckMode)
-                          .url
+                          .url,
+                        messages(
+                          "agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.label"
+                        )
                       )
 
                     case Some(ReasonNotRegisteredWithRegulator.Exempt) =>
@@ -122,7 +133,10 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                         exemptReasonContent,
                         controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
                           .onPageLoad(CheckMode)
-                          .url
+                          .url,
+                        messages(
+                          "agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.label"
+                        )
                       )
 
                     case Some(reason) =>
@@ -137,7 +151,10 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                         ),
                         controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
                           .onPageLoad(CheckMode)
-                          .url
+                          .url,
+                        messages(
+                          "agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.label"
+                        )
                       )
 
                     case None =>
@@ -147,7 +164,10 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                         ),
                         controllers.organisationDetails.routes.ReasonNotRegisteredWithRegulatorController
                           .onPageLoad(CheckMode)
-                          .url
+                          .url,
+                        messages(
+                          "agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.label"
+                        )
                       )
                   }
                 )
@@ -172,7 +192,8 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                   Text(messages(paymentRecipientMessageKey)),
                   controllers.organisationDetails.routes.WhoShouldWeSendPaymentToController
                     .onPageLoad(CheckMode)
-                    .url
+                    .url,
+                  messages("agentOrganisationDetailsCheckYourAnswers.charityDetails.sendPaymentTo.label")
                 )
 
               case None =>
@@ -180,7 +201,8 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                   messages("agentOrganisationDetailsCheckYourAnswers.charityDetails.sendPaymentTo.label"),
                   controllers.organisationDetails.routes.WhoShouldWeSendPaymentToController
                     .onPageLoad(CheckMode)
-                    .url
+                    .url,
+                  messages("agentOrganisationDetailsCheckYourAnswers.charityDetails.sendPaymentTo.label")
                 )
             }
           )
@@ -196,7 +218,8 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                 messages("agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.label"),
                 controllers.organisationDetails.routes.NameOfCharityRegulatorController
                   .onPageLoad(CheckMode)
-                  .url
+                  .url,
+                messages("agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.label")
               )
             )
           },
@@ -205,7 +228,8 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
               messages("agentOrganisationDetailsCheckYourAnswers.charityDetails.sendPaymentTo.label"),
               controllers.organisationDetails.routes.WhoShouldWeSendPaymentToController
                 .onPageLoad(CheckMode)
-                .url
+                .url,
+              messages("agentOrganisationDetailsCheckYourAnswers.charityDetails.sendPaymentTo.label")
             )
           )
         ).flatten
@@ -222,7 +246,8 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                   Text(value),
                   controllers.organisationDetails.routes.EnterTelephoneNumberController
                     .onPageLoad(CheckMode)
-                    .url
+                    .url,
+                  messages("agentOrganisationDetailsCheckYourAnswers.agentDetails.telephoneNumber.label")
                 )
 
               case None =>
@@ -230,7 +255,8 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                   messages("agentOrganisationDetailsCheckYourAnswers.agentDetails.telephoneNumber.label"),
                   controllers.organisationDetails.routes.EnterTelephoneNumberController
                     .onPageLoad(CheckMode)
-                    .url
+                    .url,
+                  messages("agentOrganisationDetailsCheckYourAnswers.agentDetails.telephoneNumber.label")
                 )
             }
           ),
@@ -243,7 +269,8 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                   Text(if (value) messages("site.yes") else messages("site.no")),
                   controllers.organisationDetails.routes.AgentHasUKAddressController
                     .onPageLoad(CheckMode)
-                    .url
+                    .url,
+                  messages("agentOrganisationDetailsCheckYourAnswers.agentDetails.ukAddress.label")
                 )
 
               case None =>
@@ -251,7 +278,8 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                   messages("agentOrganisationDetailsCheckYourAnswers.agentDetails.ukAddress.label"),
                   controllers.organisationDetails.routes.AgentHasUKAddressController
                     .onPageLoad(CheckMode)
-                    .url
+                    .url,
+                  messages("agentOrganisationDetailsCheckYourAnswers.agentDetails.ukAddress.label")
                 )
             }
           ),
@@ -267,7 +295,8 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                       Text(value),
                       controllers.organisationDetails.routes.AgentPostcodeController
                         .onPageLoad(CheckMode)
-                        .url
+                        .url,
+                      messages("agentOrganisationDetailsCheckYourAnswers.agentDetails.postcode.label")
                     )
 
                   case None =>
@@ -275,7 +304,8 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
                       messages("agentOrganisationDetailsCheckYourAnswers.agentDetails.postcode.label"),
                       controllers.organisationDetails.routes.AgentPostcodeController
                         .onPageLoad(CheckMode)
-                        .url
+                        .url,
+                      messages("agentOrganisationDetailsCheckYourAnswers.agentDetails.postcode.label")
                     )
                 }
               )
@@ -291,13 +321,15 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
             messages("agentOrganisationDetailsCheckYourAnswers.agentDetails.telephoneNumber.label"),
             controllers.organisationDetails.routes.EnterTelephoneNumberController
               .onPageLoad(CheckMode)
-              .url
+              .url,
+            messages("agentOrganisationDetailsCheckYourAnswers.agentDetails.telephoneNumber.label")
           ),
           missingDataRow(
             messages("agentOrganisationDetailsCheckYourAnswers.agentDetails.ukAddress.label"),
             controllers.organisationDetails.routes.AgentHasUKAddressController
               .onPageLoad(CheckMode)
-              .url
+              .url,
+            messages("agentOrganisationDetailsCheckYourAnswers.agentDetails.ukAddress.label")
           )
         )
       )
@@ -355,7 +387,8 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
   private def summaryRow(
     label: String,
     value: Content,
-    href: String
+    href: String,
+    hiddenText: String
   )(implicit messages: Messages): SummaryListRow =
     SummaryListRow(
       key = Key(Text(label)),
@@ -365,7 +398,8 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
           items = Seq(
             ActionItem(
               href = href,
-              content = Text(messages("site.change"))
+              content = Text(messages("site.change")),
+              visuallyHiddenText = Some(hiddenText)
             )
           )
         )
@@ -374,7 +408,8 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
 
   private def missingDataRow(
     label: String,
-    href: String
+    href: String,
+    hiddenText: String
   )(implicit messages: Messages): SummaryListRow =
     SummaryListRow(
       key = Key(Text(label)),
@@ -382,6 +417,7 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
         HtmlContent(
           s"""<a class="govuk-link" href="$href">
              |${messages("site.enter")}
+             |<span class="govuk-visually-hidden">$hiddenText</span>
              |</a>""".stripMargin
         )
       ),
