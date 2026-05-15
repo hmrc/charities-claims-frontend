@@ -1084,4 +1084,4 @@ deleteAgentClaim.title =  Delete repayment claim
 deleteAgentClaim.heading = Delete repayment claim
 deleteAgentClaim.body = You are about to delete the repayment claim for {0}.
 deleteAgentClaim.caution = Are you sure you want to delete this repayment claim?
-deleteAgentClaim.error.required = Select ‘Yes’ if you want to to delete this repayment claim
+deleteAgentClaim.error.required = Select ‘Yes’ if you want to delete this repayment claim
