@@ -135,8 +135,17 @@ object AgentUserOrganisationDetailsAnswers {
   def getDoYouHaveAgentUKAddress(using session: SessionData): Option[Boolean] =
     get(_.doYouHaveAgentUKAddress)
 
-  def setDoYouHaveAgentUKAddress(value: Boolean)(using session: SessionData): SessionData =
-    set(value)((a, v) => a.copy(doYouHaveAgentUKAddress = Some(v)))
+  def setDoYouHaveAgentUKAddress(
+    value: Boolean,
+    previousAnswer: Option[Boolean]
+  )(using session: SessionData): SessionData =
+    set(value) { (a, v) =>
+      val shouldClearPostcode = previousAnswer.contains(true) && !v
+      a.copy(
+        doYouHaveAgentUKAddress = Some(v),
+        postcode = if (shouldClearPostcode) None else a.postcode
+      )
+    }
 
   def getDaytimeTelephoneNumber(using session: SessionData): Option[String] =
     get(_.daytimeTelephoneNumber)

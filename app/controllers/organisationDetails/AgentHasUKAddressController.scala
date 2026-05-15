@@ -65,13 +65,14 @@ class AgentHasUKAddressController @Inject() (
         )
       )
       .async { implicit request =>
+        val previousAnswer: Option[Boolean] = AgentUserOrganisationDetailsAnswers.getDoYouHaveAgentUKAddress
         form
           .bindFromRequest()
           .fold(
             formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
             value =>
               saveService
-                .save(AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(value))
+                .save(AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(value, previousAnswer))
                 .map(_ =>
                   if value then
                     Redirect(

@@ -252,5 +252,71 @@ class AgentUserOrganisationDetailsAnswersSpec extends BaseSpec {
         result.get.charityRegistrationNumber shouldBe None
       }
     }
+
+    "setDoYouHaveAgentUKAddress" - {
+
+      "should clear postcode when previous answer was true and new value is false" in {
+
+        given SessionData = SessionData(
+          charitiesReference = "AB12345",
+          agentUserOrganisationDetailsAnswers = Some(
+            AgentUserOrganisationDetailsAnswers(
+              doYouHaveAgentUKAddress = Some(true),
+              postcode = Some("AA1 1AA")
+            )
+          )
+        )
+
+        val updated =
+          AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(
+            value = false,
+            previousAnswer = Some(true)
+          )
+
+        updated.agentUserOrganisationDetailsAnswers.flatMap(_.postcode) shouldBe None
+      }
+
+      "should keep postcode when previous answer was false and new value is true" in {
+
+        given SessionData = SessionData(
+          charitiesReference = "AB12345",
+          agentUserOrganisationDetailsAnswers = Some(
+            AgentUserOrganisationDetailsAnswers(
+              doYouHaveAgentUKAddress = Some(false),
+              postcode = Some("AA1 1AA")
+            )
+          )
+        )
+
+        val updated =
+          AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(
+            value = true,
+            previousAnswer = Some(false)
+          )
+
+        updated.agentUserOrganisationDetailsAnswers.flatMap(_.postcode) shouldBe Some("AA1 1AA")
+      }
+
+      "should keep postcode when previous answer was true and new value is true" in {
+
+        given SessionData = SessionData(
+          charitiesReference = "AB12345",
+          agentUserOrganisationDetailsAnswers = Some(
+            AgentUserOrganisationDetailsAnswers(
+              doYouHaveAgentUKAddress = Some(true),
+              postcode = Some("AA1 1AA")
+            )
+          )
+        )
+
+        val updated =
+          AgentUserOrganisationDetailsAnswers.setDoYouHaveAgentUKAddress(
+            value = true,
+            previousAnswer = Some(true)
+          )
+
+        updated.agentUserOrganisationDetailsAnswers.flatMap(_.postcode) shouldBe Some("AA1 1AA")
+      }
+    }
   }
 }
