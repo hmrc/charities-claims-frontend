@@ -139,11 +139,13 @@ object AgentUserOrganisationDetailsAnswers {
     value: Boolean,
     previousAnswer: Option[Boolean]
   )(using session: SessionData): SessionData =
-    set(value) { (a, v) =>
-      val shouldClearPostcode = previousAnswer.contains(true) && !v
-      a.copy(
-        doYouHaveAgentUKAddress = Some(v),
-        postcode = if (shouldClearPostcode) None else a.postcode
+    set(value) { (answers, currentValue) =>
+      val shouldClearPostcode = previousAnswer.contains(true) && !currentValue
+      answers.copy(
+        doYouHaveAgentUKAddress = Some(currentValue),
+        postcode =
+          if (shouldClearPostcode) None
+          else answers.postcode
       )
     }
 
