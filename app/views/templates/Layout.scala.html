@@ -23,15 +23,20 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.backlink.BackLink
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.*
+@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 @import config.FrontendAppConfig
+@import uk.gov.hmrc.hmrcfrontend.views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.config.ContactFrontendConfig
 
 @this(
         hmrcStandardPage: HmrcStandardPage,
         hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
         hmrcTimeoutDialog: uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcTimeoutDialog,
         timeoutDialogConfig: uk.gov.hmrc.hmrcfrontend.config.TimeoutDialogConfig,
-        hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet
-)(using config: FrontendAppConfig)
+        hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
+        betaBanner: StandardBetaBanner,
+        hmrcUserResearchBanner : HmrcUserResearchBanner
+)(using config: FrontendAppConfig)(implicit cfConfig: ContactFrontendConfig)
 
 @(
   pageTitle: String,
@@ -42,7 +47,8 @@
   suppressSignOutLink: Boolean = false,
   hasErrors: Boolean = false,
   suppressLanguageToggle: Boolean = false,
-  refreshPageSeconds: Option[Int] = None
+  refreshPageSeconds: Option[Int] = None,
+  showUserBanner: Boolean = false
 )(contentBlock: Html)(using request: Request[?], messages: Messages)
 
 @signOutUrl = @{
@@ -90,7 +96,10 @@
         accessibilityStatementUrl = Some(config.accessibilityStatementUrl)
     ),
     banners = Banners(
-        userResearchBanner = Some(UserResearchBanner(url = config.researchUrl))
+        phaseBanner = Some(betaBanner()),
+        userResearchBanner = if(showUserBanner) Some(UserResearchBanner(
+            url = config.researchUrl
+        )) else None
     ),
     pageTitle = Some(pageTitle),
     isWelshTranslationAvailable = !suppressLanguageToggle && config.enableLanguageSwitching,
