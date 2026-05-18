@@ -801,7 +801,7 @@ yourOtherIncomeScheduleUpload.heading = Your Other Income schedule upload
 yourOtherIncomeScheduleUpload.agent.heading = Other Income schedule upload
 yourOtherIncomeScheduleUpload.paragraph.one = You can upload your Other Income schedule as a spreadsheet. The selected file must be smaller than 250KB.
 yourOtherIncomeScheduleUpload.agent.paragraph.one = You can upload the Other Income schedule as a spreadsheet. The selected file must be smaller than 250KB.
-yourOtherIncomeScheduleUpload.table.key = Other Income Schedule
+yourOtherIncomeScheduleUpload.table.key = Other Income schedule
 yourOtherIncomeScheduleUpload.title = Your Other Income schedule upload
 yourOtherIncomeScheduleUpload.agent.title = Other Income schedule upload
 
@@ -834,7 +834,7 @@ yourConnectedCharitiesScheduleUpload.heading = Your Connected Charities schedule
 yourConnectedCharitiesScheduleUpload.heading.agent = Connected Charities schedule upload
 yourConnectedCharitiesScheduleUpload.paragraph.one = You can upload your Connected Charities schedule as a spreadsheet. The selected file must be smaller than 250KB.
 yourConnectedCharitiesScheduleUpload.paragraph.one.agent = You can upload the Connected Charities schedule as a spreadsheet. The selected file must be smaller than 250KB.
-yourConnectedCharitiesScheduleUpload.table.key = Connected Charities Schedule
+yourConnectedCharitiesScheduleUpload.table.key = Connected Charities schedule
 yourConnectedCharitiesScheduleUpload.title = Your Connected Charities schedule upload
 yourConnectedCharitiesScheduleUpload.title.agent = Connected Charities schedule upload
 
