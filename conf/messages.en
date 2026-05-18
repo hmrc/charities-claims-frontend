@@ -303,7 +303,7 @@ claimsTaskList.task.connectedCharitiesSchedule = Add Connected Charities schedul
 claimsTaskList.task.gasdsDetails = Gift Aid Small Donations Scheme details
 claimsTaskList.task.giftAidSchedule = Add Gift Aid schedule
 claimsTaskList.task.organisationDetails = Provide organisation details
-claimsTaskList.task.otherIncomeSchedule = Add other income schedule
+claimsTaskList.task.otherIncomeSchedule = Add Other Income Schedule
 claimsTaskList.task.readDeclaration = Read declaration
 claimsTaskList.task.repaymentClaimDetails = Provide repayment claim details
 claimsTaskList.title = Make a charity repayment claim
@@ -779,7 +779,7 @@ uploadOtherIncomeSchedule.title = Upload an Other Income schedule
 warning.text = Warning
 
 yourGiftAidScheduleUpload.caption = Add Gift Aid schedule
-yourGiftAidScheduleUpload.file = Gift Aid Schedule
+yourGiftAidScheduleUpload.file = Gift Aid schedule
 yourGiftAidScheduleUpload.heading = Your Gift Aid schedule upload
 yourGiftAidScheduleUpload.agent.heading = Gift Aid schedule upload
 yourGiftAidScheduleUpload.paragraph.one = You can upload your Gift Aid schedule as a spreadsheet. The selected file must be smaller than 250KB.
