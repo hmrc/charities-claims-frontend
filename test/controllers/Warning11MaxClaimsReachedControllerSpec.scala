@@ -22,13 +22,14 @@ import controllers.ControllerSpec
 import config.FrontendAppConfig
 import views.html.Warning11MaxClaimsReachedView
 import play.api.Application
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class Warning11MaxClaimsReachedControllerSpec extends ControllerSpec {
 
   "Warning11MaxClaimsReachedController" - {
     "onPageLoad" - {
-      "should render the page correctly" in {
-        given application: Application = applicationBuilder().build()
+      "should render the page correctly for Agent user" in {
+        given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Agent).build()
         val appConfig                  = application.injector.instanceOf[FrontendAppConfig]
 
         running(application) {
@@ -42,11 +43,26 @@ class Warning11MaxClaimsReachedControllerSpec extends ControllerSpec {
           contentAsString(result) shouldEqual view(appConfig.agentUnsubmittedClaimLimit).body
         }
       }
+      "should render the Claims list page for organisation user" in {
+        given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Organisation).build()
+
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.Warning11MaxClaimsReachedController.onPageLoad.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+        }
+      }
     }
 
     "onSubmit" - {
       "should redirect to the agent landing screen (AA2)" in {
-        given application: Application = applicationBuilder().build()
+        given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Agent).build()
 
         val appConfig = application.injector.instanceOf[FrontendAppConfig]
 
@@ -58,6 +74,22 @@ class Warning11MaxClaimsReachedControllerSpec extends ControllerSpec {
 
           status(result) shouldEqual SEE_OTHER
           redirectLocation(result) shouldEqual Some(appConfig.charityRepaymentDashboardUrl)
+        }
+      }
+
+      "should redirect to Claims List for organisation user" in {
+        given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Organisation).build()
+
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.Warning11MaxClaimsReachedController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
     }
