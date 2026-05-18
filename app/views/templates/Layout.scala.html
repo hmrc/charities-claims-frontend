@@ -68,8 +68,8 @@
     @headBlock.getOrElse {
         @if(timeOut && signOutUrl.isDefined) {
             @hmrcTimeoutDialog(TimeoutDialog(
-                    timeout = Some(timeoutDialogConfig.timeoutInSeconds),
-                    countdown = Some(timeoutDialogConfig.countdownInSeconds),
+                    timeout = Some(config.timeoutInSeconds),
+                    countdown = Some(config.countdownInSeconds),
                     message= Some(messages("session-expired-message")),
                     keepAliveUrl= Some(s"${routes.StartController.keepAlive.url}"),
                     signOutUrl= signOutUrl,
