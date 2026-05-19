@@ -16,7 +16,6 @@
 
 package viewmodels.govuk
 
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.button.Button
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 
@@ -28,24 +27,16 @@ trait ButtonFluency {
 
     def apply(content: Content): Button =
       Button(
-        element = Some("button"),
         content = content
-      )
-
-    def apply(text: String): Button =
-      Button(
-        element = Some("button"),
-        content = Text(text)
       )
   }
 
   implicit class FluentButton(button: Button) {
 
-    def asLink(href: String): Button =
-      button.copy(element = Some("a"), href = Some(href))
-
-    def asInput(inputType: String): Button =
-      button.copy(element = Some("input"), inputType = Some(inputType))
+    def withHref(href: String): Button =
+      button.copy(
+        href = Some(href)
+      )
 
     def withName(name: String): Button =
       button.copy(name = Some(name))
