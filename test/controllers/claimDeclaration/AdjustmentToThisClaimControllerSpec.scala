@@ -737,7 +737,8 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
             claimingDonationsCollectedInCommunityBuildings = Some(false),
             connectedToAnyOtherCharities = Some(true),
             claimingGiftAid = Some(true),
-            makingAdjustmentToPreviousClaim = Some(false)
+            makingAdjustmentToPreviousClaim = Some(false),
+            hmrcCharitiesReference = Some(testCharitiesReference)
           )
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
@@ -781,7 +782,8 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
             claimingDonationsCollectedInCommunityBuildings = Some(false),
             connectedToAnyOtherCharities = Some(true),
             claimingGiftAid = Some(true),
-            makingAdjustmentToPreviousClaim = Some(false)
+            makingAdjustmentToPreviousClaim = Some(false),
+            hmrcCharitiesReference = Some(testCharitiesReference)
           )
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
@@ -826,7 +828,8 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
             claimingDonationsCollectedInCommunityBuildings = Some(false),
             connectedToAnyOtherCharities = Some(true),
             claimingGiftAid = Some(true),
-            makingAdjustmentToPreviousClaim = Some(false)
+            makingAdjustmentToPreviousClaim = Some(false),
+            hmrcCharitiesReference = Some(testCharitiesReference)
           )
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
