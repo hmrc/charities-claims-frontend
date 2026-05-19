@@ -146,11 +146,14 @@ class UnregulatedDonationsServiceImpl @Inject() (
         getLimitForReason(reason, appConfig.lowIncomeLimit, appConfig.exceptedLimit) match {
           case Some(limit) =>
             val charityReference =
-              if request.isAgent then Some(RepaymentClaimDetailsAnswers.getHmrcCharitiesReference(using sessionData))
+              if request.isAgent then
+                RepaymentClaimDetailsAnswers
+                  .getHmrcCharitiesReference(using sessionData)
+                  .getOrElse(sessionData.charitiesReference)
               else sessionData.charitiesReference
             for {
               existingDonationsOpt <-
-                unregulatedDonationsConnector.getTotalUnregulatedDonations(charityReference.toString)
+                unregulatedDonationsConnector.getTotalUnregulatedDonations(charityReference)
               currentClaimTotal    <- fetchGiftAidDonationsTotal
             } yield {
               val existingDonations = existingDonationsOpt.getOrElse(BigDecimal(0))
