@@ -1,0 +1,1087 @@
+
+aboutCommunityBuildingsSchedule.caption = Add Community Buildings schedule
+aboutCommunityBuildingsSchedule.heading = About Community Buildings schedule
+aboutCommunityBuildingsSchedule.paragraph.one = Use this service to add a Community Buildings schedule.
+aboutCommunityBuildingsSchedule.agent.paragraph.one = Use this service to add a Community Buildings schedule for your client.
+aboutCommunityBuildingsSchedule.paragraph.two = You can upload a Community Buildings schedule in a .ods format.
+aboutCommunityBuildingsSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Community Buildings schedule here (opens in new tab)</a>. You can submit 1 file at a time, and each file can be up to 250KB.
+aboutCommunityBuildingsSchedule.title = About Community Buildings schedule
+
+uploadCommunityBuildingsSchedule.caption = Add Community Buildings schedule
+uploadCommunityBuildingsSchedule.title = Upload a Community Buildings schedule
+uploadCommunityBuildingsSchedule.heading = Upload a Community Buildings schedule
+uploadCommunityBuildingsSchedule.paragraph.one = To claim Community Buildings top-up payment, you need to upload a completed Community Buildings schedule with details of the community building(s) where donations were collected and amounts received. You can save your claim without uploading the Community Buildings schedule, but you need to upload a Community Buildings schedule before submitting your claim.
+uploadCommunityBuildingsSchedule.agent.paragraph.one = To claim Community Buildings top-up payment for your client, upload a completed Community Buildings schedule with details of the community building(s) where donations were collected and amounts received. You can save this claim without uploading the Community Buildings schedule, but you need to upload a Community Buildings schedule before submitting this claim.
+uploadCommunityBuildingsSchedule.paragraph.url = If you have not completed a Community Buildings schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Community Buildings schedule here (opens in new tab)</a>.
+uploadCommunityBuildingsSchedule.input.label = Upload a file
+uploadCommunityBuildingsSchedule.form.upload-file.submit = Continue
+uploadCommunityBuildingsSchedule.error.file-upload.InvalidArgument = Select a Community Buildings schedule
+uploadCommunityBuildingsSchedule.error.file-upload.EntityTooSmall = Select a Community Buildings schedule
+uploadCommunityBuildingsSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250KB
+
+aboutGiftAidSchedule.caption = Add Gift Aid schedule
+aboutGiftAidSchedule.heading = About Gift Aid schedule
+aboutGiftAidSchedule.paragraph.one = Use this service to add a Gift Aid schedule.
+aboutGiftAidSchedule.paragraph.agent.one = Use this service to add a Gift Aid schedule for your client.
+aboutGiftAidSchedule.paragraph.two = You can upload a Gift Aid schedule in a .ods format.
+aboutGiftAidSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Gift Aid schedule here (opens in new tab)</a>. You can submit 1 file at a time, and each file can be up to 250KB.
+aboutGiftAidSchedule.title = About Gift Aid schedule
+
+aboutOtherIncomeSchedule.caption = Add Other Income schedule
+aboutOtherIncomeSchedule.heading = About Other Income schedule
+aboutOtherIncomeSchedule.paragraph.one = Use this service to add an Other Income schedule.
+aboutOtherIncomeSchedule.agent.paragraph.one = Use this service to add an Other Income schedule for your client.
+aboutOtherIncomeSchedule.paragraph.two = You can upload an Other Income schedule in a .ods format.
+aboutOtherIncomeSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download an Other Income schedule here (opens in new tab)</a>. You can submit 1 file at a time, and each file can be up to 250KB.
+aboutOtherIncomeSchedule.title = About Other Income schedule
+
+aboutTheOrganisation.caption = Provide organisation details
+aboutTheOrganisation.heading = About the organisation
+aboutTheOrganisation.paragraph.one = You need to provide information about the organisation you are claiming for.
+aboutTheOrganisation.paragraph.two = The person making this claim must be an approved official or corporate trustee recognised by HM Revenue & Customs.
+aboutTheOrganisation.agent.paragraph.two = The agent making this claim must provide a phone number so HM Revenue & Customs can get in touch about this claim.
+aboutTheOrganisation.title = About the organisation
+
+addSchedule.heading = Add Schedule
+addSchedule.placeholder = Content TBC
+addSchedule.title = Add Schedule
+authLoginStub.title = Sign in using test credentials
+
+authorisedOfficialAddress.caption = Provide organisation details
+authorisedOfficialAddress.error.required = Select ‘Yes’ if the authorised official has a UK address
+authorisedOfficialAddress.heading = Does the authorised official have a UK address?
+authorisedOfficialAddress.legend = Does the authorised official have a UK address?
+authorisedOfficialAddress.missingDetails = confirm if the authorised official has a UK address
+authorisedOfficialAddress.title = Does the authorised official have a UK address?
+
+authorisedOfficialDetails.caption = Provide organisation details
+authorisedOfficialDetails.firstName = First name
+authorisedOfficialDetails.firstName.error.format = Enter an authorised official first name in the correct format
+authorisedOfficialDetails.firstName.error.length = Authorised official first name must be 35 characters or less
+authorisedOfficialDetails.firstName.error.required = Enter an authorised official first name
+authorisedOfficialDetails.heading = What are the authorised official’s details?
+authorisedOfficialDetails.lastName = Last name
+authorisedOfficialDetails.lastName.error.format = Enter an authorised official last name in the correct format
+authorisedOfficialDetails.lastName.error.length = Authorised official last name must be 35 characters or less
+authorisedOfficialDetails.lastName.error.required = Enter an authorised official last name
+authorisedOfficialDetails.missingDetails = confirm the authorised official details
+authorisedOfficialDetails.phoneNumber = Phone number
+authorisedOfficialDetails.phoneNumber.error.format = Enter an authorised official phone number in the correct format
+authorisedOfficialDetails.phoneNumber.error.length = Authorised official phone number must be 30 characters or less
+authorisedOfficialDetails.phoneNumber.error.required = Enter an authorised official phone number
+authorisedOfficialDetails.postcode = Postcode
+authorisedOfficialDetails.postcode.error.format = Enter an authorised official postcode in the correct format
+authorisedOfficialDetails.postcode.error.length = Authorised official postcode must be 8 characters or less
+authorisedOfficialDetails.postcode.error.required = Enter an authorised official postcode
+authorisedOfficialDetails.title = What are the authorised official’s details?
+authorisedOfficialDetails.title.error.format = Enter an authorised official title in the correct format
+authorisedOfficialDetails.title.error.length = Authorised official title must be 4 characters or less
+authorisedOfficialDetails.titleField = Title (optional)
+back.text = Back
+
+cannotViewOrManageClaim.heading = You cannot manage this claim
+cannotViewOrManageClaim.paragraph = This claim is being updated by someone else. You can manage this claim by returning to <a class="govuk-link" href="{0}">repayment claim summary</a>.
+cannotViewOrManageClaim.title = You cannot manage this claim
+
+changePreviousGASDSClaim.caption = Provide repayment claim details
+changePreviousGASDSClaim.caption.agent = Provide charity repayment claim details
+changePreviousGASDSClaim.error.required = Select ‘Yes’ if you want to change a previous Gift Aid Small Donations Scheme claim
+changePreviousGASDSClaim.heading = Gift Aid Small Donations Scheme (GASDS) details
+changePreviousGASDSClaim.legend = Do you want to make an adjustment to the GASDS claim?
+changePreviousGASDSClaim.missingDetails = confirm if you want to change a previous Gift Aid Small Donations Scheme claim
+changePreviousGASDSClaim.agent.missingDetails = confirm if you want to change a previous Gift Aid Small Donations Scheme claim
+changePreviousGASDSClaim.paragraph = If your charity or CASC has received an over-payment, we will deduct the over-payment from this claim.
+changePreviousGASDSClaim.paragraph.agent = If the charity or CASC has received an over-payment, we will deduct the over-payment from this claim.
+changePreviousGASDSClaim.title = Gift Aid Small Donations Scheme (GASDS) details
+
+charityExcepted.bullet.1 = a church or chapel
+charityExcepted.bullet.2 = a charity that provides premises for schools
+charityExcepted.bullet.3 = a scout or guide group
+charityExcepted.bullet.4 = a charitable service of the armed forces
+charityExcepted.bullet.5 = a students’ union
+charityExcepted.heading = Your charity is excepted
+charityExcepted.agent.heading = The charity is excepted
+charityExcepted.p1 = Your charity is excepted as the charity’s income is £100,000 or less and is classed as one of the following:
+charityExcepted.agent.p1 = The charity is excepted as the charity’s income is £100,000 or less and is classed as one of the following:
+charityExcepted.title = Your charity is excepted
+charityExcepted.agent.title = The charity is excepted
+
+charityExempt.bullet.1 = university or school
+charityExempt.bullet.2 = museum or gallery
+charityExempt.bullet.3 = housing association
+charityExempt.heading = Your charity is exempt
+charityExempt.agent.heading = The charity is exempt
+charityExempt.p1 = Your charity is exempt from registering with a regulator because it is a:
+charityExempt.agent.p1 = The charity is exempt from registering with a regulator because it is a:
+charityExempt.title = Your charity is exempt
+charityExempt.agent.title = The charity is exempt
+
+charityRegulatorNumber.caption = Provide organisation details
+charityRegulatorNumber.error.format = Enter a charity regulator number in the correct format
+charityRegulatorNumber.error.length = Enter a charity regulator number in the correct format
+charityRegulatorNumber.error.required = Enter a charity regulator number
+charityRegulatorNumber.heading = What is the charity regulator number?
+charityRegulatorNumber.hint = This can be up to 20 numerical characters like 123456789 and does not include letters.
+charityRegulatorNumber.missingDetails = confirm your charity regulator number
+charityRegulatorNumber.agent.missingDetails = confirm the charity regulator number
+charityRegulatorNumber.title = What is the charity regulator number?
+
+charityRepaymentDashboard.heading = Charity Repayment Dashboard
+charityRepaymentDashboard.placeholder = Content TBC
+charityRepaymentDashboard.title = Charity Repayment Dashboard
+
+checkYourAnswers.giftAid.change.hidden = if you are claiming Gift Aid
+checkYourAnswers.giftAid.label = Are you claiming Gift Aid?
+checkYourAnswers.giftAidSmallDonationsScheme.label = Are you claiming for the Gift Aid Small Donations Scheme?
+checkYourAnswers.hasRef.label = Do you have a claim reference number?
+checkYourAnswers.heading = Check your claim details
+checkYourAnswers.refNumber.label = What is your reference number?
+checkYourAnswers.taxDeducted.label = Are you claiming tax deducted from other income?
+checkYourAnswers.title = Check your claim details
+
+checkYourCommunityBuildingsSchedule.caption = Add Community Buildings schedule
+checkYourCommunityBuildingsSchedule.error.required = Select ‘Yes’ if you need to update this Community Buildings schedule
+checkYourCommunityBuildingsSchedule.heading = Check your Community Buildings schedule
+checkYourCommunityBuildingsSchedule.agent.heading = Check this Community Buildings schedule
+checkYourCommunityBuildingsSchedule.hint = Do you need to update this Community Buildings schedule?
+checkYourCommunityBuildingsSchedule.radios.no = No, continue with Community Buildings schedule
+checkYourCommunityBuildingsSchedule.summary.item.1 = Total donations
+checkYourCommunityBuildingsSchedule.summary.title = Community Buildings schedule details
+checkYourCommunityBuildingsSchedule.table.column.1 = Item
+checkYourCommunityBuildingsSchedule.table.column.2 = Building name
+checkYourCommunityBuildingsSchedule.table.column.3 = First line of address
+checkYourCommunityBuildingsSchedule.table.column.4 = Postcode
+checkYourCommunityBuildingsSchedule.table.column.5 = Tax year 1 ending 5 April
+checkYourCommunityBuildingsSchedule.table.column.6 = Amount of donations received in tax year 1 (£)
+checkYourCommunityBuildingsSchedule.table.column.7 = Tax year 2 ending 5 April
+checkYourCommunityBuildingsSchedule.table.column.8 = Amount of donations received in tax year 2 (£)
+checkYourCommunityBuildingsSchedule.title = Check your Community Buildings schedule
+checkYourCommunityBuildingsSchedule.agent.title = Check this Community Buildings schedule
+
+checkYourConnectedCharitiesSchedule.caption = Add Connected Charities schedule
+checkYourConnectedCharitiesSchedule.error.required = Select ‘Yes’ if you need to update this Connected Charities schedule
+checkYourConnectedCharitiesSchedule.heading = Check your Connected Charities schedule
+checkYourConnectedCharitiesSchedule.heading.agent = Check this Connected Charities schedule
+checkYourConnectedCharitiesSchedule.hint = Do you need to update this Connected Charities schedule?
+checkYourConnectedCharitiesSchedule.radios.no = No, continue with Connected Charities schedule
+checkYourConnectedCharitiesSchedule.table.column.1 = Item
+checkYourConnectedCharitiesSchedule.table.column.2 = Name of charity
+checkYourConnectedCharitiesSchedule.table.column.3 = HMRC Charities reference
+checkYourConnectedCharitiesSchedule.title = Check your Connected Charities schedule
+checkYourConnectedCharitiesSchedule.title.agent = Check this Connected Charities schedule
+
+checkYourGiftAidSchedule.caption = Add Gift Aid schedule
+checkYourGiftAidSchedule.error.required = Select ‘Yes’ if you need to update this Gift Aid schedule
+checkYourGiftAidSchedule.heading = Check your Gift Aid schedule
+checkYourGiftAidSchedule.agent.heading = Check this Gift Aid schedule
+checkYourGiftAidSchedule.hint = Do you need to update this Gift Aid schedule?
+checkYourGiftAidSchedule.radios.no = No, continue with Gift Aid schedule
+checkYourGiftAidSchedule.summary.item.1 = Earliest donation date
+checkYourGiftAidSchedule.summary.item.2 = Adjustment for Gift Aid previously over-claimed
+checkYourGiftAidSchedule.summary.item.3 = Total donations
+checkYourGiftAidSchedule.summary.title = Gift Aid schedule details
+checkYourGiftAidSchedule.table.column.1 = Item
+checkYourGiftAidSchedule.table.column.10 = Amount (£)
+checkYourGiftAidSchedule.table.column.2 = Title
+checkYourGiftAidSchedule.table.column.3 = First name
+checkYourGiftAidSchedule.table.column.4 = Last name
+checkYourGiftAidSchedule.table.column.5 = House name or number
+checkYourGiftAidSchedule.table.column.6 = Postcode
+checkYourGiftAidSchedule.table.column.7 = Aggregated donations
+checkYourGiftAidSchedule.table.column.8 = Sponsored event
+checkYourGiftAidSchedule.table.column.9 = Donation date
+checkYourGiftAidSchedule.title = Check your Gift Aid schedule
+checkYourGiftAidSchedule.agent.title = Check this Gift Aid schedule
+
+
+checkYourOtherIncomeSchedule.caption = Add Other Income schedule
+checkYourOtherIncomeSchedule.error.required = Select ‘Yes’ if you need to update this Other Income schedule
+checkYourOtherIncomeSchedule.heading = Check your Other Income schedule
+checkYourOtherIncomeSchedule.agent.heading = Check this Other Income schedule
+checkYourOtherIncomeSchedule.hint = Do you need to update this Other Income schedule?
+checkYourOtherIncomeSchedule.radios.no = No, continue with Other Income schedule
+checkYourOtherIncomeSchedule.summary.item.1 = Adjustment for Other Income previously over-claimed
+checkYourOtherIncomeSchedule.summary.item.2 = Total gross payment
+checkYourOtherIncomeSchedule.summary.item.3 = Total tax deducted
+checkYourOtherIncomeSchedule.summary.title = Other Income schedule details
+checkYourOtherIncomeSchedule.table.column.1 = Item
+checkYourOtherIncomeSchedule.table.column.2 = Name of payer
+checkYourOtherIncomeSchedule.table.column.3 = Date of payment
+checkYourOtherIncomeSchedule.table.column.4 = Gross payment (£)
+checkYourOtherIncomeSchedule.table.column.5 = Tax deducted (£)
+checkYourOtherIncomeSchedule.title = Check your Other Income schedule
+checkYourOtherIncomeSchedule.agent.title = Check this Other Income schedule
+
+claimDeclaration.bullet.one = the information given is complete and correct
+claimDeclaration.bullet.two = I have read the HMRC guidance on claiming Gift Aid and top‑up payments under the Gift Aid Small Donations Scheme
+claimDeclaration.bullet.three = where this claim relates to Gift Aid, the charity or Community Amateur Sports Club meets the conditions for tax exemption for the period covered by this claim
+claimDeclaration.warning = I understand that if I give false or misleading information, HMRC may take action against me.
+claimDeclaration.heading = Declaration
+claimDeclaration.paragraph = By submitting this claim, I confirm that:
+claimDeclaration.title = Declaration
+claimDeclaration.submit = Confirm and submit claim
+
+claimReferenceNumber.caption = Provide repayment claim details
+claimReferenceNumber.agent.caption = Provide charity repayment claim details
+claimReferenceNumber.error.length = Claim reference number must be 20 characters or less
+claimReferenceNumber.error.regex = This can be up to 20 characters including numbers and capital letters
+claimReferenceNumber.error.required = Enter your claim reference number
+claimReferenceNumber.heading = What is your claim reference number?
+claimReferenceNumber.agent.heading = What is the charity’s claim reference number?
+claimReferenceNumber.hint = This can be up to 20 characters and include numerical characters like 123456789 and letters from A to Z. It can be found on the payment advice note when the claim is paid.
+claimReferenceNumber.title = What is your claim reference number?
+claimReferenceNumber.agent.title = What is the charity’s claim reference number?
+claimReferenceNumber.agent.missingDetails = a claim reference number
+
+claimReferenceNumberCheck.error.required = Select ‘Yes’ if you have a reference number for this claim.
+claimReferenceNumberCheck.heading = Do you have a claim reference number?
+claimReferenceNumberCheck.missingDetails = confirm if you have a claim reference number
+claimReferenceNumberCheck.agent.missingDetails = confirm if the charity has a claim reference number
+claimReferenceNumberCheck.title = Do you have a claim reference number?
+
+claimReferenceNumberInput.error.length = Claim reference number must be 20 characters or less
+claimReferenceNumberInput.error.regex = Include characters from Western European alphabets
+claimReferenceNumberInput.error.required = Enter your claim reference number
+claimReferenceNumberInput.heading = What is your claim reference number?
+claimReferenceNumberInput.missingDetails = provide a claim reference number
+claimReferenceNumberInput.agent.missingDetails = provide the charity’s claim reference number
+claimReferenceNumberInput.paragraph = You do not have to complete this box but you can use it to show your claim reference if you use one. The reference that you quote will appear on the payment advice note you receive from us when we pay the claim.
+claimReferenceNumberInput.title = What is your claim reference number?
+
+claimingGiftAid.error.required = Select ‘Yes’ if you are claiming Gift Aid.
+claimingGiftAid.heading = Are you claiming Gift Aid?
+claimingGiftAid.hint = Select ‘Yes’ if you want to claim tax repayment on donations from a Gift Aid declaration.
+claimingGiftAid.legend = Are you claiming Gift Aid?
+claimingGiftAid.title = Are you claiming Gift Aid?
+
+claimGASDS.missingDetails = confirm which type of GASDS claim(s) you want to make
+claimGASDS.agent.missingDetails = confirm which type of GASDS claim(s) you want to make
+claimingCommunityBuildingDonations.missingDetails = confirm if you are claiming for donations collected in community buildings
+claimingCommunityBuildingDonations.agent.missingDetails = confirm if you are claiming for donations collected in community buildings
+connectedToAnyOtherCharities.missingDetails = confirm if you are connected to other charities or a Community Amateur Sports Club
+connectedToAnyOtherCharities.agent.missingDetails = confirm if you are connected to other charities or a Community Amateur Sports Club
+claimingTaxDeducted.agent.missingDetails = confirm if the charity is claiming UK tax deducted from Other Income
+claimingUnderGiftAidSmallDonationsScheme.agent.missingDetails = confirm if the charity is claiming under the Gift Aid Small Donations Scheme
+
+claimingGiftAidSmallDonations.error.required = Select ‘Yes’ if you are claiming for the Gift Aid Small Donations Scheme.
+claimingGiftAidSmallDonations.heading = Gift Aid Small Donations Scheme
+claimingGiftAidSmallDonations.legend =  Are you claiming for the Gift Aid Small Donations Scheme?
+claimingGiftAidSmallDonations.paragraph =  This is separate to a Gift Aid claim. The Gift Aid Small Donation Scheme (GASDS) is for donations of £20 or less and does not need declaring.
+claimingGiftAidSmallDonations.title = Gift Aid Small Donations Scheme
+
+claimingOtherIncome.bullet.one =  Bank or Building Society interest
+claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
+claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate
+claimingOtherIncome.error.required = Select ‘Yes’ if you are claiming tax deducted from other income.
+claimingOtherIncome.heading = Are you claiming tax deducted from other income?
+claimingOtherIncome.paragraph =  Tax relief can include:
+claimingOtherIncome.title = Are you claiming tax deducted from other income?
+
+claimingReferenceNumber.caption = Provide repayment claim details
+claimingReferenceNumber.agent.caption = Provide charity repayment claim details
+claimingReferenceNumber.error.required = Select ‘Yes’ if you have a claim reference number
+claimingReferenceNumber.heading = Do you have a claim reference number?
+claimingReferenceNumber.agent.heading = Does the charity have a claim reference number?
+claimingReferenceNumber.title = Do you have a claim reference number?
+claimingReferenceNumber.agent.title = Does the charity have a claim reference number?
+
+claimsTaskList.caption = HMRC Charities reference: {0}
+claimsTaskList.declaration.warning = You must complete every section before you can declare.
+claimsTaskList.heading = Make a charity repayment claim
+claimsTaskList.link.deleteClaim = Delete claim
+claimsTaskList.link.goToDashboard = Go to manage charity repayment claims
+claimsTaskList.section.aboutTheClaim = About this claim
+claimsTaskList.section.declaration = Declaration
+claimsTaskList.section.uploadDocuments = Upload documents
+claimsTaskList.status.cannotStartYet = Cannot start yet
+claimsTaskList.status.completed = Completed
+claimsTaskList.status.incomplete = Incomplete
+claimsTaskList.status.inProgress = In progress
+claimsTaskList.status.notStarted = Not yet started
+claimsTaskList.task.communityBuildingsSchedule = Add Community Buildings schedule
+claimsTaskList.task.connectedCharitiesSchedule = Add Connected Charities schedule
+claimsTaskList.task.gasdsDetails = Gift Aid Small Donations Scheme details
+claimsTaskList.task.giftAidSchedule = Add Gift Aid schedule
+claimsTaskList.task.organisationDetails = Provide organisation details
+claimsTaskList.task.otherIncomeSchedule = Add Other Income schedule
+claimsTaskList.task.readDeclaration = Read declaration
+claimsTaskList.task.repaymentClaimDetails = Provide repayment claim details
+claimsTaskList.title = Make a charity repayment claim
+
+corporateTrusteeAddress.caption = Provide organisation details
+corporateTrusteeAddress.error.required = Select ‘Yes’ if the corporate trustee has a UK address
+corporateTrusteeAddress.heading = Does the corporate trustee have a UK address?
+corporateTrusteeAddress.legend = Does the corporate trustee have a UK address?
+corporateTrusteeAddress.missingDetails = confirm if the corporate trustee has a UK address
+corporateTrusteeAddress.title = Does the corporate trustee have a UK address?
+
+corporateTrusteeClaim.caption = Provide organisation details
+corporateTrusteeClaim.error.required = Select ‘Yes’ if this claim is being made by a corporate trustee
+corporateTrusteeClaim.heading = Is a corporate trustee making this claim?
+corporateTrusteeClaim.hint = This can be the trust department of a bank, a trust company or trust corporation.
+corporateTrusteeClaim.missingDetails = confirm if you are a corporate trustee
+corporateTrusteeClaim.title = Is a corporate trustee making this claim?
+
+corporateTrusteeDetails.caption = Provide organisation details
+corporateTrusteeDetails.heading = What are the corporate trustee details?
+corporateTrusteeDetails.missingDetails = confirm the corporate trustee details
+corporateTrusteeDetails.name.error.length = Corporate trustee name must be 160 characters or less
+corporateTrusteeDetails.name.error.regex = Enter a corporate trustee name in the correct format
+corporateTrusteeDetails.name.error.required = Enter a corporate trustee name
+corporateTrusteeDetails.name.label = Trustee name
+corporateTrusteeDetails.phone.error.length = Corporate trustee phone number must be 30 characters or less
+corporateTrusteeDetails.phone.error.regex = Enter a corporate trustee phone number in the correct format
+corporateTrusteeDetails.phone.error.required = Enter a corporate trustee phone number
+corporateTrusteeDetails.phone.label = Trustee phone number
+corporateTrusteeDetails.postCode.error.length = Corporate trustee postcode must be 8 characters or less
+corporateTrusteeDetails.postCode.error.regex = Enter a corporate trustee postcode in the correct format
+corporateTrusteeDetails.postCode.error.required = Enter a corporate trustee postcode
+corporateTrusteeDetails.postcode.label = Trustee postcode
+corporateTrusteeDetails.title = What are the corporate trustee details?
+data.notApplicable = Not applicable
+
+declarationDetailsConfirmation.heading = Declaration Confirmation
+declarationDetailsConfirmation.placeholder = Content TBC
+declarationDetailsConfirmation.title = Declaration Confirmation
+
+deleteCommunityBuildingsSchedule.error.required = Select ‘Yes’ if you want to delete this Community Buildings schedule
+deleteCommunityBuildingsSchedule.heading = Do you want to delete this Community Buildings schedule?
+deleteCommunityBuildingsSchedule.title = Do you want to delete this Community Buildings schedule?
+
+deleteConnectedCharitiesSchedule.error.required = Select ‘Yes’ if you want to delete this Connected Charities schedule
+deleteConnectedCharitiesSchedule.heading = Do you want to delete this Connected Charities schedule?
+deleteConnectedCharitiesSchedule.title = Do you want to delete this Connected Charities schedule?
+
+deleteGiftAidSchedule.error.required = Select ‘Yes’ if you want to delete this Gift Aid schedule
+deleteGiftAidSchedule.heading = Do you want to delete this Gift Aid schedule?
+deleteGiftAidSchedule.title = Do you want to delete this Gift Aid schedule?
+
+deleteOtherIncomeSchedule.error.required = Select ‘Yes’ if you want to delete this Other Income schedule
+deleteOtherIncomeSchedule.heading = Do you want to delete this Other Income schedule?
+deleteOtherIncomeSchedule.title = Do you want to delete this Other Income schedule?
+
+deleteOrganisationClaim.error.required = Select ‘Yes’ if you want to delete this repayment claim
+deleteOrganisationClaim.heading = Are you sure you want to delete this repayment claim?
+deleteOrganisationClaim.title = Are you sure you want to delete this repayment claim?
+
+removeClaimForTaxYear.error.required = Select ‘Yes’ if you want to remove the claim for tax year {0}
+removeClaimForTaxYear.heading = Do you want to remove the claim for tax year {0}?
+removeClaimForTaxYear.title = Do you want to remove the claim for tax year {0}?
+error.browser.title.prefix = Error:
+
+fileUpload.status.AWAITING_UPLOAD = Uploading
+fileUpload.status.VALIDATED = Uploaded
+fileUpload.status.VALIDATING = Uploading
+fileUpload.status.VALIDATION_FAILED = Uploaded
+fileUpload.status.VERIFICATION_FAILED = Failed
+fileUpload.status.VERIFYING = Uploading
+fileUpload.refreshPageLink = Refresh page to see update of uploading file
+
+giftAidScheduleUploadSuccessful.message.1 = Upload successful
+giftAidScheduleUploadSuccessful.message.2 = You have successfully attached your Gift Aid schedule.
+giftAidScheduleUploadSuccessful.agent.message.2 = You have successfully attached this Gift Aid schedule.
+giftAidScheduleUploadSuccessful.title = Upload successful
+giftAidScheduleUploadSuccessful.title = Upload successful
+
+global.error.InternalServerError500.heading = Sorry, there is a problem with this service
+global.error.InternalServerError500.message = Try again later or contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services" target="_blank">HMRC Online Services Helpdesk (opens in new tab)</a>.
+global.error.InternalServerError500.title = Sorry, there is a problem with this service
+global.error.accessDenied.heading = Sorry, there is a problem with this service
+global.error.accessDenied.message = You do not have access to this service.<br><a class="govuk-link" rel="noreferrer noopener" href="{0}">Continue to your account</a>
+global.error.accessDenied.title = Sorry, there is a problem with this service
+global.error.pageNotFound404.heading = Page not found
+global.error.pageNotFound404.message = If you typed the web address, check it is correct.<br>If you pasted the web address, check you copied the entire address.<br>If the web address is correct or you selected a link or button, contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services" target="_blank">HMRC Online Services Helpdesk (opens in new tab)</a> if you need to speak to someone.
+
+incompleteAnswers.heading = You have not provided all required details
+incompleteAnswers.message = You have missing data
+incompleteAnswers.returnLink = Return to check your answers
+incompleteAnswers.title = You have not provided all required details
+
+index.guidance = Hello
+index.heading = Charities Claims
+
+nameOfCharityRegulator.caption = Provide organisation details
+nameOfCharityRegulator.error.required = Select the name of the charity regulator
+nameOfCharityRegulator.heading = What is the name of the charity regulator?
+nameOfCharityRegulator.legend = What is the name of the charity regulator?
+nameOfCharityRegulator.missingDetails = confirm your charity regulator name
+nameOfCharityRegulator.agent.missingDetails = confirm the charity regulator name
+nameOfCharityRegulator.radio.four = Office of the Scottish Charity Regulator
+nameOfCharityRegulator.radio.one = Charity Commission for England and Wales
+nameOfCharityRegulator.radio.three = Charity is not registered with a regulator
+nameOfCharityRegulator.radio.two = Charity Commission for Northern Ireland
+nameOfCharityRegulator.title = What is the name of the charity regulator?
+
+organisationDetailsCheckYourAnswers.charityDetails.subheader = Charity details
+organisationDetailsCheckYourAnswers.authorisedOfficialDetails.subheader = Authorised Official’s details
+organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.label = Official’s details
+organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.label = UK address
+organisationDetailsCheckYourAnswers.corporateTrusteeDetails.subheader = Corporate Trustee’s details
+organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label = Is the corporate trustee making this claim?
+organisationDetailsCheckYourAnswers.CorporateTrusteeDetails.label = Trustee’s details
+organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label = UK address
+organisationDetailsCheckYourAnswers.caption = Provide organisation details
+organisationDetailsCheckYourAnswers.charityRegulatorName.EnglandAndWales.label = Charity Commission for England and Wales
+organisationDetailsCheckYourAnswers.charityRegulatorName.NorthernIreland.label = Charity Commission for Northern Ireland
+organisationDetailsCheckYourAnswers.charityRegulatorName.Scottish.label = Office of the Scottish Charity Regulator
+organisationDetailsCheckYourAnswers.charityRegulatorName.label = Charity regulator name
+organisationDetailsCheckYourAnswers.charityRegulatorName.none.label = Charity is not registered with a regulator
+organisationDetailsCheckYourAnswers.charityRegulatorNumber.label = Charity regulator number
+organisationDetailsCheckYourAnswers.heading = Check your organisation details
+organisationDetailsCheckYourAnswers.reasonNotRegistered.excepted.label = Your charity is excepted
+organisationDetailsCheckYourAnswers.reasonNotRegistered.excepted.description = Your charity is excepted as the charity’s annual income is £100,000 or less and is classed as one of the following:
+organisationDetailsCheckYourAnswers.reasonNotRegistered.exempt.label = Your charity is exempt
+organisationDetailsCheckYourAnswers.reasonNotRegistered.exempt.description = Your charity is exempt from registering with a regulator because it is a:
+organisationDetailsCheckYourAnswers.reasonNotRegistered.label = Registered with regulator
+organisationDetailsCheckYourAnswers.reasonNotRegistered.LowIncome.label = Your charity is located in England or Wales and your income is less than £5,000 per year
+organisationDetailsCheckYourAnswers.reasonNotRegistered.Waiting.label = Your charity is based in Northern Ireland and you are awaiting registration with the Charity Commission for Northern Ireland (CCNI)
+organisationDetailsCheckYourAnswers.title = Check your organisation details
+
+agentOrganisationDetailsCheckYourAnswers.caption = Provide organisation details
+agentOrganisationDetailsCheckYourAnswers.title = Check the organisation details
+agentOrganisationDetailsCheckYourAnswers.heading = Check the organisation details
+agentOrganisationDetailsCheckYourAnswers.charityDetails.subheader = Charity details
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.label = Charity regulator name
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorNumber.label = Charity regulator number
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.label = Reason for not registering
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.LowIncome.label = The charity is located in England or Wales and your income is less than £5,000 per year
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.Excepted.label = The charity is excepted
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.Exempt.label = The charity is exempt
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.Waiting.label = The charity is based in Northern Ireland and you are awaiting registration with the Charity Commission for Northern Ireland (CCNI)
+agentOrganisationDetailsCheckYourAnswers.charityDetails.sendPaymentTo.label = Send payment to
+agentOrganisationDetailsCheckYourAnswers.agentDetails.subheader = Agent details
+agentOrganisationDetailsCheckYourAnswers.agentDetails.telephoneNumber.label = Telephone number
+agentOrganisationDetailsCheckYourAnswers.agentDetails.ukAddress.label = UK address
+agentOrganisationDetailsCheckYourAnswers.agentDetails.postcode.label = Postcode
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.EnglandAndWales.label = Charity Commission for England and Wales
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.NorthernIreland.label = Charity Commission for Northern Ireland
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.Scottish.label = Office of the Scottish Charity Regulator
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.None.label = Charity is not registered with a regulator
+
+reasonNotRegistered.excepted.heading = The charity is excepted
+
+reasonNotRegistered.excepted.description = The charity is excepted as the charity’s annual income is £100,000 or less and is classed as one of the following:
+
+reasonNotRegistered.excepted.bullet1 = a church or chapel
+reasonNotRegistered.excepted.bullet2 = a charity that provides premises for schools
+reasonNotRegistered.excepted.bullet3 = a scout or guide group
+reasonNotRegistered.excepted.bullet4 = a charitable service of the armed forces
+reasonNotRegistered.excepted.bullet5 = a students’ union
+
+reasonNotRegistered.exempt.heading=The charity is exempt
+
+reasonNotRegistered.exempt.description=The charity is exempt from registering with a regulator because it is a:
+
+reasonNotRegistered.exempt.bullet1 = university or school
+reasonNotRegistered.exempt.bullet2 = museum or gallery
+reasonNotRegistered.exempt.bullet3 = housing association
+
+organisationDetailsIncompleteAnswers.heading = This claim cannot be setup
+organisationDetailsIncompleteAnswers.message = You need to provide the following details to continue:
+organisationDetailsIncompleteAnswers.returnLink = Go back to provide the missing details for your claim
+organisationDetailsIncompleteAnswers.title = This claim cannot be setup
+organisationDetailsIncompleteAnswers.warning = This claim cannot be setup because some details are missing.
+
+otherIncomeScheduleUploadSuccessful.message.1 = Upload successful
+otherIncomeScheduleUploadSuccessful.message.2 = You have successfully attached your Other Income schedule.
+otherIncomeScheduleUploadSuccessful.agent.message.2 = You have successfully attached this Other Income schedule.
+otherIncomeScheduleUploadSuccessful.title = Upload successful
+
+phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in new tab)</a> will help us to improve it.
+phasebanner.phase=Beta
+
+problemUpdatingCommunityBuildingsScheduleUnknownError.heading = There is a problem uploading your Community Buildings schedule
+problemUpdatingCommunityBuildingsScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
+problemUpdatingCommunityBuildingsScheduleUnknownError.title = There is a problem uploading your Community Buildings schedule
+problemUpdatingCommunityBuildingsScheduleUnknownError.agent.heading = There is a problem uploading this Community Buildings schedule
+problemUpdatingCommunityBuildingsScheduleUnknownError.agent.hint = This file could not be uploaded. You can try uploading the file again.
+problemUpdatingCommunityBuildingsScheduleUnknownError.agent.title = There is a problem uploading this Community Buildings schedule
+
+problemUpdatingCommunityBuildingsScheduleQuarantine.heading = There is a problem uploading your Community Buildings schedule
+problemUpdatingCommunityBuildingsScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
+problemUpdatingCommunityBuildingsScheduleQuarantine.title = There is a problem uploading your Community Buildings schedule
+problemUpdatingCommunityBuildingsScheduleQuarantine.agent.heading = There is a problem uploading this Community Buildings schedule
+problemUpdatingCommunityBuildingsScheduleQuarantine.agent.hint = This file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
+problemUpdatingCommunityBuildingsScheduleQuarantine.agent.title = There is a problem uploading this Community Buildings schedule
+
+problemUpdatingCommunityBuildingsScheduleRejected.heading = There is a problem uploading your Community Buildings schedule
+problemUpdatingCommunityBuildingsScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
+problemUpdatingCommunityBuildingsScheduleRejected.title = There is a problem uploading your Community Buildings schedule
+problemUpdatingCommunityBuildingsScheduleRejected.agent.heading = There is a problem uploading this Community Buildings schedule
+problemUpdatingCommunityBuildingsScheduleRejected.agent.hint = This file must be an ODS file. Save this schedule as an ODS file and try uploading it again.
+problemUpdatingCommunityBuildingsScheduleRejected.agent.title = There is a problem uploading this Community Buildings schedule
+
+problemUpdatingOtherIncomeScheduleQuarantine.heading = There is a problem uploading your Other Income schedule
+problemUpdatingOtherIncomeScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
+problemUpdatingOtherIncomeScheduleQuarantine.title = There is a problem uploading your Other Income schedule
+problemUpdatingOtherIncomeScheduleQuarantine.agent.heading = There is a problem uploading this Other Income schedule
+problemUpdatingOtherIncomeScheduleQuarantine.agent.hint = This file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
+problemUpdatingOtherIncomeScheduleQuarantine.agent.title = There is a problem uploading this Other Income schedule
+
+problemUpdatingOtherIncomeScheduleUnknownError.heading = There is a problem uploading your Other Income schedule
+problemUpdatingOtherIncomeScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
+problemUpdatingOtherIncomeScheduleUnknownError.title = There is a problem uploading your Other Income schedule
+problemUpdatingOtherIncomeScheduleUnknownError.agent.heading = There is a problem uploading this Other Income schedule
+problemUpdatingOtherIncomeScheduleUnknownError.agent.hint = This file could not be uploaded. You can try uploading the file again.
+problemUpdatingOtherIncomeScheduleUnknownError.agent.title = There is a problem uploading this Other Income schedule
+
+problemUpdatingConnectedCharitiesScheduleUnknownError.heading = There is a problem uploading your Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
+problemUpdatingConnectedCharitiesScheduleUnknownError.title = There is a problem uploading your Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleUnknownError.agent.heading = There is a problem uploading this Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleUnknownError.agent.hint = This file could not be uploaded. You can try uploading the file again.
+problemUpdatingConnectedCharitiesScheduleUnknownError.agent.title = There is a problem uploading this Connected Charities schedule
+
+problemUpdatingGiftAidScheduleUnknownError.heading = There is a problem uploading your Gift Aid schedule
+problemUpdatingGiftAidScheduleUnknownError.hint = Your file could not be uploaded. You can try uploading the file again.
+problemUpdatingGiftAidScheduleUnknownError.title = There is a problem uploading your Gift Aid schedule
+problemUpdatingGiftAidScheduleUnknownError.agent.heading = There is a problem uploading this Gift Aid schedule
+problemUpdatingGiftAidScheduleUnknownError.agent.hint = This file could not be uploaded. You can try uploading the file again.
+problemUpdatingGiftAidScheduleUnknownError.agent.title = There is a problem uploading this Gift Aid schedule
+
+problemUpdatingGiftAidScheduleQuarantine.heading = There is a problem uploading your Gift Aid schedule
+problemUpdatingGiftAidScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
+problemUpdatingGiftAidScheduleQuarantine.title = There is a problem uploading your Gift Aid schedule
+problemUpdatingGiftAidScheduleQuarantine.agent.heading = There is a problem uploading this Gift Aid schedule
+problemUpdatingGiftAidScheduleQuarantine.agent.hint = This file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
+problemUpdatingGiftAidScheduleQuarantine.agent.title = There is a problem uploading this Gift Aid schedule
+
+problemUpdatingGiftAidScheduleRejected.heading = There is a problem uploading your Gift Aid schedule
+problemUpdatingGiftAidScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
+problemUpdatingGiftAidScheduleRejected.title = There is a problem uploading your Gift Aid schedule
+problemUpdatingGiftAidScheduleRejected.agent.heading = There is a problem uploading this Gift Aid schedule
+problemUpdatingGiftAidScheduleRejected.agent.hint = This file must be an ODS file. Save this schedule as an ODS file and try uploading it again.
+problemUpdatingGiftAidScheduleRejected.agent.title = There is a problem uploading this Gift Aid schedule
+
+problemWithCommunityBuildingsSchedule.caption = Add Community Buildings schedule
+problemWithCommunityBuildingsSchedule.heading = There is a problem with the data in your Community Buildings schedule
+problemWithCommunityBuildingsSchedule.agent.heading = There is a problem with the data in this Community Buildings schedule
+problemWithCommunityBuildingsSchedule.link.attachUpdatedSchedule = Attach an updated Community Buildings schedule
+problemWithCommunityBuildingsSchedule.link.deleteSchedule = Delete schedule
+problemWithCommunityBuildingsSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Community Buildings donations (opens in new tab)</a>.
+problemWithCommunityBuildingsSchedule.list.item.2 = Delete this Community Buildings schedule.
+problemWithCommunityBuildingsSchedule.list.item.3 = Update your spreadsheet.
+problemWithCommunityBuildingsSchedule.list.item.3.agent = Update the spreadsheet.
+problemWithCommunityBuildingsSchedule.list.item.4 = Upload the updated spreadsheet.
+problemWithCommunityBuildingsSchedule.subheading.1 = What you can do next
+problemWithCommunityBuildingsSchedule.subheading.2 = Summary of errors
+problemWithCommunityBuildingsSchedule.table.column.1 = Row
+problemWithCommunityBuildingsSchedule.table.column.2 = Error
+problemWithCommunityBuildingsSchedule.title = There is a problem with the data in your Community Buildings schedule
+problemWithCommunityBuildingsSchedule.agent.title = There is a problem with the data in this Community Buildings schedule
+problemWithCommunityBuildingsSchedule.warning = We cannot accept the file because it has errors. You must fix these errors and upload the updated file before you can continue.
+
+problemWithGiftAidSchedule.caption = Add Gift Aid schedule
+problemWithGiftAidSchedule.heading = There is a problem with the data in your Gift Aid schedule
+problemWithGiftAidSchedule.agent.heading = There is a problem with the data in this Gift Aid schedule
+problemWithGiftAidSchedule.link.attachUpdatedSchedule = Attach an updated Gift Aid schedule
+problemWithGiftAidSchedule.link.deleteSchedule = Delete schedule
+problemWithGiftAidSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Gift Aid donations (opens in new tab)</a>.
+problemWithGiftAidSchedule.list.item.2 = Delete this Gift Aid schedule.
+problemWithGiftAidSchedule.list.item.3 = Update your spreadsheet.
+problemWithGiftAidSchedule.agent.list.item.3 = Update the spreadsheet.
+problemWithGiftAidSchedule.list.item.4 = Upload the updated spreadsheet.
+problemWithGiftAidSchedule.subheading.1 = What you can do next
+problemWithGiftAidSchedule.subheading.2 = Summary of errors
+problemWithGiftAidSchedule.table.column.1 = Row
+problemWithGiftAidSchedule.table.column.2 = Error
+problemWithGiftAidSchedule.title = There is a problem with the data in your Gift Aid schedule
+problemWithGiftAidSchedule.agent.title = There is a problem with the data in this Gift Aid schedule
+problemWithGiftAidSchedule.warning = We cannot accept the file because it has errors. You must fix these errors and upload the updated file before you can continue.
+
+problemWithOtherIncomeSchedule.caption = Add Other Income schedule
+problemWithOtherIncomeSchedule.heading = There is a problem with the data in your Other Income schedule
+problemWithOtherIncomeSchedule.agent.heading = There is a problem with the data in this Other Income schedule
+problemWithOtherIncomeSchedule.link.attachUpdatedSchedule = Attach an updated Other Income schedule
+problemWithOtherIncomeSchedule.link.deleteSchedule = Delete schedule
+problemWithOtherIncomeSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Other Income donations (opens in new tab)</a>.
+problemWithOtherIncomeSchedule.list.item.2 = Delete this Other Income schedule.
+problemWithOtherIncomeSchedule.list.item.3 = Update your spreadsheet.
+problemWithOtherIncomeSchedule.agent.list.item.3 = Update the spreadsheet.
+problemWithOtherIncomeSchedule.list.item.4 = Upload the updated spreadsheet.
+problemWithOtherIncomeSchedule.subheading.1 = What you can do next
+problemWithOtherIncomeSchedule.subheading.2 = Summary of errors
+problemWithOtherIncomeSchedule.table.column.1 = Row
+problemWithOtherIncomeSchedule.table.column.2 = Error
+problemWithOtherIncomeSchedule.title = There is a problem with the data in your Other Income schedule
+problemWithOtherIncomeSchedule.agent.title = There is a problem with the data in this Other Income schedule
+problemWithOtherIncomeSchedule.warning = We cannot accept the file because it has errors. You must fix these errors and upload the updated file before you can continue.
+
+reasonNotRegisteredWithRegulator.caption = Provide organisation details
+reasonNotRegisteredWithRegulator.error.required = Select why the charity is not registered with a regulator
+reasonNotRegisteredWithRegulator.heading = Why is the charity not registered with a regulator?
+reasonNotRegisteredWithRegulator.missingDetails = confirm why you’re not registered with a regulator
+reasonNotRegisteredWithRegulator.agent.missingDetails = confirm why the charity is not registered with a regulator
+reasonNotRegisteredWithRegulator.radio.Excepted = Your charity is excepted
+reasonNotRegisteredWithRegulator.agent.radio.Excepted = The charity is excepted
+reasonNotRegisteredWithRegulator.radio.Exempt = Your charity is exempt
+reasonNotRegisteredWithRegulator.agent.radio.Exempt = The charity is exempt
+reasonNotRegisteredWithRegulator.radio.LowIncome = Your charity is located in England or Wales and your income is less than £5,000 per year
+reasonNotRegisteredWithRegulator.agent.radio.LowIncome = The charity is located in England or Wales and its income is less than £5,000 per year
+reasonNotRegisteredWithRegulator.radio.Waiting = Your charity is based in Northern Ireland and you are awaiting registration with the Charity Commission for Northern Ireland (CCNI)
+reasonNotRegisteredWithRegulator.agent.radio.Waiting = The charity is based in Northern Ireland and it is awaiting registration with the Charity Commission for Northern Ireland (CCNI)
+reasonNotRegisteredWithRegulator.title = Why is the charity not registered with a regulator?
+
+registerCharityWithARegulator.error.required = Select ‘Yes’ if you need to register with a regulator
+registerCharityWithARegulator.heading = Registering your charity with a regulator
+registerCharityWithARegulator.legend = Do you need to register your charity with a regulator?
+registerCharityWithARegulator.paragraph = If your annual income is £{1} or more, you need to <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">register your charity with a regulator (opens in new tab)</a>.
+registerCharityWithARegulator.radio.no.label = No, continue with claim
+registerCharityWithARegulator.radio.yes.label = Yes
+registerCharityWithARegulator.title = Registering your charity with a regulator
+registerCharityWithARegulator.warning = You have made claims for Gift Aid repayments on donations of £{1} or more in the last 12 months.
+registerCharityWithARegulator.agent.heading = Registering the charity with a regulator
+registerCharityWithARegulator.agent.legend = Do you need to register this charity with a regulator?
+registerCharityWithARegulator.agent.paragraph = If the charity’s annual income is £{1} or more, you need to <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">register this charity with a regulator (opens in new tab)</a>.
+registerCharityWithARegulator.agent.title = Registering the charity with a regulator
+registerCharityWithARegulator.agent.warning = The charity has made claims for Gift Aid repayments on donations of £{1} or more in the last 12 months.
+
+repaymentClaimDetails.bullet1 = tax repayments on Gift Aid donations
+repaymentClaimDetails.bullet2 = top-up payments under the Gift Aid Small Donations Scheme (GASDS)
+repaymentClaimDetails.bullet3 = UK tax deducted from Other Income
+repaymentClaimDetails.heading = Repayment claim details
+repaymentClaimDetails.p1 = Use this service to claim:
+repaymentClaimDetails.subheading = Provide repayment claim details
+repaymentClaimDetails.title = Repayment claim details
+repaymentClaimDetails.agent.subheading = Provide charity repayment claim details
+repaymentClaimDetails.agent.p1 = Use this service to claim the following for the charity:
+repaymentClaimDetails.agent.missingCharityName = confirm charity or Community Amateur Sports Club (CASC) name
+repaymentClaimDetails.agent.missingCharitiesReference = confirm the HMRC Charities reference number
+
+repaymentClaimDetailsCheckYourAnswers.caption = Provide repayment claim details
+repaymentClaimDetailsCheckYourAnswers.agent.caption = Provide charity repayment claim details
+repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label = GASDS adjustment
+repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label = Claim reference number
+repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label = Claim reference provided
+repaymentClaimDetailsCheckYourAnswers.heading = Check your repayment claim
+repaymentClaimDetailsCheckYourAnswers.agent.heading = Check repayment claim details
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome = UK tax deducted from Other Income
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid = Gift Aid
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label = Repayment claim type
+repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.label = GASDS claim type
+repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.topup = GASDS top-up payment
+repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.communityBuildings = Community Buildings top-up payment
+repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.connectedCharity = Connected Charity or CASC claim
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS = Top-up payments for small cash donations under Gift Aid Small Donations Scheme (GASDS)
+repaymentClaimDetailsCheckYourAnswers.title = Check your repayment claim
+repaymentClaimDetailsCheckYourAnswers.agent.title = Check repayment claim details
+repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityName.label = Charity name
+repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityReference.label = HMRC Charities reference
+repaymentClaimDetailsCheckYourAnswers.agent.heading2.1 = Charity details
+repaymentClaimDetailsCheckYourAnswers.agent.heading2.2 = Claim details
+
+repaymentClaimDetailsIncompleteAnswers.heading = This claim cannot be setup
+repaymentClaimDetailsIncompleteAnswers.message = You need to provide the following details to continue:
+repaymentClaimDetailsIncompleteAnswers.returnLink = Go back to provide the missing details for your claim
+repaymentClaimDetailsIncompleteAnswers.agent.returnLink = Go back to provide the missing details for this claim
+repaymentClaimDetailsIncompleteAnswers.title = This claim cannot be setup
+repaymentClaimDetailsIncompleteAnswers.warning = This claim cannot be setup because some details are missing.
+
+repaymentClaimType.caption = Provide repayment claim details
+repaymentClaimType.agent.caption = Provide charity repayment claim details
+repaymentClaimType.error.required = Select repayment claim type
+repaymentClaimType.heading = Which type of repayment claim do you want to make?
+repaymentClaimType.hint = Select at least one
+repaymentClaimType.hint.claimingUnderGiftAidSmallDonationsScheme = These are not your Gift Aid donations
+repaymentClaimType.label.claimingGiftAid = Tax repayments on Gift Aid donations
+repaymentClaimType.label.claimingTaxDeducted = UK tax deducted from Other Income
+repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme = Top-up payments for donations under the Gift Aid Small Donations Scheme (GASDS)
+repaymentClaimType.missingDetails = select repayment claim type
+repaymentClaimType.agent.missingDetails = confirm the repayment claim type
+repaymentClaimType.title = Which type of repayment claim do you want to make?
+
+scheduleUploadFailure.continue = Upload a new schedule
+scheduleUploadFailure.link = No, return to manage charity repayment claims
+
+service.name = Make a charity tax repayment claim
+service.title = Make a charity tax repayment claim
+session-expired-message=For your security, we will time you out in
+
+session-expired.keep-alive-button-text=Continue
+session-expired.sign-out-button-text=Sign-out
+
+site.change = Change
+site.continue = Continue
+site.confirmAndContinue = Confirm and continue
+site.enter = Enter
+site.govuk = GOV.UK
+site.no = No
+site.pagination.landmark = Pagination
+site.pagination.next = Next
+site.pagination.of = of
+site.pagination.page = page
+site.pagination.previous = Previous
+site.yes = Yes
+site.remove = Remove
+
+communityBuildingsScheduleUploadSuccessful.message.1 = Upload successful
+communityBuildingsScheduleUploadSuccessful.message.2 = You have successfully attached your Community Buildings schedule.
+communityBuildingsScheduleUploadSuccessful.agent.message.2 = You have successfully attached this Community Buildings schedule.
+communityBuildingsScheduleUploadSuccessful.title = Upload successful
+
+updateCommunityBuildingsSchedule.error.required = Select ‘Yes’ if you want to update this Community Buildings schedule
+updateCommunityBuildingsSchedule.heading = Are you sure you want to update this Community Buildings schedule?
+updateCommunityBuildingsSchedule.hint = By updating this file, you will lose any Community Buildings schedule data you have previously attached.
+updateCommunityBuildingsSchedule.title = Are you sure you want to update this Community Buildings schedule?
+
+updateConnectedCharitiesSchedule.error.required = Select ‘Yes’ if you want to update this Connected Charities schedule
+updateConnectedCharitiesSchedule.heading = Are you sure you want to update this Connected Charities schedule?
+updateConnectedCharitiesSchedule.hint = By updating this file, you will lose any Connected Charities schedule data you have previously attached.
+updateConnectedCharitiesSchedule.title = Are you sure you want to update this Connected Charities schedule?
+
+updateGiftAidSchedule.error.required = Select ‘Yes’ if you want to update this Gift Aid schedule
+updateGiftAidSchedule.heading = Are you sure you want to update this Gift Aid schedule?
+updateGiftAidSchedule.hint = By updating this file, you will lose any Gift Aid schedule data you have previously attached.
+updateGiftAidSchedule.title = Are you sure you want to update this Gift Aid schedule?
+
+updateOtherIncomeSchedule.error.required = Select ‘Yes’ if you want to update this Other Income schedule
+updateOtherIncomeSchedule.heading = Are you sure you want to update this Other Income schedule?
+updateOtherIncomeSchedule.hint = By updating this file, you will lose any Other Income schedule data you have previously attached.
+updateOtherIncomeSchedule.title = Are you sure you want to update this Other Income schedule?
+
+updateRepaymentClaim.error.required = Select ‘Yes’ if you want to update this repayment claim
+updateRepaymentClaim.heading = Do you want to update this repayment claim?
+updateRepaymentClaim.hint = If you change this claim, you’ll lose any data you’ve already given or attached.
+updateRepaymentClaim.title = Do you want to update this repayment claim?
+
+aboutConnectedCharitiesSchedule.caption = Add Connected Charities schedule
+aboutConnectedCharitiesSchedule.heading = About Connected Charities schedule
+aboutConnectedCharitiesSchedule.paragraph.one.agent = Use this service to add a Connected Charities schedule for your client.
+aboutConnectedCharitiesSchedule.paragraph.one = Use this service to add a Connected Charities schedule.
+aboutConnectedCharitiesSchedule.paragraph.two = You can upload a Connected Charities schedule in a .ods format.
+aboutConnectedCharitiesSchedule.paragraph.url = You can <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Connected Charities schedule here (opens in new tab)</a>. You can submit 1 file at a time, and each file can be up to 250KB.
+aboutConnectedCharitiesSchedule.title = About Connected Charities schedule
+
+uploadGiftAidSchedule.caption = Add Gift Aid schedule
+uploadGiftAidSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250KB
+uploadGiftAidSchedule.error.file-upload.EntityTooSmall = Select a Gift Aid schedule
+uploadGiftAidSchedule.error.file-upload.InvalidArgument = Select a Gift Aid schedule
+uploadGiftAidSchedule.form.upload-file.submit = Continue
+uploadGiftAidSchedule.heading = Upload a Gift Aid schedule
+uploadGiftAidSchedule.input.label = Upload a file
+uploadGiftAidSchedule.paragraph.one = To claim Gift Aid, you need to upload a completed Gift Aid schedule with details of your donors and donations. You can save your claim without uploading the Gift Aid schedule, but you need to upload a Gift Aid schedule before submitting your claim.
+uploadGiftAidSchedule.agent.paragraph.one = To claim Gift Aid for your client, you need to upload a completed Gift Aid schedule with details of donors and donations. You can save this claim without uploading the Gift Aid schedule, but you need to upload a Gift Aid schedule before submitting this claim.
+uploadGiftAidSchedule.paragraph.url = If you have not completed a Gift Aid schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Gift Aid schedule here (opens in new tab)</a>.
+uploadGiftAidSchedule.title = Upload a Gift Aid schedule
+
+uploadOtherIncomeSchedule.caption = Add Other Income schedule
+uploadOtherIncomeSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250KB
+uploadOtherIncomeSchedule.error.file-upload.EntityTooSmall = Select an Other Income schedule
+uploadOtherIncomeSchedule.error.file-upload.InvalidArgument = Select an Other Income schedule
+uploadOtherIncomeSchedule.form.upload-file.submit = Continue
+uploadOtherIncomeSchedule.heading = Upload an Other Income schedule
+uploadOtherIncomeSchedule.input.label = Upload a file
+uploadOtherIncomeSchedule.paragraph.one = To claim Other Income, you need to upload a completed Other Income schedule with details of your donors and donations. You can save your claim without uploading the Other Income schedule, but you need to upload an Other Income schedule before submitting your claim.
+uploadOtherIncomeSchedule.agent.paragraph.one = To claim Other Income for your client, you need to upload a completed Other Income schedule with details of donors and donations. You can save this claim without uploading the Other Income schedule, but you need to upload an Other Income schedule before submitting this claim.
+uploadOtherIncomeSchedule.paragraph.url = If you have not completed an Other Income schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download an Other Income schedule here (opens in new tab)</a>.
+uploadOtherIncomeSchedule.title = Upload an Other Income schedule
+
+warning.text = Warning
+
+yourGiftAidScheduleUpload.caption = Add Gift Aid schedule
+yourGiftAidScheduleUpload.file = Gift Aid schedule
+yourGiftAidScheduleUpload.heading = Your Gift Aid schedule upload
+yourGiftAidScheduleUpload.agent.heading = Gift Aid schedule upload
+yourGiftAidScheduleUpload.paragraph.one = You can upload your Gift Aid schedule as a spreadsheet. The selected file must be smaller than 250KB.
+yourGiftAidScheduleUpload.agent.paragraph.one = You can upload the Gift Aid schedule as a spreadsheet. The selected file must be smaller than 250KB.
+yourGiftAidScheduleUpload.title = Your Gift Aid schedule upload
+yourGiftAidScheduleUpload.agent.title = Gift Aid schedule upload
+
+yourCommunityBuildingsScheduleUpload.caption = Add Community Buildings schedule
+yourCommunityBuildingsScheduleUpload.file = Community Buildings schedule
+yourCommunityBuildingsScheduleUpload.heading = Your Community Buildings schedule upload
+yourCommunityBuildingsScheduleUpload.agent.heading = Community Buildings schedule upload
+yourCommunityBuildingsScheduleUpload.paragraph.one = You can upload your Community Buildings schedule as a spreadsheet. The selected file must be smaller than 250KB.
+yourCommunityBuildingsScheduleUpload.agent.paragraph.one = You can upload the Community Buildings schedule as a spreadsheet. The selected file must be smaller than 250KB.
+yourCommunityBuildingsScheduleUpload.title = Your Community Buildings schedule upload
+yourCommunityBuildingsScheduleUpload.agent.title = Community Buildings schedule upload
+
+yourOtherIncomeScheduleUpload.caption = Add Other Income schedule
+yourOtherIncomeScheduleUpload.heading = Your Other Income schedule upload
+yourOtherIncomeScheduleUpload.agent.heading = Other Income schedule upload
+yourOtherIncomeScheduleUpload.paragraph.one = You can upload your Other Income schedule as a spreadsheet. The selected file must be smaller than 250KB.
+yourOtherIncomeScheduleUpload.agent.paragraph.one = You can upload the Other Income schedule as a spreadsheet. The selected file must be smaller than 250KB.
+yourOtherIncomeScheduleUpload.table.key = Other Income schedule
+yourOtherIncomeScheduleUpload.title = Your Other Income schedule upload
+yourOtherIncomeScheduleUpload.agent.title = Other Income schedule upload
+
+problemUpdatingOtherIncomeScheduleRejected.heading = There is a problem uploading your Other Income schedule
+problemUpdatingOtherIncomeScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
+problemUpdatingOtherIncomeScheduleRejected.title = There is a problem uploading your Other Income schedule
+problemUpdatingOtherIncomeScheduleRejected.agent.heading = There is a problem uploading this Other Income schedule
+problemUpdatingOtherIncomeScheduleRejected.agent.hint = This file must be an ODS file. Save this schedule as an ODS file and try uploading it again.
+problemUpdatingOtherIncomeScheduleRejected.agent.title = There is a problem uploading this Other Income schedule
+
+connectedCharitiesScheduleUploadSuccessful.title = Upload successful
+connectedCharitiesScheduleUploadSuccessful.message.1 = Upload successful
+connectedCharitiesScheduleUploadSuccessful.message.2 = You have successfully attached your Connected Charities schedule.
+connectedCharitiesScheduleUploadSuccessful.message.2.agent = You have successfully attached this Connected Charities schedule.
+
+uploadConnectedCharitiesSchedule.caption = Add Connected Charities schedule
+uploadConnectedCharitiesSchedule.error.file-upload.EntityTooLarge = The selected file must be smaller than 250KB
+uploadConnectedCharitiesSchedule.error.file-upload.EntityTooSmall = Select a Connected Charities schedule
+uploadConnectedCharitiesSchedule.error.file-upload.InvalidArgument = Select a Connected Charities schedule
+uploadConnectedCharitiesSchedule.form.upload-file.submit = Continue
+uploadConnectedCharitiesSchedule.heading = Upload a Connected Charities schedule
+uploadConnectedCharitiesSchedule.input.label = Upload a file
+uploadConnectedCharitiesSchedule.paragraph.one = To claim Connected Charities, you need to upload a completed Connected Charities schedule with details of your Connected Charities or Community Amateur Sports Clubs (CASC). You can save your claim without uploading the Connected Charities schedule, but you need to upload a Connected Charities schedule before submitting your claim.
+uploadConnectedCharitiesSchedule.paragraph.one.agent = To claim Connected Charities for your client, upload a completed Connected Charities schedule with details of the connected charities or Community Amateur Sports Clubs (CASC). You can save this claim without uploading the Connected Charities schedule, but you need to upload a Connected Charities schedule before submitting this claim.
+uploadConnectedCharitiesSchedule.paragraph.url = If you have not completed a Connected Charities schedule, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">download a Connected Charities schedule here (opens in new tab)</a>.
+uploadConnectedCharitiesSchedule.title = Upload a Connected Charities schedule
+
+yourConnectedCharitiesScheduleUpload.caption = Add Connected Charities schedule
+yourConnectedCharitiesScheduleUpload.heading = Your Connected Charities schedule upload
+yourConnectedCharitiesScheduleUpload.heading.agent = Connected Charities schedule upload
+yourConnectedCharitiesScheduleUpload.paragraph.one = You can upload your Connected Charities schedule as a spreadsheet. The selected file must be smaller than 250KB.
+yourConnectedCharitiesScheduleUpload.paragraph.one.agent = You can upload the Connected Charities schedule as a spreadsheet. The selected file must be smaller than 250KB.
+yourConnectedCharitiesScheduleUpload.table.key = Connected Charities schedule
+yourConnectedCharitiesScheduleUpload.title = Your Connected Charities schedule upload
+yourConnectedCharitiesScheduleUpload.title.agent = Connected Charities schedule upload
+
+problemUpdatingConnectedCharitiesScheduleRejected.heading = There is a problem uploading your Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleRejected.hint = Your file must be an ODS file. Save your schedule as an ODS file and try uploading it again.
+problemUpdatingConnectedCharitiesScheduleRejected.title = There is a problem uploading your Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleRejected.agent.heading = There is a problem uploading this Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleRejected.agent.hint = This file must be an ODS file. Save this schedule as an ODS file and try uploading it again.
+problemUpdatingConnectedCharitiesScheduleRejected.agent.title = There is a problem uploading this Connected Charities schedule
+
+problemWithConnectedCharitiesSchedule.title = There is a problem with the data in your Connected Charities schedule
+problemWithConnectedCharitiesSchedule.title.agent = There is a problem with the data in this Connected Charities schedule
+problemWithConnectedCharitiesSchedule.caption = Add Connected Charities schedule
+problemWithConnectedCharitiesSchedule.heading = There is a problem with the data in your Connected Charities schedule
+problemWithConnectedCharitiesSchedule.heading.agent = There is a problem with the data in this Connected Charities schedule
+problemWithConnectedCharitiesSchedule.warning = We cannot accept the file because it has errors. You must fix these errors and upload the updated file before you can continue.
+problemWithConnectedCharitiesSchedule.subheading.1 = What you can do next
+problemWithConnectedCharitiesSchedule.subheading.2 = Summary of errors
+problemWithConnectedCharitiesSchedule.list.item.1 = Refer to the <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Schedule spreadsheet to claim tax back on Connected Charities donations (opens in new tab)</a>.
+problemWithConnectedCharitiesSchedule.list.item.2 = Delete this Connected Charities schedule.
+problemWithConnectedCharitiesSchedule.list.item.3 = Update your spreadsheet.
+problemWithConnectedCharitiesSchedule.list.item.3.agent = Update the spreadsheet.
+problemWithConnectedCharitiesSchedule.list.item.4 = Upload the updated spreadsheet.
+problemWithConnectedCharitiesSchedule.table.column.1 = Row
+problemWithConnectedCharitiesSchedule.table.column.2 = Error
+problemWithConnectedCharitiesSchedule.link.attachUpdatedSchedule = Attach an updated Connected Charities schedule
+problemWithConnectedCharitiesSchedule.link.deleteSchedule = Delete schedule
+
+problemUpdatingConnectedCharitiesScheduleQuarantine.heading = There is a problem uploading your Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleQuarantine.hint = Your file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
+problemUpdatingConnectedCharitiesScheduleQuarantine.title = There is a problem uploading your Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleQuarantine.agent.heading = There is a problem uploading this Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleQuarantine.agent.hint = This file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
+problemUpdatingConnectedCharitiesScheduleQuarantine.agent.title = There is a problem uploading this Connected Charities schedule
+
+adjustmentToThisClaim.caption = Provide repayment claim details
+adjustmentToThisClaim.error.length = Explanation to adjustments must be 350 characters or less
+adjustmentToThisClaim.error.regex = Provide an explanation about the adjustment in the correct format
+adjustmentToThisClaim.error.required = Provide an explanation for adjustments to Gift Aid, Other Income or a donation under the Gift Aid Small Donations Scheme
+adjustmentToThisClaim.heading = What adjustments have you made to this claim?
+adjustmentToThisClaim.para = If you have included any adjustments in this claim, you must enter an explanation below. You can also provide any other information regarding your charity’s repayment claim.
+adjustmentToThisClaim.para.agent = If you have included any adjustments in this claim, you must enter an explanation below. You can also provide any other information regarding the charity’s repayment claim.
+adjustmentToThisClaim.hint = You can enter up to 350 characters
+adjustmentToThisClaim.title = What adjustments have you made to this claim?
+
+repaymentClaimSummary.title = Charity repayment claim summary
+repaymentClaimSummary.heading = Charity repayment claim summary
+repaymentClaimSummary.claimDetails.heading = Claim details
+repaymentClaimSummary.claimDetails.charityName.label = Charity name
+repaymentClaimSummary.claimDetails.charityReference.label = HMRC Charities reference
+repaymentClaimSummary.claimDetails.submissionDate.label = Submission date
+repaymentClaimSummary.claimDetails.claimSubmittedBy.label = Claim submitted by
+repaymentClaimSummary.giftAidDetails.heading = Gift Aid details
+repaymentClaimSummary.giftAidDetails.noOfGiftAidDonations.label = Number of Gift Aid donations
+repaymentClaimSummary.giftAidDetails.totalValueOfGiftAidDonations.label = Total value of Gift Aid donations claimed
+repaymentClaimSummary.otherIncomeDetails.heading = Other Income details
+repaymentClaimSummary.otherIncomeDetails.noOfOtherIncomeItems.label = Number of Other Income items
+repaymentClaimSummary.otherIncomeDetails.totalValueOfOtherIncomeItems.label = Total value of Other Income claimed
+repaymentClaimSummary.gasdsDetails.heading = Gift Aid Small Donations Scheme (GASDS)
+repaymentClaimSummary.gasds.totalValueOfGASDS.label = Total value of GASDS donations (not collected in a Community Building)
+repaymentClaimSummary.gasds.noOfCommunityBuildings.label = Number of Community Buildings
+repaymentClaimSummary.gasds.totalValueOfCommunityBuildings.label = Total value of GASDS donations collected in a Community Building
+repaymentClaimSummary.gasds.noOfConnectedCharities.label = Number of Connected Charities
+repaymentClaimSummary.adjustmentDetails.heading = Adjustment for overclaimed tax relief details
+repaymentClaimSummary.adjustments.totalTaxRelief.label = Total tax relief overclaimed in Gift Aid and Other Income
+repaymentClaimSummary.adjustments.amountOfGASDS.label = Amount of GASDS previously overclaimed
+repaymentClaimSummary.adjustments.submissionReceiptRefNumber.label = Submission receipt reference number
+repaymentClaimSummary.printSummary.button.label = Print summary
+repaymentClaimSummary.logout.link = Log out and go back HMRC online services
+repaymentClaimSummary.goToHmrcServices.link = Go to Your HMRC services
+
+claimComplete.title = Claim complete
+claimComplete.message.2 = Your reference number
+claimComplete.subheading = What happens next
+claimComplete.claimRefNumber = {0}
+claimComplete.para.1 = We’ve sent your charity repayment claim to HMRC.
+claimComplete.para.2 = They will contact you to confirm your repayment, or to ask for more information.
+claimComplete.printSummaryLink = <a class="govuk-link" href="{0}">Print a summary of your claim</a>
+claimComplete.para.1.agent = We’ve sent this charity repayment claim to HMRC.
+claimComplete.para.2.agent = They will contact you to confirm your client’s repayment or to ask more for information.
+claimComplete.printSummaryLink.agent = <a class="govuk-link" href="{0}">Print a summary of this claim</a>
+
+aboutGiftAidSmallDonationsScheme.caption = Provide GASDS donation details
+aboutGiftAidSmallDonationsScheme.heading = About Gift Aid Small Donations Scheme schedule
+aboutGiftAidSmallDonationsScheme.title = About Gift Aid Small Donations Scheme schedule
+aboutGiftAidSmallDonationsScheme.paragraph.one = Use this service to claim payments under the Gift Aid Small Donations Scheme (GASDS). You can add claims for up to 3 tax years.
+aboutGiftAidSmallDonationsScheme.paragraph.one.agent = Use this service to claim payments under the Gift Aid Small Donations Scheme (GASDS) for your client. You can add claims for up to 3 tax years.
+aboutGiftAidSmallDonationsScheme.paragraph.two = GASDS applies to cash donations of £30 or less where the charity or Community Amateur Sports Club does not have a Gift Aid declaration.
+
+adjustmentToGiftAidOverclaimed.caption = Provide GASDS donation details
+adjustmentToGiftAidOverclaimed.heading = What is the adjustment amount for Gift Aid previously overclaimed?
+adjustmentToGiftAidOverclaimed.title = What is the adjustment amount for Gift Aid previously overclaimed?
+adjustmentToGiftAidOverclaimed.hint = This can be up to 2 decimal places, for example £1000.00
+adjustmentToGiftAidOverclaimed.error.required = Enter an adjustment amount for Gift Aid previously overclaimed
+adjustmentToGiftAidOverclaimed.error.invalid = Enter an adjustment amount for Gift Aid previously overclaimed in the correct format
+adjustmentToGiftAidOverclaimed.error.maxLength = Adjustment amount must be £1,000,000,000,000 or less
+
+gasdsAdjustmentAmountCheckYourAnswers.caption = Provide GASDS donation details
+gasdsAdjustmentAmountCheckYourAnswers.heading = Check your GASDS adjustment amount
+gasdsAdjustmentAmountCheckYourAnswers.title = Check your GASDS adjustment amount
+gasdsAdjustmentAmountCheckYourAnswers.heading.agent = Check this GASDS adjustment amount
+gasdsAdjustmentAmountCheckYourAnswers.title.agent = Check this GASDS adjustment amount
+gasdsAdjustmentAmountCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Amount of GASDS previously overclaimed
+
+donationAmountYouAreClaiming.caption = Provide GASDS donation details {0}
+donationAmountYouAreClaiming.heading = What is the donation amount you are claiming, in pounds?
+donationAmountYouAreClaiming.title = What is the donation amount you are claiming, in pounds?
+donationAmountYouAreClaiming.heading.agent = What donation amount is being claimed under GASDS, in pounds?
+donationAmountYouAreClaiming.title.agent = What donation amount is being claimed under GASDS, in pounds?
+donationAmountYouAreClaiming.hint = This can be up to 2 decimal places, for example £1000.00
+donationAmountYouAreClaiming.error.required = Enter a {0} tax year amount
+donationAmountYouAreClaiming.error.invalid = Enter a {0} tax year amount in the correct format
+donationAmountYouAreClaiming.error.maxLength = Donation amount must be £1,000,000,000,000 or less
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.heading = This claim cannot be setup
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.message = You need to provide the following details to continue:
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.returnLink = Go back to provide the missing details for your claim
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.title = This claim cannot be setup
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.warning = This claim cannot be setup because some details are missing.
+giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount = confirm the amount of GASDS previously overclaimed
+giftAidSmallDonationsSchemeDonationDetails.claim.missingYears = confirm the number of tax years you are claiming for
+giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount = confirm the donation amount you are claiming for tax year 1
+giftAidSmallDonationsSchemeDonationDetails.claim2.missingAmount = confirm the donation amount you are claiming for tax year 2
+giftAidSmallDonationsSchemeDonationDetails.claim3.missingAmount = confirm the donation amount you are claiming for tax year 3
+
+whichTaxYearAreYouClaimingFor.caption = Provide GASDS donation details {0}
+whichTaxYearAreYouClaimingFor.heading = Which tax year are you claiming for?
+whichTaxYearAreYouClaimingFor.title = Which tax year are you claiming for?
+whichTaxYearAreYouClaimingFor.heading.agent = Which tax year is the charity claiming for?
+whichTaxYearAreYouClaimingFor.title.agent = Which tax year is the charity claiming for?
+whichTaxYearAreYouClaimingFor.paragraph = The tax year covers April to April. For example, tax year 2016 runs from 6 April 2015 to 5 April 2016.
+whichTaxYearAreYouClaimingFor.hint = For example, 2016
+whichTaxYearAreYouClaimingFor.error.required = Enter a {0} tax year
+whichTaxYearAreYouClaimingFor.error.invalid = Enter a {0} tax year in the correct format
+whichTaxYearAreYouClaimingFor.error.tooOld = Gift Aid Small Donations Scheme claim cannot be earlier than {0}
+whichTaxYearAreYouClaimingFor.error.future = Gift Aid Small Donations Scheme claim tax year must be this year or earlier
+whichTaxYearAreYouClaimingFor.error.duplicate = Donations claimed for more than one tax year must be different to other tax years
+
+taxYear.first = first
+taxYear.second = second
+taxYear.third = third
+
+claimForTaxYearCheckYourAnswers.caption = Provide GASDS donation details
+claimForTaxYearCheckYourAnswers.title = Check your claim details for tax year {0}
+claimForTaxYearCheckYourAnswers.heading = Check your claim details for tax year {0}
+claimForTaxYearCheckYourAnswers.title.agent = Check claim details for tax year {0}
+claimForTaxYearCheckYourAnswers.heading.agent = Check claim details for tax year {0}
+claimForTaxYearCheckYourAnswers.taxYear.label = Tax year
+claimForTaxYearCheckYourAnswers.donationAmount.label = Donation amount
+
+claimAddedForTaxYear.caption = Provide GASDS donation details
+claimAddedForTaxYear.heading = You have added a claim for {0} tax {1}
+claimAddedForTaxYear.title = You have added a claim for {0} tax {1}
+claimAddedForTaxYear.taxYear.key = Tax year {0}
+claimAddedForTaxYear.error.required = Select ‘Yes’ if you want to make a claim for another tax year
+claimAddedForTaxYear.legend = Do you want to add a claim for another tax year?
+claimAddedForTaxYear.hint = You can only make claims for up to 3 tax years.
+claimAddedForTaxYear.singularOrPlural.singular = year
+claimAddedForTaxYear.singularOrPlural.plural = years
+
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.caption = Provide GASDS donation details
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading = Check your GASDS donation details
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.title = Check your GASDS donation details
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading.agent = Check GASDS donation details
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.title.agent = Check GASDS donation details
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.1 = GASDS claim adjustment
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.2 = GASDS claims
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Amount of GASDS previously overclaimed
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.numberOfTaxYearsAdded.label = Number of tax years added
+
+agentPostcode.title = What is your postcode?
+agentPostcode.heading = What is your postcode?
+agentPostcode.caption = Provide organisation details
+agentPostcode.error.format = Enter a postcode in the correct format
+agentPostcode.error.length = Postcode must be 8 characters or less
+agentPostcode.error.required = Enter a postcode
+agentPostcode.missingDetails = confirm if you have a postcode
+
+gasdsClaimType.title = Gift Aid Small Donations Scheme (GASDS) details
+gasdsClaimType.heading = Gift Aid Small Donations Scheme (GASDS) details
+gasdsClaimType.caption = Provide repayment claim details
+gasdsClaimType.caption.agent = Provide charity repayment claim details
+gasdsClaimType.description = We need to know what you want to claim under GASDS.
+gasdsClaimType.description.agent = We need to know what the charity is claiming under GASDS.
+gasdsClaimType.youCanClaim = You can claim:
+gasdsClaimType.youCanClaim.agent = The charity can claim:
+gasdsClaimType.topUp = GASDS top-up payments
+gasdsClaimType.topUp.desc = For donations of £30 or less that were not collected in a community building.
+gasdsClaimType.community = Community Buildings top-up payments
+gasdsClaimType.community.desc = For donations of £30 or less that were collected in a community building during charitable activities.
+gasdsClaimType.connected = Connected Charity or CASC claims
+gasdsClaimType.connected.desc = If your client is connected to other charities or Community Amateur Sports Clubs (CASCs), the £2,000 payment limit is shared across all connected organisations.
+gasdsClaimType.question = Which type of GASDS claim(s) do you want to make?
+gasdsClaimType.question.agent = Which type of GASDS claim(s) do you want to make for the charity?
+gasdsClaimType.hint = Select at least one
+gasdsClaimType.label.topUp = GASDS top-up payment
+gasdsClaimType.label.communityBuildings = Community Buildings top-up payment
+gasdsClaimType.label.connectedCharity = Connected Charity or CASC claim
+gasdsClaimType.error.required = Select which type of GASDS claim(s) you want to make
+
+warning11MaxClaimsReached.message.1 = You have reached the maximum number of draft claims
+warning11MaxClaimsReached.message.2 = You can have {0} claims in progress at one time. Please delete an existing claim to make a new claim.
+warning11MaxClaimsReached.title = You have reached the maximum number of draft claims
+
+enterCharityName.title = What is the name of the charity or Community Amateur Sports Club (CASC)?
+enterCharityName.heading = What is the name of the charity or Community Amateur Sports Club (CASC)?
+enterCharityName.caption = Provide charity repayment claim details
+enterCharityName.hint = Enter the name registered with HM Revenue & Customs. For example, Royal Society for the Prevention of Cruelty to Animals Hillingdon, Slough and District Branch.
+enterCharityName.charLimit = You have 160 characters remaining
+enterCharityName.error.required = Enter a charity or Community Amateur Sports Club (CASC) name
+enterCharityName.error.length = Charity or Community Amateur Sports Club (CASC) name must be 160 characters or less
+enterCharityName.error.regex = Enter a charity or Community Amateur Sports Club (CASC) name in the correct format
+
+enterTelephoneNumber.title = What is your telephone number?
+enterTelephoneNumber.heading = What is your telephone number?
+enterTelephoneNumber.caption = Provide organisation details
+enterTelephoneNumber.hint = For international numbers include the country code
+enterTelephoneNumber.p = You must provide a phone number so HM Revenue & Customs can get in touch about this claim.
+enterTelephoneNumber.error.required = Enter a telephone number
+enterTelephoneNumber.error.length = Telephone number must be 30 characters or less
+enterTelephoneNumber.error.format = Enter a telephone number in the correct format
+enterTelephoneNumber.missingDetails = confirm a telephone number
+
+doYouHaveAgentUKAddress.title = Do you have a UK address?
+doYouHaveAgentUKAddress.heading = Do you have a UK address?
+doYouHaveAgentUKAddress.caption = Provide organisation details
+doYouHaveAgentUKAddress.error.required = Select ‘Yes’ if you have a UK address
+doYouHaveAgentUKAddress.missingDetails = confirm if you have a UK address
+
+charitiesReferenceNumber.caption = Provide charity repayment claim details
+charitiesReferenceNumber.error.length = HMRC charities reference number must be 7 characters or less
+charitiesReferenceNumber.error.regex = Enter an HMRC charities reference number in the correct format
+charitiesReferenceNumber.error.exists = You have already created a claim for HMRC ref {0}
+charitiesReferenceNumber.error.required = Enter a HMRC charities reference number
+charitiesReferenceNumber.heading = What is the HMRC charities reference number?
+charitiesReferenceNumber.hint = This will begin with either one or two letters from A to Z and can include up to 5 numbers like 12345. For example, CF10034.
+charitiesReferenceNumber.title = What is the HMRC charities reference number?
+
+whoShouldWeSendPaymentTo.title = Who should HMRC send payment to?
+whoShouldWeSendPaymentTo.heading = Who should HMRC send payment to?
+whoShouldWeSendPaymentTo.caption = Provide organisation details
+whoShouldWeSendPaymentTo.radio.charityOrCasc = Charity/Community Amateur Sports Club (CASC)
+whoShouldWeSendPaymentTo.radio.agentOrNominee = Agent/Nominee
+whoShouldWeSendPaymentTo.error.required = Select who HMRC should send payment to
+whoShouldWeSendPaymentTo.missingDetails = confirm who HMRC should send payment to
+
+deleteAgentClaim.title =  Delete repayment claim
+deleteAgentClaim.heading = Delete repayment claim
+deleteAgentClaim.body = You are about to delete the repayment claim for {0}.
+deleteAgentClaim.caution = Are you sure you want to delete this repayment claim?
+deleteAgentClaim.error.required = Select ‘Yes’ if you want to delete this repayment claim
