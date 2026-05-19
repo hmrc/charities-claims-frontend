@@ -51,6 +51,10 @@ class FrontendAppConfigSpec extends BaseSpec {
       testFrontendAppConfig.signOutUrl shouldBe "http://foo.com/sign-out"
     }
 
+    "return betaFeedbackUrl" in {
+      testFrontendAppConfig.betaFeedbackUrl shouldBe "http://foo.com/beta-feedback"
+    }
+
     "return researchUrl" in {
       testFrontendAppConfig.researchUrl shouldBe "http://foo.com/research"
     }

@@ -91,7 +91,8 @@
 @hmrcStandardPage(HmrcStandardPageParams(
     serviceURLs = ServiceURLs(
         serviceUrl = Some(config.charityRepaymentDashboardUrl),
-        signOutUrl = signOutUrl
+        signOutUrl = signOutUrl,
+        accessibilityStatementUrl = Some(config.accessibilityStatementUrl)
     ),
     banners = Banners(
         phaseBanner = Some(betaBanner()),
