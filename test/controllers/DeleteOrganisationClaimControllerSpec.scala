@@ -66,12 +66,11 @@ class DeleteOrganisationClaimControllerSpec extends ControllerSpec {
       "should render ClaimCompleteController if Agent user" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          lastUpdatedReference = Some(testCharitiesReference),
-          submissionReference = Some(testCharitiesReference)
+          lastUpdatedReference = Some(testCharitiesReference)
         )
 
         given application: Application =
-          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation).build()
+          applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -157,8 +156,7 @@ class DeleteOrganisationClaimControllerSpec extends ControllerSpec {
       "should render ClaimCompleteController if agent user" in {
         val sessionData = SessionData(
           charitiesReference = testCharitiesReference,
-          lastUpdatedReference = Some(testCharitiesReference),
-          submissionReference = Some(testCharitiesReference)
+          lastUpdatedReference = Some(testCharitiesReference)
         )
 
         given application: Application =
@@ -326,8 +324,7 @@ class DeleteOrganisationClaimControllerSpec extends ControllerSpec {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.DeleteOrganisationClaimController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
-
-          val result = route(application, request).value
+          val result                                             = route(application, request).value
 
           a[RuntimeException] should be thrownBy result.futureValue
         }
