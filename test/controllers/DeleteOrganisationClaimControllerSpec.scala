@@ -324,8 +324,6 @@ class DeleteOrganisationClaimControllerSpec extends ControllerSpec {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
             FakeRequest(POST, routes.DeleteOrganisationClaimController.onSubmit.url)
               .withFormUrlEncodedBody("value" -> "true")
-//          ,
-//          submissionReference = Some(testCharitiesReference)
           val result                                             = route(application, request).value
 
           a[RuntimeException] should be thrownBy result.futureValue
