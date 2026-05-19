@@ -737,7 +737,8 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
             claimingDonationsCollectedInCommunityBuildings = Some(false),
             connectedToAnyOtherCharities = Some(true),
             claimingGiftAid = Some(true),
-            makingAdjustmentToPreviousClaim = Some(false)
+            makingAdjustmentToPreviousClaim = Some(false),
+            hmrcCharitiesReference = Some(testCharitiesReference)
           )
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
@@ -781,7 +782,8 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
             claimingDonationsCollectedInCommunityBuildings = Some(false),
             connectedToAnyOtherCharities = Some(true),
             claimingGiftAid = Some(true),
-            makingAdjustmentToPreviousClaim = Some(false)
+            makingAdjustmentToPreviousClaim = Some(false),
+            hmrcCharitiesReference = Some(testCharitiesReference)
           )
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
@@ -804,7 +806,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
             given request: FakeRequest[AnyContentAsEmpty.type] =
               FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
 
-            val result = route(application, request).value
+            val result = route(application, request).valuetestCharitiesReference
 
             status(result) shouldEqual SEE_OTHER
             redirectLocation(result) shouldEqual Some(
@@ -826,7 +828,8 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
             claimingDonationsCollectedInCommunityBuildings = Some(false),
             connectedToAnyOtherCharities = Some(true),
             claimingGiftAid = Some(true),
-            makingAdjustmentToPreviousClaim = Some(false)
+            makingAdjustmentToPreviousClaim = Some(false),
+            hmrcCharitiesReference = Some(testCharitiesReference)
           )
           val sessionData = SessionData(
             charitiesReference = testCharitiesReference,
