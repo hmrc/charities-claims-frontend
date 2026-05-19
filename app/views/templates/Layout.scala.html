@@ -34,9 +34,8 @@
         hmrcTimeoutDialog: uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcTimeoutDialog,
         timeoutDialogConfig: uk.gov.hmrc.hmrcfrontend.config.TimeoutDialogConfig,
         hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
-        betaBanner: StandardBetaBanner,
-        hmrcUserResearchBanner : HmrcUserResearchBanner
-)(using config: FrontendAppConfig)(implicit cfConfig: ContactFrontendConfig)
+        betaBanner: StandardBetaBanner
+)(using config: FrontendAppConfig, cfConfig: ContactFrontendConfig)
 
 @(
   pageTitle: String,
