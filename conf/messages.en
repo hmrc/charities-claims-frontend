@@ -137,7 +137,7 @@ checkYourAnswers.hasRef.label = Do you have a claim reference number?
 checkYourAnswers.heading = Check your claim details
 checkYourAnswers.refNumber.label = What is your reference number?
 checkYourAnswers.taxDeducted.label = Are you claiming tax deducted from other income?
-checkYourAnswers.title = Check your claim details
+checkYourAnswers.title = Check your claim ’details’
 
 checkYourCommunityBuildingsSchedule.caption = Add Community Buildings schedule
 checkYourCommunityBuildingsSchedule.error.required = Select ‘Yes’ if you need to update this Community Buildings schedule
@@ -877,7 +877,7 @@ adjustmentToThisClaim.error.required = Provide an explanation for adjustments to
 adjustmentToThisClaim.heading = What adjustments have you made to this claim?
 adjustmentToThisClaim.para = If you have included any adjustments in this claim, you must enter an explanation below. You can also provide any other information regarding your charity’s repayment claim.
 adjustmentToThisClaim.para.agent = If you have included any adjustments in this claim, you must enter an explanation below. You can also provide any other information regarding the charity’s repayment claim.
-adjustmentToThisClaim.hint = You can enter up to 350 characters
+adjustmentToThisClaim.hint = You can enter up to %{count} characters
 adjustmentToThisClaim.title = What adjustments have you made to this claim?
 
 repaymentClaimSummary.title = Charity repayment claim summary
