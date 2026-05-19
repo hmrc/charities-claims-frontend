@@ -806,7 +806,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
             given request: FakeRequest[AnyContentAsEmpty.type] =
               FakeRequest(GET, routes.AdjustmentToThisClaimController.onPageLoad.url)
 
-            val result = route(application, request).valuetestCharitiesReference
+            val result = route(application, request).value
 
             status(result) shouldEqual SEE_OTHER
             redirectLocation(result) shouldEqual Some(
