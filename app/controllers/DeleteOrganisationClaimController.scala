@@ -48,7 +48,7 @@ class DeleteOrganisationClaimController @Inject() (
   val form: Form[Boolean] = formProvider("deleteOrganisationClaim.error.required")
 
   def onPageLoad: Action[AnyContent] = actions.authAndGetData() { implicit request =>
-    if request.sessionData.submissionReference.isDefined then
+    if request.sessionData.submissionReference.isDefined || request.isAgent then
       Redirect(controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad)
     else
       request.sessionData.unsubmittedClaimId match {
@@ -60,7 +60,7 @@ class DeleteOrganisationClaimController @Inject() (
 
   def onSubmit: Action[AnyContent] = actions.authAndGetData().async { implicit request =>
     given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-    if request.sessionData.submissionReference.isDefined then
+    if request.sessionData.submissionReference.isDefined || request.isAgent then
       Future.successful(Redirect(controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad))
     else {
       form
