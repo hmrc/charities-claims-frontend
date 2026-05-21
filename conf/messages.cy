@@ -11,3 +11,7 @@ deleteCommunityBuildingsSchedule.title = A hoffech ddileu’r atodlen Adeiladau 
 deleteConnectedCharitiesSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddileu’r atodlen Elusennau Cysylltiedig hon
 deleteConnectedCharitiesSchedule.heading = A hoffech ddileu’r atodlen Elusennau Cysylltiedig hon?
 deleteConnectedCharitiesSchedule.title = A hoffech ddileu’r atodlen Elusennau Cysylltiedig hon?
+
+site.no = Na
+site.yes = Iawn
+site.continue = Parhau
