@@ -4,3 +4,15 @@ global.error.accessDenied.message = Nid oes gennych fynediad at y gwasanaeth hwn
 
 global.error.InternalServerError500.heading = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 global.error.InternalServerError500.title = Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth hwn
+deleteCommunityBuildingsSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddileu’r atodlen Adeiladau Cymunedol hon
+deleteCommunityBuildingsSchedule.heading = A hoffech ddileu’r atodlen Adeiladau Cymunedol hon?
+deleteCommunityBuildingsSchedule.title = A hoffech ddileu’r atodlen Adeiladau Cymunedol hon?
+
+deleteConnectedCharitiesSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddileu’r atodlen Elusennau Cysylltiedig hon
+deleteConnectedCharitiesSchedule.heading = A hoffech ddileu’r atodlen Elusennau Cysylltiedig hon?
+deleteConnectedCharitiesSchedule.title = A hoffech ddileu’r atodlen Elusennau Cysylltiedig hon?
+
+site.no = Na
+site.yes = Iawn
+site.continue = Parhau
+back.text = Yn ôl
