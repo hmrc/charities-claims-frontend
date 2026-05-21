@@ -15,3 +15,4 @@ deleteConnectedCharitiesSchedule.title = A hoffech ddileu’r atodlen Elusennau 
 site.no = Na
 site.yes = Iawn
 site.continue = Parhau
+back.text = Yn ôl
