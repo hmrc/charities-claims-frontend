@@ -20,7 +20,7 @@
 govukHint: GovukHint)
 
 
-@(params: CharacterCount)
+@(params: CharacterCount)(implicit messages: Messages)
 @import params._
 @require(name.nonEmpty, "parameter 'name' should not be empty")
 
@@ -34,9 +34,25 @@ govukHint: GovukHint)
         "data-maxlength" -> maxLength.filter(_ > 0).map(_.toString).getOrElse(""),
         "data-threshold" -> threshold.filter(_ > 0).map(_.toString).getOrElse(""),
         "data-maxwords" -> maxWords.filter(_ > 0).map(_.toString).getOrElse(""),
-    ) ++ toGovukPluralisedI18nAttributes("characters-under-limit", charactersUnderLimitText) ++ Map(
-        "data-i18n.characters-at-limit" -> charactersAtLimitText.getOrElse("")
-    ) ++ toGovukPluralisedI18nAttributes("characters-over-limit", charactersOverLimitText) ++ toGovukPluralisedI18nAttributes("words-under-limit", wordsUnderLimitText) ++ Map(
+    ) ++ toGovukPluralisedI18nAttributes(
+            "characters-under-limit",
+                Some(
+                    Map(
+                        "one" -> messages("characterCount.charactersUnderLimit.one"),
+                        "other" -> messages("characterCount.charactersUnderLimit.other")
+                        )
+)
+) ++ Map(
+        "data-i18n.characters-at-limit" -> messages("characterCount.charactersAtLimit")
+    ) ++ toGovukPluralisedI18nAttributes(
+            "characters-over-limit",
+                Some(
+                    Map(
+                        "one" -> messages("characterCount.charactersOverLimit.one"),
+                        "other" -> messages("characterCount.charactersOverLimit.other")
+                    )
+                )
+) ++ toGovukPluralisedI18nAttributes("words-under-limit", wordsUnderLimitText) ++ Map(
         "data-i18n.words-at-limit" -> wordsAtLimitText.getOrElse("")
     ) ++ toGovukPluralisedI18nAttributes("words-over-limit", wordsOverLimitText) ++ Map(
         "data-i18n.input-description.other" -> textareaDescriptionText.filter(_ => maxLength.isEmpty && maxWords.isEmpty).getOrElse("")

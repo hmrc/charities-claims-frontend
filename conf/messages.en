@@ -880,6 +880,12 @@ adjustmentToThisClaim.para.agent = If you have included any adjustments in this 
 adjustmentToThisClaim.hint = You can enter up to %{count} characters
 adjustmentToThisClaim.title = What adjustments have you made to this claim?
 
+characterCount.charactersUnderLimit.one=You have %'{'count'}' character remaining
+characterCount.charactersUnderLimit.other=You have %'{'count'}' characters remaining
+characterCount.charactersAtLimit=You have 0 characters remaining
+characterCount.charactersOverLimit.one=You have %'{'count'}' character too many
+characterCount.charactersOverLimit.other=You have %'{'count'}' characters too many
+
 repaymentClaimSummary.title = Charity repayment claim summary
 repaymentClaimSummary.heading = Charity repayment claim summary
 repaymentClaimSummary.claimDetails.heading = Claim details

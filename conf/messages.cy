@@ -14,6 +14,12 @@ adjustmentToThisClaim.para.agent = Os ydych wedi cynnwys unrhyw addasiadau yn y 
 adjustmentToThisClaim.hint = Gallwch nodi hyd at %{count} o gymeriadau
 adjustmentToThisClaim.title = Pa addasiadau ydych wedi’u gwneud i’r hawliad hwn?
 
+characterCount.charactersUnderLimit.one=Mae gennych %'{'count'}' cymeriad yn weddill
+characterCount.charactersUnderLimit.other=Mae gennych %'{'count'}' o gymeriadau yn weddill
+characterCount.charactersAtLimit=Mae gennych 0 o gymeriadau yn weddill
+characterCount.charactersOverLimit.one=Mae gennych %'{'count'} cymeriad yn ormod
+characterCount.charactersOverLimit.other=Mae gennych %'{'count'}' o gymeriadau yn ormod
+
 claimComplete.title = Hawliad wedi’i gwblhau
 claimComplete.message.2 = Eich cyfeirnod
 claimComplete.subheading = Yr hyn sy’n digwydd nesaf
