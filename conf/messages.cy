@@ -31,4 +31,15 @@ claimComplete.para.1.agent = Rydym wedi anfon yr hawliad ad-daliad elusennol hwn
 claimComplete.para.2.agent = Byddant yn cysylltu â chi i gadarnhau ad-daliad eich cleient neu i ofyn am ragor o wybodaeth.
 claimComplete.printSummaryLink.agent = <a class="govuk-link" href="{0}">Argraffwch grynodeb o’r hawliad hwn</a>
 
+deleteCommunityBuildingsSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddileu’r atodlen Adeiladau Cymunedol hon
+deleteCommunityBuildingsSchedule.heading = A hoffech ddileu’r atodlen Adeiladau Cymunedol hon?
+deleteCommunityBuildingsSchedule.title = A hoffech ddileu’r atodlen Adeiladau Cymunedol hon?
+
+deleteConnectedCharitiesSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddileu’r atodlen Elusennau Cysylltiedig hon
+deleteConnectedCharitiesSchedule.heading = A hoffech ddileu’r atodlen Elusennau Cysylltiedig hon?
+deleteConnectedCharitiesSchedule.title = A hoffech ddileu’r atodlen Elusennau Cysylltiedig hon?
+
+site.no = Na
+site.yes = Iawn
 site.continue = Parhau
+back.text = Yn ôl
