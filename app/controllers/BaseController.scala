@@ -23,8 +23,6 @@ import models.requests.DataRequest
 import play.api.data.Form
 import play.api.mvc.Request
 import play.api.mvc.AnyContent
-import models.Mode
-import models.Mode.CheckMode
 
 trait BaseController extends FrontendBaseController with I18nSupport {
 
@@ -37,13 +35,12 @@ trait BaseController extends FrontendBaseController with I18nSupport {
   }
 
   def needsUpdateConfirmation(
-    mode: Mode,
     previousAnswer: Option[Boolean],
     newAnswer: Boolean
   ): Boolean =
-    (mode, previousAnswer, newAnswer) match {
-      case (CheckMode, Some(true), false) => true
-      case _                              => false
+    (previousAnswer, newAnswer) match {
+      case (Some(true), false) => true
+      case _                   => false
     }
 
   def isConfirmingUpdate(using request: Request[AnyContent]): Boolean =

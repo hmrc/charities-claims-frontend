@@ -96,7 +96,7 @@ class GasdsClaimTypeController @Inject() (
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, mode, isCASCCharityReference, request.isAgent))),
         gasdsClaimType =>
-          if (needsUpdateConfirmation(mode, previousAnswer, gasdsClaimType)) {
+          if (needsUpdateConfirmation(previousAnswer, gasdsClaimType)) {
             val checkboxValues = formProvider.toSet(gasdsClaimType).toSeq
             Future.successful(
               Ok(
@@ -170,19 +170,13 @@ class GasdsClaimTypeController @Inject() (
     prev && !next
 
   private def needsUpdateConfirmation(
-    mode: Mode,
     previousAnswer: Option[GasdsClaimType],
     newAnswer: GasdsClaimType
   ): Boolean =
-    mode match {
-      case CheckMode =>
-        previousAnswer.exists { prev =>
-          removed(prev.topUp, newAnswer.topUp) ||
-          removed(prev.communityBuildings, newAnswer.communityBuildings) ||
-          removed(prev.connectedCharity, newAnswer.connectedCharity)
-        }
-
-      case _ => false
+    previousAnswer.exists { prev =>
+      removed(prev.topUp, newAnswer.topUp) ||
+      removed(prev.communityBuildings, newAnswer.communityBuildings) ||
+      removed(prev.connectedCharity, newAnswer.connectedCharity)
     }
 }
 

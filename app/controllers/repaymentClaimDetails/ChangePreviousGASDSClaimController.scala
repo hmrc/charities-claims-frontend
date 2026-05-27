@@ -76,7 +76,7 @@ class ChangePreviousGASDSClaimController @Inject() (
         newAnswer => {
           val previousAnswer = RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim
 
-          if (needsUpdateConfirmation(mode, previousAnswer, newAnswer)) {
+          if (needsUpdateConfirmation(previousAnswer, newAnswer)) {
             Future.successful(
               Ok(
                 updateRepaymentClaimView(

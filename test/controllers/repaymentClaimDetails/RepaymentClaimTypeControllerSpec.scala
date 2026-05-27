@@ -582,11 +582,11 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
         }
       }
 
-      "WRN3: should NOT show confirmation in NormalMode when unchecking selection" in {
+      "WRN3: should show confirmation in NormalMode when unchecking selection" in {
         val sessionData =
           RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
 
-        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -597,10 +597,9 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url
-          )
+          status(result) shouldEqual OK
+          contentAsString(result) should include("Do you want to update this repayment claim?")
+          contentAsString(result) should include("confirmingUpdate")
         }
       }
 

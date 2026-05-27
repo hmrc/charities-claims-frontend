@@ -313,13 +313,13 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
         }
       }
 
-      "normalMode: should NOT show WRN3 confirmation when submitting in NormalMode" in {
+      "normalMode: should show WRN3 confirmation when submitting in NormalMode" in {
         val sessionData = RepaymentClaimDetailsAnswers
           .setClaimingUnderGiftAidSmallDonationsScheme(true)
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
           .and(RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(true))
 
-        given application: Application = applicationBuilder(sessionData = sessionData).mockSaveSession.build()
+        given application: Application = applicationBuilder(sessionData = sessionData).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -328,10 +328,8 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            routes.ClaimingReferenceNumberController.onPageLoad(NormalMode).url
-          )
+          status(result) shouldEqual OK
+          contentAsString(result) should include("Do you want to update this repayment claim?")
         }
       }
 

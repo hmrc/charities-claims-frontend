@@ -46,8 +46,6 @@ class Warning11MaxClaimsReachedControllerSpec extends ControllerSpec {
       "should render the Claims list page for organisation user" in {
         given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Organisation).build()
 
-        val appConfig = application.injector.instanceOf[FrontendAppConfig]
-
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
             FakeRequest(GET, routes.Warning11MaxClaimsReachedController.onPageLoad.url)
@@ -79,8 +77,6 @@ class Warning11MaxClaimsReachedControllerSpec extends ControllerSpec {
 
       "should redirect to Claims List for organisation user" in {
         given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Organisation).build()
-
-        val appConfig = application.injector.instanceOf[FrontendAppConfig]
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
