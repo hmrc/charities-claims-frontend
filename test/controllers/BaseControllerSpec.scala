@@ -24,7 +24,7 @@ class BaseControllerSpec extends ControllerSpec {
   "BaseController" - {
 
     "needsUpdateConfirmation" - {
-      "should return true when in CheckMode, previous answer was Yes, and new answer is No" in {
+      "should return true when previous answer was Yes, and new answer is No" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -33,20 +33,7 @@ class BaseControllerSpec extends ControllerSpec {
               application.injector.instanceOf[MessagesControllerComponents]
           }
 
-          controller.needsUpdateConfirmation(models.Mode.CheckMode, Some(true), false) shouldBe true
-        }
-      }
-
-      "should return false when in NormalMode" in {
-        given application: Application = applicationBuilder().build()
-
-        running(application) {
-          val controller = new BaseController {
-            override val controllerComponents: MessagesControllerComponents =
-              application.injector.instanceOf[MessagesControllerComponents]
-          }
-
-          controller.needsUpdateConfirmation(models.Mode.NormalMode, Some(true), false) shouldBe false
+          controller.needsUpdateConfirmation(Some(true), false) shouldBe true
         }
       }
 
@@ -59,9 +46,9 @@ class BaseControllerSpec extends ControllerSpec {
               application.injector.instanceOf[MessagesControllerComponents]
           }
 
-          controller.needsUpdateConfirmation(models.Mode.CheckMode, Some(false), false) shouldBe false
-          controller.needsUpdateConfirmation(models.Mode.CheckMode, Some(true), true)   shouldBe false
-          controller.needsUpdateConfirmation(models.Mode.CheckMode, None, false)        shouldBe false
+          controller.needsUpdateConfirmation(Some(false), false) shouldBe false
+          controller.needsUpdateConfirmation(Some(true), true)   shouldBe false
+          controller.needsUpdateConfirmation(None, false)        shouldBe false
         }
       }
     }

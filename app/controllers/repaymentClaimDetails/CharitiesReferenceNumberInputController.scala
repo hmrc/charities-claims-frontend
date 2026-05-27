@@ -97,7 +97,7 @@ class CharitiesReferenceNumberInputController @Inject() (
                 Future.successful(BadRequest(view(formWithErrors, mode)))
 
               case false =>
-                if needsUpdateConfirmation(mode, previousAnswer, value)
+                if needsUpdateConfirmation(previousAnswer, value)
                 then {
                   Future.successful(
                     Ok(
@@ -154,18 +154,12 @@ class CharitiesReferenceNumberInputController @Inject() (
   }
 
   private def needsUpdateConfirmation(
-    mode: Mode,
     previousAnswer: Option[String],
     newAnswer: String
   ): Boolean =
-    mode match {
-      case CheckMode =>
-        previousAnswer.exists { prevAnswer =>
-          !isCASCCharityReference(prevAnswer) && isCASCCharityReference(newAnswer)
-          || (isCASCCharityReference(prevAnswer) && !isCASCCharityReference(newAnswer))
-        }
-
-      case _ => false
+    previousAnswer.exists { prevAnswer =>
+      !isCASCCharityReference(prevAnswer) && isCASCCharityReference(newAnswer)
+      || (isCASCCharityReference(prevAnswer) && !isCASCCharityReference(newAnswer))
     }
 
   private def isCASCCharityReference(value: String): Boolean =

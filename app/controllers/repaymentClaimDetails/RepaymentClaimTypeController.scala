@@ -69,7 +69,7 @@ class RepaymentClaimTypeController @Inject() (
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, isAgent))),
         repaymentClaimType =>
-          if (needsUpdateConfirmationForRepaymentClaimType(mode, previousAnswer, repaymentClaimType)) {
+          if (needsUpdateConfirmationForRepaymentClaimType(previousAnswer, repaymentClaimType)) {
             val checkboxValues = formProvider.toSet(repaymentClaimType).toSeq
             Future.successful(
               Ok(
@@ -129,18 +129,13 @@ class RepaymentClaimTypeController @Inject() (
       .getOrElse(Seq.empty)
 
   private def needsUpdateConfirmationForRepaymentClaimType(
-    mode: Mode,
     previousAnswer: Option[RepaymentClaimType],
     newAnswer: RepaymentClaimType
   ): Boolean =
-    mode match {
-      case CheckMode =>
-        previousAnswer.exists { prev =>
-          (prev.claimingGiftAid && !newAnswer.claimingGiftAid) ||
-          (prev.claimingTaxDeducted && !newAnswer.claimingTaxDeducted) ||
-          (prev.claimingUnderGiftAidSmallDonationsScheme && !newAnswer.claimingUnderGiftAidSmallDonationsScheme)
-        }
-      case _         => false
+    previousAnswer.exists { prev =>
+      (prev.claimingGiftAid && !newAnswer.claimingGiftAid) ||
+      (prev.claimingTaxDeducted && !newAnswer.claimingTaxDeducted) ||
+      (prev.claimingUnderGiftAidSmallDonationsScheme && !newAnswer.claimingUnderGiftAidSmallDonationsScheme)
     }
 }
 
