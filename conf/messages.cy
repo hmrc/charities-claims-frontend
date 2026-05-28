@@ -5,6 +5,13 @@ global.error.accessDenied.message = Nid oes gennych fynediad at y gwasanaeth hwn
 global.error.InternalServerError500.heading = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 global.error.InternalServerError500.title = Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth hwn
 
+aboutTheOrganisation.caption = Rhowch fanylion am y sefydliad
+aboutTheOrganisation.heading = Ynglŷn â’r sefydliad
+aboutTheOrganisation.paragraph.one = Mae angen i chi ddarparu gwybodaeth ynglŷn â’r sefydliad rydych yn hawlio ar ei gyfer.
+aboutTheOrganisation.paragraph.two = Mae’n rhaid i’r person sy’n gwneud yr hawliad hwn fod yn swyddog cymeradwy neu’n ymddiriedolwr corfforaethol a gydnabyddir gan Gyllid a Thollau EF.
+aboutTheOrganisation.agent.paragraph.two = Mae’n rhaid i’r asiant sy’n gwneud yr hawliad hwn ddarparu rhif ffôn fel y gall CThEF gysylltu ynglŷn â’r hawliad hwn.
+aboutTheOrganisation.title = Ynglŷn â’r sefydliad
+
 adjustmentToThisClaim.error.length = Mae’n rhaid i’r esboniad i addasiadau fod yn 350 o gymeriadau neu lai
 adjustmentToThisClaim.error.regex = Rhowch esboniad am yr addasiad yn y fformat cywir
 adjustmentToThisClaim.error.required = Rhowch esboniad am addasiadau i Rodd Cymorth, Incwm Arall neu rodd o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth
@@ -43,3 +50,223 @@ site.no = Na
 site.yes = Iawn
 site.continue = Parhau
 back.text = Yn ôl
+site.change = Newid
+site.enter = Nodi
+
+nameOfCharityRegulator.caption = Rhowch fanylion am y sefydliad
+nameOfCharityRegulator.error.required = Select the name of the charity regulator
+nameOfCharityRegulator.heading = Beth yw enw’r rheoleiddiwr elusennau?
+nameOfCharityRegulator.legend = Beth yw enw’r rheoleiddiwr elusennau?
+nameOfCharityRegulator.missingDetails = confirm your charity regulator name
+nameOfCharityRegulator.agent.missingDetails = confirm the charity regulator name
+nameOfCharityRegulator.radio.four = Swyddfa Rheoleiddiwr Elusennau’r Alban
+nameOfCharityRegulator.radio.one = Comisiwn Elusennau ar gyfer Cymru a Lloegr
+nameOfCharityRegulator.radio.three = Nid yw’r elusen wedi’i chofrestru gyda rheoleiddiwr
+nameOfCharityRegulator.radio.two = Comisiwn Elusennau ar gyfer Gogledd Iwerddon
+nameOfCharityRegulator.title = Beth yw enw’r rheoleiddiwr elusennau?
+
+charityExcepted.bullet.1 = eglwys neu gapel
+charityExcepted.bullet.2 = elusen sy’n darparu safleoedd ar gyfer ysgolion
+charityExcepted.bullet.3 = grŵp sgowtiaid neu geidiaid
+charityExcepted.bullet.4 = gwasanaeth elusennol y Lluoedd Arfog
+charityExcepted.bullet.5 = undeb myfyrwyr
+charityExcepted.heading = Mae’ch elusen wedi’i heithrio
+charityExcepted.agent.heading = Mae’r elusen wedi’i eithrio
+charityExcepted.p1 = Mae’ch elusen wedi’i heithrio gan fod incwm yr elusen yn £100,000 neu’n llai, ac mae’n cael ei dosbarthu fel un o’r canlynol:
+charityExcepted.agent.p1 = Mae’r elusen wedi’i eithrio gan fod incwm yr elusen yn £100,000 neu lai, ac mae’n cael ei dosbarthu fel un o’r canlynol:
+charityExcepted.title = Mae’ch elusen wedi’i heithrio
+charityExcepted.agent.title = Mae’r elusen wedi’i eithrio
+
+charityExempt.bullet.1 = sefydliad addysgiadol, fel prifysgol neu ysgol
+charityExempt.bullet.2 = amgueddfa neu’n oriel
+charityExempt.bullet.3 = gymdeithas dai
+charityExempt.heading = Mae’ch elusen wedi’i hesemptio
+charityExempt.agent.heading = Mae’r elusen wedi’i esemptio
+charityExempt.p1 = Mae’r elusen wedi’i esemptio rhag cofrestru gyda rheoleiddiwr oherwydd ei bod yn:
+charityExempt.agent.p1 = Mae’r elusen wedi’i esemptio rhag cofrestru gyda rheoleiddiwr oherwydd ei bod yn:
+charityExempt.title = Mae’ch elusen wedi’i hesemptio
+charityExempt.agent.title = Mae’r elusen wedi’i esemptio
+
+reasonNotRegisteredWithRegulator.caption = Rhowch fanylion am y sefydliad
+reasonNotRegisteredWithRegulator.error.required = Select why the charity is not registered with a regulator
+reasonNotRegisteredWithRegulator.heading = Pam nad yw’r elusen wedi’i chofrestru â rheoleiddiwr?
+reasonNotRegisteredWithRegulator.missingDetails = confirm why you’re not registered with a regulator
+reasonNotRegisteredWithRegulator.agent.missingDetails = confirm why the charity is not registered with a regulator
+reasonNotRegisteredWithRegulator.radio.Excepted = Mae’ch elusen wedi’i heithrio
+reasonNotRegisteredWithRegulator.agent.radio.Excepted = Mae’ch elusen wedi’i heithrio
+reasonNotRegisteredWithRegulator.radio.Exempt = Mae’ch elusen wedi’i hesemptio
+reasonNotRegisteredWithRegulator.agent.radio.Exempt = Mae’ch elusen wedi’i hesemptio
+reasonNotRegisteredWithRegulator.radio.LowIncome = Mae’ch elusen wedi’i lleoli yng Nghymru neu Loegr ac mae’ch incwm yn llai na £5,000 y flwyddyn
+reasonNotRegisteredWithRegulator.agent.radio.LowIncome = Mae’ch elusen wedi’i lleoli yng Nghymru neu Loegr ac mae’ch incwm yn llai na £5,000 y flwyddyn
+reasonNotRegisteredWithRegulator.radio.Waiting = Mae eich elusen wedi’i lleoli yng Ngogledd Iwerddon ac rydych yn aros am gofrestriad gyda Chomisiwn Elusennau Gogledd Iwerddon (CCNI)
+reasonNotRegisteredWithRegulator.agent.radio.Waiting = Mae’r elusen wedi’i lleoli yng Ngogledd Iwerddon ac mae’n aros am gofrestriad gyda Chomisiwn Elusennau Gogledd Iwerddon (CCNI)
+reasonNotRegisteredWithRegulator.title = Pam nad yw’r elusen wedi’i chofrestru â rheoleiddiwr?
+
+charityRegulatorNumber.caption = Rhowch fanylion am y sefydliad
+charityRegulatorNumber.error.format = Enter a charity regulator number in the correct format
+charityRegulatorNumber.error.length = Enter a charity regulator number in the correct format
+charityRegulatorNumber.error.required = Enter a charity regulator number
+charityRegulatorNumber.heading = Beth yw rhif y rheoleiddiwr elusennau?
+charityRegulatorNumber.hint = Gall hyn gynnwys hyd at 20 o gymeriadau rhifol (er enghraifft, 123456789) ac nid yw’n cynnwys llythrennau.
+charityRegulatorNumber.missingDetails = confirm your charity regulator number
+charityRegulatorNumber.agent.missingDetails = confirm the charity regulator number
+charityRegulatorNumber.title = Beth yw rhif y rheoleiddiwr elusennau?
+
+corporateTrusteeClaim.caption = Rhowch fanylion am y sefydliad
+corporateTrusteeClaim.error.required = Select ‘Yes’ if this claim is being made by a corporate trustee
+corporateTrusteeClaim.heading = A yw’r hawliad hwn yn cael ei wneud gan ymddiriedolwr corfforaethol?
+corporateTrusteeClaim.hint = Gall hyn fod yn adran ymddiriedolaethau o fewn banc, yn gwmni ymddiriedolaeth neu’n gorfforaeth ymddiriedolaeth.
+corporateTrusteeClaim.missingDetails = confirm if you are a corporate trustee
+corporateTrusteeClaim.title = Is a corporate trustee making this claim?
+
+corporateTrusteeAddress.caption = Rhowch fanylion am y sefydliad
+corporateTrusteeAddress.error.required = Select ‘Yes’ if the corporate trustee has a UK address
+corporateTrusteeAddress.heading = A oes gan yr ymddiriedolwr corfforaethol gyfeiriad yn y DU?
+corporateTrusteeAddress.legend = A oes gan yr ymddiriedolwr corfforaethol gyfeiriad yn y DU?
+corporateTrusteeAddress.missingDetails = confirm if the corporate trustee has a UK address
+corporateTrusteeAddress.title = A oes gan yr ymddiriedolwr corfforaethol gyfeiriad yn y DU?
+
+authorisedOfficialAddress.caption = Rhowch fanylion am y sefydliad
+authorisedOfficialAddress.error.required = Select ‘Yes’ if the authorised official has a UK address
+authorisedOfficialAddress.heading = A oes gan y swyddog awdurdodedig gyfeiriad yn y DU?
+authorisedOfficialAddress.legend = A oes gan y swyddog awdurdodedig gyfeiriad yn y DU?
+authorisedOfficialAddress.missingDetails = confirm if the authorised official has a UK address
+authorisedOfficialAddress.title = A oes gan y swyddog awdurdodedig gyfeiriad yn y DU?
+
+corporateTrusteeDetails.caption = Rhowch fanylion am y sefydliad
+corporateTrusteeDetails.heading = Beth yw manylion yr ymddiriedolwr corfforaethol?
+corporateTrusteeDetails.missingDetails = confirm the corporate trustee details
+corporateTrusteeDetails.name.error.length = Corporate trustee name must be 160 characters or less
+corporateTrusteeDetails.name.error.regex = Enter a corporate trustee name in the correct format
+corporateTrusteeDetails.name.error.required = Enter a corporate trustee name
+corporateTrusteeDetails.name.label = Enw’r ymddiriedolwr
+corporateTrusteeDetails.phone.error.length = Corporate trustee phone number must be 30 characters or less
+corporateTrusteeDetails.phone.error.regex = Enter a corporate trustee phone number in the correct format
+corporateTrusteeDetails.phone.error.required = Enter a corporate trustee phone number
+corporateTrusteeDetails.phone.label = Rhif ffôn yr ymddiriedolwr
+corporateTrusteeDetails.postCode.error.length = Corporate trustee postcode must be 8 characters or less
+corporateTrusteeDetails.postCode.error.regex = Enter a corporate trustee postcode in the correct format
+corporateTrusteeDetails.postCode.error.required = Enter a corporate trustee postcode
+corporateTrusteeDetails.postcode.label = Cod post yr ymddiriedolwr
+corporateTrusteeDetails.title = Beth yw manylion yr ymddiriedolwr corfforaethol?
+
+authorisedOfficialDetails.caption = Rhowch fanylion am y sefydliad
+authorisedOfficialDetails.firstName = Enw cyntaf
+authorisedOfficialDetails.firstName.error.format = Enter an authorised official first name in the correct format
+authorisedOfficialDetails.firstName.error.length = Authorised official first name must be 35 characters or less
+authorisedOfficialDetails.firstName.error.required = Enter an authorised official first name
+authorisedOfficialDetails.heading = Beth yw manylion y swyddog awdurdodedig?
+authorisedOfficialDetails.lastName = Enw olaf
+authorisedOfficialDetails.lastName.error.format = Enter an authorised official last name in the correct format
+authorisedOfficialDetails.lastName.error.length = Authorised official last name must be 35 characters or less
+authorisedOfficialDetails.lastName.error.required = Enter an authorised official last name
+authorisedOfficialDetails.missingDetails = confirm the authorised official details
+authorisedOfficialDetails.phoneNumber = Rhif ffôn
+authorisedOfficialDetails.phoneNumber.error.format = Enter an authorised official phone number in the correct format
+authorisedOfficialDetails.phoneNumber.error.length = Authorised official phone number must be 30 characters or less
+authorisedOfficialDetails.phoneNumber.error.required = Enter an authorised official phone number
+authorisedOfficialDetails.postcode = Cod post
+authorisedOfficialDetails.postcode.error.format = Enter an authorised official postcode in the correct format
+authorisedOfficialDetails.postcode.error.length = Authorised official postcode must be 8 characters or less
+authorisedOfficialDetails.postcode.error.required = Enter an authorised official postcode
+authorisedOfficialDetails.title = Beth yw manylion y swyddog awdurdodedig?
+authorisedOfficialDetails.title.error.format = Enter an authorised official title in the correct format
+authorisedOfficialDetails.title.error.length = Authorised official title must be 4 characters or less
+authorisedOfficialDetails.titleField = Teitl (dewisol)
+
+organisationDetailsCheckYourAnswers.charityDetails.subheader = Manylion yr elusen
+organisationDetailsCheckYourAnswers.authorisedOfficialDetails.subheader = Manylion y Swyddog Awdurdodedig
+organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeDetails.label = Manylion y swyddog
+organisationDetailsCheckYourAnswers.AuthorisedOfficialTrusteeUKAddress.label = Cyfeiriad yn y DU
+organisationDetailsCheckYourAnswers.corporateTrusteeDetails.subheader = Manylion yr ymddiriedolwr corfforaethol
+organisationDetailsCheckYourAnswers.CorporateTrusteeClaim.label = A yw’r ymddiriedolwr corfforaethol yn gwneud yr hawliad hwn?
+organisationDetailsCheckYourAnswers.CorporateTrusteeDetails.label = Manylion yr ymddiriedolwr
+organisationDetailsCheckYourAnswers.CorporateTrusteeUKAddress.label = Cyfeiriad yn y DU
+organisationDetailsCheckYourAnswers.caption = Rhowch fanylion am y sefydliad
+organisationDetailsCheckYourAnswers.charityRegulatorName.EnglandAndWales.label = Comisiwn Elusennau ar gyfer Cymru a Lloegr
+organisationDetailsCheckYourAnswers.charityRegulatorName.NorthernIreland.label = Comisiwn Elusennau ar gyfer Gogledd Iwerddon
+organisationDetailsCheckYourAnswers.charityRegulatorName.Scottish.label = Swyddfa Rheoleiddiwr Elusennau’r Alban
+organisationDetailsCheckYourAnswers.charityRegulatorName.label = Enw’r rheoleiddiwr elusennau
+organisationDetailsCheckYourAnswers.charityRegulatorName.none.label = Nid yw’r elusen wedi’i chofrestru gyda rheoleiddiwr
+organisationDetailsCheckYourAnswers.charityRegulatorNumber.label = Rhif y rheoleiddiwr elusennau
+organisationDetailsCheckYourAnswers.heading = Gwiriwch fanylion eich sefydliad
+organisationDetailsCheckYourAnswers.reasonNotRegistered.excepted.label = Mae’ch elusen wedi’i heithrio
+organisationDetailsCheckYourAnswers.reasonNotRegistered.excepted.description = Mae’ch elusen wedi’i heithrio gan fod incwm yr elusen yn £100,000 neu’n llai, ac mae’n cael ei dosbarthu fel un o’r canlynol:
+organisationDetailsCheckYourAnswers.reasonNotRegistered.exempt.label = Mae’ch elusen wedi’i hesemptio
+organisationDetailsCheckYourAnswers.reasonNotRegistered.exempt.description = Mae’ch elusen wedi’i hesemptio rhag cofrestru gyda rheoleiddiwr oherwydd ei bod yn:
+organisationDetailsCheckYourAnswers.reasonNotRegistered.label = Wedi’i chofrestru gan rheoleiddiwr
+organisationDetailsCheckYourAnswers.reasonNotRegistered.LowIncome.label = Mae’ch elusen wedi’i lleoli yng Nghymru neu Loegr ac mae’ch incwm yn llai na £5,000 y flwyddyn
+organisationDetailsCheckYourAnswers.reasonNotRegistered.Waiting.label = Mae eich elusen wedi’i lleoli yng Ngogledd Iwerddon ac rydych yn aros i gael eich cofrestru gyda Chomisiwn Elusennau Gogledd Iwerddon (CCNI).
+organisationDetailsCheckYourAnswers.title = Gwiriwch fanylion eich sefydliad
+
+whoShouldWeSendPaymentTo.title = At bwy y dylai CThEF anfon y taliad?
+whoShouldWeSendPaymentTo.heading = At bwy y dylai CThEF anfon y taliad?
+whoShouldWeSendPaymentTo.caption = Rhowch fanylion am y sefydliad
+whoShouldWeSendPaymentTo.radio.charityOrCasc = Elusen/Clwb Chwaraeon Amatur Cymunedol (CASC)
+whoShouldWeSendPaymentTo.radio.agentOrNominee = Asiant/Enwebai
+whoShouldWeSendPaymentTo.error.required = Select who HMRC should send payment to
+whoShouldWeSendPaymentTo.missingDetails = confirm who HMRC should send payment to
+
+enterTelephoneNumber.title = Beth yw’ch rhif ffôn?
+enterTelephoneNumber.heading = Beth yw’ch rhif ffôn?
+enterTelephoneNumber.caption = Rhowch fanylion am y sefydliad
+enterTelephoneNumber.hint = Ar gyfer rhifau rhyngwladol, cofiwch gynnwys cod y wlad
+enterTelephoneNumber.p = Mae’n rhaid i chi ddarparu rhif ffôn fel y gall CThEF gysylltu ynglŷn â’r hawliad hwn.
+enterTelephoneNumber.error.required = Enter a telephone number
+enterTelephoneNumber.error.length = Telephone number must be 30 characters or less
+enterTelephoneNumber.error.format = Enter a telephone number in the correct format
+enterTelephoneNumber.missingDetails = confirm a telephone number
+
+doYouHaveAgentUKAddress.title = A oes gennych gyfeiriad yn y DU?
+doYouHaveAgentUKAddress.heading = A oes gennych gyfeiriad yn y DU?
+doYouHaveAgentUKAddress.caption = Rhowch fanylion am y sefydliad
+doYouHaveAgentUKAddress.error.required = Select ‘Yes’ if you have a UK address
+doYouHaveAgentUKAddress.missingDetails = confirm if you have a UK address
+
+agentPostcode.title = Beth yw’ch cod post?
+agentPostcode.heading = Beth yw’ch cod post?
+agentPostcode.caption = Rhowch fanylion am y sefydliad
+agentPostcode.error.format = Enter a postcode in the correct format
+agentPostcode.error.length = Postcode must be 8 characters or less
+agentPostcode.error.required = Enter a postcode
+agentPostcode.missingDetails = confirm if you have a postcode
+
+agentOrganisationDetailsCheckYourAnswers.caption = Rhowch fanylion am y sefydliad
+agentOrganisationDetailsCheckYourAnswers.title = Gwiriwch fanylion y sefydliad
+agentOrganisationDetailsCheckYourAnswers.heading = Gwiriwch fanylion y sefydliad
+agentOrganisationDetailsCheckYourAnswers.charityDetails.subheader = Manylion yr elusen
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.label = Enw’r rheoleiddiwr elusennau
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorNumber.label = Rhif y rheoleiddiwr elusennau
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.label = Reason for not registering
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.LowIncome.label = The charity is located in England or Wales and your income is less than £5,000 per year
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.Excepted.label = The charity is excepted
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.Exempt.label = The charity is exempt
+agentOrganisationDetailsCheckYourAnswers.charityDetails.reasonNotRegistered.Waiting.label = The charity is based in Northern Ireland and you are awaiting registration with the Charity Commission for Northern Ireland (CCNI)
+agentOrganisationDetailsCheckYourAnswers.charityDetails.sendPaymentTo.label = Anfon y taliad at
+agentOrganisationDetailsCheckYourAnswers.agentDetails.subheader = Manylion yr asiant
+agentOrganisationDetailsCheckYourAnswers.agentDetails.telephoneNumber.label = Rhif ffôn
+agentOrganisationDetailsCheckYourAnswers.agentDetails.ukAddress.label = Cyfeiriad yn y DU
+agentOrganisationDetailsCheckYourAnswers.agentDetails.postcode.label = Cod post
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.EnglandAndWales.label = Comisiwn Elusennau ar gyfer Cymru a Lloegr
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.NorthernIreland.label = Comisiwn Elusennau ar gyfer Gogledd Iwerddon
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.Scottish.label = Swyddfa Rheoleiddiwr Elusennau’r Alban
+agentOrganisationDetailsCheckYourAnswers.charityDetails.charityRegulatorName.None.label = Nid yw’r elusen wedi’i chofrestru gyda rheoleiddiwr
+
+reasonNotRegistered.exempt.heading=Mae’ch elusen wedi’i hesemptio
+
+reasonNotRegistered.exempt.description=The charity is exempt from registering with a regulator because it is a:
+
+reasonNotRegistered.exempt.bullet1 = sefydliad addysgiadol, fel prifysgol neu ysgol
+reasonNotRegistered.exempt.bullet2 = amgueddfa neu’n oriel
+reasonNotRegistered.exempt.bullet3 = gymdeithas dai
+
+
+reasonNotRegistered.excepted.heading = Mae’ch elusen wedi’i heithrio
+
+reasonNotRegistered.excepted.description = The charity is excepted as the charity’s annual income is £100,000 or less and is classed as one of the following:
+
+reasonNotRegistered.excepted.bullet1 = eglwys neu gapel
+reasonNotRegistered.excepted.bullet2 = elusen sy’n darparu safleoedd ar gyfer ysgolion
+reasonNotRegistered.excepted.bullet3 = grŵp sgowtiaid neu geidiaid
+reasonNotRegistered.excepted.bullet4 = gwasanaeth elusennol y Lluoedd Arfog
+reasonNotRegistered.excepted.bullet5 = undeb myfyrwyr
