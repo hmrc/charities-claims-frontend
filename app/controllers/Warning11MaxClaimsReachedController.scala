@@ -16,14 +16,12 @@
 
 package controllers
 
-import com.google.inject.Inject
-import config.FrontendAppConfig
-import controllers.BaseController
-import controllers.actions.AccessType.AgentOnly
-import controllers.actions.{AccessType, Actions, GuardAction}
-import models.SessionData
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import com.google.inject.Inject
+import controllers.BaseController
+import config.FrontendAppConfig
 import views.html.Warning11MaxClaimsReachedView
+import controllers.actions.{AccessType, Actions, GuardAction}
 
 import scala.concurrent.Future
 
@@ -37,16 +35,16 @@ class Warning11MaxClaimsReachedController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetData()
-      .andThen(guard(predicate = SessionData.isClaimNotSubmitted, access = AccessType.AgentOnly))
+      .auth()
+      .andThen(guard.access(AccessType.AgentOnly))
       .async { implicit request =>
         Future.successful(Ok(view(appConfig.agentUnsubmittedClaimLimit)))
       }
 
   def onSubmit: Action[AnyContent] =
     actions
-      .authAndGetData()
-      .andThen(guard(predicate = SessionData.isClaimNotSubmitted, access = AgentOnly))
+      .auth()
+      .andThen(guard.access(AccessType.AgentOnly))
       .async { implicit request =>
         Future.successful(Redirect(appConfig.charityRepaymentDashboardUrl))
       }
