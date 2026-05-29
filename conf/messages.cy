@@ -270,3 +270,82 @@ reasonNotRegistered.excepted.bullet2 = elusen sy’n darparu safleoedd ar gyfer 
 reasonNotRegistered.excepted.bullet3 = grŵp sgowtiaid neu geidiaid
 reasonNotRegistered.excepted.bullet4 = gwasanaeth elusennol y Lluoedd Arfog
 reasonNotRegistered.excepted.bullet5 = undeb myfyrwyr
+
+deleteAgentClaim.title =  Dileu'r cais am ad-daliad
+deleteAgentClaim.heading = Dileu'r cais am ad-daliad
+deleteAgentClaim.body = Rydych ar fin dileu’r hawliad ad-daliad ar gyfer {0}.
+deleteAgentClaim.caution = A ydych yn siŵr eich bod am ddileu’r hawliad ad-daliad hwn?
+deleteAgentClaim.error.required = Dewiswch ‘Iawn’ os ydych am ddileu’r hawliad ad-daliad hwn
+
+warning11MaxClaimsReached.message.1 = Rydych wedi cyrraedd y nifer uchaf o hawliadau drafft
+warning11MaxClaimsReached.message.2 = Gallwch gael {0} o hawliadau ar y gweill ar yr un pryd. Dilëwch hawliad sy’n bodoli eisoes er mwyn gwneud hawliad newydd.
+warning11MaxClaimsReached.title = Rydych wedi cyrraedd y nifer uchaf o hawliadau drafft
+
+registerCharityWithARegulator.error.required = Dewiswch ‘Iawn’ os oes angen i chi gofrestru gyda rheoleiddiwr.
+registerCharityWithARegulator.heading = Cofrestru eich elusen gyda rheoleiddiwr
+registerCharityWithARegulator.legend = A oes angen i chi gofrestru eich elusen gyda rheoleiddiwr?
+registerCharityWithARegulator.paragraph = Os yw incwm blynyddol yr elusen yn £{1} neu fwy, mae angen i chi <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">gofrestru’r elusen hon gyda rheoleiddiwr (yn agor mewn tab newydd)</a>.
+registerCharityWithARegulator.radio.no.label = Na
+registerCharityWithARegulator.radio.yes.label = Iawn
+registerCharityWithARegulator.title = Cofrestru eich elusen gyda rheoleiddiwr
+registerCharityWithARegulator.warning = Rydych wedi gwneud hawliadau am ad-daliadau Rhodd Cymorth ar roddion o £{1} neu fwy yn y 12 mis diwethaf.
+registerCharityWithARegulator.agent.heading = Cofrestru’r elusen gyda rheoleiddiwr
+registerCharityWithARegulator.agent.legend = A oes angen i chi gofrestru’r elusen hon gyda rheoleiddiwr?
+registerCharityWithARegulator.agent.paragraph = Os yw incwm blynyddol yr elusen yn £{1} neu fwy, mae angen i chi <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">gofrestru’r elusen hon gyda rheoleiddiwr (yn agor mewn tab newydd)</a>.
+registerCharityWithARegulator.agent.title = Cofrestru’r elusen gyda rheoleiddiwr
+registerCharityWithARegulator.agent.warning = Mae’r elusen wedi gwneud hawliadau am ad-daliadau Rhodd Cymorth ar roddion o £{1} neu fwy yn y 12 mis diwethaf.
+
+repaymentClaimDetailsIncompleteAnswers.heading = Ni ellir sefydlu’r hawliad hwn
+repaymentClaimDetailsIncompleteAnswers.message = Mae angen i chi ddarparu’r manylion canlynol er mwyn parhau:
+repaymentClaimDetailsIncompleteAnswers.returnLink = Ewch yn ôl i ddarparu’r manylion coll ar gyfer eich hawliad
+repaymentClaimDetailsIncompleteAnswers.agent.returnLink = Go back to provide the missing details for this claim
+repaymentClaimDetailsIncompleteAnswers.title = Ni ellir sefydlu’r hawliad hwn
+repaymentClaimDetailsIncompleteAnswers.warning = Ni ellir sefydlu’r hawliad hwn oherwydd bod rhai manylion ar goll.
+repaymentClaimType.missingDetails = dewis y math o hawliad ad-daliad
+claimReferenceNumberInput.missingDetails = darparu rhif cyfeirnod yr hawliad
+claimReferenceNumberCheck.missingDetails = cadarnhau a oes gennych rif cyfeirnod hawliad
+claimGASDS.missingDetails = cadarnhau pa fath o hawliad(au) GASDS rydych am eu gwneud
+changePreviousGASDSClaim.missingDetails = cadarnhau a ydych am newid hawliad blaenorol y Cynllun Rhoddion Bach Rhodd Cymorth
+repaymentClaimDetails.agent.missingCharityName = cadarnhau enw’r elusen neu’r Clwb Chwaraeon Amatur Cymunedol (CASC)
+repaymentClaimDetails.agent.missingCharitiesReference = cadarnhau rhif cyfeirnod Elusennau CThEF
+repaymentClaimType.agent.missingDetails = cadarnhau’r math o hawliad ad-daliad
+claimReferenceNumberCheck.agent.missingDetails = cadarnhau a oes gan yr elusen rif cyfeirnod hawliad
+claimGASDS.agent.missingDetails = cadarnhau pa fath o hawliad(au) GASDS rydych am eu gwneud
+changePreviousGASDSClaim.agent.missingDetails = cadarnhau a ydych am newid hawliad blaenorol y Cynllun Rhoddion Bach Rhodd Cymorth
+claimReferenceNumberInput.agent.missingDetails = darparu rhif cyfeirnod hawliad yr elusen
+
+organisationDetailsIncompleteAnswers.heading = Ni ellir sefydlu’r hawliad hwn
+organisationDetailsIncompleteAnswers.message = Mae angen i chi ddarparu’r manylion canlynol er mwyn parhau:
+organisationDetailsIncompleteAnswers.returnLink = Ewch yn ôl i ddarparu’r manylion coll ar gyfer eich hawliad
+organisationDetailsIncompleteAnswers.title = Ni ellir sefydlu’r hawliad hwn
+organisationDetailsIncompleteAnswers.warning = Ni ellir sefydlu’r hawliad hwn oherwydd bod rhai manylion ar goll.
+nameOfCharityRegulator.missingDetails = cadarnhau enw rheoleiddiwr eich elusen
+reasonNotRegisteredWithRegulator.missingDetails = cadarnhau pam nad ydych wedi’ch cofrestru gyda rheoleiddiwr
+charityRegulatorNumber.missingDetails = cadarnhau rhif rheoleiddiwr eich elusen
+corporateTrusteeClaim.missingDetails = cadarnhau a ydych yn ymddiriedolwr corfforaethol
+corporateTrusteeAddress.missingDetails = cadarnhau a oes gan yr ymddiriedolwr corfforaethol gyfeiriad yn y DU
+corporateTrusteeDetails.missingDetails = cadarnhau manylion yr ymddiriedolwr corfforaethol
+authorisedOfficialAddress.missingDetails = cadarnhau a oes gan y swyddog awdurdodedig gyfeiriad yn y DU
+authorisedOfficialDetails.missingDetails = cadarnhau manylion y swyddog awdurdodedig
+nameOfCharityRegulator.agent.missingDetails = cadarnhau enw rheoleiddiwr yr elusen
+charityRegulatorNumber.agent.missingDetails = cadarnhau rhif rheoleiddiwr yr elusen
+whoShouldWeSendPaymentTo.missingDetails = cadarnhau at bwy ddylai CThEF anfon y taliad
+enterTelephoneNumber.missingDetails = cadarnhau rhif ffôn
+doYouHaveAgentUKAddress.missingDetails = cadarnhau a oes gennych gyfeiriad yn y DU
+agentPostcode.missingDetails = cadarnhau a oes gennych god post
+
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.heading = Ni ellir sefydlu’r hawliad hwn
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.message = Mae angen i chi ddarparu’r manylion canlynol er mwyn parhau:
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.returnLink = Ewch yn ôl i ddarparu’r manylion coll ar gyfer eich hawliad
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.title = Ni ellir sefydlu’r hawliad hwn
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.warning = Ni ellir sefydlu’r hawliad hwn oherwydd bod rhai manylion ar goll.
+giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount = cadarnhau swm y GASDS a hawliwyd yn ormodol yn flaenorol
+
+
+
+
+
+
+
+
+
