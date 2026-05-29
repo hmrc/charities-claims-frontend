@@ -21,6 +21,8 @@ import models.SessionData
 import models.requests.DataRequest
 import play.api.mvc.{ActionFilter, Result, Results}
 import scala.concurrent.{ExecutionContext, Future}
+import models.requests.AuthorisedRequest
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 @Singleton
 class GuardAction @Inject() ()(using ec: ExecutionContext) {
@@ -42,6 +44,25 @@ class GuardAction @Inject() ()(using ec: ExecutionContext) {
             Some(Results.Redirect(controllers.claimDeclaration.routes.ClaimCompleteController.onPageLoad))
           else if !hasAccess then Some(Results.Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
           else if predicate(using sessionData) then None
+          else Some(Results.Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+        }
+      }
+    }
+
+  def access(access: AccessType): ActionFilter[AuthorisedRequest] =
+    new ActionFilter[AuthorisedRequest] {
+      override def executionContext: ExecutionContext = ec
+
+      override protected def filter[A](request: AuthorisedRequest[A]): Future[Option[Result]] = {
+
+        val hasAccess = access match
+          case AccessType.AgentOnly        => request.affinityGroup == AffinityGroup.Agent
+          case AccessType.OrganisationOnly => request.affinityGroup == AffinityGroup.Organisation
+          case AccessType.Both             => true
+
+        Future.successful {
+          if hasAccess
+          then None
           else Some(Results.Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
         }
       }

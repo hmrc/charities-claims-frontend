@@ -21,6 +21,7 @@ import models.requests.DataRequest
 import play.api.mvc.{ActionBuilder, AnyContent, DefaultActionBuilder}
 import models.SessionData
 import javax.inject.Singleton
+import models.requests.AuthorisedRequest
 
 @Singleton
 class Actions @Inject() (
@@ -30,6 +31,11 @@ class Actions @Inject() (
   refreshData: RefreshDataAction,
   guard: GuardAction
 ) {
+
+  def auth(): ActionBuilder[AuthorisedRequest, AnyContent] =
+    actionBuilder
+      .andThen(identify)
+
   def authAndGetData(): ActionBuilder[DataRequest, AnyContent] =
     actionBuilder
       .andThen(identify)
@@ -40,7 +46,9 @@ class Actions @Inject() (
       .andThen(identify)
       .andThen(refreshData)
 
-  def authAndGetDataWithGuard(predicate: SessionData ?=> Boolean): ActionBuilder[DataRequest, AnyContent] =
+  def authAndGetDataWithGuard(
+    predicate: SessionData ?=> Boolean
+  ): ActionBuilder[DataRequest, AnyContent] =
     actionBuilder
       .andThen(identify)
       .andThen(getData)
