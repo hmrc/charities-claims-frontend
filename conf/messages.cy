@@ -52,6 +52,13 @@ site.continue = Parhau
 back.text = Yn ôl
 site.change = Newid
 site.enter = Nodi
+site.pagination.landmark = Pagination
+site.pagination.next = Nesaf
+site.pagination.of = o
+site.pagination.page = tudalen
+site.pagination.previous = Blaenorol
+site.remove = Dileu
+data.notApplicable = Amherthnasol
 
 nameOfCharityRegulator.caption = Rhowch fanylion am y sefydliad
 nameOfCharityRegulator.error.required = Select the name of the charity regulator
@@ -260,7 +267,6 @@ reasonNotRegistered.exempt.bullet1 = sefydliad addysgiadol, fel prifysgol neu ys
 reasonNotRegistered.exempt.bullet2 = amgueddfa neu’n oriel
 reasonNotRegistered.exempt.bullet3 = gymdeithas dai
 
-
 reasonNotRegistered.excepted.heading = Mae’ch elusen wedi’i heithrio
 
 reasonNotRegistered.excepted.description = The charity is excepted as the charity’s annual income is £100,000 or less and is classed as one of the following:
@@ -270,3 +276,87 @@ reasonNotRegistered.excepted.bullet2 = elusen sy’n darparu safleoedd ar gyfer 
 reasonNotRegistered.excepted.bullet3 = grŵp sgowtiaid neu geidiaid
 reasonNotRegistered.excepted.bullet4 = gwasanaeth elusennol y Lluoedd Arfog
 reasonNotRegistered.excepted.bullet5 = undeb myfyrwyr
+
+aboutGiftAidSchedule.caption = Ychwanegu atodlen Rhodd Cymorth
+aboutGiftAidSchedule.heading = Ynglŷn ag atodlen Rhodd Cymorth
+aboutGiftAidSchedule.paragraph.one = Defnyddiwch y gwasanaeth hwn i ychwanegu atodlen Rhodd Cymorth.
+aboutGiftAidSchedule.paragraph.agent.one = Defnyddiwch y gwasanaeth hwn i ychwanegu atodlen Rhodd Cymorth ar gyfer eich cleient.
+aboutGiftAidSchedule.paragraph.two = Gallwch uwchlwytho atodlen Rhodd Cymorth ar ffurf .ods.
+aboutGiftAidSchedule.paragraph.url = Gallwch <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">lawrlwytho atodlen Rhodd Cymorth fan hyn (yn agor tab newydd)</a>. Gallwch gyflwyno 1 ffeil ar y tro, a gall pob ffeil fod hyd at 250KB.
+aboutGiftAidSchedule.title = Ynglŷn ag atodlen Rhodd Cymorth
+
+uploadGiftAidSchedule.caption = Ychwanegu atodlen Rhodd Cymorth
+uploadGiftAidSchedule.error.file-upload.EntityTooLarge = Mae’n rhaid i’r ffeil dan sylw fod yn llai na 250 KB
+uploadGiftAidSchedule.error.file-upload.EntityTooSmall = Dewiswch atodlen Rhodd Cymorth
+uploadGiftAidSchedule.error.file-upload.InvalidArgument = Dewiswch atodlen Rhodd Cymorth
+uploadGiftAidSchedule.form.upload-file.submit = Parhau
+uploadGiftAidSchedule.heading = Uwchlwytho atodlen Rhodd Cymorth
+uploadGiftAidSchedule.input.label = Uwchlwytho ffeil
+uploadGiftAidSchedule.paragraph.one = I hawlio Rhodd Cymorth, mae angen i chi uwchlwytho atodlen Rhodd Cymorth wedi’i llenwi â manylion eich cyfranwyr a’r cyfraniadau. Gallwch gadw’ch hawliad heb uwchlwytho’r atodlen Rhodd Cymorth, ond mae angen i chi uwchlwytho atodlen Rhodd Cymorth cyn cyflwyno’ch hawliad.
+uploadGiftAidSchedule.agent.paragraph.one = I hawlio Rhodd Cymorth ar gyfer eich cleient, mae angen i chi uwchlwytho atodlen Rhodd Cymorth wedi’i llenwi â manylion y cyfranwyr a’r cyfraniadau. Gallwch gadw’r hawliad hwn heb uwchlwytho’r atodlen Rhodd Cymorth, ond mae angen i chi uwchlwytho atodlen Rhodd Cymorth cyn cyflwyno’r hawliad.
+uploadGiftAidSchedule.paragraph.url = Os nad ydych wedi llenwi atodlen Rhodd Cymorth, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">lawrlwythwch atodlen Rhodd Cymorth fan hyn (yn agor tab newydd)</a>.
+uploadGiftAidSchedule.title = Uwchlwytho atodlen Rhodd Cymorth
+
+fileUpload.status.AWAITING_UPLOAD = Uwchlwytho
+fileUpload.status.VALIDATED = Wedi'i uwchlwytho
+fileUpload.status.VALIDATING = Uwchlwytho
+fileUpload.status.VALIDATION_FAILED = Wedi'i uwchlwytho
+fileUpload.status.VERIFICATION_FAILED = Wedi methu
+fileUpload.status.VERIFYING = Uwchlwytho
+fileUpload.refreshPageLink = Adnewyddwch y dudalen i weld diweddariad o’r ffeil sy’n cael ei huwchlwytho.
+
+yourGiftAidScheduleUpload.caption = Ychwanegu atodlen Rhodd Cymorth
+yourGiftAidScheduleUpload.file = Atodlen Rhodd Cymorth
+yourGiftAidScheduleUpload.heading = Uwchlwytho’ch atodlen Rhodd Cymorth
+yourGiftAidScheduleUpload.agent.heading = Uwchlwytho atodlen Rhodd Cymorth
+yourGiftAidScheduleUpload.paragraph.one = Gallwch uwchlwytho’ch atodlen Rhodd Cymorth fel taenlen. Mae’n rhaid i’r ffeil dan sylw fod yn llai na 250 KB.
+yourGiftAidScheduleUpload.agent.paragraph.one = Gallwch uwchlwytho’r atodlen Rhodd Cymorth fel taenlen. Mae’n rhaid i’r ffeil dan sylw fod yn llai na 250 KB.
+yourGiftAidScheduleUpload.title = Uwchlwytho’ch atodlen Rhodd Cymorth
+yourGiftAidScheduleUpload.agent.title = Uwchlwytho atodlen Rhodd Cymorth
+
+checkYourGiftAidSchedule.caption = Ychwanegu atodlen Rhodd Cymorth
+checkYourGiftAidSchedule.error.required = Dewiswch ‘Iawn’ os oes angen i chi ddiweddaru’r atodlen Rhodd Cymorth hon.
+checkYourGiftAidSchedule.heading = Gwirio’ch atodlen Rhodd Cymorth
+checkYourGiftAidSchedule.agent.heading = Gwirio’r atodlen Rhodd Cymorth hon
+checkYourGiftAidSchedule.hint = Oes angen i chi ddiweddaru’r atodlen Rhodd Cymorth hon?
+checkYourGiftAidSchedule.radios.no = Na, parhewch â’r atodlen Rhodd Cymorth
+checkYourGiftAidSchedule.summary.item.1 = Dyddiad y cyfraniad cynharaf
+checkYourGiftAidSchedule.summary.item.2 = Addasiad ar gyfer Rhodd Cymorth a or-hawliwyd yn flaenorol
+checkYourGiftAidSchedule.summary.item.3 = Cyfanswm y cyfraniadau
+checkYourGiftAidSchedule.summary.title = Manylion yr atodlen Rhodd Cymorth
+checkYourGiftAidSchedule.table.column.1 = Eitem
+checkYourGiftAidSchedule.table.column.10 = Swm (£)
+checkYourGiftAidSchedule.table.column.2 = Teitl
+checkYourGiftAidSchedule.table.column.3 = Enw cyntaf
+checkYourGiftAidSchedule.table.column.4 = Enw olaf
+checkYourGiftAidSchedule.table.column.5 = Enw neu rif y tŷ
+checkYourGiftAidSchedule.table.column.6 = Cod post
+checkYourGiftAidSchedule.table.column.7 = Cyfraniadau cyfansymiol
+checkYourGiftAidSchedule.table.column.8 = Digwyddiad a noddir
+checkYourGiftAidSchedule.table.column.9 = Dyddiad y cyfraniad
+checkYourGiftAidSchedule.title = Gwirio’ch atodlen Rhodd Cymorth
+checkYourGiftAidSchedule.agent.title = Gwirio’r atodlen Rhodd Cymorth hon
+
+
+problemWithGiftAidSchedule.caption = Ychwanegu atodlen Rhodd Cymorth
+problemWithGiftAidSchedule.heading = Mae problem gyda’r data yn eich atodlen Rhodd Cymorth
+problemWithGiftAidSchedule.agent.heading = Mae problem gyda’r data yn yr atodlen Rhodd Cymorth hon
+problemWithGiftAidSchedule.link.attachUpdatedSchedule = Atodi atodlen Rhodd Cymorth wedi'i diweddaru
+problemWithGiftAidSchedule.link.deleteSchedule = Dileu atodlen
+problemWithGiftAidSchedule.list.item.1 = Cyfeirio at daenlen yr <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Atodlen i hawlio treth yn ôl ar gyfraniadau Rhodd Cymorth (yn agor tab newydd)</a>.
+problemWithGiftAidSchedule.list.item.2 = Dileu’r atodlen Rhodd Cymorth hon.
+problemWithGiftAidSchedule.list.item.3 = Diweddaru’ch taenlen.
+problemWithGiftAidSchedule.agent.list.item.3 = Diweddaru’r atodlen.
+problemWithGiftAidSchedule.list.item.4 = Uwchlwytho’r daenlen wedi’i diweddaru.
+problemWithGiftAidSchedule.subheading.1 = Yr hyn y gallwch ei wneud nesaf
+problemWithGiftAidSchedule.subheading.2 = Crynodeb o wallau
+problemWithGiftAidSchedule.table.column.1 = Rhes
+problemWithGiftAidSchedule.table.column.2 = Gwall
+problemWithGiftAidSchedule.title = Mae problem gyda’r data yn eich atodlen Rhodd Cymorth
+problemWithGiftAidSchedule.agent.title = Mae problem gyda’r data yn yr atodlen Rhodd Cymorth hon
+problemWithGiftAidSchedule.warning = Ni allwn dderbyn y ffeil gan ei bod yn cynnwys gwallau. Mae’n rhaid i chi gywiro’r gwallau hyn ac uwchlwytho’r ffeil wedi’i diweddaru cyn i chi allu parhau.
+
+giftAidScheduleUploadSuccessful.message.1 = Wedi llwyddo i uwchlwytho
+giftAidScheduleUploadSuccessful.message.2 = Rydych wedi llwyddo i atodi eich atodlen Rhodd Cymorth.
+giftAidScheduleUploadSuccessful.agent.message.2 = Rydych wedi llwyddo i atodi’r atodlen Rhodd Cymorth hon.
+giftAidScheduleUploadSuccessful.title = Wedi llwyddo i uwchlwytho
