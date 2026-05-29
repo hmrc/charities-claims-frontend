@@ -360,3 +360,74 @@ giftAidScheduleUploadSuccessful.message.1 = Wedi llwyddo i uwchlwytho
 giftAidScheduleUploadSuccessful.message.2 = Rydych wedi llwyddo i atodi eich atodlen Rhodd Cymorth.
 giftAidScheduleUploadSuccessful.agent.message.2 = Rydych wedi llwyddo i atodi’r atodlen Rhodd Cymorth hon.
 giftAidScheduleUploadSuccessful.title = Wedi llwyddo i uwchlwytho
+
+aboutCommunityBuildingsSchedule.caption = Ychwanegu atodlen o Adeiladau Cymunedol
+aboutCommunityBuildingsSchedule.heading = Ynglŷn â’r atodlen o Adeiladau Cymunedol
+aboutCommunityBuildingsSchedule.paragraph.one = Defnyddiwch y gwasanaeth hwn i ychwanegu atodlen o Adeiladau Cymunedol.
+aboutCommunityBuildingsSchedule.agent.paragraph.one = Defnyddiwch y gwasanaeth hwn i ychwanegu atodlen o Adeiladau Cymunedol ar gyfer eich cleient.
+aboutCommunityBuildingsSchedule.paragraph.two = Gallwch uwchlwytho atodlen o Adeiladau Cymunedol ar ffurf .ods.
+aboutCommunityBuildingsSchedule.paragraph.url = Gallwch <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">lawrlwytho atodlen o Adeiladau Cymunedol fan hyn (yn agor tab newydd)</a>. Gallwch gyflwyno 1 ffeil ar y tro, a gall pob ffeil fod hyd at 250KB.
+aboutCommunityBuildingsSchedule.title = Ynglŷn â’r atodlen o Adeiladau Cymunedol
+
+uploadCommunityBuildingsSchedule.caption = Ychwanegu atodlen o Adeiladau Cymunedol
+uploadCommunityBuildingsSchedule.title = Uwchlwytho atodlen o Adeiladau Cymunedol
+uploadCommunityBuildingsSchedule.heading = Uwchlwytho atodlen o Adeiladau Cymunedol
+uploadCommunityBuildingsSchedule.paragraph.one = I hawlio taliad Adeiladau Cymunedol atodol, mae angen i chi uwchlwytho atodlen o Adeiladau Cymunedol wedi’i llenwi â manylion yr adeilad(au) cymunedol lle cafodd y cyfraniadau eu casglu a’r symiau a ddaeth i law. Gallwch gadw’ch hawliad heb uwchlwytho’r atodlen o Adeiladau Cymunedol, ond mae angen i chi uwchlwytho atodlen o Adeiladau Cymunedol cyn cyflwyno’ch hawliad.
+uploadCommunityBuildingsSchedule.agent.paragraph.one = I hawlio taliad Adeiladau Cymunedol atodol ar gyfer eich cleient, uwchlwythwch atodlen o Adeiladau Cymunedol wedi’i llenwi â manylion yr adeilad(au) cymunedol lle cafodd y cyfraniadau eu casglu a’r symiau a ddaeth i law. Gallwch gadw’r hawliad hwn heb uwchlwytho’r atodlen o Adeiladau Cymunedol, ond mae angen i chi uwchlwytho atodlen o Adeiladau Cymunedol cyn cyflwyno’r hawliad.
+uploadCommunityBuildingsSchedule.paragraph.url = Os nad ydych wedi llenwi atodlen o Adeiladau Cymunedol, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">lawrlwythwch atodlen o Adeiladau Cymunedol fan hyn (yn agor tab newydd)</a>.
+uploadCommunityBuildingsSchedule.input.label = Uwchlwytho ffeil
+uploadCommunityBuildingsSchedule.form.upload-file.submit = Parhau
+uploadCommunityBuildingsSchedule.error.file-upload.InvalidArgument = Dewiswch atodlen o Adeiladau Cymunedol
+uploadCommunityBuildingsSchedule.error.file-upload.EntityTooSmall = Dewiswch atodlen o Adeiladau Cymunedol
+uploadCommunityBuildingsSchedule.error.file-upload.EntityTooLarge = Mae’n rhaid i’r ffeil dan sylw fod yn llai na 250 KB
+
+yourCommunityBuildingsScheduleUpload.caption = Ychwanegu atodlen o Adeiladau Cymunedol
+yourCommunityBuildingsScheduleUpload.file = Atodlen o Adeiladau Cymunedol
+yourCommunityBuildingsScheduleUpload.heading = Uwchlwytho’ch atodlen o Adeiladau Cymunedol
+yourCommunityBuildingsScheduleUpload.agent.heading = Uwchlwytho atodlen o Adeiladau Cymunedol
+yourCommunityBuildingsScheduleUpload.paragraph.one = Gallwch uwchlwytho’ch atodlen o Adeiladau Cymunedol fel taenlen. Mae’n rhaid i’r ffeil dan sylw fod yn llai na 250 KB.
+yourCommunityBuildingsScheduleUpload.agent.paragraph.one = Gallwch uwchlwytho’r atodlen o Adeiladau Cymunedol fel taenlen. Mae’n rhaid i’r ffeil dan sylw fod yn llai na 250 KB.
+yourCommunityBuildingsScheduleUpload.title = Uwchlwytho’ch atodlen o Adeiladau Cymunedol
+yourCommunityBuildingsScheduleUpload.agent.title = Uwchlwytho atodlen o Adeiladau Cymunedol
+
+checkYourCommunityBuildingsSchedule.caption = Ychwanegu atodlen o Adeiladau Cymunedol
+checkYourCommunityBuildingsSchedule.error.required = Dewiswch ‘Iawn’ os oes angen i chi ddiweddaru’r atodlen hon o Adeiladau Cymunedol
+checkYourCommunityBuildingsSchedule.heading = Gwirio’ch atodlen o Adeiladau Cymunedol
+checkYourCommunityBuildingsSchedule.agent.heading = Gwirio’r atodlen hon o Adeiladau Cymunedol
+checkYourCommunityBuildingsSchedule.hint = Oes angen i chi ddiweddaru’r atodlen hon o Adeiladau Cymunedol?
+checkYourCommunityBuildingsSchedule.radios.no = Na, parhewch â’r atodlen o Adeiladau Cymunedol
+checkYourCommunityBuildingsSchedule.summary.item.1 = Cyfanswm y cyfraniadau
+checkYourCommunityBuildingsSchedule.summary.title = Manylion yr atodlen o Adeiladau Cymunedol
+checkYourCommunityBuildingsSchedule.table.column.1 = Eitem
+checkYourCommunityBuildingsSchedule.table.column.2 = Enw’r adeilad
+checkYourCommunityBuildingsSchedule.table.column.3 = Llinell gyntaf y cyfeiriad
+checkYourCommunityBuildingsSchedule.table.column.4 = Cod post
+checkYourCommunityBuildingsSchedule.table.column.5 = Blwyddyn dreth 1 yn dod i ben ar 5 Ebrill
+checkYourCommunityBuildingsSchedule.table.column.6 = Swm y cyfraniadau a ddaeth i lawn yn ystod blwyddyn dreth 1 (£)
+checkYourCommunityBuildingsSchedule.table.column.7 = Blwyddyn dreth 2 yn dod i ben ar 5 Ebrill
+checkYourCommunityBuildingsSchedule.table.column.8 = Swm y cyfraniadau a ddaeth i lawn yn ystod blwyddyn dreth 2 (£)
+checkYourCommunityBuildingsSchedule.title = Gwirio’ch atodlen o Adeiladau Cymunedol
+checkYourCommunityBuildingsSchedule.agent.title = Gwirio’r atodlen hon o Adeiladau Cymunedol
+
+problemWithCommunityBuildingsSchedule.caption = Ychwanegu atodlen o Adeiladau Cymunedol
+problemWithCommunityBuildingsSchedule.heading = Mae problem gyda’r data yn eich atodlen o Adeiladau Cymunedol
+problemWithCommunityBuildingsSchedule.agent.heading = Mae problem gyda’r data yn yr atodlen hon o Adeiladau Cymunedol
+problemWithCommunityBuildingsSchedule.link.attachUpdatedSchedule = Atodi atodlen o Adeiladau Cymunedol wedi’i diweddaru
+problemWithCommunityBuildingsSchedule.link.deleteSchedule = Dileu atodlen
+problemWithCommunityBuildingsSchedule.list.item.1 = Cyfeiriwch at daenlen yr <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Atodlen i hawlio treth yn ôl ar gyfraniadau Adeiladau Cymunedol (yn agor tab newydd)</a>.
+problemWithCommunityBuildingsSchedule.list.item.2 = Dileu’r atodlen hon o Adeiladau Cymunedol.
+problemWithCommunityBuildingsSchedule.list.item.3 = Diweddaru’ch taenlen.
+problemWithCommunityBuildingsSchedule.list.item.3.agent = Diweddaru’r atodlen.
+problemWithCommunityBuildingsSchedule.list.item.4 = Uwchlwytho’r daenlen wedi’i diweddaru.
+problemWithCommunityBuildingsSchedule.subheading.1 = Yr hyn y gallwch ei wneud nesaf
+problemWithCommunityBuildingsSchedule.subheading.2 = Crynodeb o wallau
+problemWithCommunityBuildingsSchedule.table.column.1 = Rhes
+problemWithCommunityBuildingsSchedule.table.column.2 = Gwall
+problemWithCommunityBuildingsSchedule.title = Mae problem gyda’r data yn eich atodlen o Adeiladau Cymunedol
+problemWithCommunityBuildingsSchedule.agent.title = Mae problem gyda’r data yn yr atodlen hon o Adeiladau Cymunedol
+problemWithCommunityBuildingsSchedule.warning = Ni allwn dderbyn y ffeil gan ei bod yn cynnwys gwallau. Mae’n rhaid i chi gywiro’r gwallau hyn ac uwchlwytho’r ffeil wedi’i diweddaru cyn i chi allu parhau.
+
+communityBuildingsScheduleUploadSuccessful.message.1 = Wedi llwyddo i uwchlwytho
+communityBuildingsScheduleUploadSuccessful.message.2 = Rydych wedi llwyddo i atodi eich atodlen o Adeiladau Cymunedol.
+communityBuildingsScheduleUploadSuccessful.agent.message.2 = Rydych wedi llwyddo i atodi’r atodlen hon o Adeiladau Cymunedol.
+communityBuildingsScheduleUploadSuccessful.title = Wedi llwyddo i uwchlwytho
