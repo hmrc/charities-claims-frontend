@@ -270,3 +270,11 @@ reasonNotRegistered.excepted.bullet2 = elusen sy’n darparu safleoedd ar gyfer 
 reasonNotRegistered.excepted.bullet3 = grŵp sgowtiaid neu geidiaid
 reasonNotRegistered.excepted.bullet4 = gwasanaeth elusennol y Lluoedd Arfog
 reasonNotRegistered.excepted.bullet5 = undeb myfyrwyr
+
+aboutOtherIncomeSchedule.caption = Ychwanegu atodlen o Incwm Arall
+aboutOtherIncomeSchedule.heading = Ynglŷn â’r atodlen o Incwm Arall
+aboutOtherIncomeSchedule.paragraph.one = Defnyddiwch y gwasanaeth hwn i ychwanegu atodlen o Incwm Arall.
+aboutOtherIncomeSchedule.agent.paragraph.one = Defnyddiwch y gwasanaeth hwn i ychwanegu atodlen Rhodd Cymorth ar gyfer eich cleient.
+aboutOtherIncomeSchedule.paragraph.two = Gallwch uwchlwytho atodlen o Incwm Arall ar ffurf .ods.
+aboutOtherIncomeSchedule.paragraph.url = Gallwch lawrlwytho <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">atodlen o Incwm Arall fan hyn (yn agor tab newydd)</a>. Gallwch gyflwyno 1 ffeil ar y tro, a gall pob ffeil fod hyd at 250KB.
+aboutOtherIncomeSchedule.title = Ynglŷn â’r atodlen o Incwm Arall
