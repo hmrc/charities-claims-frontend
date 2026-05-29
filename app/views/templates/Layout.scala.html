@@ -18,7 +18,7 @@
 @import play.api.mvc.Request
 @import play.api.i18n.Messages
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.timeoutdialog.TimeoutDialog
-@import uk.gov.hmrc.hmrcfrontend.views.Aliases.UserResearchBanner
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.userresearchbanner.UserResearchBanner
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.*
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.backlink.BackLink
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -96,7 +96,8 @@
     banners = Banners(
         phaseBanner = Some(betaBanner()),
         userResearchBanner = if(showUserBanner) Some(UserResearchBanner(
-            url = config.researchUrl
+            url = config.researchUrl,
+            hideCloseButton = true
         )) else None
     ),
     pageTitle = Some(pageTitle),
