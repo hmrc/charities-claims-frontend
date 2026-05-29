@@ -337,7 +337,6 @@ checkYourGiftAidSchedule.table.column.9 = Dyddiad y cyfraniad
 checkYourGiftAidSchedule.title = Gwirio’ch atodlen Rhodd Cymorth
 checkYourGiftAidSchedule.agent.title = Gwirio’r atodlen Rhodd Cymorth hon
 
-
 problemWithGiftAidSchedule.caption = Ychwanegu atodlen Rhodd Cymorth
 problemWithGiftAidSchedule.heading = Mae problem gyda’r data yn eich atodlen Rhodd Cymorth
 problemWithGiftAidSchedule.agent.heading = Mae problem gyda’r data yn yr atodlen Rhodd Cymorth hon
@@ -431,3 +430,73 @@ communityBuildingsScheduleUploadSuccessful.message.1 = Wedi llwyddo i uwchlwytho
 communityBuildingsScheduleUploadSuccessful.message.2 = Rydych wedi llwyddo i atodi eich atodlen o Adeiladau Cymunedol.
 communityBuildingsScheduleUploadSuccessful.agent.message.2 = Rydych wedi llwyddo i atodi’r atodlen hon o Adeiladau Cymunedol.
 communityBuildingsScheduleUploadSuccessful.title = Wedi llwyddo i uwchlwytho
+
+aboutOtherIncomeSchedule.caption = Ychwanegu atodlen o Incwm Arall
+aboutOtherIncomeSchedule.heading = Ynglŷn â’r atodlen o Incwm Arall
+aboutOtherIncomeSchedule.paragraph.one = Defnyddiwch y gwasanaeth hwn i ychwanegu atodlen o Incwm Arall.
+aboutOtherIncomeSchedule.agent.paragraph.one = Defnyddiwch y gwasanaeth hwn i ychwanegu atodlen Rhodd Cymorth ar gyfer eich cleient.
+aboutOtherIncomeSchedule.paragraph.two = Gallwch uwchlwytho atodlen o Incwm Arall ar ffurf .ods.
+aboutOtherIncomeSchedule.paragraph.url = Gallwch lawrlwytho <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">atodlen o Incwm Arall fan hyn (yn agor tab newydd)</a>. Gallwch gyflwyno 1 ffeil ar y tro, a gall pob ffeil fod hyd at 250KB.
+aboutOtherIncomeSchedule.title = Ynglŷn â’r atodlen o Incwm Arall
+
+uploadOtherIncomeSchedule.caption = Ychwanegu atodlen o Incwm Arall
+uploadOtherIncomeSchedule.error.file-upload.EntityTooLarge = Mae’n rhaid i’r ffeil dan sylw fod yn llai na 250 KB
+uploadOtherIncomeSchedule.error.file-upload.EntityTooSmall = Dewiswch atodlen o Incwm Arall
+uploadOtherIncomeSchedule.error.file-upload.InvalidArgument = Dewiswch atodlen o Incwm Arall
+uploadOtherIncomeSchedule.form.upload-file.submit = Parhau
+uploadOtherIncomeSchedule.heading = Uwchlwytho atodlen o Incwm Arall
+uploadOtherIncomeSchedule.input.label = Uwchlwytho ffeil
+uploadOtherIncomeSchedule.paragraph.one = I hawlio Incwm Arall, mae angen i chi uwchlwytho atodlen o Incwm Arall wedi’i llenwi â manylion eich cyfranwyr a’r cyfraniadau. Gallwch gadw’ch hawliad heb uwchlwytho’r atodlen o Incwm Arall, ond mae angen i chi uwchlwytho atodlen o Incwm Arall cyn cyflwyno’ch hawliad.
+uploadOtherIncomeSchedule.agent.paragraph.one = I hawlio Incwm Arall ar gyfer eich cleient, mae angen i chi uwchlwytho atodlen o Incwm Arall wedi’i llenwi â manylion y cyfranwyr a’r cyfraniadau. Gallwch gadw’r hawliad hwn heb uwchlwytho’r atodlen o Incwm Arall, ond mae angen i chi uwchlwytho atodlen o Incwm Arall cyn cyflwyno’r hawliad.
+uploadOtherIncomeSchedule.paragraph.url = Os nad ydych wedi llenwi atodlen o Incwm Arall, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">lawrlwythwch atodlen o Incwm Arall fan hyn (yn agor tab newydd)</a>.
+uploadOtherIncomeSchedule.title = Uwchlwytho atodlen o Incwm Arall
+
+yourOtherIncomeScheduleUpload.caption = Ychwanegu atodlen o Incwm Arall
+yourOtherIncomeScheduleUpload.heading = Uwchlwytho’ch atodlen o Incwm Arall
+yourOtherIncomeScheduleUpload.agent.heading = Uwchlwytho atodlen o Incwm Arall
+yourOtherIncomeScheduleUpload.paragraph.one = Gallwch uwchlwytho’ch atodlen o Incwm Arall fel taenlen. Mae’n rhaid i’r ffeil dan sylw fod yn llai na 250 KB.
+yourOtherIncomeScheduleUpload.agent.paragraph.one = Gallwch uwchlwytho’r atodlen o Incwm Arall fel taenlen. Mae’n rhaid i’r ffeil dan sylw fod yn llai na 250 KB.
+yourOtherIncomeScheduleUpload.table.key = Atodlen o Incwm Arall
+yourOtherIncomeScheduleUpload.title = Uwchlwytho’ch atodlen o Incwm Arall
+yourOtherIncomeScheduleUpload.agent.title = Uwchlwytho atodlen o Incwm Arall
+
+checkYourOtherIncomeSchedule.caption = Ychwanegu atodlen o Incwm Arall
+checkYourOtherIncomeSchedule.error.required = Select ‘Yes’ if you need to update this Other Income schedule
+checkYourOtherIncomeSchedule.heading = Gwirio’ch atodlen o Incwm Arall
+checkYourOtherIncomeSchedule.agent.heading = Gwirio’r atodlen hon o Incwm Arall
+checkYourOtherIncomeSchedule.hint = Oes angen i chi ddiweddaru’r atodlen hon o Incwm Arall?
+checkYourOtherIncomeSchedule.radios.no = Na, parhewch â’r atodlen o Incwm Arall
+checkYourOtherIncomeSchedule.summary.item.1 = Addasiad ar gyfer Incwm Arall a or-hawliwyd yn flaenorol
+checkYourOtherIncomeSchedule.summary.item.2 = Cyfanswm y taliad gros
+checkYourOtherIncomeSchedule.summary.item.3 = Cyfanswm y dreth a ddidynnwyd
+checkYourOtherIncomeSchedule.summary.title = Manylion yr atodlen o Incwm Arall
+checkYourOtherIncomeSchedule.table.column.1 = Eitem
+checkYourOtherIncomeSchedule.table.column.2 = Enw’r talwr
+checkYourOtherIncomeSchedule.table.column.3 = Dyddiad y taliad
+checkYourOtherIncomeSchedule.table.column.4 = Taliad gros (£)
+checkYourOtherIncomeSchedule.table.column.5 = Treth a ddidynnwyd (£)
+checkYourOtherIncomeSchedule.title = Gwirio’ch atodlen o Incwm Arall
+checkYourOtherIncomeSchedule.agent.title = Gwirio’r atodlen hon o Incwm Arall
+
+problemWithOtherIncomeSchedule.caption = Ychwanegu atodlen o Incwm Arall
+problemWithOtherIncomeSchedule.heading = Mae problem gyda’r data yn eich atodlen o Incwm Arall
+problemWithOtherIncomeSchedule.agent.heading = Mae problem gyda’r data yn yr atodlen hon o Incwm Arall
+problemWithOtherIncomeSchedule.link.attachUpdatedSchedule = Atodi atodlen o Incwm Arall wedi’i diweddaru
+problemWithOtherIncomeSchedule.link.deleteSchedule = Dileu atodlen
+problemWithOtherIncomeSchedule.list.item.1 = Cyfeiriwch at daenlen yr <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Atodlen i hawlio treth yn ôl ar gyfraniadau Incwm Arall (yn agor tab newydd)</a>.
+problemWithOtherIncomeSchedule.list.item.2 = Dileu’r atodlen hon o Incwm Arall.
+problemWithOtherIncomeSchedule.list.item.3 = Diweddaru’ch taenlen.
+problemWithOtherIncomeSchedule.agent.list.item.3 = Diweddaru’r atodlen.
+problemWithOtherIncomeSchedule.list.item.4 = Uwchlwytho’r daenlen wedi’i diweddaru.
+problemWithOtherIncomeSchedule.subheading.1 = Yr hyn y gallwch ei wneud nesaf
+problemWithOtherIncomeSchedule.subheading.2 = Crynodeb o wallau
+problemWithOtherIncomeSchedule.table.column.1 = Rhes
+problemWithOtherIncomeSchedule.table.column.2 = Gwall
+problemWithOtherIncomeSchedule.title = Mae problem gyda’r data yn eich atodlen o Incwm Arall
+problemWithOtherIncomeSchedule.agent.title = Mae problem gyda’r data yn yr atodlen hon o Incwm Arall
+problemWithOtherIncomeSchedule.warning = Ni allwn dderbyn y ffeil gan ei bod yn cynnwys gwallau. Mae’n rhaid i chi gywiro’r gwallau hyn ac uwchlwytho’r ffeil wedi’i diweddaru cyn i chi allu parhau.
+
+otherIncomeScheduleUploadSuccessful.message.1 = Wedi llwyddo i uwchlwytho
+otherIncomeScheduleUploadSuccessful.message.2 = Rydych wedi llwyddo i atodi eich atodlen o Incwm Arall.
+otherIncomeScheduleUploadSuccessful.agent.message.2 = Rydych wedi llwyddo i atodi’r atodlen hon o incwm arall.
+otherIncomeScheduleUploadSuccessful.title = Wedi llwyddo i uwchlwytho
