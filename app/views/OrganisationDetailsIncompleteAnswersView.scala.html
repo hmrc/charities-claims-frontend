@@ -20,7 +20,12 @@
     layout: templates.Layout
 )
 
-@(organisationDetailsCheckYourAnswersUrl: String, missingFields: Seq[String])(implicit request: Request[?], messages: Messages)
+@(organisationDetailsCheckYourAnswersUrl: String, missingFields: Seq[String], isAgent: Boolean)(implicit request: Request[?], messages: Messages)
+
+@returnLinkMessage = @{
+    if (isAgent) "organisationDetailsIncompleteAnswers.returnLink.agent"
+    else "organisationDetailsIncompleteAnswers.returnLink"
+}
 
 @layout(
     pageTitle = titleNoForm(messages("organisationDetailsIncompleteAnswers.title"))) {
@@ -46,6 +51,8 @@
     }
 
     <p class="govuk-body">
-        <a class="govuk-link" href="@organisationDetailsCheckYourAnswersUrl">@messages("organisationDetailsIncompleteAnswers.returnLink")</a>
+        <a class="govuk-link" href="@organisationDetailsCheckYourAnswersUrl">
+            @messages(returnLinkMessage)
+        </a>
     </p>
 }

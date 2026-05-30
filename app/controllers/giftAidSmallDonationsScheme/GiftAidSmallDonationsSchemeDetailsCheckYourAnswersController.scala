@@ -90,8 +90,9 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController @Inject() (
           && RepaymentClaimDetailsAnswers.getClaimingUnderGiftAidSmallDonationsScheme.contains(true)
       )
       .async { implicit request =>
+        val isAgent = request.sessionData.isAgent
         if request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
-            .exists(_.hasGasdsDonationDetailsCompleteAnswers(request.sessionData.repaymentClaimDetailsAnswers))
+            .exists(_.hasGasdsDonationDetailsCompleteAnswers(request.sessionData.repaymentClaimDetailsAnswers, isAgent))
         then
           claimsService.save.map { _ =>
             Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)

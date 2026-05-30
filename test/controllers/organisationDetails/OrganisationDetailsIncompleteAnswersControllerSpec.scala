@@ -68,7 +68,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
           contentAsString(result) shouldEqual view(
             routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
-            defaultMissingFields
+            defaultMissingFields,
+            false
           ).body
         }
       }
@@ -93,7 +94,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
           contentAsString(result) shouldEqual view(
             routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
-            defaultMissingFields
+            defaultMissingFields,
+            false
           ).body
         }
       }
@@ -118,7 +120,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
           contentAsString(result) shouldEqual view(
             routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
-            defaultMissingFields
+            defaultMissingFields,
+            false
           ).body
         }
       }
@@ -159,7 +162,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
           contentAsString(result) shouldEqual view(
             routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
-            missingFields
+            missingFields,
+            false
           ).body
         }
       }
@@ -213,7 +217,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
           contentAsString(result) shouldEqual view(
             routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
-            Seq.empty
+            Seq.empty,
+            false
           ).body
         }
       }
@@ -256,7 +261,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
           contentAsString(result) shouldEqual view(
             routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
-            missingFields
+            missingFields,
+            false
           ).body
         }
       }
@@ -299,7 +305,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
           contentAsString(result) shouldEqual view(
             routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
-            missingFields
+            missingFields,
+            false
           ).body
         }
       }
@@ -345,7 +352,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
           contentAsString(result) shouldEqual view(
             routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
-            missingFields
+            missingFields,
+            false
           ).body
         }
       }
@@ -391,7 +399,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
           contentAsString(result) shouldEqual view(
             routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
-            missingFields
+            missingFields,
+            false
           ).body
         }
       }
@@ -437,7 +446,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
           contentAsString(result) shouldEqual view(
             routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
-            missingFields
+            missingFields,
+            false
           ).body
         }
       }
@@ -483,7 +493,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
           contentAsString(result) shouldEqual view(
             routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
-            missingFields
+            missingFields,
+            false
           ).body
         }
       }
@@ -526,7 +537,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
           contentAsString(result) shouldEqual view(
             routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
-            missingFields
+            missingFields,
+            false
           ).body
         }
       }
@@ -566,7 +578,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
           contentAsString(result) shouldEqual view(
             routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
-            defaultMissingFields
+            defaultMissingFields,
+            true
           ).body
         }
       }
@@ -623,7 +636,8 @@ class OrganisationDetailsIncompleteAnswersControllerSpec extends ControllerSpec 
 
           contentAsString(result) shouldEqual view(
             routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url,
-            missingFields
+            missingFields,
+            true
           ).body
         }
       }

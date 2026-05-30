@@ -27,11 +27,12 @@ import models.{
   RepaymentClaimDetailsAnswers,
   SessionData
 }
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec {
 
   private val checkYourGasdsDonationDetailsUrl =
-    routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad.url
+    controllers.giftAidSmallDonationsScheme.routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad.url
 
   private val completeRepaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
     claimingGiftAid = Some(false),
@@ -104,7 +105,8 @@ class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec
 
           contentAsString(result) shouldEqual view(
             checkYourGasdsDonationDetailsUrl,
-            defaultMissingFields
+            defaultMissingFields,
+            false
           ).body
         }
       }
@@ -137,13 +139,15 @@ class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec
           val result = route(application, request).value
 
           val view                  = application.injector.instanceOf[GasdsDonationDetailsIncompleteAnswersView]
-          val expectedMissingFields = incompleteAnswers.missingFields(sessionData.repaymentClaimDetailsAnswers)
+          val expectedMissingFields =
+            incompleteAnswers.missingFields(sessionData.repaymentClaimDetailsAnswers, isAgent = false)
 
           status(result) shouldEqual OK
 
           contentAsString(result) shouldEqual view(
             checkYourGasdsDonationDetailsUrl,
-            expectedMissingFields
+            expectedMissingFields,
+            false
           ).body
 
           expectedMissingFields should contain("giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount")
@@ -184,13 +188,15 @@ class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec
           val result = route(application, request).value
 
           val view                  = application.injector.instanceOf[GasdsDonationDetailsIncompleteAnswersView]
-          val expectedMissingFields = incompleteAnswers.missingFields(sessionData.repaymentClaimDetailsAnswers)
+          val expectedMissingFields =
+            incompleteAnswers.missingFields(sessionData.repaymentClaimDetailsAnswers, isAgent = false)
 
           status(result) shouldEqual OK
 
           contentAsString(result) shouldEqual view(
             checkYourGasdsDonationDetailsUrl,
-            expectedMissingFields
+            expectedMissingFields,
+            false
           ).body
 
           expectedMissingFields        should contain("giftAidSmallDonationsSchemeDonationDetails.claim.missingYears")
@@ -237,7 +243,8 @@ class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec
 
           contentAsString(result) shouldEqual view(
             checkYourGasdsDonationDetailsUrl,
-            Seq.empty
+            Seq.empty,
+            false
           ).body
         }
       }
@@ -255,6 +262,59 @@ class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
+        }
+      }
+
+      "should render agent-specific missing fields when no GASDS answers exist for an agent" in {
+        val repaymentClaimDetailsAnswers = RepaymentClaimDetailsAnswers(
+          hmrcCharitiesReference = Some("AB12345"),
+          nameOfCharity = Some("Test Charity"),
+          claimingGiftAid = Some(false),
+          claimingTaxDeducted = Some(false),
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingDonationsNotFromCommunityBuilding = Some(true),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(false),
+          makingAdjustmentToPreviousClaim = Some(true),
+          claimingReferenceNumber = Some(false)
+        )
+        val sessionData                  = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some("123"),
+          lastUpdatedReference = Some("123"),
+          isAgent = true,
+          repaymentClaimDetailsAnswers = Some(repaymentClaimDetailsAnswers)
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData, affinityGroup = AffinityGroup.Agent).build()
+
+        running(application) {
+
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(
+              GET,
+              routes.GasdsDonationDetailsIncompleteAnswersController.onPageLoad.url
+            )
+
+          val result = route(application, request).value
+
+          val view = application.injector
+            .instanceOf[GasdsDonationDetailsIncompleteAnswersView]
+
+          val expectedMissingFields = List(
+            "giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount.agent",
+            "giftAidSmallDonationsSchemeDonationDetails.claim.missingYears.agent",
+            "giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount.agent"
+          )
+
+          status(result) shouldEqual OK
+
+          contentAsString(result) shouldEqual view(
+            checkYourGasdsDonationDetailsUrl,
+            expectedMissingFields,
+            true
+          ).body
         }
       }
     }
