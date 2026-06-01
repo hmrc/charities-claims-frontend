@@ -298,7 +298,6 @@ class GasdsDonationDetailsIncompleteAnswersControllerSpec extends ControllerSpec
             )
 
           val result = route(application, request).value
-
           val view = application.injector
             .instanceOf[GasdsDonationDetailsIncompleteAnswersView]
 
