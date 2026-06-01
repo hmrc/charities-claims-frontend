@@ -303,7 +303,10 @@ fileUpload.status.VALIDATING = Uwchlwytho
 fileUpload.status.VALIDATION_FAILED = Wedi'i uwchlwytho
 fileUpload.status.VERIFICATION_FAILED = Wedi methu
 fileUpload.status.VERIFYING = Uwchlwytho
-fileUpload.refreshPageLink = Adnewyddwch y dudalen i weld diweddariad o’r ffeil sy’n cael ei huwchlwytho.
+fileUpload.button = Dewis ffeil
+fileUpload.dropInstruction = neu ollwng ffeil
+fileUpload.noFileChosen = Heb ddewis ffeil
+fileUpload.refreshPageLink = Adnewyddwch y dudalen i weld diweddariad o’r ffeil sy’n cael ei huwchlwytho
 
 yourGiftAidScheduleUpload.caption = Ychwanegu atodlen Rhodd Cymorth
 yourGiftAidScheduleUpload.file = Atodlen Rhodd Cymorth
