@@ -501,5 +501,153 @@ class GiftAidSmallDonationsSchemeDonationDetailsAnswersSpec extends BaseSpec {
 
       GiftAidSmallDonationsSchemeDonationDetailsAnswers.allClaims shouldBe Seq(claim1, claim2)
     }
+
+    "missingFields should return no errors when neither GASDS claim nor adjustment is required" in {
+      val answers = GiftAidSmallDonationsSchemeDonationDetailsAnswers()
+
+      val repaymentDetails = Some(
+        RepaymentClaimDetailsAnswers(
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+      )
+
+      answers.missingFields(repaymentDetails, isAgent = false) shouldBe Nil
+    }
+
+    "missingFields should return adjustment amount error when adjustment is required but amount is missing" in {
+      val answers = GiftAidSmallDonationsSchemeDonationDetailsAnswers()
+
+      val repaymentDetails = Some(
+        RepaymentClaimDetailsAnswers(
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          makingAdjustmentToPreviousClaim = Some(true)
+        )
+      )
+
+      answers.missingFields(repaymentDetails, isAgent = false) shouldBe List(
+        "giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount"
+      )
+    }
+
+    "missingFields should return claim errors when claims are required but missing" in {
+      val answers = GiftAidSmallDonationsSchemeDonationDetailsAnswers()
+
+      val repaymentDetails = Some(
+        RepaymentClaimDetailsAnswers(
+          claimingDonationsNotFromCommunityBuilding = Some(true),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+      )
+
+      answers.missingFields(repaymentDetails, isAgent = false) shouldBe List(
+        "giftAidSmallDonationsSchemeDonationDetails.claim.missingYears",
+        "giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount"
+      )
+    }
+
+    "missingFields should return both adjustment and claim errors when both are required" in {
+      val answers = GiftAidSmallDonationsSchemeDonationDetailsAnswers()
+
+      val repaymentDetails = Some(
+        RepaymentClaimDetailsAnswers(
+          claimingDonationsNotFromCommunityBuilding = Some(true),
+          makingAdjustmentToPreviousClaim = Some(true)
+        )
+      )
+
+      answers.missingFields(repaymentDetails, isAgent = false) shouldBe List(
+        "giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount",
+        "giftAidSmallDonationsSchemeDonationDetails.claim.missingYears",
+        "giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount"
+      )
+    }
+
+    "missingFields should return no errors when all required data is present" in {
+      val answers = GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+        adjustmentForGiftAidOverClaimed = Some(100),
+        claims = Some(
+          Seq(
+            Some(
+              GiftAidSmallDonationsSchemeClaimAnswers(
+                taxYear = 2025,
+                amountOfDonationsReceived = Some(1000)
+              )
+            )
+          )
+        )
+      )
+
+      val repaymentDetails = Some(
+        RepaymentClaimDetailsAnswers(
+          claimingDonationsNotFromCommunityBuilding = Some(true),
+          makingAdjustmentToPreviousClaim = Some(true)
+        )
+      )
+
+      answers.missingFields(repaymentDetails, isAgent = false) shouldBe Nil
+    }
+
+    "missingFields should return agent-specific message keys" in {
+      val answers = GiftAidSmallDonationsSchemeDonationDetailsAnswers()
+
+      val repaymentDetails = Some(
+        RepaymentClaimDetailsAnswers(
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          makingAdjustmentToPreviousClaim = Some(true)
+        )
+      )
+
+      answers.missingFields(
+        repaymentDetails,
+        isAgent = true
+      ) shouldBe List(
+        "giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount.agent"
+      )
+    }
+
+    "hasGasdsDonationDetailsCompleteAnswers should be true when no validation errors exist" in {
+      val answers = GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+        adjustmentForGiftAidOverClaimed = Some(BigDecimal(100)),
+        claims = Some(
+          Seq(
+            Some(
+              GiftAidSmallDonationsSchemeClaimAnswers(
+                taxYear = 2025,
+                amountOfDonationsReceived = Some(BigDecimal(1000))
+              )
+            )
+          )
+        )
+      )
+
+      val repaymentDetails = Some(
+        RepaymentClaimDetailsAnswers(
+          claimingDonationsNotFromCommunityBuilding = Some(true),
+          makingAdjustmentToPreviousClaim = Some(true)
+        )
+      )
+
+      answers.hasGasdsDonationDetailsCompleteAnswers(
+        repaymentDetails,
+        isAgent = false
+      ) shouldBe true
+    }
+
+    "hasGasdsDonationDetailsCompleteAnswers should be false when validation errors exist" in {
+      val answers = GiftAidSmallDonationsSchemeDonationDetailsAnswers()
+
+      val repaymentDetails = Some(
+        RepaymentClaimDetailsAnswers(
+          claimingDonationsNotFromCommunityBuilding = Some(true),
+          makingAdjustmentToPreviousClaim = Some(true)
+        )
+      )
+
+      answers.hasGasdsDonationDetailsCompleteAnswers(
+        repaymentDetails,
+        isAgent = false
+      ) shouldBe false
+    }
   }
 }

@@ -41,6 +41,6 @@ class OrganisationDetailsIncompleteAnswersController @Inject() (
           )
         else
           OrganisationDetailsAnswers.getMissingFields(request.sessionData.organisationDetailsAnswers, isCASCCharityRef)
-      Ok(view(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url, missingFields))
+      Ok(view(routes.OrganisationDetailsCheckYourAnswersController.onPageLoad.url, missingFields, request.isAgent))
   }
 }

@@ -500,3 +500,67 @@ otherIncomeScheduleUploadSuccessful.message.1 = Wedi llwyddo i uwchlwytho
 otherIncomeScheduleUploadSuccessful.message.2 = Rydych wedi llwyddo i atodi eich atodlen o Incwm Arall.
 otherIncomeScheduleUploadSuccessful.agent.message.2 = Rydych wedi llwyddo i atodi’r atodlen hon o incwm arall.
 otherIncomeScheduleUploadSuccessful.title = Wedi llwyddo i uwchlwytho
+
+aboutConnectedCharitiesSchedule.caption = Ychwanegu atodlen o Elusennau Cysylltiedig
+aboutConnectedCharitiesSchedule.heading = Ynglŷn â’r atodlen o Elusennau Cysylltiedig
+aboutConnectedCharitiesSchedule.paragraph.one.agent = Defnyddiwch y gwasanaeth hwn i ychwanegu atodlen o Elusennau Cysylltiedig ar gyfer eich cleient.
+aboutConnectedCharitiesSchedule.paragraph.one = Defnyddiwch y gwasanaeth hwn i ychwanegu atodlen o Elusennau Cysylltiedig.
+aboutConnectedCharitiesSchedule.paragraph.two = Gallwch uwchlwytho atodlen o Elusennau Cysylltiedig ar ffurf .ods.
+aboutConnectedCharitiesSchedule.paragraph.url = Gallwch <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">awrlwytho atodlen o Elusennau Cysylltiedig fan hyn (yn agor tab newydd)</a>. Gallwch gyflwyno hyd at 1 ffeil ar y tro, a gall pob ffeil fod hyd at 250KB.
+aboutConnectedCharitiesSchedule.title = Ynglŷn â’r atodlen o Elusennau Cysylltiedig
+
+uploadConnectedCharitiesSchedule.caption = Ychwanegu atodlen o Elusennau Cysylltiedig
+uploadConnectedCharitiesSchedule.error.file-upload.EntityTooLarge = Mae’n rhaid i’r ffeil dan sylw fod yn llai na 250 KB
+uploadConnectedCharitiesSchedule.error.file-upload.EntityTooSmall = Dewiswch atodlen o Elusennau Cysylltiedig
+uploadConnectedCharitiesSchedule.error.file-upload.InvalidArgument = Dewiswch atodlen o Elusennau Cysylltiedig
+uploadConnectedCharitiesSchedule.form.upload-file.submit = Parhau
+uploadConnectedCharitiesSchedule.heading = Uwchlwytho atodlen o Elusennau Cysylltiedig
+uploadConnectedCharitiesSchedule.input.label = Uwchlwytho ffeil
+uploadConnectedCharitiesSchedule.paragraph.one = I hawlio Elusennau Cysylltiedig, mae angen i chi uwchlwytho atodlen o Elusennau Cysylltiedig wedi’i llenwi â manylion eich Elusennau Cysylltiedig neu Glybiau Chwaraeon Amatur Cymunedol (CChAC). Gallwch gadw’ch hawliad heb uwchlwytho’r atodlen o Elusennau Cysylltiedig, ond mae angen i chi uwchlwytho atodlen o Elusennau Cysylltiedig cyn cyflwyno’ch hawliad.
+uploadConnectedCharitiesSchedule.paragraph.one.agent = I hawlio Elusennau Cysylltiedig ar gyfer eich cleient, uwchlwythwch atodlen o Elusennau Cysylltiedig wedi’i llenwi â manylion yr Elusennau Cysylltiedig neu Glybiau Chwaraeon Amatur Cymunedol (CChAC). Gallwch gadw’r hawliad hwn heb uwchlwytho’r atodlen o Elusennau Cysylltiedig, ond mae angen i chi uwchlwytho atodlen o Elusennau Cysylltiedig cyn cyflwyno’r hawliad.
+uploadConnectedCharitiesSchedule.paragraph.url = Os nad ydych wedi llenwi atodlen o Elusennau Cysylltiedig, <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">lawrlwythwch atodlen o Elusennau Cysylltiedig fan hyn (yn agor tab newydd)</a>.
+uploadConnectedCharitiesSchedule.title = Uwchlwytho atodlen o Elusennau Cysylltiedig
+
+yourConnectedCharitiesScheduleUpload.caption = Ychwanegu atodlen o Elusennau Cysylltiedig
+yourConnectedCharitiesScheduleUpload.heading = Uwchlwytho’ch atodlen o Elusennau Cysylltiedig
+yourConnectedCharitiesScheduleUpload.heading.agent = Uwchlwytho atodlen o Elusennau Cysylltiedig
+yourConnectedCharitiesScheduleUpload.paragraph.one = Gallwch uwchlwytho’ch atodlen o Elusennau Cysylltiedig fel taenlen. Mae’n rhaid i’r ffeil dan sylw fod yn llai na 250 KB.
+yourConnectedCharitiesScheduleUpload.paragraph.one.agent = Gallwch uwchlwytho’r atodlen o Elusennau Cysylltiedig fel taenlen. Mae’n rhaid i’r ffeil dan sylw fod yn llai na 250 KB.
+yourConnectedCharitiesScheduleUpload.table.key = Atodlen o Elusennau Cysylltiedig
+yourConnectedCharitiesScheduleUpload.title = Uwchlwytho’ch atodlen o Elusennau Cysylltiedig
+yourConnectedCharitiesScheduleUpload.title.agent = Uwchlwytho atodlen o Elusennau Cysylltiedig
+
+checkYourConnectedCharitiesSchedule.caption = Ychwanegu atodlen o Elusennau Cysylltiedig
+checkYourConnectedCharitiesSchedule.error.required = Dewiswch ‘Iawn’ os oes angen i chi ddiweddaru’r atodlen hon o Elusennau Cysylltiedig
+checkYourConnectedCharitiesSchedule.heading = Gwirio’ch atodlen o Elusennau Cysylltiedig
+checkYourConnectedCharitiesSchedule.heading.agent = Gwirio’r atodlen hon o Elusennau Cysylltiedig
+checkYourConnectedCharitiesSchedule.hint = Oes angen i chi ddiweddaru’r atodlen hon o Elusennau Cysylltiedig?
+checkYourConnectedCharitiesSchedule.radios.no = Na, parhewch â’r atodlen o Elusennau Cysylltiedig
+checkYourConnectedCharitiesSchedule.table.column.1 = Eitem
+checkYourConnectedCharitiesSchedule.table.column.2 = Enw’r elusen
+checkYourConnectedCharitiesSchedule.table.column.3 = Cyfeirnod Adran Elusennau CThEF
+checkYourConnectedCharitiesSchedule.title = Gwirio’ch atodlen o Elusennau Cysylltiedig
+checkYourConnectedCharitiesSchedule.title.agent = Gwirio’r atodlen hon o Elusennau Cysylltiedig
+
+problemWithConnectedCharitiesSchedule.title = Mae problem gyda’r data yn eich atodlen o Elusennau Cysylltiedig
+problemWithConnectedCharitiesSchedule.title.agent = Mae problem gyda’r data yn yr atodlen hon o Elusennau Cysylltiedig
+problemWithConnectedCharitiesSchedule.caption = Ychwanegu atodlen o Elusennau Cysylltiedig
+problemWithConnectedCharitiesSchedule.heading = Mae problem gyda’r data yn eich atodlen o Elusennau Cysylltiedig
+problemWithConnectedCharitiesSchedule.heading.agent = Mae problem gyda’r data yn yr atodlen hon o Elusennau Cysylltiedig
+problemWithConnectedCharitiesSchedule.warning = Ni allwn dderbyn y ffeil gan ei bod yn cynnwys gwallau. Mae’n rhaid i chi gywiro’r gwallau hyn ac uwchlwytho’r ffeil wedi’i diweddaru cyn i chi allu parhau.
+problemWithConnectedCharitiesSchedule.subheading.1 = Yr hyn y gallwch ei wneud nesaf
+problemWithConnectedCharitiesSchedule.subheading.2 = Crynodeb o wallau
+problemWithConnectedCharitiesSchedule.list.item.1 = Cyfeiriwch at daenlen yr <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Atodlen i hawlio treth yn ôl ar gyfraniadau Elusennau Cysylltiedig (yn agor tab newydd)</a>.
+problemWithConnectedCharitiesSchedule.list.item.2 = Dileu’r atodlen Elusennau Cysylltiedig hon.
+problemWithConnectedCharitiesSchedule.list.item.3 = Diweddaru’ch taenlen.
+problemWithConnectedCharitiesSchedule.list.item.3.agent = Diweddaru’r atodlen.
+problemWithConnectedCharitiesSchedule.list.item.4 = Uwchlwytho’r daenlen wedi’i diweddaru.
+problemWithConnectedCharitiesSchedule.table.column.1 = Rhes
+problemWithConnectedCharitiesSchedule.table.column.2 = Gwall
+problemWithConnectedCharitiesSchedule.link.attachUpdatedSchedule = Atodi atodlen o Elusennau Cysylltiedig wedi’i diweddaru
+problemWithConnectedCharitiesSchedule.link.deleteSchedule = Dileu atodlen
+
+connectedCharitiesScheduleUploadSuccessful.title = Wedi llwyddo i uwchlwytho
+connectedCharitiesScheduleUploadSuccessful.message.1 = Wedi llwyddo i uwchlwytho
+connectedCharitiesScheduleUploadSuccessful.message.2 = Rydych wedi llwyddo i atodi eich atodlen o Elusennau Cysylltiedig.
+connectedCharitiesScheduleUploadSuccessful.message.2.agent = Rydych wedi llwyddo i atodi’r atodlen hon o Elusennau Cysylltiedig.

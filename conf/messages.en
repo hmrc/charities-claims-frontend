@@ -479,6 +479,7 @@ reasonNotRegistered.exempt.bullet3 = housing association
 organisationDetailsIncompleteAnswers.heading = This claim cannot be setup
 organisationDetailsIncompleteAnswers.message = You need to provide the following details to continue:
 organisationDetailsIncompleteAnswers.returnLink = Go back to provide the missing details for your claim
+organisationDetailsIncompleteAnswers.returnLink.agent = Go back to provide the missing details for this claim
 organisationDetailsIncompleteAnswers.title = This claim cannot be setup
 organisationDetailsIncompleteAnswers.warning = This claim cannot be setup because some details are missing.
 
@@ -957,13 +958,19 @@ donationAmountYouAreClaiming.error.maxLength = Donation amount must be £1,000,0
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.heading = This claim cannot be setup
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.message = You need to provide the following details to continue:
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.returnLink = Go back to provide the missing details for your claim
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.returnLink.agent = Go back to provide the missing details for this claim
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.title = This claim cannot be setup
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.warning = This claim cannot be setup because some details are missing.
 giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount = confirm the amount of GASDS previously overclaimed
+giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount.agent = confirm the amount of GASDS previously overclaimed
 giftAidSmallDonationsSchemeDonationDetails.claim.missingYears = confirm the number of tax years you are claiming for
+giftAidSmallDonationsSchemeDonationDetails.claim.missingYears.agent = confirm the number of tax years the charity is claiming for
 giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount = confirm the donation amount you are claiming for tax year 1
+giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount.agent = confirm the donation amount the charity is claiming for tax year 1
 giftAidSmallDonationsSchemeDonationDetails.claim2.missingAmount = confirm the donation amount you are claiming for tax year 2
+giftAidSmallDonationsSchemeDonationDetails.claim2.missingAmount.agent = confirm the donation amount the charity is claiming for tax year 2
 giftAidSmallDonationsSchemeDonationDetails.claim3.missingAmount = confirm the donation amount you are claiming for tax year 3
+giftAidSmallDonationsSchemeDonationDetails.claim3.missingAmount.agent = confirm the donation amount the charity is claiming for tax year 3
 
 whichTaxYearAreYouClaimingFor.caption = Provide GASDS donation details {0}
 whichTaxYearAreYouClaimingFor.heading = Which tax year are you claiming for?

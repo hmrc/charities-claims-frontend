@@ -254,8 +254,9 @@ object ClaimsTaskListController {
   }
 
   private def buildGasdsDetailsTask(using request: DataRequest[?], messages: Messages): TaskItem = {
+    val isAgent    = request.sessionData.isAgent
     val isComplete = request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
-      .exists(_.hasGasdsDonationDetailsCompleteAnswers(request.sessionData.repaymentClaimDetailsAnswers))
+      .exists(_.hasGasdsDonationDetailsCompleteAnswers(request.sessionData.repaymentClaimDetailsAnswers, isAgent))
     val status     = if (isComplete) TaskStatus.Completed else TaskStatus.NotStarted
     val href       = if (isComplete) {
       giftAidSmallDonationsScheme.routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad
