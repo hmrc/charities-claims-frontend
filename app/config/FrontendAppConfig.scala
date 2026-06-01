@@ -63,6 +63,8 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
 
   lazy val uploadStatusRefreshIntervalSeconds: Int = config.get[Int]("uploadStatusRefreshIntervalSeconds")
 
+  lazy val useRateLimitedAllowList: Boolean = config.get[Boolean]("splitter.trafficSplitEnabled")
+
   def pageTitleWithServiceName(
     pageTitle: String,
     serviceName: String

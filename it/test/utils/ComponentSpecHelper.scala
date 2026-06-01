@@ -83,6 +83,8 @@ trait ComponentSpecHelper
       "microservice.services.upscan-initiate.host"             -> mockHost,
       "microservice.services.upscan-initiate.port"             -> mockPort,
       "microservice.services.upscan-initiate.port"             -> mockPort,
+      "microservice.services.rate-limited-allow-list.host"     -> mockHost,
+      "microservice.services.rate-limited-allow-list.port"     -> mockPort,
       "auditing.enabled"                                       -> "false",
       "play.filters.csrf.header.bypassHeaders.Csrf-Token"      -> "nocheck"
     )
