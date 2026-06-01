@@ -32,8 +32,8 @@ class GasdsDonationDetailsIncompleteAnswersController @Inject() (
   def onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete) { implicit request =>
 
-      val repaymentClaimDetailsAnswers = request.sessionData.repaymentClaimDetailsAnswers
-
+      val repaymentClaimDetailsAnswers                      = request.sessionData.repaymentClaimDetailsAnswers
+      val isAgent                                           = request.sessionData.isAgent
       def buildMissingFieldsWhenGasdsNotExist: List[String] = {
 
         val bClaimingDonationsNotFromCommunityBuilding: Boolean =
@@ -42,20 +42,23 @@ class GasdsDonationDetailsIncompleteAnswersController @Inject() (
         val bMakingAdjustmentToPreviousClaim: Boolean =
           repaymentClaimDetailsAnswers.flatMap(_.makingAdjustmentToPreviousClaim).contains(true)
 
+        def messageKey(key: String): String =
+          if (isAgent) s"$key.agent" else key
+
         (bClaimingDonationsNotFromCommunityBuilding, bMakingAdjustmentToPreviousClaim) match {
           case (true, true)   =>
             List(
-              "giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount",
-              "giftAidSmallDonationsSchemeDonationDetails.claim.missingYears",
-              "giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount"
+              messageKey("giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount"),
+              messageKey("giftAidSmallDonationsSchemeDonationDetails.claim.missingYears"),
+              messageKey("giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount")
             )
           case (true, false)  =>
             List(
-              "giftAidSmallDonationsSchemeDonationDetails.claim.missingYears",
-              "giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount"
+              messageKey("giftAidSmallDonationsSchemeDonationDetails.claim.missingYears"),
+              messageKey("giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount")
             )
           case (false, true)  =>
-            List("giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount")
+            List(messageKey("giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount"))
           case (false, false) =>
             Nil
 
@@ -64,13 +67,14 @@ class GasdsDonationDetailsIncompleteAnswersController @Inject() (
 
       val missingFields =
         request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
-          .map(_.missingFields(repaymentClaimDetailsAnswers))
+          .map(_.missingFields(repaymentClaimDetailsAnswers, isAgent))
           .getOrElse(buildMissingFieldsWhenGasdsNotExist)
 
       Ok(
         view(
           routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad.url,
-          missingFields
+          missingFields,
+          isAgent
         )
       )
     }
