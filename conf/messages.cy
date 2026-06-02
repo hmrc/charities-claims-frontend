@@ -58,7 +58,11 @@ site.pagination.of = o
 site.pagination.page = tudalen
 site.pagination.previous = Blaenorol
 site.remove = Dileu
+site.govuk = GOV.UK
 data.notApplicable = Amherthnasol
+
+service.name = Gwneud hawliad am ad-daliad treth elusennau
+service.title = Gwneud hawliad am ad-daliad treth elusennau
 
 nameOfCharityRegulator.caption = Rhowch fanylion am y sefydliad
 nameOfCharityRegulator.error.required = Select the name of the charity regulator
