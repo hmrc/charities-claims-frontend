@@ -59,22 +59,24 @@ class GasdsAdjustmentAmountCheckYourAnswersController @Inject() (
         val claimingTopUpUnderGasds = request.sessionData.repaymentClaimDetailsAnswers
           .flatMap(_.claimingDonationsNotFromCommunityBuilding)
           .contains(true)
-        val hasGasdsClaims          = GiftAidSmallDonationsSchemeDonationDetailsAnswers.allClaims.nonEmpty
+        val firstClaimIncomplete    = GiftAidSmallDonationsSchemeDonationDetailsAnswers.getClaims.headOption.flatten
+          .fold(true)(claim => claim.taxYear < 1 || claim.amountOfDonationsReceived.isEmpty)
         Future.successful(
           Redirect(
-            GasdsAdjustmentAmountCheckYourAnswersController.nextPage(mode, claimingTopUpUnderGasds, hasGasdsClaims)
+            GasdsAdjustmentAmountCheckYourAnswersController
+              .nextPage(mode, claimingTopUpUnderGasds, firstClaimIncomplete)
           )
         )
       }
 }
 
 object GasdsAdjustmentAmountCheckYourAnswersController {
-  def nextPage(mode: Mode, claimingTopUpUnderGasds: Boolean, hasGasdsClaims: Boolean): Call =
+  def nextPage(mode: Mode, claimingTopUpUnderGasds: Boolean, firstClaimIncomplete: Boolean): Call =
     mode match {
       case NormalMode if claimingTopUpUnderGasds =>
         routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1, NormalMode)
 
-      case CheckMode if claimingTopUpUnderGasds && !hasGasdsClaims =>
+      case CheckMode if claimingTopUpUnderGasds && firstClaimIncomplete =>
         routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1, NormalMode)
 
       case _ =>

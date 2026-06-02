@@ -508,6 +508,81 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
               routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad.url
           }
         }
+
+        "redirect to WhichTaxYearAreYouClaimingFor in CheckMode when first claim is incomplete" in {
+
+          val sessionWithIncompleteClaim =
+            sessionData.copy(
+              giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+                GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+                  claims = Some(
+                    Seq(
+                      Some(
+                        GiftAidSmallDonationsSchemeClaimAnswers(
+                          2025,
+                          None
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionWithIncompleteClaim).build()
+
+          running(application) {
+
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(
+                POST,
+                routes.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit(CheckMode).url
+              )
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+
+            redirectLocation(result).value shouldEqual
+              routes.WhichTaxYearAreYouClaimingForController
+                .onPageLoad(1, NormalMode)
+                .url
+          }
+        }
+
+        "redirect to WhichTaxYearAreYouClaimingFor in CheckMode when first claim is None" in {
+
+          val sessionWithEmptyFirstClaim =
+            sessionData.copy(
+              giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+                GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+                  claims = Some(Seq(None))
+                )
+              )
+            )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionWithEmptyFirstClaim).build()
+
+          running(application) {
+
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(
+                POST,
+                routes.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit(CheckMode).url
+              )
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+
+            redirectLocation(result).value shouldEqual
+              routes.WhichTaxYearAreYouClaimingForController
+                .onPageLoad(1, NormalMode)
+                .url
+          }
+        }
       }
     }
   }
