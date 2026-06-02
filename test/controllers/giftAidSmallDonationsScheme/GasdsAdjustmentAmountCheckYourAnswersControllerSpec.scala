@@ -18,7 +18,12 @@ package controllers.giftAidSmallDonationsScheme
 
 import controllers.ControllerSpec
 import models.Mode.{CheckMode, NormalMode}
-import models.{RepaymentClaimDetailsAnswers, SessionData}
+import models.{
+  GiftAidSmallDonationsSchemeClaimAnswers,
+  GiftAidSmallDonationsSchemeDonationDetailsAnswers,
+  RepaymentClaimDetailsAnswers,
+  SessionData
+}
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -217,6 +222,7 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
             redirectLocation(result).value shouldEqual controllers.routes.ClaimsTaskListController.onPageLoad.url
           }
         }
+
       }
     }
 
@@ -285,10 +291,64 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
           }
         }
 
-        "redirect to GASDS details check page in CheckMode" in {
-          given application: Application = applicationBuilder(sessionData = sessionData).build()
+        "redirect to WhichTaxYearAreYouClaimingFor in CheckMode when claiming top-up under GASDS and no claims exist" in {
+
+          val sessionWithoutClaims =
+            sessionData.copy(
+              giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+                GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+                  claims = Some(Seq.empty)
+                )
+              )
+            )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionWithoutClaims).build()
 
           running(application) {
+
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(
+                POST,
+                routes.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit(CheckMode).url
+              )
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+
+            redirectLocation(result).value shouldEqual
+              routes.WhichTaxYearAreYouClaimingForController
+                .onPageLoad(1, NormalMode)
+                .url
+          }
+        }
+
+        "redirect to GASDS details check page in CheckMode when claims already exist" in {
+
+          val sessionWithClaims =
+            sessionData.copy(
+              giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+                GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+                  claims = Some(
+                    Seq(
+                      Some(
+                        GiftAidSmallDonationsSchemeClaimAnswers(
+                          2025,
+                          Some(BigDecimal(1000))
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            )
+
+          given application: Application =
+            applicationBuilder(sessionData = sessionWithClaims).build()
+
+          running(application) {
+
             given request: FakeRequest[AnyContentAsEmpty.type] =
               FakeRequest(
                 POST,
@@ -370,11 +430,25 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
           }
         }
 
-        "redirect to GASDS details check page in CheckMode" in {
+        "redirect to WhichTaxYearAreYouClaimingFor in CheckMode when claiming top-up under GASDS and no claims exist" in {
+
+          val sessionWithoutClaims =
+            sessionData.copy(
+              giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+                GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+                  claims = Some(Seq.empty)
+                )
+              )
+            )
+
           given application: Application =
-            applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
+            applicationBuilder(
+              sessionData = sessionWithoutClaims,
+              affinityGroup = AffinityGroup.Agent
+            ).build()
 
           running(application) {
+
             given request: FakeRequest[AnyContentAsEmpty.type] =
               FakeRequest(
                 POST,
@@ -384,6 +458,52 @@ class GasdsAdjustmentAmountCheckYourAnswersControllerSpec extends ControllerSpec
             val result = route(application, request).value
 
             status(result) shouldEqual SEE_OTHER
+
+            redirectLocation(result).value shouldEqual
+              routes.WhichTaxYearAreYouClaimingForController
+                .onPageLoad(1, NormalMode)
+                .url
+          }
+        }
+
+        "redirect to GASDS details check page in CheckMode when claims already exist" in {
+
+          val sessionWithClaims =
+            sessionData.copy(
+              giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+                GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+                  claims = Some(
+                    Seq(
+                      Some(
+                        GiftAidSmallDonationsSchemeClaimAnswers(
+                          2025,
+                          Some(BigDecimal(1000))
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            )
+
+          given application: Application =
+            applicationBuilder(
+              sessionData = sessionWithClaims,
+              affinityGroup = AffinityGroup.Agent
+            ).build()
+
+          running(application) {
+
+            given request: FakeRequest[AnyContentAsEmpty.type] =
+              FakeRequest(
+                POST,
+                routes.GasdsAdjustmentAmountCheckYourAnswersController.onSubmit(CheckMode).url
+              )
+
+            val result = route(application, request).value
+
+            status(result) shouldEqual SEE_OTHER
+
             redirectLocation(result).value shouldEqual
               routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad.url
           }
