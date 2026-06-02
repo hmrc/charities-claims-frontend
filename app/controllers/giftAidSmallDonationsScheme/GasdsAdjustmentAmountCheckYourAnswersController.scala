@@ -60,7 +60,7 @@ class GasdsAdjustmentAmountCheckYourAnswersController @Inject() (
           .flatMap(_.claimingDonationsNotFromCommunityBuilding)
           .contains(true)
         val firstClaimIncomplete    = GiftAidSmallDonationsSchemeDonationDetailsAnswers.getClaims.headOption.flatten
-          .fold(true)(claim => claim.taxYear < 1 || claim.amountOfDonationsReceived.isEmpty)
+          .fold(true)(_.amountOfDonationsReceived.isEmpty)
         Future.successful(
           Redirect(
             GasdsAdjustmentAmountCheckYourAnswersController
