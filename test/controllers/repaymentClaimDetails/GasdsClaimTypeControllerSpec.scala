@@ -287,7 +287,8 @@ class GasdsClaimTypeControllerSpec extends ControllerSpec {
             _.copy(
               claimingDonationsNotFromCommunityBuilding = Some(true)
             )
-          )
+          ),
+          unsubmittedClaimId = Some("claim-123")
         )
 
         given application: Application =
@@ -310,6 +311,30 @@ class GasdsClaimTypeControllerSpec extends ControllerSpec {
             routes.GasdsClaimTypeController.onSubmit(CheckMode),
             Seq("connectedCharity")
           ).body
+        }
+      }
+
+      "should redirect when removing an option in CheckMode but claim was not submitted" in {
+        val sessionData = baseSessionData.copy(
+          repaymentClaimDetailsAnswers = baseSessionData.repaymentClaimDetailsAnswers.map(
+            _.copy(
+              claimingDonationsNotFromCommunityBuilding = Some(true)
+            )
+          ),
+          unsubmittedClaimId = None
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData = sessionData).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsFormUrlEncoded] =
+            FakeRequest(POST, routes.GasdsClaimTypeController.onSubmit(CheckMode).url)
+              .withFormUrlEncodedBody("value[]" -> "connectedCharity")
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
         }
       }
 
