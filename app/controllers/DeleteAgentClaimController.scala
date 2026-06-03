@@ -58,19 +58,20 @@ class DeleteAgentClaimController @Inject() (
         )
       )
       .async { implicit request =>
-        val nextUrl =
-          if request.getQueryString("claimId").isDefined
+        val claimIdFromRequest = request.getQueryString("claimId")
+        val nextUrl            =
+          if claimIdFromRequest.isDefined
           then appConfig.charityRepaymentDashboardUrl
           else routes.ClaimsTaskListController.onPageLoad.url
 
         request.sessionData.unsubmittedClaimId match {
-          case Some(claimId) =>
+          case Some(_) =>
             val charityName =
               RepaymentClaimDetailsAnswers
                 .getNameOfCharity(using request.sessionData)
                 .getOrElse("")
 
-            Future.successful(Ok(view(form, claimId, charityName)))
+            Future.successful(Ok(view(form, claimIdFromRequest.getOrElse(""), charityName)))
 
           case None =>
             Future.successful(Redirect(nextUrl))
@@ -87,8 +88,11 @@ class DeleteAgentClaimController @Inject() (
         )
       )
       .async { implicit request =>
+        val claimIdFromRequest =
+          request.body.asFormUrlEncoded.flatMap(_.get("claimId")).flatMap(_.headOption).filter(_.nonEmpty)
+
         val nextUrl =
-          if request.getQueryString("claimId").isDefined
+          if claimIdFromRequest.isDefined
           then appConfig.charityRepaymentDashboardUrl
           else routes.ClaimsTaskListController.onPageLoad.url
 
@@ -97,13 +101,13 @@ class DeleteAgentClaimController @Inject() (
         formData.fold(
           formWithErrors =>
             request.sessionData.unsubmittedClaimId match {
-              case Some(claimId) =>
+              case Some(_) =>
                 val charityName =
                   RepaymentClaimDetailsAnswers
                     .getNameOfCharity(using request.sessionData)
                     .getOrElse("")
 
-                Future.successful(BadRequest(view(formWithErrors, claimId, charityName)))
+                Future.successful(BadRequest(view(formWithErrors, claimIdFromRequest.getOrElse(""), charityName)))
 
               case None =>
                 Future.successful(Redirect(nextUrl))
