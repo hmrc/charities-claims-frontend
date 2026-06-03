@@ -96,7 +96,10 @@ class GasdsClaimTypeController @Inject() (
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, mode, isCASCCharityReference, request.isAgent))),
         gasdsClaimType =>
-          if (needsUpdateConfirmation(previousAnswer, gasdsClaimType)) {
+          if (
+            request.sessionData.unsubmittedClaimId.isDefined
+            && needsUpdateConfirmation(previousAnswer, gasdsClaimType)
+          ) {
             val checkboxValues = formProvider.toSet(gasdsClaimType).toSeq
             Future.successful(
               Ok(
