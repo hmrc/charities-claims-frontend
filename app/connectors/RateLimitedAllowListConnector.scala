@@ -51,11 +51,12 @@ class RateLimitedAllowListConnectorImpl @Inject() (
     with Retries
     with Logging {
 
-  val baseUrl: String = servicesConfig.baseUrl("rate-limited-allow-list")
+  val baseUrl: String     = servicesConfig.baseUrl("rate-limited-allow-list")
+  val serviceName: String = configuration.underlying.getString("splitter.serviceName")
 
   val retryIntervals: Seq[FiniteDuration] = Retries.getConfIntervals("rate-limited-allow-list", configuration)
 
-  private val checkAllowListUrl: String = s"$baseUrl/rate-limited-allow-list/services/charities/features/"
+  private val checkAllowListUrl: String = s"$baseUrl/rate-limited-allow-list/services/$serviceName/features/"
 
   override def checkAllowList(feature: String, charityReference: String)(using hc: HeaderCarrier): Future[Boolean] = {
     val url: String = s"$checkAllowListUrl$feature"

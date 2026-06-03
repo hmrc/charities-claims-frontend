@@ -45,6 +45,8 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
     config.get[String]("urls.communityBuildingsScheduleSpreadsheetGuidanceUrl")
   lazy val connectedCharitiesScheduleSpreadsheetGuidanceUrl: String =
     config.get[String]("urls.connectedCharitiesScheduleSpreadsheetGuidanceUrl")
+  lazy val legacyCharitiesServiceUrl: String                        =
+    config.get[String]("urls.legacyCharitiesServiceUrl")
 
   lazy val enableLanguageSwitching: Boolean = config.get[Boolean]("enableLanguageSwitching")
   lazy val timeoutInSeconds: Int            = config.get[Int]("timeout-dialog.timeout")
@@ -64,6 +66,8 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
   lazy val uploadStatusRefreshIntervalSeconds: Int = config.get[Int]("uploadStatusRefreshIntervalSeconds")
 
   lazy val useRateLimitedAllowList: Boolean = config.get[Boolean]("splitter.trafficSplitEnabled")
+  lazy val splitterServiceName: String      = config.get[String]("splitter.serviceName")
+  lazy val splitterAllowListName: String    = config.get[String]("splitter.allowListName")
 
   def pageTitleWithServiceName(
     pageTitle: String,
