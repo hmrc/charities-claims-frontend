@@ -31,6 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import javax.inject.Inject
 import uk.gov.hmrc.auth.core.AffinityGroup
 import config.FrontendAppConfig
+import connectors.RateLimitedAllowListConnector
 
 @ImplementedBy(classOf[DefaultRefreshDataAction])
 trait RefreshDataAction extends ActionRefiner[AuthorisedRequest, DataRequest]
@@ -41,7 +42,8 @@ class DefaultRefreshDataAction @Inject() (
   claimsConnector: ClaimsConnector,
   claimsValidationConnector: ClaimsValidationConnector,
   dataRetrievalAction: DefaultDataRetrievalAction,
-  config: FrontendAppConfig
+  config: FrontendAppConfig,
+  rateLimitedAllowListConnector: RateLimitedAllowListConnector
 )(using val executionContext: ExecutionContext)
     extends RefreshDataAction {
 
@@ -106,9 +108,16 @@ class DefaultRefreshDataAction @Inject() (
             }
 
         case _ =>
-          if acceptDraftOrEmptyClaim
-          then dataRetrievalAction.refine(request)
-          else Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
+          checkAllowList(config.useRateLimitedAllowList, config.splitterAllowListName, request.charitiesReference)
+            .flatMap {
+              case true =>
+                if acceptDraftOrEmptyClaim
+                then dataRetrievalAction.refine(request)
+                else Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
+
+              case false =>
+                Future.successful(Left(Results.Redirect(config.legacyCharitiesServiceUrl)))
+            }
       }
 
   private def tryOpenAgentClaimById(request: AuthorisedRequest[?], claimId: String)(using HeaderCarrier) =
@@ -187,11 +196,28 @@ class DefaultRefreshDataAction @Inject() (
           dataRetrievalAction.refine(request)
 
         case None =>
-          // in case when session data does not exist
-          // we should start a new claim
-          val newSessionData = SessionData.empty(request.charitiesReference)
-          cache
-            .store(newSessionData)
-            .map(_ => Right(DataRequest(request, newSessionData)))
+          checkAllowList(config.useRateLimitedAllowList, config.splitterAllowListName, request.charitiesReference)
+            .flatMap {
+              case true =>
+                // in case when session data does not exist
+                // we should start a new claim
+                val newSessionData = SessionData.empty(request.charitiesReference)
+                cache
+                  .store(newSessionData)
+                  .map(_ => Right(DataRequest(request, newSessionData)))
+
+              case false =>
+                Future.successful(Left(Results.Redirect(config.legacyCharitiesServiceUrl)))
+            }
+
       }
+
+  private def checkAllowList(useRateLimitedAllowList: Boolean, allowListName: String, charitiesReference: String)(
+    implicit hc: HeaderCarrier
+  ): Future[Boolean] =
+    if (useRateLimitedAllowList) {
+      rateLimitedAllowListConnector.checkAllowList(allowListName, charitiesReference)
+    } else {
+      Future.successful(true)
+    }
 }

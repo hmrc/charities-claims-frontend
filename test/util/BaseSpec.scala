@@ -33,6 +33,7 @@ import org.scalatest.time.{Millis, Seconds, Span}
 import uk.gov.hmrc.auth.core.AffinityGroup
 import models.requests.AuthorisedRequest
 import play.api.mvc.AnyContent
+import com.typesafe.config.ConfigValueFactory
 
 abstract class BaseSpec
     extends AnyFreeSpec
@@ -92,10 +93,9 @@ abstract class BaseSpec
 
   protected def messages(key: String, args: String*)(implicit m: Messages): String = m(key, args*)
 
-  protected val testFrontendAppConfig = new FrontendAppConfig(
-    Configuration(
-      ConfigFactory.parseString(
-        """
+  val testConfiguration = Configuration(
+    ConfigFactory.parseString(
+      """
           | appName = foo-bar-frontend
           | mongodb {
           |  ttl = 15 minutes
@@ -137,8 +137,25 @@ abstract class BaseSpec
           |     allowedFileTypesHint = ".ods"
           |   }
           | }
+          |
+          | splitter {
+          |   trafficSplitEnabled = false
+          |   serviceName = charities
+          |   allowListName = beta
+          | }
           |""".stripMargin
-      )
+    )
+  )
+
+  protected val testFrontendAppConfig = new FrontendAppConfig(
+    testConfiguration
+  )
+
+  protected val testFrontendAppConfigWithTrafficSplitEnabled = new FrontendAppConfig(
+    Configuration(
+      testConfiguration.underlying
+        .withValue("splitter.trafficSplitEnabled", ConfigValueFactory.fromAnyRef("true"))
+        .withValue("urls.legacyCharitiesServiceUrl", ConfigValueFactory.fromAnyRef("/charities"))
     )
   )
 

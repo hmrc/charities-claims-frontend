@@ -17,7 +17,7 @@
 package controllers
 
 import com.softwaremill.diffx.scalatest.DiffShouldMatcher
-import connectors.{ClaimsConnector, ClaimsValidationConnector}
+import connectors.{ClaimsConnector, ClaimsValidationConnector, RateLimitedAllowListConnector}
 import controllers.actions.{AuthorisedAction, DataRetrievalAction, RefreshDataAction}
 import models.*
 import play.api.data.Form
@@ -68,14 +68,21 @@ trait ControllerSpec
             .toInstance(new FakeRefreshDataAction(sessionData)),
           inject
             .bind[AuthorisedAction]
-            .toInstance(new FakeAuthorisedAction(affinityGroup))
+            .toInstance(new FakeAuthorisedAction(affinityGroup)),
+          inject
+            .bind[RateLimitedAllowListConnector]
+            .toInstance(new RateLimitedAllowListConnector {
+              override def checkAllowList(feature: String, charityReference: String)(using
+                hc: HeaderCarrier
+              ): Future[Boolean] = Future.successful(false)
+            })
         ) ++
           additionalBindings*
       )
       .configure(
         "play.filters.csp.nonce.enabled" -> false,
-        "auditing.enabled"               -> false,
-        "metric.enabled"                 -> false
+        "auditing.enabled" -> false,
+        "metric.enabled"   -> false
       )
 
   protected def applicationBuilder(
@@ -98,14 +105,22 @@ trait ControllerSpec
             .toInstance(new FakeClaimsValidationConnector(uploads)),
           inject
             .bind[AuthorisedAction]
-            .toInstance(new FakeAuthorisedAction(affinityGroup))
+            .toInstance(new FakeAuthorisedAction(affinityGroup)),
+          inject
+            .bind[RateLimitedAllowListConnector]
+            .toInstance(new RateLimitedAllowListConnector {
+              override def checkAllowList(feature: String, charityReference: String)(using
+                hc: HeaderCarrier
+              ): Future[Boolean] = Future.successful(false)
+            })
         ) ++
           additionalBindings*
       )
       .configure(
         "play.filters.csp.nonce.enabled" -> false,
-        "auditing.enabled"               -> false,
-        "metric.enabled"                 -> false
+        "auditing.enabled"             -> false,
+        "metric.enabled"               -> false,
+        "splitter.trafficSplitEnabled" -> false
       )
   }
 
