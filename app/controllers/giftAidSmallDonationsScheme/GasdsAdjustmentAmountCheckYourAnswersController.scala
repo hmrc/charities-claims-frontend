@@ -19,7 +19,7 @@ package controllers.giftAidSmallDonationsScheme
 import com.google.inject.Inject
 import controllers.actions.Actions
 import models.Mode.{CheckMode, NormalMode}
-import models.{Mode, RepaymentClaimDetailsAnswers, SessionData}
+import models.{GiftAidSmallDonationsSchemeDonationDetailsAnswers, Mode, RepaymentClaimDetailsAnswers, SessionData}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -55,27 +55,31 @@ class GasdsAdjustmentAmountCheckYourAnswersController @Inject() (
           RepaymentClaimDetailsAnswers.getMakingAdjustmentToPreviousClaim.contains(true)
       )
       .async { implicit request =>
-        val claimingTopUpUnderGasds =
-          request.sessionData.repaymentClaimDetailsAnswers
-            .flatMap(_.claimingDonationsNotFromCommunityBuilding)
-            .contains(true)
-
+        given SessionData           = request.sessionData
+        val claimingTopUpUnderGasds = request.sessionData.repaymentClaimDetailsAnswers
+          .flatMap(_.claimingDonationsNotFromCommunityBuilding)
+          .contains(true)
+        val firstClaimIncomplete    = GiftAidSmallDonationsSchemeDonationDetailsAnswers.getClaims.headOption.flatten
+          .fold(true)(_.amountOfDonationsReceived.isEmpty)
         Future.successful(
-          Redirect(GasdsAdjustmentAmountCheckYourAnswersController.nextPage(mode, claimingTopUpUnderGasds))
+          Redirect(
+            GasdsAdjustmentAmountCheckYourAnswersController
+              .nextPage(mode, claimingTopUpUnderGasds, firstClaimIncomplete)
+          )
         )
       }
 }
 
 object GasdsAdjustmentAmountCheckYourAnswersController {
-  def nextPage(mode: Mode, claimingTopUpUnderGasds: Boolean): Call =
+  def nextPage(mode: Mode, claimingTopUpUnderGasds: Boolean, firstClaimIncomplete: Boolean): Call =
     mode match {
-      case NormalMode =>
-        if (claimingTopUpUnderGasds) {
-          routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1, NormalMode)
-        } else {
-          routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad
-        }
-      case CheckMode  =>
+      case NormalMode if claimingTopUpUnderGasds =>
+        routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1, NormalMode)
+
+      case CheckMode if claimingTopUpUnderGasds && firstClaimIncomplete =>
+        routes.WhichTaxYearAreYouClaimingForController.onPageLoad(1, NormalMode)
+
+      case _ =>
         routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad
     }
 }
