@@ -48,7 +48,7 @@ class RegisterCharityWithARegulatorController @Inject() (
   private lazy val defaultFormattedLimit: String = new DecimalFormat("#,###").format(appConfig.exceptedLimit)
 
   def onPageLoad: Action[AnyContent] =
-    actions.authAndGetDataWithGuard(SessionData.isUnregulatedLimitExceeded).async { implicit request =>
+    actions.authAndGetDataWithGuard(true /*SessionData.isUnregulatedLimitExceeded*/ ).async { implicit request =>
       given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
       // gets dynamic limit based on charity type (LowIncome = £5,000, Excepted = £100,000)
       val formattedLimit  = unregulatedDonationsService.getApplicableLimit.getOrElse(defaultFormattedLimit)

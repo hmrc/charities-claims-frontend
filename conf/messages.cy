@@ -65,6 +65,7 @@ site.remove = Dileu
 site.govuk = GOV.UK
 data.notApplicable = Amherthnasol
 error.browser.title.prefix = Mae problem:
+warning.text = Rhybudd
 
 service.name = Gwneud hawliad am ad-daliad treth elusennau
 service.title = Gwneud hawliad am ad-daliad treth elusennau
@@ -107,7 +108,7 @@ reasonNotRegisteredWithRegulator.caption = Rhowch fanylion am y sefydliad
 reasonNotRegisteredWithRegulator.error.required = Select why the charity is not registered with a regulator
 reasonNotRegisteredWithRegulator.heading = Pam nad yw’r elusen wedi’i chofrestru â rheoleiddiwr?
 reasonNotRegisteredWithRegulator.missingDetails = confirm why you’re not registered with a regulator
-reasonNotRegisteredWithRegulator.agent.missingDetails = confirm why the charity is not registered with a regulator
+reasonNotRegisteredWithRegulator.agent.missingDetails = cadarnhau pam nad yw’r elusen wedi’i chofrestru gyda rheoleiddiwr
 reasonNotRegisteredWithRegulator.radio.Excepted = Mae’ch elusen wedi’i heithrio
 reasonNotRegisteredWithRegulator.agent.radio.Excepted = Mae’ch elusen wedi’i heithrio
 reasonNotRegisteredWithRegulator.radio.Exempt = Mae’ch elusen wedi’i hesemptio
@@ -643,8 +644,10 @@ repaymentClaimDetailsIncompleteAnswers.agent.returnLink = Go back to provide the
 repaymentClaimDetailsIncompleteAnswers.title = Ni ellir sefydlu’r hawliad hwn
 repaymentClaimDetailsIncompleteAnswers.warning = Ni ellir sefydlu’r hawliad hwn oherwydd bod rhai manylion ar goll.
 repaymentClaimType.missingDetails = dewis y math o hawliad ad-daliad
+
 claimReferenceNumberInput.missingDetails = darparu rhif cyfeirnod yr hawliad
 claimReferenceNumberCheck.missingDetails = cadarnhau a oes gennych rif cyfeirnod hawliad
+
 claimGASDS.missingDetails = cadarnhau pa fath o hawliad(au) GASDS rydych am eu gwneud
 changePreviousGASDSClaim.missingDetails = cadarnhau a ydych am newid hawliad blaenorol y Cynllun Rhoddion Bach Rhodd Cymorth
 repaymentClaimDetails.agent.missingCharityName = cadarnhau enw’r elusen neu’r Clwb Chwaraeon Amatur Cymunedol (CASC)
@@ -681,7 +684,38 @@ giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.returnLink = Ewch yn
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.title = Ni ellir sefydlu’r hawliad hwn
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.warning = Ni ellir sefydlu’r hawliad hwn oherwydd bod rhai manylion ar goll.
 giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount = cadarnhau swm y GASDS a hawliwyd yn ormodol yn flaenorol
+giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount.agent = cadarnhau swm y GASDS a hawliwyd yn ormodol yn flaenorol
+giftAidSmallDonationsSchemeDonationDetails.claim.missingYears = confirm the number of tax years you are claiming for
+giftAidSmallDonationsSchemeDonationDetails.claim.missingYears.agent = cadarnhau nifer y blynyddoedd treth y mae’r elusen yn hawlio ar eu cyfer
+giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount = confirm the donation amount you are claiming for tax year 1
+giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount.agent = cadarnhau swm y rhodd y mae’r elusen yn ei hawlio ar gyfer blwyddyn dreth 1
+giftAidSmallDonationsSchemeDonationDetails.claim2.missingAmount = confirm the donation amount you are claiming for tax year 2
+giftAidSmallDonationsSchemeDonationDetails.claim2.missingAmount.agent = cadarnhau swm y rhodd y mae’r elusen yn ei hawlio ar gyfer blwyddyn dreth 2
+giftAidSmallDonationsSchemeDonationDetails.claim3.missingAmount = confirm the donation amount you are claiming for tax year 3
+giftAidSmallDonationsSchemeDonationDetails.claim3.missingAmount.agent = cadarnhau swm y rhodd y mae’r elusen yn ei hawlio ar gyfer blwyddyn dreth 3
 
+claimsTaskList.caption = Cyfeirnod Elusennau CThEF: {0}
+claimsTaskList.declaration.warning = Mae’n rhaid i chi lenwi pob adran cyn y gallwch ddatgan.
+claimsTaskList.heading = Hawlio ad-daliad elusennnau
+claimsTaskList.link.deleteClaim = Dileu hawliad
+claimsTaskList.link.goToDashboard = Ewch i reoli hawliadau am ad-daliad elusennau
+claimsTaskList.section.aboutTheClaim = Ynglŷn â’r cais hwn
+claimsTaskList.section.declaration = Datganiad
+claimsTaskList.section.uploadDocuments = Uwchlwytho dogfennau
+claimsTaskList.status.cannotStartYet = Methu dechrau ar hyn o bryd
+claimsTaskList.status.completed = Wedi cwblhau
+claimsTaskList.status.incomplete = Incomplete
+claimsTaskList.status.inProgress = Ar y gweill
+claimsTaskList.status.notStarted = Heb ddechrau eto
+claimsTaskList.task.communityBuildingsSchedule = Ychwanegu atodlen o Adeiladau Cymunedol
+claimsTaskList.task.connectedCharitiesSchedule = Ychwanegu atodlen o Elusennau Cysylltiedig
+claimsTaskList.task.gasdsDetails = Manylion y Cynllun Cyfraniadau Bach Rhodd Cymorth
+claimsTaskList.task.giftAidSchedule = Ychwanegu atodlen Rhodd Cymorth
+claimsTaskList.task.organisationDetails = Rhowch fanylion am y sefydliad
+claimsTaskList.task.otherIncomeSchedule = Ychwanegu atodlen o Incwm Arall
+claimsTaskList.task.readDeclaration = Darllenwch y datganiad
+claimsTaskList.task.repaymentClaimDetails = Rhowch fanylion yr hawliad ad-daliad
+claimsTaskList.title = Hawlio ad-daliad elusennnau
 
 
 
