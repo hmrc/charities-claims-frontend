@@ -472,7 +472,7 @@ yourOtherIncomeScheduleUpload.title = Uwchlwytho’ch atodlen o Incwm Arall
 yourOtherIncomeScheduleUpload.agent.title = Uwchlwytho atodlen o Incwm Arall
 
 checkYourOtherIncomeSchedule.caption = Ychwanegu atodlen o Incwm Arall
-checkYourOtherIncomeSchedule.error.required = Select ‘Yes’ if you need to update this Other Income schedule
+checkYourOtherIncomeSchedule.error.required = Dewiswch ‘Iawn’ os oes angen i chi ddiweddaru’r atodlen Incwm Arall hon
 checkYourOtherIncomeSchedule.heading = Gwirio’ch atodlen o Incwm Arall
 checkYourOtherIncomeSchedule.agent.heading = Gwirio’r atodlen hon o Incwm Arall
 checkYourOtherIncomeSchedule.hint = Oes angen i chi ddiweddaru’r atodlen hon o Incwm Arall?
