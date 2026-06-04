@@ -64,7 +64,7 @@ site.pagination.previous = Blaenorol
 site.remove = Dileu
 site.govuk = GOV.UK
 data.notApplicable = Amherthnasol
-error.browser.title.prefix = Mae problem:
+error.browser.title.prefix = Gwall:
 warning.text = Rhybudd
 
 service.name = Gwneud hawliad am ad-daliad treth elusennau
