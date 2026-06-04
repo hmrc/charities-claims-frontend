@@ -45,6 +45,10 @@ class RateLimitedAllowListConnectorSpec extends BaseSpec with HttpV2Support {
         |     }
         |   }
         | }
+        | splitter {
+        |   serviceName = charities
+        |   allowListName = beta
+        | }
         |""".stripMargin
     )
   )

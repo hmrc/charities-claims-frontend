@@ -71,7 +71,7 @@ service.name = Gwneud hawliad am ad-daliad treth elusennau
 service.title = Gwneud hawliad am ad-daliad treth elusennau
 
 nameOfCharityRegulator.caption = Rhowch fanylion am y sefydliad
-nameOfCharityRegulator.error.required = Select the name of the charity regulator
+nameOfCharityRegulator.error.required = Dewiswch enw rheoleiddiwr yr elusen
 nameOfCharityRegulator.heading = Beth yw enw’r rheoleiddiwr elusennau?
 nameOfCharityRegulator.legend = Beth yw enw’r rheoleiddiwr elusennau?
 nameOfCharityRegulator.missingDetails = confirm your charity regulator name
@@ -105,7 +105,7 @@ charityExempt.title = Mae’ch elusen wedi’i hesemptio
 charityExempt.agent.title = Mae’r elusen wedi’i esemptio
 
 reasonNotRegisteredWithRegulator.caption = Rhowch fanylion am y sefydliad
-reasonNotRegisteredWithRegulator.error.required = Select why the charity is not registered with a regulator
+reasonNotRegisteredWithRegulator.error.required = Dewiswch pam nad yw’r elusen wedi’i chofrestru â rheolydd
 reasonNotRegisteredWithRegulator.heading = Pam nad yw’r elusen wedi’i chofrestru â rheoleiddiwr?
 reasonNotRegisteredWithRegulator.missingDetails = confirm why you’re not registered with a regulator
 reasonNotRegisteredWithRegulator.agent.missingDetails = cadarnhau pam nad yw’r elusen wedi’i chofrestru gyda rheoleiddiwr
@@ -717,10 +717,79 @@ claimsTaskList.task.readDeclaration = Darllenwch y datganiad
 claimsTaskList.task.repaymentClaimDetails = Rhowch fanylion yr hawliad ad-daliad
 claimsTaskList.title = Hawlio ad-daliad elusennnau
 
+#validationService messages
+validationService.communityBuildings.message.1 = Nodwch fanylion ar gyfer eitem Adeilad Cymunedol
+validationService.communityBuildings.message.2 = Mae problem gyda rhif yr eitem hon
+validationService.communityBuildings.message.3 = Nodwch enw adeilad
+validationService.communityBuildings.message.4 = Nodwch enw adeilad yn y fformat cywir
+validationService.communityBuildings.message.5 = Nodwch linell gyntaf y cyfeiriad
+validationService.communityBuildings.message.6 = Nodwch linell gyntaf y cyfeiriad yn y fformat cywir
+validationService.communityBuildings.message.7 = Nodwch god post
+validationService.communityBuildings.message.8 = Nodwch god post yn y fformat cywir
+validationService.communityBuildings.message.9 = Nodwch ddyddiad dod i ben y flwyddyn dreth gyntaf
+validationService.communityBuildings.message.10 = Nodwch ddyddiad dod i ben ail flwyddyn dreth
+validationService.communityBuildings.message.11 = Nodwch swm y flwyddyn dreth gyntaf yn y fformat cywir
+validationService.communityBuildings.message.12 = Nodwch ddyddiad dod i ben ail flwyddyn dreth yn y fformat cywir
+validationService.communityBuildings.message.13 = Mae’n rhaid i rhoddion o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth fod cyn 2014
+validationService.communityBuildings.message.14 = Mae’n rhaid i flwyddyn dreth hawlio adeiladau cymunedol Cynllun Rhodd Cymorth fod eleni neu’n gynharach
+validationService.communityBuildings.message.15 = Ni all hawliad adeiladau cymunedol Cynllun Cyfraniadau Bach Rhodd Cymorth fod yn gynharach na [blwyddyn dreth gyfredol llai 3]
+validationService.communityBuildings.message.16 = Nodwch swm y flwyddyn dreth gyntaf
+validationService.communityBuildings.message.17 = Nodwch swm yr ail flwyddyn dreth
+validationService.communityBuildings.message.18 = Nodwch swm y flwyddyn dreth gyntaf yn y fformat cywir
+validationService.communityBuildings.message.19 = Nodwch swm ail flwyddyn dreth yn y fformat cywir
+validationService.communityBuildings.message.20 = Mae’n rhaid i roddion a hawlir am fwy nag un flwyddyn dreth mewn adeilad cymunedol fod yn wahanol i flynyddoedd treth eraill
+validationService.communityBuildings.message.21 = Gellir hawlio Adeiladau Cymunedol unwaith y flwyddyn dreth fesul adeilad cymunedol, hyd at uchafswm o 3 blynedd
 
+validationService.otherIncome.message.1 = Nodwch fanylion ar gyfer eitem Incwm Arall
+validationService.otherIncome.message.2 = Nodwch swm a or-hawliwyd yn y fformat cywir
+validationService.otherIncome.message.3 = Mae’n rhaid i’r dreth a ddidynnwyd fod yn llai na’r taliad gros
+validationService.otherIncome.message.4 = Mae problem gyda rhif yr eitem hon
+validationService.otherIncome.message.5 = Nodwch enw’r talwr
+validationService.otherIncome.message.6 = Nodwch enw’r talwr yn y fformat cywir
+validationService.otherIncome.message.7 = Nodwch ddyddiad incwm
+validationService.otherIncome.message.8 = Nodwch y didyniad treth yn y fformat cywir
+validationService.otherIncome.message.9 = Ni all dyddiad talu’r incwm arall fod yn y dyfodol
+validationService.otherIncome.message.10 = Nodwch swm taliad gros
+validationService.otherIncome.message.11 = Enter the tax deduction amount
+validationService.otherIncome.message.12 = Nodwch swm y taliad gros yn y fformat cywir
+validationService.otherIncome.message.13 = Enter the tax deduction amount in the correct format
 
+validationService.connectedCharities.message.1 = Nodwch fanylion ar gyfer Elusen Gysylltiedig
+validationService.connectedCharities.message.2 = Mae problem gyda rhif yr eitem hon
+validationService.connectedCharities.message.3 = Nodwch enw elusen
+validationService.connectedCharities.message.4 = Nodwch enw elusen yn y fformat cywir
+validationService.connectedCharities.message.5 = Nodwch gyfeirnod adran elusennau CThEF
+validationService.connectedCharities.message.6 = Nodwch gyfeirnod adran elusennau CThEF yr achos yn y fformat cywir
 
+validationService.giftAid.message.1 = Nodwch fanylion ar gyfer o leiaf un cyfraniad Rhodd Cymorth
+validationService.giftAid.message.2 = Nodwch ddyddiad y cyfraniad cynharaf
+validationService.giftAid.message.3 = Enter the earliest donation date in the correct format
+validationService.giftAid.message.4 = Nodwch swm a or-hawliwyd yn flaenorol yn y fformat cywir
+validationService.giftAid.message.5 = Nodwch gofnod rhoddion cyfansymiol yn y fformat cywir
+validationService.giftAid.message.6 = Mae problem gyda rhif yr eitem hon
+validationService.giftAid.message.7 = Nodwch ddyddiad y cyfraniad
+validationService.giftAid.message.8 = Nodwch ddyddiad y cyfraniad yn y fformat cywir
+validationService.giftAid.message.9 = Ni all dyddiad cyfraniad Rhodd Cymorth fod yn y dyfodol
+validationService.giftAid.message.10 = Nodwch swm y rhodd yn y fformat cywir
+validationService.giftAid.message.11 = Mae swm y cyfraniad ar goll
+validationService.giftAid.message.12 = Enter an aggregated donation amount that is £1000 or smaller
+validationService.giftAid.message.13 = Nodwch deitl y rhoddwr yn y fformat cywir
+validationService.giftAid.message.14 = Nodwch enw cyntaf rhoddwr
+validationService.giftAid.message.15 = Nodwch enw olaf rhoddwr
+validationService.giftAid.message.16 = Nodwch enw cyntaf rhoddwr yn y fformat cywir
+validationService.giftAid.message.17 = Nodwch gyfenw rhoddwr yn y fformat cywir
+validationService.giftAid.message.18 = Nodwch enw neu rif tŷ’r rhoddwr
+validationService.giftAid.message.19 = Nodwch enw neu rif tŷ rhoddwr yn y fformat cywir
+validationService.giftAid.message.20 = Nodwch god post y rhoddwr
+validationService.giftAid.message.21 = Nodwch god post rhoddwr yn y fformat cywir
+validationService.giftAid.message.22 = Nodwch ‘Iawn’ os yw hwn yn ddigwyddiad a noddir, fel arall gadewch yn wag
+validationService.giftAid.message.23 = Mae’n rhaid i’r maes a ddewisir fod yn cyfraniad cyfansymiol, digwyddiad noddedig neu rodd gyffredin
+validationService.giftAid.message.24 = Ni allwch roi teitl ar gyfer cyfraniad cyfansymiol
+validationService.giftAid.message.25 = Ni allwch roi enw cyntaf ar gyfer cyfraniad cyfansymiol
+validationService.giftAid.message.26 = Ni allwch roi enw olaf ar gyfer cyfraniad cyfansymiol
+validationService.giftAid.message.27 = Ni allwch ddarparu enw na rhif tŷ ar gyfer cyfraniad cyfansymiol
+validationService.giftAid.message.28 = Ni allwch roi cod post ar gyfer cyfraniad cyfansymiol
 
-
-
-
+validationService.commonFile.message.1 = Nid oedd modd uwchlwytho’r ffeil dan sylw
+validationService.commonFile.message.2 = There is a problem with your spreadsheet
+validationService.commonFile.message.3 = Mae’n rhaid i’r ffeil a ddewiswyd ddefnyddio’r templed gofynnol

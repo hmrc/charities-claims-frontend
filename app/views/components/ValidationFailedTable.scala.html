@@ -34,7 +34,7 @@
         rows = errors.map { error =>
             Seq(
                 TableRow(content = Text(error.field.toRowNumber), classes = "govuk-table__header"),
-                TableRow(content = Text(error.error))
+                TableRow(content = Text(messages(error.error)))
             )
         }
     )
