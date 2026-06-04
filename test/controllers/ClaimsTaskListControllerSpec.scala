@@ -221,11 +221,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
         }
       }
 
-      "should show GASDS task as Not yet started when GASDS details are incomplete" in {
-
-        val gasdsAnswers = GiftAidSmallDonationsSchemeDonationDetailsAnswers(
-          claims = None
-        )
+      "should show GASDS task as Not yet started when no GASDS details exist" in {
 
         val answers = repaymentClaimDetailsAnswersCompleted.copy(
           claimingUnderGiftAidSmallDonationsScheme = Some(true),
@@ -233,6 +229,39 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           claimingDonationsCollectedInCommunityBuildings = Some(false),
           connectedToAnyOtherCharities = Some(false),
           makingAdjustmentToPreviousClaim = Some(false)
+        )
+
+        val sessionData = SessionData(
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswers = Some(answers)
+        )
+
+        given application: Application =
+          applicationBuilder(sessionData).mockClaimsConnectorLastVisitedAt.build()
+
+        running(application) {
+          val result  = route(application, FakeRequest(GET, url)).value
+          val content = contentAsString(result)
+
+          content should include("Gift Aid Small Donations Scheme details")
+          content should include("Not yet started")
+        }
+      }
+
+      "should show GASDS task as In progress when GASDS details are incomplete" in {
+
+        val gasdsAnswers = GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+          claims = None,
+          adjustmentForGiftAidOverClaimed = Some(BigDecimal(100))
+        )
+
+        val answers = repaymentClaimDetailsAnswersCompleted.copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(true),
+          claimingDonationsNotFromCommunityBuilding = Some(true),
+          claimingDonationsCollectedInCommunityBuildings = Some(false),
+          connectedToAnyOtherCharities = Some(false),
+          makingAdjustmentToPreviousClaim = Some(true)
         )
 
         val sessionData = SessionData(
@@ -250,7 +279,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val content = contentAsString(result)
 
           content should include("Gift Aid Small Donations Scheme details")
-          content should include("Not yet started")
+          content should include("In progress")
         }
       }
 
