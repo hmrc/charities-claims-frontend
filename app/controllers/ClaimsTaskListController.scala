@@ -257,7 +257,24 @@ object ClaimsTaskListController {
     val isAgent    = request.sessionData.isAgent
     val isComplete = request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
       .exists(_.hasGasdsDonationDetailsCompleteAnswers(request.sessionData.repaymentClaimDetailsAnswers, isAgent))
-    val status     = if (isComplete) TaskStatus.Completed else TaskStatus.NotStarted
+    val status     =
+      request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers match {
+        case None =>
+          TaskStatus.NotStarted
+
+        case Some(answers) if !answers.hasStarted =>
+          TaskStatus.NotStarted
+
+        case Some(answers)
+            if answers.hasGasdsDonationDetailsCompleteAnswers(
+              request.sessionData.repaymentClaimDetailsAnswers,
+              isAgent
+            ) =>
+          TaskStatus.Completed
+
+        case Some(_) =>
+          TaskStatus.InProgress
+      }
     val href       = if (isComplete) {
       giftAidSmallDonationsScheme.routes.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersController.onPageLoad
     } else {

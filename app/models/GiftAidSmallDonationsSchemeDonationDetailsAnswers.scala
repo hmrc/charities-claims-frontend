@@ -155,6 +155,10 @@ final case class GiftAidSmallDonationsSchemeDonationDetailsAnswers(
   private def messageKey(key: String, isAgent: Boolean): String =
     if (isAgent) s"$key.agent" else key
 
+  def hasStarted: Boolean =
+    adjustmentForGiftAidOverClaimed.isDefined ||
+      claims.exists(_.nonEmpty)
+
   def hasGasdsDonationDetailsCompleteAnswers(
     repaymentClaimDetailsAnswers: Option[RepaymentClaimDetailsAnswers],
     isAgent: Boolean
