@@ -65,6 +65,7 @@ site.remove = Dileu
 site.govuk = GOV.UK
 data.notApplicable = Amherthnasol
 error.browser.title.prefix = Gwall:
+govukErrorMessage.visuallyHiddenText = Gwall
 warning.text = Rhybudd
 
 service.name = Gwneud hawliad am ad-daliad treth elusennau
@@ -618,6 +619,10 @@ deleteAgentClaim.heading = Dileu’r cais am ad-daliad
 deleteAgentClaim.body = Rydych ar fin dileu’r hawliad ad-daliad ar gyfer {0}.
 deleteAgentClaim.caution = A ydych yn siŵr eich bod am ddileu’r hawliad ad-daliad hwn?
 deleteAgentClaim.error.required = Dewiswch ‘Iawn’ os ydych am ddileu’r hawliad ad-daliad hwn
+
+deleteOrganisationClaim.error.required = Dewiswch ‘Iawn’ os ydych am ddileu’r hawliad ad-daliad hwn
+deleteOrganisationClaim.heading = A ydych yn siŵr eich bod am ddileu’r hawliad ad-daliad hwn?
+deleteOrganisationClaim.title = A ydych yn siŵr eich bod am ddileu’r hawliad ad-daliad hwn?
 
 warning11MaxClaimsReached.message.1 = Rydych wedi cyrraedd y nifer uchaf o hawliadau drafft
 warning11MaxClaimsReached.message.2 = Gallwch gael {0} o hawliadau ar y gweill ar yr un pryd. Dilëwch hawliad sy’n bodoli eisoes er mwyn gwneud hawliad newydd.
