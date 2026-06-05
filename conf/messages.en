@@ -951,6 +951,7 @@ gasdsAdjustmentAmountCheckYourAnswers.title.agent = Check this GASDS adjustment 
 gasdsAdjustmentAmountCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Amount of GASDS previously overclaimed
 
 donationAmountYouAreClaiming.caption = Provide GASDS donation details {0}
+donationAmountYouAreClaiming.caption.multipleYears = Provide GASDS donation details - Tax year {0}
 donationAmountYouAreClaiming.heading = What donation amount are you claiming under GASDS, in pounds?
 donationAmountYouAreClaiming.title = What donation amount are you claiming under GASDS, in pounds?
 donationAmountYouAreClaiming.heading.agent = What donation amount is being claimed under GASDS, in pounds?
@@ -959,6 +960,7 @@ donationAmountYouAreClaiming.hint = This can be up to 2 decimal places, for exam
 donationAmountYouAreClaiming.error.required = Enter a {0} tax year amount
 donationAmountYouAreClaiming.error.invalid = Enter a {0} tax year amount in the correct format
 donationAmountYouAreClaiming.error.maxLength = Donation amount must be £1,000,000,000,000 or less
+
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.heading = This claim cannot be setup
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.message = You need to provide the following details to continue:
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.returnLink = Go back to provide the missing details for your claim
@@ -976,7 +978,8 @@ giftAidSmallDonationsSchemeDonationDetails.claim2.missingAmount.agent = confirm 
 giftAidSmallDonationsSchemeDonationDetails.claim3.missingAmount = confirm the donation amount you are claiming for tax year 3
 giftAidSmallDonationsSchemeDonationDetails.claim3.missingAmount.agent = confirm the donation amount the charity is claiming for tax year 3
 
-whichTaxYearAreYouClaimingFor.caption = Provide GASDS donation details {0}
+whichTaxYearAreYouClaimingFor.caption = Provide GASDS donation details
+whichTaxYearAreYouClaimingFor.caption.multipleYears = Provide GASDS donation details - Tax year {0}
 whichTaxYearAreYouClaimingFor.heading = Which tax year are you claiming for?
 whichTaxYearAreYouClaimingFor.title = Which tax year are you claiming for?
 whichTaxYearAreYouClaimingFor.heading.agent = Which tax year is the charity claiming for?
