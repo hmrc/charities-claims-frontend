@@ -136,7 +136,7 @@ corporateTrusteeClaim.error.required = Dewiswch ‘Iawn’ os yw’r hawliad hwn
 corporateTrusteeClaim.heading = A yw’r hawliad hwn yn cael ei wneud gan ymddiriedolwr corfforaethol?
 corporateTrusteeClaim.hint = Gall hyn fod yn adran ymddiriedolaethau o fewn banc, yn gwmni ymddiriedolaeth neu’n gorfforaeth ymddiriedolaeth.
 corporateTrusteeClaim.missingDetails = confirm if you are a corporate trustee
-corporateTrusteeClaim.title = Is a corporate trustee making this claim?
+corporateTrusteeClaim.title = A yw’r hawliad hwn yn cael ei wneud gan ymddiriedolwr corfforaethol?
 
 corporateTrusteeAddress.caption = Rhowch fanylion am y sefydliad
 corporateTrusteeAddress.error.required = Dewiswch ‘Iawn’ os oes gan yr ymddiriedolwr corfforaethol gyfeiriad yn y DU
@@ -159,13 +159,13 @@ corporateTrusteeDetails.name.error.length = Mae’n rhaid i enw ymddiriedolwr co
 corporateTrusteeDetails.name.error.regex = Nodwch enw ymddiriedolwr corfforaethol yn y fformat cywir
 corporateTrusteeDetails.name.error.required = Nodwch enw ymddiriedolwr corfforaethol
 corporateTrusteeDetails.name.label = Enw’r ymddiriedolwr
-corporateTrusteeDetails.phone.error.length = Corporate trustee phone number must be 30 characters or less
+corporateTrusteeDetails.phone.error.length = Mae’n rhaid i rif ffôn ymddiriedolwr corfforaethol fod yn 30 o gymeriadau neu lai
 corporateTrusteeDetails.phone.error.regex = Enter a corporate trustee phone number in the correct format
-corporateTrusteeDetails.phone.error.required = Enter a corporate trustee phone number
+corporateTrusteeDetails.phone.error.required = Nodwch rif ffôn ymddiriedolwr corfforaethol
 corporateTrusteeDetails.phone.label = Rhif ffôn yr ymddiriedolwr
 corporateTrusteeDetails.postCode.error.length = Mae’n rhaid i’r cod post ymddiriedolwr corfforaethol fod yn 8 o gymeriadau neu lai
-corporateTrusteeDetails.postCode.error.regex = Enter a corporate trustee postcode in the correct format
-corporateTrusteeDetails.postCode.error.required = Enter a corporate trustee postcode
+corporateTrusteeDetails.postCode.error.regex = Nodwch god post enw ymddiriedolwr corfforaethol yn y fformat cywir
+corporateTrusteeDetails.postCode.error.required = Nodwch god post yr ymddiriedolwr
 corporateTrusteeDetails.postcode.label = Cod post yr ymddiriedolwr
 corporateTrusteeDetails.title = Beth yw manylion yr ymddiriedolwr corfforaethol?
 
