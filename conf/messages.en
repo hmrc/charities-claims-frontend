@@ -368,6 +368,7 @@ removeClaimForTaxYear.error.required = Select ‘Yes’ if you want to remove th
 removeClaimForTaxYear.heading = Do you want to remove the claim for tax year {0}?
 removeClaimForTaxYear.title = Do you want to remove the claim for tax year {0}?
 error.browser.title.prefix = Error:
+govukErrorMessage.visuallyHiddenText = Error
 
 fileUpload.status.AWAITING_UPLOAD = Uploading
 fileUpload.status.VALIDATED = Uploaded
