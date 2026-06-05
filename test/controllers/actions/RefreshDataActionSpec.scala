@@ -228,7 +228,7 @@ class RefreshDataActionSpec extends BaseSpec {
 
       val result = action.invokeBlock(
         authorisedRequestOrganisation,
-        (req: DataRequest[?]) => Future.successful(Ok)
+        _ => Future.successful(Ok)
       )
 
       status(result)           shouldBe SEE_OTHER
