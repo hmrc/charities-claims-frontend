@@ -69,7 +69,10 @@ class RepaymentClaimTypeController @Inject() (
       .fold(
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, isAgent))),
         repaymentClaimType =>
-          if (needsUpdateConfirmationForRepaymentClaimType(previousAnswer, repaymentClaimType)) {
+          if (
+            RepaymentClaimDetailsAnswers
+              .needsUpdateConfirmationForRepaymentClaimType(previousAnswer, repaymentClaimType)
+          ) {
             val checkboxValues = formProvider.toSet(repaymentClaimType).toSeq
             Future.successful(
               Ok(
