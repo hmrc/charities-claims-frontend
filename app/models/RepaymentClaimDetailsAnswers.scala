@@ -140,12 +140,6 @@ object RepaymentClaimDetailsAnswers {
       case Some(a) => a.agentMissingFields
       case None    => defaultAgentMissingFields
 
-  /*  private val defaultAgentMissingFields: List[String] = List(
-    "claimingTaxDeducted.agent.missingDetails",
-    "claimingUnderGiftAidSmallDonationsScheme.agent.missingDetails",
-    "claimReferenceNumber.agent.missingDetails"
-  )*/
-
   private val defaultAgentMissingFields: List[String] = List(
     "repaymentClaimDetails.agent.missingCharitiesReference",
     "repaymentClaimDetails.agent.missingCharityName",
