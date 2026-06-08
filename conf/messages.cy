@@ -928,24 +928,24 @@ problemUpdatingConnectedCharitiesScheduleUnknownError.agent.hint = This file cou
 problemUpdatingConnectedCharitiesScheduleUnknownError.agent.title = There is a problem uploading this Connected Charities schedule
 
 updateCommunityBuildingsSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddiweddaru’ch incwm trethadwy amcangyfrifedig
-updateCommunityBuildingsSchedule.heading = Are you sure you want to update this Community Buildings schedule?
+updateCommunityBuildingsSchedule.heading = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Adeiladau Cymunedol hon?
 updateCommunityBuildingsSchedule.hint = Drwy ddiweddaru’r ffeil hon, byddwch yn colli unrhyw ddata atodlen o Adeiladau Cymunedol rydych wedi’i atodi o’r blaen.
-updateCommunityBuildingsSchedule.title = Are you sure you want to update this Community Buildings schedule?
+updateCommunityBuildingsSchedule.title = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Adeiladau Cymunedol hon?
 
 updateConnectedCharitiesSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddiweddaru’ch incwm trethadwy amcangyfrifedig
-updateConnectedCharitiesSchedule.heading = Are you sure you want to update this Connected Charities schedule?
+updateConnectedCharitiesSchedule.heading = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Elusennau Cysylltiedig hon?
 updateConnectedCharitiesSchedule.hint = Drwy ddiweddaru’r ffeil hon, byddwch yn colli unrhyw ddata atodlen o Elusennau Cysylltiedig rydych wedi’i atodi o’r blaen.
-updateConnectedCharitiesSchedule.title = Are you sure you want to update this Connected Charities schedule?
+updateConnectedCharitiesSchedule.title = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Elusennau Cysylltiedig hon?
 
-updateGiftAidSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddiweddaru’ch incwm trethadwy amcangyfrifedig
+updateGiftAidSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddiweddaru’r atodlen Rhodd Cymorth hon
 updateGiftAidSchedule.heading = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Rhodd Cymorth hon?
 updateGiftAidSchedule.hint = Drwy ddiweddaru’r ffeil hon, byddwch yn colli unrhyw ddata atodlen Rhodd Cymorth rydych wedi’i atodi o’r blaen.
 updateGiftAidSchedule.title = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Rhodd Cymorth hon?
 
 updateOtherIncomeSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddiweddaru’r atodlen Incwm Arall hon
-updateOtherIncomeSchedule.heading = Are you sure you want to update this Other Income schedule?
+updateOtherIncomeSchedule.heading = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Incwm Arall hon?
 updateOtherIncomeSchedule.hint = Drwy ddiweddaru’r ffeil hon, byddwch yn colli unrhyw ddata atodlen Incwm Arall rydych wedi’i atodi o’r blaen.
-updateOtherIncomeSchedule.title = Are you sure you want to update this Other Income schedule?
+updateOtherIncomeSchedule.title = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Incwm Arall hon?
 
 removeClaimForTaxYear.error.required = Dewiswch ‘Iawn’ os ydych am ddileu’r hawliad ar gyfer blwyddyn dreth {0}
 removeClaimForTaxYear.heading = A ydych am ddileu’r hawliad ar gyfer blwyddyn dreth {0}?
