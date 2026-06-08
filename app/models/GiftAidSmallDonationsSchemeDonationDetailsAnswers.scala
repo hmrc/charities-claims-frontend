@@ -170,8 +170,8 @@ final case class GiftAidSmallDonationsSchemeDonationDetailsAnswers(
 object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
 
   given [A](using f: Format[A]): Format[Seq[Option[A]]] = {
-    val reads  = Reads.seq(Reads.optionWithNull(using f))
-    val writes = Writes.seq(Writes.optionWithNull(using f))
+    val reads  = Reads.seq(using Reads.optionWithNull(using f))
+    val writes = Writes.seq(using Writes.optionWithNull(using f))
     Format(reads, writes)
   }
 

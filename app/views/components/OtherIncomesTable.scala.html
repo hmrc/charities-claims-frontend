@@ -37,8 +37,8 @@
                 TableRow(content = Text(income.otherIncomeItem.toString), classes = "govuk-table__header"),
                 TableRow(content = Text(income.payerName)),
                 TableRow(content = Text(income.paymentDate.toDdMmYyyyDateString)),
-                TableRow(content = Text(income.grossPayment.setScale(2).bigDecimal.toPlainString)),
-                TableRow(content = Text(income.taxDeducted.setScale(2).bigDecimal.toPlainString))
+                TableRow(content = Text(income.grossPayment.toAmountString)),
+                TableRow(content = Text(income.taxDeducted.toAmountString))
             )
         }
     )
