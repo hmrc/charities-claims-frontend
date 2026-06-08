@@ -130,16 +130,6 @@ class RepaymentClaimTypeController @Inject() (
     request.body.asFormUrlEncoded
       .flatMap(_.get("value[]"))
       .getOrElse(Seq.empty)
-
-  private def needsUpdateConfirmationForRepaymentClaimType(
-    previousAnswer: Option[RepaymentClaimType],
-    newAnswer: RepaymentClaimType
-  ): Boolean =
-    previousAnswer.exists { prev =>
-      (prev.claimingGiftAid && !newAnswer.claimingGiftAid) ||
-      (prev.claimingTaxDeducted && !newAnswer.claimingTaxDeducted) ||
-      (prev.claimingUnderGiftAidSmallDonationsScheme && !newAnswer.claimingUnderGiftAidSmallDonationsScheme)
-    }
 }
 
 object RepaymentClaimTypeController {
