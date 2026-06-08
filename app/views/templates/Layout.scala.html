@@ -27,6 +27,7 @@
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.config.ContactFrontendConfig
+@import java.net.URLEncoder
 
 @this(
         hmrcStandardPage: HmrcStandardPage,
@@ -91,7 +92,7 @@
 @hmrcStandardPage(HmrcStandardPageParams(
     serviceURLs = ServiceURLs(
         serviceUrl = Some(config.charityRepaymentDashboardUrl),
-        signOutUrl = signOutUrl
+        signOutUrl = signOutUrl.map(url => s"$url?continue=${URLEncoder.encode(config.feedbackUrl, "UTF-8")}")
     ),
     banners = Banners(
         phaseBanner = Some(betaBanner()),
