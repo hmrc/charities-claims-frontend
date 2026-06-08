@@ -950,7 +950,7 @@ gasdsAdjustmentAmountCheckYourAnswers.heading.agent = Check this GASDS adjustmen
 gasdsAdjustmentAmountCheckYourAnswers.title.agent = Check this GASDS adjustment amount
 gasdsAdjustmentAmountCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Amount of GASDS previously overclaimed
 
-donationAmountYouAreClaiming.caption = Provide GASDS donation details {0}
+donationAmountYouAreClaiming.caption = Provide GASDS donation details
 donationAmountYouAreClaiming.caption.multipleYears = Provide GASDS donation details - Tax year {0}
 donationAmountYouAreClaiming.heading = What donation amount are you claiming under GASDS, in pounds?
 donationAmountYouAreClaiming.title = What donation amount are you claiming under GASDS, in pounds?
