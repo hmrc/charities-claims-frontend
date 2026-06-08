@@ -16,13 +16,13 @@
 
 package controllers.otherIncomeSchedule
 
-import models.{Claim, DeleteScheduleResponse, UpdateClaimResponse}
 import org.jsoup.Jsoup
-import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.libs.json.Json
-import play.api.test.Helpers.*
+import models.Claim
+import org.scalatest.OptionValues.convertOptionToValuable
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
+import play.api.test.Helpers.*
 
 class OtherIncomeScheduleUploadSuccessfulControllerISpec
     extends ComponentSpecHelper
