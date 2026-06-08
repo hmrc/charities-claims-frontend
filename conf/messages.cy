@@ -729,7 +729,7 @@ repaymentClaimType.heading = Pa fath o hawliad am ad-daliad hoffech ei wneud?
 repaymentClaimType.hint = Dewiswch o leiaf un
 repaymentClaimType.label.claimingGiftAid = Ad-daliadau treth ar gyfraniadau Rhodd Cymorth
 repaymentClaimType.label.claimingTaxDeducted = Treth yn y DU a ddidynnwyd o Incwm Arall
-repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme = Top-up payments for donations under the Gift Aid Small Donations Scheme (GASDS)
+repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme = Taliadau atodol o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS)
 repaymentClaimType.title = Pa fath o hawliad am ad-daliad hoffech ei wneud?
 
 gasdsClaimType.title = Manylion y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS)
@@ -800,7 +800,7 @@ repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.label = Math o hawliad GASD
 repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.topup = Taliad atodol GASDS
 repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.communityBuildings = Taliad atodol adeiladau cymunedol
 repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.connectedCharity = Hawliad CChAC neu elusen gysylltiedig
-repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS = Top-up payments for small cash donations under Gift Aid Small Donations Scheme (GASDS)
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS = Taliadau atodol ar gyfer cyfraniadau arian parod bach o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS)
 repaymentClaimDetailsCheckYourAnswers.title = Gwiriwch eich hawliad am ad-daliad
 repaymentClaimDetailsCheckYourAnswers.agent.title = Gwiriwch fanylion yr hawliad am ad-daliad
 repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityName.label = Enw’r elusen
