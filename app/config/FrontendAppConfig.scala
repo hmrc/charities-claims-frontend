@@ -30,6 +30,7 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
   lazy val loginUrl: String                                         = config.get[String]("urls.login")
   lazy val loginContinueUrl: String                                 = config.get[String]("urls.loginContinue")
   lazy val signOutUrl: String                                       = config.get[String]("urls.signOut")
+  lazy val feedbackUrl: String                                      = config.get[String]("urls.feedbackUrl")
   lazy val homePageUrl: String                                      = config.get[String]("urls.homePageUrl")
   lazy val researchUrl: String                                      = config.get[String]("urls.researchUrl")
   lazy val authLoginStubSignInUrl: String                           = config.get[String]("urls.authLoginStubSignInUrl")
