@@ -1011,7 +1011,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val result  = route(application, request).value
           val content = contentAsString(result)
 
-          content should include("""class="govuk-caption-l"""")
+          content should include("""class="govuk-caption-l charity-name-caption"""")
           content should include("Test Charity Name")
         }
       }
