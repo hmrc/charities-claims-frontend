@@ -19,7 +19,7 @@ package viewmodels
 import models.*
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.test.Helpers.stubMessages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 
@@ -78,6 +78,28 @@ class RepaymentClaimSummaryHelperSpec extends PlaySpec with GuiceOneAppPerSuite 
       result.rows(2).value.content.asHtml.body   must include("SUB123456")
       result.rows(3).value.content.asHtml.body   must include("7 Apr 2026 12:34:21")
       result.rows(4).value.content.asHtml.body   must include("John Doe")
+    }
+
+    "display the submission date in Welsh when Welsh is selected" in {
+
+      val welshMessages: Messages =
+        app.injector.instanceOf[MessagesApi].preferred(Seq(Lang("cy")))
+
+      val result =
+        RepaymentClaimSummaryHelper.claimDetails(summary)(using welshMessages)
+
+      result.rows(3).value.content.asHtml.body must include("7 Ebr 2026 12:34:21")
+    }
+
+    "display the submission date in English when English is selected" in {
+
+      val englishMessages: Messages =
+        app.injector.instanceOf[MessagesApi].preferred(Seq(Lang("en")))
+
+      val result =
+        RepaymentClaimSummaryHelper.claimDetails(summary)(using englishMessages)
+
+      result.rows(3).value.content.asHtml.body must include("7 Apr 2026 12:34:21")
     }
   }
 

@@ -26,7 +26,11 @@ import java.time.format.DateTimeFormatter
 
 object RepaymentClaimSummaryHelper {
   def claimDetails(summary: SubmissionSummaryResponse)(implicit messages: Messages): SummaryList =
-    val formatter = DateTimeFormatter.ofPattern("d MMM yyyy HH:mm:ss").withZone(ZoneId.of("Europe/London"))
+    val formatter =
+      DateTimeFormatter
+        .ofPattern("d MMM yyyy HH:mm:ss")
+        .withLocale(messages.lang.toLocale)
+        .withZone(ZoneId.of("Europe/London"))
 
     SummaryList(
       rows = Seq(
