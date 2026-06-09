@@ -222,7 +222,7 @@ organisationDetailsCheckYourAnswers.title = Gwiriwch fanylion eich sefydliad
 whoShouldWeSendPaymentTo.title = At bwy y dylai CThEF anfon y taliad?
 whoShouldWeSendPaymentTo.heading = At bwy y dylai CThEF anfon y taliad?
 whoShouldWeSendPaymentTo.caption = Rhowch fanylion am y sefydliad
-whoShouldWeSendPaymentTo.radio.charityOrCasc = Elusen/Clwb Chwaraeon Amatur Cymunedol (CASC)
+whoShouldWeSendPaymentTo.radio.charityOrCasc = Elusen/Clwb Chwaraeon Amatur Cymunedol (CChAC)
 whoShouldWeSendPaymentTo.radio.agentOrNominee = Asiant/Enwebai
 whoShouldWeSendPaymentTo.error.required = Dewiswch at bwy y dylai CThEF anfon taliad
 
@@ -238,7 +238,7 @@ enterTelephoneNumber.error.format = Nodwch rif ffôn yn y fformat cywir
 doYouHaveAgentUKAddress.title = A oes gennych gyfeiriad yn y DU?
 doYouHaveAgentUKAddress.heading = A oes gennych gyfeiriad yn y DU?
 doYouHaveAgentUKAddress.caption = Rhowch fanylion am y sefydliad
-doYouHaveAgentUKAddress.error.required = Dewiswch ’Iawn’ os oes gennych gyfeiriad yn y DU
+doYouHaveAgentUKAddress.error.required = Dewiswch ‘Iawn’ os oes gennych gyfeiriad yn y DU
 
 agentPostcode.title = Beth yw’ch cod post?
 agentPostcode.heading = Beth yw’ch cod post?
@@ -653,7 +653,7 @@ claimReferenceNumberCheck.missingDetails = cadarnhau a oes gennych rif cyfeirnod
 
 claimGASDS.missingDetails = cadarnhau pa fath o hawliad(au) GASDS rydych am eu gwneud
 changePreviousGASDSClaim.missingDetails = cadarnhau a ydych am newid hawliad blaenorol y Cynllun Rhoddion Bach Rhodd Cymorth
-repaymentClaimDetails.agent.missingCharityName = cadarnhau enw’r elusen neu’r Clwb Chwaraeon Amatur Cymunedol (CASC)
+repaymentClaimDetails.agent.missingCharityName = cadarnhau enw’r elusen neu’r Clwb Chwaraeon Amatur Cymunedol (CChAC)
 repaymentClaimDetails.agent.missingCharitiesReference = cadarnhau rhif cyfeirnod Elusennau CThEF
 repaymentClaimType.agent.missingDetails = cadarnhau’r math o hawliad ad-daliad
 claimReferenceNumberCheck.agent.missingDetails = cadarnhau a oes gan yr elusen rif cyfeirnod hawliad
@@ -820,9 +820,9 @@ enterCharityName.heading = Beth yw enw’r elusen neu’r Clwb Chwaraeon Amatur 
 enterCharityName.caption = Rhowch fanylion hawliad yr elusen am ad-daliad
 enterCharityName.hint = Nodwch yr enw sydd wedi’i gofrestru gyda Chyllid a Thollau EF. Er enghraifft, Royal Society for the Prevention of Cruelty to Animals Hillingdon, Slough and District Branch.
 enterCharityName.charLimit = Mae gennych 160 o gymeriadau’n weddill
-enterCharityName.error.required = Nodwch enw elusen neu Glwb Chwaraeon Amatur Cymunedol (CASC)
-enterCharityName.error.length = Mae’n rhaid i enw Clwb Chwaraeon Amatur Elusen neu Gymunedol (CASC) fod yn 160 o gymeriadau neu lai
-enterCharityName.error.regex = Nodwch enw elusen neu Glwb Chwaraeon Amatur Cymunedol (CASC) yn y fformat cywir
+enterCharityName.error.required = Nodwch enw elusen neu Glwb Chwaraeon Amatur Cymunedol (CChAC)
+enterCharityName.error.length = Mae’n rhaid i enw Clwb Chwaraeon Amatur Elusen neu Gymunedol (CChAC) fod yn 160 o gymeriadau neu lai
+enterCharityName.error.regex = Nodwch enw elusen neu Glwb Chwaraeon Amatur Cymunedol (CChAC) yn y fformat cywir
 
 charitiesReferenceNumber.caption = Rhowch fanylion hawliad yr elusen am ad-daliad
 charitiesReferenceNumber.error.length = Mae’n rhaid i gyfeirnod adran elusennau CThEF fod yn 7 o gymeriadau neu lai
