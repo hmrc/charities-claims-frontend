@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-    layout: templates.Layout
-)
+package viewmodels
 
-@()(implicit request: Request[?], messages: Messages)
+import controllers.routes
 
-@* TODO: This is a placeholder screen (D3) *@
-@* TODO: Content and functionality will be implemented in the future *@
-
-@layout(pageTitle = titleNoForm(messages("declarationDetailsConfirmation.title")), showBackLink = true) {
-
-    <h1 class="govuk-heading-xl">@messages("declarationDetailsConfirmation.heading")</h1>
-
-    <p class="govuk-body">@messages("declarationDetailsConfirmation.placeholder")</p>
-
+enum TimeoutMode(val url: String) {
+  case Normal extends TimeoutMode(routes.StartController.timedOut.url)
+  case Saved extends TimeoutMode(routes.StartController.timedOutSaved.url)
+  case NotSaved extends TimeoutMode(routes.StartController.timedOutNotSaved.url)
 }

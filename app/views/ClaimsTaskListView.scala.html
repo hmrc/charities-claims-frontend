@@ -16,6 +16,7 @@
 
 @import viewmodels.ClaimsTaskListViewModel
 @import viewmodels.govuk.tasklist.*
+@import viewmodels.TimeoutMode
 
 @this(
     layout: templates.Layout,
@@ -24,7 +25,10 @@
 
 @(viewModel: ClaimsTaskListViewModel, isAgent: Boolean, organisationName: Option[String])(implicit request: Request[?], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("claimsTaskList.title"))) {
+@layout(
+    pageTitle = titleNoForm(messages("claimsTaskList.title")),
+    timeOutMode = TimeoutMode.Saved
+) {
 
     @if(isAgent) {
        @organisationName.map { name =>

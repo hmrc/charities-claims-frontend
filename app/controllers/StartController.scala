@@ -21,10 +21,15 @@ import com.google.inject.Inject
 import controllers.actions.AuthorisedAction
 import play.api.i18n.I18nSupport
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.TimedOutView
+import viewmodels.TimeoutMode
+import javax.inject.Singleton
 
+@Singleton
 class StartController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  authorisedAction: AuthorisedAction
+  authorisedAction: AuthorisedAction,
+  timedOutView: TimedOutView
 ) extends FrontendBaseController
     with I18nSupport {
 
@@ -34,7 +39,13 @@ class StartController @Inject() (
   val keepAlive: Action[AnyContent] =
     authorisedAction(_ => Ok)
 
+  val timedOutNotSaved: Action[AnyContent] =
+    Action(implicit request => Ok(timedOutView(TimeoutMode.NotSaved)))
+
+  val timedOutSaved: Action[AnyContent] =
+    Action(implicit request => Ok(timedOutView(TimeoutMode.Saved)))
+
   val timedOut: Action[AnyContent] =
-    Action(implicit request => Redirect(routes.StartController.start.url))
+    Action(implicit request => Ok(timedOutView(TimeoutMode.Normal)))
 
 }

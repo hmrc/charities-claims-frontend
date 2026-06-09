@@ -59,7 +59,7 @@ class StartControllerSpec extends ControllerSpec {
     }
 
     "timedOut" - {
-      "should redirect to the start page" in {
+      "should return OK" in {
         given application: Application = applicationBuilder().build()
 
         running(application) {
@@ -68,8 +68,37 @@ class StartControllerSpec extends ControllerSpec {
 
           val result = route(application, request).value
 
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(routes.StartController.start.url)
+          status(result) shouldEqual OK
+        }
+      }
+    }
+
+    "timedOutSaved" - {
+      "should return OK" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.StartController.timedOutSaved.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual OK
+        }
+      }
+    }
+
+    "timedOutNotSaved" - {
+      "should return OK" in {
+        given application: Application = applicationBuilder().build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.StartController.timedOutNotSaved.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual OK
         }
       }
     }

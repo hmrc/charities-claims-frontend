@@ -1113,3 +1113,9 @@ giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.1 = Addasiad i haw
 giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.2 = Hawliadau GASDS
 giftAidSmallDonationsSchemeDetailsCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Swm y GASDS a orhawliwyd yn flaenorol
 giftAidSmallDonationsSchemeDetailsCheckYourAnswers.numberOfTaxYearsAdded.label = Nifer y blynyddoedd treth sydd wedi’u hychwanegu
+
+timedOut.title = Er eich diogelwch, gwnaethom eich allgofnodi
+timedOut.heading = Er eich diogelwch, gwnaethom eich allgofnodi
+timedOut.message.saved = Gwnaethom gadw’ch atebion.
+timedOut.message.not-saved = Ni wnaethom gadw’ch atebion.
+timedOut.button = Mewngofnodi
