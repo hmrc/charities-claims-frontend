@@ -27,7 +27,7 @@ adjustmentToThisClaim.title = Pa addasiadau ydych wedi’u gwneud i’r hawliad 
 characterCount.charactersUnderLimit.one=Mae gennych %'{'count'}' cymeriad yn weddill
 characterCount.charactersUnderLimit.other=Mae gennych %'{'count'}' o gymeriadau yn weddill
 characterCount.charactersAtLimit=Mae gennych 0 o gymeriadau yn weddill
-characterCount.charactersOverLimit.one=Mae gennych %'{'count'} cymeriad yn ormod
+characterCount.charactersOverLimit.one=Mae gennych %'{'count'}' cymeriad yn ormod
 characterCount.charactersOverLimit.other=Mae gennych %'{'count'}' o gymeriadau yn ormod
 
 claimComplete.title = Hawliad wedi’i gwblhau
@@ -294,9 +294,9 @@ uploadGiftAidSchedule.paragraph.url = Os nad ydych wedi llenwi atodlen Rhodd Cym
 uploadGiftAidSchedule.title = Uwchlwytho atodlen Rhodd Cymorth
 
 fileUpload.status.AWAITING_UPLOAD = Uwchlwytho
-fileUpload.status.VALIDATED = Wedi'i uwchlwytho
+fileUpload.status.VALIDATED = Wedi’i uwchlwytho
 fileUpload.status.VALIDATING = Uwchlwytho
-fileUpload.status.VALIDATION_FAILED = Wedi'i uwchlwytho
+fileUpload.status.VALIDATION_FAILED = Wedi’i uwchlwytho
 fileUpload.status.VERIFICATION_FAILED = Wedi methu
 fileUpload.status.VERIFYING = Uwchlwytho
 fileUpload.button = Dewis ffeil
@@ -339,7 +339,7 @@ checkYourGiftAidSchedule.agent.title = Gwirio’r atodlen Rhodd Cymorth hon
 problemWithGiftAidSchedule.caption = Ychwanegu atodlen Rhodd Cymorth
 problemWithGiftAidSchedule.heading = Mae problem gyda’r data yn eich atodlen Rhodd Cymorth
 problemWithGiftAidSchedule.agent.heading = Mae problem gyda’r data yn yr atodlen Rhodd Cymorth hon
-problemWithGiftAidSchedule.link.attachUpdatedSchedule = Atodi atodlen Rhodd Cymorth wedi'i diweddaru
+problemWithGiftAidSchedule.link.attachUpdatedSchedule = Atodi atodlen Rhodd Cymorth wedi’i diweddaru
 problemWithGiftAidSchedule.link.deleteSchedule = Dileu atodlen
 problemWithGiftAidSchedule.list.item.1 = Cyfeirio at daenlen yr <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Atodlen i hawlio treth yn ôl ar gyfraniadau Rhodd Cymorth (yn agor tab newydd)</a>.
 problemWithGiftAidSchedule.list.item.2 = Dileu’r atodlen Rhodd Cymorth hon.
@@ -681,9 +681,9 @@ giftAidSmallDonationsSchemeDonationDetails.claim.missingYears.agent = cadarnhau 
 giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount = confirm the donation amount you are claiming for tax year 1
 giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount.agent = cadarnhau swm y rhodd y mae’r elusen yn ei hawlio ar gyfer blwyddyn dreth 1
 giftAidSmallDonationsSchemeDonationDetails.claim2.missingAmount = confirm the donation amount you are claiming for tax year 2
-giftAidSmallDonationsSchemeDonationDetails.claim2.missingAmount.agent = cadarnhau swm y rhodd y mae'r elusen yn ei hawlio ar gyfer blwyddyn dreth 2
+giftAidSmallDonationsSchemeDonationDetails.claim2.missingAmount.agent = cadarnhau swm y rhodd y mae’r elusen yn ei hawlio ar gyfer blwyddyn dreth 2
 giftAidSmallDonationsSchemeDonationDetails.claim3.missingAmount = confirm the donation amount you are claiming for tax year 3
-giftAidSmallDonationsSchemeDonationDetails.claim3.missingAmount.agent = cadarnhau swm y rhodd y mae'r elusen yn ei hawlio ar gyfer blwyddyn dreth 3
+giftAidSmallDonationsSchemeDonationDetails.claim3.missingAmount.agent = cadarnhau swm y rhodd y mae’r elusen yn ei hawlio ar gyfer blwyddyn dreth 3
 
 claimsTaskList.declaration.warning = Mae’n rhaid i chi lenwi pob adran cyn y gallwch ddatgan.
 claimsTaskList.heading = Hawlio ad-daliad elusennnau
@@ -1099,4 +1099,4 @@ giftAidSmallDonationsSchemeDetailsCheckYourAnswers.title.agent = Gwiriwch fanyli
 giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.1 = Addasiad i hawliad GASDS
 giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.2 = Hawliadau GASDS
 giftAidSmallDonationsSchemeDetailsCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Swm y GASDS a orhawliwyd yn flaenorol
-giftAidSmallDonationsSchemeDetailsCheckYourAnswers.numberOfTaxYearsAdded.label = Nifer y blynyddoedd treth sydd wedi'u hychwanegu
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.numberOfTaxYearsAdded.label = Nifer y blynyddoedd treth sydd wedi’u hychwanegu
