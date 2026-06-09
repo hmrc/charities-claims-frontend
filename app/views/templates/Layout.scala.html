@@ -28,6 +28,7 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.config.ContactFrontendConfig
 @import java.net.URLEncoder
+@import viewmodels.TimeoutMode
 
 @this(
         hmrcStandardPage: HmrcStandardPage,
@@ -48,7 +49,8 @@
   hasErrors: Boolean = false,
   suppressLanguageToggle: Boolean = false,
   refreshPageSeconds: Option[Int] = None,
-  showUserBanner: Boolean = false
+  showUserBanner: Boolean = false,
+  timeOutMode: TimeoutMode = TimeoutMode.NotSaved
 )(contentBlock: Html)(using request: Request[?], messages: Messages)
 
 @signOutUrl = @{
@@ -70,12 +72,9 @@
             @hmrcTimeoutDialog(TimeoutDialog(
                     timeout = Some(config.timeoutInSeconds),
                     countdown = Some(config.countdownInSeconds),
-                    message= Some(messages("session-expired-message")),
                     keepAliveUrl= Some(s"${routes.StartController.keepAlive.url}"),
-                    signOutUrl= signOutUrl,
-                    timeoutUrl= Some(s"${routes.StartController.timedOut.url}"),
-                    keepAliveButtonText= Some(messages("session-expired.keep-alive-button-text")),
-                    signOutButtonText= Some(messages("session-expired.sign-out-button-text")),
+                    signOutUrl= signOutUrl.map(url => s"$url?continue=${URLEncoder.encode(config.feedbackUrl, "UTF-8")}"),
+                    timeoutUrl= signOutUrl.map(url => s"$url?continue=${URLEncoder.encode(config.baseUrl + timeOutMode.url, "UTF-8")}"),
                     language = Some(messages.lang.code),
                     synchroniseTabs = Some(true)
                 )

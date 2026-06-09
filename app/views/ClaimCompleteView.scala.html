@@ -17,6 +17,7 @@
 @import controllers.claimDeclaration.routes
 @import models.*
 @import views.html.components.*
+@import viewmodels.TimeoutMode
 
 @this(
     layout: templates.Layout,
@@ -29,7 +30,8 @@
 @layout(
     pageTitle = titleNoForm(messages("claimComplete.title")),
     showBackLink = false,
-    showUserBanner = true
+    showUserBanner = true,
+    timeOutMode = TimeoutMode.Normal
 ) {
 
     <div class="govuk-panel govuk-panel--confirmation">

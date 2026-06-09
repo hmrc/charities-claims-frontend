@@ -1143,3 +1143,9 @@ validationService.giftAid.message.28 = You cannot provide a postcode for an aggr
 validationService.commonFile.message.1 = The selected file could not be uploaded
 validationService.commonFile.message.2 = There is a problem with your spreadsheet
 validationService.commonFile.message.3 = The selected file must use the template required
+
+timedOut.title = For your security, we signed you out
+timedOut.heading = For your security, we signed you out
+timedOut.message.saved = We saved your answers.
+timedOut.message.not-saved = We did not save your answers.
+timedOut.button = Sign in

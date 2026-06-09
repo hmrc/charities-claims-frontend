@@ -17,6 +17,7 @@
 @import viewmodels.RepaymentClaimSummaryHelper
 @import models.SubmissionSummaryResponse
 @import config.FrontendAppConfig
+@import viewmodels.TimeoutMode
 
 @this(
     layout: templates.Layout,
@@ -29,7 +30,8 @@
 
 @layout(
     showBackLink = false,
-    pageTitle = titleNoForm(messages("repaymentClaimSummary.title"))
+    pageTitle = titleNoForm(messages("repaymentClaimSummary.title")),
+    timeOutMode = TimeoutMode.Normal
 ) {
 
     <h1 class="govuk-heading-l">@messages("repaymentClaimSummary.heading")</h1>
