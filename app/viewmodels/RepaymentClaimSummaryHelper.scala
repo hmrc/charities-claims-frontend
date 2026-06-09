@@ -25,12 +25,15 @@ import java.time.{Instant, ZoneId}
 import java.time.format.DateTimeFormatter
 
 object RepaymentClaimSummaryHelper {
-  def claimDetails(summary: SubmissionSummaryResponse)(implicit messages: Messages): SummaryList =
-    val formatter =
-      DateTimeFormatter
-        .ofPattern("d MMM yyyy HH:mm:ss")
-        .withLocale(messages.lang.toLocale)
-        .withZone(ZoneId.of("Europe/London"))
+  def claimDetails(summary: SubmissionSummaryResponse)(implicit messages: Messages): SummaryList = {
+
+    val timeFormatter      = DateTimeFormatter.ofPattern("HH:mm:ss")
+    val submissionDateTime = Instant.parse(summary.claimDetails.submissionTimestamp).atZone(ZoneId.of("Europe/London"))
+
+    val month = messages(s"month.${submissionDateTime.getMonthValue}.short")
+
+    val formattedDate =
+      s"${submissionDateTime.getDayOfMonth} $month ${submissionDateTime.getYear} ${submissionDateTime.format(timeFormatter)}"
 
     SummaryList(
       rows = Seq(
@@ -45,11 +48,12 @@ object RepaymentClaimSummaryHelper {
         ),
         row(
           messages("repaymentClaimSummary.claimDetails.submissionDate.label"),
-          formatter.format(Instant.parse(summary.claimDetails.submissionTimestamp))
+          formattedDate
         ),
         row(messages("repaymentClaimSummary.claimDetails.claimSubmittedBy.label"), summary.claimDetails.submittedBy)
       )
     )
+  }
 
   def giftAidDetails(summary: SubmissionSummaryResponse)(implicit messages: Messages): Option[SummaryList] =
     summary.giftAidDetails.map { ga =>

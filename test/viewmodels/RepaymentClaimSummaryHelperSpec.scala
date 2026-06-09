@@ -68,8 +68,10 @@ class RepaymentClaimSummaryHelperSpec extends PlaySpec with GuiceOneAppPerSuite 
   "claimDetails" should {
 
     "build a SummaryList with claim details rows" in {
+      val englishMessages: Messages =
+        app.injector.instanceOf[MessagesApi].preferred(Seq(Lang("en")))
 
-      val result = RepaymentClaimSummaryHelper.claimDetails(summary)
+      val result = RepaymentClaimSummaryHelper.claimDetails(summary)(using englishMessages)
 
       result.rows.size mustBe 5
 
@@ -92,7 +94,6 @@ class RepaymentClaimSummaryHelperSpec extends PlaySpec with GuiceOneAppPerSuite 
     }
 
     "display the submission date in English when English is selected" in {
-
       val englishMessages: Messages =
         app.injector.instanceOf[MessagesApi].preferred(Seq(Lang("en")))
 
