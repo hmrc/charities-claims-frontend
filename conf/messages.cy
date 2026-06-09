@@ -238,7 +238,7 @@ enterTelephoneNumber.error.format = Nodwch rif ffôn yn y fformat cywir
 doYouHaveAgentUKAddress.title = A oes gennych gyfeiriad yn y DU?
 doYouHaveAgentUKAddress.heading = A oes gennych gyfeiriad yn y DU?
 doYouHaveAgentUKAddress.caption = Rhowch fanylion am y sefydliad
-doYouHaveAgentUKAddress.error.required = Dewiswch ’Iawn’ os oes gennych gyfeiriad yn y DU
+doYouHaveAgentUKAddress.error.required = Dewiswch ‘Iawn’ os oes gennych gyfeiriad yn y DU
 
 agentPostcode.title = Beth yw’ch cod post?
 agentPostcode.heading = Beth yw’ch cod post?
