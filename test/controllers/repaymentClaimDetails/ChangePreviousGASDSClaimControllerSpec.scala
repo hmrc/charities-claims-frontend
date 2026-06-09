@@ -318,6 +318,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
           .setClaimingUnderGiftAidSmallDonationsScheme(true)
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
           .and(RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(true))
+          .and(SessionData.setUnsubmittedClaimId("claim-123"))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -422,6 +423,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
           .setClaimingUnderGiftAidSmallDonationsScheme(true)
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
           .and(RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(true))
+          .and(SessionData.setUnsubmittedClaimId("claim-123"))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -464,6 +466,7 @@ class ChangePreviousGASDSClaimControllerSpec extends ControllerSpec {
           .setClaimingUnderGiftAidSmallDonationsScheme(true)
           .and(RepaymentClaimDetailsAnswers.setClaimingDonationsCollectedInCommunityBuildings(true, None))
           .and(RepaymentClaimDetailsAnswers.setMakingAdjustmentToPreviousClaim(true))
+          .and(SessionData.setUnsubmittedClaimId("claim-123"))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
