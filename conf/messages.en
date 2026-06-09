@@ -670,6 +670,19 @@ site.pagination.previous = Previous
 site.yes = Yes
 site.remove = Remove
 
+month.1.short=Jan
+month.2.short=Feb
+month.3.short=Mar
+month.4.short=Apr
+month.5.short=May
+month.6.short=Jun
+month.7.short=Jul
+month.8.short=Aug
+month.9.short=Sep
+month.10.short=Oct
+month.11.short=Nov
+month.12.short=Dec
+
 communityBuildingsScheduleUploadSuccessful.message.1 = Upload successful
 communityBuildingsScheduleUploadSuccessful.message.2 = You have successfully attached your Community Buildings schedule.
 communityBuildingsScheduleUploadSuccessful.agent.message.2 = You have successfully attached this Community Buildings schedule.

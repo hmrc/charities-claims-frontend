@@ -73,6 +73,19 @@ service.title = Gwneud hawliad am ad-daliad treth elusennau
 scheduleUploadFailure.continue = Uwchlwythwch atodlen newydd
 scheduleUploadFailure.link = Na, ewch yn ôl i reoli hawliadau am ad-daliadau elusennau
 
+month.1.short=Ion
+month.2.short=Chwef
+month.3.short=Maw
+month.4.short=Ebr
+month.5.short=Mai
+month.6.short=Meh
+month.7.short=Gorff
+month.8.short=Awst
+month.9.short=Medi
+month.10.short=Hyd
+month.11.short=Tach
+month.12.short=Rhag
+
 nameOfCharityRegulator.caption = Rhowch fanylion am y sefydliad
 nameOfCharityRegulator.error.required = Dewiswch enw rheoleiddiwr yr elusen
 nameOfCharityRegulator.heading = Beth yw enw’r rheoleiddiwr elusennau?
