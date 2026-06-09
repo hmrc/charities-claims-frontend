@@ -18,6 +18,7 @@ package viewmodels
 
 import models.SubmissionSummaryResponse
 import play.api.i18n.Messages
+import utils.FormatUtils.*
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.*
 import java.time.{Instant, ZoneId}
@@ -119,5 +120,5 @@ object RepaymentClaimSummaryHelper {
     )
 
   private def formatCurrency(amount: BigDecimal): String =
-    s"£${amount.setScale(2)}"
+    amount.toAmountString
 }

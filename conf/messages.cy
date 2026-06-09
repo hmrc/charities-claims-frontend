@@ -22,7 +22,6 @@ adjustmentToThisClaim.error.required = Rhowch esboniad am addasiadau i Rodd Cymo
 adjustmentToThisClaim.heading = Pa addasiadau ydych wedi’u gwneud i’r hawliad hwn?
 adjustmentToThisClaim.para = Os ydych wedi cynnwys unrhyw addasiadau yn y cais hwn, mae’n rhaid i chi nodi eglurhad isod. Gallwch hefyd roi unrhyw wybodaeth arall ynghylch hawliad ad-daliad eich elusen.
 adjustmentToThisClaim.para.agent = Os ydych wedi cynnwys unrhyw addasiadau yn y cais hwn, mae’n rhaid i chi nodi eglurhad isod. Gallwch hefyd roi unrhyw wybodaeth arall ynghylch hawliad ad-daliad yr elusen.
-adjustmentToThisClaim.hint = Gallwch nodi hyd at %{count} o gymeriadau
 adjustmentToThisClaim.title = Pa addasiadau ydych wedi’u gwneud i’r hawliad hwn?
 
 characterCount.charactersUnderLimit.one=Mae gennych %'{'count'}' cymeriad yn weddill
@@ -53,7 +52,6 @@ deleteConnectedCharitiesSchedule.title = A hoffech ddileu’r atodlen Elusennau 
 site.no = Na
 site.yes = Iawn
 site.continue = Parhau
-back.text = Yn ôl
 site.change = Newid
 site.enter = Nodi
 site.pagination.landmark = Pagination
@@ -63,19 +61,21 @@ site.pagination.page = tudalen
 site.pagination.previous = Blaenorol
 site.remove = Dileu
 site.govuk = GOV.UK
+site.confirmAndContinue = Cadarnhau a pharhau
 data.notApplicable = Amherthnasol
 error.browser.title.prefix = Gwall:
+govukErrorMessage.visuallyHiddenText = Gwall
 warning.text = Rhybudd
 
 service.name = Gwneud hawliad am ad-daliad treth elusennau
 service.title = Gwneud hawliad am ad-daliad treth elusennau
 
+scheduleUploadFailure.continue = Uwchlwythwch atodlen newydd
+scheduleUploadFailure.link = Na, ewch yn ôl i reoli hawliadau am ad-daliadau elusennau
+
 nameOfCharityRegulator.caption = Rhowch fanylion am y sefydliad
 nameOfCharityRegulator.error.required = Dewiswch enw rheoleiddiwr yr elusen
 nameOfCharityRegulator.heading = Beth yw enw’r rheoleiddiwr elusennau?
-nameOfCharityRegulator.legend = Beth yw enw’r rheoleiddiwr elusennau?
-nameOfCharityRegulator.missingDetails = confirm your charity regulator name
-nameOfCharityRegulator.agent.missingDetails = confirm the charity regulator name
 nameOfCharityRegulator.radio.four = Swyddfa Rheoleiddiwr Elusennau’r Alban
 nameOfCharityRegulator.radio.one = Comisiwn Elusennau ar gyfer Cymru a Lloegr
 nameOfCharityRegulator.radio.three = Nid yw’r elusen wedi’i chofrestru gyda rheoleiddiwr
@@ -107,7 +107,6 @@ charityExempt.agent.title = Mae’r elusen wedi’i esemptio
 reasonNotRegisteredWithRegulator.caption = Rhowch fanylion am y sefydliad
 reasonNotRegisteredWithRegulator.error.required = Dewiswch pam nad yw’r elusen wedi’i chofrestru â rheolydd
 reasonNotRegisteredWithRegulator.heading = Pam nad yw’r elusen wedi’i chofrestru â rheoleiddiwr?
-reasonNotRegisteredWithRegulator.missingDetails = confirm why you’re not registered with a regulator
 reasonNotRegisteredWithRegulator.agent.missingDetails = cadarnhau pam nad yw’r elusen wedi’i chofrestru gyda rheoleiddiwr
 reasonNotRegisteredWithRegulator.radio.Excepted = Mae’ch elusen wedi’i heithrio
 reasonNotRegisteredWithRegulator.agent.radio.Excepted = Mae’ch elusen wedi’i heithrio
@@ -125,45 +124,37 @@ charityRegulatorNumber.error.length = Nodwch rif rheoleiddiwr elusennau yn y ffo
 charityRegulatorNumber.error.required = Nodwch rif rheoleiddiwr elusennau
 charityRegulatorNumber.heading = Beth yw rhif y rheoleiddiwr elusennau?
 charityRegulatorNumber.hint = Gall hyn gynnwys hyd at 20 o gymeriadau rhifol (er enghraifft, 123456789) ac nid yw’n cynnwys llythrennau.
-charityRegulatorNumber.missingDetails = confirm your charity regulator number
-charityRegulatorNumber.agent.missingDetails = confirm the charity regulator number
 charityRegulatorNumber.title = Beth yw rhif y rheoleiddiwr elusennau?
 
 corporateTrusteeClaim.caption = Rhowch fanylion am y sefydliad
 corporateTrusteeClaim.error.required = Dewiswch ‘Iawn’ os yw’r hawliad hwn yn cael ei wneud gan ymddiriedolwr corfforaethol
 corporateTrusteeClaim.heading = A yw’r hawliad hwn yn cael ei wneud gan ymddiriedolwr corfforaethol?
 corporateTrusteeClaim.hint = Gall hyn fod yn adran ymddiriedolaethau o fewn banc, yn gwmni ymddiriedolaeth neu’n gorfforaeth ymddiriedolaeth.
-corporateTrusteeClaim.missingDetails = confirm if you are a corporate trustee
-corporateTrusteeClaim.title = Is a corporate trustee making this claim?
+corporateTrusteeClaim.title = A yw’r hawliad hwn yn cael ei wneud gan ymddiriedolwr corfforaethol?
 
 corporateTrusteeAddress.caption = Rhowch fanylion am y sefydliad
 corporateTrusteeAddress.error.required = Dewiswch ‘Iawn’ os oes gan yr ymddiriedolwr corfforaethol gyfeiriad yn y DU
 corporateTrusteeAddress.heading = A oes gan yr ymddiriedolwr corfforaethol gyfeiriad yn y DU?
-corporateTrusteeAddress.legend = A oes gan yr ymddiriedolwr corfforaethol gyfeiriad yn y DU?
-corporateTrusteeAddress.missingDetails = confirm if the corporate trustee has a UK address
 corporateTrusteeAddress.title = A oes gan yr ymddiriedolwr corfforaethol gyfeiriad yn y DU?
 
 authorisedOfficialAddress.caption = Rhowch fanylion am y sefydliad
 authorisedOfficialAddress.error.required = Dewiswch ‘Iawn’ os oes gan y swyddog awdurdodedig gyfeiriad yn y DU
 authorisedOfficialAddress.heading = A oes gan y swyddog awdurdodedig gyfeiriad yn y DU?
-authorisedOfficialAddress.legend = A oes gan y swyddog awdurdodedig gyfeiriad yn y DU?
-authorisedOfficialAddress.missingDetails = confirm if the authorised official has a UK address
 authorisedOfficialAddress.title = A oes gan y swyddog awdurdodedig gyfeiriad yn y DU?
 
 corporateTrusteeDetails.caption = Rhowch fanylion am y sefydliad
 corporateTrusteeDetails.heading = Beth yw manylion yr ymddiriedolwr corfforaethol?
-corporateTrusteeDetails.missingDetails = confirm the corporate trustee details
 corporateTrusteeDetails.name.error.length = Mae’n rhaid i enw ymddiriedolwr corfforaethol fod yn 160 o gymeriadau neu lai
 corporateTrusteeDetails.name.error.regex = Nodwch enw ymddiriedolwr corfforaethol yn y fformat cywir
 corporateTrusteeDetails.name.error.required = Nodwch enw ymddiriedolwr corfforaethol
 corporateTrusteeDetails.name.label = Enw’r ymddiriedolwr
-corporateTrusteeDetails.phone.error.length = Corporate trustee phone number must be 30 characters or less
+corporateTrusteeDetails.phone.error.length = Mae’n rhaid i rif ffôn ymddiriedolwr corfforaethol fod yn 30 o gymeriadau neu lai
 corporateTrusteeDetails.phone.error.regex = Enter a corporate trustee phone number in the correct format
-corporateTrusteeDetails.phone.error.required = Enter a corporate trustee phone number
+corporateTrusteeDetails.phone.error.required = Nodwch rif ffôn ymddiriedolwr corfforaethol
 corporateTrusteeDetails.phone.label = Rhif ffôn yr ymddiriedolwr
 corporateTrusteeDetails.postCode.error.length = Mae’n rhaid i’r cod post ymddiriedolwr corfforaethol fod yn 8 o gymeriadau neu lai
-corporateTrusteeDetails.postCode.error.regex = Enter a corporate trustee postcode in the correct format
-corporateTrusteeDetails.postCode.error.required = Enter a corporate trustee postcode
+corporateTrusteeDetails.postCode.error.regex = Nodwch god post enw ymddiriedolwr corfforaethol yn y fformat cywir
+corporateTrusteeDetails.postCode.error.required = Nodwch god post yr ymddiriedolwr
 corporateTrusteeDetails.postcode.label = Cod post yr ymddiriedolwr
 corporateTrusteeDetails.title = Beth yw manylion yr ymddiriedolwr corfforaethol?
 
@@ -177,7 +168,6 @@ authorisedOfficialDetails.lastName = Enw olaf
 authorisedOfficialDetails.lastName.error.format = Nodwch gyfenw swyddogol awdurdodedig yn y fformat cywir
 authorisedOfficialDetails.lastName.error.length = Mae’n rhaid i gyfenw swyddogol awdurdodedig fod yn 35 o gymeriadau neu lai
 authorisedOfficialDetails.lastName.error.required = Nodwch gyfenw swyddogol awdurdodedig
-authorisedOfficialDetails.missingDetails = confirm the authorised official details
 authorisedOfficialDetails.phoneNumber = Rhif ffôn
 authorisedOfficialDetails.phoneNumber.error.format = Nodwch rif ffôn swyddogol awdurdodedig yn y fformat cywir
 authorisedOfficialDetails.phoneNumber.error.length = Mae’n rhaid i rif ffôn swyddogol awdurdodedig fod yn 30 o gymeriadau neu lai
@@ -222,7 +212,6 @@ whoShouldWeSendPaymentTo.caption = Rhowch fanylion am y sefydliad
 whoShouldWeSendPaymentTo.radio.charityOrCasc = Elusen/Clwb Chwaraeon Amatur Cymunedol (CASC)
 whoShouldWeSendPaymentTo.radio.agentOrNominee = Asiant/Enwebai
 whoShouldWeSendPaymentTo.error.required = Dewiswch at bwy y dylai CThEF anfon taliad
-whoShouldWeSendPaymentTo.missingDetails = confirm who HMRC should send payment to
 
 enterTelephoneNumber.title = Beth yw’ch rhif ffôn?
 enterTelephoneNumber.heading = Beth yw’ch rhif ffôn?
@@ -232,13 +221,11 @@ enterTelephoneNumber.p = Mae’n rhaid i chi ddarparu rhif ffôn fel y gall CThE
 enterTelephoneNumber.error.required = Nodwch rif ffôn
 enterTelephoneNumber.error.length = Telephone number must be 30 characters or less
 enterTelephoneNumber.error.format = Nodwch rif ffôn yn y fformat cywir
-enterTelephoneNumber.missingDetails = confirm a telephone number
 
 doYouHaveAgentUKAddress.title = A oes gennych gyfeiriad yn y DU?
 doYouHaveAgentUKAddress.heading = A oes gennych gyfeiriad yn y DU?
 doYouHaveAgentUKAddress.caption = Rhowch fanylion am y sefydliad
 doYouHaveAgentUKAddress.error.required = Dewiswch ’Iawn’ os oes gennych gyfeiriad yn y DU
-doYouHaveAgentUKAddress.missingDetails = confirm if you have a UK address
 
 agentPostcode.title = Beth yw’ch cod post?
 agentPostcode.heading = Beth yw’ch cod post?
@@ -246,7 +233,6 @@ agentPostcode.caption = Rhowch fanylion am y sefydliad
 agentPostcode.error.format = Nodwch god post yn y fformat cywir
 agentPostcode.error.length = Mae’n rhaid i’r cod post fod yn 8 o gymeriadau neu lai
 agentPostcode.error.required = Nodwch god post
-agentPostcode.missingDetails = confirm if you have a postcode
 
 agentOrganisationDetailsCheckYourAnswers.caption = Rhowch fanylion am y sefydliad
 agentOrganisationDetailsCheckYourAnswers.title = Gwiriwch fanylion y sefydliad
@@ -619,6 +605,10 @@ deleteAgentClaim.body = Rydych ar fin dileu’r hawliad ad-daliad ar gyfer {0}.
 deleteAgentClaim.caution = A ydych yn siŵr eich bod am ddileu’r hawliad ad-daliad hwn?
 deleteAgentClaim.error.required = Dewiswch ‘Iawn’ os ydych am ddileu’r hawliad ad-daliad hwn
 
+deleteOrganisationClaim.error.required = Dewiswch ‘Iawn’ os ydych am ddileu’r hawliad ad-daliad hwn
+deleteOrganisationClaim.heading = A ydych yn siŵr eich bod am ddileu’r hawliad ad-daliad hwn?
+deleteOrganisationClaim.title = A ydych yn siŵr eich bod am ddileu’r hawliad ad-daliad hwn?
+
 warning11MaxClaimsReached.message.1 = Rydych wedi cyrraedd y nifer uchaf o hawliadau drafft
 warning11MaxClaimsReached.message.2 = Gallwch gael {0} o hawliadau ar y gweill ar yr un pryd. Dilëwch hawliad sy’n bodoli eisoes er mwyn gwneud hawliad newydd.
 warning11MaxClaimsReached.title = Rydych wedi cyrraedd y nifer uchaf o hawliadau drafft
@@ -681,6 +671,7 @@ agentPostcode.missingDetails = cadarnhau a oes gennych god post
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.heading = Ni ellir sefydlu’r hawliad hwn
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.message = Mae angen i chi ddarparu’r manylion canlynol er mwyn parhau:
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.returnLink = Ewch yn ôl i ddarparu’r manylion coll ar gyfer eich hawliad
+giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.returnLink.agent = Go back to provide the missing details for this claim
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.title = Ni ellir sefydlu’r hawliad hwn
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.warning = Ni ellir sefydlu’r hawliad hwn oherwydd bod rhai manylion ar goll.
 giftAidSmallDonationsSchemeDonationDetails.missingAdjustmentAmount = cadarnhau swm y GASDS a hawliwyd yn ormodol yn flaenorol
@@ -690,11 +681,10 @@ giftAidSmallDonationsSchemeDonationDetails.claim.missingYears.agent = cadarnhau 
 giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount = confirm the donation amount you are claiming for tax year 1
 giftAidSmallDonationsSchemeDonationDetails.claim1.missingAmount.agent = cadarnhau swm y rhodd y mae’r elusen yn ei hawlio ar gyfer blwyddyn dreth 1
 giftAidSmallDonationsSchemeDonationDetails.claim2.missingAmount = confirm the donation amount you are claiming for tax year 2
-giftAidSmallDonationsSchemeDonationDetails.claim2.missingAmount.agent = cadarnhau swm y rhodd y mae’r elusen yn ei hawlio ar gyfer blwyddyn dreth 2
+giftAidSmallDonationsSchemeDonationDetails.claim2.missingAmount.agent = cadarnhau swm y rhodd y mae'r elusen yn ei hawlio ar gyfer blwyddyn dreth 2
 giftAidSmallDonationsSchemeDonationDetails.claim3.missingAmount = confirm the donation amount you are claiming for tax year 3
-giftAidSmallDonationsSchemeDonationDetails.claim3.missingAmount.agent = cadarnhau swm y rhodd y mae’r elusen yn ei hawlio ar gyfer blwyddyn dreth 3
+giftAidSmallDonationsSchemeDonationDetails.claim3.missingAmount.agent = cadarnhau swm y rhodd y mae'r elusen yn ei hawlio ar gyfer blwyddyn dreth 3
 
-claimsTaskList.caption = Cyfeirnod Elusennau CThEF: {0}
 claimsTaskList.declaration.warning = Mae’n rhaid i chi lenwi pob adran cyn y gallwch ddatgan.
 claimsTaskList.heading = Hawlio ad-daliad elusennnau
 claimsTaskList.link.deleteClaim = Dileu hawliad
@@ -704,7 +694,6 @@ claimsTaskList.section.declaration = Datganiad
 claimsTaskList.section.uploadDocuments = Uwchlwytho dogfennau
 claimsTaskList.status.cannotStartYet = Methu dechrau ar hyn o bryd
 claimsTaskList.status.completed = Wedi cwblhau
-claimsTaskList.status.incomplete = Incomplete
 claimsTaskList.status.inProgress = Ar y gweill
 claimsTaskList.status.notStarted = Heb ddechrau eto
 claimsTaskList.task.communityBuildingsSchedule = Ychwanegu atodlen o Adeiladau Cymunedol
@@ -716,6 +705,245 @@ claimsTaskList.task.otherIncomeSchedule = Ychwanegu atodlen o Incwm Arall
 claimsTaskList.task.readDeclaration = Darllenwch y datganiad
 claimsTaskList.task.repaymentClaimDetails = Rhowch fanylion yr hawliad ad-daliad
 claimsTaskList.title = Hawlio ad-daliad elusennnau
+
+repaymentClaimDetails.bullet1 = ad-daliadau treth ar gyfraniadau Rhodd Cymorth
+repaymentClaimDetails.bullet2 = taliadau atodol o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS)
+repaymentClaimDetails.bullet3 = treth yn y DU a ddidynnwyd o Incwm Arall
+repaymentClaimDetails.heading = Manylion y cais am ad-daliad
+repaymentClaimDetails.p1 = Defnyddiwch y gwasanaeth hwn i hawlio:
+repaymentClaimDetails.subheading = Rhowch fanylion yr hawliad am ad-daliad
+repaymentClaimDetails.title = Manylion y cais am ad-daliad
+repaymentClaimDetails.agent.subheading = Rhowch fanylion hawliad yr elusen am ad-daliad
+repaymentClaimDetails.agent.p1 = Defnyddiwch y gwasanaeth hwn i hawlio’r canlynol ar gyfer yr elusen:
+
+repaymentClaimType.caption = Rhowch fanylion yr hawliad am ad-daliad
+repaymentClaimType.agent.caption = Rhowch fanylion hawliad yr elusen am ad-daliad
+repaymentClaimType.error.required = Dewiswch y math o hawliad am ad-daliad
+repaymentClaimType.heading = Pa fath o hawliad am ad-daliad hoffech ei wneud?
+repaymentClaimType.hint = Dewiswch o leiaf un
+repaymentClaimType.label.claimingGiftAid = Ad-daliadau treth ar gyfraniadau Rhodd Cymorth
+repaymentClaimType.label.claimingTaxDeducted = Treth yn y DU a ddidynnwyd o Incwm Arall
+repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme = Taliadau atodol o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS)
+repaymentClaimType.title = Pa fath o hawliad am ad-daliad hoffech ei wneud?
+
+gasdsClaimType.title = Manylion y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS)
+gasdsClaimType.heading = Manylion y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS)
+gasdsClaimType.caption = Rhowch fanylion yr hawliad am ad-daliad
+gasdsClaimType.caption.agent = Rhowch fanylion hawliad yr elusen am ad-daliad
+gasdsClaimType.description = Mae angen i ni wybod yr hyn yr hoffech ei hawlio o dan GASDS.
+gasdsClaimType.description.agent = Mae angen i ni wybod yr hyn y mae’r elusen yn ei hawlio o dan GASDS.
+gasdsClaimType.youCanClaim = Gallwch hawlio:
+gasdsClaimType.youCanClaim.agent = Gall yr elusen hawlio:
+gasdsClaimType.topUp = Taliadau atodol GASDS
+gasdsClaimType.topUp.desc = Ar gyfer cyfraniadau o £30, neu lai, na chawsant eu casglu mewn adeilad cymunedol.
+gasdsClaimType.community = Taliadau atodol adeiladau cymunedol
+gasdsClaimType.community.desc = Ar gyfer cyfraniadau o £30, neu lai, y cawsant eu casglu mewn adeilad cymunedol yn ystod gweithgareddau elusennol.
+gasdsClaimType.connected = Hawliadau CChAC neu elusen gysylltiedig
+gasdsClaimType.connected.desc = Os yw’ch cleient wedi’i gysylltu ag elusennau eraill, neu Glybiau Chwaraeon Amatur Cymunedol (CChAC) eraill, y terfyn taliad yw £2,000 wedi’i rhannu â’r holl sefydliadau cysylltiedig.
+gasdsClaimType.question = Pa fath o hawliad GASDS hoffech ei wneud?
+gasdsClaimType.question.agent = Pa fath o hawliad GASDS hoffech ei wneud ar gyfer yr elusen?
+gasdsClaimType.hint = Dewiswch o leiaf un
+gasdsClaimType.label.topUp = Taliad atodol GASDS
+gasdsClaimType.label.communityBuildings = Taliad atodol adeiladau cymunedol
+gasdsClaimType.label.connectedCharity = Hawliad CChAC neu elusen gysylltiedig
+gasdsClaimType.error.required = Dewiswch y math o hawliad GASDS hoffech ei wneud
+
+changePreviousGASDSClaim.caption = Rhowch fanylion yr hawliad am ad-daliad
+changePreviousGASDSClaim.caption.agent = Rhowch fanylion hawliad yr elusen am ad-daliad
+changePreviousGASDSClaim.error.required = Dewiswch ‘Iawn’ os ydych am newid hawliad Cynllun Cyfraniadau Bach Rhodd Cymorth blaenorol
+changePreviousGASDSClaim.heading = Manylion y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS)
+changePreviousGASDSClaim.legend = A hoffech wneud addasiad i’r hawliad GASDS?
+changePreviousGASDSClaim.paragraph = Os yw’ch elusen neu’ch CChAC wedi cael gordaliad, byddwn yn didynnu’r gordaliad hwnnw o’r hawliad hwn.
+changePreviousGASDSClaim.paragraph.agent = Os yw’r elusen neu’r CChAC wedi cael gordaliad, byddwn yn didynnu’r gordaliad hwnnw o’r hawliad hwn.
+changePreviousGASDSClaim.title = Manylion y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS)
+
+claimReferenceNumberCheck.heading = A oes gennych gyfeirnod hawliad?
+claimReferenceNumberCheck.title = A oes gennych gyfeirnod hawliad?
+
+claimingReferenceNumber.caption = Rhowch fanylion yr hawliad am ad-daliad
+claimingReferenceNumber.agent.caption = Rhowch fanylion hawliad yr elusen am ad-daliad
+claimingReferenceNumber.error.required = Dewiswch ‘Iawn’ os oes gennych gyfeirnod hawliad
+claimingReferenceNumber.heading = A oes gennych gyfeirnod hawliad?
+claimingReferenceNumber.agent.heading = A oes gan yr elusen gyfeirnod hawliad?
+claimingReferenceNumber.title = A oes gennych gyfeirnod hawliad?
+claimingReferenceNumber.agent.title = A oes gan yr elusen gyfeirnod hawliad?
+
+claimReferenceNumber.caption = Rhowch fanylion yr hawliad am ad-daliad
+claimReferenceNumber.agent.caption = Rhowch fanylion hawliad yr elusen am ad-daliad
+claimReferenceNumber.error.length = Mae’n rhaid i gyfeirnod hawlio fod yn 20 o gymeriadau neu lai
+claimReferenceNumber.error.regex = Gall hyn fod hyd at 20 o gymeriadau gan gynnwys rhifau a phriflythrennau
+claimReferenceNumber.error.required = Nodwch eich cyfeirnod hawliad
+claimReferenceNumber.heading = Beth yw’ch cyfeirnod hawliad?
+claimReferenceNumber.agent.heading = Beth yw cyfeirnod hawliad yr elusen?
+claimReferenceNumber.hint = Gall hyn fod hyd at 20 o gymeriadau, a chynnwys cymeriadau rhifol megis 123456789 a llythrennau o A i Z. Bydd i’w weld ar y nodyn hysbysu ynglŷn â thalu.
+claimReferenceNumber.title = Beth yw’ch cyfeirnod hawliad?
+claimReferenceNumber.agent.title = Beth yw cyfeirnod hawliad yr elusen?
+claimReferenceNumber.agent.missingDetails = a claim reference number
+
+repaymentClaimDetailsCheckYourAnswers.caption = Rhowch fanylion yr hawliad am ad-daliad
+repaymentClaimDetailsCheckYourAnswers.agent.caption = Rhowch fanylion hawliad yr elusen am ad-daliad
+repaymentClaimDetailsCheckYourAnswers.changeGASDSClaim.label = Addasiad GASDS
+repaymentClaimDetailsCheckYourAnswers.claimReferenceNumber.label = Cyfeirnod hawliad
+repaymentClaimDetailsCheckYourAnswers.claimingReferenceNumber.label = Cyfeirnod hawliad wedi’i roi
+repaymentClaimDetailsCheckYourAnswers.heading = Gwiriwch eich hawliad am ad-daliad
+repaymentClaimDetailsCheckYourAnswers.agent.heading = Gwiriwch fanylion yr hawliad am ad-daliad
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.UKTaxDeductedFromOtherIncome = Treth yn y DU a ddidynnwyd o Incwm Arall
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.giftAid = Rhodd Cymorth
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.label = Math o hawliad am ad-daliad
+repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.label = Math o hawliad GASDS
+repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.topup = Taliad atodol GASDS
+repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.communityBuildings = Taliad atodol adeiladau cymunedol
+repaymentClaimDetailsCheckYourAnswers.gasdsClaimType.connectedCharity = Hawliad CChAC neu elusen gysylltiedig
+repaymentClaimDetailsCheckYourAnswers.repaymentClaimType.topUpPaymentForSmallCashDonationsGASDS = Taliadau atodol ar gyfer cyfraniadau arian parod bach o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS)
+repaymentClaimDetailsCheckYourAnswers.title = Gwiriwch eich hawliad am ad-daliad
+repaymentClaimDetailsCheckYourAnswers.agent.title = Gwiriwch fanylion yr hawliad am ad-daliad
+repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityName.label = Enw’r elusen
+repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityReference.label = Cyfeirnod elusennau a roddir gan CThEF
+repaymentClaimDetailsCheckYourAnswers.agent.heading2.1 = Manylion yr elusen
+repaymentClaimDetailsCheckYourAnswers.agent.heading2.2 = Manylion yr hawliad
+
+enterCharityName.title = Beth yw enw’r elusen neu’r Clwb Chwaraeon Amatur Cymunedol (CChAC)?
+enterCharityName.heading = Beth yw enw’r elusen neu’r Clwb Chwaraeon Amatur Cymunedol (CChAC)?
+enterCharityName.caption = Rhowch fanylion hawliad yr elusen am ad-daliad
+enterCharityName.hint = Nodwch yr enw sydd wedi’i gofrestru gyda Chyllid a Thollau EF. Er enghraifft, Royal Society for the Prevention of Cruelty to Animals Hillingdon, Slough and District Branch.
+enterCharityName.charLimit = Mae gennych 160 o gymeriadau’n weddill
+enterCharityName.error.required = Nodwch enw elusen neu Glwb Chwaraeon Amatur Cymunedol (CASC)
+enterCharityName.error.length = Mae’n rhaid i enw Clwb Chwaraeon Amatur Elusen neu Gymunedol (CASC) fod yn 160 o gymeriadau neu lai
+enterCharityName.error.regex = Nodwch enw elusen neu Glwb Chwaraeon Amatur Cymunedol (CASC) yn y fformat cywir
+
+charitiesReferenceNumber.caption = Rhowch fanylion hawliad yr elusen am ad-daliad
+charitiesReferenceNumber.error.length = Mae’n rhaid i gyfeirnod adran elusennau CThEF fod yn 7 o gymeriadau neu lai
+charitiesReferenceNumber.error.regex = Nodwch gyfeirnod adran elusennau CThEF yn y fformat cywir
+charitiesReferenceNumber.error.exists = Rydych eisoes wedi creu hawliad ar gyfer cyf CThEF {0}
+charitiesReferenceNumber.error.required = Nodwch gyfeirnod adran elusennau CThEF
+charitiesReferenceNumber.heading = Beth yw’r cyfeirnod elusennau a roddir gan CThEF?
+charitiesReferenceNumber.hint = Bydd hyn yn dechrau gydag un lythyren, neu ddwy lythyren, o A i Z, a chynnwys hyd at 5 rhif megis 12345. Er enghraifft, CF10034.
+charitiesReferenceNumber.title = Beth yw’r cyfeirnod elusennau a roddir gan CThEF?
+
+deleteGiftAidSchedule.error.required = Dewiswch ‘Iawn’ os ydych am atodlen Rhodd Cymorth hon
+deleteGiftAidSchedule.heading = A ydych am ddileu’r atodlen Rhodd Cymorth hon?
+deleteGiftAidSchedule.title = A ydych am ddileu’r atodlen Rhodd Cymorth hon?
+
+deleteOtherIncomeSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddileu’r atodlen Incwm Arall hon
+deleteOtherIncomeSchedule.heading = A ydych am ddileu’r atodlen Incwm Arall hon?
+deleteOtherIncomeSchedule.title = A ydych am ddileu’r atodlen Incwm Arall hon?
+
+updateRepaymentClaim.error.required = Dewiswch ‘Iawn’ os ydych am ddiweddaru’r hawliad ad-daliad hwn
+updateRepaymentClaim.heading = A ydych am ddiweddaru’r hawliad ad-daliad hwn?
+updateRepaymentClaim.hint = Os byddwch yn newid yr hawliad hwn, byddwch yn colli unrhyw ddata rydych eisoes wedi’i roi neu ei atodi.
+updateRepaymentClaim.title = A ydych am ddiweddaru’r hawliad ad-daliad hwn?
+
+cannotViewOrManageClaim.heading = Ni allwch reoli’r hawliad hwn
+cannotViewOrManageClaim.paragraph = Mae’r hawliad hwn yn cael ei ddiweddaru gan rywun arall. Gallwch reoli’r hawliad hwn drwy fynd yn ôl i <a class="govuk-link" href="{0}">grynodeb yr hawliad ad-daliad</a>.
+cannotViewOrManageClaim.title = Ni allwch reoli’r hawliad hwn
+
+problemUpdatingCommunityBuildingsScheduleUnknownError.heading = Mae problem wrth uwchlwytho’ch atodlen o Adeiladau Cymunedol
+problemUpdatingCommunityBuildingsScheduleUnknownError.hint = Nid oedd modd uwchlwytho eich ffeil. Gallwch geisio uwchlwytho’r ffeil eto.
+problemUpdatingCommunityBuildingsScheduleUnknownError.title = Mae problem wrth uwchlwytho’ch atodlen o Adeiladau Cymunedol
+problemUpdatingCommunityBuildingsScheduleUnknownError.agent.heading = There is a problem uploading this Community Buildings schedule
+problemUpdatingCommunityBuildingsScheduleUnknownError.agent.hint = This file could not be uploaded. You can try uploading the file again.
+problemUpdatingCommunityBuildingsScheduleUnknownError.agent.title = There is a problem uploading this Community Buildings schedule
+
+problemUpdatingCommunityBuildingsScheduleRejected.heading = Mae problem wrth uwchlwytho’ch atodlen o Adeiladau Cymunedol
+problemUpdatingCommunityBuildingsScheduleRejected.hint = Mae’n rhaid i’ch ffeil fod yn ffeil ODS. Cadwch eich atodlen fel ffeil ODS a cheisiwch ei huwchlwytho eto.
+problemUpdatingCommunityBuildingsScheduleRejected.title = Mae problem wrth uwchlwytho’ch atodlen o Adeiladau Cymunedol
+problemUpdatingCommunityBuildingsScheduleRejected.agent.heading = There is a problem uploading this Community Buildings schedule
+problemUpdatingCommunityBuildingsScheduleRejected.agent.hint = This file must be an ODS file. Save this schedule as an ODS file and try uploading it again.
+problemUpdatingCommunityBuildingsScheduleRejected.agent.title = There is a problem uploading this Community Buildings schedule
+
+problemUpdatingCommunityBuildingsScheduleQuarantine.heading = Mae problem wrth uwchlwytho’ch atodlen o Adeiladau Cymunedol
+problemUpdatingCommunityBuildingsScheduleQuarantine.hint = Mae’ch ffeil yn cynnwys feirws, felly ni ellir ei huwchlwytho. Gwiriwch y ffeil am feirysau neu crëwch fersiwn newydd cyn ei huwchlwytho eto.
+problemUpdatingCommunityBuildingsScheduleQuarantine.title = Mae problem wrth uwchlwytho’ch atodlen o Adeiladau Cymunedol
+problemUpdatingCommunityBuildingsScheduleQuarantine.agent.heading = There is a problem uploading this Community Buildings schedule
+problemUpdatingCommunityBuildingsScheduleQuarantine.agent.hint = This file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
+problemUpdatingCommunityBuildingsScheduleQuarantine.agent.title = There is a problem uploading this Community Buildings schedule
+
+problemUpdatingGiftAidScheduleUnknownError.heading = Mae problem wrth uwchlwytho’ch atodlen Rhodd Cymorth
+problemUpdatingGiftAidScheduleUnknownError.hint = Nid oedd modd uwchlwytho eich ffeil. Gallwch geisio uwchlwytho’r ffeil eto.
+problemUpdatingGiftAidScheduleUnknownError.title = Mae problem wrth uwchlwytho’ch atodlen Rhodd Cymorth
+problemUpdatingGiftAidScheduleUnknownError.agent.heading = There is a problem uploading this Gift Aid schedule
+problemUpdatingGiftAidScheduleUnknownError.agent.hint = This file could not be uploaded. You can try uploading the file again.
+problemUpdatingGiftAidScheduleUnknownError.agent.title = There is a problem uploading this Gift Aid schedule
+
+problemUpdatingGiftAidScheduleQuarantine.heading = Mae problem wrth uwchlwytho’ch atodlen Rhodd Cymorth
+problemUpdatingGiftAidScheduleQuarantine.hint = Mae’ch ffeil yn cynnwys feirws, felly ni ellir ei huwchlwytho. Gwiriwch y ffeil am feirysau neu crëwch fersiwn newydd cyn ei huwchlwytho eto.
+problemUpdatingGiftAidScheduleQuarantine.title = Mae problem wrth uwchlwytho’ch atodlen Rhodd Cymorth
+problemUpdatingGiftAidScheduleQuarantine.agent.heading = There is a problem uploading this Gift Aid schedule
+problemUpdatingGiftAidScheduleQuarantine.agent.hint = This file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
+problemUpdatingGiftAidScheduleQuarantine.agent.title = There is a problem uploading this Gift Aid schedule
+
+problemUpdatingGiftAidScheduleRejected.heading = Mae problem wrth uwchlwytho’ch atodlen Rhodd Cymorth
+problemUpdatingGiftAidScheduleRejected.hint = Mae’n rhaid i’ch ffeil fod yn ffeil ODS. Cadwch eich atodlen fel ffeil ODS a cheisiwch ei huwchlwytho eto.
+problemUpdatingGiftAidScheduleRejected.title = Mae problem wrth uwchlwytho’ch atodlen Rhodd Cymorth
+problemUpdatingGiftAidScheduleRejected.agent.heading = There is a problem uploading this Gift Aid schedule
+problemUpdatingGiftAidScheduleRejected.agent.hint = This file must be an ODS file. Save this schedule as an ODS file and try uploading it again.
+problemUpdatingGiftAidScheduleRejected.agent.title = There is a problem uploading this Gift Aid schedule
+
+problemUpdatingOtherIncomeScheduleQuarantine.heading = Mae problem wrth uwchlwytho’ch atodlen o Incwm Arall
+problemUpdatingOtherIncomeScheduleQuarantine.hint = Mae’ch ffeil yn cynnwys feirws, felly ni ellir ei huwchlwytho. Gwiriwch y ffeil am feirysau neu crëwch fersiwn newydd cyn ei huwchlwytho eto.
+problemUpdatingOtherIncomeScheduleQuarantine.title = Mae problem wrth uwchlwytho’ch atodlen o Incwm Arall
+problemUpdatingOtherIncomeScheduleQuarantine.agent.heading = There is a problem uploading this Other Income schedule
+problemUpdatingOtherIncomeScheduleQuarantine.agent.hint = This file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
+problemUpdatingOtherIncomeScheduleQuarantine.agent.title = There is a problem uploading this Other Income schedule
+
+problemUpdatingOtherIncomeScheduleUnknownError.heading = Mae problem wrth uwchlwytho’ch atodlen o Incwm Arall
+problemUpdatingOtherIncomeScheduleUnknownError.hint = Nid oedd modd uwchlwytho eich ffeil. Gallwch geisio uwchlwytho’r ffeil eto.
+problemUpdatingOtherIncomeScheduleUnknownError.title = Mae problem wrth uwchlwytho’ch atodlen o Incwm Arall
+problemUpdatingOtherIncomeScheduleUnknownError.agent.heading = There is a problem uploading this Other Income schedule
+problemUpdatingOtherIncomeScheduleUnknownError.agent.hint = This file could not be uploaded. You can try uploading the file again.
+problemUpdatingOtherIncomeScheduleUnknownError.agent.title = There is a problem uploading this Other Income schedule
+
+problemUpdatingOtherIncomeScheduleRejected.heading = Mae problem wrth uwchlwytho’ch atodlen o Incwm Arall
+problemUpdatingOtherIncomeScheduleRejected.hint = Mae’n rhaid i’ch ffeil fod yn ffeil ODS. Cadwch eich atodlen fel ffeil ODS a cheisiwch ei huwchlwytho eto.
+problemUpdatingOtherIncomeScheduleRejected.title = Mae problem wrth uwchlwytho’ch atodlen o Incwm Arall
+problemUpdatingOtherIncomeScheduleRejected.agent.heading = There is a problem uploading this Other Income schedule
+problemUpdatingOtherIncomeScheduleRejected.agent.hint = This file must be an ODS file. Save this schedule as an ODS file and try uploading it again.
+problemUpdatingOtherIncomeScheduleRejected.agent.title = There is a problem uploading this Other Income schedule
+
+problemUpdatingConnectedCharitiesScheduleQuarantine.heading = Mae problem wrth uwchlwytho’ch atodlen o Elusennau Cysylltiedig
+problemUpdatingConnectedCharitiesScheduleQuarantine.hint = Mae’ch ffeil yn cynnwys feirws, felly ni ellir ei huwchlwytho. Gwiriwch y ffeil am feirysau neu crëwch fersiwn newydd cyn ei huwchlwytho eto.
+problemUpdatingConnectedCharitiesScheduleQuarantine.title = Mae problem wrth uwchlwytho’ch atodlen o Elusennau Cysylltiedig
+problemUpdatingConnectedCharitiesScheduleQuarantine.agent.heading = There is a problem uploading this Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleQuarantine.agent.hint = This file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
+problemUpdatingConnectedCharitiesScheduleQuarantine.agent.title = There is a problem uploading this Connected Charities schedule
+
+problemUpdatingConnectedCharitiesScheduleRejected.heading = Mae problem wrth uwchlwytho’ch atodlen o Elusennau Cysylltiedig
+problemUpdatingConnectedCharitiesScheduleRejected.hint = Mae’n rhaid i’ch ffeil fod yn ffeil ODS. Cadwch eich atodlen fel ffeil ODS a cheisiwch ei huwchlwytho eto.
+problemUpdatingConnectedCharitiesScheduleRejected.title = Mae problem wrth uwchlwytho’ch atodlen o Elusennau Cysylltiedig
+problemUpdatingConnectedCharitiesScheduleRejected.agent.heading = There is a problem uploading this Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleRejected.agent.hint = This file must be an ODS file. Save this schedule as an ODS file and try uploading it again.
+problemUpdatingConnectedCharitiesScheduleRejected.agent.title = There is a problem uploading this Connected Charities schedule
+
+problemUpdatingConnectedCharitiesScheduleUnknownError.heading = Mae problem wrth uwchlwytho’ch atodlen o Elusennau Cysylltiedig
+problemUpdatingConnectedCharitiesScheduleUnknownError.hint = Nid oedd modd uwchlwytho eich ffeil. Gallwch geisio uwchlwytho’r ffeil eto.
+problemUpdatingConnectedCharitiesScheduleUnknownError.title = Mae problem wrth uwchlwytho’ch atodlen o Elusennau Cysylltiedig
+problemUpdatingConnectedCharitiesScheduleUnknownError.agent.heading = There is a problem uploading this Connected Charities schedule
+problemUpdatingConnectedCharitiesScheduleUnknownError.agent.hint = This file could not be uploaded. You can try uploading the file again.
+problemUpdatingConnectedCharitiesScheduleUnknownError.agent.title = There is a problem uploading this Connected Charities schedule
+
+updateCommunityBuildingsSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddiweddaru’ch incwm trethadwy amcangyfrifedig
+updateCommunityBuildingsSchedule.heading = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Adeiladau Cymunedol hon?
+updateCommunityBuildingsSchedule.hint = Drwy ddiweddaru’r ffeil hon, byddwch yn colli unrhyw ddata atodlen o Adeiladau Cymunedol rydych wedi’i atodi o’r blaen.
+updateCommunityBuildingsSchedule.title = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Adeiladau Cymunedol hon?
+
+updateConnectedCharitiesSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddiweddaru’ch incwm trethadwy amcangyfrifedig
+updateConnectedCharitiesSchedule.heading = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Elusennau Cysylltiedig hon?
+updateConnectedCharitiesSchedule.hint = Drwy ddiweddaru’r ffeil hon, byddwch yn colli unrhyw ddata atodlen o Elusennau Cysylltiedig rydych wedi’i atodi o’r blaen.
+updateConnectedCharitiesSchedule.title = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Elusennau Cysylltiedig hon?
+
+updateGiftAidSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddiweddaru’r atodlen Rhodd Cymorth hon
+updateGiftAidSchedule.heading = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Rhodd Cymorth hon?
+updateGiftAidSchedule.hint = Drwy ddiweddaru’r ffeil hon, byddwch yn colli unrhyw ddata atodlen Rhodd Cymorth rydych wedi’i atodi o’r blaen.
+updateGiftAidSchedule.title = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Rhodd Cymorth hon?
+
+updateOtherIncomeSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddiweddaru’r atodlen Incwm Arall hon
+updateOtherIncomeSchedule.heading = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Incwm Arall hon?
+updateOtherIncomeSchedule.hint = Drwy ddiweddaru’r ffeil hon, byddwch yn colli unrhyw ddata atodlen Incwm Arall rydych wedi’i atodi o’r blaen.
+updateOtherIncomeSchedule.title = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Incwm Arall hon?
+
+removeClaimForTaxYear.error.required = Dewiswch ‘Iawn’ os ydych am ddileu’r hawliad ar gyfer blwyddyn dreth {0}
+removeClaimForTaxYear.heading = A ydych am ddileu’r hawliad ar gyfer blwyddyn dreth {0}?
+removeClaimForTaxYear.title = A ydych am ddileu’r hawliad ar gyfer blwyddyn dreth {0}?
 
 #validationService messages
 validationService.communityBuildings.message.1 = Nodwch fanylion ar gyfer eitem Adeilad Cymunedol
@@ -793,3 +1021,82 @@ validationService.giftAid.message.28 = Ni allwch roi cod post ar gyfer cyfraniad
 validationService.commonFile.message.1 = Nid oedd modd uwchlwytho’r ffeil dan sylw
 validationService.commonFile.message.2 = There is a problem with your spreadsheet
 validationService.commonFile.message.3 = Mae’n rhaid i’r ffeil a ddewiswyd ddefnyddio’r templed gofynnol
+
+aboutGiftAidSmallDonationsScheme.caption = Rhowch fanylion y cyfraniad GASDS
+aboutGiftAidSmallDonationsScheme.heading = Ynglŷn â’r atodlen Cynllun Cyfraniadau Bach Rhodd Cymorth
+aboutGiftAidSmallDonationsScheme.title = Ynglŷn â’r atodlen Cynllun Cyfraniadau Bach Rhodd Cymorth
+aboutGiftAidSmallDonationsScheme.paragraph.one = Defnyddiwch y gwasanaeth hwn i hawlio ad-daliadau o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS). Gallwch ychwanegu hawliadau ar gyfer hyd at 3 flwyddyn dreth.
+aboutGiftAidSmallDonationsScheme.paragraph.one.agent = Defnyddiwch y gwasanaeth hwn i hawlio ad-daliadau o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS) ar gyfer eich cleient. Gallwch ychwanegu hawliadau ar gyfer hyd at 3 blwyddyn dreth.
+aboutGiftAidSmallDonationsScheme.paragraph.two = Mae’r GASDS yn berthnasol i gyfraniadau arian parod bach o £30, neu lai, lle nad oes gan yr elusen neu’r Clwb Chwaraeon Amatur Cymunedol ddatganiad Rhodd Cymorth.
+
+adjustmentToGiftAidOverclaimed.caption = Rhowch fanylion y cyfraniad GASDS
+adjustmentToGiftAidOverclaimed.heading = Beth yw swm yr addasiad ar gyfer Rhodd Cymorth a orhawliwyd yn flaenorol?
+adjustmentToGiftAidOverclaimed.title = Beth yw swm yr addasiad ar gyfer Rhodd Cymorth a orhawliwyd yn flaenorol?
+adjustmentToGiftAidOverclaimed.hint = Gall hyn fod hyd at 2 le degol, er enghraifft, £1000.00
+adjustmentToGiftAidOverclaimed.error.required = Nodwch swm yr addasiad ar gyfer Rhodd Cymorth a orhawliwyd yn flaenorol
+adjustmentToGiftAidOverclaimed.error.invalid = Nodwch swm yr addasiad ar gyfer Rhodd Cymorth a orhawliwyd yn flaenorol yn y fformat cywir
+adjustmentToGiftAidOverclaimed.error.maxLength = Mae’n rhaid i swm yr addasiad fod yn £1,000,000,000,000 neu’n llai
+
+gasdsAdjustmentAmountCheckYourAnswers.caption = Rhowch fanylion y cyfraniad GASDS
+gasdsAdjustmentAmountCheckYourAnswers.heading = Gwiriwch swm eich addasiad GASDS
+gasdsAdjustmentAmountCheckYourAnswers.title = Gwiriwch swm eich addasiad GASDS
+gasdsAdjustmentAmountCheckYourAnswers.heading.agent = Gwiriwch swm yr addasiad GASDS
+gasdsAdjustmentAmountCheckYourAnswers.title.agent = Gwiriwch swm yr addasiad GASDS
+gasdsAdjustmentAmountCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Swm y GASDS a orhawliwyd yn flaenorol
+
+whichTaxYearAreYouClaimingFor.caption = Rhowch fanylion y cyfraniad GASDS
+whichTaxYearAreYouClaimingFor.caption.multipleYears = Rhowch fanylion y cyfraniad GASDS - Blwyddyn dreth {0}
+whichTaxYearAreYouClaimingFor.heading = Pa flwyddyn dreth ydych chi’n hawlio ar ei chyfer?
+whichTaxYearAreYouClaimingFor.title = Pa flwyddyn dreth ydych chi’n hawlio ar ei chyfer?
+whichTaxYearAreYouClaimingFor.heading.agent = Pa flwyddyn dreth yw’r elusen yn hawlio ar ei chyfer?
+whichTaxYearAreYouClaimingFor.title.agent = Pa flwyddyn dreth yw’r elusen yn hawlio ar ei chyfer?
+whichTaxYearAreYouClaimingFor.paragraph = Mae’r flwyddyn dreth yn rhedeg o Ebrill i Ebrill. Er enghraifft, mae blwyddyn dreth 2016 yn rhedeg o 6 Ebrill 2015 i 5 Ebrill 2016.
+whichTaxYearAreYouClaimingFor.hint = Er enghraifft, 2016
+whichTaxYearAreYouClaimingFor.error.required = Nodwch flwyddyn dreth {0}
+whichTaxYearAreYouClaimingFor.error.invalid = Nodwch flwyddyn dreth {0} yn y fformat cywir
+whichTaxYearAreYouClaimingFor.error.tooOld = Ni all yr hawliad Cynllun Cyfraniadau Bach Rhodd Cymorth fod cyn {0}
+whichTaxYearAreYouClaimingFor.error.future = Mae’n rhaid i’r flwyddyn dreth yr ydych yn gwneud hawliad Cynllun Cyfraniadau Bach Rhodd Cymorth ar ei chyfer fod cyn neu ar y flwyddyn dreth hon
+whichTaxYearAreYouClaimingFor.error.duplicate = Mae’n rhaid i’r cyfraniadau a hawliwyd ar gyfer mwy nag un flwyddyn dreth fod yn wahanol i flynyddoedd treth eraill
+
+taxYear.first = 1
+taxYear.second = 2
+taxYear.third = 3
+
+donationAmountYouAreClaiming.caption = Rhowch fanylion y cyfraniad GASDS
+donationAmountYouAreClaiming.caption.multipleYears = Rhowch fanylion y cyfraniad GASDS - Blwyddyn dreth {0}
+donationAmountYouAreClaiming.heading = Beth yw swm y cyfraniad hoffech ei hawlio o dan GASDS, mewn punnoedd?
+donationAmountYouAreClaiming.title = Beth yw swm y cyfraniad hoffech ei hawlio o dan GASDS, mewn punnoedd?
+donationAmountYouAreClaiming.heading.agent = Beth yw swm y cyfraniad sy’n cael ei hawlio o dan GASDS, mewn punnoedd?
+donationAmountYouAreClaiming.title.agent = Beth yw swm y cyfraniad sy’n cael ei hawlio o dan GASDS, mewn punnoedd?
+donationAmountYouAreClaiming.hint = Gall hyn fod hyd at 2 le degol, er enghraifft, £1000.00
+donationAmountYouAreClaiming.error.required = Nodwch swm ar gyfer blwyddyn dreth {0}
+donationAmountYouAreClaiming.error.invalid = Nodwch swm ar gyfer blwyddyn dreth {0} yn y fformat cywir
+donationAmountYouAreClaiming.error.maxLength = Mae’n rhaid i swm y cyfraniad fod yn £1,000,000,000,000 neu’n llai
+
+claimForTaxYearCheckYourAnswers.caption = Rhowch fanylion y cyfraniad GASDS
+claimForTaxYearCheckYourAnswers.title = Gwiriwch fanylion eich hawliad ar gyfer blwyddyn dreth {0}
+claimForTaxYearCheckYourAnswers.heading = Gwiriwch fanylion eich hawliad ar gyfer blwyddyn dreth {0}
+claimForTaxYearCheckYourAnswers.title.agent = Gwiriwch fanylion yr hawliad ar gyfer blwyddyn dreth {0}
+claimForTaxYearCheckYourAnswers.heading.agent = Gwiriwch fanylion yr hawliad ar gyfer blwyddyn dreth {0}
+claimForTaxYearCheckYourAnswers.taxYear.label = Blwyddyn dreth
+claimForTaxYearCheckYourAnswers.donationAmount.label = Swm y cyfraniad
+
+claimAddedForTaxYear.caption = Rhowch fanylion y cyfraniad GASDS
+claimAddedForTaxYear.heading = Rydych wedi ychwanegu hawliad ar gyfer {0} flwyddyn dreth {1}
+claimAddedForTaxYear.title = Rydych wedi ychwanegu hawliad ar gyfer {0} flwyddyn dreth {1}
+claimAddedForTaxYear.taxYear.key = Blwyddyn dreth {0}
+claimAddedForTaxYear.error.required = Dewiswch ‘Iawn’ os ydych am wneud hawliad ar gyfer blwyddyn dreth arall
+claimAddedForTaxYear.legend = A hoffech ychwanegu hawliad ar gyfer blwyddyn dreth arall?
+claimAddedForTaxYear.hint = Gallwch wneud hawliadau ar gyfer hyd at 3 flwyddyn dreth.
+claimAddedForTaxYear.singularOrPlural.singular = blwyddyn
+claimAddedForTaxYear.singularOrPlural.plural = blynyddoedd
+
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.caption = Rhowch fanylion y cyfraniad GASDS
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading = Gwiriwch fanylion eich cyfraniad GASDS
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.title = Gwiriwch fanylion eich cyfraniad GASDS
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading.agent = Gwiriwch fanylion y cyfraniad GASDS
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.title.agent = Gwiriwch fanylion y cyfraniad GASDS
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.1 = Addasiad i hawliad GASDS
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.2 = Hawliadau GASDS
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Swm y GASDS a orhawliwyd yn flaenorol
+giftAidSmallDonationsSchemeDetailsCheckYourAnswers.numberOfTaxYearsAdded.label = Nifer y blynyddoedd treth sydd wedi'u hychwanegu

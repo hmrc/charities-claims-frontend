@@ -34,7 +34,7 @@ govukErrorSummary: GovukErrorSummary
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="govuk-caption-l">@messages("whichTaxYearAreYouClaimingFor.caption", if(index == 1) "" else s"- Tax year $index")</span>
+    <span class="govuk-caption-l">@messages(if(index == 1) "whichTaxYearAreYouClaimingFor.caption" else "whichTaxYearAreYouClaimingFor.caption.multipleYears",index)</span>
 
     <h1 class="govuk-heading-l">@messages(if (isAgent) "whichTaxYearAreYouClaimingFor.heading.agent" else "whichTaxYearAreYouClaimingFor.heading")</h1>
 

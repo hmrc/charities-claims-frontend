@@ -27,6 +27,7 @@ import forms.CheckBoxListFormProvider
 import play.api.data.Form
 import views.html.RepaymentClaimTypeView
 import models.Mode.*
+import models.FileUploadReference
 
 class RepaymentClaimTypeControllerSpec extends ControllerSpec {
   val formProvider                   = new CheckBoxListFormProvider()
@@ -355,8 +356,11 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
       "in CheckMode" - {
         "old selection with GASDS & new selection with GASDS not defined should show WRN3" in {
-          val sessionData                =
-            RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithClaimingGiftAidChecked))
+          val sessionData =
+            RepaymentClaimDetailsAnswers
+              .setRepaymentClaimType(dataWithAllChecked, Some(dataWithClaimingGiftAidChecked))
+              .and(SessionData.setUnsubmittedClaimId("claim-123"))
+
           given application: Application = applicationBuilder(sessionData = sessionData).build()
 
           running(application) {
@@ -468,7 +472,9 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
       "WRN3: should show confirmation when changing claimingGiftAid from Yes to No in CheckMode" in {
         val sessionData =
-          RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
+          RepaymentClaimDetailsAnswers
+            .setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
+            .copy(giftAidScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -490,7 +496,9 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
       "WRN3: should show confirmation when changing claimingTaxDeducted from Yes to No in CheckMode" in {
         val sessionData =
-          RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
+          RepaymentClaimDetailsAnswers
+            .setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
+            .copy(otherIncomeScheduleFileUploadReference = Some(FileUploadReference("test-file-upload-reference")))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -512,7 +520,9 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
       "WRN3: should show confirmation when changing claimingUnderGiftAidSmallDonationsScheme from Yes to No in CheckMode" in {
         val sessionData =
-          RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
+          RepaymentClaimDetailsAnswers
+            .setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
+            .and(SessionData.setUnsubmittedClaimId("claim-123"))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -584,7 +594,9 @@ class RepaymentClaimTypeControllerSpec extends ControllerSpec {
 
       "WRN3: should show confirmation in NormalMode when unchecking selection" in {
         val sessionData =
-          RepaymentClaimDetailsAnswers.setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
+          RepaymentClaimDetailsAnswers
+            .setRepaymentClaimType(dataWithAllChecked, Some(dataWithAllChecked))
+            .and(SessionData.setUnsubmittedClaimId("claim-123"))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 

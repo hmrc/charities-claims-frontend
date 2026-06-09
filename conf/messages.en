@@ -50,7 +50,6 @@ authLoginStub.title = Sign in using test credentials
 authorisedOfficialAddress.caption = Provide organisation details
 authorisedOfficialAddress.error.required = Select ‘Yes’ if the authorised official has a UK address
 authorisedOfficialAddress.heading = Does the authorised official have a UK address?
-authorisedOfficialAddress.legend = Does the authorised official have a UK address?
 authorisedOfficialAddress.missingDetails = confirm if the authorised official has a UK address
 authorisedOfficialAddress.title = Does the authorised official have a UK address?
 
@@ -77,7 +76,6 @@ authorisedOfficialDetails.title = What are the authorised official’s details?
 authorisedOfficialDetails.title.error.format = Enter an authorised official title in the correct format
 authorisedOfficialDetails.title.error.length = Authorised official title must be 4 characters or less
 authorisedOfficialDetails.titleField = Title (optional)
-back.text = Back
 
 cannotViewOrManageClaim.heading = You cannot manage this claim
 cannotViewOrManageClaim.paragraph = This claim is being updated by someone else. You can manage this claim by returning to <a class="govuk-link" href="{0}">repayment claim summary</a>.
@@ -127,17 +125,8 @@ charityRegulatorNumber.agent.missingDetails = confirm the charity regulator numb
 charityRegulatorNumber.title = What is the charity regulator number?
 
 charityRepaymentDashboard.heading = Charity Repayment Dashboard
-charityRepaymentDashboard.placeholder = Content TBC
 charityRepaymentDashboard.title = Charity Repayment Dashboard
 
-checkYourAnswers.giftAid.change.hidden = if you are claiming Gift Aid
-checkYourAnswers.giftAid.label = Are you claiming Gift Aid?
-checkYourAnswers.giftAidSmallDonationsScheme.label = Are you claiming for the Gift Aid Small Donations Scheme?
-checkYourAnswers.hasRef.label = Do you have a claim reference number?
-checkYourAnswers.heading = Check your claim details
-checkYourAnswers.refNumber.label = What is your reference number?
-checkYourAnswers.taxDeducted.label = Are you claiming tax deducted from other income?
-checkYourAnswers.title = Check your claim ’details’
 
 checkYourCommunityBuildingsSchedule.caption = Add Community Buildings schedule
 checkYourCommunityBuildingsSchedule.error.required = Select ‘Yes’ if you need to update this Community Buildings schedule
@@ -233,49 +222,18 @@ claimReferenceNumber.title = What is your claim reference number?
 claimReferenceNumber.agent.title = What is the charity’s claim reference number?
 claimReferenceNumber.agent.missingDetails = a claim reference number
 
-claimReferenceNumberCheck.error.required = Select ‘Yes’ if you have a reference number for this claim.
-claimReferenceNumberCheck.heading = Do you have a claim reference number?
 claimReferenceNumberCheck.missingDetails = confirm if you have a claim reference number
 claimReferenceNumberCheck.agent.missingDetails = confirm if the charity has a claim reference number
-claimReferenceNumberCheck.title = Do you have a claim reference number?
 
-claimReferenceNumberInput.error.length = Claim reference number must be 20 characters or less
-claimReferenceNumberInput.error.regex = Include characters from Western European alphabets
-claimReferenceNumberInput.error.required = Enter your claim reference number
-claimReferenceNumberInput.heading = What is your claim reference number?
 claimReferenceNumberInput.missingDetails = provide a claim reference number
 claimReferenceNumberInput.agent.missingDetails = provide the charity’s claim reference number
-claimReferenceNumberInput.paragraph = You do not have to complete this box but you can use it to show your claim reference if you use one. The reference that you quote will appear on the payment advice note you receive from us when we pay the claim.
-claimReferenceNumberInput.title = What is your claim reference number?
 
-claimingGiftAid.error.required = Select ‘Yes’ if you are claiming Gift Aid.
-claimingGiftAid.heading = Are you claiming Gift Aid?
-claimingGiftAid.hint = Select ‘Yes’ if you want to claim tax repayment on donations from a Gift Aid declaration.
-claimingGiftAid.legend = Are you claiming Gift Aid?
-claimingGiftAid.title = Are you claiming Gift Aid?
 
 claimGASDS.missingDetails = confirm which type of GASDS claim(s) you want to make
 claimGASDS.agent.missingDetails = confirm which type of GASDS claim(s) you want to make
-claimingCommunityBuildingDonations.missingDetails = confirm if you are claiming for donations collected in community buildings
-claimingCommunityBuildingDonations.agent.missingDetails = confirm if you are claiming for donations collected in community buildings
-connectedToAnyOtherCharities.missingDetails = confirm if you are connected to other charities or a Community Amateur Sports Club
-connectedToAnyOtherCharities.agent.missingDetails = confirm if you are connected to other charities or a Community Amateur Sports Club
 claimingTaxDeducted.agent.missingDetails = confirm if the charity is claiming UK tax deducted from Other Income
 claimingUnderGiftAidSmallDonationsScheme.agent.missingDetails = confirm if the charity is claiming under the Gift Aid Small Donations Scheme
 
-claimingGiftAidSmallDonations.error.required = Select ‘Yes’ if you are claiming for the Gift Aid Small Donations Scheme.
-claimingGiftAidSmallDonations.heading = Gift Aid Small Donations Scheme
-claimingGiftAidSmallDonations.legend =  Are you claiming for the Gift Aid Small Donations Scheme?
-claimingGiftAidSmallDonations.paragraph =  This is separate to a Gift Aid claim. The Gift Aid Small Donation Scheme (GASDS) is for donations of £20 or less and does not need declaring.
-claimingGiftAidSmallDonations.title = Gift Aid Small Donations Scheme
-
-claimingOtherIncome.bullet.one =  Bank or Building Society interest
-claimingOtherIncome.bullet.three =  Tax deducted from a Discretionary Trust payment
-claimingOtherIncome.bullet.two =  Tax shown on a R185E certificate
-claimingOtherIncome.error.required = Select ‘Yes’ if you are claiming tax deducted from other income.
-claimingOtherIncome.heading = Are you claiming tax deducted from other income?
-claimingOtherIncome.paragraph =  Tax relief can include:
-claimingOtherIncome.title = Are you claiming tax deducted from other income?
 
 claimingReferenceNumber.caption = Provide repayment claim details
 claimingReferenceNumber.agent.caption = Provide charity repayment claim details
@@ -285,7 +243,6 @@ claimingReferenceNumber.agent.heading = Does the charity have a claim reference 
 claimingReferenceNumber.title = Do you have a claim reference number?
 claimingReferenceNumber.agent.title = Does the charity have a claim reference number?
 
-claimsTaskList.caption = HMRC Charities reference: {0}
 claimsTaskList.declaration.warning = You must complete every section before you can declare.
 claimsTaskList.heading = Make a charity repayment claim
 claimsTaskList.link.deleteClaim = Delete claim
@@ -311,7 +268,6 @@ claimsTaskList.title = Make a charity repayment claim
 corporateTrusteeAddress.caption = Provide organisation details
 corporateTrusteeAddress.error.required = Select ‘Yes’ if the corporate trustee has a UK address
 corporateTrusteeAddress.heading = Does the corporate trustee have a UK address?
-corporateTrusteeAddress.legend = Does the corporate trustee have a UK address?
 corporateTrusteeAddress.missingDetails = confirm if the corporate trustee has a UK address
 corporateTrusteeAddress.title = Does the corporate trustee have a UK address?
 
@@ -368,6 +324,7 @@ removeClaimForTaxYear.error.required = Select ‘Yes’ if you want to remove th
 removeClaimForTaxYear.heading = Do you want to remove the claim for tax year {0}?
 removeClaimForTaxYear.title = Do you want to remove the claim for tax year {0}?
 error.browser.title.prefix = Error:
+govukErrorMessage.visuallyHiddenText = Error
 
 fileUpload.status.AWAITING_UPLOAD = Uploading
 fileUpload.status.VALIDATED = Uploaded
@@ -384,7 +341,6 @@ giftAidScheduleUploadSuccessful.message.1 = Upload successful
 giftAidScheduleUploadSuccessful.message.2 = You have successfully attached your Gift Aid schedule.
 giftAidScheduleUploadSuccessful.agent.message.2 = You have successfully attached this Gift Aid schedule.
 giftAidScheduleUploadSuccessful.title = Upload successful
-giftAidScheduleUploadSuccessful.title = Upload successful
 
 global.error.InternalServerError500.heading = Sorry, there is a problem with this service
 global.error.InternalServerError500.message = Try again later or contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services" target="_blank">HMRC Online Services Helpdesk (opens in new tab)</a>.
@@ -400,13 +356,10 @@ incompleteAnswers.message = You have missing data
 incompleteAnswers.returnLink = Return to check your answers
 incompleteAnswers.title = You have not provided all required details
 
-index.guidance = Hello
-index.heading = Charities Claims
 
 nameOfCharityRegulator.caption = Provide organisation details
 nameOfCharityRegulator.error.required = Select the name of the charity regulator
 nameOfCharityRegulator.heading = What is the name of the charity regulator?
-nameOfCharityRegulator.legend = What is the name of the charity regulator?
 nameOfCharityRegulator.missingDetails = confirm your charity regulator name
 nameOfCharityRegulator.agent.missingDetails = confirm the charity regulator name
 nameOfCharityRegulator.radio.four = Office of the Scottish Charity Regulator
@@ -686,7 +639,6 @@ repaymentClaimType.agent.caption = Provide charity repayment claim details
 repaymentClaimType.error.required = Select repayment claim type
 repaymentClaimType.heading = Which type of repayment claim do you want to make?
 repaymentClaimType.hint = Select at least one
-repaymentClaimType.hint.claimingUnderGiftAidSmallDonationsScheme = These are not your Gift Aid donations
 repaymentClaimType.label.claimingGiftAid = Tax repayments on Gift Aid donations
 repaymentClaimType.label.claimingTaxDeducted = UK tax deducted from Other Income
 repaymentClaimType.label.claimingUnderGiftAidSmallDonationsScheme = Top-up payments for donations under the Gift Aid Small Donations Scheme (GASDS)
@@ -874,14 +826,12 @@ problemUpdatingConnectedCharitiesScheduleQuarantine.agent.heading = There is a p
 problemUpdatingConnectedCharitiesScheduleQuarantine.agent.hint = This file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
 problemUpdatingConnectedCharitiesScheduleQuarantine.agent.title = There is a problem uploading this Connected Charities schedule
 
-adjustmentToThisClaim.caption = Provide repayment claim details
 adjustmentToThisClaim.error.length = Explanation to adjustments must be 350 characters or less
 adjustmentToThisClaim.error.regex = Provide an explanation about the adjustment in the correct format
 adjustmentToThisClaim.error.required = Provide an explanation for adjustments to Gift Aid, Other Income or a donation under the Gift Aid Small Donations Scheme
 adjustmentToThisClaim.heading = What adjustments have you made to this claim?
 adjustmentToThisClaim.para = If you have included any adjustments in this claim, you must enter an explanation below. You can also provide any other information regarding your charity’s repayment claim.
 adjustmentToThisClaim.para.agent = If you have included any adjustments in this claim, you must enter an explanation below. You can also provide any other information regarding the charity’s repayment claim.
-adjustmentToThisClaim.hint = You can enter up to %{count} characters
 adjustmentToThisClaim.title = What adjustments have you made to this claim?
 
 characterCount.charactersUnderLimit.one=You have %'{'count'}' character remaining
@@ -949,7 +899,8 @@ gasdsAdjustmentAmountCheckYourAnswers.heading.agent = Check this GASDS adjustmen
 gasdsAdjustmentAmountCheckYourAnswers.title.agent = Check this GASDS adjustment amount
 gasdsAdjustmentAmountCheckYourAnswers.adjustmentToGiftAidOverclaimed.label = Amount of GASDS previously overclaimed
 
-donationAmountYouAreClaiming.caption = Provide GASDS donation details {0}
+donationAmountYouAreClaiming.caption = Provide GASDS donation details
+donationAmountYouAreClaiming.caption.multipleYears = Provide GASDS donation details - Tax year {0}
 donationAmountYouAreClaiming.heading = What donation amount are you claiming under GASDS, in pounds?
 donationAmountYouAreClaiming.title = What donation amount are you claiming under GASDS, in pounds?
 donationAmountYouAreClaiming.heading.agent = What donation amount is being claimed under GASDS, in pounds?
@@ -958,6 +909,7 @@ donationAmountYouAreClaiming.hint = This can be up to 2 decimal places, for exam
 donationAmountYouAreClaiming.error.required = Enter a {0} tax year amount
 donationAmountYouAreClaiming.error.invalid = Enter a {0} tax year amount in the correct format
 donationAmountYouAreClaiming.error.maxLength = Donation amount must be £1,000,000,000,000 or less
+
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.heading = This claim cannot be setup
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.message = You need to provide the following details to continue:
 giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.returnLink = Go back to provide the missing details for your claim
@@ -975,7 +927,8 @@ giftAidSmallDonationsSchemeDonationDetails.claim2.missingAmount.agent = confirm 
 giftAidSmallDonationsSchemeDonationDetails.claim3.missingAmount = confirm the donation amount you are claiming for tax year 3
 giftAidSmallDonationsSchemeDonationDetails.claim3.missingAmount.agent = confirm the donation amount the charity is claiming for tax year 3
 
-whichTaxYearAreYouClaimingFor.caption = Provide GASDS donation details {0}
+whichTaxYearAreYouClaimingFor.caption = Provide GASDS donation details
+whichTaxYearAreYouClaimingFor.caption.multipleYears = Provide GASDS donation details - Tax year {0}
 whichTaxYearAreYouClaimingFor.heading = Which tax year are you claiming for?
 whichTaxYearAreYouClaimingFor.title = Which tax year are you claiming for?
 whichTaxYearAreYouClaimingFor.heading.agent = Which tax year is the charity claiming for?
@@ -1058,7 +1011,6 @@ enterCharityName.title = What is the name of the charity or Community Amateur Sp
 enterCharityName.heading = What is the name of the charity or Community Amateur Sports Club (CASC)?
 enterCharityName.caption = Provide charity repayment claim details
 enterCharityName.hint = Enter the name registered with HM Revenue & Customs. For example, Royal Society for the Prevention of Cruelty to Animals Hillingdon, Slough and District Branch.
-enterCharityName.charLimit = You have 160 characters remaining
 enterCharityName.error.required = Enter a charity or Community Amateur Sports Club (CASC) name
 enterCharityName.error.length = Charity or Community Amateur Sports Club (CASC) name must be 160 characters or less
 enterCharityName.error.regex = Enter a charity or Community Amateur Sports Club (CASC) name in the correct format

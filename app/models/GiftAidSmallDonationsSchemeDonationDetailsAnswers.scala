@@ -155,6 +155,10 @@ final case class GiftAidSmallDonationsSchemeDonationDetailsAnswers(
   private def messageKey(key: String, isAgent: Boolean): String =
     if (isAgent) s"$key.agent" else key
 
+  def hasStarted: Boolean =
+    adjustmentForGiftAidOverClaimed.isDefined ||
+      claims.exists(_.nonEmpty)
+
   def hasGasdsDonationDetailsCompleteAnswers(
     repaymentClaimDetailsAnswers: Option[RepaymentClaimDetailsAnswers],
     isAgent: Boolean
@@ -166,8 +170,8 @@ final case class GiftAidSmallDonationsSchemeDonationDetailsAnswers(
 object GiftAidSmallDonationsSchemeDonationDetailsAnswers {
 
   given [A](using f: Format[A]): Format[Seq[Option[A]]] = {
-    val reads  = Reads.seq(Reads.optionWithNull(using f))
-    val writes = Writes.seq(Writes.optionWithNull(using f))
+    val reads  = Reads.seq(using Reads.optionWithNull(using f))
+    val writes = Writes.seq(using Writes.optionWithNull(using f))
     Format(reads, writes)
   }
 
