@@ -6,9 +6,9 @@ GET         /assets/*file                                       controllers.Asse
 
 GET         /                                                   controllers.StartController.start
 GET         /keep-alive                                         controllers.StartController.keepAlive
-GET         /timed-out-not-saved                                controllers.StartController.timedOutNotSaved
-GET         /timed-out-saved                                    controllers.StartController.timedOutSaved
-GET         /timed-out                                          controllers.StartController.timedOut
+GET         /service-timeout-unsaved                            controllers.StartController.timedOutNotSaved
+GET         /service-timeout-saved                              controllers.StartController.timedOutSaved
+GET         /service-timeout                                    controllers.StartController.timedOut
 GET         /page-not-found                                     controllers.PageNotFoundController.onPageLoad
 GET         /there-is-a-problem-access-denied                   controllers.AccessDeniedController.onPageLoad
 
