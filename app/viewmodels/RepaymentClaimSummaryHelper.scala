@@ -29,8 +29,7 @@ object RepaymentClaimSummaryHelper {
 
     val timeFormatter      = DateTimeFormatter.ofPattern("HH:mm:ss")
     val submissionDateTime = Instant.parse(summary.claimDetails.submissionTimestamp).atZone(ZoneId.of("Europe/London"))
-
-    val month = messages(s"month.${submissionDateTime.getMonthValue}.short")
+    val month              = messages(s"month.${submissionDateTime.getMonthValue}.short")
 
     val formattedDate =
       s"${submissionDateTime.getDayOfMonth} $month ${submissionDateTime.getYear} ${submissionDateTime.format(timeFormatter)}"

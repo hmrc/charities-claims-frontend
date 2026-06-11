@@ -86,6 +86,19 @@ month.10.short=Hyd
 month.11.short=Tach
 month.12.short=Rhag
 
+month.1.long=Ionawr
+month.2.long=Chwefror
+month.3.long=Mawrth
+month.4.long=Ebrill
+month.5.long=Mai
+month.6.long=Mehefin
+month.7.long=Gorffennaf
+month.8.long=Awst
+month.9.long=Medi
+month.10.long=Hydref
+month.11.long=Tachwedd
+month.12.long=Rhagfyr
+
 nameOfCharityRegulator.caption = Rhowch fanylion am y sefydliad
 nameOfCharityRegulator.error.required = Dewiswch enw rheoleiddiwr yr elusen
 nameOfCharityRegulator.heading = Beth yw enw’r rheoleiddiwr elusennau?
