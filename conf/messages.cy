@@ -256,13 +256,13 @@ checkYourOtherIncomeSchedule.title = Gwirio’ch atodlen o Incwm Arall
 
 claimAddedForTaxYear.caption = Rhowch fanylion y cyfraniad GASDS
 claimAddedForTaxYear.error.required = Dewiswch ‘Iawn’ os ydych am wneud hawliad ar gyfer blwyddyn dreth arall
-claimAddedForTaxYear.heading = Rydych wedi ychwanegu hawliad ar gyfer {0} flwyddyn dreth {1}
+claimAddedForTaxYear.heading = Rydych wedi ychwanegu hawliad ar gyfer {0} {1} dreth
 claimAddedForTaxYear.hint = Gallwch wneud hawliadau ar gyfer hyd at 3 flwyddyn dreth.
 claimAddedForTaxYear.legend = A hoffech ychwanegu hawliad ar gyfer blwyddyn dreth arall?
 claimAddedForTaxYear.singularOrPlural.plural = blynyddoedd
 claimAddedForTaxYear.singularOrPlural.singular = blwyddyn
 claimAddedForTaxYear.taxYear.key = Blwyddyn dreth {0}
-claimAddedForTaxYear.title = Rydych wedi ychwanegu hawliad ar gyfer {0} flwyddyn dreth {1}
+claimAddedForTaxYear.title = Rydych wedi ychwanegu hawliad ar gyfer {0} {1} dreth
 
 claimComplete.claimRefNumber = {0}
 claimComplete.message.2 = Eich cyfeirnod
