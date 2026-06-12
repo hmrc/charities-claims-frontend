@@ -548,6 +548,19 @@ incompleteAnswers.message = You have missing data
 incompleteAnswers.returnLink = Return to check your answers
 incompleteAnswers.title = You have not provided all required details
 
+month.1.long=January
+month.2.long=February
+month.3.long=March
+month.4.long=April
+month.5.long=May
+month.6.long=June
+month.7.long=July
+month.8.long=August
+month.9.long=September
+month.10.long=October
+month.11.long=November
+month.12.long=December
+
 month.1.short=Jan
 month.10.short=Oct
 month.11.short=Nov

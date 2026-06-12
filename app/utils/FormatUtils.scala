@@ -28,34 +28,32 @@ object FormatUtils {
   lazy val gdsShortMonthFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM yyyy")
   lazy val ddMmYyyyFormatter: DateTimeFormatter      = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
-  def formatDateToGds(localDate: LocalDate): String =
-    localDate.format(gdsFormatter)
+  private def formatDateToGds(localDate: LocalDate)(using messages: Messages): String = {
+    val month = messages(s"month.${localDate.getMonthValue}.long")
+    s"${localDate.getDayOfMonth} $month ${localDate.getYear}"
+  }
 
-  def formatDateToGdsShortMonth(localDate: LocalDate): String =
-    localDate.format(gdsShortMonthFormatter)
+  private def formatDateToGdsShortMonth(localDate: LocalDate)(using messages: Messages): String = {
+    val month = messages(s"month.${localDate.getMonthValue}.short")
+    s"${localDate.getDayOfMonth} $month ${localDate.getYear}"
+  }
 
-  def formatDateToDdMmYyyy(localDate: LocalDate): String =
+  private def formatDateToDdMmYyyy(localDate: LocalDate): String =
     localDate.format(ddMmYyyyFormatter)
 
-  def formatAmount(amount: BigDecimal): String = {
+  private def formatAmount(amount: BigDecimal): String = {
     val currencyFormatter = NumberFormat.getCurrencyInstance(Locale.UK)
     currencyFormatter.format(amount)
   }
 
-  extension (localDate: LocalDate) {
-    def toGdsDateString: String           = formatDateToGds(localDate)
-    def toGdsShortMonthDateString: String = formatDateToGdsShortMonth(localDate)
-    def toDdMmYyyyDateString: String      = formatDateToDdMmYyyy(localDate)
+  extension (string: String) {
+    def toGdsDateString(using messages: Messages): String           = formatDateToGds(LocalDate.parse(string))
+    def toGdsShortMonthDateString(using messages: Messages): String = formatDateToGdsShortMonth(LocalDate.parse(string))
+    def toDdMmYyyyDateString: String                                = formatDateToDdMmYyyy(LocalDate.parse(string))
   }
 
   extension (amount: BigDecimal) {
     def toAmountString: String = formatAmount(amount)
-  }
-
-  extension (string: String) {
-    def toGdsDateString: String           = formatDateToGds(LocalDate.parse(string))
-    def toGdsShortMonthDateString: String = formatDateToGdsShortMonth(LocalDate.parse(string))
-    def toDdMmYyyyDateString: String      = formatDateToDdMmYyyy(LocalDate.parse(string))
   }
 
   extension (boolean: Boolean) {
@@ -71,5 +69,4 @@ object FormatUtils {
       pattern.findFirstMatchIn(field).map(m => (m.group(1).toInt + 1).toString).getOrElse("0")
     }
   }
-
 }
