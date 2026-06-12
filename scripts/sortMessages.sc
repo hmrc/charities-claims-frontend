@@ -8,7 +8,7 @@ import scala.io.AnsiColor
 val debug = !args.headOption.contains("--save")
 
 sortMessages(os.pwd / "conf" / "messages.en")
-// sortMessages(os.pwd / "conf" / "messages.cy")
+sortMessages(os.pwd / "conf" / "messages.cy")
 
 def sortMessages(messagesFilePath: os.Path) = {
 
