@@ -256,13 +256,13 @@ checkYourOtherIncomeSchedule.title = Gwirio’ch atodlen o Incwm Arall
 
 claimAddedForTaxYear.caption = Rhowch fanylion y cyfraniad GASDS
 claimAddedForTaxYear.error.required = Dewiswch ‘Iawn’ os ydych am wneud hawliad ar gyfer blwyddyn dreth arall
-claimAddedForTaxYear.heading = Rydych wedi ychwanegu hawliad ar gyfer {0} flwyddyn dreth {1}
+claimAddedForTaxYear.heading = Rydych wedi ychwanegu hawliad ar gyfer {0} {1} dreth
 claimAddedForTaxYear.hint = Gallwch wneud hawliadau ar gyfer hyd at 3 flwyddyn dreth.
 claimAddedForTaxYear.legend = A hoffech ychwanegu hawliad ar gyfer blwyddyn dreth arall?
 claimAddedForTaxYear.singularOrPlural.plural = blynyddoedd
 claimAddedForTaxYear.singularOrPlural.singular = blwyddyn
 claimAddedForTaxYear.taxYear.key = Blwyddyn dreth {0}
-claimAddedForTaxYear.title = Rydych wedi ychwanegu hawliad ar gyfer {0} flwyddyn dreth {1}
+claimAddedForTaxYear.title = Rydych wedi ychwanegu hawliad ar gyfer {0} {1} dreth
 
 claimComplete.claimRefNumber = {0}
 claimComplete.message.2 = Eich cyfeirnod
@@ -379,7 +379,7 @@ corporateTrusteeDetails.phone.error.regex = Nodwch rif ffôn symudol ymddiriedol
 corporateTrusteeDetails.phone.error.required = Nodwch rif ffôn ymddiriedolwr corfforaethol
 corporateTrusteeDetails.phone.label = Rhif ffôn yr ymddiriedolwr
 corporateTrusteeDetails.postCode.error.length = Mae’n rhaid i’r cod post ymddiriedolwr corfforaethol fod yn 8 o gymeriadau neu lai
-corporateTrusteeDetails.postCode.error.regex = Nodwch god post enw ymddiriedolwr corfforaethol yn y fformat cywir
+corporateTrusteeDetails.postCode.error.regex = Nodwch god post ymddiriedolwr corfforaethol yn y fformat cywir
 corporateTrusteeDetails.postCode.error.required = Nodwch god post yr ymddiriedolwr
 corporateTrusteeDetails.postcode.label = Cod post yr ymddiriedolwr
 corporateTrusteeDetails.title = Beth yw manylion yr ymddiriedolwr corfforaethol?
