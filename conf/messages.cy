@@ -813,10 +813,10 @@ repaymentClaimDetails.agent.subheading = Rhowch fanylion hawliad yr elusen am ad
 repaymentClaimDetails.bullet1 = ad-daliadau treth ar gyfraniadau Rhodd Cymorth
 repaymentClaimDetails.bullet2 = taliadau atodol o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS)
 repaymentClaimDetails.bullet3 = treth yn y DU a ddidynnwyd o Incwm Arall
-repaymentClaimDetails.heading = Manylion y cais am ad-daliad
+repaymentClaimDetails.heading = Manylion yr hawliad am ad-daliad
 repaymentClaimDetails.p1 = Defnyddiwch y gwasanaeth hwn i hawlio:
 repaymentClaimDetails.subheading = Rhowch fanylion yr hawliad am ad-daliad
-repaymentClaimDetails.title = Manylion y cais am ad-daliad
+repaymentClaimDetails.title = Manylion yr hawliad am ad-daliad
 
 repaymentClaimDetailsCheckYourAnswers.agent.caption = Rhowch fanylion hawliad yr elusen am ad-daliad
 repaymentClaimDetailsCheckYourAnswers.agent.claimDetails.charityName.label = Enw’r elusen
