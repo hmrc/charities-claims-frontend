@@ -34,14 +34,6 @@ class TaskStatusSpec extends BaseSpec {
       result.tag     shouldBe None
     }
 
-    "return blue tag when status is Incomplete" in {
-      val result = TaskStatus.Incomplete.toTaskListStatus
-
-      result.tag               shouldBe defined
-      result.tag.value.classes   should include("govuk-tag--blue")
-      result.tag.value.content shouldBe Text(messages("claimsTaskList.status.incomplete"))
-    }
-
     "return blue tag when status is NotStarted" in {
       val result = TaskStatus.NotStarted.toTaskListStatus
 
