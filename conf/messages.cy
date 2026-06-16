@@ -333,7 +333,6 @@ claimsTaskList.section.uploadDocuments = Uwchlwytho dogfennau
 claimsTaskList.status.cannotStartYet = Methu dechrau ar hyn o bryd
 claimsTaskList.status.completed = Wedi cwblhau
 claimsTaskList.status.inProgress = Ar y gweill
-claimsTaskList.status.incomplete = Incomplete
 claimsTaskList.status.notStarted = Heb ddechrau eto
 claimsTaskList.task.communityBuildingsSchedule = Ychwanegu atodlen o Adeiladau Cymunedol
 claimsTaskList.task.connectedCharitiesSchedule = Ychwanegu atodlen o Elusennau Cysylltiedig

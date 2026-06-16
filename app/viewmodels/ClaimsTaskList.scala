@@ -23,15 +23,12 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.tag.Tag
 import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.TaskListItemStatus
 
 enum TaskStatus {
-  case Completed, Incomplete, NotStarted, CannotStartYet, InProgress
+  case Completed, NotStarted, CannotStartYet, InProgress
 
   def toTaskListStatus(using messages: Messages): TaskListItemStatus =
     this match
       case Completed =>
         TaskListItemStatus(content = Text(messages("claimsTaskList.status.completed")))
-
-      case Incomplete =>
-        TaskListItemStatus(tag = Some(tag("claimsTaskList.status.incomplete", "govuk-tag--blue")))
 
       case NotStarted =>
         TaskListItemStatus(tag = Some(tag("claimsTaskList.status.notStarted", "govuk-tag--blue")))
