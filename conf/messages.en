@@ -45,10 +45,6 @@ aboutTheOrganisation.paragraph.one = You need to provide information about the o
 aboutTheOrganisation.paragraph.two = The person making this claim must be an approved official or corporate trustee recognised by HM Revenue & Customs.
 aboutTheOrganisation.title = About the organisation
 
-addSchedule.heading = Add Schedule
-addSchedule.placeholder = Content TBC
-addSchedule.title = Add Schedule
-
 adjustmentToGiftAidOverclaimed.caption = Provide GASDS donation details
 adjustmentToGiftAidOverclaimed.error.invalid = Enter an adjustment amount for Gift Aid previously overclaimed in the correct format
 adjustmentToGiftAidOverclaimed.error.maxLength = Adjustment amount must be £1,000,000,000,000 or less
@@ -93,6 +89,7 @@ agentPostcode.error.required = Enter a postcode
 agentPostcode.heading = What is your postcode?
 agentPostcode.missingDetails = confirm if you have a postcode
 agentPostcode.title = What is your postcode?
+
 authLoginStub.title = Sign in using test credentials
 
 authorisedOfficialAddress.caption = Provide organisation details
@@ -186,9 +183,6 @@ charityRegulatorNumber.heading = What is the charity regulator number?
 charityRegulatorNumber.hint = This can be up to 20 numerical characters like 123456789 and does not include letters.
 charityRegulatorNumber.missingDetails = confirm your charity regulator number
 charityRegulatorNumber.title = What is the charity regulator number?
-
-charityRepaymentDashboard.heading = Charity Repayment Dashboard
-charityRepaymentDashboard.title = Charity Repayment Dashboard
 
 checkYourCommunityBuildingsSchedule.agent.heading = Check this Community Buildings schedule
 checkYourCommunityBuildingsSchedule.agent.title = Check this Community Buildings schedule
@@ -328,8 +322,6 @@ claimingReferenceNumber.caption = Provide repayment claim details
 claimingReferenceNumber.error.required = Select ‘Yes’ if you have a claim reference number
 claimingReferenceNumber.heading = Do you have a claim reference number?
 claimingReferenceNumber.title = Do you have a claim reference number?
-claimingTaxDeducted.agent.missingDetails = confirm if the charity is claiming UK tax deducted from Other Income
-claimingUnderGiftAidSmallDonationsScheme.agent.missingDetails = confirm if the charity is claiming under the Gift Aid Small Donations Scheme
 
 claimsTaskList.declaration.warning = You must complete every section before you can declare.
 claimsTaskList.heading = Make a charity repayment claim
@@ -393,10 +385,6 @@ corporateTrusteeDetails.postCode.error.required = Enter a corporate trustee post
 corporateTrusteeDetails.postcode.label = Trustee postcode
 corporateTrusteeDetails.title = What are the corporate trustee details?
 data.notApplicable = Not applicable
-
-declarationDetailsConfirmation.heading = Declaration Confirmation
-declarationDetailsConfirmation.placeholder = Content TBC
-declarationDetailsConfirmation.title = Declaration Confirmation
 
 deleteAgentClaim.body = You are about to delete the repayment claim for {0}.
 deleteAgentClaim.caution = Are you sure you want to delete this repayment claim?
@@ -543,11 +531,6 @@ global.error.pageNotFound404.heading = Page not found
 global.error.pageNotFound404.message = If you typed the web address, check it is correct.<br>If you pasted the web address, check you copied the entire address.<br>If the web address is correct or you selected a link or button, contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services" target="_blank">HMRC Online Services Helpdesk (opens in new tab)</a> if you need to speak to someone.
 govukErrorMessage.visuallyHiddenText = Error
 
-incompleteAnswers.heading = You have not provided all required details
-incompleteAnswers.message = You have missing data
-incompleteAnswers.returnLink = Return to check your answers
-incompleteAnswers.title = You have not provided all required details
-
 month.1.long=January
 month.2.long=February
 month.3.long=March
@@ -621,9 +604,6 @@ otherIncomeScheduleUploadSuccessful.agent.message.2 = You have successfully atta
 otherIncomeScheduleUploadSuccessful.message.1 = Upload successful
 otherIncomeScheduleUploadSuccessful.message.2 = You have successfully attached your Other Income schedule.
 otherIncomeScheduleUploadSuccessful.title = Upload successful
-
-phasebanner.feedback.text=This is a new service - your <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">feedback (opens in new tab)</a> will help us to improve it.
-phasebanner.phase=Beta
 
 problemUpdatingCommunityBuildingsScheduleQuarantine.agent.heading = There is a problem uploading this Community Buildings schedule
 problemUpdatingCommunityBuildingsScheduleQuarantine.agent.hint = This file contains a virus, so it cannot be uploaded. Check the file for viruses or create a new version before uploading it again.
@@ -911,10 +891,6 @@ scheduleUploadFailure.link = No, return to manage charity repayment claims
 
 service.name = Make a charity tax repayment claim
 service.title = Make a charity tax repayment claim
-session-expired-message=For your security, we will time you out in
-
-session-expired.keep-alive-button-text=Continue
-session-expired.sign-out-button-text=Sign-out
 
 site.change = Change
 site.confirmAndContinue = Confirm and continue

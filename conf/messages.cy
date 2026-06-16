@@ -90,6 +90,8 @@ agentPostcode.heading = Beth yw’ch cod post?
 agentPostcode.missingDetails = cadarnhau a oes gennych god post
 agentPostcode.title = Beth yw’ch cod post?
 
+authLoginStub.title = Sign in using test credentials
+
 authorisedOfficialAddress.caption = Rhowch fanylion am y sefydliad
 authorisedOfficialAddress.error.required = Dewiswch ‘Iawn’ os oes gan y swyddog awdurdodedig gyfeiriad yn y DU
 authorisedOfficialAddress.heading = A oes gan y swyddog awdurdodedig gyfeiriad yn y DU?
@@ -308,9 +310,7 @@ claimReferenceNumber.hint = Gall hyn fod hyd at 20 o gymeriadau, a chynnwys cyme
 claimReferenceNumber.title = Beth yw’ch cyfeirnod hawliad?
 
 claimReferenceNumberCheck.agent.missingDetails = cadarnhau a oes gan yr elusen rif cyfeirnod hawliad
-claimReferenceNumberCheck.heading = A oes gennych gyfeirnod hawliad?
 claimReferenceNumberCheck.missingDetails = cadarnhau a oes gennych rif cyfeirnod hawliad
-claimReferenceNumberCheck.title = A oes gennych gyfeirnod hawliad?
 
 claimReferenceNumberInput.agent.missingDetails = darparu rhif cyfeirnod hawliad yr elusen
 claimReferenceNumberInput.missingDetails = darparu rhif cyfeirnod yr hawliad
@@ -333,6 +333,7 @@ claimsTaskList.section.uploadDocuments = Uwchlwytho dogfennau
 claimsTaskList.status.cannotStartYet = Methu dechrau ar hyn o bryd
 claimsTaskList.status.completed = Wedi cwblhau
 claimsTaskList.status.inProgress = Ar y gweill
+claimsTaskList.status.incomplete = Incomplete
 claimsTaskList.status.notStarted = Heb ddechrau eto
 claimsTaskList.task.communityBuildingsSchedule = Ychwanegu atodlen o Adeiladau Cymunedol
 claimsTaskList.task.connectedCharitiesSchedule = Ychwanegu atodlen o Elusennau Cysylltiedig
@@ -429,7 +430,6 @@ donationAmountYouAreClaiming.title = Beth yw swm y cyfraniad hoffech ei hawlio o
 donationAmountYouAreClaiming.title.agent = Beth yw swm y cyfraniad sy’n cael ei hawlio o dan GASDS, mewn punnoedd?
 
 enterCharityName.caption = Rhowch fanylion hawliad yr elusen am ad-daliad
-enterCharityName.charLimit = Mae gennych 160 o gymeriadau’n weddill
 enterCharityName.error.length = Mae’n rhaid i enw Clwb Chwaraeon Amatur Elusen neu Gymunedol (CChAC) fod yn 160 o gymeriadau neu lai
 enterCharityName.error.regex = Nodwch enw elusen neu Glwb Chwaraeon Amatur Cymunedol (CChAC) yn y fformat cywir
 enterCharityName.error.required = Nodwch enw elusen neu Glwb Chwaraeon Amatur Cymunedol (CChAC)
@@ -596,6 +596,7 @@ organisationDetailsCheckYourAnswers.title = Gwiriwch fanylion eich sefydliad
 organisationDetailsIncompleteAnswers.heading = Ni ellir sefydlu’r hawliad hwn
 organisationDetailsIncompleteAnswers.message = Mae angen i chi ddarparu’r manylion canlynol er mwyn parhau:
 organisationDetailsIncompleteAnswers.returnLink = Ewch yn ôl i ddarparu’r manylion coll ar gyfer eich hawliad
+organisationDetailsIncompleteAnswers.returnLink.agent = Yn ôl i ddarparu’r manylion coll ar gyfer yr hawliad hwn
 organisationDetailsIncompleteAnswers.title = Ni ellir sefydlu’r hawliad hwn
 organisationDetailsIncompleteAnswers.warning = Ni ellir sefydlu’r hawliad hwn oherwydd bod rhai manylion ar goll.
 
