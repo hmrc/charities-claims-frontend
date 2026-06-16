@@ -16,24 +16,23 @@
 
 package connectors
 
+import com.typesafe.config.Config
 import uk.gov.hmrc.http.HttpReads.Implicits.*
 import com.google.inject.ImplementedBy
 import connectors.HttpResponseOps.*
 import org.apache.pekko.actor.ActorSystem
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, Retries}
 import models.*
 import uk.gov.hmrc.http.client.HttpClientV2
-import play.api.Configuration
+import play.api.{Configuration, Logging}
 import play.api.libs.ws.JsonBodyWritables.*
 import play.api.libs.json.Json
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.concurrent.duration.FiniteDuration
 
 import javax.inject.Inject
 import java.net.URL
-import play.api.Logging
 
 @ImplementedBy(classOf[UpscanInitiateConnectorImpl])
 trait UpscanInitiateConnector {
@@ -46,7 +45,7 @@ trait UpscanInitiateConnector {
 
 class UpscanInitiateConnectorImpl @Inject() (
   http: HttpClientV2,
-  configuration: Configuration,
+  config: Configuration,
   servicesConfig: ServicesConfig,
   val actorSystem: ActorSystem
 )(using ExecutionContext)
@@ -56,7 +55,7 @@ class UpscanInitiateConnectorImpl @Inject() (
 
   val baseUrl: String = servicesConfig.baseUrl("upscan-initiate")
 
-  val retryIntervals: Seq[FiniteDuration] = Retries.getConfIntervals("upscan-initiate", configuration)
+  def configuration: Config = config.underlying
 
   val contextPath: String       = servicesConfig.getConfString("upscan-initiate.context-path", "upscan")
   val upscanServiceName: String = servicesConfig.getConfString("upscan-initiate.service-name", "charities-claims")
@@ -72,7 +71,7 @@ class UpscanInitiateConnectorImpl @Inject() (
     logger.info(
       s"POST $contextPath/v2/initiate for claimId=$claimId [requestId=${hc.requestId.map(_.value).getOrElse("-")}]"
     )
-    retry(retryIntervals*)(shouldRetry, retryReason) {
+    retryFor("initiate") { case _ => true } {
       http
         .post(URL(s"$baseUrl$contextPath/v2/initiate"))
         .withBody(
@@ -84,26 +83,27 @@ class UpscanInitiateConnectorImpl @Inject() (
           )
         )
         .execute[HttpResponse]
-    }.flatMap(response =>
-      if response.status >= 200 && response.status < 300
-      then
-        response
-          .parseJSON[UpscanInitiateResponse]()
-          .fold(
-            error => {
-              logger.error(s"Failed to parse upscan initiate response for claimId=$claimId: $error")
-              Future.failed(Exception(error))
-            },
-            result => Future.successful(result)
-          )
-      else {
-        Future.failed(
-          Exception(
-            s"Request to POST $contextPath/v2/initiate failed with status ${response.status} for claimId=$claimId, body=${response.body}"
-          )
+        .flatMap(response =>
+          if response.status >= 200 && response.status < 300
+          then
+            response
+              .parseJSON[UpscanInitiateResponse]()
+              .fold(
+                error => {
+                  logger.error(s"Failed to parse upscan initiate response for claimId=$claimId: $error")
+                  Future.failed(Exception(error))
+                },
+                result => Future.successful(result)
+              )
+          else {
+            Future.failed(
+              Exception(
+                s"Request to POST $contextPath/v2/initiate failed with status ${response.status} for claimId=$claimId, body=${response.body}"
+              )
+            )
+          }
         )
-      }
-    )
+    }
   }
 
 }

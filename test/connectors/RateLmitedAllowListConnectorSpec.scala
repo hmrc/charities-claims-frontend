@@ -19,7 +19,7 @@ package connectors
 import util.{BaseSpec, HttpV2Support}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import models.AllowListCheckRequest
+import models.{AllowListCheckRequest, AllowListCheckResponse}
 import play.api.test.Helpers.*
 import com.typesafe.config.ConfigFactory
 import play.api.Configuration
@@ -27,28 +27,26 @@ import play.api.libs.json.Json
 
 import scala.language.implicitConversions
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.FiniteDuration
-import models.AllowListCheckResponse
 
 class RateLimitedAllowListConnectorSpec extends BaseSpec with HttpV2Support {
 
   val config: Configuration = Configuration(
     ConfigFactory.parseString(
       """
-        | microservice {
+        |microservice {
         |   services {
         |     rate-limited-allow-list  {
         |       protocol = http
         |       host     = foo.bar.com
         |       port     = 1234
-        |       retryIntervals = [10ms,50ms]
         |     }
         |   }
-        | }
-        | splitter {
+        |}
+        |splitter {
         |   serviceName = charities
         |   allowListName = beta
-        | }
+        |}
+        |http-verbs.retries.intervals = [10ms,50ms]
         |""".stripMargin
     )
   )
@@ -56,7 +54,7 @@ class RateLimitedAllowListConnectorSpec extends BaseSpec with HttpV2Support {
   val connector =
     new RateLimitedAllowListConnectorImpl(
       http = mockHttp,
-      configuration = config,
+      config = config,
       servicesConfig = new ServicesConfig(config),
       actorSystem = actorSystem
     )
@@ -67,15 +65,6 @@ class RateLimitedAllowListConnectorSpec extends BaseSpec with HttpV2Support {
     "http://foo.bar.com:1234/rate-limited-allow-list/services/charities/features/test-feature"
 
   "RateLimitedAllowListConnector" - {
-
-    "retry configuration" - {
-      "should load retry intervals from config" in {
-        connector.retryIntervals shouldBe Seq(
-          FiniteDuration(10, "ms"),
-          FiniteDuration(50, "ms")
-        )
-      }
-    }
 
     "checkAllowList" - {
 
