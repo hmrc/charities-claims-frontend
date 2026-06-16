@@ -16,27 +16,24 @@
 
 package connectors
 
+import com.typesafe.config.Config
+import uk.gov.hmrc.http.HttpReads.Implicits.*
 import com.google.inject.ImplementedBy
 import connectors.HttpResponseOps.*
-import models.*
 import org.apache.pekko.actor.ActorSystem
-import play.api.{Configuration, Logging}
-import play.api.libs.json.{JsNull, Json, Reads, Writes}
-import play.api.libs.ws.JsonBodyWritables.*
-import uk.gov.hmrc.http.HttpReads.Implicits.*
-import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import play.api.http.Status.NOT_FOUND
-import play.api.http.Status.NO_CONTENT
-import play.api.http.Status.OK
-import play.api.http.Status.BAD_REQUEST
+import models.*
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import play.api.{Configuration, Logging}
+import play.api.libs.ws.JsonBodyWritables.*
+import play.api.libs.json.*
+import play.api.http.Status.*
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, Retries}
 
-import java.net.URL
-import javax.inject.Inject
-import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
-import play.api.libs.json.JsObject
+
+import javax.inject.Inject
+import java.net.URL
 
 @ImplementedBy(classOf[ClaimsConnectorImpl])
 trait ClaimsConnector {
@@ -64,7 +61,7 @@ trait ClaimsConnector {
 
 class ClaimsConnectorImpl @Inject() (
   http: HttpClientV2,
-  configuration: Configuration,
+  config: Configuration,
   servicesConfig: ServicesConfig,
   val actorSystem: ActorSystem
 )(using
@@ -75,7 +72,7 @@ class ClaimsConnectorImpl @Inject() (
 
   val baseUrl: String = servicesConfig.baseUrl("charities-claims")
 
-  val retryIntervals: Seq[FiniteDuration] = Retries.getConfIntervals("charities-claims", configuration)
+  def configuration: Config = config.underlying
 
   val contextPath: String = servicesConfig
     .getConfString("charities-claims.context-path", "charities-claims")
@@ -169,15 +166,18 @@ class ClaimsConnectorImpl @Inject() (
   final def hasUnsubmittedClaim(charitiesReference: String)(using hc: HeaderCarrier): Future[Boolean] =
     val url: String = s"$claimsApiUrl/charities/$charitiesReference/unsubmitted"
     logger.info(s"GET $url [requestId=${hc.requestId.map(_.value).getOrElse("-")}]")
-    retry(retryIntervals*)(shouldRetry, retryReason) {
-      http.get(URL(url)).execute[HttpResponse]
-    }.map(response =>
-      response.status match {
-        case NOT_FOUND  => false
-        case NO_CONTENT => true
-        case _          => throw Exception(s"Request to $url failed because of $response ${response.body}")
-      }
-    )
+    retryFor(s"hasUnsubmittedClaim") { case _ => true } {
+      http
+        .get(URL(url))
+        .execute[HttpResponse]
+        .map(response =>
+          response.status match {
+            case NOT_FOUND  => false
+            case NO_CONTENT => true
+            case _          => throw Exception(s"Request to $url failed because of $response ${response.body}")
+          }
+        )
+    }
 
   private def callCharitiesClaimsBackend[I, O](
     method: String,
@@ -191,7 +191,12 @@ class ClaimsConnectorImpl @Inject() (
     hc: HeaderCarrier
   ): Future[O] = {
     logger.info(s"$method $url [requestId=${hc.requestId.map(_.value).getOrElse("-")}]")
-    retry(retryIntervals*)(shouldRetry, retryReason) {
+    retryFor(s"$method $url") {
+      case _: UpdatedByAnotherUserException => false
+      case _: MaxClaimsExceededException    => false
+      case _: UnknownClaimError             => false
+      case _                                => true
+    } {
       val request: RequestBuilder = method match {
         case "GET"    => http.get(URL(url))
         case "POST"   => http.post(URL(url))
@@ -203,36 +208,37 @@ class ClaimsConnectorImpl @Inject() (
       payload
         .fold(request)(p => request.withBody(Json.toJson(p)))
         .execute[HttpResponse]
-    }.flatMap(response =>
-      if response.status == OK then
-        response
-          .parseJSON[O]()
-          .fold(
-            error => {
-              logger.error(s"Failed to parse response from $method $url: $error")
-              Future.failed(Exception(error))
-            },
-            Future.successful
-          )
-      else if noneOnNotFound && response.status == NOT_FOUND then Future.successful(noneValue)
-      else if response.status == BAD_REQUEST then
-        response
-          .parseJSON[ClaimError]()
-          .fold(
-            error => {
-              logger.error(s"Failed to parse 400 error response from $method $url: $error")
-              Future.failed(Exception(error))
-            },
-            e => {
-              logger.warn(s"$method $url returned 400: ${e.getMessage}")
-              Future.failed(e)
-            }
-          )
-      else {
-        logger.error(s"$method $url failed with status ${response.status}")
-        Future.failed(Exception(s"Request to $method $url failed because of $response ${response.body}"))
-      }
-    )
+        .flatMap(response =>
+          if response.status == OK then
+            response
+              .parseJSON[O]()
+              .fold(
+                error => {
+                  logger.error(s"Failed to parse response from $method $url: $error")
+                  Future.failed(Exception(error))
+                },
+                Future.successful
+              )
+          else if noneOnNotFound && response.status == NOT_FOUND then Future.successful(noneValue)
+          else if response.status == BAD_REQUEST then
+            response
+              .parseJSON[ClaimError]()
+              .fold(
+                error => {
+                  logger.error(s"Failed to parse 400 error response from $method $url: $error")
+                  Future.failed(Exception(error))
+                },
+                e => {
+                  logger.warn(s"$method $url returned 400: ${e.getMessage}")
+                  Future.failed(e)
+                }
+              )
+          else {
+            logger.error(s"$method $url failed with status ${response.status}")
+            Future.failed(Exception(s"Request to $method $url failed because of $response ${response.body}"))
+          }
+        )
+    }
   }
 
   given Writes[Nothing] = Writes.apply(_ => JsNull)

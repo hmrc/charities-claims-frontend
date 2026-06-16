@@ -16,22 +16,23 @@
 
 package connectors
 
+import com.typesafe.config.Config
+import uk.gov.hmrc.http.HttpReads.Implicits.*
 import com.google.inject.ImplementedBy
 import connectors.HttpResponseOps.*
-import models.*
 import org.apache.pekko.actor.ActorSystem
-import play.api.{Configuration, Logging}
-import play.api.libs.json.{JsNull, Json, Reads, Writes}
-import play.api.libs.ws.JsonBodyWritables.*
-import uk.gov.hmrc.http.HttpReads.Implicits.*
-import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, Retries}
+import models.*
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import play.api.{Configuration, Logging}
+import play.api.libs.ws.JsonBodyWritables.*
+import play.api.libs.json.*
 
-import java.net.URI
-import javax.inject.Inject
-import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
+
+import javax.inject.Inject
+import java.net.URI
 
 @ImplementedBy(classOf[ClaimsValidationConnectorImpl])
 trait ClaimsValidationConnector {
@@ -58,7 +59,7 @@ trait ClaimsValidationConnector {
 
 class ClaimsValidationConnectorImpl @Inject() (
   http: HttpClientV2,
-  configuration: Configuration,
+  config: Configuration,
   servicesConfig: ServicesConfig,
   val actorSystem: ActorSystem
 )(using
@@ -69,7 +70,7 @@ class ClaimsValidationConnectorImpl @Inject() (
 
   val baseUrl: String = servicesConfig.baseUrl("charities-claims-validation")
 
-  val retryIntervals: Seq[FiniteDuration] = Retries.getConfIntervals("charities-claims-validation", configuration)
+  def configuration: Config = config.underlying
 
   val contextPath: String = servicesConfig
     .getConfString("charities-claims-validation.context-path", "charities-claims-validation")
@@ -134,7 +135,10 @@ class ClaimsValidationConnectorImpl @Inject() (
     hc: HeaderCarrier
   ): Future[O] = {
     logger.info(s"$method $url [requestId=${hc.requestId.map(_.value).getOrElse("-")}]")
-    retry(retryIntervals*)(shouldRetry, retryReason) {
+    retryFor(s"$method $url") {
+      case e if e.getMessage.contains("CLAIM_DOES_NOT_EXIST") => false
+      case _                                                  => true
+    } {
       val request: RequestBuilder = method match {
         case "GET"    => http.get(new URI(url).toURL)
         case "POST"   => http.post(new URI(url).toURL)
@@ -144,21 +148,22 @@ class ClaimsValidationConnectorImpl @Inject() (
       payload
         .fold(request)(p => request.withBody(Json.toJson(p)))
         .execute[HttpResponse]
-    }.flatMap(response =>
-      if response.status >= 200 && response.status < 300 then
-        response
-          .parseJSON[O]()
-          .fold(
-            error => {
-              logger.error(s"Failed to parse response from $method $url: $error")
-              Future.failed(Exception(error))
-            },
-            Future.successful
-          )
-      else {
-        Future.failed(Exception(s"Request to $method $url failed because of $response ${response.body}"))
-      }
-    )
+        .flatMap(response =>
+          if response.status >= 200 && response.status < 300 then
+            response
+              .parseJSON[O]()
+              .fold(
+                error => {
+                  logger.error(s"Failed to parse response from $method $url: $error")
+                  Future.failed(Exception(error))
+                },
+                Future.successful
+              )
+          else {
+            Future.failed(Exception(s"Request to $method $url failed because of $response ${response.body}"))
+          }
+        )
+    }
   }
 
   given Writes[Nothing] = Writes.apply(_ => JsNull)

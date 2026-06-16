@@ -16,7 +16,7 @@
 
 package connectors
 
-import util.{BaseSpec, HttpV2Support}
+import util.{BaseSpec, HttpV2Support, TestResources}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import models.*
@@ -28,10 +28,8 @@ import play.api.libs.json.Json
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.FiniteDuration
 
 import java.net.URL
-import util.TestResources
 
 class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
 
@@ -44,11 +42,11 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         |        protocol = http
         |        host     = example.com
         |        port     = 1234
-        |        retryIntervals = [10ms,50ms]
         |        context-path = "/charities-claims-validation"
         |      }
         |   }
         |}
+        |http-verbs.retries.intervals = [10ms,50ms]
         |""".stripMargin
     )
   )
@@ -57,7 +55,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
     new ClaimsValidationConnectorImpl(
       http = mockHttp,
       servicesConfig = new ServicesConfig(config),
-      configuration = config,
+      config = config,
       actorSystem = actorSystem
     )
 
@@ -149,9 +147,6 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
     }
 
     "getUploadSummary" - {
-      "have retries defined" in {
-        connector.retryIntervals shouldBe Seq(FiniteDuration(10, "ms"), FiniteDuration(50, "ms"))
-      }
 
       "should return upload summary when service returns 200 status" in {
         givenGetUploadSummaryEndpointReturns(HttpResponse(200, testUploadSummaryResponseJsonString)).once()
