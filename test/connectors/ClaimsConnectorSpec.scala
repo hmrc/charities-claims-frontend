@@ -16,19 +16,18 @@
 
 package connectors
 
-import com.typesafe.config.ConfigFactory
+import util.{BaseSpec, HttpV2Support, TestClaims}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import models.*
 import org.scalamock.handlers.CallHandler
+import play.api.test.Helpers.*
+import com.typesafe.config.ConfigFactory
 import play.api.Configuration
 import play.api.libs.json.Json
-import play.api.test.Helpers.*
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import util.{BaseSpec, HttpV2Support, TestClaims}
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
@@ -41,11 +40,11 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
         |        protocol = http
         |        host     = foo.bar.com
         |        port     = 1234
-        |        retryIntervals = [10ms,50ms]
         |        context-path = "/foo-claims"
         |      }
         |   }
         |}
+        |http-verbs.retries.intervals = [10ms,50ms]
         |""".stripMargin
     )
   )
@@ -54,7 +53,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
     new ClaimsConnectorImpl(
       http = mockHttp,
       servicesConfig = new ServicesConfig(config),
-      configuration = config,
+      config = config,
       actorSystem = actorSystem
     )
 
@@ -132,9 +131,6 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
   "ClaimsConnector" - {
     "retrieveUnsubmittedClaims" - {
-      "have retries defined" in {
-        connector.retryIntervals shouldBe Seq(FiniteDuration(10, "ms"), FiniteDuration(50, "ms"))
-      }
 
       "should return a list of unsubmitted claims" in {
         givenGetClaimsEndpointReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)).once()

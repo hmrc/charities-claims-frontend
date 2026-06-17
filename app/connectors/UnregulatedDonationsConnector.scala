@@ -16,18 +16,18 @@
 
 package connectors
 
+import com.typesafe.config.Config
 import uk.gov.hmrc.http.HttpReads.Implicits.*
 import com.google.inject.ImplementedBy
 import connectors.HttpResponseOps.*
 import org.apache.pekko.actor.ActorSystem
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import play.api.Configuration
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, Retries}
 import models.*
 import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.concurrent.duration.FiniteDuration
 
 import javax.inject.Inject
 import java.net.URL
@@ -36,12 +36,11 @@ import java.net.URL
 trait UnregulatedDonationsConnector {
 
   def getTotalUnregulatedDonations(charityReference: String)(using hc: HeaderCarrier): Future[Option[BigDecimal]]
-
 }
 
 class UnregulatedDonationsConnectorImpl @Inject() (
   http: HttpClientV2,
-  configuration: Configuration,
+  config: Configuration,
   servicesConfig: ServicesConfig,
   val actorSystem: ActorSystem
 )(using
@@ -51,33 +50,33 @@ class UnregulatedDonationsConnectorImpl @Inject() (
 
   val baseUrl: String = servicesConfig.baseUrl("charities-claims")
 
-  val retryIntervals: Seq[FiniteDuration] = Retries.getConfIntervals("charities-claims", configuration)
-
-  val contextPath: String = servicesConfig
+  def configuration: Config = config.underlying
+  val contextPath: String   = servicesConfig
     .getConfString("charities-claims.context-path", "charities-claims")
 
   final def getTotalUnregulatedDonations(
     charityReference: String
   )(using hc: HeaderCarrier): Future[Option[BigDecimal]] =
-    retry(retryIntervals*)(shouldRetry, retryReason) {
+    retryFor("getTotalUnregulatedDonations") { case _ => true } {
       http
         .get(URL(s"$baseUrl$contextPath/charities/$charityReference/unregulated-donations"))
         .execute[HttpResponse]
-    }.flatMap(response =>
-      if response.status == 200 then
-        response
-          .parseJSON[GetTotalUnregulatedDonationsResponse]()
-          .fold(
-            error => Future.failed(Exception(error)),
-            result => Future.successful(Some(result.unregulatedDonationsTotal))
-          )
-      else if response.status == 404 then Future.successful(None)
-      else
-        Future.failed(
-          Exception(
-            s"Request to GET $contextPath/charities/$charityReference/unregulated-donations failed because of $response ${response.body}"
-          )
+        .flatMap(response =>
+          if response.status == 200 then
+            response
+              .parseJSON[GetTotalUnregulatedDonationsResponse]()
+              .fold(
+                error => Future.failed(Exception(error)),
+                result => Future.successful(Some(result.unregulatedDonationsTotal))
+              )
+          else if response.status == 404 then Future.successful(None)
+          else
+            Future.failed(
+              Exception(
+                s"Request to GET $contextPath/charities/$charityReference/unregulated-donations failed because of $response ${response.body}"
+              )
+            )
         )
-    )
+    }
 
 }

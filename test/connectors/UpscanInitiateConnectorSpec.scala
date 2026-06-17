@@ -28,31 +28,30 @@ import play.api.libs.json.Json
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.FiniteDuration
 
 class UpscanInitiateConnectorSpec extends BaseSpec with HttpV2Support {
 
   val config: Configuration = Configuration(
     ConfigFactory.parseString(
       """
-        |  microservice {
-        |    services {
-        |      upscan-initiate {
+        |microservice {
+        |  services {
+        |    upscan-initiate {
         |        protocol = http
         |        host     = foo.bar.com
         |        port     = 1234
-        |        retryIntervals = [10ms,50ms]
         |        context-path = "/foo-upscan"
         |        service-name = "foo-bar"
-        |      }
-        |      charities-claims-validation {
+        |    }
+        |    charities-claims-validation {
         |        protocol = http
         |        host     = example.com
         |        port     = 1235
         |        context-path = "/charities-claims-validation"
-        |      }
-        |   }
+        |    }
+        |  }
         |}
+        |http-verbs.retries.intervals = [10ms,50ms]
         |""".stripMargin
     )
   )
@@ -61,7 +60,7 @@ class UpscanInitiateConnectorSpec extends BaseSpec with HttpV2Support {
     new UpscanInitiateConnectorImpl(
       http = mockHttp,
       servicesConfig = new ServicesConfig(config),
-      configuration = config,
+      config = config,
       actorSystem = actorSystem
     )
 
@@ -117,9 +116,6 @@ class UpscanInitiateConnectorSpec extends BaseSpec with HttpV2Support {
 
   "UpscanInitiateConnector" - {
     "initiate" - {
-      "have retries defined" in {
-        connector.retryIntervals shouldBe Seq(FiniteDuration(10, "ms"), FiniteDuration(50, "ms"))
-      }
 
       "should return a upscan initiate response if the service returns 200 status" in {
         givenPostInitiateEndpointReturns(expectedUpscanInitiateRequest, HttpResponse(200, responseJson)).once()
