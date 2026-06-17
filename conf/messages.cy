@@ -796,7 +796,7 @@ registerCharityWithARegulator.agent.warning = Mae’r elusen wedi gwneud hawliad
 registerCharityWithARegulator.error.required = Dewiswch ‘Iawn’ os oes angen i chi gofrestru gyda rheoleiddiwr.
 registerCharityWithARegulator.heading = Cofrestru eich elusen gyda rheoleiddiwr
 registerCharityWithARegulator.legend = A oes angen i chi gofrestru eich elusen gyda rheoleiddiwr?
-registerCharityWithARegulator.paragraph = Os yw incwm blynyddol yr elusen yn £{1} neu fwy, mae angen i chi <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">gofrestru’r elusen hon gyda rheoleiddiwr (yn agor mewn tab newydd)</a>.
+registerCharityWithARegulator.paragraph = Os yw eich incwm blynyddol yn £{1} neu fwy, mae angen i chi <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">gofrestru eich elusen gyda rheoleiddiwr (yn agor mewn tab newydd)</a>.
 registerCharityWithARegulator.radio.no.label = Na
 registerCharityWithARegulator.radio.yes.label = Iawn
 registerCharityWithARegulator.title = Cofrestru eich elusen gyda rheoleiddiwr
