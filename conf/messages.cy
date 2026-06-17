@@ -556,11 +556,11 @@ month.7.short=Gorff
 month.8.short=Awst
 month.9.short=Medi
 
-nameOfCharityRegulator.agent.missingDetails = cadarnhewch yr enw rheoleiddiwr elusennau
+nameOfCharityRegulator.agent.missingDetails = cadarnhau enw rheoleiddiwr yr elusen
 nameOfCharityRegulator.caption = Rhowch fanylion am y sefydliad
 nameOfCharityRegulator.error.required = Dewiswch enw rheoleiddiwr yr elusen
 nameOfCharityRegulator.heading = Beth yw enw’r rheoleiddiwr elusennau?
-nameOfCharityRegulator.missingDetails = cadarnhewch eich enw rheoleiddiwr elusennau
+nameOfCharityRegulator.missingDetails = cadarnhau enw rheoleiddiwr eich elusen
 nameOfCharityRegulator.radio.four = Swyddfa Rheoleiddiwr Elusennau’r Alban
 nameOfCharityRegulator.radio.one = Comisiwn Elusennau ar gyfer Cymru a Lloegr
 nameOfCharityRegulator.radio.three = Nid yw’r elusen wedi’i chofrestru gyda rheoleiddiwr
