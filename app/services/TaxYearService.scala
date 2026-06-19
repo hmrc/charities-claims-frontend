@@ -17,6 +17,7 @@
 package services
 
 import services.TaxYearService.TaxYearError
+import utils.TaxYearUtils
 
 import java.time.{LocalDate, ZoneId}
 
@@ -28,7 +29,7 @@ class TaxYearService {
     today: LocalDate = LocalDate.now(ZoneId.of("Europe/London"))
   ): Option[TaxYearError] = {
 
-    val (minYear, maxYear) = validRange(today)
+    val (minYear, maxYear) = TaxYearUtils.validRange(today)
 
     if (taxYear < minYear)
       Some(TaxYearError.TooOld(minYear))
@@ -39,21 +40,6 @@ class TaxYearService {
     else
       None
   }
-
-  def validRange(today: LocalDate): (Int, Int) = {
-    val end = currentTaxYearEnd(today)
-    (end - 3, end)
-  }
-
-  private def currentTaxYearStart(today: LocalDate): Int = {
-    val year         = today.getYear
-    val taxYearStart = LocalDate.of(year, 4, 6)
-
-    if (today.isBefore(taxYearStart)) year - 1 else year
-  }
-
-  private def currentTaxYearEnd(today: LocalDate): Int =
-    currentTaxYearStart(today) + 1
 }
 
 object TaxYearService {

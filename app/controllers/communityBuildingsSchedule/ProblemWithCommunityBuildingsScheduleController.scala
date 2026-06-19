@@ -24,8 +24,9 @@ import config.FrontendAppConfig
 import views.html.ProblemWithCommunityBuildingsScheduleView
 import controllers.actions.Actions
 import models.*
-import services.{ClaimsValidationService, PaginationService, TaxYearService}
+import services.{ClaimsValidationService, PaginationService}
 import controllers.communityBuildingsSchedule.routes
+import utils.TaxYearUtils
 
 import java.time.{LocalDate, ZoneId}
 import _root_.scala.concurrent.{ExecutionContext, Future}
@@ -36,8 +37,7 @@ class ProblemWithCommunityBuildingsScheduleController @Inject() (
   actions: Actions,
   claimsValidationConnector: ClaimsValidationConnector,
   claimsValidationService: ClaimsValidationService,
-  appConfig: FrontendAppConfig,
-  taxYearService: TaxYearService
+  appConfig: FrontendAppConfig
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -73,7 +73,7 @@ class ProblemWithCommunityBuildingsScheduleController @Inject() (
                       communityBuildingsScheduleSpreadsheetGuidanceUrl =
                         appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl,
                       isAgent = request.isAgent,
-                      earliestTaxYear = Some(taxYearService.validRange(today)._1)
+                      earliestTaxYear = Some(TaxYearUtils.validRange(today)._1)
                     )
                   )
 
