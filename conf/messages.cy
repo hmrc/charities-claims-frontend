@@ -791,7 +791,7 @@ registerCharityWithARegulator.agent.legend = A oes angen i chi gofrestru’r elu
 registerCharityWithARegulator.agent.paragraph = Os yw incwm blynyddol yr elusen yn £{1} neu fwy, mae angen i chi <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">gofrestru’r elusen hon gyda rheoleiddiwr (yn agor mewn tab newydd)</a>.
 registerCharityWithARegulator.agent.title = Cofrestru’r elusen gyda rheoleiddiwr
 registerCharityWithARegulator.agent.warning = Mae’r elusen wedi gwneud hawliadau am ad-daliadau Rhodd Cymorth ar roddion o £{1} neu fwy yn y 12 mis diwethaf.
-registerCharityWithARegulator.error.required = Dewiswch ‘Iawn’ os oes angen i chi gofrestru gyda rheoleiddiwr.
+registerCharityWithARegulator.error.required = Dewiswch ‘Iawn’ os oes angen i chi gofrestru gyda rheoleiddiwr
 registerCharityWithARegulator.heading = Cofrestru eich elusen gyda rheoleiddiwr
 registerCharityWithARegulator.legend = A oes angen i chi gofrestru eich elusen gyda rheoleiddiwr?
 registerCharityWithARegulator.paragraph = Os yw eich incwm blynyddol yn £{1} neu fwy, mae angen i chi <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">gofrestru eich elusen gyda rheoleiddiwr (yn agor mewn tab newydd)</a>.
