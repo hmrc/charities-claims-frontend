@@ -795,7 +795,7 @@ registerCharityWithARegulator.error.required = Dewiswch ‘Iawn’ os oes angen 
 registerCharityWithARegulator.heading = Cofrestru eich elusen gyda rheoleiddiwr
 registerCharityWithARegulator.legend = A oes angen i chi gofrestru eich elusen gyda rheoleiddiwr?
 registerCharityWithARegulator.paragraph = Os yw eich incwm blynyddol yn £{1} neu fwy, mae angen i chi <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">gofrestru eich elusen gyda rheoleiddiwr (yn agor mewn tab newydd)</a>.
-registerCharityWithARegulator.radio.no.label = Na
+registerCharityWithARegulator.radio.no.label = Na, parhewch â’r hawliad
 registerCharityWithARegulator.radio.yes.label = Iawn
 registerCharityWithARegulator.title = Cofrestru eich elusen gyda rheoleiddiwr
 registerCharityWithARegulator.warning = Rydych wedi gwneud hawliadau am ad-daliadau Rhodd Cymorth ar roddion o £{1} neu fwy yn y 12 mis diwethaf.
@@ -913,12 +913,12 @@ timedOut.message.not-saved = Ni wnaethom gadw’ch atebion.
 timedOut.message.saved = Gwnaethom gadw’ch atebion.
 timedOut.title = Er eich diogelwch, gwnaethom eich allgofnodi
 
-updateCommunityBuildingsSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddiweddaru’ch incwm trethadwy amcangyfrifedig
+updateCommunityBuildingsSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddiweddaru’r atodlen Adeiladau Cymunedol hon
 updateCommunityBuildingsSchedule.heading = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Adeiladau Cymunedol hon?
 updateCommunityBuildingsSchedule.hint = Drwy ddiweddaru’r ffeil hon, byddwch yn colli unrhyw ddata atodlen o Adeiladau Cymunedol rydych wedi’i atodi o’r blaen.
 updateCommunityBuildingsSchedule.title = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Adeiladau Cymunedol hon?
 
-updateConnectedCharitiesSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddiweddaru’ch incwm trethadwy amcangyfrifedig
+updateConnectedCharitiesSchedule.error.required = Dewiswch ‘Iawn’ os ydych am ddiweddaru’r atodlen Elusennau Cysylltiedig hon
 updateConnectedCharitiesSchedule.heading = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Elusennau Cysylltiedig hon?
 updateConnectedCharitiesSchedule.hint = Drwy ddiweddaru’r ffeil hon, byddwch yn colli unrhyw ddata atodlen o Elusennau Cysylltiedig rydych wedi’i atodi o’r blaen.
 updateConnectedCharitiesSchedule.title = A ydych yn siŵr eich bod am ddiweddaru’r atodlen Elusennau Cysylltiedig hon?
@@ -1079,7 +1079,7 @@ whichTaxYearAreYouClaimingFor.title.agent = Pa flwyddyn dreth yw’r elusen yn h
 whoShouldWeSendPaymentTo.caption = Rhowch fanylion am y sefydliad
 whoShouldWeSendPaymentTo.error.required = Dewiswch at bwy y dylai CThEF anfon taliad
 whoShouldWeSendPaymentTo.heading = At bwy y dylai CThEF anfon y taliad?
-whoShouldWeSendPaymentTo.missingDetails = cadarnhewch i bwy y dylai CThEF anfon taliadau
+whoShouldWeSendPaymentTo.missingDetails = cadarnhau at bwy ddylai CThEF anfon y taliad
 whoShouldWeSendPaymentTo.radio.agentOrNominee = Asiant/Enwebai
 whoShouldWeSendPaymentTo.radio.charityOrCasc = Elusen/Clwb Chwaraeon Amatur Cymunedol (CChAC)
 whoShouldWeSendPaymentTo.title = At bwy y dylai CThEF anfon y taliad?
