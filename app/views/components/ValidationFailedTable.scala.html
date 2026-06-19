@@ -35,9 +35,10 @@
         rows = errors.map { error =>
             Seq(
                 TableRow(content = Text(error.field.toRowNumber), classes = "govuk-table__header"),
-                if (error.error) =="validationService.communityBuildings.message.15" then
-                    TableRow(content = Text(messages(error.error,s"${earliestTaxYear.get}")))
-                else
+                (error.error, earliestTaxYear) match
+                case ("validationService.communityBuildings.message.15", Some(year)) =>
+                    TableRow(content = Text(messages(error.error, s"${year}")))
+                case _ =>
                     TableRow(content = Text(messages(error.error)))
             )
         }

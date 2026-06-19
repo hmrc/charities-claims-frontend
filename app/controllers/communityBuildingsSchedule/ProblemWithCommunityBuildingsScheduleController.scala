@@ -73,7 +73,7 @@ class ProblemWithCommunityBuildingsScheduleController @Inject() (
                       communityBuildingsScheduleSpreadsheetGuidanceUrl =
                         appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl,
                       isAgent = request.isAgent,
-                      earliestTaxYear = Some(taxYearService.validRange(today).head)
+                      earliestTaxYear = Some(taxYearService.validRange(today)._1)
                     )
                   )
 
