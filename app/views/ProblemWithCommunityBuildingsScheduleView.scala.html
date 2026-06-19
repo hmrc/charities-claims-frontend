@@ -35,7 +35,8 @@
     paginationViewModel: PaginationViewModel,
     paginationStatus: PaginationStatus,
     communityBuildingsScheduleSpreadsheetGuidanceUrl: String,
-    isAgent: Boolean
+    isAgent: Boolean,
+    earliestTaxYear : Option[Int]
 )(implicit request: Request[?], messages: Messages)
 
 @pageTitleMessage = @{
@@ -78,7 +79,8 @@
     @validationFailedTable(
         errors,
         messages("problemWithCommunityBuildingsSchedule.table.column.1"),
-        messages("problemWithCommunityBuildingsSchedule.table.column.2")
+        messages("problemWithCommunityBuildingsSchedule.table.column.2"),
+        earliestTaxYear
     )
 
     @pageNavigator(paginationViewModel)

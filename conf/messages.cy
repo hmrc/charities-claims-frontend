@@ -90,8 +90,6 @@ agentPostcode.heading = Beth yw’ch cod post?
 agentPostcode.missingDetails = cadarnhau a oes gennych god post
 agentPostcode.title = Beth yw’ch cod post?
 
-authLoginStub.title = Sign in using test credentials
-
 authorisedOfficialAddress.caption = Rhowch fanylion am y sefydliad
 authorisedOfficialAddress.error.required = Dewiswch ‘Iawn’ os oes gan y swyddog awdurdodedig gyfeiriad yn y DU
 authorisedOfficialAddress.heading = A oes gan y swyddog awdurdodedig gyfeiriad yn y DU?
@@ -995,9 +993,8 @@ validationService.communityBuildings.message.1 = Nodwch fanylion ar gyfer eitem 
 validationService.communityBuildings.message.10 = Nodwch ddyddiad dod i ben ail flwyddyn dreth
 validationService.communityBuildings.message.11 = Nodwch swm y flwyddyn dreth gyntaf yn y fformat cywir
 validationService.communityBuildings.message.12 = Nodwch ddyddiad dod i ben ail flwyddyn dreth yn y fformat cywir
-validationService.communityBuildings.message.13 = Mae’n rhaid i rhoddion o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth fod cyn 2014
-validationService.communityBuildings.message.14 = Mae’n rhaid i flwyddyn dreth hawlio adeiladau cymunedol Cynllun Rhodd Cymorth fod eleni neu’n gynharach
-validationService.communityBuildings.message.15 = Ni all hawliad adeiladau cymunedol Cynllun Cyfraniadau Bach Rhodd Cymorth fod yn gynharach na [blwyddyn dreth gyfredol llai 3]
+validationService.communityBuildings.message.14 = Mae’n rhaid i’r flwyddyn dreth yr ydych yn gwneud hawliad Adeiladau Cymunedol ar ei chyfer fod cyn neu ar y flwyddyn hon
+validationService.communityBuildings.message.15 = Mae’n rhaid i’r flwyddyn dreth yr ydych yn gwneud hawliad Adeiladau Cymunedol ar ei chyfer fod cyn {0}
 validationService.communityBuildings.message.16 = Nodwch swm y flwyddyn dreth gyntaf
 validationService.communityBuildings.message.17 = Nodwch swm yr ail flwyddyn dreth
 validationService.communityBuildings.message.18 = Nodwch swm y flwyddyn dreth gyntaf yn y fformat cywir

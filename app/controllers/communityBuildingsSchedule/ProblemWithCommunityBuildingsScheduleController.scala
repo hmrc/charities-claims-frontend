@@ -24,10 +24,11 @@ import config.FrontendAppConfig
 import views.html.ProblemWithCommunityBuildingsScheduleView
 import controllers.actions.Actions
 import models.*
-import services.{ClaimsValidationService, PaginationService}
+import services.{ClaimsValidationService, PaginationService, TaxYearService}
 import controllers.communityBuildingsSchedule.routes
 
-import scala.concurrent.{ExecutionContext, Future}
+import java.time.{LocalDate, ZoneId}
+import _root_.scala.concurrent.{ExecutionContext, Future}
 
 class ProblemWithCommunityBuildingsScheduleController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -35,7 +36,8 @@ class ProblemWithCommunityBuildingsScheduleController @Inject() (
   actions: Actions,
   claimsValidationConnector: ClaimsValidationConnector,
   claimsValidationService: ClaimsValidationService,
-  appConfig: FrontendAppConfig
+  appConfig: FrontendAppConfig,
+  taxYearService: TaxYearService
 )(using ec: ExecutionContext)
     extends BaseController {
 
@@ -61,6 +63,7 @@ class ProblemWithCommunityBuildingsScheduleController @Inject() (
                     currentPage = currentPage,
                     baseUrl = routes.ProblemWithCommunityBuildingsScheduleController.onPageLoad.url
                   )
+                  val today: LocalDate = LocalDate.now(ZoneId.of("Europe/London"))
                   Ok(
                     view(
                       claimId = claimId,
@@ -69,7 +72,8 @@ class ProblemWithCommunityBuildingsScheduleController @Inject() (
                       paginationStatus = paginationResult,
                       communityBuildingsScheduleSpreadsheetGuidanceUrl =
                         appConfig.communityBuildingsScheduleSpreadsheetGuidanceUrl,
-                      isAgent = request.isAgent
+                      isAgent = request.isAgent,
+                      earliestTaxYear = Some(taxYearService.validRange(today).head)
                     )
                   )
 

@@ -40,7 +40,7 @@ class TaxYearService {
       None
   }
 
-  private def validRange(today: LocalDate): (Int, Int) = {
+  def validRange(today: LocalDate): (Int, Int) = {
     val end = currentTaxYearEnd(today)
     (end - 3, end)
   }

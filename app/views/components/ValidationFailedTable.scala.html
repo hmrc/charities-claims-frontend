@@ -19,10 +19,11 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.table.*
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.*
 @import utils.FormatUtils.*
+@import services.TaxYearService.*
 
 @this(govukTable: GovukTable)
 
-@(errors: Seq[ValidationError], headCell1: String, headCell2: String)(implicit request: Request[_], messages: Messages)
+@(errors: Seq[ValidationError], headCell1: String, headCell2: String, earliestTaxYear: Option[Int])(implicit request: Request[_], messages: Messages)
 
 @govukTable(
     Table(
@@ -34,7 +35,10 @@
         rows = errors.map { error =>
             Seq(
                 TableRow(content = Text(error.field.toRowNumber), classes = "govuk-table__header"),
-                TableRow(content = Text(messages(error.error)))
+                if (error.error) =="validationService.communityBuildings.message.15" then
+                    TableRow(content = Text(messages(error.error,s"${earliestTaxYear.get}")))
+                else
+                    TableRow(content = Text(messages(error.error)))
             )
         }
     )
