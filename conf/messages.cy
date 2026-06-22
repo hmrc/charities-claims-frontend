@@ -266,7 +266,7 @@ claimAddedForTaxYear.title = Rydych wedi ychwanegu hawliad ar gyfer {0} {1} dret
 
 claimComplete.claimRefNumber = {0}
 claimComplete.message.2 = Eich cyfeirnod
-claimComplete.para.1 = Rydym wedi anfon eich hawliad ad-daliad elusennnau i CThEF.
+claimComplete.para.1 = Rydym wedi anfon eich hawliad ad-daliad elusennau i CThEF.
 claimComplete.para.1.agent = Rydym wedi anfon yr hawliad ad-daliad elusennol hwn i CThEF.
 claimComplete.para.2 = Byddant yn cysylltu â chi i gadarnhau’ch ad-daliad, neu i ofyn am ragor o wybodaeth.
 claimComplete.para.2.agent = Byddant yn cysylltu â chi i gadarnhau ad-daliad eich cleient neu i ofyn am ragor o wybodaeth.
@@ -322,7 +322,7 @@ claimingReferenceNumber.heading = A oes gennych gyfeirnod hawliad?
 claimingReferenceNumber.title = A oes gennych gyfeirnod hawliad?
 
 claimsTaskList.declaration.warning = Mae’n rhaid i chi lenwi pob adran cyn y gallwch ddatgan.
-claimsTaskList.heading = Hawlio ad-daliad elusennnau
+claimsTaskList.heading = Hawlio ad-daliad elusennau
 claimsTaskList.link.deleteClaim = Dileu hawliad
 claimsTaskList.link.goToDashboard = Ewch i reoli hawliadau am ad-daliad elusennau
 claimsTaskList.section.aboutTheClaim = Ynglŷn â’r cais hwn
@@ -340,7 +340,7 @@ claimsTaskList.task.organisationDetails = Rhowch fanylion am y sefydliad
 claimsTaskList.task.otherIncomeSchedule = Ychwanegu atodlen o Incwm Arall
 claimsTaskList.task.readDeclaration = Darllenwch y datganiad
 claimsTaskList.task.repaymentClaimDetails = Rhowch fanylion yr hawliad ad-daliad
-claimsTaskList.title = Hawlio ad-daliad elusennnau
+claimsTaskList.title = Hawlio ad-daliad elusennau
 
 communityBuildingsScheduleUploadSuccessful.agent.message.2 = Rydych wedi llwyddo i atodi’r atodlen hon o Adeiladau Cymunedol.
 communityBuildingsScheduleUploadSuccessful.message.1 = Wedi llwyddo i uwchlwytho
