@@ -525,7 +525,7 @@ global.error.accessDenied.heading = Mae’n ddrwg gennym, mae problem gyda’r g
 global.error.accessDenied.message = Nid oes gennych fynediad at y gwasanaeth hwn.<br><a class="govuk-link" rel="noreferrer noopener" href="{0}">Parhau i’ch cyfrif</a>
 global.error.accessDenied.title = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth hwn
 global.error.pageNotFound404.heading = Heb ddod o hyd i’r dudalen
-global.error.pageNotFound404.message = Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.<br>Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.<br>Os yw’r cyfeiriad gwe yn gywir, neu os dewisoch gysylltiad neu fotwm, cysylltwch â <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services" target="_blank">au Ar-lein CThEF (yn agor tab newydd)</a> os oes angen i chi siarad â rhywun.
+global.error.pageNotFound404.message = Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.<br>Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.<br>Os yw’r cyfeiriad gwe yn gywir, neu os dewisoch gysylltiad neu fotwm, cysylltwch â <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services" target="_blank">Desg Gymorth Gwasanaethau Ar-lein CThEF (yn agor tab newydd)</a> os oes angen i chi siarad â rhywun.
 govukErrorMessage.visuallyHiddenText = Gwall
 
 month.1.long=Ionawr
