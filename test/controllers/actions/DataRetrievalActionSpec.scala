@@ -30,6 +30,7 @@ import util.{BaseSpec, TestClaims}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 import connectors.ClaimsValidationConnector
+import connectors.RateLimitedAllowListConnector
 
 class DataRetrievalActionSpec extends BaseSpec {
 
@@ -45,14 +46,17 @@ class DataRetrievalActionSpec extends BaseSpec {
 
   "DataRetrievalAction" - {
     "refines AuthorisedRequest into a DataRequest when session data exists" in {
-      val mockSessionCache              = mock[SessionCache]
-      val mockClaimsConnector           = mock[ClaimsConnector]
-      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
-      val action                        = new DefaultDataRetrievalAction(
+      val mockSessionCache                  = mock[SessionCache]
+      val mockClaimsConnector               = mock[ClaimsConnector]
+      val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
+      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
+
+      val action = new DefaultDataRetrievalAction(
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig
+        testFrontendAppConfig,
+        mockRateLimitedAllowListConnector
       )
 
       val sessionData =
@@ -73,14 +77,17 @@ class DataRetrievalActionSpec extends BaseSpec {
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and no claims are retrieved from backend" in {
-      val mockSessionCache              = mock[SessionCache]
-      val mockClaimsConnector           = mock[ClaimsConnector]
-      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
-      val action                        = new DefaultDataRetrievalAction(
+      val mockSessionCache                  = mock[SessionCache]
+      val mockClaimsConnector               = mock[ClaimsConnector]
+      val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
+      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
+
+      val action = new DefaultDataRetrievalAction(
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig
+        testFrontendAppConfig,
+        mockRateLimitedAllowListConnector
       )
 
       (mockSessionCache
@@ -107,15 +114,52 @@ class DataRetrievalActionSpec extends BaseSpec {
       status(result) shouldBe OK
     }
 
-    "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and some claims are retrieved from backend" in {
-      val mockSessionCache              = mock[SessionCache]
-      val mockClaimsConnector           = mock[ClaimsConnector]
-      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
-      val action                        = new DefaultDataRetrievalAction(
+    "redirect to legacy charities service url when user is not on the allow list" in {
+      val mockSessionCache                  = mock[SessionCache]
+      val mockClaimsConnector               = mock[ClaimsConnector]
+      val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
+      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
+
+      val action = new DefaultDataRetrievalAction(
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig
+        testFrontendAppConfigWithTrafficSplitEnabled,
+        mockRateLimitedAllowListConnector
+      )
+
+      (mockSessionCache
+        .get()(using _: HeaderCarrier))
+        .expects(*)
+        .returning(Future.successful(None))
+
+      (mockRateLimitedAllowListConnector
+        .checkAllowList(_: String, _: String)(using _: HeaderCarrier))
+        .expects(*, *, *)
+        .returning(Future.successful(false))
+
+      val result = action.invokeBlock(
+        authorisedRequestOrganisation,
+        (req: DataRequest[?]) =>
+          req.sessionData shouldBe SessionData.empty(testCharitiesReference)
+          Future.successful(Ok)
+      )
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(testFrontendAppConfigWithTrafficSplitEnabled.legacyCharitiesServiceUrl)
+    }
+
+    "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and some claims are retrieved from backend" in {
+      val mockSessionCache                  = mock[SessionCache]
+      val mockClaimsConnector               = mock[ClaimsConnector]
+      val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
+      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
+
+      val action = new DefaultDataRetrievalAction(
+        mockSessionCache,
+        mockClaimsConnector,
+        mockClaimsValidationConnector,
+        testFrontendAppConfig,
+        mockRateLimitedAllowListConnector
       )
 
       (mockSessionCache
@@ -176,14 +220,17 @@ class DataRetrievalActionSpec extends BaseSpec {
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and some claims and uploads summary are retrieved from backend" in {
-      val mockSessionCache              = mock[SessionCache]
-      val mockClaimsConnector           = mock[ClaimsConnector]
-      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
-      val action                        = new DefaultDataRetrievalAction(
+      val mockSessionCache                  = mock[SessionCache]
+      val mockClaimsConnector               = mock[ClaimsConnector]
+      val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
+      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
+
+      val action = new DefaultDataRetrievalAction(
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig
+        testFrontendAppConfig,
+        mockRateLimitedAllowListConnector
       )
 
       (mockSessionCache
@@ -268,14 +315,17 @@ class DataRetrievalActionSpec extends BaseSpec {
     }
 
     "refines AuthorisedRequest into a DataRequest when session data exists when user is agent" in {
-      val mockSessionCache              = mock[SessionCache]
-      val mockClaimsConnector           = mock[ClaimsConnector]
-      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
-      val action                        = new DefaultDataRetrievalAction(
+      val mockSessionCache                  = mock[SessionCache]
+      val mockClaimsConnector               = mock[ClaimsConnector]
+      val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
+      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
+
+      val action = new DefaultDataRetrievalAction(
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig
+        testFrontendAppConfig,
+        mockRateLimitedAllowListConnector
       )
 
       val sessionData =
@@ -296,14 +346,17 @@ class DataRetrievalActionSpec extends BaseSpec {
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and no claims are retrieved from backend for agent" in {
-      val mockSessionCache              = mock[SessionCache]
-      val mockClaimsConnector           = mock[ClaimsConnector]
-      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
-      val action                        = new DefaultDataRetrievalAction(
+      val mockSessionCache                  = mock[SessionCache]
+      val mockClaimsConnector               = mock[ClaimsConnector]
+      val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
+      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
+
+      val action = new DefaultDataRetrievalAction(
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig
+        testFrontendAppConfig,
+        mockRateLimitedAllowListConnector
       )
 
       (mockSessionCache
@@ -331,15 +384,17 @@ class DataRetrievalActionSpec extends BaseSpec {
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and no claims are retrieved from backend less than limit for agent" in {
-      val mockSessionCache              = mock[SessionCache]
-      val mockClaimsConnector           = mock[ClaimsConnector]
-      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+      val mockSessionCache                  = mock[SessionCache]
+      val mockClaimsConnector               = mock[ClaimsConnector]
+      val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
+      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
 
       val action = new DefaultDataRetrievalAction(
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig
+        testFrontendAppConfig,
+        mockRateLimitedAllowListConnector
       )
 
       (mockSessionCache
@@ -368,15 +423,17 @@ class DataRetrievalActionSpec extends BaseSpec {
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and claimId is provided with 'blank' value for agent" in {
-      val mockSessionCache              = mock[SessionCache]
-      val mockClaimsConnector           = mock[ClaimsConnector]
-      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+      val mockSessionCache                  = mock[SessionCache]
+      val mockClaimsConnector               = mock[ClaimsConnector]
+      val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
+      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
 
       val action = new DefaultDataRetrievalAction(
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig
+        testFrontendAppConfig,
+        mockRateLimitedAllowListConnector
       )
 
       (mockSessionCache
@@ -405,15 +462,17 @@ class DataRetrievalActionSpec extends BaseSpec {
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and claimId is provided with non-existing value for agent" in {
-      val mockSessionCache              = mock[SessionCache]
-      val mockClaimsConnector           = mock[ClaimsConnector]
-      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+      val mockSessionCache                  = mock[SessionCache]
+      val mockClaimsConnector               = mock[ClaimsConnector]
+      val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
+      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
 
       val action = new DefaultDataRetrievalAction(
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig
+        testFrontendAppConfig,
+        mockRateLimitedAllowListConnector
       )
 
       (mockSessionCache
@@ -436,15 +495,17 @@ class DataRetrievalActionSpec extends BaseSpec {
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and claimId is provided with existing value for agent" in {
-      val mockSessionCache              = mock[SessionCache]
-      val mockClaimsConnector           = mock[ClaimsConnector]
-      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+      val mockSessionCache                  = mock[SessionCache]
+      val mockClaimsConnector               = mock[ClaimsConnector]
+      val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
+      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
 
       val action = new DefaultDataRetrievalAction(
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig
+        testFrontendAppConfig,
+        mockRateLimitedAllowListConnector
       )
 
       (mockSessionCache
@@ -487,15 +548,17 @@ class DataRetrievalActionSpec extends BaseSpec {
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and no claims are retrieved from backend and equal to limit for agent" in {
-      val mockSessionCache              = mock[SessionCache]
-      val mockClaimsConnector           = mock[ClaimsConnector]
-      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
+      val mockSessionCache                  = mock[SessionCache]
+      val mockClaimsConnector               = mock[ClaimsConnector]
+      val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
+      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
 
       val action = new DefaultDataRetrievalAction(
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig
+        testFrontendAppConfig,
+        mockRateLimitedAllowListConnector
       )
 
       (mockSessionCache
