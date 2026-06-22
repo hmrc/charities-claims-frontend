@@ -53,7 +53,8 @@ class RefreshDataActionSpec extends BaseSpec {
           mockSessionCache,
           mockClaimsConnector,
           mockClaimsValidationConnector,
-          testFrontendAppConfig
+          testFrontendAppConfig,
+          mockRateLimitedAllowListConnector
         ),
         testFrontendAppConfig,
         mockRateLimitedAllowListConnector
@@ -113,7 +114,8 @@ class RefreshDataActionSpec extends BaseSpec {
           mockSessionCache,
           mockClaimsConnector,
           mockClaimsValidationConnector,
-          testFrontendAppConfig
+          testFrontendAppConfig,
+          mockRateLimitedAllowListConnector
         ),
         testFrontendAppConfig,
         mockRateLimitedAllowListConnector
@@ -209,7 +211,8 @@ class RefreshDataActionSpec extends BaseSpec {
           mockSessionCache,
           mockClaimsConnector,
           mockClaimsValidationConnector,
-          testFrontendAppConfigWithTrafficSplitEnabled
+          testFrontendAppConfigWithTrafficSplitEnabled,
+          mockRateLimitedAllowListConnector
         ),
         testFrontendAppConfigWithTrafficSplitEnabled,
         mockRateLimitedAllowListConnector
@@ -249,7 +252,8 @@ class RefreshDataActionSpec extends BaseSpec {
           mockSessionCache,
           mockClaimsConnector,
           mockClaimsValidationConnector,
-          testFrontendAppConfig
+          testFrontendAppConfig,
+          mockRateLimitedAllowListConnector
         ),
         testFrontendAppConfig,
         mockRateLimitedAllowListConnector
@@ -328,7 +332,8 @@ class RefreshDataActionSpec extends BaseSpec {
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig
+        testFrontendAppConfig,
+        mockRateLimitedAllowListConnector
       ),
       testFrontendAppConfig,
       mockRateLimitedAllowListConnector
@@ -366,7 +371,8 @@ class RefreshDataActionSpec extends BaseSpec {
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig
+        testFrontendAppConfig,
+        mockRateLimitedAllowListConnector
       ),
       testFrontendAppConfig,
       mockRateLimitedAllowListConnector
@@ -412,7 +418,8 @@ class RefreshDataActionSpec extends BaseSpec {
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig
+        testFrontendAppConfig,
+        mockRateLimitedAllowListConnector
       ),
       testFrontendAppConfig,
       mockRateLimitedAllowListConnector

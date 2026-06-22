@@ -31,6 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import play.api.Logging
 
 import javax.inject.Inject
+import connectors.RateLimitedAllowListConnector
 
 @ImplementedBy(classOf[DefaultDataRetrievalAction])
 trait DataRetrievalAction extends ActionRefiner[AuthorisedRequest, DataRequest]
@@ -39,7 +40,8 @@ class DefaultDataRetrievalAction @Inject() (
   cache: SessionCache,
   claimsConnector: ClaimsConnector,
   claimsValidationConnector: ClaimsValidationConnector,
-  config: FrontendAppConfig
+  config: FrontendAppConfig,
+  rateLimitedAllowListConnector: RateLimitedAllowListConnector
 )(using val executionContext: ExecutionContext)
     extends DataRetrievalAction
     with Logging {
@@ -53,102 +55,114 @@ class DefaultDataRetrievalAction @Inject() (
       .flatMap {
         case None =>
           logger.info(s"No session data in cache for ${request.charitiesReference}, retrieving from backend")
-          claimsConnector.retrieveUnsubmittedClaims
-            .flatMap { getClaimsResponse =>
-              request.affinityGroup match {
-                case AffinityGroup.Organisation =>
-                  getClaimsResponse.claimsList match
-                    case claimInfo :: _ =>
-                      claimsConnector.getClaim(claimInfo.claimId).flatMap {
-                        case Some(claim) =>
-                          claimsValidationConnector
-                            .getUploadSummary(claim.claimId)
-                            .flatMap { uploadsSummary =>
-                              val sessionData =
-                                SessionData.from(claim, request.charitiesReference, Some(uploadsSummary))
-                              cache
-                                .store(sessionData)
-                                .map(_ => Right(DataRequest(request, sessionData)))
+          checkAllowList(config.useRateLimitedAllowList, config.splitterAllowListName, request.charitiesReference)
+            .flatMap {
+              case false =>
+                Future.successful(Left(Results.Redirect(config.legacyCharitiesServiceUrl)))
+
+              case true =>
+                claimsConnector.retrieveUnsubmittedClaims
+                  .flatMap { getClaimsResponse =>
+                    request.affinityGroup match {
+                      case AffinityGroup.Organisation =>
+                        getClaimsResponse.claimsList match
+                          case claimInfo :: _ =>
+                            claimsConnector.getClaim(claimInfo.claimId).flatMap {
+                              case Some(claim) =>
+                                claimsValidationConnector
+                                  .getUploadSummary(claim.claimId)
+                                  .flatMap { uploadsSummary =>
+                                    val sessionData =
+                                      SessionData.from(claim, request.charitiesReference, Some(uploadsSummary))
+                                    cache
+                                      .store(sessionData)
+                                      .map(_ => Right(DataRequest(request, sessionData)))
+                                  }
+                              case None        =>
+                                logger.error(s"Claim ${claimInfo.claimId} could not be found in backend")
+                                Future
+                                  .failed(
+                                    new RuntimeException(s"claim ${claimInfo.claimId} could not be found in backend")
+                                  )
                             }
-                        case None        =>
-                          logger.error(s"Claim ${claimInfo.claimId} could not be found in backend")
-                          Future
-                            .failed(new RuntimeException(s"claim ${claimInfo.claimId} could not be found in backend"))
-                      }
-                    case _              =>
-                      val sessionData = SessionData.empty(request.charitiesReference)
-                      cache
-                        .store(sessionData)
-                        .map(_ => Right(DataRequest(request, sessionData)))
+                          case _              =>
+                            val sessionData = SessionData.empty(request.charitiesReference)
+                            cache
+                              .store(sessionData)
+                              .map(_ => Right(DataRequest(request, sessionData)))
 
-                case AffinityGroup.Agent =>
-                  getClaimsResponse.claimsCount match {
-                    case 0 =>
-                      val sessionData = SessionData.empty(request.charitiesReference, true)
-                      cache
-                        .store(sessionData)
-                        .map(_ => Right(DataRequest(request, sessionData)))
+                      case AffinityGroup.Agent =>
+                        getClaimsResponse.claimsCount match {
+                          case 0 =>
+                            val sessionData = SessionData.empty(request.charitiesReference, true)
+                            cache
+                              .store(sessionData)
+                              .map(_ => Right(DataRequest(request, sessionData)))
 
-                    case unsubmittedClaimsCount =>
-                      request.underlying.getQueryString("claimId") match {
-                        case Some(claimId) if getClaimsResponse.claimsList.exists(_.claimId == claimId) =>
-                          // in case when the claimId is provided and exists in the backend
-                          // we should open that claim
-                          claimsConnector.getClaim(claimId).flatMap {
-                            case Some(claim) =>
-                              claimsValidationConnector
-                                .getUploadSummary(claim.claimId)
-                                .flatMap { uploadsSummary =>
-                                  val sessionData =
-                                    SessionData.from(claim, request.charitiesReference, Some(uploadsSummary), true)
-                                  cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
+                          case unsubmittedClaimsCount =>
+                            request.underlying.getQueryString("claimId") match {
+                              case Some(claimId) if getClaimsResponse.claimsList.exists(_.claimId == claimId) =>
+                                // in case when the claimId is provided and exists in the backend
+                                // we should open that claim
+                                claimsConnector.getClaim(claimId).flatMap {
+                                  case Some(claim) =>
+                                    claimsValidationConnector
+                                      .getUploadSummary(claim.claimId)
+                                      .flatMap { uploadsSummary =>
+                                        val sessionData =
+                                          SessionData
+                                            .from(claim, request.charitiesReference, Some(uploadsSummary), true)
+                                        cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
+                                      }
+
+                                  case None =>
+                                    Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
                                 }
 
-                            case None =>
-                              Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
-                          }
+                              case Some(claimId)
+                                  if claimId == "blank" && unsubmittedClaimsCount < config.agentUnsubmittedClaimLimit =>
+                                // in case when the claimId is blank and unsubmitted claims count is less than a limit
+                                // we should start a new claim
+                                val sessionData = SessionData.empty(request.charitiesReference, true)
+                                cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
 
-                        case Some(claimId)
-                            if claimId == "blank" && unsubmittedClaimsCount < config.agentUnsubmittedClaimLimit =>
-                          // in case when the claimId is blank and unsubmitted claims count is less than a limit
-                          // we should start a new claim
-                          val sessionData = SessionData.empty(request.charitiesReference, true)
-                          cache.store(sessionData).map(_ => Right(DataRequest(request, sessionData)))
+                              case Some(claimId)
+                                  if claimId == "blank" && unsubmittedClaimsCount >= config.agentUnsubmittedClaimLimit =>
+                                // in case when the claimId is blank and the unsubmitted claims count is greater than or equal to the limit
+                                // we should redirect to the warning page
+                                Future.successful(
+                                  Left(
+                                    Results
+                                      .Redirect(controllers.routes.Warning11MaxClaimsReachedController.onPageLoad.url)
+                                  )
+                                )
 
-                        case Some(claimId)
-                            if claimId == "blank" && unsubmittedClaimsCount >= config.agentUnsubmittedClaimLimit =>
-                          // in case when the claimId is blank and the unsubmitted claims count is greater than or equal to the limit
-                          // we should redirect to the warning page
-                          Future.successful(
-                            Left(
-                              Results.Redirect(controllers.routes.Warning11MaxClaimsReachedController.onPageLoad.url)
-                            )
-                          )
+                              case Some(_) =>
+                                // in case when the claimId is provided but does not exist in the backend
+                                // we should redirect to the dashboard
+                                Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
 
-                        case Some(_) =>
-                          // in case when the claimId is provided but does not exist in the backend
-                          // we should redirect to the dashboard
-                          Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
+                              case None if unsubmittedClaimsCount >= config.agentUnsubmittedClaimLimit =>
+                                // in case when no claimId is provided and the unsubmitted claims count is greater than or equal to the limit
+                                // we should redirect to the warning page
+                                Future.successful(
+                                  Left(
+                                    Results
+                                      .Redirect(controllers.routes.Warning11MaxClaimsReachedController.onPageLoad.url)
+                                  )
+                                )
 
-                        case None if unsubmittedClaimsCount >= config.agentUnsubmittedClaimLimit =>
-                          // in case when no claimId is provided and the unsubmitted claims count is greater than or equal to the limit
-                          // we should redirect to the warning page
-                          Future.successful(
-                            Left(
-                              Results.Redirect(controllers.routes.Warning11MaxClaimsReachedController.onPageLoad.url)
-                            )
-                          )
-
-                        case None =>
-                          // in case when no claimId is provided and unsubmitted claims count is less than a limit
-                          // we should start a new claim
-                          val sessionData = SessionData.empty(request.charitiesReference)
-                          cache
-                            .store(sessionData)
-                            .map(_ => Right(DataRequest(request, sessionData)))
-                      }
+                              case None =>
+                                // in case when no claimId is provided and unsubmitted claims count is less than a limit
+                                // we should start a new claim
+                                val sessionData = SessionData.empty(request.charitiesReference)
+                                cache
+                                  .store(sessionData)
+                                  .map(_ => Right(DataRequest(request, sessionData)))
+                            }
+                        }
+                    }
                   }
-              }
             }
 
         case Some(sessionData) =>
@@ -208,4 +222,13 @@ class DefaultDataRetrievalAction @Inject() (
           Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
         }
       }
+
+  private def checkAllowList(useRateLimitedAllowList: Boolean, allowListName: String, charitiesReference: String)(
+    implicit hc: HeaderCarrier
+  ): Future[Boolean] =
+    if (useRateLimitedAllowList) {
+      rateLimitedAllowListConnector.checkAllowList(allowListName, charitiesReference)
+    } else {
+      Future.successful(true)
+    }
 }
