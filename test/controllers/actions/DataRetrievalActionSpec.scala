@@ -145,7 +145,9 @@ class DataRetrievalActionSpec extends BaseSpec {
           Future.successful(Ok)
       )
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(testFrontendAppConfigWithTrafficSplitEnabled.legacyCharitiesServiceUrl)
+      redirectLocation(result) shouldBe Some(
+        testFrontendAppConfigWithTrafficSplitEnabled.legacyCharitiesServiceUrl(authorisedRequestOrganisation)
+      )
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and some claims are retrieved from backend" in {

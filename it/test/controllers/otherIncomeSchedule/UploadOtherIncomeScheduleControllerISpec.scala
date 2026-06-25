@@ -25,7 +25,8 @@ import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub, UpscanInitiateStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
 class UploadOtherIncomeScheduleControllerISpec
-  extends ComponentSpecHelper with TestDataUtils
+    extends ComponentSpecHelper
+    with TestDataUtils
     with AuthStub
     with ClaimsStub
     with ClaimsValidationStub
@@ -40,25 +41,25 @@ class UploadOtherIncomeScheduleControllerISpec
 
       val result = get(url)
 
-      result.status shouldBe OK
+      result.status                shouldBe OK
       Jsoup.parse(result.body).title should include(msg("uploadOtherIncomeSchedule.title"))
     }
-    
-   "render the agent upload page when upscan is already initialised" in {
-        stubAgentBackend(withUpscan = true)
-  
-        val result = get(url)
-  
-        result.status shouldBe OK
-        Jsoup.parse(result.body).text should include(msg("uploadOtherIncomeSchedule.agent.paragraph.one"))
-      }
+
+    "render the agent upload page when upscan is already initialised" in {
+      stubAgentBackend(withUpscan = true)
+
+      val result = get(url)
+
+      result.status               shouldBe OK
+      Jsoup.parse(result.body).text should include(msg("uploadOtherIncomeSchedule.agent.paragraph.one"))
+    }
 
     "redirect to your upload page when file reference already exists" in {
       stubBackend(withReference = true)
 
       val result = get(url)
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/your-other-income-schedule-upload")
     }
   }
@@ -71,7 +72,7 @@ class UploadOtherIncomeScheduleControllerISpec
 
       val result = get("/upload-other-income-schedule/success")
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/your-other-income-schedule-upload")
     }
   }
@@ -91,15 +92,15 @@ class UploadOtherIncomeScheduleControllerISpec
 
       val result = get("/upload-other-income-schedule/error")
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/upload-other-income-schedule")
     }
   }
 
   private def stubBackend(
-                           withUpscan: Boolean = false,
-                           withReference: Boolean = false
-                         ): Unit = {
+    withUpscan: Boolean = false,
+    withReference: Boolean = false
+  ): Unit = {
 
     stubAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
@@ -107,12 +108,10 @@ class UploadOtherIncomeScheduleControllerISpec
     val claimResponse =
       claim.copy(
         claimData = claim.claimData.copy(
-          repaymentClaimDetails =
-            claim.claimData.repaymentClaimDetails.copy(
-              claimingTaxDeducted = true
-            ),
-          otherIncomeScheduleFileUploadReference =
-            if withReference then Some(otherIncomefileRef) else None
+          repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
+            claimingTaxDeducted = true
+          ),
+          otherIncomeScheduleFileUploadReference = if withReference then Some(otherIncomefileRef) else None
         )
       )
 
@@ -129,14 +128,13 @@ class UploadOtherIncomeScheduleControllerISpec
         otherIncomefileRef
       )(OK, validatedOtherIncomeJson)
 
-    if withUpscan then
-      stubCreateUploadTracking(claimId)(OK, Json.toJson(SuccessResponse(success = true)))
+    if withUpscan then stubCreateUploadTracking(claimId)(OK, Json.toJson(SuccessResponse(success = true)))
   }
-  
-private def stubAgentBackend(
-                           withUpscan: Boolean = false,
-                           withReference: Boolean = false
-                         ): Unit = {
+
+  private def stubAgentBackend(
+    withUpscan: Boolean,
+    withReference: Boolean = false
+  ): Unit = {
 
     stubAgentAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
@@ -144,12 +142,10 @@ private def stubAgentBackend(
     val claimResponse =
       claim.copy(
         claimData = claim.claimData.copy(
-          repaymentClaimDetails =
-            claim.claimData.repaymentClaimDetails.copy(
-              claimingTaxDeducted = true
-            ),
-          otherIncomeScheduleFileUploadReference =
-            if withReference then Some(otherIncomefileRef) else None
+          repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
+            claimingTaxDeducted = true
+          ),
+          otherIncomeScheduleFileUploadReference = if withReference then Some(otherIncomefileRef) else None
         )
       )
 
@@ -166,8 +162,7 @@ private def stubAgentBackend(
         otherIncomefileRef
       )(OK, validatedOtherIncomeJson)
 
-    if withUpscan then
-      stubCreateUploadTracking(claimId)(OK, Json.toJson(SuccessResponse(success = true)))
+    if withUpscan then stubCreateUploadTracking(claimId)(OK, Json.toJson(SuccessResponse(success = true)))
   }
 
   private def uploadSummary(withUpscan: Boolean): GetUploadSummaryResponse =
@@ -176,12 +171,9 @@ private def stubAgentBackend(
         UploadSummary(
           reference = FileUploadReference("test-reference"),
           validationType = ValidationType.OtherIncome,
-          fileStatus =
-            if withUpscan then FileStatus.AWAITING_UPLOAD else FileStatus.VALIDATED,
-          uploadUrl =
-            if withUpscan then Some("https://s3-bucket/upload") else None,
-          fields =
-            if withUpscan then Some(Map("key" -> "value")) else None
+          fileStatus = if withUpscan then FileStatus.AWAITING_UPLOAD else FileStatus.VALIDATED,
+          uploadUrl = if withUpscan then Some("https://s3-bucket/upload") else None,
+          fields = if withUpscan then Some(Map("key" -> "value")) else None
         )
       )
     )

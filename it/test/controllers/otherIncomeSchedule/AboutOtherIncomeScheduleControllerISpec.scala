@@ -25,7 +25,8 @@ import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
 class AboutOtherIncomeScheduleControllerISpec
-  extends ComponentSpecHelper with TestDataUtils
+    extends ComponentSpecHelper
+    with TestDataUtils
     with ClaimsStub
     with AuthStub
     with ClaimsValidationStub {
@@ -39,16 +40,16 @@ class AboutOtherIncomeScheduleControllerISpec
 
       val result = get(url)
 
-      result.status shouldBe OK
+      result.status                shouldBe OK
       Jsoup.parse(result.body).title should include(msg("aboutOtherIncomeSchedule.title"))
     }
-    
+
     "render the agent page when claiming tax deducted and schedule not completed" in {
       stubAgentBackend(claimWithTaxDeducted())
 
       val result = get(url)
 
-      result.status shouldBe OK
+      result.status               shouldBe OK
       Jsoup.parse(result.body).text should include(msg("aboutOtherIncomeSchedule.agent.paragraph.one"))
     }
 
@@ -57,7 +58,7 @@ class AboutOtherIncomeScheduleControllerISpec
 
       val result = get(url)
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/your-other-income-schedule-upload")
     }
 
@@ -66,7 +67,7 @@ class AboutOtherIncomeScheduleControllerISpec
 
       val result = get(url)
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/charities-claims/make-a-charity-repayment-claim")
     }
   }
@@ -78,7 +79,7 @@ class AboutOtherIncomeScheduleControllerISpec
 
       val result = post(url)(Json.obj())
 
-      result.status shouldBe SEE_OTHER
+      result.status               shouldBe SEE_OTHER
       result.header(LOCATION).value should include("/upload-other-income-schedule")
     }
   }
@@ -89,8 +90,8 @@ class AboutOtherIncomeScheduleControllerISpec
     stubGetClaims(claimId)(OK, Json.toJson(testClaim))
     stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
   }
-  
- private def stubAgentBackend(testClaim: Claim): Unit = {
+
+  private def stubAgentBackend(testClaim: Claim): Unit = {
     stubAgentAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
     stubGetClaims(claimId)(OK, Json.toJson(testClaim))
@@ -100,10 +101,9 @@ class AboutOtherIncomeScheduleControllerISpec
   private def claimWithTaxDeducted(fileRef: Option[FileUploadReference] = None): Claim =
     claim.copy(
       claimData = claim.claimData.copy(
-        repaymentClaimDetails =
-          claim.claimData.repaymentClaimDetails.copy(
-            claimingTaxDeducted = true
-          ),
+        repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
+          claimingTaxDeducted = true
+        ),
         otherIncomeScheduleFileUploadReference = fileRef
       )
     )
@@ -114,10 +114,9 @@ class AboutOtherIncomeScheduleControllerISpec
   private def claimWithoutTaxDeducted: Claim =
     claim.copy(
       claimData = claim.claimData.copy(
-        repaymentClaimDetails =
-          claim.claimData.repaymentClaimDetails.copy(
-            claimingTaxDeducted = false
-          )
+        repaymentClaimDetails = claim.claimData.repaymentClaimDetails.copy(
+          claimingTaxDeducted = false
+        )
       )
     )
 }

@@ -45,19 +45,19 @@ class ProblemWithOtherIncomeScheduleControllerISpec
       val doc = Jsoup.parse(result.body)
       doc.title should include(msg("problemWithOtherIncomeSchedule.title"))
     }
-    
-   "render the agent page when validation errors exist" in {
-        stubAgentBackendWithValidationErrors()
-  
-        val result = get(url)
-  
-        result.status shouldBe OK
-  
-        val doc = Jsoup.parse(result.body)
-        doc.title should include(msg("problemWithOtherIncomeSchedule.agent.title"))
-        doc.text should include(msg("problemWithOtherIncomeSchedule.agent.heading"))
-        doc.text should include(msg("problemWithOtherIncomeSchedule.agent.list.item.3"))
-      }
+
+    "render the agent page when validation errors exist" in {
+      stubAgentBackendWithValidationErrors()
+
+      val result = get(url)
+
+      result.status shouldBe OK
+
+      val doc = Jsoup.parse(result.body)
+      doc.title should include(msg("problemWithOtherIncomeSchedule.agent.title"))
+      doc.text  should include(msg("problemWithOtherIncomeSchedule.agent.heading"))
+      doc.text  should include(msg("problemWithOtherIncomeSchedule.agent.list.item.3"))
+    }
 
     "redirect to upload page when file reference is missing" in {
       stubBackendWithoutFileRef()

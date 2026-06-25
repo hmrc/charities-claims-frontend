@@ -116,7 +116,7 @@ class DefaultRefreshDataAction @Inject() (
                 else Future.successful(Left(Results.Redirect(config.charityRepaymentDashboardUrl)))
 
               case false =>
-                Future.successful(Left(Results.Redirect(config.legacyCharitiesServiceUrl)))
+                Future.successful(Left(Results.Redirect(config.legacyCharitiesServiceUrl(request))))
             }
       }
 
@@ -207,7 +207,7 @@ class DefaultRefreshDataAction @Inject() (
                   .map(_ => Right(DataRequest(request, newSessionData)))
 
               case false =>
-                Future.successful(Left(Results.Redirect(config.legacyCharitiesServiceUrl)))
+                Future.successful(Left(Results.Redirect(config.legacyCharitiesServiceUrl(request))))
             }
 
       }
