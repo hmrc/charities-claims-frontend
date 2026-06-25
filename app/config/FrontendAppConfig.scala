@@ -19,6 +19,8 @@ package config
 import com.google.inject.{Inject, Singleton}
 import play.api.Configuration
 import scala.concurrent.duration.Duration
+import models.requests.AuthorisedRequest
+import uk.gov.hmrc.auth.core.AffinityGroup
 
 @Singleton
 class FrontendAppConfig @Inject() (config: Configuration) { self =>
@@ -46,8 +48,14 @@ class FrontendAppConfig @Inject() (config: Configuration) { self =>
     config.get[String]("urls.communityBuildingsScheduleSpreadsheetGuidanceUrl")
   lazy val connectedCharitiesScheduleSpreadsheetGuidanceUrl: String =
     config.get[String]("urls.connectedCharitiesScheduleSpreadsheetGuidanceUrl")
-  lazy val legacyCharitiesServiceUrl: String                        =
-    config.get[String]("urls.legacyCharitiesServiceUrl")
+
+  def legacyCharitiesServiceUrl(request: AuthorisedRequest[?]): String =
+    val urlBase      = config.get[String]("urls.legacyCharitiesServiceUrl")
+    val userTypeText = request.affinityGroup match {
+      case AffinityGroup.Agent => "agent"
+      case _                   => "org"
+    }
+    s"$urlBase/$userTypeText/${request.charitiesReference}/at-a-glance?lang=eng"
 
   lazy val enableLanguageSwitching: Boolean = config.get[Boolean]("enableLanguageSwitching")
   lazy val timeoutInSeconds: Int            = config.get[Int]("timeout-dialog.timeout")

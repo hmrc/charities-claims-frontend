@@ -25,12 +25,13 @@ import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
 class CheckYourOtherIncomeScheduleControllerISpec
-    extends ComponentSpecHelper with TestDataUtils
+    extends ComponentSpecHelper
+    with TestDataUtils
     with ClaimsValidationStub
-      with AuthStub
-      with ClaimsStub {
+    with AuthStub
+    with ClaimsStub {
 
-  private val url     = "/check-your-other-income-schedule?claimId=123"
+  private val url = "/check-your-other-income-schedule?claimId=123"
 
   "GET /check-your-other-income-schedule" should {
 
@@ -42,16 +43,16 @@ class CheckYourOtherIncomeScheduleControllerISpec
       result.status                shouldBe OK
       Jsoup.parse(result.body).title should include(msg("checkYourOtherIncomeSchedule.title"))
     }
-    
-  "render the agent check your other income schedule page" in {
-    stubAgentBackend()
 
-    val result = get(url)
+    "render the agent check your other income schedule page" in {
+      stubAgentBackend()
 
-    result.status                shouldBe OK
-    Jsoup.parse(result.body).title should include(msg("checkYourOtherIncomeSchedule.agent.title"))
-    Jsoup.parse(result.body).text should include(msg("checkYourOtherIncomeSchedule.agent.heading"))
-  }
+      val result = get(url)
+
+      result.status                shouldBe OK
+      Jsoup.parse(result.body).title should include(msg("checkYourOtherIncomeSchedule.agent.title"))
+      Jsoup.parse(result.body).text  should include(msg("checkYourOtherIncomeSchedule.agent.heading"))
+    }
   }
 
   "POST /check-your-other-income-schedule" should {
@@ -102,8 +103,8 @@ class CheckYourOtherIncomeScheduleControllerISpec
     stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryOtherIncomeValidatedResponse))
     stubGetUploadResult(claimId, otherIncomefileRef)(OK, validatedOtherIncomeJson)
   }
-  
- private def stubAgentBackend(fileRefOpt: Option[FileUploadReference] = Some(otherIncomefileRef)): Unit = {
+
+  private def stubAgentBackend(fileRefOpt: Option[FileUploadReference] = Some(otherIncomefileRef)): Unit = {
     stubAgentAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
     stubGetClaims(

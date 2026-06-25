@@ -58,7 +58,7 @@ class DefaultDataRetrievalAction @Inject() (
           checkAllowList(config.useRateLimitedAllowList, config.splitterAllowListName, request.charitiesReference)
             .flatMap {
               case false =>
-                Future.successful(Left(Results.Redirect(config.legacyCharitiesServiceUrl)))
+                Future.successful(Left(Results.Redirect(config.legacyCharitiesServiceUrl(request))))
 
               case true =>
                 claimsConnector.retrieveUnsubmittedClaims

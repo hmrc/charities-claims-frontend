@@ -25,10 +25,11 @@ import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub, UpscanInitiateStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
 class UploadGiftAidScheduleControllerISpec
-    extends ComponentSpecHelper with TestDataUtils
+    extends ComponentSpecHelper
+    with TestDataUtils
     with ClaimsStub
-      with AuthStub
-      with ClaimsValidationStub
+    with AuthStub
+    with ClaimsValidationStub
     with UpscanInitiateStub {
 
   private val url = "/upload-gift-aid-schedule?claimId=123"
@@ -49,10 +50,9 @@ class UploadGiftAidScheduleControllerISpec
 
       val result = get(url)
 
-      result.status shouldBe OK
+      result.status               shouldBe OK
       Jsoup.parse(result.body).text should include(msg("uploadGiftAidSchedule.agent.paragraph.one"))
     }
-
 
     "redirect to your upload page when file reference already exists" in {
       stubBackend(withReference = true)
@@ -98,9 +98,9 @@ class UploadGiftAidScheduleControllerISpec
   }
 
   private def stubAgentBackend(
-                           withUpscan: Boolean = false,
-                           withReference: Boolean = false
-                         ): Unit = {
+    withUpscan: Boolean,
+    withReference: Boolean = false
+  ): Unit = {
 
     stubAgentAuthRequest()
     stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
@@ -130,7 +130,6 @@ class UploadGiftAidScheduleControllerISpec
 
     if withUpscan then stubCreateUploadTracking(claimId)(OK, Json.toJson(SuccessResponse(success = true)))
   }
-
 
   private def stubBackend(
     withUpscan: Boolean = false,

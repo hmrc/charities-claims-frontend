@@ -235,7 +235,9 @@ class RefreshDataActionSpec extends BaseSpec {
       )
 
       status(result)           shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(testFrontendAppConfigWithTrafficSplitEnabled.legacyCharitiesServiceUrl)
+      redirectLocation(result) shouldBe Some(
+        testFrontendAppConfigWithTrafficSplitEnabled.legacyCharitiesServiceUrl(authorisedRequestOrganisation)
+      )
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object exists but and unsubmitted claim exists too" in {
