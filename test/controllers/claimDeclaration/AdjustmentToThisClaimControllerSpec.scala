@@ -134,7 +134,22 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
             repaymentClaimDetailsAnswers = Some(answers)
           ).copy(
             giftAidScheduleCompleted = true,
-            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+            organisationDetailsAnswers = Some(organisationDetailsAnswers),
+            giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+              GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+                adjustmentForGiftAidOverClaimed = Some(BigDecimal(100)),
+                claims = Some(
+                  Seq(
+                    Some(
+                      GiftAidSmallDonationsSchemeClaimAnswers(
+                        taxYear = 2025,
+                        amountOfDonationsReceived = Some(BigDecimal(1000))
+                      )
+                    )
+                  )
+                )
+              )
+            )
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -166,7 +181,22 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
             repaymentClaimDetailsAnswers = Some(answers)
           ).copy(
             otherIncomeScheduleCompleted = true,
-            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+            organisationDetailsAnswers = Some(organisationDetailsAnswers),
+            giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+              GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+                adjustmentForGiftAidOverClaimed = Some(BigDecimal(100)),
+                claims = Some(
+                  Seq(
+                    Some(
+                      GiftAidSmallDonationsSchemeClaimAnswers(
+                        taxYear = 2025,
+                        amountOfDonationsReceived = Some(BigDecimal(1000))
+                      )
+                    )
+                  )
+                )
+              )
+            )
           )
 
           given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -550,7 +580,22 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
             repaymentClaimDetailsAnswers = Some(answers)
           ).copy(
             giftAidScheduleCompleted = true,
-            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+            organisationDetailsAnswers = Some(organisationDetailsAnswers),
+            giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+              GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+                adjustmentForGiftAidOverClaimed = Some(BigDecimal(100)),
+                claims = Some(
+                  Seq(
+                    Some(
+                      GiftAidSmallDonationsSchemeClaimAnswers(
+                        taxYear = 2025,
+                        amountOfDonationsReceived = Some(BigDecimal(1000))
+                      )
+                    )
+                  )
+                )
+              )
+            )
           )
 
           given application: Application =
@@ -583,7 +628,22 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
             repaymentClaimDetailsAnswers = Some(answers)
           ).copy(
             otherIncomeScheduleCompleted = true,
-            organisationDetailsAnswers = Some(organisationDetailsAnswers)
+            organisationDetailsAnswers = Some(organisationDetailsAnswers),
+            giftAidSmallDonationsSchemeDonationDetailsAnswers = Some(
+              GiftAidSmallDonationsSchemeDonationDetailsAnswers(
+                adjustmentForGiftAidOverClaimed = Some(BigDecimal(100)),
+                claims = Some(
+                  Seq(
+                    Some(
+                      GiftAidSmallDonationsSchemeClaimAnswers(
+                        taxYear = 2025,
+                        amountOfDonationsReceived = Some(BigDecimal(1000))
+                      )
+                    )
+                  )
+                )
+              )
+            )
           )
 
           given application: Application =
