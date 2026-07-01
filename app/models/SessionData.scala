@@ -223,6 +223,12 @@ object SessionData {
       && (!shouldUploadOtherIncomeSchedule || session.otherIncomeScheduleCompleted)
       && (!shouldUploadCommunityBuildingsSchedule || session.communityBuildingsScheduleCompleted)
       && (!shouldUploadGiftAidSchedule || session.giftAidScheduleCompleted)
+      && (!session.repaymentClaimDetailsAnswers.exists(a =>
+        a.claimingDonationsNotFromCommunityBuilding.contains(true) ||
+          a.makingAdjustmentToPreviousClaim.contains(true)
+      )
+        || session.giftAidSmallDonationsSchemeDonationDetailsAnswers
+          .exists(_.hasGasdsDonationDetailsCompleteAnswers(session.repaymentClaimDetailsAnswers, session.isAgent)))
 
   def isClaimSubmitted(using session: SessionData): Boolean =
     session.submissionReference.isDefined
