@@ -245,8 +245,8 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
             val label = messages("taxYear.first")
 
             val form = formProvider(
-              requiredKey = messages("whichTaxYearAreYouClaimingFor.error.required", label),
-              invalidKey = messages("whichTaxYearAreYouClaimingFor.error.invalid", label)
+              requiredKey = messages("whichTaxYearAreYouClaimingFor.firstYear.error.required", label),
+              invalidKey = messages("whichTaxYearAreYouClaimingFor.firstYear.error.invalid", label)
             )
 
             status(result) shouldEqual BAD_REQUEST
@@ -276,8 +276,8 @@ class WhichTaxYearAreYouClaimingForControllerSpec extends ControllerSpec {
             val label = messages("taxYear.first")
 
             val form = formProvider(
-              requiredKey = messages("whichTaxYearAreYouClaimingFor.error.required", label),
-              invalidKey = messages("whichTaxYearAreYouClaimingFor.error.invalid", label)
+              requiredKey = messages("whichTaxYearAreYouClaimingFor.firstYear.error.required", label),
+              invalidKey = messages("whichTaxYearAreYouClaimingFor.firstYear.error.invalid", label)
             )
 
             status(result) shouldEqual BAD_REQUEST

@@ -46,9 +46,23 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
   private def form(index: Int)(using messages: Messages) = {
     val label = messages(taxYearLabelKey(index))
 
+    val requiredKeyForYear =
+      index match
+        case 1 => "whichTaxYearAreYouClaimingFor.firstYear.error.required"
+        case 2 => "whichTaxYearAreYouClaimingFor.secondYear.error.required"
+        case 3 => "whichTaxYearAreYouClaimingFor.thirdYear.error.required"
+        case _ => ""
+
+    val invalidKeyForYear =
+      index match
+        case 1 => "whichTaxYearAreYouClaimingFor.firstYear.error.invalid"
+        case 2 => "whichTaxYearAreYouClaimingFor.secondYear.error.invalid"
+        case 3 => "whichTaxYearAreYouClaimingFor.thirdYear.error.invalid"
+        case _ => ""
+
     formProvider(
-      requiredKey = messages("whichTaxYearAreYouClaimingFor.error.required", label),
-      invalidKey = messages("whichTaxYearAreYouClaimingFor.error.invalid", label)
+      requiredKey = messages(requiredKeyForYear, label),
+      invalidKey = messages(invalidKeyForYear, label)
     )
   }
 
