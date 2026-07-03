@@ -25,7 +25,7 @@ aboutGiftAidSchedule.title = Ynglŷn ag atodlen Rhodd Cymorth
 
 aboutGiftAidSmallDonationsScheme.caption = Rhowch fanylion y cyfraniad GASDS
 aboutGiftAidSmallDonationsScheme.heading = Ynglŷn â’r atodlen Cynllun Cyfraniadau Bach Rhodd Cymorth
-aboutGiftAidSmallDonationsScheme.paragraph.one = Defnyddiwch y gwasanaeth hwn i hawlio ad-daliadau o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS). Gallwch ychwanegu hawliadau ar gyfer hyd at 3 flwyddyn dreth.
+aboutGiftAidSmallDonationsScheme.paragraph.one = Defnyddiwch y gwasanaeth hwn i hawlio ad-daliadau o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS). Gallwch ychwanegu hawliadau ar gyfer hyd at 3 blwyddyn dreth.
 aboutGiftAidSmallDonationsScheme.paragraph.one.agent = Defnyddiwch y gwasanaeth hwn i hawlio ad-daliadau o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS) ar gyfer eich cleient. Gallwch ychwanegu hawliadau ar gyfer hyd at 3 blwyddyn dreth.
 aboutGiftAidSmallDonationsScheme.paragraph.two = Mae’r GASDS yn berthnasol i gyfraniadau arian parod bach o £30, neu lai, lle nad oes gan yr elusen neu’r Clwb Chwaraeon Amatur Cymunedol ddatganiad Rhodd Cymorth.
 aboutGiftAidSmallDonationsScheme.title = Ynglŷn â’r atodlen Cynllun Cyfraniadau Bach Rhodd Cymorth
@@ -143,9 +143,9 @@ characterCount.charactersUnderLimit.other=Mae gennych %'{'count'}' o gymeriadau 
 
 charitiesReferenceNumber.caption = Rhowch fanylion hawliad yr elusen am ad-daliad
 charitiesReferenceNumber.error.exists = Rydych eisoes wedi creu hawliad ar gyfer cyf CThEF {0}
-charitiesReferenceNumber.error.length = Mae’n rhaid i gyfeirnod adran elusennau CThEF fod yn 7 o gymeriadau neu lai
-charitiesReferenceNumber.error.regex = Nodwch gyfeirnod adran elusennau CThEF yn y fformat cywir
-charitiesReferenceNumber.error.required = Nodwch gyfeirnod adran elusennau CThEF
+charitiesReferenceNumber.error.length = Mae’n rhaid i gyfeirnod elusennau a roddir gan CThEF fod yn 7 o gymeriadau neu lai
+charitiesReferenceNumber.error.regex = Nodwch gyfeirnod elusennau a roddir gan CThEF yn y fformat cywir
+charitiesReferenceNumber.error.required = Nodwch gyfeirnod elusennau a roddir gan CThEF
 charitiesReferenceNumber.heading = Beth yw’r cyfeirnod elusennau a roddir gan CThEF?
 charitiesReferenceNumber.hint = Bydd hyn yn dechrau gydag un lythyren, neu ddwy lythyren, o A i Z, a chynnwys hyd at 5 rhif megis 12345. Er enghraifft, CF10034.
 charitiesReferenceNumber.title = Beth yw’r cyfeirnod elusennau a roddir gan CThEF?
@@ -256,13 +256,13 @@ checkYourOtherIncomeSchedule.title = Gwirio’ch atodlen o Incwm Arall
 
 claimAddedForTaxYear.caption = Rhowch fanylion y cyfraniad GASDS
 claimAddedForTaxYear.error.required = Dewiswch ‘Iawn’ os ydych am wneud hawliad ar gyfer blwyddyn dreth arall
-claimAddedForTaxYear.heading = Rydych wedi ychwanegu hawliad ar gyfer {0} {1} dreth
-claimAddedForTaxYear.hint = Gallwch wneud hawliadau ar gyfer hyd at 3 flwyddyn dreth.
+claimAddedForTaxYear.heading = Rydych wedi ychwanegu hawliad ar gyfer {0} {1}
+claimAddedForTaxYear.hint = Gallwch wneud hawliadau ar gyfer hyd at 3 blwyddyn dreth.
 claimAddedForTaxYear.legend = A hoffech ychwanegu hawliad ar gyfer blwyddyn dreth arall?
-claimAddedForTaxYear.singularOrPlural.plural = blynyddoedd
-claimAddedForTaxYear.singularOrPlural.singular = blwyddyn
+claimAddedForTaxYear.singularOrPlural.plural = flynyddoedd o treth
+claimAddedForTaxYear.singularOrPlural.singular = flwyddyn dreth
 claimAddedForTaxYear.taxYear.key = Blwyddyn dreth {0}
-claimAddedForTaxYear.title = Rydych wedi ychwanegu hawliad ar gyfer {0} {1} dreth
+claimAddedForTaxYear.title = Rydych wedi ychwanegu hawliad ar gyfer {0} {1}
 
 claimComplete.claimRefNumber = {0}
 claimComplete.message.2 = Eich cyfeirnod
@@ -286,11 +286,11 @@ claimDeclaration.warning = Rwy’n deall, os byddaf yn rhoi gwybodaeth ffug neu 
 
 claimForTaxYearCheckYourAnswers.caption = Rhowch fanylion y cyfraniad GASDS
 claimForTaxYearCheckYourAnswers.donationAmount.label = Swm y cyfraniad
-claimForTaxYearCheckYourAnswers.heading = Gwiriwch fanylion eich hawliad ar gyfer blwyddyn dreth {0}
-claimForTaxYearCheckYourAnswers.heading.agent = Gwiriwch fanylion yr hawliad ar gyfer blwyddyn dreth {0}
+claimForTaxYearCheckYourAnswers.heading = Gwiriwch fanylion eich hawliad ar gyfer flwyddyn dreth {0}
+claimForTaxYearCheckYourAnswers.heading.agent = Gwiriwch fanylion yr hawliad ar gyfer flwyddyn dreth {0}
 claimForTaxYearCheckYourAnswers.taxYear.label = Blwyddyn dreth
-claimForTaxYearCheckYourAnswers.title = Gwiriwch fanylion eich hawliad ar gyfer blwyddyn dreth {0}
-claimForTaxYearCheckYourAnswers.title.agent = Gwiriwch fanylion yr hawliad ar gyfer blwyddyn dreth {0}
+claimForTaxYearCheckYourAnswers.title = Gwiriwch fanylion eich hawliad ar gyfer flwyddyn dreth {0}
+claimForTaxYearCheckYourAnswers.title.agent = Gwiriwch fanylion yr hawliad ar gyfer flwyddyn dreth {0}
 
 claimGASDS.agent.missingDetails = cadarnhau pa fath o hawliad(au) GASDS rydych am eu gwneud
 claimGASDS.missingDetails = cadarnhau pa fath o hawliad(au) GASDS rydych am eu gwneud
