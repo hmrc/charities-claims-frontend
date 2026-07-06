@@ -16,12 +16,14 @@
 
 package repositories
 
+import play.api.libs.json.{OWrites, Reads}
 import uk.gov.hmrc.mongo.{MongoComponent, TimestampSupport}
 import com.google.inject.{ImplementedBy, Inject, Singleton}
-import config.FrontendAppConfig
+import uk.gov.hmrc.crypto.{Decrypter, Encrypter}
+import config.{CryptoProvider, FrontendAppConfig}
 import uk.gov.hmrc.mongo.cache.{CacheIdType, DataKey, MongoCacheRepository}
 import uk.gov.hmrc.http.HeaderCarrier
-import models.SessionData
+import models.{SessionData, SessionDataEncrypted}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -51,7 +53,8 @@ object HeaderCarrierCacheId extends CacheIdType[HeaderCarrier] {
 class DefaultSessionCache @Inject() (
   mongoComponent: MongoComponent,
   timestampSupport: TimestampSupport,
-  config: FrontendAppConfig
+  config: FrontendAppConfig,
+  cryptoProvider: CryptoProvider
 )(using
   ec: ExecutionContext
 ) extends MongoCacheRepository[HeaderCarrier](
@@ -63,18 +66,32 @@ class DefaultSessionCache @Inject() (
     )
     with SessionCache {
 
-  val sessionDataKey: DataKey[SessionData] =
-    DataKey[SessionData]("session-data")
+  private given crypto: Encrypter & Decrypter =
+    cryptoProvider.get()
+
+  private given Reads[SessionDataEncrypted] =
+    SessionDataEncrypted.reads(using crypto)
+
+  private given OWrites[SessionDataEncrypted] =
+    SessionDataEncrypted.writes(using crypto)  
+
+  private val sessionDataKey: DataKey[SessionDataEncrypted] =
+    DataKey[SessionDataEncrypted]("session-data")
+
 
   final def get()(using
     hc: HeaderCarrier
   ): Future[Option[SessionData]] =
-    super.get[SessionData](hc)(sessionDataKey)
+    super.get[SessionDataEncrypted](hc)(sessionDataKey)
+      .map(_.map(_.toSessionData))
 
   final def store(
     sessionData: SessionData
   )(using hc: HeaderCarrier): Future[Unit] =
     super
-      .put(hc)(sessionDataKey, sessionData)
+      .put(hc)(
+        sessionDataKey,
+        SessionDataEncrypted.fromSessionData(sessionData)
+      )
       .map(_ => ())
 }

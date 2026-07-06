@@ -26,6 +26,7 @@ import uk.gov.hmrc.http.hooks.*
 import play.api.libs.ws.WSClient
 import play.api.{Configuration, Environment, Logger}
 import play.api.libs.json.Json
+import uk.gov.hmrc.crypto.{Decrypter, Encrypter}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.io.AnsiColor.*
@@ -40,7 +41,8 @@ class Module extends play.api.inject.Module {
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[?]] =
     Seq(
       bind[Clock].toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC)),
-      bind[HttpClientV2].to(classOf[DebuggingHttpClientV2])
+      bind[HttpClientV2].to(classOf[DebuggingHttpClientV2]),
+      bind[Encrypter & Decrypter].toProvider[CryptoProvider]
     )
 
 }
