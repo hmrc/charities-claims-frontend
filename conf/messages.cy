@@ -25,8 +25,8 @@ aboutGiftAidSchedule.title = Ynglŷn ag atodlen Rhodd Cymorth
 
 aboutGiftAidSmallDonationsScheme.caption = Rhowch fanylion y cyfraniad GASDS
 aboutGiftAidSmallDonationsScheme.heading = Ynglŷn â’r atodlen Cynllun Cyfraniadau Bach Rhodd Cymorth
-aboutGiftAidSmallDonationsScheme.paragraph.one = Defnyddiwch y gwasanaeth hwn i hawlio ad-daliadau o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS). Gallwch ychwanegu hawliadau ar gyfer hyd at 3 blwyddyn dreth.
-aboutGiftAidSmallDonationsScheme.paragraph.one.agent = Defnyddiwch y gwasanaeth hwn i hawlio ad-daliadau o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS) ar gyfer eich cleient. Gallwch ychwanegu hawliadau ar gyfer hyd at 3 blwyddyn dreth.
+aboutGiftAidSmallDonationsScheme.paragraph.one = Defnyddiwch y gwasanaeth hwn i hawlio taliadau o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS). Gallwch ychwanegu hawliadau ar gyfer hyd at 3 blwyddyn dreth.
+aboutGiftAidSmallDonationsScheme.paragraph.one.agent = Defnyddiwch y gwasanaeth hwn i hawlio taliadau o dan y Cynllun Cyfraniadau Bach Rhodd Cymorth (GASDS) ar gyfer eich cleient. Gallwch ychwanegu hawliadau ar gyfer hyd at 3 blwyddyn dreth.
 aboutGiftAidSmallDonationsScheme.paragraph.two = Mae’r GASDS yn berthnasol i gyfraniadau arian parod bach o £30, neu lai, lle nad oes gan yr elusen neu’r Clwb Chwaraeon Amatur Cymunedol ddatganiad Rhodd Cymorth.
 aboutGiftAidSmallDonationsScheme.title = Ynglŷn â’r atodlen Cynllun Cyfraniadau Bach Rhodd Cymorth
 
@@ -38,11 +38,11 @@ aboutOtherIncomeSchedule.paragraph.two = Gallwch uwchlwytho atodlen o Incwm Aral
 aboutOtherIncomeSchedule.paragraph.url = Gallwch lawrlwytho <a class="govuk-link" href="{0}" target="_blank" rel="noopener noreferrer">atodlen o Incwm Arall fan hyn (yn agor tab newydd)</a>. Gallwch gyflwyno 1 ffeil ar y tro, a gall pob ffeil fod hyd at 250KB.
 aboutOtherIncomeSchedule.title = Ynglŷn â’r atodlen o Incwm Arall
 
-aboutTheOrganisation.agent.paragraph.two = Mae’n rhaid i’r asiant sy’n gwneud yr hawliad hwn ddarparu rhif ffôn fel y gall CThEF gysylltu ynglŷn â’r hawliad hwn.
+aboutTheOrganisation.agent.paragraph.two = Mae’n rhaid i’r asiant sy’n gwneud yr hawliad hwn ddarparu rhif ffôn fel y gall Cyllid a Thollau EF gysylltu ynglŷn â’r hawliad hwn.
 aboutTheOrganisation.caption = Rhowch fanylion am y sefydliad
 aboutTheOrganisation.heading = Ynglŷn â’r sefydliad
 aboutTheOrganisation.paragraph.one = Mae angen i chi ddarparu gwybodaeth ynglŷn â’r sefydliad rydych yn hawlio ar ei gyfer.
-aboutTheOrganisation.paragraph.two = Mae’n rhaid i’r person sy’n gwneud yr hawliad hwn fod yn swyddog cymeradwy neu’n ymddiriedolwr corfforaethol a gydnabyddir gan Cyllid a Thollau EF.
+aboutTheOrganisation.paragraph.two = Mae’n rhaid i’r person sy’n gwneud yr hawliad hwn fod yn swyddog cymeradwy neu’n ymddiriedolwr corfforaethol a gydnabyddir gan Gyllid a Thollau EF.
 aboutTheOrganisation.title = Ynglŷn â’r sefydliad
 
 adjustmentToGiftAidOverclaimed.caption = Rhowch fanylion y cyfraniad GASDS
