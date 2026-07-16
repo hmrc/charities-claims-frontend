@@ -25,7 +25,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import scala.concurrent.{ExecutionContext, Future}
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Result
-import models.UpdatedByAnotherUserException
+import models.{MaxClaimsExceededException, UpdatedByAnotherUserException}
 import models.ValidationType.{CommunityBuildings, ConnectedCharities, GiftAid, OtherIncome}
 import play.api.mvc.Results.Redirect
 import play.api.Logger
@@ -47,6 +47,11 @@ class ErrorHandler @Inject() (
         logger.error(ex.getMessage)
         Future.successful(
           Redirect(controllers.organisationDetails.routes.CannotViewOrManageClaimController.onPageLoad)
+        )
+      case _: MaxClaimsExceededException          =>
+        logger.warn(ex.getMessage)
+        Future.successful(
+          Redirect(controllers.routes.Warning11MaxClaimsReachedController.onPageLoad)
         )
       case value: ScheduleUploadNotFoundException =>
         value.validationType match {

@@ -34,8 +34,9 @@ case class UnknownClaimError(errorCode: String) extends ClaimError {
 
 object ClaimError {
   given reads: Reads[ClaimError] = (JsPath \ "errorCode").read[String].map {
-    case "UPDATED_BY_ANOTHER_USER" => UpdatedByAnotherUserException()
-    case "MAX_CLAIMS_EXCEEDED"     => MaxClaimsExceededException()
-    case other                     => UnknownClaimError(other)
+    case "UPDATED_BY_ANOTHER_USER"           => UpdatedByAnotherUserException()
+    case "MAX_CLAIMS_EXCEEDED"               => MaxClaimsExceededException()
+    case "UNSUBMITTED_CLAIMS_LIMIT_EXCEEDED" => MaxClaimsExceededException()
+    case other                               => UnknownClaimError(other)
   }
 }

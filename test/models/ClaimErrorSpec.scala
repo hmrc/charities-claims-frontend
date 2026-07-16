@@ -34,6 +34,12 @@ class ClaimErrorSpec extends BaseSpec {
       result shouldBe a[MaxClaimsExceededException]
     }
 
+    "parse UNSUBMITTED_CLAIMS_LIMIT_EXCEEDED as MaxClaimsExceededException" in {
+      val json   = """{"errorCode": "UNSUBMITTED_CLAIMS_LIMIT_EXCEEDED"}"""
+      val result = Json.parse(json).as[ClaimError]
+      result shouldBe a[MaxClaimsExceededException]
+    }
+
     "parse unknown error code as UnknownClaimError" in {
       val json   = """{"errorCode": "SOME_OTHER_ERROR"}"""
       val result = Json.parse(json).as[ClaimError]
