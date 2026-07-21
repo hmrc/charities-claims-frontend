@@ -285,7 +285,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       }
     }
 
-    "should throw MaxClaimsExceededException when backend returns 400 with MAX_CLAIMS_EXCEEDED error" in {
+    "should throw UnsubmittedClaimsLimitExceededException when backend returns 400 with UNSUBMITTED_CLAIMS_LIMIT_EXCEEDED error" in {
       val repaymentDetails = RepaymentClaimDetails(
         claimingGiftAid = true,
         claimingTaxDeducted = true,
@@ -300,10 +300,10 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
       givenUpdateClaimEndpointReturns(
         payload = updateRequest,
-        response = HttpResponse(400, """{"errorCode": "MAX_CLAIMS_EXCEEDED"}""")
+        response = HttpResponse(400, """{"errorCode": "UNSUBMITTED_CLAIMS_LIMIT_EXCEEDED"}""")
       )
 
-      a[MaxClaimsExceededException] should be thrownBy {
+      a[UnsubmittedClaimsLimitExceededException] should be thrownBy {
         await(connector.updateClaim("123", updateRequest))
       }
     }

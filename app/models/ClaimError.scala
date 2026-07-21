@@ -24,8 +24,8 @@ case class UpdatedByAnotherUserException() extends ClaimError {
   override def getMessage: String = "UPDATED_BY_ANOTHER_USER"
 }
 
-case class MaxClaimsExceededException() extends ClaimError {
-  override def getMessage: String = "MAX_CLAIMS_EXCEEDED"
+case class UnsubmittedClaimsLimitExceededException() extends ClaimError {
+  override def getMessage: String = "UNSUBMITTED_CLAIMS_LIMIT_EXCEEDED"
 }
 
 case class UnknownClaimError(errorCode: String) extends ClaimError {
@@ -34,8 +34,8 @@ case class UnknownClaimError(errorCode: String) extends ClaimError {
 
 object ClaimError {
   given reads: Reads[ClaimError] = (JsPath \ "errorCode").read[String].map {
-    case "UPDATED_BY_ANOTHER_USER" => UpdatedByAnotherUserException()
-    case "MAX_CLAIMS_EXCEEDED"     => MaxClaimsExceededException()
-    case other                     => UnknownClaimError(other)
+    case "UPDATED_BY_ANOTHER_USER"           => UpdatedByAnotherUserException()
+    case "UNSUBMITTED_CLAIMS_LIMIT_EXCEEDED" => UnsubmittedClaimsLimitExceededException()
+    case other                               => UnknownClaimError(other)
   }
 }
