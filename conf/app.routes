@@ -318,3 +318,4 @@ GET         /delete-charity-repayment-claim                        controllers.D
 POST        /delete-charity-repayment-claim                        controllers.DeleteAgentClaimController.onSubmit
 
 GET         /cannot-progress-this-claim                            controllers.CannotProgressThisClaimController.onPageLoad
+GET         /claim-cannot-be-saved                                 controllers.ClaimCannotBeSavedController.onPageLoad

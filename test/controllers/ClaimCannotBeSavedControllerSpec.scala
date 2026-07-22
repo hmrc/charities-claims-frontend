@@ -19,35 +19,36 @@ package controllers
 import play.api.test.FakeRequest
 import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
-import views.html.Warning15UnsubmittedClaimExistsView
+import views.html.Warning16UnsubmittedClaimExistsForCharityView
 import uk.gov.hmrc.auth.core.AffinityGroup
 import play.api.Application
+import models.RepaymentClaimDetailsAnswers
 
-class CannotProgressThisClaimControllerSpec extends ControllerSpec {
+class ClaimCannotBeSavedControllerSpec extends ControllerSpec {
 
-  "CannotProgressThisClaimController" - {
+  "ClaimCannotBeSavedController" - {
     "onPageLoad" - {
-      "should render the WRN15 page for an organisation user" in {
+      "should render the WRN16 page for an agent user" in {
+        given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Agent, sessionData = defaultSessionData.copy(repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers(nameOfCharity = Some("Test Charity"), hmrcCharitiesReference = Some("1234567890"))))).build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, routes.ClaimCannotBeSavedController.onPageLoad.url)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[Warning16UnsubmittedClaimExistsForCharityView]
+
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view(Some("Test Charity"),Some("1234567890"),"http://localhost:8033/charities-management/manage-charity-repayment-claim").body
+        }
+      }
+
+      "should reject the request for an organisation user" in {
         given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Organisation).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CannotProgressThisClaimController.onPageLoad.url)
-
-          val result = route(application, request).value
-          val view   = application.injector.instanceOf[Warning15UnsubmittedClaimExistsView]
-
-          status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view().body
-        }
-      }
-
-      "should reject the request for an agent user" in {
-        given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Agent).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CannotProgressThisClaimController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimCannotBeSavedController.onPageLoad.url)
 
           val result = route(application, request).value
           status(result) shouldEqual SEE_OTHER
@@ -57,12 +58,12 @@ class CannotProgressThisClaimControllerSpec extends ControllerSpec {
       "should redirect to the Claim complete page when the claim has been submitted" in {
         given application: Application = applicationBuilder(
           sessionData = defaultSessionData.copy(submissionReference = Some("submission-reference")),
-          affinityGroup = AffinityGroup.Organisation
+          affinityGroup = AffinityGroup.Agent
         ).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.CannotProgressThisClaimController.onPageLoad.url)
+            FakeRequest(GET, routes.ClaimCannotBeSavedController.onPageLoad.url)
 
           val result = route(application, request).value
 

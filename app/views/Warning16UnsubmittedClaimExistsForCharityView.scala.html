@@ -18,15 +18,24 @@
     layout: templates.Layout
 )
 
-@()(implicit request: Request[?], messages: Messages)
+@(nameOfCharity: Option[String], hmrcCharitiesReference: Option[String], dashboardUrl: String)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("warning16UnsubmittedClaimExistsForCharity.title")),
-    showBackLink = true
+    showBackLink = false
 ) {
 
     <h1 class="govuk-heading-l">
         @messages("warning16UnsubmittedClaimExistsForCharity.heading")
     </h1>
 
+   @if(nameOfCharity.isDefined && hmrcCharitiesReference.isDefined) {
+      <p class="govuk-body">@messages("warning16UnsubmittedClaimExistsForCharity.paragraph.1", nameOfCharity.get, hmrcCharitiesReference.get)</p>
+   }
+
+    <p class="govuk-body">@messages("warning16UnsubmittedClaimExistsForCharity.paragraph.2")</p>
+
+    <p class="govuk-body">
+        <a class="govuk-link" href="@dashboardUrl">@messages("warning16UnsubmittedClaimExistsForCharity.link")</a>
+    </p>
 }

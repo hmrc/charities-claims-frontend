@@ -23,33 +23,33 @@ import play.api.test.Helpers.*
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
-class CannotProgressThisClaimControllerISpec extends ComponentSpecHelper
+class ClaimCannotBeSavedControllerISpec extends ComponentSpecHelper
   with AuthStub with TestDataUtils with ClaimsStub
   with ClaimsValidationStub {
 
   private val noClaimsResponse = GetClaimsResponse(claimsCount = 0, claimsList = List.empty)
 
-  "GET /cannot-progress-this-claim" should {
+  "GET /claim-cannot-be-saved" should {
 
-    "render the WRN15 page for an organisation user" in {
-      stubAuthRequest()
+    "render the WRN16 page for an agent user" in {
+      stubAgentAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(noClaimsResponse))
 
-      val result = get("/cannot-progress-this-claim")
+      val result = get("/claim-cannot-be-saved")
 
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.title should include(msg("warning15UnsubmittedClaimExists.title"))
-      doc.select("h1").text shouldBe msg("warning15UnsubmittedClaimExists.heading")
-      doc.select("p.govuk-body").text should include(msg("warning15UnsubmittedClaimExists.paragraph.2"))
+      doc.title should include(msg("warning16UnsubmittedClaimExistsForCharity.title"))
+      doc.select("h1").text shouldBe msg("warning16UnsubmittedClaimExistsForCharity.heading")
+      doc.select("p.govuk-body").text should include(msg("warning16UnsubmittedClaimExistsForCharity.paragraph.2"))
     }
 
-    "reject the request if an agent user" in {
-      stubAgentAuthRequest()
+    "reject the request if an organisation user" in {
+      stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(noClaimsResponse))
 
-      val result = get("/cannot-progress-this-claim")
+      val result = get("/claim-cannot-be-saved")
 
       result.status shouldBe SEE_OTHER
     }

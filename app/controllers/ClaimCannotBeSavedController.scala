@@ -19,22 +19,26 @@ package controllers
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
-import views.html.Warning15UnsubmittedClaimExistsView
+import views.html.Warning16UnsubmittedClaimExistsForCharityView
 import controllers.actions.{AccessType, Actions}
 import models.SessionData
 
 import scala.concurrent.Future
+import config.FrontendAppConfig
 
-class CannotProgressThisClaimController @Inject() (
+class ClaimCannotBeSavedController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
-  organisationView: Warning15UnsubmittedClaimExistsView
+  agentView: Warning16UnsubmittedClaimExistsForCharityView,
+  appConfig: FrontendAppConfig
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetDataWithGuard(AccessType.OrganisationOnly, SessionData.isClaimNotSubmitted)
+      .authAndGetDataWithGuard(AccessType.AgentOnly, SessionData.isClaimNotSubmitted)
       .async { implicit request =>
-        Future.successful(Ok(organisationView()))
+        val nameOfCharity = request.sessionData.repaymentClaimDetailsAnswers.flatMap { _.nameOfCharity}
+        val hmrcCharitiesReference = request.sessionData.repaymentClaimDetailsAnswers.flatMap { _.hmrcCharitiesReference}
+        Future.successful(Ok(agentView(nameOfCharity, hmrcCharitiesReference, appConfig.charityRepaymentDashboardUrl)))
       }
 }

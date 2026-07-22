@@ -1071,6 +1071,9 @@ warning15UnsubmittedClaimExists.title = You cannot progress this claim
 
 warning16UnsubmittedClaimExistsForCharity.heading = You cannot progress this claim
 warning16UnsubmittedClaimExistsForCharity.title = Your claim cannot be saved
+warning16UnsubmittedClaimExistsForCharity.paragraph.1 = There is already a draft claim for: {0} - HMRC Charities Reference: {1}. 
+warning16UnsubmittedClaimExistsForCharity.paragraph.2 = Contact a colleague who is working on this claim to delete or submit the existing draft claim before creating a new one for this organisation.
+warning16UnsubmittedClaimExistsForCharity.link = Return to manage charity repayment claims
 
 whichTaxYearAreYouClaimingFor.caption = Provide GASDS donation details
 whichTaxYearAreYouClaimingFor.caption.multipleYears = Provide GASDS donation details - Tax year {0}

@@ -1062,6 +1062,17 @@ warning11MaxClaimsReached.message.1 = Rydych wedi cyrraedd y nifer uchaf o hawli
 warning11MaxClaimsReached.message.2 = Gallwch gael {0} o hawliadau ar y gweill ar yr un pryd. Dilëwch hawliad sy’n bodoli eisoes er mwyn gwneud hawliad newydd.
 warning11MaxClaimsReached.title = Rydych wedi cyrraedd y nifer uchaf o hawliadau drafft
 
+warning15UnsubmittedClaimExists.heading = You cannot progress this claim
+warning15UnsubmittedClaimExists.paragraph.1 = Your claim cannot be saved as another claim is already in progress.
+warning15UnsubmittedClaimExists.paragraph.2 = You can contact a colleague to delete or submit the existing claim before starting a new claim.
+warning15UnsubmittedClaimExists.title = You cannot progress this claim
+
+warning16UnsubmittedClaimExistsForCharity.heading = You cannot progress this claim
+warning16UnsubmittedClaimExistsForCharity.title = Your claim cannot be saved
+warning16UnsubmittedClaimExistsForCharity.paragraph.1 = There is already a draft claim for: {0} - HMRC Charities Reference: {1}. 
+warning16UnsubmittedClaimExistsForCharity.paragraph.2 = Contact a colleague who is working on this claim to delete or submit the existing draft claim before creating a new one for this organisation.
+warning16UnsubmittedClaimExistsForCharity.link = Return to manage charity repayment claims
+
 whichTaxYearAreYouClaimingFor.caption = Rhowch fanylion y cyfraniad GASDS
 whichTaxYearAreYouClaimingFor.caption.multipleYears = Rhowch fanylion y cyfraniad GASDS - Blwyddyn dreth {0}
 whichTaxYearAreYouClaimingFor.error.duplicate = Mae’n rhaid i’r cyfraniadau a hawliwyd ar gyfer mwy nag un flwyddyn dreth fod yn wahanol i flynyddoedd treth eraill

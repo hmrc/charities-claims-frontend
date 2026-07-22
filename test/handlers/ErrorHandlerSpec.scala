@@ -83,7 +83,7 @@ class ErrorHandlerSpec extends ControllerSpec {
 
     }
 
-    "should redirect to the cannot progress claim page if the exception is UnsubmittedClaimExistsForCharityException" in {
+    "should redirect to the claim cannot be saved page if the exception is UnsubmittedClaimExistsForCharityException" in {
 
       given application: Application = applicationBuilder().build()
       val errorHandler               = application.injector.instanceOf[ErrorHandler]
@@ -96,7 +96,7 @@ class ErrorHandlerSpec extends ControllerSpec {
 
         status(result) shouldEqual SEE_OTHER
         redirectLocation(result) shouldEqual Some(
-          controllers.routes.CannotProgressThisClaimController.onPageLoad.url
+          controllers.routes.ClaimCannotBeSavedController.onPageLoad.url
         )
       }
 
