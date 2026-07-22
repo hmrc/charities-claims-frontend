@@ -32,6 +32,10 @@ case class UnsubmittedClaimExistsForCharityException() extends ClaimError {
   override def getMessage: String = "UNSUBMITTED_CLAIM_EXISTS_FOR_CHARITY"
 }
 
+case class OrganisationClaimAlreadyInProgressException() extends ClaimError {
+  override def getMessage: String = "ORGANISATION_CLAIM_ALREADY_IN_PROGRESS"
+}
+
 case class UnknownClaimError(errorCode: String) extends ClaimError {
   override def getMessage: String = errorCode
 }

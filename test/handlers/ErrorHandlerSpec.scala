@@ -21,7 +21,12 @@ import play.api.Application
 import play.api.test.FakeRequest
 import play.api.mvc.AnyContentAsEmpty
 import handlers.ErrorHandler
-import models.UpdatedByAnotherUserException
+import models.{
+  OrganisationClaimAlreadyInProgressException,
+  UnsubmittedClaimExistsForCharityException,
+  UnsubmittedClaimsLimitExceededException,
+  UpdatedByAnotherUserException
+}
 
 class ErrorHandlerSpec extends ControllerSpec {
 
@@ -38,6 +43,61 @@ class ErrorHandlerSpec extends ControllerSpec {
         val result    = errorHandler.resolveError(request, exception)
 
         status(result) shouldEqual SEE_OTHER
+      }
+
+    }
+
+    "should redirect to the max claims reached page if the exception is UnsubmittedClaimsLimitExceededException" in {
+
+      given application: Application = applicationBuilder().build()
+      val errorHandler               = application.injector.instanceOf[ErrorHandler]
+
+      running(application) {
+        given request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/foo")
+
+        val exception = UnsubmittedClaimsLimitExceededException()
+        val result    = errorHandler.resolveError(request, exception)
+
+        status(result) shouldEqual SEE_OTHER
+        redirectLocation(result) shouldEqual Some(controllers.routes.Warning11MaxClaimsReachedController.onPageLoad.url)
+      }
+
+    }
+
+    "should redirect to the cannot progress claim page if the exception is OrganisationClaimAlreadyInProgressException" in {
+
+      given application: Application = applicationBuilder().build()
+      val errorHandler               = application.injector.instanceOf[ErrorHandler]
+
+      running(application) {
+        given request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/foo")
+
+        val exception = OrganisationClaimAlreadyInProgressException()
+        val result    = errorHandler.resolveError(request, exception)
+
+        status(result) shouldEqual SEE_OTHER
+        redirectLocation(result) shouldEqual Some(
+          controllers.routes.CannotProgressThisClaimController.onPageLoad.url
+        )
+      }
+
+    }
+
+    "should redirect to the cannot progress claim page if the exception is UnsubmittedClaimExistsForCharityException" in {
+
+      given application: Application = applicationBuilder().build()
+      val errorHandler               = application.injector.instanceOf[ErrorHandler]
+
+      running(application) {
+        given request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/foo")
+
+        val exception = UnsubmittedClaimExistsForCharityException()
+        val result    = errorHandler.resolveError(request, exception)
+
+        status(result) shouldEqual SEE_OTHER
+        redirectLocation(result) shouldEqual Some(
+          controllers.routes.CannotProgressThisClaimController.onPageLoad.url
+        )
       }
 
     }

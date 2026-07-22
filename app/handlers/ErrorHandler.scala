@@ -26,6 +26,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Result
 import models.{
+  OrganisationClaimAlreadyInProgressException,
   UnsubmittedClaimExistsForCharityException,
   UnsubmittedClaimsLimitExceededException,
   UpdatedByAnotherUserException
@@ -59,7 +60,7 @@ class ErrorHandler @Inject() (
           Redirect(controllers.routes.Warning11MaxClaimsReachedController.onPageLoad)
         )
 
-      case _: UnsubmittedClaimExistsForCharityException =>
+      case _: UnsubmittedClaimExistsForCharityException | _: OrganisationClaimAlreadyInProgressException =>
         logger.warn(ex.getMessage)
         Future.successful(
           Redirect(controllers.routes.CannotProgressThisClaimController.onPageLoad)

@@ -19,9 +19,8 @@ package controllers
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
-import config.FrontendAppConfig
+import models.SessionData
 import views.html.{Warning15UnsubmittedClaimExistsView, Warning16UnsubmittedClaimExistsForCharityView}
-import uk.gov.hmrc.auth.core.AffinityGroup
 import controllers.actions.Actions
 
 import scala.concurrent.Future
@@ -30,19 +29,14 @@ class CannotProgressThisClaimController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
   agentView: Warning16UnsubmittedClaimExistsForCharityView,
-  organisationView: Warning15UnsubmittedClaimExistsView,
-  appConfig: FrontendAppConfig
+  organisationView: Warning15UnsubmittedClaimExistsView
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] =
     actions
-      .auth()
+      .authAndGetDataWithGuard(SessionData.isClaimNotSubmitted)
       .async { implicit request =>
-        request.affinityGroup match {
-          case AffinityGroup.Agent =>
-            Future.successful(Ok(agentView()))
-          case _                   =>
-            Future.successful(Ok(organisationView()))
-        }
+        if request.isAgent then Future.successful(Ok(agentView()))
+        else Future.successful(Ok(organisationView()))
       }
 }

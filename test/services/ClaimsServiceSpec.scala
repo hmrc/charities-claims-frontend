@@ -117,6 +117,74 @@ class ClaimsServiceSpec extends BaseSpec {
       await(service.save)
     }
 
+    "fail with OrganisationClaimAlreadyInProgressException when the claims limit is exceeded for an organisation user" in {
+      val mockSessionCache = mock[SessionCache]
+      val mockConnector    = mock[ClaimsConnector]
+
+      val service = new ClaimsServiceImpl(mockSessionCache, mockConnector)
+
+      val repaymentAnswers = RepaymentClaimDetailsAnswers(
+        claimingGiftAid = Some(true),
+        claimingTaxDeducted = Some(true),
+        claimingUnderGiftAidSmallDonationsScheme = Some(false),
+        claimReferenceNumber = Some("1234567890")
+      )
+
+      val initialSessionData = SessionData(
+        charitiesReference = testCharitiesReference,
+        unsubmittedClaimId = None,
+        lastUpdatedReference = None,
+        repaymentClaimDetailsAnswers = Some(repaymentAnswers),
+        isAgent = false
+      )
+
+      (mockSessionCache
+        .get()(using _: HeaderCarrier))
+        .expects(*)
+        .returns(Future.successful(Some(initialSessionData)))
+
+      (mockConnector
+        .saveClaim(_: RepaymentClaimDetails)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(Future.failed(UnsubmittedClaimsLimitExceededException()))
+
+      an[OrganisationClaimAlreadyInProgressException] should be thrownBy await(service.save)
+    }
+
+    "fail with UnsubmittedClaimsLimitExceededException when the claims limit is exceeded for an agent user" in {
+      val mockSessionCache = mock[SessionCache]
+      val mockConnector    = mock[ClaimsConnector]
+
+      val service = new ClaimsServiceImpl(mockSessionCache, mockConnector)
+
+      val repaymentAnswers = RepaymentClaimDetailsAnswers(
+        claimingGiftAid = Some(true),
+        claimingTaxDeducted = Some(true),
+        claimingUnderGiftAidSmallDonationsScheme = Some(false),
+        claimReferenceNumber = Some("1234567890")
+      )
+
+      val initialSessionData = SessionData(
+        charitiesReference = testCharitiesReference,
+        unsubmittedClaimId = None,
+        lastUpdatedReference = None,
+        repaymentClaimDetailsAnswers = Some(repaymentAnswers),
+        isAgent = true
+      )
+
+      (mockSessionCache
+        .get()(using _: HeaderCarrier))
+        .expects(*)
+        .returns(Future.successful(Some(initialSessionData)))
+
+      (mockConnector
+        .saveClaim(_: RepaymentClaimDetails)(using _: HeaderCarrier))
+        .expects(*, *)
+        .returning(Future.failed(UnsubmittedClaimsLimitExceededException()))
+
+      an[UnsubmittedClaimsLimitExceededException] should be thrownBy await(service.save)
+    }
+
     "fail with MissingRequiredFieldsException when required fields are not present" in {
       val mockSessionCache = mock[SessionCache]
       val mockConnector    = mock[ClaimsConnector]

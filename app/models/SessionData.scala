@@ -197,6 +197,9 @@ object SessionData {
   def isClaimNotSubmitted(using session: SessionData): Boolean =
     session.submissionReference.isEmpty
 
+  def hasNoClaimInProgress(using session: SessionData): Boolean =
+    session.unsubmittedClaimId.isEmpty
+
   def isCASCCharityReference(using session: SessionData): Boolean =
     if (session.isAgent) {
       session.repaymentClaimDetailsAnswers
