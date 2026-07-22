@@ -60,10 +60,16 @@ class ErrorHandler @Inject() (
           Redirect(controllers.routes.Warning11MaxClaimsReachedController.onPageLoad)
         )
 
-      case _: UnsubmittedClaimExistsForCharityException | _: OrganisationClaimAlreadyInProgressException =>
+      case _: OrganisationClaimAlreadyInProgressException =>
         logger.warn(ex.getMessage)
         Future.successful(
           Redirect(controllers.routes.CannotProgressThisClaimController.onPageLoad)
+        )
+
+      case _: UnsubmittedClaimExistsForCharityException =>
+        logger.warn(ex.getMessage)
+        Future.successful(
+          Redirect(controllers.routes.ClaimCannotBeSavedController.onPageLoad)
         )
 
       case value: ScheduleUploadNotFoundException =>
