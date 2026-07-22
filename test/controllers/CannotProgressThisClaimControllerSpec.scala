@@ -19,58 +19,41 @@ package controllers
 import play.api.test.FakeRequest
 import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
-import models.SessionData
-import views.html.Warning15CannotProgressClaimView
+import views.html.{Warning15UnsubmittedClaimExistsView, Warning16UnsubmittedClaimExistsForCharityView}
 import play.api.Application
 import uk.gov.hmrc.auth.core.AffinityGroup
 
-class Warning15CannotProgressClaimControllerSpec extends ControllerSpec {
+class CannotProgressThisClaimControllerSpec extends ControllerSpec {
 
-  "Warning15CannotProgressClaimController" - {
+  "CannotProgressThisClaimController" - {
     "onPageLoad" - {
-      "should render the page correctly for an organisation user with no claim in progress" in {
+      "should render the WRN15 page for an organisation user" in {
         given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Organisation).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.Warning15CannotProgressClaimController.onPageLoad.url)
+            FakeRequest(GET, routes.CannotProgressThisClaimController.onPageLoad.url)
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[Warning15CannotProgressClaimView]
+          val view   = application.injector.instanceOf[Warning15UnsubmittedClaimExistsView]
 
           status(result) shouldEqual OK
           contentAsString(result) shouldEqual view().body
         }
       }
 
-      "should redirect to the Claims list page for an agent user" in {
+      "should render the WRN16 page for an agent user" in {
         given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Agent).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.Warning15CannotProgressClaimController.onPageLoad.url)
+            FakeRequest(GET, routes.CannotProgressThisClaimController.onPageLoad.url)
 
           val result = route(application, request).value
+          val view   = application.injector.instanceOf[Warning16UnsubmittedClaimExistsForCharityView]
 
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
-        }
-      }
-
-      "should redirect to the Claims list page when the user has a claim in progress" in {
-        given application: Application = applicationBuilder(
-          sessionData = defaultSessionData.copy(unsubmittedClaimId = Some("claim-id")),
-          affinityGroup = AffinityGroup.Organisation
-        ).build()
-
-        running(application) {
-          given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.Warning15CannotProgressClaimController.onPageLoad.url)
-
-          val result = route(application, request).value
-
-          status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
+          status(result) shouldEqual OK
+          contentAsString(result) shouldEqual view().body
         }
       }
 
@@ -82,7 +65,7 @@ class Warning15CannotProgressClaimControllerSpec extends ControllerSpec {
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, routes.Warning15CannotProgressClaimController.onPageLoad.url)
+            FakeRequest(GET, routes.CannotProgressThisClaimController.onPageLoad.url)
 
           val result = route(application, request).value
 

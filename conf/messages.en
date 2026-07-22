@@ -1064,10 +1064,13 @@ warning11MaxClaimsReached.message.1 = You have reached the maximum number of dra
 warning11MaxClaimsReached.message.2 = You can have {0} claims in progress at one time. Please delete an existing claim to make a new claim.
 warning11MaxClaimsReached.title = You have reached the maximum number of draft claims
 
-warning15CannotProgressClaim.heading = You cannot progress this claim
-warning15CannotProgressClaim.paragraph.1 = Your claim cannot be saved as another claim is already in progress.
-warning15CannotProgressClaim.paragraph.2 = You can contact a colleague to delete or submit the existing claim before starting a new claim.
-warning15CannotProgressClaim.title = You cannot progress this claim
+warning15UnsubmittedClaimExists.heading = You cannot progress this claim
+warning15UnsubmittedClaimExists.paragraph.1 = Your claim cannot be saved as another claim is already in progress.
+warning15UnsubmittedClaimExists.paragraph.2 = You can contact a colleague to delete or submit the existing claim before starting a new claim.
+warning15UnsubmittedClaimExists.title = You cannot progress this claim
+
+warning16UnsubmittedClaimExistsForCharity.heading = You cannot progress this claim
+warning16UnsubmittedClaimExistsForCharity.title = Your claim cannot be saved
 
 whichTaxYearAreYouClaimingFor.caption = Provide GASDS donation details
 whichTaxYearAreYouClaimingFor.caption.multipleYears = Provide GASDS donation details - Tax year {0}

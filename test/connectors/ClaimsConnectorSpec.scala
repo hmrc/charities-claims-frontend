@@ -308,6 +308,29 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       }
     }
 
+    "should throw UnsubmittedClaimExistsForCharityException when backend returns 400 with UNSUBMITTED_CLAIM_EXISTS_FOR_CHARITY error" in {
+      val repaymentDetails = RepaymentClaimDetails(
+        claimingGiftAid = true,
+        claimingTaxDeducted = true,
+        claimingUnderGiftAidSmallDonationsScheme = false,
+        claimReferenceNumber = Some("1234567890")
+      )
+
+      val updateRequest = UpdateClaimRequest(
+        lastUpdatedReference = "1234567890",
+        repaymentClaimDetails = repaymentDetails
+      )
+
+      givenUpdateClaimEndpointReturns(
+        payload = updateRequest,
+        response = HttpResponse(400, """{"errorCode": "UNSUBMITTED_CLAIM_EXISTS_FOR_CHARITY"}""")
+      )
+
+      a[UnsubmittedClaimExistsForCharityException] should be thrownBy {
+        await(connector.updateClaim("123", updateRequest))
+      }
+    }
+
     "should throw UnknownClaimError when backend returns 400 with unknown error code" in {
       val repaymentDetails = RepaymentClaimDetails(
         claimingGiftAid = true,

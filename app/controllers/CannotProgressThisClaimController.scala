@@ -20,28 +20,23 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
 import controllers.BaseController
 import models.SessionData
-import views.html.Warning15CannotProgressClaimView
-import controllers.actions.{AccessType, Actions, GuardAction}
+import views.html.{Warning15UnsubmittedClaimExistsView, Warning16UnsubmittedClaimExistsForCharityView}
+import controllers.actions.Actions
 
 import scala.concurrent.Future
 
-class Warning15CannotProgressClaimController @Inject() (
+class CannotProgressThisClaimController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   actions: Actions,
-  guard: GuardAction,
-  view: Warning15CannotProgressClaimView
+  agentView: Warning16UnsubmittedClaimExistsForCharityView,
+  organisationView: Warning15UnsubmittedClaimExistsView
 ) extends BaseController {
 
   def onPageLoad: Action[AnyContent] =
     actions
-      .authAndGetData()
-      .andThen(
-        guard(
-          predicate = SessionData.hasNoClaimInProgress,
-          access = AccessType.OrganisationOnly
-        )
-      )
+      .authAndGetDataWithGuard(SessionData.isClaimNotSubmitted)
       .async { implicit request =>
-        Future.successful(Ok(view()))
+        if request.isAgent then Future.successful(Ok(agentView()))
+        else Future.successful(Ok(organisationView()))
       }
 }

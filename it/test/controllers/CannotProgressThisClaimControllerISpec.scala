@@ -23,7 +23,7 @@ import play.api.test.Helpers.*
 import stubs.{AuthStub, ClaimsStub, ClaimsValidationStub}
 import utils.{ComponentSpecHelper, TestDataUtils}
 
-class Warning15CannotProgressClaimControllerISpec extends ComponentSpecHelper
+class CannotProgressThisClaimControllerISpec extends ComponentSpecHelper
   with AuthStub with TestDataUtils with ClaimsStub
   with ClaimsValidationStub {
 
@@ -31,7 +31,7 @@ class Warning15CannotProgressClaimControllerISpec extends ComponentSpecHelper
 
   "GET /cannot-progress-this-claim" should {
 
-    "render the cannot progress this claim page for an organisation user with no claim in progress" in {
+    "render the WRN15 page for an organisation user" in {
       stubAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(noClaimsResponse))
 
@@ -40,30 +40,22 @@ class Warning15CannotProgressClaimControllerISpec extends ComponentSpecHelper
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.title should include(msg("warning15CannotProgressClaim.title"))
-      doc.select("h1").text shouldBe msg("warning15CannotProgressClaim.heading")
+      doc.title should include(msg("warning15UnsubmittedClaimExists.title"))
+      doc.select("h1").text shouldBe msg("warning15UnsubmittedClaimExists.heading")
+      doc.select("p.govuk-body").text should include(msg("warning15UnsubmittedClaimExists.paragraph.2"))
     }
 
-    "redirect to the claims task list for an agent user" in {
+    "render the WRN16 page for an agent user" in {
       stubAgentAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(noClaimsResponse))
 
       val result = get("/cannot-progress-this-claim")
 
-      result.status shouldBe SEE_OTHER
-      result.header(LOCATION) shouldBe Some(routes.ClaimsTaskListController.onPageLoad.url)
-    }
+      result.status shouldBe OK
 
-    "redirect to the claims task list when the user already has a claim in progress" in {
-      stubAuthRequest()
-      stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
-      stubGetClaims(claimId)(OK, Json.toJson(claim))
-      stubGetUploadSummary(claimId)(OK, Json.toJson(testUploadSummaryResponse))
-
-      val result = get("/cannot-progress-this-claim")
-
-      result.status shouldBe SEE_OTHER
-      result.header(LOCATION) shouldBe Some(routes.ClaimsTaskListController.onPageLoad.url)
+      val doc = Jsoup.parse(result.body)
+      doc.title should include(msg("warning16UnsubmittedClaimExistsForCharity.title"))
+      doc.select("h1").text shouldBe msg("warning16UnsubmittedClaimExistsForCharity.heading")
     }
   }
 }

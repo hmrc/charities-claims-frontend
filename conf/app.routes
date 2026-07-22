@@ -281,8 +281,6 @@ POST        /change-select-gift-aid-small-donations-scheme-claim-type        con
 GET         /maximum-claims-limit-reached                       controllers.Warning11MaxClaimsReachedController.onPageLoad
 POST        /maximum-claims-limit-reached                       controllers.Warning11MaxClaimsReachedController.onSubmit
 
-GET         /cannot-progress-this-claim                       controllers.Warning15CannotProgressClaimController.onPageLoad
-
 GET         /enter-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onPageLoad(mode: Mode = Mode.NormalMode)
 GET         /change-enter-the-charity-name                             controllers.repaymentClaimDetails.EnterCharityNameController.onPageLoad(mode: Mode = Mode.CheckMode)
 POST        /enter-the-charity-name                                    controllers.repaymentClaimDetails.EnterCharityNameController.onSubmit(mode: Mode = Mode.NormalMode)
@@ -318,3 +316,5 @@ POST        /delete-repayment-claim                                controllers.D
 
 GET         /delete-charity-repayment-claim                        controllers.DeleteAgentClaimController.onPageLoad
 POST        /delete-charity-repayment-claim                        controllers.DeleteAgentClaimController.onSubmit
+
+GET         /cannot-progress-this-claim                            controllers.CannotProgressThisClaimController.onPageLoad
