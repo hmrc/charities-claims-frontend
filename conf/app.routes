@@ -316,3 +316,5 @@ POST        /delete-repayment-claim                                controllers.D
 
 GET         /delete-charity-repayment-claim                        controllers.DeleteAgentClaimController.onPageLoad
 POST        /delete-charity-repayment-claim                        controllers.DeleteAgentClaimController.onSubmit
+
+GET         /cannot-progress-this-claim                            controllers.CannotProgressThisClaimController.onPageLoad

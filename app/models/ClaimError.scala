@@ -28,14 +28,19 @@ case class UnsubmittedClaimsLimitExceededException() extends ClaimError {
   override def getMessage: String = "UNSUBMITTED_CLAIMS_LIMIT_EXCEEDED"
 }
 
+case class UnsubmittedClaimExistsForCharityException() extends ClaimError {
+  override def getMessage: String = "UNSUBMITTED_CLAIM_EXISTS_FOR_CHARITY"
+}
+
 case class UnknownClaimError(errorCode: String) extends ClaimError {
   override def getMessage: String = errorCode
 }
 
 object ClaimError {
   given reads: Reads[ClaimError] = (JsPath \ "errorCode").read[String].map {
-    case "UPDATED_BY_ANOTHER_USER"           => UpdatedByAnotherUserException()
-    case "UNSUBMITTED_CLAIMS_LIMIT_EXCEEDED" => UnsubmittedClaimsLimitExceededException()
-    case other                               => UnknownClaimError(other)
+    case "UPDATED_BY_ANOTHER_USER"              => UpdatedByAnotherUserException()
+    case "UNSUBMITTED_CLAIMS_LIMIT_EXCEEDED"    => UnsubmittedClaimsLimitExceededException()
+    case "UNSUBMITTED_CLAIM_EXISTS_FOR_CHARITY" => UnsubmittedClaimExistsForCharityException()
+    case other                                  => UnknownClaimError(other)
   }
 }
