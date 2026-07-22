@@ -28,6 +28,13 @@ case class UnsubmittedClaimsLimitExceededException() extends ClaimError {
   override def getMessage: String = "UNSUBMITTED_CLAIMS_LIMIT_EXCEEDED"
 }
 
+/** Derived from UnsubmittedClaimsLimitExceededException for organisation users, who can only have one claim in progress
+  * at a time
+  */
+case class OrganisationClaimAlreadyInProgressException() extends ClaimError {
+  override def getMessage: String = "ORGANISATION_CLAIM_ALREADY_IN_PROGRESS"
+}
+
 case class UnknownClaimError(errorCode: String) extends ClaimError {
   override def getMessage: String = errorCode
 }

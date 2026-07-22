@@ -18,7 +18,11 @@ package services
 
 import com.google.inject.{ImplementedBy, Inject, Singleton}
 import connectors.ClaimsConnector
-import models.RepaymentClaimDetailsAnswers
+import models.{
+  OrganisationClaimAlreadyInProgressException,
+  RepaymentClaimDetailsAnswers,
+  UnsubmittedClaimsLimitExceededException
+}
 import play.api.Logging
 import repositories.SessionCache
 import uk.gov.hmrc.http.HeaderCarrier
@@ -46,7 +50,7 @@ class ClaimsServiceImpl @Inject() (
         Future.failed(new RuntimeException("Cannot save claim: no session data found"))
 
       case Some(sessionData) =>
-        sessionData.unsubmittedClaimId match {
+        val saved = sessionData.unsubmittedClaimId match {
           case None =>
             logger.info("Creating new claim in backend")
             for
@@ -79,6 +83,12 @@ class ClaimsServiceImpl @Inject() (
                                       )
                                     )
             yield ()
+        }
+
+        saved.recoverWith {
+          case _: UnsubmittedClaimsLimitExceededException if !sessionData.isAgent =>
+            logger.warn("Organisation already has a claim in progress")
+            Future.failed(OrganisationClaimAlreadyInProgressException())
         }
     }
 
