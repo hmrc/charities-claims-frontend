@@ -192,10 +192,11 @@ class ClaimsConnectorImpl @Inject() (
   ): Future[O] = {
     logger.info(s"$method $url [requestId=${hc.requestId.map(_.value).getOrElse("-")}]")
     retryFor(s"$method $url") {
-      case _: UpdatedByAnotherUserException           => false
-      case _: UnsubmittedClaimsLimitExceededException => false
-      case _: UnknownClaimError                       => false
-      case _                                          => true
+      case _: UpdatedByAnotherUserException             => false
+      case _: UnsubmittedClaimsLimitExceededException   => false
+      case _: UnsubmittedClaimExistsForCharityException => false
+      case _: UnknownClaimError                         => false
+      case _                                            => true
     } {
       val request: RequestBuilder = method match {
         case "GET"    => http.get(URL(url))
