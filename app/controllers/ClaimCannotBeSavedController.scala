@@ -37,8 +37,10 @@ class ClaimCannotBeSavedController @Inject() (
     actions
       .authAndGetDataWithGuard(AccessType.AgentOnly, SessionData.isClaimNotSubmitted)
       .async { implicit request =>
-        val nameOfCharity = request.sessionData.repaymentClaimDetailsAnswers.flatMap { _.nameOfCharity}
-        val hmrcCharitiesReference = request.sessionData.repaymentClaimDetailsAnswers.flatMap { _.hmrcCharitiesReference}
+        val nameOfCharity          = request.sessionData.repaymentClaimDetailsAnswers.flatMap(_.nameOfCharity)
+        val hmrcCharitiesReference = request.sessionData.repaymentClaimDetailsAnswers.flatMap {
+          _.hmrcCharitiesReference
+        }
         Future.successful(Ok(agentView(nameOfCharity, hmrcCharitiesReference, appConfig.charityRepaymentDashboardUrl)))
       }
 }
