@@ -40,7 +40,7 @@ class ErrorHandlerSpec extends ControllerSpec {
         given request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/foo")
 
         val exception = UpdatedByAnotherUserException()
-        val result    = errorHandler.resolveError(request, exception)
+        val result    = errorHandler.onServerError(request, exception)
 
         status(result) shouldEqual SEE_OTHER
       }
@@ -56,7 +56,7 @@ class ErrorHandlerSpec extends ControllerSpec {
         given request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/foo")
 
         val exception = UnsubmittedClaimsLimitExceededException()
-        val result    = errorHandler.resolveError(request, exception)
+        val result    = errorHandler.onServerError(request, exception)
 
         status(result) shouldEqual SEE_OTHER
         redirectLocation(result) shouldEqual Some(controllers.routes.Warning11MaxClaimsReachedController.onPageLoad.url)
@@ -73,7 +73,7 @@ class ErrorHandlerSpec extends ControllerSpec {
         given request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/foo")
 
         val exception = OrganisationClaimAlreadyInProgressException()
-        val result    = errorHandler.resolveError(request, exception)
+        val result    = errorHandler.onServerError(request, exception)
 
         status(result) shouldEqual SEE_OTHER
         redirectLocation(result) shouldEqual Some(
@@ -92,7 +92,7 @@ class ErrorHandlerSpec extends ControllerSpec {
         given request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/foo")
 
         val exception = UnsubmittedClaimExistsForCharityException()
-        val result    = errorHandler.resolveError(request, exception)
+        val result    = errorHandler.onServerError(request, exception)
 
         status(result) shouldEqual SEE_OTHER
         redirectLocation(result) shouldEqual Some(
@@ -109,7 +109,7 @@ class ErrorHandlerSpec extends ControllerSpec {
       running(application) {
         given request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/foo")
         val exception                                      = Exception("test")
-        val result                                         = errorHandler.resolveError(request, exception)
+        val result                                         = errorHandler.onServerError(request, exception)
 
         status(result) shouldEqual INTERNAL_SERVER_ERROR
       }

@@ -16,25 +16,20 @@
 
 package handlers
 
-import play.api.mvc.{Request, RequestHeader}
+import services.ScheduleUploadNotFoundException
+import play.api.mvc.{Request, RequestHeader, Result}
 import play.twirl.api.Html
+import models.ValidationType.{CommunityBuildings, ConnectedCharities, GiftAid, OtherIncome}
 import views.html.ErrorView
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
+import play.api.Logger
+import models.*
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.Results.Redirect
 
 import scala.concurrent.{ExecutionContext, Future}
+
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.Result
-import models.{
-  OrganisationClaimAlreadyInProgressException,
-  UnsubmittedClaimExistsForCharityException,
-  UnsubmittedClaimsLimitExceededException,
-  UpdatedByAnotherUserException
-}
-import models.ValidationType.{CommunityBuildings, ConnectedCharities, GiftAid, OtherIncome}
-import play.api.mvc.Results.Redirect
-import play.api.Logger
-import services.ScheduleUploadNotFoundException
 
 @Singleton
 class ErrorHandler @Inject() (
@@ -46,55 +41,76 @@ class ErrorHandler @Inject() (
 
   private val logger = Logger(getClass)
 
-  override def resolveError(rh: RequestHeader, ex: Throwable): Future[Result] =
+  override def onServerError(request: RequestHeader, exception: Throwable): Future[Result] =
+    resolveCustomError(exception)
+      .fold(ex => super.onServerError(request, ex), identity)
+
+  def resolveCustomError(ex: Throwable): Either[Throwable, Future[Result]] =
     ex match {
       case _: UpdatedByAnotherUserException =>
-        logger.error(ex.getMessage)
-        Future.successful(
-          Redirect(controllers.organisationDetails.routes.CannotViewOrManageClaimController.onPageLoad)
+        logger.warn(ex.getMessage)
+        Right(
+          Future.successful(
+            Redirect(controllers.organisationDetails.routes.CannotViewOrManageClaimController.onPageLoad)
+          )
         )
 
       case _: UnsubmittedClaimsLimitExceededException =>
         logger.warn(ex.getMessage)
-        Future.successful(
-          Redirect(controllers.routes.Warning11MaxClaimsReachedController.onPageLoad)
+        Right(
+          Future.successful(
+            Redirect(controllers.routes.Warning11MaxClaimsReachedController.onPageLoad)
+          )
         )
 
       case _: OrganisationClaimAlreadyInProgressException =>
         logger.warn(ex.getMessage)
-        Future.successful(
-          Redirect(controllers.routes.CannotProgressThisClaimController.onPageLoad)
+        Right(
+          Future.successful(
+            Redirect(controllers.routes.CannotProgressThisClaimController.onPageLoad)
+          )
         )
 
       case _: UnsubmittedClaimExistsForCharityException =>
         logger.warn(ex.getMessage)
-        Future.successful(
-          Redirect(controllers.routes.ClaimCannotBeSavedController.onPageLoad)
+        Right(
+          Future.successful(
+            Redirect(controllers.routes.ClaimCannotBeSavedController.onPageLoad)
+          )
         )
 
       case value: ScheduleUploadNotFoundException =>
         value.validationType match {
-          case GiftAid            =>
-            Future.successful(Redirect(controllers.giftAidSchedule.routes.UploadGiftAidScheduleController.onPageLoad))
+          case GiftAid =>
+            Right(
+              Future.successful(Redirect(controllers.giftAidSchedule.routes.UploadGiftAidScheduleController.onPageLoad))
+            )
+
           case CommunityBuildings =>
-            Future.successful(
-              Redirect(
-                controllers.communityBuildingsSchedule.routes.UploadCommunityBuildingsScheduleController.onPageLoad
+            Right(
+              Future.successful(
+                Redirect(
+                  controllers.communityBuildingsSchedule.routes.UploadCommunityBuildingsScheduleController.onPageLoad
+                )
               )
             )
           case OtherIncome        =>
-            Future.successful(
-              Redirect(controllers.otherIncomeSchedule.routes.UploadOtherIncomeScheduleController.onPageLoad)
+            Right(
+              Future.successful(
+                Redirect(controllers.otherIncomeSchedule.routes.UploadOtherIncomeScheduleController.onPageLoad)
+              )
             )
           case ConnectedCharities =>
-            Future.successful(
-              Redirect(
-                controllers.connectedCharitiesSchedule.routes.UploadConnectedCharitiesScheduleController.onPageLoad
+            Right(
+              Future.successful(
+                Redirect(
+                  controllers.connectedCharitiesSchedule.routes.UploadConnectedCharitiesScheduleController.onPageLoad
+                )
               )
             )
         }
-      case _                                      =>
-        super.resolveError(rh, ex)
+      case exception                              =>
+        Left(exception)
     }
 
   def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit

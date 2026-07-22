@@ -1172,7 +1172,7 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
         running(application) {
           val request     = FakeRequest(POST, routes.RepaymentClaimDetailsCheckYourAnswersController.onSubmit.url)
           val caught      = intercept[UpdatedByAnotherUserException](await(route(application, request).value))
-          val errorResult = application.injector.instanceOf[handlers.ErrorHandler].resolveError(request, caught)
+          val errorResult = application.injector.instanceOf[handlers.ErrorHandler].onServerError(request, caught)
 
           status(errorResult) shouldEqual SEE_OTHER
           redirectLocation(errorResult) shouldEqual Some(

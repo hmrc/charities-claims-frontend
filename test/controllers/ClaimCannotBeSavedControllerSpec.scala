@@ -29,7 +29,17 @@ class ClaimCannotBeSavedControllerSpec extends ControllerSpec {
   "ClaimCannotBeSavedController" - {
     "onPageLoad" - {
       "should render the WRN16 page for an agent user" in {
-        given application: Application = applicationBuilder(affinityGroup = AffinityGroup.Agent, sessionData = defaultSessionData.copy(repaymentClaimDetailsAnswers = Some(RepaymentClaimDetailsAnswers(nameOfCharity = Some("Test Charity"), hmrcCharitiesReference = Some("1234567890"))))).build()
+        given application: Application = applicationBuilder(
+          affinityGroup = AffinityGroup.Agent,
+          sessionData = defaultSessionData.copy(repaymentClaimDetailsAnswers =
+            Some(
+              RepaymentClaimDetailsAnswers(
+                nameOfCharity = Some("Test Charity"),
+                hmrcCharitiesReference = Some("1234567890")
+              )
+            )
+          )
+        ).build()
 
         running(application) {
           given request: FakeRequest[AnyContentAsEmpty.type] =
@@ -39,7 +49,11 @@ class ClaimCannotBeSavedControllerSpec extends ControllerSpec {
           val view   = application.injector.instanceOf[Warning16UnsubmittedClaimExistsForCharityView]
 
           status(result) shouldEqual OK
-          contentAsString(result) shouldEqual view(Some("Test Charity"),Some("1234567890"),"http://localhost:8033/charities-management/manage-charity-repayment-claim").body
+          contentAsString(result) shouldEqual view(
+            Some("Test Charity"),
+            Some("1234567890"),
+            "http://localhost:8033/charities-management/manage-charity-repayment-claim"
+          ).body
         }
       }
 
