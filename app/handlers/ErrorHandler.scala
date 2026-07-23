@@ -21,6 +21,7 @@ import play.api.mvc.{Request, RequestHeader, Result}
 import play.twirl.api.Html
 import models.ValidationType.{CommunityBuildings, ConnectedCharities, GiftAid, OtherIncome}
 import views.html.ErrorView
+import uk.gov.hmrc.mdc.RequestMdc
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import play.api.Logger
 import models.*
@@ -41,9 +42,11 @@ class ErrorHandler @Inject() (
 
   private val logger = Logger(getClass)
 
-  override def onServerError(request: RequestHeader, exception: Throwable): Future[Result] =
+  override def onServerError(request: RequestHeader, exception: Throwable): Future[Result] = {
+    RequestMdc.initMdc(request.id)
     resolveCustomError(exception)
       .fold(ex => super.onServerError(request, ex), identity)
+  }
 
   def resolveCustomError(ex: Throwable): Either[Throwable, Future[Result]] =
     ex match {
@@ -80,6 +83,7 @@ class ErrorHandler @Inject() (
         )
 
       case value: ScheduleUploadNotFoundException =>
+        logger.warn(value.getMessage)
         value.validationType match {
           case GiftAid =>
             Right(
