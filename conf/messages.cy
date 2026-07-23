@@ -1062,16 +1062,16 @@ warning11MaxClaimsReached.message.1 = Rydych wedi cyrraedd y nifer uchaf o hawli
 warning11MaxClaimsReached.message.2 = Gallwch gael {0} o hawliadau ar y gweill ar yr un pryd. Dilëwch hawliad sy’n bodoli eisoes er mwyn gwneud hawliad newydd.
 warning11MaxClaimsReached.title = Rydych wedi cyrraedd y nifer uchaf o hawliadau drafft
 
-warning15UnsubmittedClaimExists.heading = You cannot progress this claim
-warning15UnsubmittedClaimExists.paragraph.1 = Your claim cannot be saved as another claim is already in progress.
-warning15UnsubmittedClaimExists.paragraph.2 = You can contact a colleague to delete or submit the existing claim before starting a new claim.
-warning15UnsubmittedClaimExists.title = You cannot progress this claim
+warning15UnsubmittedClaimExists.heading = Ni allwch symud ymlaen gyda’r hawliad hwn
+warning15UnsubmittedClaimExists.paragraph.1 = Ni allwch gadw’ch hawliad gan fod hawliad arall eisoes ar y gweill.
+warning15UnsubmittedClaimExists.paragraph.2 = Gallwch gysylltu â chydweithiwr i ddileu neu i gyflwyno’r hawliad sydd eisoes yn bodoli cyn i chi ddechrau hawliad newydd.
+warning15UnsubmittedClaimExists.title = Ni allwch symud ymlaen gyda’r hawliad hwn
 
-warning16UnsubmittedClaimExistsForCharity.heading = You cannot progress this claim
-warning16UnsubmittedClaimExistsForCharity.title = Your claim cannot be saved
-warning16UnsubmittedClaimExistsForCharity.paragraph.1 = There is already a draft claim for: {0} - HMRC Charities Reference: {1}. 
-warning16UnsubmittedClaimExistsForCharity.paragraph.2 = Contact a colleague who is working on this claim to delete or submit the existing draft claim before creating a new one for this organisation.
-warning16UnsubmittedClaimExistsForCharity.link = Return to manage charity repayment claims
+warning16UnsubmittedClaimExistsForCharity.heading = Nid oes modd cadw’ch hawliad
+warning16UnsubmittedClaimExistsForCharity.title = Nid oes modd cadw’ch hawliad
+warning16UnsubmittedClaimExistsForCharity.paragraph.1 = Mae hawliad drafft eisoes am y canlynol: {0} - Cyfeirnod Elusennau CThEF: {1}.
+warning16UnsubmittedClaimExistsForCharity.paragraph.2 = Cysylltwch â chydweithiwr sy’n gweithio ar yr hawliad hwn i ddileu neu i gyflwyno’r hawliad drafft sydd eisoes yn bodoli cyn i chi greu hawliad newydd ar gyfer y sefydliad hwn.
+warning16UnsubmittedClaimExistsForCharity.link = Ewch yn ôl i reoli hawliadau am ad-daliadau elusennau
 
 whichTaxYearAreYouClaimingFor.caption = Rhowch fanylion y cyfraniad GASDS
 whichTaxYearAreYouClaimingFor.caption.multipleYears = Rhowch fanylion y cyfraniad GASDS - Blwyddyn dreth {0}
