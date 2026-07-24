@@ -1069,7 +1069,7 @@ warning15UnsubmittedClaimExists.title = Ni allwch symud ymlaen gyda’r hawliad 
 
 warning16UnsubmittedClaimExistsForCharity.heading = Nid oes modd cadw’ch hawliad
 warning16UnsubmittedClaimExistsForCharity.title = Nid oes modd cadw’ch hawliad
-warning16UnsubmittedClaimExistsForCharity.paragraph.1 = Mae hawliad drafft eisoes am y canlynol: {0} - Cyfeirnod Elusennau CThEF: {1}.
+warning16UnsubmittedClaimExistsForCharity.paragraph.1 = Mae hawliad drafft eisoes am y canlynol: {0} - Cyfeirnod Elusennau a roddir gan CThEF: {1}.
 warning16UnsubmittedClaimExistsForCharity.paragraph.2 = Cysylltwch â chydweithiwr sy’n gweithio ar yr hawliad hwn i ddileu neu i gyflwyno’r hawliad drafft sydd eisoes yn bodoli cyn i chi greu hawliad newydd ar gyfer y sefydliad hwn.
 warning16UnsubmittedClaimExistsForCharity.link = Ewch yn ôl i reoli hawliadau am ad-daliadau elusennau
 
