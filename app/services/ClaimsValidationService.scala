@@ -382,10 +382,8 @@ class ClaimsValidationServiceImpl @Inject() (
                   .map(_ => ())
 
               case None =>
-                logger.error(s"No $validationType schedule upload found for claimId=$claimId")
-                Future.failed(
-                  new RuntimeException(s"No $validationType schedule upload found for claimId: $claimId")
-                )
+                logger.info(s"No $validationType schedule upload found for claimId=$claimId")
+                Future.unit
             }
           }
           .flatMap { case _ =>
