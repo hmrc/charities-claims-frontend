@@ -166,7 +166,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
         }
       }
 
-      "should fail when no GiftAid upload found" in {
+      "should proceed even when no GiftAid upload found" in {
         val service          = new ClaimsValidationServiceImpl(mockSaveService, mockClaimsService, mockConnector)
         val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-789"))
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
@@ -176,12 +176,24 @@ class ClaimsValidationServiceSpec extends BaseSpec {
           .expects("test-claim-789", *)
           .returning(Future.successful(testUploadSummaryWithoutGiftAid))
 
-        val result = service.deleteGiftAidSchedule
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(
+            sessionData.copy(
+              giftAidScheduleFileUploadReference = None,
+              giftAidScheduleData = None,
+              prevOverclaimedGiftAid = None
+            ),
+            *
+          )
+          .returning(Future.successful(()))
 
-        whenReady(result.failed) { (exception: Throwable) =>
-          exception.getMessage should include("GiftAid")
-          exception.getMessage should include("schedule upload")
-        }
+        (mockClaimsService
+          .save(using _: HeaderCarrier))
+          .expects(*)
+          .returning(Future.successful(()))
+
+        await(service.deleteGiftAidSchedule)
       }
     }
 
@@ -234,7 +246,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
         }
       }
 
-      "should fail when no OtherIncome upload found" in {
+      "should proceed even when no OtherIncome upload found" in {
         val service          = new ClaimsValidationServiceImpl(mockSaveService, mockClaimsService, mockConnector)
         val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-999"))
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
@@ -244,12 +256,24 @@ class ClaimsValidationServiceSpec extends BaseSpec {
           .expects("test-claim-999", *)
           .returning(Future.successful(testUploadSummaryWithoutOtherIncome))
 
-        val result = service.deleteOtherIncomeSchedule
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(
+            sessionData.copy(
+              otherIncomeScheduleFileUploadReference = None,
+              otherIncomeScheduleData = None,
+              adjustmentForOtherIncomePreviousOverClaimed = None
+            ),
+            *
+          )
+          .returning(Future.successful(()))
 
-        whenReady(result.failed) { (exception: Throwable) =>
-          exception.getMessage should include("OtherIncome")
-          exception.getMessage should include("schedule upload")
-        }
+        (mockClaimsService
+          .save(using _: HeaderCarrier))
+          .expects(*)
+          .returning(Future.successful(()))
+
+        await(service.deleteOtherIncomeSchedule)
       }
     }
 
@@ -301,7 +325,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
         }
       }
 
-      "should fail when no CommunityBuildings upload found" in {
+      "should proceed even when no CommunityBuildings upload found" in {
         val service     = new ClaimsValidationServiceImpl(mockSaveService, mockClaimsService, mockConnector)
         val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-999"))
 
@@ -312,12 +336,21 @@ class ClaimsValidationServiceSpec extends BaseSpec {
           .expects("test-claim-999", *)
           .returning(Future.successful(testUploadSummaryWithoutCommunityBuildings))
 
-        val result = service.deleteCommunityBuildingsSchedule
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(
+            sessionData
+              .copy(communityBuildingsScheduleFileUploadReference = None, communityBuildingsScheduleData = None),
+            *
+          )
+          .returning(Future.successful(()))
 
-        whenReady(result.failed) { (exception: Throwable) =>
-          exception.getMessage should include("CommunityBuildings")
-          exception.getMessage should include("schedule upload")
-        }
+        (mockClaimsService
+          .save(using _: HeaderCarrier))
+          .expects(*)
+          .returning(Future.successful(()))
+
+        await(service.deleteCommunityBuildingsSchedule)
       }
     }
 
@@ -369,7 +402,7 @@ class ClaimsValidationServiceSpec extends BaseSpec {
         }
       }
 
-      "should fail when no ConnectedCharities upload found" in {
+      "should proceed even when no ConnectedCharities upload found" in {
         val service     = new ClaimsValidationServiceImpl(mockSaveService, mockClaimsService, mockConnector)
         val sessionData = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-999"))
 
@@ -380,12 +413,21 @@ class ClaimsValidationServiceSpec extends BaseSpec {
           .expects("test-claim-999", *)
           .returning(Future.successful(testUploadSummaryWithoutConnectedCharities))
 
-        val result = service.deleteConnectedCharitiesSchedule
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(
+            sessionData
+              .copy(connectedCharitiesScheduleFileUploadReference = None, connectedCharitiesScheduleData = None),
+            *
+          )
+          .returning(Future.successful(()))
 
-        whenReady(result.failed) { (exception: Throwable) =>
-          exception.getMessage should include("ConnectedCharities")
-          exception.getMessage should include("schedule upload")
-        }
+        (mockClaimsService
+          .save(using _: HeaderCarrier))
+          .expects(*)
+          .returning(Future.successful(()))
+
+        await(service.deleteConnectedCharitiesSchedule)
       }
     }
   }
