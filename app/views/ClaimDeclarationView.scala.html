@@ -46,6 +46,9 @@
     </div>
 
     @formHelper(action = routes.ClaimDeclarationController.onSubmit) {
-        @govukButton(ButtonViewModel(Text(messages("claimDeclaration.submit"))))
+        @govukButton(
+            ButtonViewModel(Text(messages("claimDeclaration.submit")))
+            .preventingDoubleClick()
+        )
     }
 }
