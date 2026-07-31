@@ -28,6 +28,7 @@ import repositories.SessionCache
 import services.{ClaimsService, SaveService}
 
 import scala.concurrent.{ExecutionContext, Future}
+import models.ClaimAlreadySubmittedException
 
 class ClaimDeclarationController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -60,22 +61,29 @@ class ClaimDeclarationController @Inject() (
       .authAndRefreshDataWithGuard(SessionData.isClaimDetailsComplete)
       .async { implicit request =>
         // read and understood the declaration
-        for {
-          _                  <- saveService
-                                  .save(
-                                    request.sessionData.copy(understandFalseStatements = Some(true))
+        {
+          for {
+            _                  <- saveService
+                                    .save(
+                                      request.sessionData.copy(understandFalseStatements = Some(true))
+                                    )
+            _                  <- claimsService.save
+            updatedClaim       <- sessionCache.get()
+            submissionResponse <- claimsConnector.submitClaim(
+                                    request.sessionData.unsubmittedClaimId.get,
+                                    updatedClaim.get.lastUpdatedReference.get,
+                                    request.request.lang.code
                                   )
-          _                  <- claimsService.save
-          updatedClaim       <- sessionCache.get()
-          submissionResponse <- claimsConnector.submitClaim(
-                                  request.sessionData.unsubmittedClaimId.get,
-                                  updatedClaim.get.lastUpdatedReference.get,
-                                  request.request.lang.code
-                                )
-          _                  <- saveService
-                                  .save(
-                                    updatedClaim.get.copy(submissionReference = Some(submissionResponse.submissionReference))
-                                  )
-        } yield Redirect(routes.ClaimCompleteController.onPageLoad)
+            _                  <- saveService
+                                    .save(
+                                      updatedClaim.get.copy(submissionReference = Some(submissionResponse.submissionReference))
+                                    )
+          } yield Redirect(routes.ClaimCompleteController.onPageLoad)
+        }.recoverWith {
+          case _: ClaimAlreadySubmittedException =>
+            Future.successful(Redirect(routes.ClaimCompleteController.onPageLoad))
+          case e: Exception                      =>
+            Future.failed(e)
+        }
       }
 }

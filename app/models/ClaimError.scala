@@ -36,6 +36,10 @@ case class OrganisationClaimAlreadyInProgressException() extends ClaimError {
   override def getMessage: String = "ORGANISATION_CLAIM_ALREADY_IN_PROGRESS"
 }
 
+case class ClaimAlreadySubmittedException() extends ClaimError {
+  override def getMessage: String = "CLAIM_ALREADY_SUBMITTED_ERROR"
+}
+
 case class UnknownClaimError(errorCode: String) extends ClaimError {
   override def getMessage: String = errorCode
 }
@@ -45,6 +49,7 @@ object ClaimError {
     case "UPDATED_BY_ANOTHER_USER"              => UpdatedByAnotherUserException()
     case "UNSUBMITTED_CLAIMS_LIMIT_EXCEEDED"    => UnsubmittedClaimsLimitExceededException()
     case "UNSUBMITTED_CLAIM_EXISTS_FOR_CHARITY" => UnsubmittedClaimExistsForCharityException()
+    case "CLAIM_ALREADY_SUBMITTED_ERROR"        => ClaimAlreadySubmittedException()
     case other                                  => UnknownClaimError(other)
   }
 }
