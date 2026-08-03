@@ -360,6 +360,61 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
         }
       }
 
+      "should redirect to claim complete when ClaimAlreadySubmitted error is returned" in {
+        val answers     = repaymentClaimDetailsAnswersCompleted.copy(
+          claimingUnderGiftAidSmallDonationsScheme = Some(false),
+          claimingDonationsNotFromCommunityBuilding = Some(false),
+          claimingDonationsCollectedInCommunityBuildings = Some(true),
+          connectedToAnyOtherCharities = Some(true),
+          makingAdjustmentToPreviousClaim = Some(false)
+        )
+        val sessionData = SessionData(
+          lastUpdatedReference = Some(testClaimId),
+          charitiesReference = testCharitiesReference,
+          unsubmittedClaimId = Some(testClaimId),
+          repaymentClaimDetailsAnswers = Some(answers)
+        ).copy(
+          understandFalseStatements = Some(true),
+          connectedCharitiesScheduleCompleted = true,
+          prevOverclaimedGiftAid = Some(BigDecimal(1.0)),
+          includedAnyAdjustmentsInClaimPrompt = Some("test"),
+          organisationDetailsAnswers = Some(organisationDetailsAnswers)
+        )
+
+        (mockSaveService
+          .save(_: SessionData)(using _: HeaderCarrier))
+          .expects(*, *)
+          .returning(Future.successful(()))
+
+        (mockClaimsService
+          .save(using _: HeaderCarrier))
+          .expects(*)
+          .returning(Future.successful(()))
+
+        (mockSessionCache
+          .get()(using _: HeaderCarrier))
+          .expects(*)
+          .returning(Future.successful(Some(sessionData)))
+
+        (mockClaimsConnector
+          .submitClaim(_: String, _: String, _: String)(using _: HeaderCarrier))
+          .expects(testClaimId, testClaimId, "en", *)
+          .returning(Future.failed(ClaimAlreadySubmittedException()))
+
+        given application: Application = applicationBuilder(sessionData = sessionData)
+          .build()
+
+        running(application) {
+          given request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(POST, routes.ClaimDeclarationController.onSubmit.url)
+
+          val result = route(application, request).value
+
+          status(result) shouldEqual SEE_OTHER
+          redirectLocation(result) shouldEqual Some(routes.ClaimCompleteController.onPageLoad.url)
+        }
+      }
+
       "should redirect to Claims List when dataguard condition is not met due upload not completed" in {
         val answers     = repaymentClaimDetailsAnswersCompleted.copy(
           claimingUnderGiftAidSmallDonationsScheme = Some(false),
