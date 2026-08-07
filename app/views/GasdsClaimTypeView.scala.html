@@ -68,7 +68,7 @@ pageTitle = title(form, messages("gasdsClaimType.title"))
         @messages("gasdsClaimType.connected")
       </span>
         <p class="claim-type-hint govuk-!-margin-top-1 govuk-!-margin-bottom-0">
-            @messages("gasdsClaimType.connected.desc")
+            @messages(if(isAgent) "gasdsClaimType.connected.desc.agent" else "gasdsClaimType.connected.desc")
         </p>
     </li>
 </ul>
