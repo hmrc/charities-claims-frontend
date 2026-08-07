@@ -56,6 +56,6 @@
             )
         )
 
-        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))).preventingDoubleClick())
     }
 }
