@@ -25,9 +25,9 @@ object TestScheduleData {
     prevOverclaimedGiftAid = Some(2000.00),
     totalDonations = Some(1000.00),
     donations = Seq(
-      Donation(donationItem = Some(1), donationDate = "2025-01-01", donationAmount = 1000.00),
-      Donation(donationItem = Some(2), donationDate = "2025-01-02", donationAmount = 2000.00),
-      Donation(donationItem = Some(3), donationDate = "2025-01-03", donationAmount = 3000.00)
+      Donation(donationItem = Some(1), donationDate = Some("2025-01-01"), donationAmount = Some(1000.00)),
+      Donation(donationItem = Some(2), donationDate = Some("2025-01-02"), donationAmount = Some(2000.00)),
+      Donation(donationItem = Some(3), donationDate = Some("2025-01-03"), donationAmount = Some(3000.00))
     )
   )
 

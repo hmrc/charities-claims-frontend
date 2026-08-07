@@ -330,6 +330,58 @@ class GetUploadResultResponseSpec extends BaseSpec {
       }
     }
 
+    "successfully parse GetUploadResultValidationFailedGiftAid when a rejected donation omits its date and amount" in {
+      val result = Json
+        .parse("""|{
+                  |  "reference": "f5da5578-8393-4cd1-be0e-d8ef1b78d8e7",
+                  |  "validationType": "GiftAid",
+                  |  "fileStatus": "VALIDATION_FAILED",
+                  |  "giftAidScheduleData": {
+                  |    "prevOverclaimedGiftAid": 0.00,
+                  |    "donations": [
+                  |      {
+                  |        "donationItem": 1,
+                  |        "donorTitle": "Miss",
+                  |        "donorFirstName": "B",
+                  |        "donorLastName": "Chaudry",
+                  |        "donorHouse": "21",
+                  |        "sponsoredEvent": true,
+                  |        "enteredValues": {
+                  |          "donorPostcode": "L434FB",
+                  |          "donationDate": "31/02/25",
+                  |          "donationAmount": "abc"
+                  |        }
+                  |      }
+                  |    ]
+                  |  },
+                  |  "errors": [
+                  |    {
+                  |      "field": "postcode[0]",
+                  |      "error": "validationService.giftAid.message.21"
+                  |    },
+                  |    {
+                  |      "field": "donationDate[0]",
+                  |      "error": "validationService.giftAid.message.8"
+                  |    },
+                  |    {
+                  |      "field": "donationAmount[0]",
+                  |      "error": "validationService.giftAid.message.10"
+                  |    }
+                  |  ]
+                  |}""".stripMargin)
+        .validate[GetUploadResultResponse]
+      result match {
+        case JsSuccess(value: GetUploadResultValidationFailedGiftAid, _) =>
+          val donation = value.giftAidScheduleData.value.donations.head
+          donation.donationDate   shouldBe None
+          donation.donationAmount shouldBe None
+          donation.donorPostcode  shouldBe None
+          donation.donorLastName  shouldBe Some("Chaudry")
+        case JsSuccess(other, _)                                         => fail(s"Parsed to unexpected type: $other")
+        case JsError(errors)                                             => fail(s"Failed to parse GetUploadResultValidationFailedGiftAid: $errors")
+      }
+    }
+
     "successfully parse GetUploadResultValidationFailedOtherIncome" in {
       val result = Json
         .parse("""|{
