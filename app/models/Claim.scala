@@ -127,8 +127,8 @@ object SubmissionDetails {
 
 final case class Donation(
   donationItem: Option[Int] = None,
-  donationDate: String,
-  donationAmount: BigDecimal,
+  donationDate: Option[String] = None,
+  donationAmount: Option[BigDecimal] = None,
   donorTitle: Option[String] = None,
   donorFirstName: Option[String] = None,
   donorLastName: Option[String] = None,

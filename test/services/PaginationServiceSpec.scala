@@ -26,8 +26,8 @@ class PaginationServiceSpec extends BaseSpec {
   def donations(n: Int): Seq[Donation] =
     Seq.fill(n)(
       Donation(
-        donationDate = "2025-01-01",
-        donationAmount = BigDecimal(100)
+        donationDate = Some("2025-01-01"),
+        donationAmount = Some(BigDecimal(100))
       )
     )
 
