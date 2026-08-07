@@ -46,6 +46,6 @@
             ).withHint(HintViewModel(Text(messages("updateOtherIncomeSchedule.hint"))))
         )
 
-        @govukButton(ButtonViewModel(Text(messages("site.continue"))))
+        @govukButton(ButtonViewModel(Text(messages("site.continue"))).preventingDoubleClick())
     }
 }
