@@ -34,14 +34,14 @@
         ),
         rows = communityBuildings.map { building =>
             Seq(
-                TableRow(content = Text(building.communityBuildingItem.map(_.toString).getOrElse(messages("data.notApplicable"))), classes = "govuk-table__header"),
-                TableRow(content = Text(building.buildingName.getOrElse(messages("data.notApplicable")))),
-                TableRow(content = Text(building.firstLineOfAddress.getOrElse(messages("data.notApplicable")))),
-                TableRow(content = Text(building.postcode.getOrElse(messages("data.notApplicable")))),
-                TableRow(content = Text(building.taxYear1.map(_.toString).getOrElse(messages("data.notApplicable")))),
-                TableRow(content = Text(building.amountYear1.map(_.toAmountString).getOrElse(messages("data.notApplicable")))),
-                TableRow(content = Text(building.taxYear2.map(_.toString).getOrElse(messages("data.notApplicable")))),
-                TableRow(content = Text(building.amountYear2.map(_.toAmountString).getOrElse(messages("data.notApplicable"))))
+                TableRow(content = Text(building.communityBuildingItem.map(_.toString).orNotApplicable), classes = "govuk-table__header"),
+                TableRow(content = Text(building.buildingName.orNotApplicable)),
+                TableRow(content = Text(building.firstLineOfAddress.orNotApplicable)),
+                TableRow(content = Text(building.postcode.orNotApplicable)),
+                TableRow(content = Text(building.taxYear1.map(_.toString).orNotApplicable)),
+                TableRow(content = Text(building.amountYear1.map(_.toAmountString).orNotApplicable)),
+                TableRow(content = Text(building.taxYear2.map(_.toString).orNotApplicable)),
+                TableRow(content = Text(building.amountYear2.map(_.toAmountString).orNotApplicable))
             )
         }
     )

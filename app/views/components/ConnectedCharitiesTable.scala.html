@@ -18,6 +18,7 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.*
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.table.*
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.*
+@import utils.FormatUtils.*
 
 @this(govukTable: GovukTable)
 
@@ -33,9 +34,9 @@
         ),
         rows = connectedCharities.map { charity =>
             Seq(
-                TableRow(content = Text(charity.charityItem.map(_.toString).getOrElse(messages("data.notApplicable"))), classes = "govuk-table__header"),
-                TableRow(content = Text(charity.charityName.getOrElse(messages("data.notApplicable")))),
-                TableRow(content = Text(charity.charityReference.getOrElse(messages("data.notApplicable"))))
+                TableRow(content = Text(charity.charityItem.map(_.toString).orNotApplicable), classes = "govuk-table__header"),
+                TableRow(content = Text(charity.charityName.orNotApplicable)),
+                TableRow(content = Text(charity.charityReference.orNotApplicable))
             )
         }
     )

@@ -63,6 +63,11 @@ object FormatUtils {
       else messages("site.no")
   }
 
+  extension (value: Option[String]) {
+    def orNotApplicable(using messages: Messages): String =
+      value.getOrElse(messages("data.notApplicable"))
+  }
+
   extension (field: String) {
     def toRowNumber: String = {
       val pattern = """\[(\d+)\]""".r

@@ -37,16 +37,16 @@
         ),
         rows = donations.map { donation =>
             Seq(
-                TableRow(content = Text(donation.donationItem.map(_.toString).getOrElse(messages("data.notApplicable"))), classes = "govuk-table__header"),
-                TableRow(content = Text(donation.donorTitle.getOrElse(messages("data.notApplicable")))),
-                TableRow(content = Text(donation.donorFirstName.getOrElse(messages("data.notApplicable")))),
-                TableRow(content = Text(donation.donorLastName.getOrElse(messages("data.notApplicable")))),
-                TableRow(content = Text(donation.donorHouse.getOrElse(messages("data.notApplicable")))),
-                TableRow(content = Text(donation.donorPostcode.getOrElse(messages("data.notApplicable")))),
-                TableRow(content = Text(donation.aggregatedDonations.getOrElse(messages("data.notApplicable")))),
-                TableRow(content = Text(donation.sponsoredEvent.map(_.toYesNoString).getOrElse(messages("data.notApplicable")))),
-                TableRow(content = Text(donation.donationDate.map(_.toDdMmYyyyDateString).getOrElse(messages("data.notApplicable")))),
-                TableRow(content = Text(donation.donationAmount.map(_.toAmountString).getOrElse(messages("data.notApplicable"))))
+                TableRow(content = Text(donation.donationItem.map(_.toString).orNotApplicable), classes = "govuk-table__header"),
+                TableRow(content = Text(donation.donorTitle.orNotApplicable)),
+                TableRow(content = Text(donation.donorFirstName.orNotApplicable)),
+                TableRow(content = Text(donation.donorLastName.orNotApplicable)),
+                TableRow(content = Text(donation.donorHouse.orNotApplicable)),
+                TableRow(content = Text(donation.donorPostcode.orNotApplicable)),
+                TableRow(content = Text(donation.aggregatedDonations.orNotApplicable)),
+                TableRow(content = Text(donation.sponsoredEvent.map(_.toYesNoString).orNotApplicable)),
+                TableRow(content = Text(donation.donationDate.map(_.toDdMmYyyyDateString).orNotApplicable)),
+                TableRow(content = Text(donation.donationAmount.map(_.toAmountString).orNotApplicable))
             )
         }
     )
