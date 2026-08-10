@@ -34,11 +34,11 @@
         ),
         rows = otherIncomes.map { income =>
             Seq(
-                TableRow(content = Text(income.otherIncomeItem.toString), classes = "govuk-table__header"),
-                TableRow(content = Text(income.payerName)),
-                TableRow(content = Text(income.paymentDate.toDdMmYyyyDateString)),
-                TableRow(content = Text(income.grossPayment.toAmountString)),
-                TableRow(content = Text(income.taxDeducted.toAmountString))
+                TableRow(content = Text(income.otherIncomeItem.map(_.toString).orNotApplicable), classes = "govuk-table__header"),
+                TableRow(content = Text(income.payerName.orNotApplicable)),
+                TableRow(content = Text(income.paymentDate.map(_.toDdMmYyyyDateString).orNotApplicable)),
+                TableRow(content = Text(income.grossPayment.map(_.toAmountString).orNotApplicable)),
+                TableRow(content = Text(income.taxDeducted.map(_.toAmountString).orNotApplicable))
             )
         }
     )

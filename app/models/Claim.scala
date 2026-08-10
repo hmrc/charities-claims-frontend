@@ -154,11 +154,11 @@ object OtherIncomeScheduleData {
 }
 
 final case class OtherIncome(
-  otherIncomeItem: Int,
-  payerName: String,
-  paymentDate: String,
-  grossPayment: BigDecimal,
-  taxDeducted: BigDecimal
+  otherIncomeItem: Option[Int] = None,
+  payerName: Option[String] = None,
+  paymentDate: Option[String] = None,
+  grossPayment: Option[BigDecimal] = None,
+  taxDeducted: Option[BigDecimal] = None
 )
 
 object OtherIncome {
@@ -184,9 +184,9 @@ object GiftAidSmallDonationsSchemeClaim {
 }
 
 final case class ConnectedCharity(
-  charityItem: Int,
-  charityName: String,
-  charityReference: String
+  charityItem: Option[Int] = None,
+  charityName: Option[String] = None,
+  charityReference: Option[String] = None
 )
 
 object ConnectedCharity {
@@ -194,12 +194,12 @@ object ConnectedCharity {
 }
 
 final case class CommunityBuilding(
-  communityBuildingItem: Int,
-  buildingName: String,
-  firstLineOfAddress: String,
-  postcode: String,
-  taxYear1: Int,
-  amountYear1: BigDecimal,
+  communityBuildingItem: Option[Int] = None,
+  buildingName: Option[String] = None,
+  firstLineOfAddress: Option[String] = None,
+  postcode: Option[String] = None,
+  taxYear1: Option[Int] = None,
+  amountYear1: Option[BigDecimal] = None,
   taxYear2: Option[Int] = None,
   amountYear2: Option[BigDecimal] = None
 )

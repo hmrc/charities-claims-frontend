@@ -34,11 +34,11 @@ class PaginationServiceSpec extends BaseSpec {
   def otherIncomes(n: Int): Seq[OtherIncome] =
     (1 to n).map(i =>
       OtherIncome(
-        otherIncomeItem = i,
-        payerName = "Mr Smith",
-        paymentDate = "2025-01-01",
-        grossPayment = BigDecimal(100),
-        taxDeducted = BigDecimal(20)
+        otherIncomeItem = Some(i),
+        payerName = Some("Mr Smith"),
+        paymentDate = Some("2025-01-01"),
+        grossPayment = Some(BigDecimal(100)),
+        taxDeducted = Some(BigDecimal(20))
       )
     )
 
