@@ -460,6 +460,137 @@ class GetUploadResultResponseSpec extends BaseSpec {
       }
     }
 
+    "successfully parse GetUploadResultValidationFailedOtherIncome when a rejected row omits its payer name and gross payment" in {
+      val result = Json
+        .parse("""|{
+                  |  "reference": "f5da5578-8393-4cd1-be0e-d8ef1b78d8e7",
+                  |  "validationType": "OtherIncome",
+                  |  "fileStatus": "VALIDATION_FAILED",
+                  |  "otherIncomeData": {
+                  |    "adjustmentForOtherIncomePreviousOverClaimed": 0.00,
+                  |    "totalOfGrossPayments": 0.00,
+                  |    "totalOfTaxDeducted": 56.00,
+                  |    "otherIncomes": [
+                  |      {
+                  |        "otherIncomeItem": 1,
+                  |        "paymentDate": "2025-01-01",
+                  |        "taxDeducted": 56.00,
+                  |        "enteredValues": {
+                  |          "payerName": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  |          "grossPayment": "test"
+                  |        }
+                  |      }
+                  |    ]
+                  |  },
+                  |  "errors": [
+                  |    {
+                  |      "field": "payerName[0]",
+                  |      "error": "validationService.otherIncome.message.6"
+                  |    },
+                  |    {
+                  |      "field": "grossPayment[0]",
+                  |      "error": "validationService.otherIncome.message.12"
+                  |    }
+                  |  ]
+                  |}""".stripMargin)
+        .validate[GetUploadResultResponse]
+      result match {
+        case JsSuccess(value: GetUploadResultValidationFailedOtherIncome, _) =>
+          val income = value.otherIncomeData.value.otherIncomes.head
+          income.payerName       shouldBe None
+          income.grossPayment    shouldBe None
+          income.otherIncomeItem shouldBe Some(1)
+          income.taxDeducted     shouldBe Some(BigDecimal("56.00"))
+        case JsSuccess(other, _)                                             => fail(s"Parsed to unexpected type: $other")
+        case JsError(errors)                                                 => fail(s"Failed to parse GetUploadResultValidationFailedOtherIncome: $errors")
+      }
+    }
+
+    "successfully parse GetUploadResultValidationFailedCommunityBuildings when a rejected row omits its address and postcode" in {
+      val result = Json
+        .parse("""|{
+                  |  "reference": "f5da5578-8393-4cd1-be0e-d8ef1b78d8e7",
+                  |  "validationType": "CommunityBuildings",
+                  |  "fileStatus": "VALIDATION_FAILED",
+                  |  "communityBuildingsData": {
+                  |    "totalOfAllAmounts": 1500.00,
+                  |    "communityBuildings": [
+                  |      {
+                  |        "communityBuildingItem": 1,
+                  |        "buildingName": "The Vault",
+                  |        "taxYear1": 2023,
+                  |        "amountYear1": 1500.00,
+                  |        "enteredValues": {
+                  |          "firstLineOfAddress": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  |          "postcode": "not a postcode"
+                  |        }
+                  |      }
+                  |    ]
+                  |  },
+                  |  "errors": [
+                  |    {
+                  |      "field": "firstLineOfAddress[0]",
+                  |      "error": "validationService.communityBuildings.message.6"
+                  |    },
+                  |    {
+                  |      "field": "postcode[0]",
+                  |      "error": "validationService.communityBuildings.message.8"
+                  |    }
+                  |  ]
+                  |}""".stripMargin)
+        .validate[GetUploadResultResponse]
+      result match {
+        case JsSuccess(value: GetUploadResultValidationFailedCommunityBuildings, _) =>
+          val building = value.communityBuildingsData.value.communityBuildings.head
+          building.firstLineOfAddress shouldBe None
+          building.postcode           shouldBe None
+          building.buildingName       shouldBe Some("The Vault")
+          building.taxYear1           shouldBe Some(2023)
+        case JsSuccess(other, _)                                                    => fail(s"Parsed to unexpected type: $other")
+        case JsError(errors)                                                        => fail(s"Failed to parse GetUploadResultValidationFailedCommunityBuildings: $errors")
+      }
+    }
+
+    "successfully parse GetUploadResultValidationFailedConnectedCharities when a rejected row omits its name and reference" in {
+      val result = Json
+        .parse("""|{
+                  |  "reference": "f5da5578-8393-4cd1-be0e-d8ef1b78d8e7",
+                  |  "validationType": "ConnectedCharities",
+                  |  "fileStatus": "VALIDATION_FAILED",
+                  |  "connectedCharitiesData": {
+                  |    "charities": [
+                  |      {
+                  |        "charityItem": 1,
+                  |        "enteredValues": {
+                  |          "charityName": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  |          "charityReference": "abc123"
+                  |        }
+                  |      }
+                  |    ]
+                  |  },
+                  |  "errors": [
+                  |    {
+                  |      "field": "charityName[0]",
+                  |      "error": "validationService.connectedCharities.message.4"
+                  |    },
+                  |    {
+                  |      "field": "charityReference[0]",
+                  |      "error": "validationService.connectedCharities.message.6"
+                  |    }
+                  |  ]
+                  |}""".stripMargin)
+        .validate[GetUploadResultResponse]
+      result match {
+        case JsSuccess(value: GetUploadResultValidationFailedConnectedCharities, _) =>
+          val charity = value.connectedCharitiesData.value.charities.head
+          charity.charityName      shouldBe None
+          charity.charityReference shouldBe None
+          charity.charityItem      shouldBe Some(1)
+        case JsSuccess(other, _)                                                    => fail(s"Parsed to unexpected type: $other")
+        case JsError(errors)                                                        => fail(s"Failed to parse GetUploadResultValidationFailedConnectedCharities: $errors")
+      }
+    }
+
     "successfully parse GetUploadResultValidationFailedCommunityBuildings" in {
       val result = Json
         .parse("""|{

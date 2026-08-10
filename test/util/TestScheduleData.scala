@@ -37,18 +37,18 @@ object TestScheduleData {
     totalOfTaxDeducted = 1000.00,
     otherIncomes = Seq(
       OtherIncome(
-        otherIncomeItem = 1,
-        payerName = "test-payer-name",
-        paymentDate = "2025-01-01",
-        grossPayment = 1000.00,
-        taxDeducted = 100.00
+        otherIncomeItem = Some(1),
+        payerName = Some("test-payer-name"),
+        paymentDate = Some("2025-01-01"),
+        grossPayment = Some(1000.00),
+        taxDeducted = Some(100.00)
       ),
       OtherIncome(
-        otherIncomeItem = 2,
-        payerName = "test-payer-name-2",
-        paymentDate = "2025-01-02",
-        grossPayment = 2000.00,
-        taxDeducted = 200.00
+        otherIncomeItem = Some(2),
+        payerName = Some("test-payer-name-2"),
+        paymentDate = Some("2025-01-02"),
+        grossPayment = Some(2000.00),
+        taxDeducted = Some(200.00)
       )
     )
   )
@@ -57,22 +57,22 @@ object TestScheduleData {
     totalOfAllAmounts = Some(1000.00),
     communityBuildings = Seq(
       CommunityBuilding(
-        communityBuildingItem = 1,
-        buildingName = "test-building-name",
-        firstLineOfAddress = "test-building-address",
-        postcode = "test-building-postcode",
-        taxYear1 = 2025,
-        amountYear1 = 1001.00,
+        communityBuildingItem = Some(1),
+        buildingName = Some("test-building-name"),
+        firstLineOfAddress = Some("test-building-address"),
+        postcode = Some("test-building-postcode"),
+        taxYear1 = Some(2025),
+        amountYear1 = Some(1001.00),
         taxYear2 = Some(2026),
         amountYear2 = Some(1002.00)
       ),
       CommunityBuilding(
-        communityBuildingItem = 2,
-        buildingName = "test-building-name-2",
-        firstLineOfAddress = "test-building-address-2",
-        postcode = "test-building-postcode-2",
-        taxYear1 = 2025,
-        amountYear1 = 2001.00
+        communityBuildingItem = Some(2),
+        buildingName = Some("test-building-name-2"),
+        firstLineOfAddress = Some("test-building-address-2"),
+        postcode = Some("test-building-postcode-2"),
+        taxYear1 = Some(2025),
+        amountYear1 = Some(2001.00)
       )
     )
   )
@@ -80,14 +80,14 @@ object TestScheduleData {
   val exampleConnectedCharitiesScheduleData: ConnectedCharitiesScheduleData = ConnectedCharitiesScheduleData(
     charities = Seq(
       ConnectedCharity(
-        charityItem = 1,
-        charityName = "test-charity-name-1",
-        charityReference = "test-charity-reference-1"
+        charityItem = Some(1),
+        charityName = Some("test-charity-name-1"),
+        charityReference = Some("test-charity-reference-1")
       ),
       ConnectedCharity(
-        charityItem = 2,
-        charityName = "test-charity-name-2",
-        charityReference = "test-charity-reference-2"
+        charityItem = Some(2),
+        charityName = Some("test-charity-name-2"),
+        charityReference = Some("test-charity-reference-2")
       )
     )
   )

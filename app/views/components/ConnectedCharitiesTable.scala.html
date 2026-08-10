@@ -33,9 +33,9 @@
         ),
         rows = connectedCharities.map { charity =>
             Seq(
-                TableRow(content = Text(charity.charityItem.toString), classes = "govuk-table__header"),
-                TableRow(content = Text(charity.charityName)),
-                TableRow(content = Text(charity.charityReference))
+                TableRow(content = Text(charity.charityItem.map(_.toString).getOrElse(messages("data.notApplicable"))), classes = "govuk-table__header"),
+                TableRow(content = Text(charity.charityName.getOrElse(messages("data.notApplicable")))),
+                TableRow(content = Text(charity.charityReference.getOrElse(messages("data.notApplicable"))))
             )
         }
     )

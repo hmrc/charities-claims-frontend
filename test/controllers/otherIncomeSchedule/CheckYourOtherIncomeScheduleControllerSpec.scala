@@ -44,11 +44,11 @@ class CheckYourOtherIncomeScheduleControllerSpec extends ControllerSpec {
     totalOfTaxDeducted = BigDecimal(50.00),
     otherIncomes = Seq(
       OtherIncome(
-        otherIncomeItem = 1,
-        payerName = "Test Payer",
-        paymentDate = "2025-01-24",
-        grossPayment = BigDecimal(100.00),
-        taxDeducted = BigDecimal(50.00)
+        otherIncomeItem = Some(1),
+        payerName = Some("Test Payer"),
+        paymentDate = Some("2025-01-24"),
+        grossPayment = Some(BigDecimal(100.00)),
+        taxDeducted = Some(BigDecimal(50.00))
       )
     )
   )
