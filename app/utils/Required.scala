@@ -27,7 +27,7 @@ object Required {
     val labels = summonLabels[m.MirroredElemLabels]
     val values = obj.asInstanceOf[Product].productIterator.toList
 
-    val extracted = field(obj) // Option[A]
+    val extracted = field(obj)
     val idx       = values.indexWhere(_ == extracted) // compare whole field value
 
     if idx == -1 then Failure(new MissingRequiredFieldsException("Field not found"))

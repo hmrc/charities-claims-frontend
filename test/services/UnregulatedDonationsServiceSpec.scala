@@ -118,7 +118,6 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
 
       "should return the totalDonations value when present" in {
         val data   = TestScheduleData.exampleGiftAidScheduleData
-        // exampleGiftAidScheduleData.totalDonations = Some(1000.00)
         val result = UnregulatedDonationsService.getGiftAidTotalDonations(data)
         result shouldEqual BigDecimal(1000.00)
       }

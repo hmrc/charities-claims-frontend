@@ -21,7 +21,7 @@ import models.*
 
 case class PaginationConfig(
   recordsPerPage: Int = 10,
-  maxRecords: Int = 10000, // TBC
+  maxRecords: Int = 10000,
   maxVisiblePages: Int = 5
 )
 

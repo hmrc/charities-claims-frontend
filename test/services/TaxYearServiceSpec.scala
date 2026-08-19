@@ -24,15 +24,10 @@ import java.time.LocalDate
 
 class TaxYearServiceSpec extends AnyWordSpec with Matchers {
 
-  private val service = new TaxYearService
-
+  private val service    = new TaxYearService
   private val fixedToday = LocalDate.of(2026, 6, 1)
-
-  // currentTaxYearStart = 2026
-  // currentTaxYearEnd   = 2027
-  // valid range         = 2024 to 2027
-  private val minYear = 2024
-  private val maxYear = 2027
+  private val minYear    = 2024
+  private val maxYear    = 2027
 
   "TaxYearService" should {
 

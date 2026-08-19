@@ -79,8 +79,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers =
-            Some(incompleteAnswers) // TODO: MIGRATION - change to: repaymentClaimDetailsAnswers = incompleteAnswers
+          repaymentClaimDetailsAnswers = Some(incompleteAnswers)
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -119,8 +118,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers =
-            Some(completeAnswers) // TODO: MIGRATION - change to: repaymentClaimDetailsAnswers = completeAnswers
+          repaymentClaimDetailsAnswers = Some(completeAnswers)
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -158,8 +156,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           charitiesReference = testCharitiesReference,
           unsubmittedClaimId = Some("123"),
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers =
-            Some(completeAnswers) // TODO: MIGRATION - change to: repaymentClaimDetailsAnswers = completeAnswers
+          repaymentClaimDetailsAnswers = Some(completeAnswers)
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -193,8 +190,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           unsubmittedClaimId = Some("123"),
           charitiesReference = testCharitiesReference,
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers =
-            Some(incompleteAnswers) // TODO: MIGRATION - change to: repaymentClaimDetailsAnswers = incompleteAnswers
+          repaymentClaimDetailsAnswers = Some(incompleteAnswers)
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -231,8 +227,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           unsubmittedClaimId = Some("123"),
           charitiesReference = testCharitiesReference,
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers =
-            Some(incompleteAnswers) // TODO: MIGRATION - change to: repaymentClaimDetailsAnswers = incompleteAnswers
+          repaymentClaimDetailsAnswers = Some(incompleteAnswers)
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
@@ -271,8 +266,7 @@ class RepaymentClaimDetailsIncompleteAnswersControllerSpec extends ControllerSpe
           unsubmittedClaimId = Some("123"),
           charitiesReference = testCharitiesReference,
           lastUpdatedReference = Some("123"),
-          repaymentClaimDetailsAnswers =
-            Some(incompleteAnswers) // TODO: MIGRATION - change to: repaymentClaimDetailsAnswers = incompleteAnswers
+          repaymentClaimDetailsAnswers = Some(incompleteAnswers)
         )
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
