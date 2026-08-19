@@ -89,7 +89,6 @@ agentPostcode.error.required = Enter a postcode
 agentPostcode.heading = What is your postcode?
 agentPostcode.missingDetails = confirm if you have a postcode
 agentPostcode.title = What is your postcode?
-
 authLoginStub.title = Sign in using test credentials
 
 authorisedOfficialAddress.caption = Provide organisation details
@@ -532,29 +531,28 @@ global.error.pageNotFound404.message = If you typed the web address, check it is
 govukErrorMessage.visuallyHiddenText = Error
 
 month.1.long=January
-month.2.long=February
-month.3.long=March
-month.4.long=April
-month.5.long=May
-month.6.long=June
-month.7.long=July
-month.8.long=August
-month.9.long=September
-month.10.long=October
-month.11.long=November
-month.12.long=December
-
 month.1.short=Jan
+month.10.long=October
 month.10.short=Oct
+month.11.long=November
 month.11.short=Nov
+month.12.long=December
 month.12.short=Dec
+month.2.long=February
 month.2.short=Feb
+month.3.long=March
 month.3.short=Mar
+month.4.long=April
 month.4.short=Apr
+month.5.long=May
 month.5.short=May
+month.6.long=June
 month.6.short=Jun
+month.7.long=July
 month.7.short=Jul
+month.8.long=August
 month.8.short=Aug
+month.9.long=September
 month.9.short=Sep
 
 nameOfCharityRegulator.agent.missingDetails = confirm the charity regulator name
@@ -1071,26 +1069,26 @@ warning15UnsubmittedClaimExists.paragraph.2 = You can contact a colleague to del
 warning15UnsubmittedClaimExists.title = You cannot progress this claim
 
 warning16UnsubmittedClaimExistsForCharity.heading = Your claim cannot be saved
-warning16UnsubmittedClaimExistsForCharity.title = Your claim cannot be saved
-warning16UnsubmittedClaimExistsForCharity.paragraph.1 = There is already a draft claim for: {0} - HMRC Charities Reference: {1}. 
-warning16UnsubmittedClaimExistsForCharity.paragraph.2 = Contact a colleague who is working on this claim to delete or submit the existing draft claim before creating a new one for this organisation.
 warning16UnsubmittedClaimExistsForCharity.link = Return to manage charity repayment claims
+warning16UnsubmittedClaimExistsForCharity.paragraph.1 = There is already a draft claim for: {0} - HMRC Charities Reference: {1}.
+warning16UnsubmittedClaimExistsForCharity.paragraph.2 = Contact a colleague who is working on this claim to delete or submit the existing draft claim before creating a new one for this organisation.
+warning16UnsubmittedClaimExistsForCharity.title = Your claim cannot be saved
 
 whichTaxYearAreYouClaimingFor.caption = Provide GASDS donation details
 whichTaxYearAreYouClaimingFor.caption.multipleYears = Provide GASDS donation details - Tax year {0}
 whichTaxYearAreYouClaimingFor.error.duplicate = Donations claimed for more than one tax year must be different to other tax years
 whichTaxYearAreYouClaimingFor.error.future = Gift Aid Small Donations Scheme claim tax year must be this year or earlier
-whichTaxYearAreYouClaimingFor.firstYear.error.invalid = Enter a first tax year in the correct format
-whichTaxYearAreYouClaimingFor.secondYear.error.invalid = Enter a second tax year in the correct format
-whichTaxYearAreYouClaimingFor.thirdYear.error.invalid = Enter a third tax year in the correct format
-whichTaxYearAreYouClaimingFor.firstYear.error.required = Enter a first tax year
-whichTaxYearAreYouClaimingFor.secondYear.error.required = Enter a second tax year
-whichTaxYearAreYouClaimingFor.thirdYear.error.required = Enter a third tax year
 whichTaxYearAreYouClaimingFor.error.tooOld = Gift Aid Small Donations Scheme claim cannot be earlier than {0}
+whichTaxYearAreYouClaimingFor.firstYear.error.invalid = Enter a first tax year in the correct format
+whichTaxYearAreYouClaimingFor.firstYear.error.required = Enter a first tax year
 whichTaxYearAreYouClaimingFor.heading = Which tax year are you claiming for?
 whichTaxYearAreYouClaimingFor.heading.agent = Which tax year is the charity claiming for?
 whichTaxYearAreYouClaimingFor.hint = For example, 2016
 whichTaxYearAreYouClaimingFor.paragraph = The tax year covers April to April. For example, tax year 2016 runs from 6 April 2015 to 5 April 2016.
+whichTaxYearAreYouClaimingFor.secondYear.error.invalid = Enter a second tax year in the correct format
+whichTaxYearAreYouClaimingFor.secondYear.error.required = Enter a second tax year
+whichTaxYearAreYouClaimingFor.thirdYear.error.invalid = Enter a third tax year in the correct format
+whichTaxYearAreYouClaimingFor.thirdYear.error.required = Enter a third tax year
 whichTaxYearAreYouClaimingFor.title = Which tax year are you claiming for?
 whichTaxYearAreYouClaimingFor.title.agent = Which tax year is the charity claiming for?
 

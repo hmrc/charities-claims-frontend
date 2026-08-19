@@ -153,7 +153,6 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
           )
 
         val application = applicationBuilder(sessionData = sessionData, AffinityGroup.Organisation).build()
-        // val view = application.injector.instanceOf[CommunityBuildingsScheduleUploadSuccessfulView]
         val messages    = application.injector.instanceOf[MessagesApi].preferred(Seq(Lang("en")))
 
         running(application) {
@@ -179,7 +178,6 @@ class CommunityBuildingsScheduleUploadSuccessfulControllerSpec extends Controlle
           )
 
         val application = applicationBuilder(sessionData = sessionData, AffinityGroup.Agent).build()
-        // val view = application.injector.instanceOf[CommunityBuildingsScheduleUploadSuccessfulView]
         val messages    = application.injector.instanceOf[MessagesApi].preferred(Seq(Lang("en")))
 
         running(application) {

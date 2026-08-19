@@ -115,7 +115,7 @@ class CheckYourGiftAidScheduleControllerSpec extends ControllerSpec {
         (mockClaimsValidationService
           .getGiftAidScheduleData(using _: DataRequest[?], _: HeaderCarrier))
           .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.giftAidScheduleData)) // TODO
+          .returning(Future.successful(testValidatedResponse.giftAidScheduleData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 

@@ -72,8 +72,7 @@ class RepaymentClaimDetailsControllerISpec extends ComponentSpecHelper with Test
       result.header(LOCATION).value shouldBe routes.RepaymentClaimTypeController.onPageLoad(NormalMode).url
     }
 
-/*    "redirect to repayment claim claim reference number page for an agent" in {
-      // TODO: Need to change Create screen R1.9, currently redirecting to R1.8
+    "redirect to repayment claim claim reference number page for an agent" in {
       stubAgentAuthRequest()
       stubRetrieveUnsubmittedClaims(OK, Json.toJson(getClaimsResponse))
       stubGetClaims(claimId)(OK, Json.toJson(claim))
@@ -82,7 +81,7 @@ class RepaymentClaimDetailsControllerISpec extends ComponentSpecHelper with Test
       val result = post("/repayment-claim-details")(Map.empty[String, Seq[String]])
 
       result.status shouldBe SEE_OTHER
-      result.header(LOCATION).value shouldBe controllers.routes.ClaimsTaskListController.onPageLoad.url
-    }*/
+      result.header(LOCATION).value shouldBe controllers.repaymentClaimDetails.routes.CharitiesReferenceNumberInputController.onPageLoad(NormalMode).url
+    }
   }
 }
