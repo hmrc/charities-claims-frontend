@@ -29,12 +29,14 @@ trait Constraints extends validation.Constraints {
         .getOrElse(Valid)
     }
 
-  protected def regexp(regex: String, errorKey: String): Constraint[String] =
-    Constraint {
-      case str if str.replace("\r\n", "\n").matches(regex) =>
-        Valid
-      case _                                               =>
-        Invalid(errorKey, regex)
+  protected def regexp(regex: String, errorKey: String, doReplace: Boolean = true): Constraint[String] =
+    Constraint { str =>
+      val value =
+        if doReplace then str.replace("\r\n", "\n")
+        else str
+
+      if value.matches(regex) then Valid
+      else Invalid(errorKey, regex)
     }
 
   protected def required(errorKey: String): Constraint[String] =
