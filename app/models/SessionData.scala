@@ -220,8 +220,7 @@ object SessionData {
           else
             session.organisationDetailsAnswers.exists(
               _.hasOrganisationDetailsCompleteAnswers(isCASCCharityReference(using session))
-            )
-      )
+            ))
       && (!shouldUploadConnectedCharitiesSchedule || session.connectedCharitiesScheduleCompleted)
       && (!shouldUploadOtherIncomeSchedule || session.otherIncomeScheduleCompleted)
       && (!shouldUploadCommunityBuildingsSchedule || session.communityBuildingsScheduleCompleted)

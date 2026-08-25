@@ -163,33 +163,29 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
       "throw an exception if the service returns malformed JSON" in {
         givenGetUploadSummaryEndpointReturns(HttpResponse(200, "{\"invalid\": \"json\"}")).once()
 
-        a[Exception] should be thrownBy {
+        a[Exception] should be thrownBy
           await(connector.getUploadSummary("123"))
-        }
       }
 
       "throw an exception if the service returns wrong entity format" in {
         givenGetUploadSummaryEndpointReturns(HttpResponse(200, "{\"uploads\": \"not-an-array\"}")).once()
 
-        a[Exception] should be thrownBy {
+        a[Exception] should be thrownBy
           await(connector.getUploadSummary("123"))
-        }
       }
 
       "throw an exception if the service returns 404 status" in {
         givenGetUploadSummaryEndpointReturns(HttpResponse(404, "")).once()
 
-        a[Exception] should be thrownBy {
+        a[Exception] should be thrownBy
           await(connector.getUploadSummary("123"))
-        }
       }
 
       "throw an exception if the service returns 500 status" in {
         givenGetUploadSummaryEndpointReturns(HttpResponse(500, "")).once()
 
-        a[Exception] should be thrownBy {
+        a[Exception] should be thrownBy
           await(connector.getUploadSummary("123"))
-        }
       }
 
       "throw exception when 5xx response status in the third attempt" in {
@@ -252,33 +248,29 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
           HttpResponse(200, Json.stringify(Json.toJson(failureResponse)))
         ).once()
 
-        a[Exception] should be thrownBy {
+        a[Exception] should be thrownBy
           await(connector.deleteSchedule("123", FileUploadReference("ref-123")))
-        }
       }
 
       "throw an exception if the service returns malformed JSON" in {
         givenDeleteScheduleEndpointReturns(HttpResponse(200, "{\"invalid\"}")).once()
 
-        a[Exception] should be thrownBy {
+        a[Exception] should be thrownBy
           await(connector.deleteSchedule("123", FileUploadReference("ref-123")))
-        }
       }
 
       "throw an exception if the service returns 404 status" in {
         givenDeleteScheduleEndpointReturns(HttpResponse(404, "")).once()
 
-        a[Exception] should be thrownBy {
+        a[Exception] should be thrownBy
           await(connector.deleteSchedule("123", FileUploadReference("ref-123")))
-        }
       }
 
       "throw an exception if the service returns 500 status" in {
         givenDeleteScheduleEndpointReturns(HttpResponse(500, "")).once()
 
-        a[Exception] should be thrownBy {
+        a[Exception] should be thrownBy
           await(connector.deleteSchedule("123", FileUploadReference("ref-123")))
-        }
       }
     }
 

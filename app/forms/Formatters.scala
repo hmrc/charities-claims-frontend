@@ -60,7 +60,7 @@ trait Formatters {
     }
   def enumerableFormatter[A](requiredKey: String, invalidKey: String, args: Seq[String] = Seq.empty)(implicit
     ev: Enumerable[A]
-  ): Formatter[A] =
+  ): Formatter[A]       =
     new Formatter[A] {
 
       private val baseFormatter = stringFormatter(requiredKey, args)

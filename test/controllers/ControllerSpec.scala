@@ -81,8 +81,8 @@ trait ControllerSpec
       )
       .configure(
         "play.filters.csp.nonce.enabled" -> false,
-        "auditing.enabled" -> false,
-        "metric.enabled"   -> false
+        "auditing.enabled"               -> false,
+        "metric.enabled"                 -> false
       )
 
   protected def applicationBuilder(
@@ -118,9 +118,9 @@ trait ControllerSpec
       )
       .configure(
         "play.filters.csp.nonce.enabled" -> false,
-        "auditing.enabled"             -> false,
-        "metric.enabled"               -> false,
-        "splitter.trafficSplitEnabled" -> false
+        "auditing.enabled"               -> false,
+        "metric.enabled"                 -> false,
+        "splitter.trafficSplitEnabled"   -> false
       )
   }
 

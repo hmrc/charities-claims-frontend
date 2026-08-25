@@ -31,7 +31,6 @@ class GasdsDonationDetailsIncompleteAnswersController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete) { implicit request =>
-
       val repaymentClaimDetailsAnswers                      = request.sessionData.repaymentClaimDetailsAnswers
       val isAgent                                           = request.sessionData.isAgent
       def buildMissingFieldsWhenGasdsNotExist: List[String] = {

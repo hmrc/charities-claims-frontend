@@ -23,10 +23,7 @@ import org.scalatest.OptionValues
 import play.api.libs.json.*
 import uk.gov.hmrc.crypto.{Decrypter, Encrypter, SymmetricCryptoFactory}
 
-class SessionDataEncryptedSpec
-  extends AnyWordSpec
-    with Matchers
-    with OptionValues:
+class SessionDataEncryptedSpec extends AnyWordSpec with Matchers with OptionValues:
 
   private val aesKey = "nRvFTLnNmueAbaMqjpcHQDAmh3JFsMV/XDX3AUfULNE="
 
@@ -36,8 +33,8 @@ class SessionDataEncryptedSpec
   private given OFormat[SessionDataEncrypted] =
     SessionDataEncrypted.format(using crypto)
 
-  private val charitiesReference = "AB123456"
-  private val unsubmittedClaimId = "claim-123"
+  private val charitiesReference   = "AB123456"
+  private val unsubmittedClaimId   = "claim-123"
   private val lastUpdatedReference = "last-updated-123"
 
   private val sessionData: SessionData =
@@ -104,7 +101,7 @@ class SessionDataEncryptedSpec
       val result =
         Json.fromJson[SessionDataEncrypted](json)
 
-      result.isSuccess shouldBe true
+      result.isSuccess         shouldBe true
       result.get.toSessionData shouldBe sessionData
     }
 

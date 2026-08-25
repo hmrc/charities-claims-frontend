@@ -41,7 +41,6 @@ class AuthLoginStubController @Inject() (
 
   final val onPageLoad: Action[AnyContent] =
     Action { implicit request =>
-
       val userId = request.getQueryString("userId").getOrElse(defaultUserId)
 
       val continueUrl =

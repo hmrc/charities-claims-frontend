@@ -75,7 +75,6 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
           GiftAidSmallDonationsSchemeDonationDetailsAnswers.isValidIndex(index)
       )
       .async { implicit request =>
-
         implicit val messages: Messages = messagesApi.preferred(request)
 
         val preparedForm = form(index)
@@ -99,7 +98,6 @@ class WhichTaxYearAreYouClaimingForController @Inject() (
           GiftAidSmallDonationsSchemeDonationDetailsAnswers.isValidIndex(index)
       )
       .async { implicit request =>
-
         implicit val messages: Messages       = messagesApi.preferred(request)
         implicit val sessionData: SessionData = request.sessionData
 

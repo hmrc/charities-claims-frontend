@@ -167,7 +167,7 @@ class UnregulatedDonationsServiceImpl @Inject() (
         }
 
       // No reason set (charity has regulator set) - no limit check required, proceed
-      case None         =>
+      case None =>
         Future.successful(None)
     }
   }

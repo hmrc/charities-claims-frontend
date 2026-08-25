@@ -138,7 +138,7 @@ object RepaymentClaimTypeController {
     (value, mode, previousAnswer) match {
 
       // NormalMode
-      case (value, NormalMode, _)   =>
+      case (value, NormalMode, _) =>
         if value.claimingUnderGiftAidSmallDonationsScheme then routes.GasdsClaimTypeController.onPageLoad(NormalMode)
         else routes.ClaimingReferenceNumberController.onPageLoad(NormalMode)
 
@@ -155,7 +155,7 @@ object RepaymentClaimTypeController {
         routes.GasdsClaimTypeController.onPageLoad(CheckMode)
 
       // CheckMode: Answer unchanged
-      case (_, CheckMode, _)        =>
+      case (_, CheckMode, _) =>
         routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
     }
 }

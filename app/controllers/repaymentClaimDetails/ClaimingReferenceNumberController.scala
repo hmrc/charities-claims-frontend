@@ -72,15 +72,15 @@ object ClaimingReferenceNumberController {
   def nextPage(value: Boolean, mode: Mode, previousAnswer: Option[Boolean]): Call =
     (value, mode, previousAnswer) match {
       // NormalMode
-      case (true, NormalMode, _)                              =>
+      case (true, NormalMode, _) =>
         routes.ClaimReferenceNumberInputController.onPageLoad(NormalMode)
-      case (_, NormalMode, _)                                 =>
+      case (_, NormalMode, _)    =>
         routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 
       // CheckMode: new data
-      case (true, CheckMode, None)                            =>
+      case (true, CheckMode, None) =>
         routes.ClaimReferenceNumberInputController.onPageLoad(CheckMode)
-      case (_, CheckMode, None)                               =>
+      case (_, CheckMode, None)    =>
         routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
 
       // CheckMode: new value diff to old value
@@ -88,7 +88,7 @@ object ClaimingReferenceNumberController {
         routes.ClaimReferenceNumberInputController.onPageLoad(CheckMode)
 
       // unchanged
-      case (_, CheckMode, _)                                  =>
+      case (_, CheckMode, _) =>
         routes.RepaymentClaimDetailsCheckYourAnswersController.onPageLoad
     }
 

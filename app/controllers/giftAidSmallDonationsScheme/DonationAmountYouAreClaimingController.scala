@@ -97,7 +97,6 @@ class DonationAmountYouAreClaimingController @Inject() (
                     Redirect(controllers.routes.ClaimsTaskListController.onPageLoad)
                   )
                 } { existingClaim =>
-
                   val updatedClaim =
                     existingClaim.copy(amountOfDonationsReceived = Some(value))
 

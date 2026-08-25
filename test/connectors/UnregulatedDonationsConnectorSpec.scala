@@ -84,25 +84,22 @@ class UnregulatedDonationsConnectorSpec extends BaseSpec with HttpV2Support {
         givenGetTotalUnregulatedDonationsEndpointReturns(
           HttpResponse(200, "{unregulatedDonationsTotal: 123.45}")
         ).once()
-        a[Exception] should be thrownBy {
+        a[Exception] should be thrownBy
           await(connector.getTotalUnregulatedDonations("123"))
-        }
       }
 
       "throw an exception if the service returs wrong entity format" in {
         givenGetTotalUnregulatedDonationsEndpointReturns(
           HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]}")
         ).once()
-        a[Exception] should be thrownBy {
+        a[Exception] should be thrownBy
           await(connector.getTotalUnregulatedDonations("123"))
-        }
       }
 
       "throw an exception if the service returns 500 status" in {
         givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(500, "")).once()
-        a[Exception] should be thrownBy {
+        a[Exception] should be thrownBy
           await(connector.getTotalUnregulatedDonations("123"))
-        }
       }
 
       "throw exception when 5xx response status in the third attempt" in {

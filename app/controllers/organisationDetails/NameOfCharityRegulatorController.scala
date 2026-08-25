@@ -87,19 +87,19 @@ object NameOfCharityRegulatorController {
   def nextPage(value: NameOfCharityRegulator, mode: Mode, previousAnswer: Option[NameOfCharityRegulator]): Call =
     (value, mode, previousAnswer) match {
       // NormalMode
-      case (NameOfCharityRegulator.None, NormalMode, _)                                                    =>
+      case (NameOfCharityRegulator.None, NormalMode, _) =>
         routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(NormalMode)
-      case (_, NormalMode, _)                                                                              =>
+      case (_, NormalMode, _)                           =>
         routes.CharityRegulatorNumberController.onPageLoad(NormalMode)
 
       // CheckMode: new data
-      case (NameOfCharityRegulator.None, CheckMode, None)                                                  =>
+      case (NameOfCharityRegulator.None, CheckMode, None) =>
         routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(CheckMode)
-      case (_, CheckMode, None)                                                                            =>
+      case (_, CheckMode, None)                           =>
         routes.CharityRegulatorNumberController.onPageLoad(CheckMode)
 
       // CheckMode: regulator → None
-      case (NameOfCharityRegulator.None, CheckMode, Some(prev)) if prev != NameOfCharityRegulator.None     =>
+      case (NameOfCharityRegulator.None, CheckMode, Some(prev)) if prev != NameOfCharityRegulator.None =>
         routes.ReasonNotRegisteredWithRegulatorController.onPageLoad(CheckMode)
 
       // CheckMode: None → regulator
@@ -112,7 +112,7 @@ object NameOfCharityRegulatorController {
         routes.CharityRegulatorNumberController.onPageLoad(CheckMode)
 
       // unchanged
-      case (_, CheckMode, _)                                                                               =>
+      case (_, CheckMode, _) =>
         routes.OrganisationDetailsCheckYourAnswersController.onPageLoad
     }
 }

@@ -49,7 +49,6 @@ class CheckYourGiftAidScheduleController @Inject() (
       .async { implicit request =>
         claimsValidationService.getGiftAidScheduleData
           .map { giftAidScheduleData =>
-
             val currentPage      = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
             val paginationResult = PaginationService.paginateDonations(
               allDonations = giftAidScheduleData.donations,

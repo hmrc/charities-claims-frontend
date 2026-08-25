@@ -42,7 +42,6 @@ class ClaimDetailsForTaxYearCheckYourAnswersController @Inject() (
           && RepaymentClaimDetailsAnswers.getClaimingDonationsNotFromCommunityBuilding.contains(true)
       )
       .async { implicit request =>
-
         val claimOpt =
           request.sessionData.giftAidSmallDonationsSchemeDonationDetailsAnswers
             .flatMap(_.claims)

@@ -73,7 +73,6 @@ class CorporateTrusteeDetailsController @Inject() (
       .authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete)
       .andThen(guard(predicate = SessionData.isClaimNotSubmitted, access = OrganisationOnly))
       .async { implicit request =>
-
         val isUKAddress = OrganisationDetailsAnswers.getDoYouHaveCorporateTrusteeUKAddress.getOrElse(false)
         val form        = formProvider(
           isUKAddress,
