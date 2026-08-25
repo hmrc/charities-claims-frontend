@@ -19,6 +19,7 @@ package forms
 import play.api.data.Forms.*
 import forms.{Mappings, Validation}
 import play.api.data.Form
+import play.api.data.validation.Constraints as PlayConstraints
 
 import javax.inject.Inject
 
@@ -38,8 +39,8 @@ class AdjustmentToThisClaimFormProvider @Inject() extends Mappings {
             text(errorRequired)
               .verifying(
                 firstError(
-                  maxLength(maxInputLength, maxInputLengthErrorMessage),
-                  regexp(Validation.adjustmentToThisClaimPattern, regexPatternError)
+                  PlayConstraints.maxLength(maxInputLength, maxInputLengthErrorMessage),
+                  regexp(Validation.adjustmentToThisClaimPattern, regexPatternError, false)
                 )
               )
         ).transform[Option[String]](Some(_), _.getOrElse(""))
@@ -51,8 +52,8 @@ class AdjustmentToThisClaimFormProvider @Inject() extends Mappings {
               text("")
                 .verifying(
                   firstError(
-                    maxLength(maxInputLength, maxInputLengthErrorMessage),
-                    regexp(Validation.adjustmentToThisClaimPattern, regexPatternError)
+                    PlayConstraints.maxLength(maxInputLength, maxInputLengthErrorMessage),
+                    regexp(Validation.adjustmentToThisClaimPattern, regexPatternError, false)
                   )
                 )
             )
