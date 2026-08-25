@@ -49,7 +49,6 @@ class CheckYourConnectedCharitiesScheduleController @Inject() (
       .async { implicit request =>
         claimsValidationService.getConnectedCharitiesScheduleData
           .map { connectedCharitiesScheduleData =>
-
             val currentPage      = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
             val paginationResult = PaginationService.paginateConnectedCharities(
               allConnectedCharities = connectedCharitiesScheduleData.charities,

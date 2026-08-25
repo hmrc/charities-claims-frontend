@@ -73,16 +73,16 @@ class DefaultSessionCache @Inject() (
     SessionDataEncrypted.reads(using crypto)
 
   private given OWrites[SessionDataEncrypted] =
-    SessionDataEncrypted.writes(using crypto)  
+    SessionDataEncrypted.writes(using crypto)
 
   private val sessionDataKey: DataKey[SessionDataEncrypted] =
     DataKey[SessionDataEncrypted]("session-data")
 
-
   final def get()(using
     hc: HeaderCarrier
   ): Future[Option[SessionData]] =
-    super.get[SessionDataEncrypted](hc)(sessionDataKey)
+    super
+      .get[SessionDataEncrypted](hc)(sessionDataKey)
       .map(_.map(_.toSessionData))
 
   final def store(

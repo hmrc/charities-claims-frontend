@@ -49,7 +49,6 @@ class CheckYourCommunityBuildingsScheduleController @Inject() (
       .async { implicit request =>
         claimsValidationService.getCommunityBuildingsScheduleData
           .map { communityBuildingsScheduleData =>
-
             val currentPage      = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
             val paginationResult = PaginationService.paginateCommunityBuildings(
               allCommunityBuildings = communityBuildingsScheduleData.communityBuildings,

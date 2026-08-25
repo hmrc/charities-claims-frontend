@@ -227,7 +227,6 @@ object RepaymentClaimDetailsAnswers {
 
   def getGasdsClaimType(using session: SessionData): Option[GasdsClaimType] =
     session.repaymentClaimDetailsAnswers.flatMap { answers =>
-
       val hasAnyAnswer =
         answers.claimingDonationsNotFromCommunityBuilding.isDefined ||
           answers.claimingDonationsCollectedInCommunityBuildings.isDefined ||

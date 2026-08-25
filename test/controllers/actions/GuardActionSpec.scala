@@ -41,7 +41,7 @@ class GuardActionSpec extends BaseSpec {
       override def invokeBlock[A](
         request: play.api.mvc.Request[A],
         block: DataRequest[A] => Future[play.api.mvc.Result]
-      ) =
+      )                                       =
         block(DataRequest(AuthorisedRequest(request, AffinityGroup.Organisation, testCharitiesReference), sessionData))
     }
 

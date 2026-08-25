@@ -47,7 +47,6 @@ class EnterCharityNameController @Inject() (
       .authAndGetData()
       .andThen(guard(predicate = SessionData.isClaimNotSubmitted, access = AgentOnly))
       .async { implicit request =>
-
         val previousAnswer = RepaymentClaimDetailsAnswers.getNameOfCharity match {
           case None        => form
           case Some(value) => form.fill(value)

@@ -42,9 +42,8 @@ class DebugHookSpec extends ControllerSpec {
       val responseData = ResponseData(Data("{}", false, false), 200, Map("foo" -> Seq("bar")))
       val request      = RequestData(Seq.empty, None)
 
-      noException should be thrownBy {
+      noException should be thrownBy
         hook.apply("GET", new URL("http://localhost/path"), request, Future.successful(responseData))
-      }
     }
 
     "should respect debugOutboundRequests=true and log the request and response when hook data is a string" in {
@@ -54,10 +53,9 @@ class DebugHookSpec extends ControllerSpec {
       val responseData = ResponseData(Data("{}", false, false), 200, Map("foo" -> Seq("bar")))
       val request      = RequestData(Seq("foo" -> "bar"), Some(Data(HookData.FromString("{}"), false, false)))
 
-      noException should be thrownBy {
+      noException should be thrownBy
         hook.apply("GET", new URL("http://localhost/path"), request, Future.successful(responseData))
 
-      }
     }
 
     "should respect debugOutboundRequests=true and log the request and response when hook data is a map" in {
@@ -68,10 +66,9 @@ class DebugHookSpec extends ControllerSpec {
       val request      =
         RequestData(Seq("foo" -> "bar"), Some(Data(HookData.FromMap(Map("foo" -> Seq("bar"))), false, false)))
 
-      noException should be thrownBy {
+      noException should be thrownBy
         hook.apply("GET", new URL("http://localhost/path"), request, Future.successful(responseData))
 
-      }
     }
 
     "should log failed response" in {
@@ -79,9 +76,8 @@ class DebugHookSpec extends ControllerSpec {
       val hook    = new DummyDebugHook(conf)
       val request = RequestData(Seq.empty, None)
 
-      noException should be thrownBy {
+      noException should be thrownBy
         hook.apply("GET", new URL("http://localhost/path"), request, Future.failed(new Exception("An example failure")))
-      }
     }
   }
 

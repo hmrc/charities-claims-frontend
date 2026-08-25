@@ -57,7 +57,6 @@ class ClaimAddedForTaxYearController @Inject() (
         && GiftAidSmallDonationsSchemeDonationDetailsAnswers.getClaimsSize != 0
     )
     .async { implicit request =>
-
       val (taxYears, countOfTaxYears) = extractTaxYears
 
       Future.successful(
@@ -79,7 +78,6 @@ class ClaimAddedForTaxYearController @Inject() (
         && GiftAidSmallDonationsSchemeDonationDetailsAnswers.getClaimsSize != 0
     )
     .async { implicit request =>
-
       val (taxYears, countOfTaxYears) = extractTaxYears
 
       if (countOfTaxYears == 3) {

@@ -42,7 +42,6 @@ class CharityRegulatorNumberController @Inject() (
 
   def onPageLoad(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-
       given SessionData = request.sessionData
 
       if isCASCCharityReference then {
@@ -72,7 +71,6 @@ class CharityRegulatorNumberController @Inject() (
 
   def onSubmit(mode: Mode = NormalMode): Action[AnyContent] =
     actions.authAndGetDataWithGuard(SessionData.isRepaymentClaimDetailsComplete).async { implicit request =>
-
       given SessionData = request.sessionData
 
       form

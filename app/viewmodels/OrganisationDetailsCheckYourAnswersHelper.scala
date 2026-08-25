@@ -311,7 +311,6 @@ object OrganisationDetailsCheckYourAnswersHelper {
         }
       ),
       answers.doYouHaveCorporateTrusteeUKAddress.map { hasUkAddress =>
-
         val details =
           if (hasUkAddress) {
             Seq(
@@ -375,7 +374,6 @@ object OrganisationDetailsCheckYourAnswersHelper {
         }
       ),
       answers.doYouHaveAuthorisedOfficialTrusteeUKAddress.map { hasUkAddress =>
-
         val fullName =
           Seq(
             answers.authorisedOfficialTrusteeTitle,

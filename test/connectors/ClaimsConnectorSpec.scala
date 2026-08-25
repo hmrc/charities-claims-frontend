@@ -141,31 +141,27 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       "throw an exception if the service returns malformed JSON" in {
         givenGetClaimsEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]"))
           .once()
-        a[Exception] should be thrownBy {
+        a[Exception] should be thrownBy
           await(connector.retrieveUnsubmittedClaims)
-        }
       }
 
       "throw an exception if the service returns wrong entity format" in {
         givenGetClaimsEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]}"))
           .once()
-        a[Exception] should be thrownBy {
+        a[Exception] should be thrownBy
           await(connector.retrieveUnsubmittedClaims)
-        }
       }
 
       "throw an exception if the service returns 404 status" in {
         givenGetClaimsEndpointReturns(HttpResponse(404, "Bad Request")).once()
-        a[Exception] should be thrownBy {
+        a[Exception] should be thrownBy
           await(connector.retrieveUnsubmittedClaims)
-        }
       }
 
       "throw an exception if the service returns 500 status" in {
         givenGetClaimsEndpointReturns(HttpResponse(500, "")).once()
-        a[Exception] should be thrownBy {
+        a[Exception] should be thrownBy
           await(connector.retrieveUnsubmittedClaims)
-        }
       }
 
       "throw exception when 5xx response status in the third attempt" in {
@@ -280,9 +276,8 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
         response = HttpResponse(400, """{"errorCode": "UPDATED_BY_ANOTHER_USER"}""")
       )
 
-      a[UpdatedByAnotherUserException] should be thrownBy {
+      a[UpdatedByAnotherUserException] should be thrownBy
         await(connector.updateClaim("123", updateRequest))
-      }
     }
 
     "should throw UnsubmittedClaimsLimitExceededException when backend returns 400 with UNSUBMITTED_CLAIMS_LIMIT_EXCEEDED error" in {
@@ -303,9 +298,8 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
         response = HttpResponse(400, """{"errorCode": "UNSUBMITTED_CLAIMS_LIMIT_EXCEEDED"}""")
       )
 
-      a[UnsubmittedClaimsLimitExceededException] should be thrownBy {
+      a[UnsubmittedClaimsLimitExceededException] should be thrownBy
         await(connector.updateClaim("123", updateRequest))
-      }
     }
 
     "should throw UnsubmittedClaimExistsForCharityException when backend returns 400 with UNSUBMITTED_CLAIM_EXISTS_FOR_CHARITY error" in {
@@ -326,9 +320,8 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
         response = HttpResponse(400, """{"errorCode": "UNSUBMITTED_CLAIM_EXISTS_FOR_CHARITY"}""")
       )
 
-      a[UnsubmittedClaimExistsForCharityException] should be thrownBy {
+      a[UnsubmittedClaimExistsForCharityException] should be thrownBy
         await(connector.updateClaim("123", updateRequest))
-      }
     }
 
     "should throw UnknownClaimError when backend returns 400 with unknown error code" in {
@@ -349,9 +342,8 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
         response = HttpResponse(400, """{"errorCode": "SOME_UNKNOWN_ERROR"}""")
       )
 
-      a[UnknownClaimError] should be thrownBy {
+      a[UnknownClaimError] should be thrownBy
         await(connector.updateClaim("123", updateRequest))
-      }
     }
   }
 
@@ -373,31 +365,27 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
     "throw an exception if the service returns malformed JSON" in {
       givenDeleteClaimEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]"))
         .once()
-      a[Exception] should be thrownBy {
+      a[Exception] should be thrownBy
         await(connector.deleteClaim("123"))
-      }
     }
 
     "throw an exception if the service returns wrong entity format" in {
       givenDeleteClaimEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]}"))
         .once()
-      a[Exception] should be thrownBy {
+      a[Exception] should be thrownBy
         await(connector.deleteClaim("123"))
-      }
     }
 
     "throw an exception if the service returns 404 status" in {
       givenDeleteClaimEndpointReturns(HttpResponse(404, "Bad Request")).once()
-      a[Exception] should be thrownBy {
+      a[Exception] should be thrownBy
         await(connector.deleteClaim("123"))
-      }
     }
 
     "throw an exception if the service returns 500 status" in {
       givenDeleteClaimEndpointReturns(HttpResponse(500, ""))
-      a[Exception] should be thrownBy {
+      a[Exception] should be thrownBy
         await(connector.deleteClaim("123"))
-      }
     }
   }
 
@@ -430,9 +418,8 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
         response = HttpResponse(400, """{"errorCode": "UPDATED_BY_ANOTHER_USER"}""")
       )
 
-      a[UpdatedByAnotherUserException] should be thrownBy {
+      a[UpdatedByAnotherUserException] should be thrownBy
         await(connector.submitClaim("123", "1234567890", "cy"))
-      }
     }
   }
 
@@ -454,9 +441,8 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
     "throw an exception if the service returns 404 status" in {
       givenGetSubmissionClaimSummaryEndpointReturns(HttpResponse(404, "Not Found")).once()
-      a[Exception] should be thrownBy {
+      a[Exception] should be thrownBy
         await(connector.getSubmissionClaimSummary("123"))
-      }
     }
   }
 
@@ -473,9 +459,8 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
     "should throw an exception if the service returns 500 status" in {
       givenGetUnsubmittedClaimEndpointReturns(HttpResponse(500, ""))
-      a[Exception] should be thrownBy {
+      a[Exception] should be thrownBy
         await(connector.hasUnsubmittedClaim("123"))
-      }
     }
   }
 }

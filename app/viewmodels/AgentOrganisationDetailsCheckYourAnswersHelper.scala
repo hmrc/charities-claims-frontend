@@ -72,8 +72,8 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
             agentOrgUserAnswers.nameOfCharityRegulator match {
 
               case Some(
-                    NameOfCharityRegulator.EnglandAndWales |
-                    NameOfCharityRegulator.Scottish | NameOfCharityRegulator.NorthernIreland
+                    NameOfCharityRegulator.EnglandAndWales | NameOfCharityRegulator.Scottish |
+                    NameOfCharityRegulator.NorthernIreland
                   ) =>
                 Some(
                   agentOrgUserAnswers.charityRegistrationNumber match {

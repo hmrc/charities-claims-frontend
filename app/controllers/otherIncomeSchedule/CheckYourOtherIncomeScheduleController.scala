@@ -48,7 +48,6 @@ class CheckYourOtherIncomeScheduleController @Inject() (
       .async { implicit request =>
         claimsValidationService.getOtherIncomeScheduleData
           .map { otherIncomeScheduleData =>
-
             val currentPage      = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
             val paginationResult = PaginationService.paginateOtherIncomes(
               allOtherIncomes = otherIncomeScheduleData.otherIncomes,

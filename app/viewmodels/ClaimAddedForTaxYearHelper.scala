@@ -59,9 +59,13 @@ object ClaimAddedForTaxYearHelper {
 
     val actions =
       if isMultipleTaxYears then
-        baseActions :+ (controllers.giftAidSmallDonationsScheme.routes.RemoveClaimForTaxYearController
-          .onPageLoad(index)
-          .url, "site.remove", label)
+        baseActions :+ (
+          controllers.giftAidSmallDonationsScheme.routes.RemoveClaimForTaxYearController
+            .onPageLoad(index)
+            .url,
+          "site.remove",
+          label
+        )
       else baseActions
 
     label -> actions
