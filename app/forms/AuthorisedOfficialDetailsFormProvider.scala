@@ -25,7 +25,7 @@ class AuthorisedOfficialDetailsFormProvider @Inject() extends Mappings {
 
   private val titleRegex     = "^( *[a-zA-Z]{1,4} *)$"
   private val firstNameRegex = "^( *[A-Za-z][A-Za-z'\\-]* *)$"
-  private val lastNameRegex  = "^( *[A-Za-z][A-Za-z'\\-]* *)$"
+  private val lastNameRegex  = "^[A-Za-z0-9 ,\\.\\(\\)/&\\-']+$"
   private val phoneRegex     = "^[0-9\\(\\)\\-\\s]{1,30}$"
   private val maxPhoneLength = 30
 
