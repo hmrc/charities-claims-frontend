@@ -33,7 +33,7 @@ class AuthorisedOfficialDetailsControllerISpec
 
   private val validPayload = Json.obj(
     "firstName"   -> "John",
-    "lastName"    -> "Doe",
+    "lastName"    -> "van    der West",
     "phoneNumber" -> "01234567890",
     "postcode"    -> "SW1A 1AA"
   )
