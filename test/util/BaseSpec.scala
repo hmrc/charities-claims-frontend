@@ -17,23 +17,22 @@
 package util
 
 import org.scalatest.concurrent.ScalaFutures
+import play.api.mvc.AnyContent
 import org.scalamock.scalatest.MockFactory
 import org.apache.pekko.stream.Materializer
 import config.FrontendAppConfig
 import generators.Generators
-import models.{RepaymentClaimDetailsAnswers, SessionData}
+import uk.gov.hmrc.auth.core.AffinityGroup
 import org.apache.pekko.actor.ActorSystem
+import models.{RepaymentClaimDetailsAnswers, SessionData}
 import play.api.i18n.{Messages, MessagesApi}
+import models.requests.AuthorisedRequest
 import org.scalatest.freespec.AnyFreeSpec
 import com.typesafe.config.ConfigFactory
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, OptionValues}
 import play.api.{Application, Configuration}
 import org.scalatest.time.{Millis, Seconds, Span}
-import uk.gov.hmrc.auth.core.AffinityGroup
-import models.requests.AuthorisedRequest
-import play.api.mvc.AnyContent
-import com.typesafe.config.ConfigValueFactory
 
 abstract class BaseSpec
     extends AnyFreeSpec
@@ -149,14 +148,6 @@ abstract class BaseSpec
 
   protected val testFrontendAppConfig = new FrontendAppConfig(
     testConfiguration
-  )
-
-  protected val testFrontendAppConfigWithTrafficSplitEnabled = new FrontendAppConfig(
-    Configuration(
-      testConfiguration.underlying
-        .withValue("splitter.trafficSplitEnabled", ConfigValueFactory.fromAnyRef("true"))
-        .withValue("urls.legacyCharitiesServiceUrl", ConfigValueFactory.fromAnyRef("/charities"))
-    )
   )
 
   object FakeRequest {

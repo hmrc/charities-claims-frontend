@@ -16,7 +16,7 @@
 
 package controllers.actions
 
-import connectors.{ClaimsConnector, ClaimsValidationConnector, RateLimitedAllowListConnector}
+import connectors.{ClaimsConnector, ClaimsValidationConnector}
 import models.*
 import models.requests.{AuthorisedRequest, DataRequest}
 import play.api.mvc.Results.*
@@ -40,10 +40,9 @@ class RefreshDataActionSpec extends BaseSpec {
 
   "RefreshDataAction" - {
     "refines AuthorisedRequest into a DataRequest when session data exists" in {
-      val mockSessionCache                  = mock[SessionCache]
-      val mockClaimsConnector               = mock[ClaimsConnector]
-      val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
-      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
+      val mockSessionCache              = mock[SessionCache]
+      val mockClaimsConnector           = mock[ClaimsConnector]
+      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
 
       val action = new DefaultRefreshDataAction(
         mockSessionCache,
@@ -53,11 +52,9 @@ class RefreshDataActionSpec extends BaseSpec {
           mockSessionCache,
           mockClaimsConnector,
           mockClaimsValidationConnector,
-          testFrontendAppConfig,
-          mockRateLimitedAllowListConnector
+          testFrontendAppConfig
         ),
-        testFrontendAppConfig,
-        mockRateLimitedAllowListConnector
+        testFrontendAppConfig
       )
 
       val sessionData =
@@ -101,10 +98,9 @@ class RefreshDataActionSpec extends BaseSpec {
     }
 
     "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and some claims and uploads summary are retrieved from backend" in {
-      val mockSessionCache                  = mock[SessionCache]
-      val mockClaimsConnector               = mock[ClaimsConnector]
-      val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
-      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
+      val mockSessionCache              = mock[SessionCache]
+      val mockClaimsConnector           = mock[ClaimsConnector]
+      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
 
       val action = new DefaultRefreshDataAction(
         mockSessionCache,
@@ -114,11 +110,9 @@ class RefreshDataActionSpec extends BaseSpec {
           mockSessionCache,
           mockClaimsConnector,
           mockClaimsValidationConnector,
-          testFrontendAppConfig,
-          mockRateLimitedAllowListConnector
+          testFrontendAppConfig
         ),
-        testFrontendAppConfig,
-        mockRateLimitedAllowListConnector
+        testFrontendAppConfig
       )
 
       val sessionData =
@@ -195,56 +189,10 @@ class RefreshDataActionSpec extends BaseSpec {
       status(result) shouldBe OK
     }
 
-    "refines AuthorisedRequest into a DataRequest when session data object doesn't exist and user is not on the allow list" in {
-      val mockSessionCache                  = mock[SessionCache]
-      val mockClaimsConnector               = mock[ClaimsConnector]
-      val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
-      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
-
-      testFrontendAppConfigWithTrafficSplitEnabled.useRateLimitedAllowList shouldBe true
-
-      val action = new DefaultRefreshDataAction(
-        mockSessionCache,
-        mockClaimsConnector,
-        mockClaimsValidationConnector,
-        new DefaultDataRetrievalAction(
-          mockSessionCache,
-          mockClaimsConnector,
-          mockClaimsValidationConnector,
-          testFrontendAppConfigWithTrafficSplitEnabled,
-          mockRateLimitedAllowListConnector
-        ),
-        testFrontendAppConfigWithTrafficSplitEnabled,
-        mockRateLimitedAllowListConnector
-      )
-
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .anyNumberOfTimes()
-        .returning(Future.successful(None))
-
-      (mockRateLimitedAllowListConnector
-        .checkAllowList(_: String, _: String)(using _: HeaderCarrier))
-        .expects(*, *, *)
-        .returning(Future.successful(false))
-
-      val result = action.invokeBlock(
-        authorisedRequestOrganisation,
-        _ => Future.successful(Ok)
-      )
-
-      status(result)           shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(
-        testFrontendAppConfigWithTrafficSplitEnabled.legacyCharitiesServiceUrl(authorisedRequestOrganisation)
-      )
-    }
-
     "refines AuthorisedRequest into a DataRequest when session data object exists but and unsubmitted claim exists too" in {
-      val mockSessionCache                  = mock[SessionCache]
-      val mockClaimsConnector               = mock[ClaimsConnector]
-      val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
-      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
+      val mockSessionCache              = mock[SessionCache]
+      val mockClaimsConnector           = mock[ClaimsConnector]
+      val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
 
       val action = new DefaultRefreshDataAction(
         mockSessionCache,
@@ -254,11 +202,9 @@ class RefreshDataActionSpec extends BaseSpec {
           mockSessionCache,
           mockClaimsConnector,
           mockClaimsValidationConnector,
-          testFrontendAppConfig,
-          mockRateLimitedAllowListConnector
+          testFrontendAppConfig
         ),
-        testFrontendAppConfig,
-        mockRateLimitedAllowListConnector
+        testFrontendAppConfig
       )
 
       val sessionData = RepaymentClaimDetailsAnswers
@@ -321,12 +267,11 @@ class RefreshDataActionSpec extends BaseSpec {
   }
 
   "refines AuthorisedRequest into a DataRequest when session data object exists but no claim has been submitted yet" in {
-    val mockSessionCache                  = mock[SessionCache]
-    val mockClaimsConnector               = mock[ClaimsConnector]
-    val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
-    val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
+    val mockSessionCache              = mock[SessionCache]
+    val mockClaimsConnector           = mock[ClaimsConnector]
+    val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
 
-    val action = new DefaultRefreshDataAction(
+    val action      = new DefaultRefreshDataAction(
       mockSessionCache,
       mockClaimsConnector,
       mockClaimsValidationConnector,
@@ -334,13 +279,10 @@ class RefreshDataActionSpec extends BaseSpec {
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig,
-        mockRateLimitedAllowListConnector
+        testFrontendAppConfig
       ),
-      testFrontendAppConfig,
-      mockRateLimitedAllowListConnector
+      testFrontendAppConfig
     )
-
     val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
 
     (mockSessionCache
@@ -360,10 +302,9 @@ class RefreshDataActionSpec extends BaseSpec {
   }
 
   "refines AuthorisedRequest into a DataRequest when submitted session data object exists and claimId=blank is provided" in {
-    val mockSessionCache                  = mock[SessionCache]
-    val mockClaimsConnector               = mock[ClaimsConnector]
-    val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
-    val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
+    val mockSessionCache              = mock[SessionCache]
+    val mockClaimsConnector           = mock[ClaimsConnector]
+    val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
 
     val action = new DefaultRefreshDataAction(
       mockSessionCache,
@@ -373,11 +314,9 @@ class RefreshDataActionSpec extends BaseSpec {
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig,
-        mockRateLimitedAllowListConnector
+        testFrontendAppConfig
       ),
-      testFrontendAppConfig,
-      mockRateLimitedAllowListConnector
+      testFrontendAppConfig
     )
 
     val sessionData = SessionData
@@ -407,10 +346,9 @@ class RefreshDataActionSpec extends BaseSpec {
   }
 
   "refines AuthorisedRequest into a DataRequest when unsubmitted claim exists and claimId=blank is provided" in {
-    val mockSessionCache                  = mock[SessionCache]
-    val mockClaimsConnector               = mock[ClaimsConnector]
-    val mockClaimsValidationConnector     = mock[ClaimsValidationConnector]
-    val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
+    val mockSessionCache              = mock[SessionCache]
+    val mockClaimsConnector           = mock[ClaimsConnector]
+    val mockClaimsValidationConnector = mock[ClaimsValidationConnector]
 
     val action = new DefaultRefreshDataAction(
       mockSessionCache,
@@ -420,11 +358,9 @@ class RefreshDataActionSpec extends BaseSpec {
         mockSessionCache,
         mockClaimsConnector,
         mockClaimsValidationConnector,
-        testFrontendAppConfig,
-        mockRateLimitedAllowListConnector
+        testFrontendAppConfig
       ),
-      testFrontendAppConfig,
-      mockRateLimitedAllowListConnector
+      testFrontendAppConfig
     )
 
     val sessionData =
