@@ -20,14 +20,14 @@ import controllers.ControllerSpec
 import controllers.otherIncomeSchedule.routes
 import forms.YesNoFormProvider
 import models.*
-import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import services.{ClaimsService, ClaimsValidationService, SaveService}
-import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
 
@@ -95,10 +95,8 @@ class CheckYourOtherIncomeScheduleControllerSpec extends ControllerSpec {
       "should render the page correctly when schedule data is available" in {
         val mockClaimsValidationService: ClaimsValidationService = mock[ClaimsValidationService]
 
-        (mockClaimsValidationService
-          .getOtherIncomeScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testOtherIncomeScheduleData))
+        when(mockClaimsValidationService.getOtherIncomeScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testOtherIncomeScheduleData))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
@@ -119,10 +117,8 @@ class CheckYourOtherIncomeScheduleControllerSpec extends ControllerSpec {
       "should fail when no schedule data is available" in {
         val mockClaimsValidationService: ClaimsValidationService = mock[ClaimsValidationService]
 
-        (mockClaimsValidationService
-          .getOtherIncomeScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.failed(new RuntimeException("No Other Income schedule data found")))
+        when(mockClaimsValidationService.getOtherIncomeScheduleData(using any(), any()))
+          .thenReturn(Future.failed(new RuntimeException("No Other Income schedule data found")))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
@@ -143,10 +139,8 @@ class CheckYourOtherIncomeScheduleControllerSpec extends ControllerSpec {
       "should return BadRequest when form has errors" in {
         val mockClaimsValidationService: ClaimsValidationService = mock[ClaimsValidationService]
 
-        (mockClaimsValidationService
-          .getOtherIncomeScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testOtherIncomeScheduleData))
+        when(mockClaimsValidationService.getOtherIncomeScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testOtherIncomeScheduleData))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
@@ -167,10 +161,8 @@ class CheckYourOtherIncomeScheduleControllerSpec extends ControllerSpec {
       "should redirect to update other income schedule when Yes is selected" in {
         val mockClaimsValidationService: ClaimsValidationService = mock[ClaimsValidationService]
 
-        (mockClaimsValidationService
-          .getOtherIncomeScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testOtherIncomeScheduleData))
+        when(mockClaimsValidationService.getOtherIncomeScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testOtherIncomeScheduleData))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
@@ -193,10 +185,8 @@ class CheckYourOtherIncomeScheduleControllerSpec extends ControllerSpec {
 
         val completedSessionData = sessionData.copy(otherIncomeScheduleCompleted = true)
 
-        (mockClaimsValidationService
-          .getOtherIncomeScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testOtherIncomeScheduleData))
+        when(mockClaimsValidationService.getOtherIncomeScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testOtherIncomeScheduleData))
 
         given application: Application = applicationBuilder(sessionData = completedSessionData)
           .overrides(
@@ -221,20 +211,12 @@ class CheckYourOtherIncomeScheduleControllerSpec extends ControllerSpec {
         val mockClaimsService: ClaimsService                     = mock[ClaimsService]
         val mockSaveService: SaveService                         = mock[SaveService]
 
-        (mockClaimsValidationService
-          .getOtherIncomeScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testOtherIncomeScheduleData))
+        when(mockClaimsValidationService.getOtherIncomeScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testOtherIncomeScheduleData))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(

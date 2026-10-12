@@ -20,7 +20,8 @@ import connectors.ClaimsValidationConnector
 import controllers.ControllerSpec
 import controllers.otherIncomeSchedule.routes
 import models.*
-import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.{inject, Application}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceableModule
@@ -28,7 +29,6 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import services.ClaimsValidationService
-import uk.gov.hmrc.http.HeaderCarrier
 import util.TestResources
 
 import scala.concurrent.Future
@@ -133,10 +133,10 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -156,10 +156,10 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -185,10 +185,10 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -220,10 +220,10 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -245,10 +245,10 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -270,10 +270,10 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -293,10 +293,10 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -317,10 +317,10 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -341,10 +341,10 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -366,10 +366,10 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidatedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidatedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -391,10 +391,10 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidatedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidatedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -439,10 +439,8 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationService
-          .deleteOtherIncomeSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockClaimsValidationService.deleteOtherIncomeSchedule(using any(), any()))
+          .thenReturn(Future.successful(()))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -464,10 +462,8 @@ class ProblemWithOtherIncomeScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationService
-          .deleteOtherIncomeSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.failed(new RuntimeException("Delete failed")))
+        when(mockClaimsValidationService.deleteOtherIncomeSchedule(using any(), any()))
+          .thenReturn(Future.failed(new RuntimeException("Delete failed")))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 

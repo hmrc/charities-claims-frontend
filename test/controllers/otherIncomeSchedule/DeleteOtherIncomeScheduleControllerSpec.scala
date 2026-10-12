@@ -18,13 +18,14 @@ package controllers.otherIncomeSchedule
 
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import services.ClaimsValidationService
-import uk.gov.hmrc.http.HeaderCarrier
 import views.html.DeleteOtherIncomeScheduleView
 
 import scala.concurrent.Future
@@ -124,10 +125,8 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
         val sessionData = completeRepaymentDetailsAnswersSession
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
-        (mockClaimsValidationService
-          .deleteOtherIncomeSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockClaimsValidationService.deleteOtherIncomeSchedule(using any(), any()))
+          .thenReturn(Future.successful(()))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
@@ -150,12 +149,9 @@ class DeleteOtherIncomeScheduleControllerSpec extends ControllerSpec {
           completeRepaymentDetailsAnswersSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
-        (mockClaimsValidationService
-          .deleteOtherIncomeSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(
-            Future.failed(new RuntimeException("No OtherIncome schedule upload found for claimId: test-claim-123"))
-          )
+        when(mockClaimsValidationService.deleteOtherIncomeSchedule(using any(), any())).thenReturn(
+          Future.failed(new RuntimeException("No OtherIncome schedule upload found for claimId: test-claim-123"))
+        )
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))

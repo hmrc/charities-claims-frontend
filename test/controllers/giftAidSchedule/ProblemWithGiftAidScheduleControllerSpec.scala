@@ -20,7 +20,8 @@ import connectors.ClaimsValidationConnector
 import controllers.ControllerSpec
 import controllers.giftAidSchedule.routes
 import models.*
-import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceableModule
@@ -29,7 +30,6 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.inject
 import services.ClaimsValidationService
-import uk.gov.hmrc.http.HeaderCarrier
 import util.TestResources
 
 import scala.concurrent.Future
@@ -133,10 +133,10 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
           .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -156,10 +156,10 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
           .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -184,10 +184,10 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
           .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -212,10 +212,10 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
           .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -237,10 +237,10 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
           .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -262,10 +262,10 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
           .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -288,10 +288,10 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
           .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -312,10 +312,10 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
           .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -336,10 +336,10 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
           .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -361,10 +361,10 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
           .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidatedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidatedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -386,10 +386,10 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
           .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidatedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        )
+          .thenReturn(Future.successful(testValidatedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -433,10 +433,7 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
           .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationService
-          .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockClaimsValidationService.deleteGiftAidSchedule(using any(), any())).thenReturn(Future.successful(()))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 
@@ -458,10 +455,8 @@ class ProblemWithGiftAidScheduleControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
           .copy(giftAidScheduleFileUploadReference = Some(testFileUploadReference))
 
-        (mockClaimsValidationService
-          .deleteGiftAidSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.failed(new RuntimeException("Delete failed")))
+        when(mockClaimsValidationService.deleteGiftAidSchedule(using any(), any()))
+          .thenReturn(Future.failed(new RuntimeException("Delete failed")))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 

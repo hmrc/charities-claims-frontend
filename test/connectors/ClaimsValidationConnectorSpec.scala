@@ -20,13 +20,11 @@ import util.{BaseSpec, HttpV2Support, TestResources}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import models.*
-import org.scalamock.handlers.CallHandler
 import play.api.test.Helpers.*
 import com.typesafe.config.ConfigFactory
 import play.api.Configuration
 import play.api.libs.json.Json
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import java.net.URL
@@ -87,29 +85,29 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
   def givenCreateUploadTrackingEndpointReturns(
     request: CreateUploadTrackingRequest,
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     mockHttpPostSuccess(
       url = "http://example.com:1234/charities-claims-validation/123/create-upload-tracking",
       requestBody = Json.toJson(request),
       hasHeaders = false
     )(response)
 
-  def givenGetUploadSummaryEndpointReturns(response: HttpResponse): CallHandler[Future[HttpResponse]] =
+  def givenGetUploadSummaryEndpointReturns(response: HttpResponse) =
     mockHttpGetSuccess(
       URL("http://example.com:1234/charities-claims-validation/123/upload-results")
     )(response)
 
-  def givenGetUploadResultEndpointReturns(response: HttpResponse): CallHandler[Future[HttpResponse]] =
+  def givenGetUploadResultEndpointReturns(response: HttpResponse) =
     mockHttpGetSuccess(
       URL("http://example.com:1234/charities-claims-validation/123/upload-results/file-upload-reference-123")
     )(response)
 
-  def givenDeleteScheduleEndpointReturns(response: HttpResponse): CallHandler[Future[HttpResponse]] =
+  def givenDeleteScheduleEndpointReturns(response: HttpResponse) =
     mockHttpDeleteSuccess(
       "http://example.com:1234/charities-claims-validation/123/upload-results/ref-123"
     )(response)
 
-  def givenUpdateUploadStatusEndpointReturns(response: HttpResponse): CallHandler[Future[HttpResponse]] =
+  def givenUpdateUploadStatusEndpointReturns(response: HttpResponse) =
     mockHttpPutSuccess(
       "http://example.com:1234/charities-claims-validation/123/upload-results/file-upload-reference-123",
       Json.toJson(UpdateUploadStatusRequest(FileStatus.VERIFYING))
@@ -133,7 +131,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         givenCreateUploadTrackingEndpointReturns(
           createUploadTrackingRequest,
           HttpResponse(200, Json.stringify(Json.toJson(SuccessResponse(success = true))))
-        ).once()
+        )
         await(connector.createUploadTracking("123", createUploadTrackingRequest)) should be(true)
       }
 
@@ -141,7 +139,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         givenCreateUploadTrackingEndpointReturns(
           createUploadTrackingRequest,
           HttpResponse(200, Json.stringify(Json.toJson(SuccessResponse(success = false))))
-        ).once()
+        )
         await(connector.createUploadTracking("123", createUploadTrackingRequest)) should be(false)
       }
     }
@@ -149,49 +147,49 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
     "getUploadSummary" - {
 
       "should return upload summary when service returns 200 status" in {
-        givenGetUploadSummaryEndpointReturns(HttpResponse(200, testUploadSummaryResponseJsonString)).once()
+        givenGetUploadSummaryEndpointReturns(HttpResponse(200, testUploadSummaryResponseJsonString))
 
         await(connector.getUploadSummary("123")) shouldEqual testUploadSummaryResponse
       }
 
       "should return empty upload summary when service returns CLAIM_DOES_NOT_EXIST" in {
-        givenGetUploadSummaryEndpointReturns(HttpResponse(404, "CLAIM_DOES_NOT_EXIST")).once()
+        givenGetUploadSummaryEndpointReturns(HttpResponse(404, "CLAIM_DOES_NOT_EXIST"))
 
         await(connector.getUploadSummary("123")) shouldEqual GetUploadSummaryResponse(uploads = Nil)
       }
 
       "throw an exception if the service returns malformed JSON" in {
-        givenGetUploadSummaryEndpointReturns(HttpResponse(200, "{\"invalid\": \"json\"}")).once()
+        givenGetUploadSummaryEndpointReturns(HttpResponse(200, "{\"invalid\": \"json\"}"))
 
         a[Exception] should be thrownBy
           await(connector.getUploadSummary("123"))
       }
 
       "throw an exception if the service returns wrong entity format" in {
-        givenGetUploadSummaryEndpointReturns(HttpResponse(200, "{\"uploads\": \"not-an-array\"}")).once()
+        givenGetUploadSummaryEndpointReturns(HttpResponse(200, "{\"uploads\": \"not-an-array\"}"))
 
         a[Exception] should be thrownBy
           await(connector.getUploadSummary("123"))
       }
 
       "throw an exception if the service returns 404 status" in {
-        givenGetUploadSummaryEndpointReturns(HttpResponse(404, "")).once()
+        givenGetUploadSummaryEndpointReturns(HttpResponse(404, ""))
 
         a[Exception] should be thrownBy
           await(connector.getUploadSummary("123"))
       }
 
       "throw an exception if the service returns 500 status" in {
-        givenGetUploadSummaryEndpointReturns(HttpResponse(500, "")).once()
+        givenGetUploadSummaryEndpointReturns(HttpResponse(500, ""))
 
         a[Exception] should be thrownBy
           await(connector.getUploadSummary("123"))
       }
 
       "throw exception when 5xx response status in the third attempt" in {
-        givenGetUploadSummaryEndpointReturns(HttpResponse(500, "")).once()
-        givenGetUploadSummaryEndpointReturns(HttpResponse(499, "")).once()
-        givenGetUploadSummaryEndpointReturns(HttpResponse(469, "")).once()
+        givenGetUploadSummaryEndpointReturns(HttpResponse(500, ""))
+        givenGetUploadSummaryEndpointReturns(HttpResponse(499, ""))
+        givenGetUploadSummaryEndpointReturns(HttpResponse(469, ""))
 
         a[Exception] shouldBe thrownBy {
           await(connector.getUploadSummary("123"))
@@ -199,16 +197,16 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
       }
 
       "accept valid response in a second attempt" in {
-        givenGetUploadSummaryEndpointReturns(HttpResponse(500, "")).once()
-        givenGetUploadSummaryEndpointReturns(HttpResponse(200, testUploadSummaryResponseJsonString)).once()
+        givenGetUploadSummaryEndpointReturns(HttpResponse(500, ""))
+        givenGetUploadSummaryEndpointReturns(HttpResponse(200, testUploadSummaryResponseJsonString))
 
         await(connector.getUploadSummary("123")) shouldEqual testUploadSummaryResponse
       }
 
       "accept valid response in a third attempt" in {
-        givenGetUploadSummaryEndpointReturns(HttpResponse(499, "")).once()
-        givenGetUploadSummaryEndpointReturns(HttpResponse(500, "")).once()
-        givenGetUploadSummaryEndpointReturns(HttpResponse(200, testUploadSummaryResponseJsonString)).once()
+        givenGetUploadSummaryEndpointReturns(HttpResponse(499, ""))
+        givenGetUploadSummaryEndpointReturns(HttpResponse(500, ""))
+        givenGetUploadSummaryEndpointReturns(HttpResponse(200, testUploadSummaryResponseJsonString))
 
         await(connector.getUploadSummary("123")) shouldEqual testUploadSummaryResponse
       }
@@ -217,14 +215,14 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
     "getUploadResult" - {
 
       "should return upload result when service returns 200 status with validated gift aid" in {
-        givenGetUploadResultEndpointReturns(HttpResponse(200, testGetUploadResultValidatedGiftAidJsonString)).once()
+        givenGetUploadResultEndpointReturns(HttpResponse(200, testGetUploadResultValidatedGiftAidJsonString))
         await(connector.getUploadResult("123", FileUploadReference("file-upload-reference-123"))) should be(
           a[GetUploadResultValidatedGiftAid]
         )
       }
 
       "should return upload result when service returns 200 status with awaiting upload" in {
-        givenGetUploadResultEndpointReturns(HttpResponse(200, testGetUploadResultValidatedGiftAidJsonString)).once()
+        givenGetUploadResultEndpointReturns(HttpResponse(200, testGetUploadResultValidatedGiftAidJsonString))
         await(connector.getUploadResult("123", FileUploadReference("file-upload-reference-123"))) should be(
           a[GetUploadResultValidatedGiftAid]
         )
@@ -237,7 +235,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         val successResponse = DeleteScheduleResponse(success = true)
         givenDeleteScheduleEndpointReturns(
           HttpResponse(200, Json.stringify(Json.toJson(successResponse)))
-        ).once()
+        )
 
         await(connector.deleteSchedule("123", FileUploadReference("ref-123"))) shouldBe successResponse
       }
@@ -246,28 +244,28 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
         val failureResponse = DeleteScheduleResponse(success = false)
         givenDeleteScheduleEndpointReturns(
           HttpResponse(200, Json.stringify(Json.toJson(failureResponse)))
-        ).once()
+        )
 
         a[Exception] should be thrownBy
           await(connector.deleteSchedule("123", FileUploadReference("ref-123")))
       }
 
       "throw an exception if the service returns malformed JSON" in {
-        givenDeleteScheduleEndpointReturns(HttpResponse(200, "{\"invalid\"}")).once()
+        givenDeleteScheduleEndpointReturns(HttpResponse(200, "{\"invalid\"}"))
 
         a[Exception] should be thrownBy
           await(connector.deleteSchedule("123", FileUploadReference("ref-123")))
       }
 
       "throw an exception if the service returns 404 status" in {
-        givenDeleteScheduleEndpointReturns(HttpResponse(404, "")).once()
+        givenDeleteScheduleEndpointReturns(HttpResponse(404, ""))
 
         a[Exception] should be thrownBy
           await(connector.deleteSchedule("123", FileUploadReference("ref-123")))
       }
 
       "throw an exception if the service returns 500 status" in {
-        givenDeleteScheduleEndpointReturns(HttpResponse(500, "")).once()
+        givenDeleteScheduleEndpointReturns(HttpResponse(500, ""))
 
         a[Exception] should be thrownBy
           await(connector.deleteSchedule("123", FileUploadReference("ref-123")))
@@ -278,7 +276,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
       "should return true when service returns 200 status" in {
         givenUpdateUploadStatusEndpointReturns(
           HttpResponse(200, Json.stringify(Json.toJson(SuccessResponse(success = true))))
-        ).once()
+        )
         await(
           connector.updateUploadStatus("123", FileUploadReference("file-upload-reference-123"), FileStatus.VERIFYING)
         ) should be(true)

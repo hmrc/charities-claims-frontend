@@ -20,13 +20,11 @@ import util.{BaseSpec, HttpV2Support}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import models.{UpscanInitiateRequest, UpscanInitiateResponse}
-import org.scalamock.handlers.CallHandler
 import play.api.test.Helpers.*
 import com.typesafe.config.ConfigFactory
 import play.api.Configuration
 import play.api.libs.json.Json
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class UpscanInitiateConnectorSpec extends BaseSpec with HttpV2Support {
@@ -67,7 +65,7 @@ class UpscanInitiateConnectorSpec extends BaseSpec with HttpV2Support {
   def givenPostInitiateEndpointReturns(
     request: UpscanInitiateRequest,
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     mockHttpPostSuccess(
       url = "http://foo.bar.com:1234/foo-upscan/v2/initiate",
       requestBody = Json.toJson(request),
@@ -118,7 +116,7 @@ class UpscanInitiateConnectorSpec extends BaseSpec with HttpV2Support {
     "initiate" - {
 
       "should return a upscan initiate response if the service returns 200 status" in {
-        givenPostInitiateEndpointReturns(expectedUpscanInitiateRequest, HttpResponse(200, responseJson)).once()
+        givenPostInitiateEndpointReturns(expectedUpscanInitiateRequest, HttpResponse(200, responseJson))
         await(connector.initiate("claim-1234567890", upscanInitiateRequest)) shouldBe response
       }
 

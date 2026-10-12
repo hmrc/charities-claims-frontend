@@ -19,13 +19,14 @@ package controllers.organisationDetails
 import controllers.ControllerSpec
 import models.*
 import models.SessionData.isCASCCharityReference
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.inject.bind
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import services.ClaimsService
 import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.http.HeaderCarrier
 import views.html.{AgentOrganisationDetailsCheckYourAnswersView, OrganisationDetailsCheckYourAnswersView}
 
 import _root_.scala.concurrent.Future
@@ -1214,10 +1215,8 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
           completeRepaymentDetailsAnswersSession.copy(organisationDetailsAnswers = Some(organisationDetailsAnswers))
 
         val mockClaimsService: ClaimsService = mock[ClaimsService]
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -1277,10 +1276,7 @@ class OrganisationDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
 
         val mockClaimsService: ClaimsService = mock[ClaimsService]
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent)

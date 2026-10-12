@@ -20,7 +20,8 @@ import connectors.ClaimsValidationConnector
 import controllers.ControllerSpec
 import controllers.communityBuildingsSchedule.routes
 import models.*
-import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceableModule
@@ -30,7 +31,6 @@ import play.api.test.FakeRequest
 import play.api.inject
 import services.ClaimsValidationService
 import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.http.HeaderCarrier
 import util.TestResources
 
 import scala.concurrent.Future
@@ -136,10 +136,9 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
       // Page Render Tests:
 
       "should render page with validation errors when upload has VALIDATION_FAILED status" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        ).thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -157,10 +156,9 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
       }
 
       "should display error messages in the table" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        ).thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -177,10 +175,9 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
       }
 
       "As Organisation, should display error messages in the table" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        ).thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application =
           applicationBuilder(sessionData = validSessionData, affinityGroup = AffinityGroup.Organisation).build()
@@ -200,10 +197,9 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
       }
 
       "As Agent, should display error messages in the table" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        ).thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application =
           applicationBuilder(sessionData = validSessionData, affinityGroup = AffinityGroup.Agent).build()
@@ -223,10 +219,9 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
       }
 
       "should display number 0 in row column for string field errors" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        ).thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -244,10 +239,9 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
       }
 
       "should default to page 1 of pagination when page query parameter is not a valid integer" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        ).thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -266,10 +260,9 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
       }
 
       "should include the communityBuildingsScheduleSpreadsheetGuidanceUrl link" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        ).thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -286,10 +279,9 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
       }
 
       "should include the (attach updated schedule) button" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        ).thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -306,10 +298,9 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
       }
 
       "should include the delete schedule link" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        ).thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -327,10 +318,9 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
       }
 
       "should redirect to YourCommunityBuildingsScheduleUploadController when upload result is VALIDATED (fallback case)" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidatedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        ).thenReturn(Future.successful(testValidatedResponse))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -348,10 +338,9 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
       }
 
       "should NOT render problem page when upload has VALIDATED status (should redirect)" in {
-        (mockClaimsValidationConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(testClaimId, testFileUploadReference, *)
-          .returning(Future.successful(testValidatedResponse))
+        when(
+          mockClaimsValidationConnector.getUploadResult(eqTo(testClaimId), eqTo(testFileUploadReference))(using any())
+        ).thenReturn(Future.successful(testValidatedResponse))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -390,11 +379,10 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
           )
         }
       }
+
       "should delete schedule and redirect to UploadCommunityBuildingsScheduleController in Attach updated schedule path" in {
-        (mockClaimsValidationService
-          .deleteCommunityBuildingsSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockClaimsValidationService.deleteCommunityBuildingsSchedule(using any(), any()))
+          .thenReturn(Future.successful(()))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -412,10 +400,8 @@ class ProblemWithCommunityBuildingsScheduleControllerSpec extends ControllerSpec
       }
 
       "should handle when delete fails" in {
-        (mockClaimsValidationService
-          .deleteCommunityBuildingsSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.failed(new RuntimeException("Delete failed")))
+        when(mockClaimsValidationService.deleteCommunityBuildingsSchedule(using any(), any()))
+          .thenReturn(Future.failed(new RuntimeException("Delete failed")))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 

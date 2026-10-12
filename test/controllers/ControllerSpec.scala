@@ -20,6 +20,8 @@ import com.softwaremill.diffx.scalatest.DiffShouldMatcher
 import connectors.{ClaimsConnector, ClaimsValidationConnector}
 import controllers.actions.{AuthorisedAction, DataRetrievalAction, RefreshDataAction}
 import models.*
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.data.Form
 import play.api.http.*
 import play.api.i18n.{Lang, Messages, MessagesApi}
@@ -30,7 +32,6 @@ import play.api.{inject, Application}
 import repositories.SessionCache
 import services.{ClaimsService, SaveService}
 import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.http.HeaderCarrier
 import util.*
 
 import _root_.scala.concurrent.Future
@@ -114,56 +115,28 @@ trait ControllerSpec
   extension (appBuilder: GuiceApplicationBuilder) {
     def mockSaveSession: GuiceApplicationBuilder = {
       val mockSaveService: SaveService = mock[SaveService]
-      (mockSaveService
-        .save(_: SessionData)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(()))
-      appBuilder.overrides(
-        inject
-          .bind[SaveService]
-          .toInstance(mockSaveService)
-      )
+
+      when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
+      appBuilder.overrides(inject.bind[SaveService].toInstance(mockSaveService))
     }
 
-    def mockSaveClaim: GuiceApplicationBuilder = {
+    def mockSaveClaim: GuiceApplicationBuilder                             = {
       val mockClaimsService: ClaimsService = mock[ClaimsService]
-      (mockClaimsService
-        .save(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(()))
-      appBuilder.overrides(
-        inject
-          .bind[ClaimsService]
-          .toInstance(mockClaimsService)
-      )
+      when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
+      appBuilder.overrides(inject.bind[ClaimsService].toInstance(mockClaimsService))
     }
-
     def mockSaveClaimFailed(exception: Throwable): GuiceApplicationBuilder = {
       val mockClaimsService: ClaimsService = mock[ClaimsService]
-      (mockClaimsService
-        .save(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.failed(exception))
-      appBuilder.overrides(
-        inject
-          .bind[ClaimsService]
-          .toInstance(mockClaimsService)
-      )
+      when(mockClaimsService.save(using any())).thenReturn(Future.failed(exception))
+      appBuilder.overrides(inject.bind[ClaimsService].toInstance(mockClaimsService))
     }
-
-    def mockClaimsConnectorLastVisitedAt: GuiceApplicationBuilder = {
+    def mockClaimsConnectorLastVisitedAt: GuiceApplicationBuilder          = {
       val mockClaimsConnector: ClaimsConnector = mock[ClaimsConnector]
-      (mockClaimsConnector
-        .updateLastVisitedAt(_: String)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(()))
-      appBuilder.overrides(
-        inject
-          .bind[ClaimsConnector]
-          .toInstance(mockClaimsConnector)
-      )
+      when(mockClaimsConnector.updateLastVisitedAt(any())(using any())).thenReturn(Future.successful(()))
+      appBuilder.overrides(inject.bind[ClaimsConnector].toInstance(mockClaimsConnector))
     }
   }
+
   protected val additionalBindings: List[GuiceableModule] = List()
 
   def messages(application: Application): Messages = {

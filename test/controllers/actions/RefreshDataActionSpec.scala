@@ -19,12 +19,13 @@ package controllers.actions
 import connectors.{ClaimsConnector, ClaimsValidationConnector}
 import models.*
 import models.requests.{AuthorisedRequest, DataRequest}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.mvc.Results.*
 import play.api.test.Helpers.*
 import play.api.test.Helpers
 import repositories.SessionCache
 import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.http.HeaderCarrier
 import util.{BaseSpec, TestClaims}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -62,27 +63,16 @@ class RefreshDataActionSpec extends BaseSpec {
           .setClaimingTaxDeducted(true)
           .and(SessionData.setUnsubmittedClaimId("claim-123"))
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(Some(sessionData)))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(Some(sessionData)))
 
-      (mockSessionCache
-        .store(_: SessionData)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(()))
+      when(mockSessionCache.store(any())(using any())).thenReturn(Future.successful(()))
 
-      (mockClaimsValidationConnector
-        .getUploadSummary(_: String)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(GetUploadSummaryResponse(uploads = Nil)))
+      when(mockClaimsValidationConnector.getUploadSummary(any())(using any()))
+        .thenReturn(Future.successful(GetUploadSummaryResponse(uploads = Nil)))
 
       val claim = TestClaims.testClaimWithRepaymentClaimDetailsOnly()
 
-      (mockClaimsConnector
-        .getClaim(_: String)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(Some(claim)))
+      when(mockClaimsConnector.getClaim(any())(using any())).thenReturn(Future.successful(Some(claim)))
 
       val result = action.invokeBlock(
         authorisedRequestOrganisation,
@@ -120,15 +110,9 @@ class RefreshDataActionSpec extends BaseSpec {
           .setClaimingTaxDeducted(true)
           .and(SessionData.setUnsubmittedClaimId("claim-123"))
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(Some(sessionData)))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(Some(sessionData)))
 
-      (mockSessionCache
-        .store(_: SessionData)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(()))
+      when(mockSessionCache.store(any())(using any())).thenReturn(Future.successful(()))
 
       val getUploadSummaryResponseWithGiftAidAwaitingUpload =
         GetUploadSummaryResponse(uploads =
@@ -143,19 +127,12 @@ class RefreshDataActionSpec extends BaseSpec {
           )
         )
 
-      (mockClaimsValidationConnector
-        .getUploadSummary(_: String)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(
-          Future.successful(getUploadSummaryResponseWithGiftAidAwaitingUpload)
-        )
+      when(mockClaimsValidationConnector.getUploadSummary(any())(using any()))
+        .thenReturn(Future.successful(getUploadSummaryResponseWithGiftAidAwaitingUpload))
 
       val claim = TestClaims.testClaimWithRepaymentClaimDetailsOnly()
 
-      (mockClaimsConnector
-        .getClaim(_: String)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(Some(claim)))
+      when(mockClaimsConnector.getClaim(any())(using any())).thenReturn(Future.successful(Some(claim)))
 
       val result = action.invokeBlock(
         authorisedRequestOrganisation,
@@ -211,18 +188,11 @@ class RefreshDataActionSpec extends BaseSpec {
         .setClaimingTaxDeducted(true)
         .and(SessionData.setUnsubmittedClaimId("claim-123"))
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .anyNumberOfTimes()
-        .returning(Future.successful(Some(sessionData)))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(Some(sessionData)))
 
       val claim = TestClaims.testClaimWithRepaymentClaimDetailsOnly()
 
-      (mockClaimsConnector
-        .getClaim(_: String)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(Some(claim)))
+      when(mockClaimsConnector.getClaim(any())(using any())).thenReturn(Future.successful(Some(claim)))
 
       val getUploadSummaryResponseWithGiftAidAwaitingUpload =
         GetUploadSummaryResponse(uploads =
@@ -237,17 +207,10 @@ class RefreshDataActionSpec extends BaseSpec {
           )
         )
 
-      (mockClaimsValidationConnector
-        .getUploadSummary(_: String)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(
-          Future.successful(getUploadSummaryResponseWithGiftAidAwaitingUpload)
-        )
+      when(mockClaimsValidationConnector.getUploadSummary(any())(using any()))
+        .thenReturn(Future.successful(getUploadSummaryResponseWithGiftAidAwaitingUpload))
 
-      (mockSessionCache
-        .store(_: SessionData)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(()))
+      when(mockSessionCache.store(any())(using any())).thenReturn(Future.successful(()))
 
       val result = action.invokeBlock(
         authorisedRequestAgent,
@@ -285,11 +248,7 @@ class RefreshDataActionSpec extends BaseSpec {
     )
     val sessionData = RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true)
 
-    (mockSessionCache
-      .get()(using _: HeaderCarrier))
-      .expects(*)
-      .anyNumberOfTimes()
-      .returning(Future.successful(Some(sessionData)))
+    when(mockSessionCache.get()(using any())).thenReturn(Future.successful(Some(sessionData)))
 
     val result = action.invokeBlock(
       authorisedRequestAgent,
@@ -323,15 +282,9 @@ class RefreshDataActionSpec extends BaseSpec {
       .empty(testCharitiesReference)
       .copy(submissionReference = Some("submission-123"))
 
-    (mockSessionCache
-      .get()(using _: HeaderCarrier))
-      .expects(*)
-      .returning(Future.successful(Some(sessionData)))
+    when(mockSessionCache.get()(using any())).thenReturn(Future.successful(Some(sessionData)))
 
-    (mockSessionCache
-      .store(_: SessionData)(using _: HeaderCarrier))
-      .expects(*, *)
-      .returning(Future.successful(()))
+    when(mockSessionCache.store(any())(using any())).thenReturn(Future.successful(()))
 
     val request =
       AuthorisedRequest(FakeRequest("GET", "/test?claimId=blank"), AffinityGroup.Organisation, testCharitiesReference)
@@ -368,15 +321,9 @@ class RefreshDataActionSpec extends BaseSpec {
         .setClaimingTaxDeducted(true)
         .and(SessionData.setUnsubmittedClaimId("claim-123"))
 
-    (mockSessionCache
-      .get()(using _: HeaderCarrier))
-      .expects(*)
-      .returning(Future.successful(Some(sessionData)))
+    when(mockSessionCache.get()(using any())).thenReturn(Future.successful(Some(sessionData)))
 
-    (mockSessionCache
-      .store(_: SessionData)(using _: HeaderCarrier))
-      .expects(*, *)
-      .returning(Future.successful(()))
+    when(mockSessionCache.store(any())(using any())).thenReturn(Future.successful(()))
 
     val getUploadSummaryResponseWithGiftAidAwaitingUpload =
       GetUploadSummaryResponse(uploads =
@@ -391,19 +338,12 @@ class RefreshDataActionSpec extends BaseSpec {
         )
       )
 
-    (mockClaimsValidationConnector
-      .getUploadSummary(_: String)(using _: HeaderCarrier))
-      .expects(*, *)
-      .returning(
-        Future.successful(getUploadSummaryResponseWithGiftAidAwaitingUpload)
-      )
+    when(mockClaimsValidationConnector.getUploadSummary(any())(using any()))
+      .thenReturn(Future.successful(getUploadSummaryResponseWithGiftAidAwaitingUpload))
 
     val claim = TestClaims.testClaimWithRepaymentClaimDetailsOnly()
 
-    (mockClaimsConnector
-      .getClaim(_: String)(using _: HeaderCarrier))
-      .expects(*, *)
-      .returning(Future.successful(Some(claim)))
+    when(mockClaimsConnector.getClaim(any())(using any())).thenReturn(Future.successful(Some(claim)))
 
     val request =
       AuthorisedRequest(FakeRequest("GET", "/test?claimId=blank"), AffinityGroup.Organisation, testCharitiesReference)

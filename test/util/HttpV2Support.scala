@@ -16,14 +16,11 @@
 
 package util
 
-import izumi.reflect.Tag
-import org.scalamock.handlers.CallHandler2
-import org.scalamock.handlers.CallHandler4
-import org.scalamock.scalatest.MockFactory
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import org.scalatest.matchers.should.Matchers
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.JsValue
-import play.api.libs.ws.BodyWritable
-import play.api.libs.ws.WSRequest
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.*
@@ -31,11 +28,9 @@ import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.client.RequestBuilder
 
 import java.net.URL
-import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
-import org.scalamock.handlers.CallHandler
 
-trait HttpV2Support { this: MockFactory & Matchers =>
+trait HttpV2Support { this: MockitoSugar & Matchers =>
 
   implicit val hc: HeaderCarrier                            = HeaderCarrier()
   implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -46,61 +41,61 @@ trait HttpV2Support { this: MockFactory & Matchers =>
   def givenGetReturns(
     expectedUrl: String,
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     mockHttpGetSuccess(URL(expectedUrl))(response)
 
   def givenPostReturns(
     expectedUrl: String,
     expectedPayload: JsValue,
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     mockHttpPostSuccess(expectedUrl, expectedPayload)(response)
 
   def givenPutReturns(
     expectedUrl: String,
     expectedPayload: JsValue,
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     mockHttpPutSuccess(expectedUrl, expectedPayload)(response)
 
   def givenDeleteReturns(
     expectedUrl: String,
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     mockHttpDeleteSuccess(expectedUrl)(response)
 
   def givenSubmitReturns(
     expectedUrl: String,
     expectedPayload: JsValue,
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     mockHttpSubmitSuccess(expectedUrl, expectedPayload)(response)
 
   def mockHttpPostSuccess[A](url: String, requestBody: JsValue, hasHeaders: Boolean = false)(response: A) = {
-    mockHttpPost(URL(url)).once()
-    mockRequestBuilderWithBody(requestBody).once()
-    if hasHeaders then mockRequestBuilderTransform().once()
-    mockRequestBuilderExecuteWithoutException(response).once()
+    mockHttpPost(URL(url))
+    mockRequestBuilderWithBody(requestBody)
+    if hasHeaders then mockRequestBuilderTransform()
+    mockRequestBuilderExecuteWithoutException(response)
   }
 
   def mockHttpPutSuccess[A](url: String, requestBody: JsValue, hasHeaders: Boolean = false)(response: A) = {
-    mockHttpPut(URL(url)).once()
-    mockRequestBuilderWithBody(requestBody).once()
-    if hasHeaders then mockRequestBuilderTransform().once()
-    mockRequestBuilderExecuteWithoutException(response).once()
+    mockHttpPut(URL(url))
+    mockRequestBuilderWithBody(requestBody)
+    if hasHeaders then mockRequestBuilderTransform()
+    mockRequestBuilderExecuteWithoutException(response)
   }
 
   def mockHttpDeleteSuccess[A](url: String, hasHeaders: Boolean = false)(response: A) = {
-    mockHttpDelete(URL(url)).atLeastOnce()
-    if hasHeaders then mockRequestBuilderTransform().atLeastOnce()
-    mockRequestBuilderExecuteWithoutException(response).atLeastOnce()
+    mockHttpDelete(URL(url))
+    if hasHeaders then mockRequestBuilderTransform()
+    mockRequestBuilderExecuteWithoutException(response)
   }
 
   def mockHttpSubmitSuccess[A](url: String, requestBody: JsValue, hasHeaders: Boolean = false)(response: A) = {
-    mockHttpSubmit(URL(url)).atLeastOnce()
-    mockRequestBuilderWithBody(requestBody).atLeastOnce()
-    if hasHeaders then mockRequestBuilderTransform().atLeastOnce()
-    mockRequestBuilderExecuteWithoutException(response).atLeastOnce()
+    mockHttpSubmit(URL(url))
+    mockRequestBuilderWithBody(requestBody)
+    if hasHeaders then mockRequestBuilderTransform()
+    mockRequestBuilderExecuteWithoutException(response)
   }
 
   def mockHttpPostWithException(
@@ -141,72 +136,30 @@ trait HttpV2Support { this: MockFactory & Matchers =>
     mockRequestBuilderExecuteWithException(exception)
   }
 
-  private def mockHttpGet[A](url: URL) =
-    (mockHttp
-      .get(_: URL)(using _: HeaderCarrier))
-      .expects(url, *)
-      .returning(mockRequestBuilder)
+  private def mockHttpGet[A](url: URL) = when(mockHttp.get(eqTo(url))(using any())).thenReturn(mockRequestBuilder)
 
-  def mockHttpPost[A](url: URL) =
-    (mockHttp
-      .post(_: URL)(using _: HeaderCarrier))
-      .expects(url, *)
-      .returning(mockRequestBuilder)
+  def mockHttpPost[A](url: URL) = when(mockHttp.post(eqTo(url))(using any())).thenReturn(mockRequestBuilder)
 
-  def mockHttpPut[A](url: URL) =
-    (mockHttp
-      .put(_: URL)(using _: HeaderCarrier))
-      .expects(url, *)
-      .returning(mockRequestBuilder)
+  def mockHttpPut[A](url: URL) = when(mockHttp.put(eqTo(url))(using any())).thenReturn(mockRequestBuilder)
 
-  def mockHttpDelete[A](url: URL) =
-    (mockHttp
-      .delete(_: URL)(using _: HeaderCarrier))
-      .expects(url, *)
-      .returning(mockRequestBuilder)
+  def mockHttpDelete[A](url: URL) = when(mockHttp.delete(eqTo(url))(using any())).thenReturn(mockRequestBuilder)
 
-  def mockHttpSubmit[A](url: URL) =
-    (mockHttp
-      .post(_: URL)(using _: HeaderCarrier))
-      .expects(url, *)
-      .returning(mockRequestBuilder)
+  def mockHttpSubmit[A](url: URL) = when(mockHttp.post(eqTo(url))(using any())).thenReturn(mockRequestBuilder)
 
   def mockRequestBuilderWithBody[JsValue](
     body: JsValue
-  ): CallHandler4[JsValue, BodyWritable[JsValue], Tag[JsValue], ExecutionContext, RequestBuilder] =
-    (mockRequestBuilder
-      .withBody(_: JsValue)(using _: BodyWritable[JsValue], _: Tag[JsValue], _: ExecutionContext))
-      .expects(body, *, *, *)
-      .returning(mockRequestBuilder)
-
-  def mockRequestBuilderWithString(
-    body: String
   ) =
-    (mockRequestBuilder
-      .withBody(_: String)(using _: BodyWritable[String], _: Tag[String], _: ExecutionContext))
-      .expects(body, *, *, *)
-      .returning(mockRequestBuilder)
+    when(mockRequestBuilder.withBody(eqTo(body))(using any(), any(), any())).thenReturn(mockRequestBuilder)
 
-  def mockRequestBuilderExecuteWithoutException[A](
-    value: A
-  ): CallHandler2[HttpReads[A], ExecutionContext, Future[A]] =
-    (mockRequestBuilder
-      .execute(using _: HttpReads[A], _: ExecutionContext))
-      .expects(*, *)
-      .returning(Future.successful(value))
+  def mockRequestBuilderWithString(body: String) =
+    when(mockRequestBuilder.withBody(eqTo(body))(using any(), any(), any())).thenReturn(mockRequestBuilder)
 
-  def mockRequestBuilderTransform() =
-    (mockRequestBuilder
-      .transform(_: WSRequest => WSRequest))
-      .expects(*)
-      .returning(mockRequestBuilder)
+  def mockRequestBuilderExecuteWithoutException[A](value: A) =
+    when(mockRequestBuilder.execute(using any(), any())).thenReturn(Future.successful(value))
 
-  def mockRequestBuilderExecuteWithException[A](
-    ex: Exception
-  ) =
-    (mockRequestBuilder
-      .execute(using _: HttpReads[A], _: ExecutionContext))
-      .expects(*, *)
-      .returning(Future.failed(ex))
+  def mockRequestBuilderTransform() = when(mockRequestBuilder.transform(any())).thenReturn(mockRequestBuilder)
+
+  def mockRequestBuilderExecuteWithException[A](ex: Exception) =
+    when(mockRequestBuilder.execute(using any(), any())).thenReturn(Future.failed(ex))
 
 }

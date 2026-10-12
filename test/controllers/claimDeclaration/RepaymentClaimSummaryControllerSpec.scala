@@ -19,12 +19,13 @@ package controllers.claimDeclaration
 import connectors.ClaimsConnector
 import controllers.ControllerSpec
 import models.*
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceableModule
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.http.HeaderCarrier
 import views.html.RepaymentClaimSummaryView
 
 import scala.concurrent.Future
@@ -55,10 +56,8 @@ class RepaymentClaimSummaryControllerSpec extends ControllerSpec {
           submissionReferenceNumber = submissionRef
         )
 
-        (mockClaimsConnector
-          .getSubmissionClaimSummary(_: String)(using _: HeaderCarrier))
-          .expects(testClaimId, *)
-          .returning(Future.successful(submissionSummaryResponse))
+        when(mockClaimsConnector.getSubmissionClaimSummary(eqTo(testClaimId))(using any()))
+          .thenReturn(Future.successful(submissionSummaryResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData).build()
 

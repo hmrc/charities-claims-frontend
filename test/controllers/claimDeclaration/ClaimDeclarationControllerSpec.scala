@@ -18,6 +18,8 @@ package controllers.claimDeclaration
 
 import controllers.ControllerSpec
 import models.*
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.Application
@@ -27,7 +29,6 @@ import services.{ClaimsService, SaveService}
 import connectors.ClaimsConnector
 import repositories.SessionCache
 import play.api.inject.bind
-import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.Future
 
 class ClaimDeclarationControllerSpec extends ControllerSpec {
@@ -321,30 +322,16 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
           organisationDetailsAnswers = Some(organisationDetailsAnswers)
         )
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
-        (mockSessionCache
-          .get()(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(Some(sessionData)))
+        when(mockSessionCache.get()(using any())).thenReturn(Future.successful(Some(sessionData)))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
-        (mockClaimsConnector
-          .submitClaim(_: String, _: String, _: String)(using _: HeaderCarrier))
-          .expects(testClaimId, testClaimId, "en", *)
-          .returning(Future.successful(SubmitClaimResponse(true, "test sub ref")))
+        when(mockClaimsConnector.submitClaim(eqTo(testClaimId), eqTo(testClaimId), eqTo("en"))(using any()))
+          .thenReturn(Future.successful(SubmitClaimResponse(true, "test sub ref")))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .build()
@@ -381,25 +368,14 @@ class ClaimDeclarationControllerSpec extends ControllerSpec {
           organisationDetailsAnswers = Some(organisationDetailsAnswers)
         )
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
-        (mockSessionCache
-          .get()(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(Some(sessionData)))
+        when(mockSessionCache.get()(using any())).thenReturn(Future.successful(Some(sessionData)))
 
-        (mockClaimsConnector
-          .submitClaim(_: String, _: String, _: String)(using _: HeaderCarrier))
-          .expects(testClaimId, testClaimId, "en", *)
-          .returning(Future.failed(ClaimAlreadySubmittedException()))
+        when(mockClaimsConnector.submitClaim(eqTo(testClaimId), eqTo(testClaimId), eqTo("en"))(using any()))
+          .thenReturn(Future.failed(ClaimAlreadySubmittedException()))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .build()

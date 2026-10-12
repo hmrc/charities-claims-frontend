@@ -18,6 +18,8 @@ package controllers.communityBuildingsSchedule
 
 import controllers.ControllerSpec
 import models.RepaymentClaimDetailsAnswers
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.{inject, Application}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -31,7 +33,6 @@ import connectors.ClaimsValidationConnector
 
 import scala.concurrent.Future
 import util.TestResources
-import models.requests.DataRequest
 import uk.gov.hmrc.auth.core.AffinityGroup
 
 class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec {
@@ -130,10 +131,10 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
         val sessionData = sessionWithClaimId(claimId)
           .copy(communityBuildingsScheduleFileUploadReference = None)
 
-        (mockService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.CommunityBuildings, false, *, *)
-          .returning(Future.successful(None))
+        when(
+          mockService.getFileUploadReference(eqTo(ValidationType.CommunityBuildings), eqTo(false))(using any(), any())
+        )
+          .thenReturn(Future.successful(None))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
@@ -156,10 +157,8 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
         val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
         val isAgent     = false
 
-        (mockConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testAwaitingResponse))
+        when(mockConnector.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testAwaitingResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
@@ -191,10 +190,8 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
         val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
         val isAgent     = false
 
-        (mockConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testVerifyingResponse))
+        when(mockConnector.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testVerifyingResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
@@ -225,10 +222,8 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
         val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
         val isAgent     = false
 
-        (mockConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testValidatingResponse))
+        when(mockConnector.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testValidatingResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
@@ -259,10 +254,8 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
         val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
         val isAgent     = false
 
-        (mockConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testVerificationFailedRejectedResponse))
+        when(mockConnector.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testVerificationFailedRejectedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
@@ -291,10 +284,8 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       "unsubmitted Claim ID & file reference are defined - recoverWith" in {
         val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
-        (mockConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.failed(new Exception("CLAIM_REFERENCE_DOES_NOT_EXIST")))
+        when(mockConnector.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.failed(new Exception("CLAIM_REFERENCE_DOES_NOT_EXIST")))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
@@ -317,10 +308,7 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
     "onRemove - delete schedule and redirect" in {
       val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
-      (mockService
-        .deleteCommunityBuildingsSchedule(using _: DataRequest[?], _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(()))
+      when(mockService.deleteCommunityBuildingsSchedule(using any(), any())).thenReturn(Future.successful(()))
 
       given application: Application = applicationBuilder(sessionData = sessionData)
         .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
@@ -343,10 +331,8 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
     "should render content for organisation" in {
       val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
-      (mockConnector
-        .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-        .expects(claimId, fileUploadReference, *)
-        .returning(Future.successful(testValidatingResponse))
+      when(mockConnector.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+        .thenReturn(Future.successful(testValidatingResponse))
 
       given application: Application =
         applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Organisation)
@@ -369,10 +355,8 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
     "should render content for agent" in {
       val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
-      (mockConnector
-        .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-        .expects(claimId, fileUploadReference, *)
-        .returning(Future.successful(testValidatingResponse))
+      when(mockConnector.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+        .thenReturn(Future.successful(testValidatingResponse))
 
       given application: Application =
         applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent)
@@ -454,15 +438,10 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed - REJECTED" in {
         val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
-        (mockConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testVerificationFailedRejectedResponse))
+        when(mockConnector.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testVerificationFailedRejectedResponse))
 
-        (mockService
-          .deleteCommunityBuildingsSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockService.deleteCommunityBuildingsSchedule(using any(), any())).thenReturn(Future.successful(()))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
@@ -485,15 +464,10 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed - QUARANTINE" in {
         val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
-        (mockConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testVerificationFailedQuarantineResponse))
+        when(mockConnector.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testVerificationFailedQuarantineResponse))
 
-        (mockService
-          .deleteCommunityBuildingsSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockService.deleteCommunityBuildingsSchedule(using any(), any())).thenReturn(Future.successful(()))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
@@ -516,15 +490,10 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       "unsubmitted Claim ID & file reference are defined - result = Verification Failed - UNKNOWN" in {
         val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
-        (mockConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testVerificationFailedUnknownResponse))
+        when(mockConnector.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testVerificationFailedUnknownResponse))
 
-        (mockService
-          .deleteCommunityBuildingsSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockService.deleteCommunityBuildingsSchedule(using any(), any())).thenReturn(Future.successful(()))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
@@ -547,10 +516,8 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       "unsubmitted Claim ID & file reference are defined - result = passed Validation" in {
         val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
-        (mockConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testValidatedResponse))
+        when(mockConnector.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testValidatedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
@@ -573,10 +540,8 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       "unsubmitted Claim ID & file reference are defined - result = failed Validation" in {
         val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
-        (mockConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(mockConnector.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))
@@ -598,10 +563,8 @@ class YourCommunityBuildingsScheduleUploadControllerSpec extends ControllerSpec 
       "unsubmitted Claim ID & file reference are defined - result = other" in {
         val sessionData = sessionWithClaimIdAndFileRef(claimId, fileUploadReference)
 
-        (mockConnector
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testAwaitingResponse))
+        when(mockConnector.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testAwaitingResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationConnector].toInstance(mockConnector))

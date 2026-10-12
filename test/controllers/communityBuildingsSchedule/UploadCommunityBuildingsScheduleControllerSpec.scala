@@ -23,8 +23,8 @@ import connectors.UpscanInitiateConnector
 import controllers.ControllerSpec
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import models.*
-import org.scalamock.handlers.CallHandler
-import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import services.{ClaimsValidationService, SaveService}
 import controllers.communityBuildingsSchedule.routes
 import play.api.inject.guice.GuiceableModule
@@ -64,7 +64,7 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
   def givenPostInitiateEndpointReturns(
     request: UpscanInitiateRequest,
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     mockHttpPostSuccess(
       url = "http://foo.bar.com:1234/foo-upscan/v2/initiate",
       requestBody = Json.toJson(request),
@@ -203,10 +203,12 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
         val sessionData =
           completeGasdsSession
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.CommunityBuildings, false, *, *)
-          .returning(Future.successful(Some(FileUploadReference("ref-123"))))
+        when(
+          mockClaimsValidationService.getFileUploadReference(eqTo(ValidationType.CommunityBuildings), eqTo(false))(using
+            any(),
+            any()
+          )
+        ).thenReturn(Future.successful(Some(FileUploadReference("ref-123"))))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -232,25 +234,19 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
         val sessionData =
           completeGasdsSession
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.CommunityBuildings, false, *, *)
-          .returning(Future.successful(None))
+        when(
+          mockClaimsValidationService.getFileUploadReference(
+            eqTo(ValidationType.CommunityBuildings),
+            eqTo(false)
+          )(using any(), any())
+        ).thenReturn(Future.successful(None))
 
-        (mockUpscanInitiateConnector
-          .initiate(_: String, _: UpscanInitiateRequest)(using _: HeaderCarrier))
-          .expects(*, *, *)
-          .returning(Future.successful(response))
+        when(mockUpscanInitiateConnector.initiate(any(), any())(using any())).thenReturn(Future.successful(response))
 
-        (mockClaimsValidationService
-          .createUploadTracking(_: String, _: CreateUploadTrackingRequest)(using _: HeaderCarrier))
-          .expects(*, *, *)
-          .returning(Future.successful(true))
+        when(mockClaimsValidationService.createUploadTracking(any(), any())(using any()))
+          .thenReturn(Future.successful(true))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -343,21 +339,22 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
 
       "should update status and redirect when reference exists" in {
 
-        val sessionData =
-          completeGasdsSession
+        val sessionData = completeGasdsSession
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.CommunityBuildings, true, *, *)
-          .returning(Future.successful(Some(FileUploadReference("ref-123"))))
+        when(
+          mockClaimsValidationService.getFileUploadReference(
+            eqTo(ValidationType.CommunityBuildings),
+            eqTo(true)
+          )(using any(), any())
+        ).thenReturn(Future.successful(Some(FileUploadReference("ref-123"))))
 
-        (mockClaimsValidationService
-          .updateUploadStatus(_: String, _: FileUploadReference, _: ValidationType)(using
-            _: DataRequest[?],
-            _: HeaderCarrier
-          ))
-          .expects("test-claim-id", FileUploadReference("ref-123"), ValidationType.CommunityBuildings, *, *)
-          .returning(Future.successful(true))
+        when(
+          mockClaimsValidationService.updateUploadStatus(
+            eqTo("test-claim-id"),
+            eqTo(FileUploadReference("ref-123")),
+            eqTo(ValidationType.CommunityBuildings)
+          )(using any(), any())
+        ).thenReturn(Future.successful(true))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -382,10 +379,12 @@ class UploadCommunityBuildingsScheduleControllerSpec extends ControllerSpec with
         val sessionData =
           completeGasdsSession
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.CommunityBuildings, true, *, *)
-          .returning(Future.successful(None))
+        when(
+          mockClaimsValidationService.getFileUploadReference(eqTo(ValidationType.CommunityBuildings), eqTo(true))(using
+            any(),
+            any()
+          )
+        ).thenReturn(Future.successful(None))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)

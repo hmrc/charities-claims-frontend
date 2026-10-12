@@ -20,9 +20,7 @@ import com.typesafe.config.ConfigFactory
 import connectors.UpscanInitiateConnector
 import controllers.otherIncomeSchedule.routes
 import controllers.ControllerSpec
-import models.requests.DataRequest
 import models.{
-  CreateUploadTrackingRequest,
   FileUploadReference,
   RepaymentClaimDetailsAnswers,
   SessionData,
@@ -30,13 +28,14 @@ import models.{
   UpscanInitiateResponse,
   ValidationType
 }
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.{inject, Application, Configuration}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.libs.json.Json
 import util.HttpV2Support
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import org.scalamock.handlers.CallHandler
 import play.api.inject.guice.GuiceableModule
 import services.{ClaimsValidationService, SaveService}
 
@@ -71,7 +70,7 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
   def givenPostInitiateEndpointReturns(
     request: UpscanInitiateRequest,
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     mockHttpPostSuccess(
       url = "http://foo.bar.com:1234/foo-upscan/v2/initiate",
       requestBody = Json.toJson(request),
@@ -219,10 +218,12 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
           completeRepaymentDetailsAnswersSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.OtherIncome, false, *, *)
-          .returning(Future.successful(Some(FileUploadReference("ref-123"))))
+        when(
+          mockClaimsValidationService.getFileUploadReference(
+            eqTo(ValidationType.OtherIncome),
+            eqTo(false)
+          )(using any(), any())
+        ).thenReturn(Future.successful(Some(FileUploadReference("ref-123"))))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -248,25 +249,19 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
           completeRepaymentDetailsAnswersSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.OtherIncome, false, *, *)
-          .returning(Future.successful(None))
+        when(
+          mockClaimsValidationService.getFileUploadReference(
+            eqTo(ValidationType.OtherIncome),
+            eqTo(false)
+          )(using any(), any())
+        ).thenReturn(Future.successful(None))
 
-        (mockUpscanInitiateConnector
-          .initiate(_: String, _: UpscanInitiateRequest)(using _: HeaderCarrier))
-          .expects(*, *, *)
-          .returning(Future.successful(response))
+        when(mockUpscanInitiateConnector.initiate(any(), any())(using any())).thenReturn(Future.successful(response))
 
-        (mockClaimsValidationService
-          .createUploadTracking(_: String, _: CreateUploadTrackingRequest)(using _: HeaderCarrier))
-          .expects(*, *, *)
-          .returning(Future.successful(true))
+        when(mockClaimsValidationService.createUploadTracking(any(), any())(using any()))
+          .thenReturn(Future.successful(true))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -315,18 +310,20 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
           completeRepaymentDetailsAnswersSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.OtherIncome, true, *, *)
-          .returning(Future.successful(Some(FileUploadReference("ref-123"))))
+        when(
+          mockClaimsValidationService.getFileUploadReference(eqTo(ValidationType.OtherIncome), eqTo(true))(using
+            any(),
+            any()
+          )
+        ).thenReturn(Future.successful(Some(FileUploadReference("ref-123"))))
 
-        (mockClaimsValidationService
-          .updateUploadStatus(_: String, _: FileUploadReference, _: ValidationType)(using
-            _: DataRequest[?],
-            _: HeaderCarrier
-          ))
-          .expects("test-claim-id", FileUploadReference("ref-123"), ValidationType.OtherIncome, *, *)
-          .returning(Future.successful(true))
+        when(
+          mockClaimsValidationService.updateUploadStatus(
+            eqTo("test-claim-id"),
+            eqTo(FileUploadReference("ref-123")),
+            eqTo(ValidationType.OtherIncome)
+          )(using any(), any())
+        ).thenReturn(Future.successful(true))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -352,10 +349,12 @@ class UploadOtherIncomeScheduleControllerSpec extends ControllerSpec with HttpV2
           completeRepaymentDetailsAnswersSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.OtherIncome, true, *, *)
-          .returning(Future.successful(None))
+        when(
+          mockClaimsValidationService.getFileUploadReference(eqTo(ValidationType.OtherIncome), eqTo(true))(using
+            any(),
+            any()
+          )
+        ).thenReturn(Future.successful(None))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)

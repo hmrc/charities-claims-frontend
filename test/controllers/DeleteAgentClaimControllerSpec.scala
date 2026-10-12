@@ -29,8 +29,9 @@ import forms.YesNoFormProvider
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import connectors.ClaimsConnector
 import services.SaveService
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.inject.bind
-import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.Future
 
 class DeleteAgentClaimControllerSpec extends ControllerSpec {
@@ -152,15 +153,9 @@ class DeleteAgentClaimControllerSpec extends ControllerSpec {
           bind[SaveService].toInstance(mockSaveService)
         ).build()
 
-        (mockClaimsConnector
-          .deleteClaim(_: String)(using _: HeaderCarrier))
-          .expects("test-claim-123", *)
-          .returning(Future.successful(true))
+        when(mockClaimsConnector.deleteClaim(eqTo("test-claim-123"))(using any())).thenReturn(Future.successful(true))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
         val appConfig = application.injector.instanceOf[FrontendAppConfig]
 
@@ -196,15 +191,9 @@ class DeleteAgentClaimControllerSpec extends ControllerSpec {
           bind[SaveService].toInstance(mockSaveService)
         ).build()
 
-        (mockClaimsConnector
-          .deleteClaim(_: String)(using _: HeaderCarrier))
-          .expects("test-claim-123", *)
-          .returning(Future.successful(true))
+        when(mockClaimsConnector.deleteClaim(eqTo("test-claim-123"))(using any())).thenReturn(Future.successful(true))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
         val appConfig = application.injector.instanceOf[FrontendAppConfig]
 

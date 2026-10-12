@@ -23,10 +23,10 @@ import connectors.UpscanInitiateConnector
 import controllers.ControllerSpec
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import models.*
-import org.scalamock.handlers.CallHandler
-import models.requests.DataRequest
 import services.{ClaimsValidationService, SaveService}
 import controllers.giftAidSchedule.routes
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.inject.guice.GuiceableModule
 import com.typesafe.config.ConfigFactory
 import play.api.{inject, Application, Configuration}
@@ -63,7 +63,7 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
   def givenPostInitiateEndpointReturns(
     request: UpscanInitiateRequest,
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     mockHttpPostSuccess(
       url = "http://foo.bar.com:1234/foo-upscan/v2/initiate",
       requestBody = Json.toJson(request),
@@ -210,10 +210,12 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
           completeRepaymentDetailsAnswersSession
             .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.GiftAid, false, *, *)
-          .returning(Future.successful(Some(FileUploadReference("ref-123"))))
+        when(
+          mockClaimsValidationService.getFileUploadReference(eqTo(ValidationType.GiftAid), eqTo(false))(using
+            any(),
+            any()
+          )
+        ).thenReturn(Future.successful(Some(FileUploadReference("ref-123"))))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -239,25 +241,19 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
           completeRepaymentDetailsAnswersSession
             .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.GiftAid, false, *, *)
-          .returning(Future.successful(None))
+        when(
+          mockClaimsValidationService.getFileUploadReference(eqTo(ValidationType.GiftAid), eqTo(false))(using
+            any(),
+            any()
+          )
+        ).thenReturn(Future.successful(None))
 
-        (mockUpscanInitiateConnector
-          .initiate(_: String, _: UpscanInitiateRequest)(using _: HeaderCarrier))
-          .expects(*, *, *)
-          .returning(Future.successful(response))
+        when(mockUpscanInitiateConnector.initiate(any(), any())(using any())).thenReturn(Future.successful(response))
 
-        (mockClaimsValidationService
-          .createUploadTracking(_: String, _: CreateUploadTrackingRequest)(using _: HeaderCarrier))
-          .expects(*, *, *)
-          .returning(Future.successful(true))
+        when(mockClaimsValidationService.createUploadTracking(any(), any())(using any()))
+          .thenReturn(Future.successful(true))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -306,18 +302,21 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
           completeRepaymentDetailsAnswersSession
             .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.GiftAid, true, *, *)
-          .returning(Future.successful(Some(FileUploadReference("ref-123"))))
+        when(
+          mockClaimsValidationService.getFileUploadReference(eqTo(ValidationType.GiftAid), eqTo(true))(using
+            any(),
+            any()
+          )
+        )
+          .thenReturn(Future.successful(Some(FileUploadReference("ref-123"))))
 
-        (mockClaimsValidationService
-          .updateUploadStatus(_: String, _: FileUploadReference, _: ValidationType)(using
-            _: DataRequest[?],
-            _: HeaderCarrier
-          ))
-          .expects("test-claim-id", FileUploadReference("ref-123"), ValidationType.GiftAid, *, *)
-          .returning(Future.successful(true))
+        when(
+          mockClaimsValidationService.updateUploadStatus(
+            eqTo("test-claim-id"),
+            eqTo(FileUploadReference("ref-123")),
+            eqTo(ValidationType.GiftAid)
+          )(using any(), any())
+        ).thenReturn(Future.successful(true))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -343,10 +342,13 @@ class UploadGiftAidScheduleControllerSpec extends ControllerSpec with HttpV2Supp
           completeRepaymentDetailsAnswersSession
             .and(RepaymentClaimDetailsAnswers.setClaimingGiftAid(true))
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.GiftAid, true, *, *)
-          .returning(Future.successful(None))
+        when(
+          mockClaimsValidationService.getFileUploadReference(eqTo(ValidationType.GiftAid), eqTo(true))(using
+            any(),
+            any()
+          )
+        )
+          .thenReturn(Future.successful(None))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)

@@ -20,7 +20,8 @@ import connectors.ClaimsValidationConnector
 import controllers.ControllerSpec
 import controllers.giftAidSchedule.routes
 import models.*
-import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceableModule
@@ -28,7 +29,6 @@ import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import services.{ClaimsService, ClaimsValidationService, SaveService}
-import uk.gov.hmrc.http.HeaderCarrier
 import util.TestResources
 
 import scala.concurrent.Future
@@ -112,10 +112,8 @@ class CheckYourGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should render the page when schedule data is available" in {
-        (mockClaimsValidationService
-          .getGiftAidScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.giftAidScheduleData))
+        when(mockClaimsValidationService.getGiftAidScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testValidatedResponse.giftAidScheduleData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -131,10 +129,8 @@ class CheckYourGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should display gift Aid data in the table" in {
-        (mockClaimsValidationService
-          .getGiftAidScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.giftAidScheduleData))
+        when(mockClaimsValidationService.getGiftAidScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testValidatedResponse.giftAidScheduleData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -151,10 +147,8 @@ class CheckYourGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should default to page 1 when page query parameter is not a valid integer" in {
-        (mockClaimsValidationService
-          .getGiftAidScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.giftAidScheduleData))
+        when(mockClaimsValidationService.getGiftAidScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testValidatedResponse.giftAidScheduleData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -194,11 +188,10 @@ class CheckYourGiftAidScheduleControllerSpec extends ControllerSpec {
           )
         }
       }
+
       "should return BadRequest when form onSubmit has errors and display error message" in {
-        (mockClaimsValidationService
-          .getGiftAidScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.giftAidScheduleData))
+        when(mockClaimsValidationService.getGiftAidScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testValidatedResponse.giftAidScheduleData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -217,10 +210,8 @@ class CheckYourGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should redirect to update screen when Yes is selected" in {
-        (mockClaimsValidationService
-          .getGiftAidScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.giftAidScheduleData))
+        when(mockClaimsValidationService.getGiftAidScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testValidatedResponse.giftAidScheduleData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -239,10 +230,8 @@ class CheckYourGiftAidScheduleControllerSpec extends ControllerSpec {
       }
 
       "should redirect to Task List when No is selected and schedule is already completed previously" in {
-        (mockClaimsValidationService
-          .getGiftAidScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.giftAidScheduleData))
+        when(mockClaimsValidationService.getGiftAidScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testValidatedResponse.giftAidScheduleData))
 
         given application: Application = applicationBuilder(sessionData = validSessionDataCompleted).build()
 
@@ -254,26 +243,17 @@ class CheckYourGiftAidScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            controllers.routes.ClaimsTaskListController.onPageLoad.url
-          )
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
+
       "should save and redirect to UploadSuccessful when No is selected and schedule not yet completed before" in {
-        (mockClaimsValidationService
-          .getGiftAidScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.giftAidScheduleData))
+        when(mockClaimsValidationService.getGiftAidScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testValidatedResponse.giftAidScheduleData))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 

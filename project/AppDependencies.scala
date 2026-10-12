@@ -21,9 +21,8 @@ object AppDependencies {
     "uk.gov.hmrc"            %% "bootstrap-test-play-30"  % bootstrapVersion,
     "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-30" % hmrcMongoVersion,
     "org.scalatestplus"      %% "scalacheck-1-18"         % "3.2.19.0",
-    "org.jsoup"               % "jsoup"                   % "1.21.2",
-    "com.softwaremill.diffx" %% "diffx-scalatest-should"  % "0.9.0",
-    "org.scalamock"          %% "scalamock"               % "7.5.5"
+    "org.jsoup"               % "jsoup"                   % "1.23.2",
+    "com.softwaremill.diffx" %% "diffx-scalatest-should"  % "0.9.0"
   ).map(_ % Test)
 
   def apply(): Seq[ModuleID] = compile ++ test
