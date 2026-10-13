@@ -19,13 +19,11 @@ package connectors
 import util.{BaseSpec, HttpV2Support}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import play.api.Configuration
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import play.api.test.Helpers.*
 import com.typesafe.config.ConfigFactory
 
 import scala.concurrent.ExecutionContext.Implicits.global
-
-import java.net.URL
 
 class UnregulatedDonationsConnectorSpec extends BaseSpec with HttpV2Support {
 
@@ -57,8 +55,13 @@ class UnregulatedDonationsConnectorSpec extends BaseSpec with HttpV2Support {
 
   def givenGetTotalUnregulatedDonationsEndpointReturns(response: HttpResponse) =
     mockHttpGetSuccess(
-      URL("http://foo.bar.com:1234/foo-claims/charities/123/unregulated-donations")
+      url"http://foo.bar.com:1234/foo-claims/charities/123/unregulated-donations"
     )(response)
+
+  def givenGetTotalUnregulatedDonationsEndpointReturns(responses: Seq[HttpResponse]) =
+    mockHttpGetSuccesses(
+      url"http://foo.bar.com:1234/foo-claims/charities/123/unregulated-donations"
+    )(responses)
 
   given HeaderCarrier = HeaderCarrier()
 
@@ -100,9 +103,9 @@ class UnregulatedDonationsConnectorSpec extends BaseSpec with HttpV2Support {
       }
 
       "throw exception when 5xx response status in the third attempt" in {
-        givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(500, ""))
-        givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(499, ""))
-        givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(469, ""))
+        givenGetTotalUnregulatedDonationsEndpointReturns(
+          Seq(HttpResponse(500, ""), HttpResponse(499, ""), HttpResponse(469, ""))
+        )
 
         a[Exception] shouldBe thrownBy {
           await(connector.getTotalUnregulatedDonations("123"))
@@ -110,18 +113,19 @@ class UnregulatedDonationsConnectorSpec extends BaseSpec with HttpV2Support {
       }
 
       "accept valid response in a second attempt" in {
-        givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(500, ""))
         givenGetTotalUnregulatedDonationsEndpointReturns(
-          HttpResponse(200, "{\"unregulatedDonationsTotal\": 123.45}")
+          Seq(HttpResponse(500, ""), HttpResponse(200, "{\"unregulatedDonationsTotal\": 123.45}"))
         )
         await(connector.getTotalUnregulatedDonations("123")) shouldEqual Some(123.45)
       }
 
       "accept valid response in a third attempt" in {
-        givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(499, ""))
-        givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(500, ""))
         givenGetTotalUnregulatedDonationsEndpointReturns(
-          HttpResponse(200, "{\"unregulatedDonationsTotal\": 123.45}")
+          Seq(
+            HttpResponse(499, ""),
+            HttpResponse(500, ""),
+            HttpResponse(200, "{\"unregulatedDonationsTotal\": 123.45}")
+          )
         )
         await(connector.getTotalUnregulatedDonations("123")) shouldEqual Some(123.45)
       }

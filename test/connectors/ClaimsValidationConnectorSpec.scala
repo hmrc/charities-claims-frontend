@@ -18,7 +18,7 @@ package connectors
 
 import util.{BaseSpec, HttpV2Support, TestResources}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import models.*
 import play.api.test.Helpers.*
 import com.typesafe.config.ConfigFactory
@@ -26,8 +26,6 @@ import play.api.Configuration
 import play.api.libs.json.Json
 
 import scala.concurrent.ExecutionContext.Implicits.global
-
-import java.net.URL
 
 class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
 
@@ -94,12 +92,17 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
 
   def givenGetUploadSummaryEndpointReturns(response: HttpResponse) =
     mockHttpGetSuccess(
-      URL("http://example.com:1234/charities-claims-validation/123/upload-results")
+      url"http://example.com:1234/charities-claims-validation/123/upload-results"
     )(response)
+
+  def givenGetUploadSummaryEndpointReturns(responses: Seq[HttpResponse]) =
+    mockHttpGetSuccess(
+      url"http://example.com:1234/charities-claims-validation/123/upload-results"
+    )(responses)
 
   def givenGetUploadResultEndpointReturns(response: HttpResponse) =
     mockHttpGetSuccess(
-      URL("http://example.com:1234/charities-claims-validation/123/upload-results/file-upload-reference-123")
+      url"http://example.com:1234/charities-claims-validation/123/upload-results/file-upload-reference-123"
     )(response)
 
   def givenDeleteScheduleEndpointReturns(response: HttpResponse) =
@@ -187,9 +190,7 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
       }
 
       "throw exception when 5xx response status in the third attempt" in {
-        givenGetUploadSummaryEndpointReturns(HttpResponse(500, ""))
-        givenGetUploadSummaryEndpointReturns(HttpResponse(499, ""))
-        givenGetUploadSummaryEndpointReturns(HttpResponse(469, ""))
+        givenGetUploadSummaryEndpointReturns(Seq(HttpResponse(500, ""), HttpResponse(499, ""), HttpResponse(469, "")))
 
         a[Exception] shouldBe thrownBy {
           await(connector.getUploadSummary("123"))
@@ -197,16 +198,17 @@ class ClaimsValidationConnectorSpec extends BaseSpec with HttpV2Support {
       }
 
       "accept valid response in a second attempt" in {
-        givenGetUploadSummaryEndpointReturns(HttpResponse(500, ""))
-        givenGetUploadSummaryEndpointReturns(HttpResponse(200, testUploadSummaryResponseJsonString))
+        givenGetUploadSummaryEndpointReturns(
+          Seq(HttpResponse(500, ""), HttpResponse(200, testUploadSummaryResponseJsonString))
+        )
 
         await(connector.getUploadSummary("123")) shouldEqual testUploadSummaryResponse
       }
 
       "accept valid response in a third attempt" in {
-        givenGetUploadSummaryEndpointReturns(HttpResponse(499, ""))
-        givenGetUploadSummaryEndpointReturns(HttpResponse(500, ""))
-        givenGetUploadSummaryEndpointReturns(HttpResponse(200, testUploadSummaryResponseJsonString))
+        givenGetUploadSummaryEndpointReturns(
+          Seq(HttpResponse(499, ""), HttpResponse(500, ""), HttpResponse(200, testUploadSummaryResponseJsonString))
+        )
 
         await(connector.getUploadSummary("123")) shouldEqual testUploadSummaryResponse
       }

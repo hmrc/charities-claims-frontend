@@ -61,6 +61,12 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       response = response
     )
 
+  def givenGetClaimsEndpointReturns(responses: Seq[HttpResponse]) =
+    givenGetReturns(
+      expectedUrl = "http://foo.bar.com:1234/foo-claims/claims?claimSubmitted=false",
+      responses = responses
+    )
+
   def givenSaveClaimEndpointReturns(
     payload: SaveClaimRequest,
     response: HttpResponse
@@ -161,9 +167,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       }
 
       "throw exception when 5xx response status in the third attempt" in {
-        givenGetClaimsEndpointReturns(HttpResponse(500, ""))
-        givenGetClaimsEndpointReturns(HttpResponse(499, ""))
-        givenGetClaimsEndpointReturns(HttpResponse(469, ""))
+        givenGetClaimsEndpointReturns(Seq(HttpResponse(500, ""), HttpResponse(499, ""), HttpResponse(469, "")))
 
         a[Exception] shouldBe thrownBy {
           await(connector.retrieveUnsubmittedClaims)
@@ -171,15 +175,20 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       }
 
       "accept valid response in a second attempt" in {
-        givenGetClaimsEndpointReturns(HttpResponse(500, ""))
-        givenGetClaimsEndpointReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString))
+        givenGetClaimsEndpointReturns(
+          Seq(HttpResponse(500, ""), HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString))
+        )
         await(connector.retrieveUnsubmittedClaims) shouldEqual TestClaims.testGetClaimsResponseUnsubmitted
       }
 
       "accept valid response in a third attempt" in {
-        givenGetClaimsEndpointReturns(HttpResponse(499, ""))
-        givenGetClaimsEndpointReturns(HttpResponse(500, ""))
-        givenGetClaimsEndpointReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString))
+        givenGetClaimsEndpointReturns(
+          Seq(
+            HttpResponse(499, ""),
+            HttpResponse(500, ""),
+            HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)
+          )
+        )
         await(connector.retrieveUnsubmittedClaims) shouldEqual TestClaims.testGetClaimsResponseUnsubmitted
       }
     }
