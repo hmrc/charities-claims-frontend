@@ -18,15 +18,15 @@ package controllers.connectedCharitiesSchedule
 
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
-import models.requests.DataRequest
 import models.{RepaymentClaimDetailsAnswers, SessionData}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import services.ClaimsValidationService
-import uk.gov.hmrc.http.HeaderCarrier
 import views.html.DeleteConnectedCharitiesScheduleView
 
 import scala.concurrent.Future
@@ -144,10 +144,8 @@ class DeleteConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
           RepaymentClaimDetailsAnswers.setClaimingConnectedCharities(true)
         )
 
-        (mockClaimsValidationService
-          .deleteConnectedCharitiesSchedule(using _: models.requests.DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockClaimsValidationService.deleteConnectedCharitiesSchedule(using any(), any()))
+          .thenReturn(Future.successful(()))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
@@ -164,15 +162,11 @@ class DeleteConnectedCharitiesScheduleControllerSpec extends ControllerSpec {
           redirectLocation(result) shouldBe Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
+
       "should handle case when no ConnectedCharities upload data is found" in {
-        (mockClaimsValidationService
-          .deleteConnectedCharitiesSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(
-            Future.failed(
-              new RuntimeException("No ConnectedCharities schedule upload found for claimId: claim-123")
-            )
-          )
+        when(mockClaimsValidationService.deleteConnectedCharitiesSchedule(using any(), any())).thenReturn(
+          Future.failed(new RuntimeException("No ConnectedCharities schedule upload found for claimId: claim-123"))
+        )
 
         given application: Application = applicationBuilder(sessionData = completeGasdsSession)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))

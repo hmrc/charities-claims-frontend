@@ -20,6 +20,8 @@ import play.api.test.FakeRequest
 import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
 import views.html.RepaymentClaimDetailsCheckYourAnswersView
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.test.Helpers.*
 import models.RepaymentClaimDetailsAnswers
@@ -1159,10 +1161,8 @@ class RepaymentClaimDetailsCheckYourAnswersControllerSpec extends ControllerSpec
         )
 
         val mockClaimsService = mock[services.ClaimsService]
-        (mockClaimsService
-          .save(using _: uk.gov.hmrc.http.HeaderCarrier))
-          .expects(*)
-          .returning(scala.concurrent.Future.failed(UpdatedByAnotherUserException()))
+        when(mockClaimsService.save(using any()))
+          .thenReturn(scala.concurrent.Future.failed(UpdatedByAnotherUserException()))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)

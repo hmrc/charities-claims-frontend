@@ -20,14 +20,14 @@ import controllers.ControllerSpec
 import forms.YesNoFormProvider
 import models.{RepaymentClaimDetailsAnswers, SessionData}
 import models.SessionData.and
-import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import services.ClaimsValidationService
-import uk.gov.hmrc.http.HeaderCarrier
 import views.html.DeleteCommunityBuildingsScheduleView
 
 import scala.concurrent.Future
@@ -140,10 +140,8 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
       }
 
       "should call backend deletion endpoint and redirect to R2 when yes is selected" in {
-        (mockClaimsValidationService
-          .deleteCommunityBuildingsSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockClaimsValidationService.deleteCommunityBuildingsSchedule(using any(), any()))
+          .thenReturn(Future.successful(()))
 
         given application: Application = applicationBuilder(sessionData = completeGasdsSession)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
@@ -162,14 +160,9 @@ class DeleteCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
       }
 
       "should handle case when no CommunityBuildings upload data is found" in {
-        (mockClaimsValidationService
-          .deleteCommunityBuildingsSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(
-            Future.failed(
-              new RuntimeException("No CommunityBuildings schedule upload found for claimId: claim-123")
-            )
-          )
+        when(mockClaimsValidationService.deleteCommunityBuildingsSchedule(using any(), any())).thenReturn(
+          Future.failed(new RuntimeException("No CommunityBuildings schedule upload found for claimId: claim-123"))
+        )
 
         given application: Application = applicationBuilder(sessionData = completeGasdsSession)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))

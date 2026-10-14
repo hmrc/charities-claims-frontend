@@ -19,14 +19,14 @@ package controllers.communityBuildingsSchedule
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
 import models.*
-import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import services.ClaimsValidationService
-import uk.gov.hmrc.http.HeaderCarrier
 import views.html.UpdateCommunityBuildingsScheduleView
 
 import scala.concurrent.Future
@@ -143,15 +143,10 @@ class UpdateCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
       }
 
       "should call backend deletion endpoint and redirect to UploadCommunityBuildingsSchedule when yes is selected" in {
-        (mockClaimsValidationService
-          .deleteCommunityBuildingsSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockClaimsValidationService.deleteCommunityBuildingsSchedule(using any(), any()))
+          .thenReturn(Future.successful(()))
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
         given application: Application = applicationBuilder(sessionData = validSessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
@@ -171,10 +166,8 @@ class UpdateCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
       }
 
       "should handle case when no CommunityBuildings upload data is found" in {
-        (mockClaimsValidationService
-          .deleteCommunityBuildingsSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.failed(new RuntimeException("No CommunityBuildings schedule upload found")))
+        when(mockClaimsValidationService.deleteCommunityBuildingsSchedule(using any(), any()))
+          .thenReturn(Future.failed(new RuntimeException("No CommunityBuildings schedule upload found")))
 
         given application: Application = applicationBuilder(sessionData = validSessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))

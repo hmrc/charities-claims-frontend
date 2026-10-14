@@ -20,7 +20,8 @@ import connectors.ClaimsValidationConnector
 import controllers.ControllerSpec
 import controllers.communityBuildingsSchedule.routes
 import models.*
-import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceableModule
@@ -29,7 +30,6 @@ import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import services.{ClaimsService, ClaimsValidationService, SaveService}
 import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.http.HeaderCarrier
 import util.TestResources
 
 import scala.concurrent.Future
@@ -114,10 +114,8 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
       }
 
       "should render the page when schedule data is available" in {
-        (mockClaimsValidationService
-          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+        when(mockClaimsValidationService.getCommunityBuildingsScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testValidatedResponse.communityBuildingsData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -133,10 +131,8 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
       }
 
       "should display community buildings data in the table" in {
-        (mockClaimsValidationService
-          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+        when(mockClaimsValidationService.getCommunityBuildingsScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testValidatedResponse.communityBuildingsData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -153,10 +149,8 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
       }
 
       "should default to page 1 when page query parameter is not a valid integer" in {
-        (mockClaimsValidationService
-          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+        when(mockClaimsValidationService.getCommunityBuildingsScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testValidatedResponse.communityBuildingsData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -174,10 +168,8 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
       }
 
       "should render the page for organisation" in {
-        (mockClaimsValidationService
-          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+        when(mockClaimsValidationService.getCommunityBuildingsScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testValidatedResponse.communityBuildingsData))
 
         given application: Application =
           applicationBuilder(sessionData = validSessionData, AffinityGroup.Organisation).build()
@@ -198,10 +190,8 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
       }
 
       "should render the page for agent" in {
-        (mockClaimsValidationService
-          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+        when(mockClaimsValidationService.getCommunityBuildingsScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testValidatedResponse.communityBuildingsData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData, AffinityGroup.Agent).build()
 
@@ -243,11 +233,10 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
           )
         }
       }
+
       "should return BadRequest when form onSubmit has errors and display error message" in {
-        (mockClaimsValidationService
-          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+        when(mockClaimsValidationService.getCommunityBuildingsScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testValidatedResponse.communityBuildingsData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -266,10 +255,8 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
       }
 
       "should redirect to update screen when Yes is selected" in {
-        (mockClaimsValidationService
-          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+        when(mockClaimsValidationService.getCommunityBuildingsScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testValidatedResponse.communityBuildingsData))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 
@@ -288,10 +275,8 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
       }
 
       "should redirect to Task List when No is selected and schedule is already completed previously" in {
-        (mockClaimsValidationService
-          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+        when(mockClaimsValidationService.getCommunityBuildingsScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testValidatedResponse.communityBuildingsData))
 
         given application: Application = applicationBuilder(sessionData = validSessionDataCompleted).build()
 
@@ -303,26 +288,17 @@ class CheckYourCommunityBuildingsScheduleControllerSpec extends ControllerSpec {
           val result = route(application, request).value
 
           status(result) shouldEqual SEE_OTHER
-          redirectLocation(result) shouldEqual Some(
-            controllers.routes.ClaimsTaskListController.onPageLoad.url
-          )
+          redirectLocation(result) shouldEqual Some(controllers.routes.ClaimsTaskListController.onPageLoad.url)
         }
       }
+
       "should save and redirect to UploadSuccessful when No is selected and schedule not yet completed before" in {
-        (mockClaimsValidationService
-          .getCommunityBuildingsScheduleData(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(testValidatedResponse.communityBuildingsData))
+        when(mockClaimsValidationService.getCommunityBuildingsScheduleData(using any(), any()))
+          .thenReturn(Future.successful(testValidatedResponse.communityBuildingsData))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
         given application: Application = applicationBuilder(sessionData = validSessionData).build()
 

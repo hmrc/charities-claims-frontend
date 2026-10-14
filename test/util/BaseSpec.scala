@@ -18,7 +18,6 @@ package util
 
 import org.scalatest.concurrent.ScalaFutures
 import play.api.mvc.AnyContent
-import org.scalamock.scalatest.MockFactory
 import org.apache.pekko.stream.Materializer
 import config.FrontendAppConfig
 import generators.Generators
@@ -33,10 +32,11 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, OptionValues}
 import play.api.{Application, Configuration}
 import org.scalatest.time.{Millis, Seconds, Span}
+import org.scalatestplus.mockito.MockitoSugar
 
 abstract class BaseSpec
     extends AnyFreeSpec
-    with MockFactory
+    with MockitoSugar
     with Matchers
     with ScalaFutures
     with BeforeAndAfterEach

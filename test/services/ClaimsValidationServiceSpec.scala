@@ -27,6 +27,8 @@ import models.{
   ValidationType
 }
 import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.http.HeaderCarrier
 import util.BaseSpec
@@ -124,32 +126,28 @@ class ClaimsValidationServiceSpec extends BaseSpec {
         val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
-        (mockConnector
-          .getUploadSummary(_: String)(using _: HeaderCarrier))
-          .expects("test-claim-123", *)
-          .returning(Future.successful(testUploadSummaryWithAll))
+        when(mockConnector.getUploadSummary(eqTo("test-claim-123"))(using any()))
+          .thenReturn(Future.successful(testUploadSummaryWithAll))
 
-        (mockConnector
-          .deleteSchedule(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects("test-claim-123", FileUploadReference("gift-aid-ref-123"), *)
-          .returning(Future.successful(DeleteScheduleResponse(success = true)))
-
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(
-            sessionData.copy(
-              giftAidScheduleFileUploadReference = None,
-              giftAidScheduleData = None,
-              prevOverclaimedGiftAid = None
-            ),
-            *
+        when(
+          mockConnector.deleteSchedule(eqTo("test-claim-123"), eqTo(FileUploadReference("gift-aid-ref-123")))(using
+            any()
           )
-          .returning(Future.successful(()))
+        ).thenReturn(Future.successful(DeleteScheduleResponse(success = true)))
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(
+          mockSaveService.save(
+            eqTo(
+              sessionData.copy(
+                giftAidScheduleFileUploadReference = None,
+                giftAidScheduleData = None,
+                prevOverclaimedGiftAid = None
+              )
+            )
+          )(using any())
+        ).thenReturn(Future.successful(()))
+
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
         await(service.deleteGiftAidSchedule)
       }
@@ -171,27 +169,22 @@ class ClaimsValidationServiceSpec extends BaseSpec {
         val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-789"))
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
-        (mockConnector
-          .getUploadSummary(_: String)(using _: HeaderCarrier))
-          .expects("test-claim-789", *)
-          .returning(Future.successful(testUploadSummaryWithoutGiftAid))
+        when(mockConnector.getUploadSummary(eqTo("test-claim-789"))(using any()))
+          .thenReturn(Future.successful(testUploadSummaryWithoutGiftAid))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(
-            sessionData.copy(
-              giftAidScheduleFileUploadReference = None,
-              giftAidScheduleData = None,
-              prevOverclaimedGiftAid = None
-            ),
-            *
-          )
-          .returning(Future.successful(()))
+        when(
+          mockSaveService.save(
+            eqTo(
+              sessionData.copy(
+                giftAidScheduleFileUploadReference = None,
+                giftAidScheduleData = None,
+                prevOverclaimedGiftAid = None
+              )
+            )
+          )(using any())
+        ).thenReturn(Future.successful(()))
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
         await(service.deleteGiftAidSchedule)
       }
@@ -204,32 +197,28 @@ class ClaimsValidationServiceSpec extends BaseSpec {
         val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-456"))
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
-        (mockConnector
-          .getUploadSummary(_: String)(using _: HeaderCarrier))
-          .expects("test-claim-456", *)
-          .returning(Future.successful(testUploadSummaryWithAll))
+        when(mockConnector.getUploadSummary(eqTo("test-claim-456"))(using any()))
+          .thenReturn(Future.successful(testUploadSummaryWithAll))
 
-        (mockConnector
-          .deleteSchedule(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects("test-claim-456", FileUploadReference("other-income-ref-456"), *)
-          .returning(Future.successful(DeleteScheduleResponse(success = true)))
-
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(
-            sessionData.copy(
-              otherIncomeScheduleFileUploadReference = None,
-              otherIncomeScheduleData = None,
-              adjustmentForOtherIncomePreviousOverClaimed = None
-            ),
-            *
+        when(
+          mockConnector.deleteSchedule(eqTo("test-claim-456"), eqTo(FileUploadReference("other-income-ref-456")))(using
+            any()
           )
-          .returning(Future.successful(()))
+        ).thenReturn(Future.successful(DeleteScheduleResponse(success = true)))
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(
+          mockSaveService.save(
+            eqTo(
+              sessionData.copy(
+                otherIncomeScheduleFileUploadReference = None,
+                otherIncomeScheduleData = None,
+                adjustmentForOtherIncomePreviousOverClaimed = None
+              )
+            )
+          )(using any())
+        ).thenReturn(Future.successful(()))
+
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
         await(service.deleteOtherIncomeSchedule)
       }
@@ -251,27 +240,22 @@ class ClaimsValidationServiceSpec extends BaseSpec {
         val sessionData      = SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-999"))
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
-        (mockConnector
-          .getUploadSummary(_: String)(using _: HeaderCarrier))
-          .expects("test-claim-999", *)
-          .returning(Future.successful(testUploadSummaryWithoutOtherIncome))
+        when(mockConnector.getUploadSummary(eqTo("test-claim-999"))(using any()))
+          .thenReturn(Future.successful(testUploadSummaryWithoutOtherIncome))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(
-            sessionData.copy(
-              otherIncomeScheduleFileUploadReference = None,
-              otherIncomeScheduleData = None,
-              adjustmentForOtherIncomePreviousOverClaimed = None
-            ),
-            *
-          )
-          .returning(Future.successful(()))
+        when(
+          mockSaveService.save(
+            eqTo(
+              sessionData.copy(
+                otherIncomeScheduleFileUploadReference = None,
+                otherIncomeScheduleData = None,
+                adjustmentForOtherIncomePreviousOverClaimed = None
+              )
+            )
+          )(using any())
+        ).thenReturn(Future.successful(()))
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
         await(service.deleteOtherIncomeSchedule)
       }
@@ -285,29 +269,28 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
-        (mockConnector
-          .getUploadSummary(_: String)(using _: HeaderCarrier))
-          .expects("test-claim-456", *)
-          .returning(Future.successful(testUploadSummaryWithAll))
+        when(mockConnector.getUploadSummary(eqTo("test-claim-456"))(using any()))
+          .thenReturn(Future.successful(testUploadSummaryWithAll))
 
-        (mockConnector
-          .deleteSchedule(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects("test-claim-456", FileUploadReference("community-buildings-ref-222"), *)
-          .returning(Future.successful(DeleteScheduleResponse(success = true)))
+        when(
+          mockConnector.deleteSchedule(
+            eqTo("test-claim-456"),
+            eqTo(FileUploadReference("community-buildings-ref-222"))
+          )(using any())
+        ).thenReturn(Future.successful(DeleteScheduleResponse(success = true)))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(
-            sessionData
-              .copy(communityBuildingsScheduleFileUploadReference = None, communityBuildingsScheduleData = None),
-            *
-          )
-          .returning(Future.successful(()))
+        when(
+          mockSaveService.save(
+            eqTo(
+              sessionData.copy(
+                communityBuildingsScheduleFileUploadReference = None,
+                communityBuildingsScheduleData = None
+              )
+            )
+          )(using any())
+        ).thenReturn(Future.successful(()))
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
         await(service.deleteCommunityBuildingsSchedule)
       }
@@ -331,24 +314,21 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
-        (mockConnector
-          .getUploadSummary(_: String)(using _: HeaderCarrier))
-          .expects("test-claim-999", *)
-          .returning(Future.successful(testUploadSummaryWithoutCommunityBuildings))
+        when(mockConnector.getUploadSummary(eqTo("test-claim-999"))(using any()))
+          .thenReturn(Future.successful(testUploadSummaryWithoutCommunityBuildings))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(
-            sessionData
-              .copy(communityBuildingsScheduleFileUploadReference = None, communityBuildingsScheduleData = None),
-            *
-          )
-          .returning(Future.successful(()))
+        when(
+          mockSaveService.save(
+            eqTo(
+              sessionData.copy(
+                communityBuildingsScheduleFileUploadReference = None,
+                communityBuildingsScheduleData = None
+              )
+            )
+          )(using any())
+        ).thenReturn(Future.successful(()))
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
         await(service.deleteCommunityBuildingsSchedule)
       }
@@ -362,29 +342,28 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
-        (mockConnector
-          .getUploadSummary(_: String)(using _: HeaderCarrier))
-          .expects("test-claim-456", *)
-          .returning(Future.successful(testUploadSummaryWithAll))
+        when(mockConnector.getUploadSummary(eqTo("test-claim-456"))(using any()))
+          .thenReturn(Future.successful(testUploadSummaryWithAll))
 
-        (mockConnector
-          .deleteSchedule(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects("test-claim-456", FileUploadReference("connected-charities-ref-333"), *)
-          .returning(Future.successful(DeleteScheduleResponse(success = true)))
+        when(
+          mockConnector.deleteSchedule(
+            eqTo("test-claim-456"),
+            eqTo(FileUploadReference("connected-charities-ref-333"))
+          )(using any())
+        ).thenReturn(Future.successful(DeleteScheduleResponse(success = true)))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(
-            sessionData
-              .copy(connectedCharitiesScheduleFileUploadReference = None, connectedCharitiesScheduleData = None),
-            *
-          )
-          .returning(Future.successful(()))
+        when(
+          mockSaveService.save(
+            eqTo(
+              sessionData.copy(
+                connectedCharitiesScheduleFileUploadReference = None,
+                connectedCharitiesScheduleData = None
+              )
+            )
+          )(using any())
+        ).thenReturn(Future.successful(()))
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
         await(service.deleteConnectedCharitiesSchedule)
       }
@@ -408,24 +387,21 @@ class ClaimsValidationServiceSpec extends BaseSpec {
 
         given DataRequest[?] = DataRequest(FakeRequest(), sessionData)
 
-        (mockConnector
-          .getUploadSummary(_: String)(using _: HeaderCarrier))
-          .expects("test-claim-999", *)
-          .returning(Future.successful(testUploadSummaryWithoutConnectedCharities))
+        when(mockConnector.getUploadSummary(eqTo("test-claim-999"))(using any()))
+          .thenReturn(Future.successful(testUploadSummaryWithoutConnectedCharities))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(
-            sessionData
-              .copy(connectedCharitiesScheduleFileUploadReference = None, connectedCharitiesScheduleData = None),
-            *
-          )
-          .returning(Future.successful(()))
+        when(
+          mockSaveService.save(
+            eqTo(
+              sessionData.copy(
+                connectedCharitiesScheduleFileUploadReference = None,
+                connectedCharitiesScheduleData = None
+              )
+            )
+          )(using any())
+        ).thenReturn(Future.successful(()))
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
         await(service.deleteConnectedCharitiesSchedule)
       }

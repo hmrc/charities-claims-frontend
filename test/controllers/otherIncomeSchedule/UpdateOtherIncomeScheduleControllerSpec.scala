@@ -18,14 +18,14 @@ package controllers.otherIncomeSchedule
 
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
-import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import services.ClaimsValidationService
-import uk.gov.hmrc.http.HeaderCarrier
 import views.html.UpdateOtherIncomeScheduleView
 import models.SessionData
 
@@ -151,15 +151,10 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
           completeRepaymentDetailsAnswersSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
-        (mockClaimsValidationService
-          .deleteOtherIncomeSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockClaimsValidationService.deleteOtherIncomeSchedule(using any(), any()))
+          .thenReturn(Future.successful(()))
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))
@@ -183,10 +178,8 @@ class UpdateOtherIncomeScheduleControllerSpec extends ControllerSpec {
           completeRepaymentDetailsAnswersSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
-        (mockClaimsValidationService
-          .deleteOtherIncomeSchedule(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.failed(new RuntimeException("No OtherIncome schedule upload found")))
+        when(mockClaimsValidationService.deleteOtherIncomeSchedule(using any(), any()))
+          .thenReturn(Future.failed(new RuntimeException("No OtherIncome schedule upload found")))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(bind[ClaimsValidationService].toInstance(mockClaimsValidationService))

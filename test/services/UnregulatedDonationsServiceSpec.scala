@@ -29,6 +29,8 @@ import models.{
   SessionData
 }
 import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import uk.gov.hmrc.http.HeaderCarrier
 import play.api.mvc.AnyContent
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
@@ -500,11 +502,8 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
       "when charity reason is LowIncome" - {
 
         "should return None when total donations are under the Low Income limit" in {
-          (mockConnector
-            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
-            .expects(testCharitiesReference, *)
-            .returning(Future.successful(Some(BigDecimal(1000))))
-            .once()
+          when(mockConnector.getTotalUnregulatedDonations(eqTo(testCharitiesReference))(using any()))
+            .thenReturn(Future.successful(Some(BigDecimal(1000))))
 
           val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
             ReasonNotRegisteredWithRegulator.LowIncome
@@ -519,11 +518,8 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
         }
 
         "should return Some(UnregulatedLimitExceeded) when total donations exceed the Low Income limit" in {
-          (mockConnector
-            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
-            .expects(testCharitiesReference, *)
-            .returning(Future.successful(Some(BigDecimal(5001))))
-            .once()
+          when(mockConnector.getTotalUnregulatedDonations(eqTo(testCharitiesReference))(using any()))
+            .thenReturn(Future.successful(Some(BigDecimal(5001))))
 
           val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
             ReasonNotRegisteredWithRegulator.LowIncome
@@ -538,11 +534,8 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
         }
 
         "should handle when connector returns None (no existing unregulated donations)" in {
-          (mockConnector
-            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
-            .expects(testCharitiesReference, *)
-            .returning(Future.successful(None))
-            .once()
+          when(mockConnector.getTotalUnregulatedDonations(eqTo(testCharitiesReference))(using any()))
+            .thenReturn(Future.successful(None))
 
           val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
             ReasonNotRegisteredWithRegulator.LowIncome
@@ -560,25 +553,17 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
         "should include schedule data in total calculation" in {
           val testFileRef = FileUploadReference("test-file-ref")
 
-          (mockConnector
-            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
-            .expects(testCharitiesReference, *)
-            .returning(Future.successful(Some(BigDecimal(4500))))
-            .once()
-
+          when(mockConnector.getTotalUnregulatedDonations(eqTo(testCharitiesReference))(using any()))
+            .thenReturn(Future.successful(Some(BigDecimal(4500))))
           // mock the validation connector to return gift aid data with totalDonations = 1000
-          (mockClaimsValidationConnector
-            .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-            .expects(*, testFileRef, *)
-            .returning(
-              Future.successful(
-                GetUploadResultValidatedGiftAid(
-                  reference = testFileRef,
-                  giftAidScheduleData = TestScheduleData.exampleGiftAidScheduleData
-                )
+          when(mockClaimsValidationConnector.getUploadResult(any(), eqTo(testFileRef))(using any())).thenReturn(
+            Future.successful(
+              GetUploadResultValidatedGiftAid(
+                reference = testFileRef,
+                giftAidScheduleData = TestScheduleData.exampleGiftAidScheduleData
               )
             )
-            .once()
+          )
 
           val baseSessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
             ReasonNotRegisteredWithRegulator.LowIncome
@@ -604,11 +589,8 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
       "when charity reason is Excepted" - {
 
         "should return None when total donations are under the limit" in {
-          (mockConnector
-            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
-            .expects(testCharitiesReference, *)
-            .returning(Future.successful(Some(BigDecimal(50000))))
-            .once()
+          when(mockConnector.getTotalUnregulatedDonations(eqTo(testCharitiesReference))(using any()))
+            .thenReturn(Future.successful(Some(BigDecimal(50000))))
 
           val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
             ReasonNotRegisteredWithRegulator.Excepted
@@ -624,11 +606,8 @@ class UnregulatedDonationsServiceSpec extends BaseSpec {
         }
 
         "should return Some(UnregulatedLimitExceeded) when total donations exceed the limit" in {
-          (mockConnector
-            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
-            .expects(testCharitiesReference, *)
-            .returning(Future.successful(Some(BigDecimal(100001))))
-            .once()
+          when(mockConnector.getTotalUnregulatedDonations(eqTo(testCharitiesReference))(using any()))
+            .thenReturn(Future.successful(Some(BigDecimal(100001))))
 
           val sessionData = OrganisationDetailsAnswers.setReasonNotRegisteredWithRegulator(
             ReasonNotRegisteredWithRegulator.Excepted

@@ -20,9 +20,9 @@ import com.typesafe.config.ConfigFactory
 import connectors.UpscanInitiateConnector
 import controllers.ControllerSpec
 import controllers.connectedCharitiesSchedule.routes
-import models.requests.DataRequest
 import models.*
-import org.scalamock.handlers.CallHandler
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.inject.guice.GuiceableModule
 import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
@@ -64,7 +64,7 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
   def givenPostInitiateEndpointReturns(
     request: UpscanInitiateRequest,
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     mockHttpPostSuccess(
       url = "http://foo.bar.com:1234/foo-upscan/v2/initiate",
       requestBody = Json.toJson(request),
@@ -236,10 +236,12 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
           completeGasdsSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.ConnectedCharities, false, *, *)
-          .returning(Future.successful(Some(FileUploadReference("ref-123"))))
+        when(
+          mockClaimsValidationService.getFileUploadReference(eqTo(ValidationType.ConnectedCharities), eqTo(false))(using
+            any(),
+            any()
+          )
+        ).thenReturn(Future.successful(Some(FileUploadReference("ref-123"))))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -265,25 +267,19 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
           completeGasdsSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.ConnectedCharities, false, *, *)
-          .returning(Future.successful(None))
+        when(
+          mockClaimsValidationService.getFileUploadReference(eqTo(ValidationType.ConnectedCharities), eqTo(false))(using
+            any(),
+            any()
+          )
+        ).thenReturn(Future.successful(None))
 
-        (mockUpscanInitiateConnector
-          .initiate(_: String, _: UpscanInitiateRequest)(using _: HeaderCarrier))
-          .expects(*, *, *)
-          .returning(Future.successful(response))
+        when(mockUpscanInitiateConnector.initiate(any(), any())(using any())).thenReturn(Future.successful(response))
 
-        (mockClaimsValidationService
-          .createUploadTracking(_: String, _: CreateUploadTrackingRequest)(using _: HeaderCarrier))
-          .expects(*, *, *)
-          .returning(Future.successful(true))
+        when(mockClaimsValidationService.createUploadTracking(any(), any())(using any()))
+          .thenReturn(Future.successful(true))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -332,18 +328,20 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
           completeGasdsSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.ConnectedCharities, true, *, *)
-          .returning(Future.successful(Some(FileUploadReference("ref-123"))))
+        when(
+          mockClaimsValidationService.getFileUploadReference(eqTo(ValidationType.ConnectedCharities), eqTo(true))(using
+            any(),
+            any()
+          )
+        ).thenReturn(Future.successful(Some(FileUploadReference("ref-123"))))
 
-        (mockClaimsValidationService
-          .updateUploadStatus(_: String, _: FileUploadReference, _: ValidationType)(using
-            _: DataRequest[?],
-            _: HeaderCarrier
-          ))
-          .expects("test-claim-id", FileUploadReference("ref-123"), ValidationType.ConnectedCharities, *, *)
-          .returning(Future.successful(true))
+        when(
+          mockClaimsValidationService.updateUploadStatus(
+            eqTo("test-claim-id"),
+            eqTo(FileUploadReference("ref-123")),
+            eqTo(ValidationType.ConnectedCharities)
+          )(using any(), any())
+        ).thenReturn(Future.successful(true))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)
@@ -369,18 +367,20 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
           completeGasdsSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.ConnectedCharities, true, *, *)
-          .returning(Future.successful(Some(FileUploadReference("ref-123"))))
+        when(
+          mockClaimsValidationService.getFileUploadReference(eqTo(ValidationType.ConnectedCharities), eqTo(true))(using
+            any(),
+            any()
+          )
+        ).thenReturn(Future.successful(Some(FileUploadReference("ref-123"))))
 
-        (mockClaimsValidationService
-          .updateUploadStatus(_: String, _: FileUploadReference, _: ValidationType)(using
-            _: DataRequest[?],
-            _: HeaderCarrier
-          ))
-          .expects("test-claim-id", FileUploadReference("ref-123"), ValidationType.ConnectedCharities, *, *)
-          .returning(Future.successful(true))
+        when(
+          mockClaimsValidationService.updateUploadStatus(
+            eqTo("test-claim-id"),
+            eqTo(FileUploadReference("ref-123")),
+            eqTo(ValidationType.ConnectedCharities)
+          )(using any(), any())
+        ).thenReturn(Future.successful(true))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData, AffinityGroup.Agent)
@@ -406,10 +406,12 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
           completeGasdsSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.ConnectedCharities, true, *, *)
-          .returning(Future.successful(None))
+        when(
+          mockClaimsValidationService.getFileUploadReference(eqTo(ValidationType.ConnectedCharities), eqTo(true))(using
+            any(),
+            any()
+          )
+        ).thenReturn(Future.successful(None))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData, AffinityGroup.Agent)
@@ -435,10 +437,12 @@ class UploadConnectedCharitiesScheduleControllerSpec extends ControllerSpec with
           completeGasdsSession
             .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
 
-        (mockClaimsValidationService
-          .getFileUploadReference(_: ValidationType, _: Boolean)(using _: DataRequest[?], _: HeaderCarrier))
-          .expects(ValidationType.ConnectedCharities, true, *, *)
-          .returning(Future.successful(None))
+        when(
+          mockClaimsValidationService.getFileUploadReference(eqTo(ValidationType.ConnectedCharities), eqTo(true))(using
+            any(),
+            any()
+          )
+        ).thenReturn(Future.successful(None))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)

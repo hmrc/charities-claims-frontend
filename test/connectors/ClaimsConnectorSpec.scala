@@ -20,13 +20,11 @@ import util.{BaseSpec, HttpV2Support, TestClaims}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import models.*
-import org.scalamock.handlers.CallHandler
 import play.api.test.Helpers.*
 import com.typesafe.config.ConfigFactory
 import play.api.Configuration
 import play.api.libs.json.Json
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
@@ -57,16 +55,22 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       actorSystem = actorSystem
     )
 
-  def givenGetClaimsEndpointReturns(response: HttpResponse): CallHandler[Future[HttpResponse]] =
+  def givenGetClaimsEndpointReturns(response: HttpResponse) =
     givenGetReturns(
       expectedUrl = "http://foo.bar.com:1234/foo-claims/claims?claimSubmitted=false",
       response = response
     )
 
+  def givenGetClaimsEndpointReturns(responses: Seq[HttpResponse]) =
+    givenGetReturns(
+      expectedUrl = "http://foo.bar.com:1234/foo-claims/claims?claimSubmitted=false",
+      responses = responses
+    )
+
   def givenSaveClaimEndpointReturns(
     payload: SaveClaimRequest,
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     givenPostReturns(
       expectedUrl = "http://foo.bar.com:1234/foo-claims/claims",
       expectedPayload = Json.toJson(payload),
@@ -75,7 +79,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
   def givenGetClaimEndpointReturns(
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     givenGetReturns(
       expectedUrl = "http://foo.bar.com:1234/foo-claims/claims/123",
       response = response
@@ -84,7 +88,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
   def givenUpdateClaimEndpointReturns(
     payload: UpdateClaimRequest,
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     givenPutReturns(
       expectedUrl = "http://foo.bar.com:1234/foo-claims/claims/123",
       expectedPayload = Json.toJson(payload),
@@ -93,7 +97,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
   def givenDeleteClaimEndpointReturns(
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     givenDeleteReturns(
       expectedUrl = "http://foo.bar.com:1234/foo-claims/claims/123",
       response = response
@@ -104,7 +108,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
     lastUpdatedReference: String,
     declarationLanguage: String,
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     givenSubmitReturns(
       expectedUrl = "http://foo.bar.com:1234/foo-claims/chris",
       expectedPayload = Json.toJson(SubmitClaimRequest(claimId, lastUpdatedReference, declarationLanguage)),
@@ -113,7 +117,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
   def givenGetSubmissionClaimSummaryEndpointReturns(
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     givenGetReturns(
       expectedUrl = "http://foo.bar.com:1234/foo-claims/submission-summary/123",
       response = response
@@ -121,7 +125,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
   def givenGetUnsubmittedClaimEndpointReturns(
     response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
+  ) =
     givenGetReturns(
       expectedUrl = "http://foo.bar.com:1234/foo-claims/claims/charities/123/unsubmitted",
       response = response
@@ -133,41 +137,37 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
     "retrieveUnsubmittedClaims" - {
 
       "should return a list of unsubmitted claims" in {
-        givenGetClaimsEndpointReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)).once()
+        givenGetClaimsEndpointReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString))
 
         await(connector.retrieveUnsubmittedClaims) shouldEqual TestClaims.testGetClaimsResponseUnsubmitted
       }
 
       "throw an exception if the service returns malformed JSON" in {
         givenGetClaimsEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]"))
-          .once()
         a[Exception] should be thrownBy
           await(connector.retrieveUnsubmittedClaims)
       }
 
       "throw an exception if the service returns wrong entity format" in {
         givenGetClaimsEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]}"))
-          .once()
         a[Exception] should be thrownBy
           await(connector.retrieveUnsubmittedClaims)
       }
 
       "throw an exception if the service returns 404 status" in {
-        givenGetClaimsEndpointReturns(HttpResponse(404, "Bad Request")).once()
+        givenGetClaimsEndpointReturns(HttpResponse(404, "Bad Request"))
         a[Exception] should be thrownBy
           await(connector.retrieveUnsubmittedClaims)
       }
 
       "throw an exception if the service returns 500 status" in {
-        givenGetClaimsEndpointReturns(HttpResponse(500, "")).once()
+        givenGetClaimsEndpointReturns(HttpResponse(500, ""))
         a[Exception] should be thrownBy
           await(connector.retrieveUnsubmittedClaims)
       }
 
       "throw exception when 5xx response status in the third attempt" in {
-        givenGetClaimsEndpointReturns(HttpResponse(500, "")).once()
-        givenGetClaimsEndpointReturns(HttpResponse(499, "")).once()
-        givenGetClaimsEndpointReturns(HttpResponse(469, "")).once()
+        givenGetClaimsEndpointReturns(Seq(HttpResponse(500, ""), HttpResponse(499, ""), HttpResponse(469, "")))
 
         a[Exception] shouldBe thrownBy {
           await(connector.retrieveUnsubmittedClaims)
@@ -175,15 +175,20 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
       }
 
       "accept valid response in a second attempt" in {
-        givenGetClaimsEndpointReturns(HttpResponse(500, "")).once()
-        givenGetClaimsEndpointReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)).once()
+        givenGetClaimsEndpointReturns(
+          Seq(HttpResponse(500, ""), HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString))
+        )
         await(connector.retrieveUnsubmittedClaims) shouldEqual TestClaims.testGetClaimsResponseUnsubmitted
       }
 
       "accept valid response in a third attempt" in {
-        givenGetClaimsEndpointReturns(HttpResponse(499, "")).once()
-        givenGetClaimsEndpointReturns(HttpResponse(500, "")).once()
-        givenGetClaimsEndpointReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)).once()
+        givenGetClaimsEndpointReturns(
+          Seq(
+            HttpResponse(499, ""),
+            HttpResponse(500, ""),
+            HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)
+          )
+        )
         await(connector.retrieveUnsubmittedClaims) shouldEqual TestClaims.testGetClaimsResponseUnsubmitted
       }
     }
@@ -202,7 +207,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
           200,
           Json.stringify(Json.toJson(SaveClaimResponse(claimId = "1237", lastUpdatedReference = "0123456789")))
         )
-      ).once()
+      )
       await(
         connector.saveClaim(
           RepaymentClaimDetails(
@@ -364,20 +369,18 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
     "throw an exception if the service returns malformed JSON" in {
       givenDeleteClaimEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]"))
-        .once()
       a[Exception] should be thrownBy
         await(connector.deleteClaim("123"))
     }
 
     "throw an exception if the service returns wrong entity format" in {
       givenDeleteClaimEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]}"))
-        .once()
       a[Exception] should be thrownBy
         await(connector.deleteClaim("123"))
     }
 
     "throw an exception if the service returns 404 status" in {
-      givenDeleteClaimEndpointReturns(HttpResponse(404, "Bad Request")).once()
+      givenDeleteClaimEndpointReturns(HttpResponse(404, "Bad Request"))
       a[Exception] should be thrownBy
         await(connector.deleteClaim("123"))
     }
@@ -440,7 +443,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
     }
 
     "throw an exception if the service returns 404 status" in {
-      givenGetSubmissionClaimSummaryEndpointReturns(HttpResponse(404, "Not Found")).once()
+      givenGetSubmissionClaimSummaryEndpointReturns(HttpResponse(404, "Not Found"))
       a[Exception] should be thrownBy
         await(connector.getSubmissionClaimSummary("123"))
     }

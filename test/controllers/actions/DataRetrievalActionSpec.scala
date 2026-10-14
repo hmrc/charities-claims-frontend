@@ -19,12 +19,13 @@ package controllers.actions
 import connectors.ClaimsConnector
 import models.requests.{AuthorisedRequest, DataRequest}
 import models.*
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.mvc.Results.*
 import play.api.test.Helpers.*
 import play.api.test.Helpers
 import repositories.SessionCache
 import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.http.HeaderCarrier
 import util.{BaseSpec, TestClaims}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -59,10 +60,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       val sessionData =
         RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(Some(sessionData)))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(Some(sessionData)))
 
       val result = action.invokeBlock(
         authorisedRequestOrganisation,
@@ -85,20 +83,12 @@ class DataRetrievalActionSpec extends BaseSpec {
         testFrontendAppConfig
       )
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(None))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(None))
 
-      (mockSessionCache
-        .store(_: SessionData)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(()))
+      when(mockSessionCache.store(any())(using any())).thenReturn(Future.successful(()))
 
-      (mockClaimsConnector
-        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(GetClaimsResponse(claimsCount = 0, claimsList = Nil)))
+      when(mockClaimsConnector.retrieveUnsubmittedClaims(using any()))
+        .thenReturn(Future.successful(GetClaimsResponse(claimsCount = 0, claimsList = Nil)))
 
       val result = action.invokeBlock(
         authorisedRequestOrganisation,
@@ -121,39 +111,20 @@ class DataRetrievalActionSpec extends BaseSpec {
         testFrontendAppConfig
       )
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(None))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(None))
 
-      (mockSessionCache
-        .store(_: SessionData)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(()))
+      when(mockSessionCache.store(any())(using any())).thenReturn(Future.successful(()))
 
-      (mockClaimsConnector
-        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
-        .expects(*)
-        .returning(
-          Future.successful(
-            GetClaimsResponse(
-              claimsCount = 1,
-              claimsList = List(TestClaims.testClaimInfo())
-            )
-          )
-        )
+      when(mockClaimsConnector.retrieveUnsubmittedClaims(using any())).thenReturn(
+        Future.successful(GetClaimsResponse(claimsCount = 1, claimsList = List(TestClaims.testClaimInfo())))
+      )
 
-      (mockClaimsValidationConnector
-        .getUploadSummary(_: String)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(GetUploadSummaryResponse(uploads = Nil)))
+      when(mockClaimsValidationConnector.getUploadSummary(any())(using any()))
+        .thenReturn(Future.successful(GetUploadSummaryResponse(uploads = Nil)))
 
       val claim = TestClaims.testClaimWithRepaymentClaimDetailsOnly()
 
-      (mockClaimsConnector
-        .getClaim(_: String)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(Some(claim)))
+      when(mockClaimsConnector.getClaim(any())(using any())).thenReturn(Future.successful(Some(claim)))
 
       val result = action.invokeBlock(
         authorisedRequestOrganisation,
@@ -190,27 +161,13 @@ class DataRetrievalActionSpec extends BaseSpec {
         testFrontendAppConfig
       )
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(None))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(None))
 
-      (mockSessionCache
-        .store(_: SessionData)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(()))
+      when(mockSessionCache.store(any())(using any())).thenReturn(Future.successful(()))
 
-      (mockClaimsConnector
-        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
-        .expects(*)
-        .returning(
-          Future.successful(
-            GetClaimsResponse(
-              claimsCount = 1,
-              claimsList = List(TestClaims.testClaimInfo())
-            )
-          )
-        )
+      when(mockClaimsConnector.retrieveUnsubmittedClaims(using any())).thenReturn(
+        Future.successful(GetClaimsResponse(claimsCount = 1, claimsList = List(TestClaims.testClaimInfo())))
+      )
 
       val getUploadSummaryResponseWithGiftAidAwaitingUpload =
         GetUploadSummaryResponse(uploads =
@@ -225,19 +182,12 @@ class DataRetrievalActionSpec extends BaseSpec {
           )
         )
 
-      (mockClaimsValidationConnector
-        .getUploadSummary(_: String)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(
-          Future.successful(getUploadSummaryResponseWithGiftAidAwaitingUpload)
-        )
+      when(mockClaimsValidationConnector.getUploadSummary(any())(using any()))
+        .thenReturn(Future.successful(getUploadSummaryResponseWithGiftAidAwaitingUpload))
 
       val claim = TestClaims.testClaimWithRepaymentClaimDetailsOnly()
 
-      (mockClaimsConnector
-        .getClaim(_: String)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(Some(claim)))
+      when(mockClaimsConnector.getClaim(any())(using any())).thenReturn(Future.successful(Some(claim)))
 
       val result = action.invokeBlock(
         authorisedRequestOrganisation,
@@ -286,10 +236,7 @@ class DataRetrievalActionSpec extends BaseSpec {
       val sessionData =
         RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true).and(SessionData.setUnsubmittedClaimId("claim-123"))
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(Some(sessionData)))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(Some(sessionData)))
 
       val result = action.invokeBlock(
         authorisedRequestAgent,
@@ -312,20 +259,12 @@ class DataRetrievalActionSpec extends BaseSpec {
         testFrontendAppConfig
       )
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(None))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(None))
 
-      (mockSessionCache
-        .store(_: SessionData)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(()))
+      when(mockSessionCache.store(any())(using any())).thenReturn(Future.successful(()))
 
-      (mockClaimsConnector
-        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(GetClaimsResponse(claimsCount = 0, claimsList = Nil)))
+      when(mockClaimsConnector.retrieveUnsubmittedClaims(using any()))
+        .thenReturn(Future.successful(GetClaimsResponse(claimsCount = 0, claimsList = Nil)))
 
       val result = action.invokeBlock(
         authorisedRequestAgent,
@@ -348,20 +287,12 @@ class DataRetrievalActionSpec extends BaseSpec {
         testFrontendAppConfig
       )
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(None))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(None))
 
-      (mockSessionCache
-        .store(_: SessionData)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(()))
+      when(mockSessionCache.store(any())(using any())).thenReturn(Future.successful(()))
 
-      (mockClaimsConnector
-        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(GetClaimsResponse(claimsCount = 2, claimsList = Nil)))
+      when(mockClaimsConnector.retrieveUnsubmittedClaims(using any()))
+        .thenReturn(Future.successful(GetClaimsResponse(claimsCount = 2, claimsList = Nil)))
 
       val result =
         action.invokeBlock(
@@ -385,20 +316,12 @@ class DataRetrievalActionSpec extends BaseSpec {
         testFrontendAppConfig
       )
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(None))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(None))
 
-      (mockSessionCache
-        .store(_: SessionData)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(()))
+      when(mockSessionCache.store(any())(using any())).thenReturn(Future.successful(()))
 
-      (mockClaimsConnector
-        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(GetClaimsResponse(claimsCount = 2, claimsList = Nil)))
+      when(mockClaimsConnector.retrieveUnsubmittedClaims(using any()))
+        .thenReturn(Future.successful(GetClaimsResponse(claimsCount = 2, claimsList = Nil)))
 
       val result =
         action.invokeBlock(
@@ -422,15 +345,11 @@ class DataRetrievalActionSpec extends BaseSpec {
         testFrontendAppConfig
       )
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(None))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(None))
 
-      (mockClaimsConnector
-        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(GetClaimsResponse(claimsCount = 1, claimsList = List(TestClaims.testClaimInfo()))))
+      when(mockClaimsConnector.retrieveUnsubmittedClaims(using any())).thenReturn(
+        Future.successful(GetClaimsResponse(claimsCount = 1, claimsList = List(TestClaims.testClaimInfo())))
+      )
 
       val result =
         action.invokeBlock(
@@ -453,30 +372,19 @@ class DataRetrievalActionSpec extends BaseSpec {
         testFrontendAppConfig
       )
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(None))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(None))
 
-      (mockSessionCache
-        .store(_: SessionData)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(()))
+      when(mockSessionCache.store(any())(using any())).thenReturn(Future.successful(()))
 
-      (mockClaimsConnector
-        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(GetClaimsResponse(claimsCount = 1, claimsList = List(TestClaims.testClaimInfo()))))
+      when(mockClaimsConnector.retrieveUnsubmittedClaims(using any())).thenReturn(
+        Future.successful(GetClaimsResponse(claimsCount = 1, claimsList = List(TestClaims.testClaimInfo())))
+      )
 
-      (mockClaimsConnector
-        .getClaim(_: String)(using _: HeaderCarrier))
-        .expects("123", *)
-        .returning(Future.successful(Some(TestClaims.testClaimWithRepaymentClaimDetailsOnly())))
+      when(mockClaimsConnector.getClaim(eqTo("123"))(using any()))
+        .thenReturn(Future.successful(Some(TestClaims.testClaimWithRepaymentClaimDetailsOnly())))
 
-      (mockClaimsValidationConnector
-        .getUploadSummary(_: String)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.successful(GetUploadSummaryResponse(uploads = Nil)))
+      when(mockClaimsValidationConnector.getUploadSummary(any())(using any()))
+        .thenReturn(Future.successful(GetUploadSummaryResponse(uploads = Nil)))
 
       val result =
         action.invokeBlock(
@@ -504,15 +412,10 @@ class DataRetrievalActionSpec extends BaseSpec {
         testFrontendAppConfig
       )
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(None))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(None))
 
-      (mockClaimsConnector
-        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
-        .expects(*)
-        .returning(Future.successful(GetClaimsResponse(claimsCount = 3, claimsList = Nil)))
+      when(mockClaimsConnector.retrieveUnsubmittedClaims(using any()))
+        .thenReturn(Future.successful(GetClaimsResponse(claimsCount = 3, claimsList = Nil)))
 
       val result =
         action.invokeBlock(authorisedRequestAgent, (_: DataRequest[?]) => ???) // never going to be executed

@@ -19,15 +19,11 @@ package connectors
 import util.{BaseSpec, HttpV2Support}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import play.api.Configuration
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import org.scalamock.handlers.CallHandler
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import play.api.test.Helpers.*
 import com.typesafe.config.ConfigFactory
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-
-import java.net.URL
 
 class UnregulatedDonationsConnectorSpec extends BaseSpec with HttpV2Support {
 
@@ -57,10 +53,15 @@ class UnregulatedDonationsConnectorSpec extends BaseSpec with HttpV2Support {
       actorSystem = actorSystem
     )
 
-  def givenGetTotalUnregulatedDonationsEndpointReturns(response: HttpResponse): CallHandler[Future[HttpResponse]] =
+  def givenGetTotalUnregulatedDonationsEndpointReturns(response: HttpResponse) =
     mockHttpGetSuccess(
-      URL("http://foo.bar.com:1234/foo-claims/charities/123/unregulated-donations")
+      url"http://foo.bar.com:1234/foo-claims/charities/123/unregulated-donations"
     )(response)
+
+  def givenGetTotalUnregulatedDonationsEndpointReturns(responses: Seq[HttpResponse]) =
+    mockHttpGetSuccesses(
+      url"http://foo.bar.com:1234/foo-claims/charities/123/unregulated-donations"
+    )(responses)
 
   given HeaderCarrier = HeaderCarrier()
 
@@ -70,20 +71,19 @@ class UnregulatedDonationsConnectorSpec extends BaseSpec with HttpV2Support {
       "should return a total of unregulated donations if the service returns 200 status" in {
         givenGetTotalUnregulatedDonationsEndpointReturns(
           HttpResponse(200, "{\"unregulatedDonationsTotal\": 123.45}")
-        ).once()
-
+        )
         await(connector.getTotalUnregulatedDonations("123")) shouldEqual Some(123.45)
       }
 
       "should return None if the service returns 404 status" in {
-        givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(404, "")).once()
+        givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(404, ""))
         await(connector.getTotalUnregulatedDonations("123")) shouldEqual None
       }
 
       "throw an exception if the service returs malformed JSON" in {
         givenGetTotalUnregulatedDonationsEndpointReturns(
           HttpResponse(200, "{unregulatedDonationsTotal: 123.45}")
-        ).once()
+        )
         a[Exception] should be thrownBy
           await(connector.getTotalUnregulatedDonations("123"))
       }
@@ -91,21 +91,21 @@ class UnregulatedDonationsConnectorSpec extends BaseSpec with HttpV2Support {
       "throw an exception if the service returs wrong entity format" in {
         givenGetTotalUnregulatedDonationsEndpointReturns(
           HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]}")
-        ).once()
+        )
         a[Exception] should be thrownBy
           await(connector.getTotalUnregulatedDonations("123"))
       }
 
       "throw an exception if the service returns 500 status" in {
-        givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(500, "")).once()
+        givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(500, ""))
         a[Exception] should be thrownBy
           await(connector.getTotalUnregulatedDonations("123"))
       }
 
       "throw exception when 5xx response status in the third attempt" in {
-        givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(500, "")).once()
-        givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(499, "")).once()
-        givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(469, "")).once()
+        givenGetTotalUnregulatedDonationsEndpointReturns(
+          Seq(HttpResponse(500, ""), HttpResponse(499, ""), HttpResponse(469, ""))
+        )
 
         a[Exception] shouldBe thrownBy {
           await(connector.getTotalUnregulatedDonations("123"))
@@ -113,19 +113,20 @@ class UnregulatedDonationsConnectorSpec extends BaseSpec with HttpV2Support {
       }
 
       "accept valid response in a second attempt" in {
-        givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(500, "")).once()
         givenGetTotalUnregulatedDonationsEndpointReturns(
-          HttpResponse(200, "{\"unregulatedDonationsTotal\": 123.45}")
-        ).once()
+          Seq(HttpResponse(500, ""), HttpResponse(200, "{\"unregulatedDonationsTotal\": 123.45}"))
+        )
         await(connector.getTotalUnregulatedDonations("123")) shouldEqual Some(123.45)
       }
 
       "accept valid response in a third attempt" in {
-        givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(499, "")).once()
-        givenGetTotalUnregulatedDonationsEndpointReturns(HttpResponse(500, "")).once()
         givenGetTotalUnregulatedDonationsEndpointReturns(
-          HttpResponse(200, "{\"unregulatedDonationsTotal\": 123.45}")
-        ).once()
+          Seq(
+            HttpResponse(499, ""),
+            HttpResponse(500, ""),
+            HttpResponse(200, "{\"unregulatedDonationsTotal\": 123.45}")
+          )
+        )
         await(connector.getTotalUnregulatedDonations("123")) shouldEqual Some(123.45)
       }
     }

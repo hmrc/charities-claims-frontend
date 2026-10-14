@@ -18,19 +18,19 @@ package controllers.giftAidSmallDonationsScheme
 
 import controllers.ControllerSpec
 import models.*
-import org.scalamock.scalatest.MockFactory
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.inject.bind
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import services.ClaimsService
 import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.http.HeaderCarrier
 import views.html.GiftAidSmallDonationsSchemeDetailsCheckYourAnswersView
 
 import scala.concurrent.Future
 
-class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerSpec extends ControllerSpec with MockFactory {
+class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerSpec extends ControllerSpec {
 
   private val validGasdsAnswers =
     GiftAidSmallDonationsSchemeDonationDetailsAnswers(
@@ -300,10 +300,7 @@ class GiftAidSmallDonationsSchemeDetailsCheckYourAnswersControllerSpec extends C
         val mockClaimsService =
           mock[ClaimsService]
 
-        (mockClaimsService
-          .save(using _: HeaderCarrier))
-          .expects(*)
-          .returning(Future.successful(()))
+        when(mockClaimsService.save(using any())).thenReturn(Future.successful(()))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)

@@ -23,7 +23,8 @@ import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import models.{FileUploadReference, RepaymentClaimDetailsAnswers, *}
-import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.{inject, Application}
 import play.api.libs.json.{JsBoolean, JsString, Json}
 
@@ -141,10 +142,8 @@ class CommunityBuildingsScheduleUploadStatusControllerSpec extends ControllerSpe
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
           .copy(communityBuildingsScheduleFileUploadReference = Some(fileUploadReference))
 
-        (mockService
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testAwaitingResponse))
+        when(mockService.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testAwaitingResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
@@ -170,10 +169,8 @@ class CommunityBuildingsScheduleUploadStatusControllerSpec extends ControllerSpe
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
           .copy(communityBuildingsScheduleFileUploadReference = Some(fileUploadReference))
 
-        (mockService
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testVerifyingResponse))
+        when(mockService.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testVerifyingResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
@@ -198,10 +195,8 @@ class CommunityBuildingsScheduleUploadStatusControllerSpec extends ControllerSpe
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
           .copy(communityBuildingsScheduleFileUploadReference = Some(fileUploadReference))
 
-        (mockService
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testValidatingResponse))
+        when(mockService.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testValidatingResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
@@ -227,10 +222,8 @@ class CommunityBuildingsScheduleUploadStatusControllerSpec extends ControllerSpe
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
           .copy(communityBuildingsScheduleFileUploadReference = Some(fileUploadReference))
 
-        (mockService
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testValidatedResponse))
+        when(mockService.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testValidatedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
@@ -256,10 +249,8 @@ class CommunityBuildingsScheduleUploadStatusControllerSpec extends ControllerSpe
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
           .copy(communityBuildingsScheduleFileUploadReference = Some(fileUploadReference))
 
-        (mockService
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(mockService.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
@@ -285,10 +276,8 @@ class CommunityBuildingsScheduleUploadStatusControllerSpec extends ControllerSpe
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
           .copy(communityBuildingsScheduleFileUploadReference = Some(fileUploadReference))
 
-        (mockService
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testVerificationFailedRejectedResponse))
+        when(mockService.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testVerificationFailedRejectedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
@@ -313,10 +302,8 @@ class CommunityBuildingsScheduleUploadStatusControllerSpec extends ControllerSpe
           .and(RepaymentClaimDetailsAnswers.setClaimingUnderGiftAidSmallDonationsScheme(true))
           .copy(communityBuildingsScheduleFileUploadReference = Some(fileUploadReference))
 
-        (mockService
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.failed(new Exception("CLAIM_REFERENCE_DOES_NOT_EXIST")))
+        when(mockService.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.failed(new Exception("CLAIM_REFERENCE_DOES_NOT_EXIST")))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))

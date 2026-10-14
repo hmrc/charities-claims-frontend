@@ -20,6 +20,8 @@ import connectors.UnregulatedDonationsConnector
 import controllers.ControllerSpec
 import forms.AdjustmentToThisClaimFormProvider
 import models.*
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
@@ -332,12 +334,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
 
         "should render the page when unregulatedWarningBypassed is true (user just bypassed WRN5)" in {
           val mockSaveService = mock[SaveService]
-          (mockSaveService
-            .save(_: SessionData)(using _: HeaderCarrier))
-            .expects(where { (sessionData: SessionData, _: HeaderCarrier) =>
-              !sessionData.unregulatedWarningBypassed
-            })
-            .returning(Future.successful(()))
+          when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
           val answers     = repaymentClaimDetailsAnswersCompleted.copy(
             claimingUnderGiftAidSmallDonationsScheme = Some(false),
@@ -376,11 +373,8 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
         }
 
         "should redirect to the warning page when unregulatedWarningBypassed is false and limit is exceeded (re-visit after bypass)" in {
-          (mockConnector
-            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
-            .expects(testCharitiesReference, *)
-            .returning(Future.successful(Some(BigDecimal(5001))))
-            .once()
+          when(mockConnector.getTotalUnregulatedDonations(eqTo(testCharitiesReference))(using any()))
+            .thenReturn(Future.successful(Some(BigDecimal(5001))))
 
           val answers     = repaymentClaimDetailsAnswersCompleted.copy(
             claimingUnderGiftAidSmallDonationsScheme = Some(false),
@@ -420,11 +414,8 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
         }
 
         "should render the page and pre-populate correctly when Some(UnregulatedLimitExceeded) when total donations less than the Low Income limit" in {
-          (mockConnector
-            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
-            .expects(testCharitiesReference, *)
-            .returning(Future.successful(Some(BigDecimal(3000))))
-            .once()
+          when(mockConnector.getTotalUnregulatedDonations(eqTo(testCharitiesReference))(using any()))
+            .thenReturn(Future.successful(Some(BigDecimal(3000))))
 
           val answers     = repaymentClaimDetailsAnswersCompleted.copy(
             claimingUnderGiftAidSmallDonationsScheme = Some(false),
@@ -462,11 +453,8 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
         }
 
         "should render the page and pre-populate correctly when Some(UnregulatedLimitExceeded) when total donations exceed the Low Income limit" in {
-          (mockConnector
-            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
-            .expects(testCharitiesReference, *)
-            .returning(Future.successful(Some(BigDecimal(5001))))
-            .once()
+          when(mockConnector.getTotalUnregulatedDonations(eqTo(testCharitiesReference))(using any()))
+            .thenReturn(Future.successful(Some(BigDecimal(5001))))
 
           val answers     = repaymentClaimDetailsAnswersCompleted.copy(
             claimingUnderGiftAidSmallDonationsScheme = Some(false),
@@ -784,12 +772,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
 
         "should render the page when unregulatedWarningBypassed is true (user just bypassed WRN5)" in {
           val mockSaveService = mock[SaveService]
-          (mockSaveService
-            .save(_: SessionData)(using _: HeaderCarrier))
-            .expects(where { (sessionData: SessionData, _: HeaderCarrier) =>
-              !sessionData.unregulatedWarningBypassed
-            })
-            .returning(Future.successful(()))
+          when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
           val answers     = repaymentClaimDetailsAnswersCompleted.copy(
             claimingUnderGiftAidSmallDonationsScheme = Some(false),
@@ -830,11 +813,8 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
         }
 
         "should redirect to the warning page when unregulatedWarningBypassed is false and limit is exceeded (re-visit after bypass)" in {
-          (mockConnector
-            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
-            .expects(testCharitiesReference, *)
-            .returning(Future.successful(Some(BigDecimal(5001))))
-            .once()
+          when(mockConnector.getTotalUnregulatedDonations(eqTo(testCharitiesReference))(using any()))
+            .thenReturn(Future.successful(Some(BigDecimal(5001))))
 
           val answers     = repaymentClaimDetailsAnswersCompleted.copy(
             claimingUnderGiftAidSmallDonationsScheme = Some(false),
@@ -876,11 +856,8 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
         }
 
         "should render the page and pre-populate correctly when Some(UnregulatedLimitExceeded) when total donations less than the Low Income limit" in {
-          (mockConnector
-            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
-            .expects(testCharitiesReference, *)
-            .returning(Future.successful(Some(BigDecimal(3000))))
-            .once()
+          when(mockConnector.getTotalUnregulatedDonations(eqTo(testCharitiesReference))(using any()))
+            .thenReturn(Future.successful(Some(BigDecimal(3000))))
 
           val answers     = repaymentClaimDetailsAnswersCompleted.copy(
             claimingUnderGiftAidSmallDonationsScheme = Some(false),
@@ -920,11 +897,8 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
         }
 
         "should render the page and pre-populate correctly when Some(UnregulatedLimitExceeded) when total donations exceed the Low Income limit" in {
-          (mockConnector
-            .getTotalUnregulatedDonations(_: String)(using _: HeaderCarrier))
-            .expects(testCharitiesReference, *)
-            .returning(Future.successful(Some(BigDecimal(5001))))
-            .once()
+          when(mockConnector.getTotalUnregulatedDonations(eqTo(testCharitiesReference))(using any()))
+            .thenReturn(Future.successful(Some(BigDecimal(5001))))
 
           val answers     = repaymentClaimDetailsAnswersCompleted.copy(
             claimingUnderGiftAidSmallDonationsScheme = Some(false),

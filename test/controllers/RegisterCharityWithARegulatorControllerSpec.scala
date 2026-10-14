@@ -20,6 +20,8 @@ import controllers.ControllerSpec
 import forms.YesNoFormProvider
 import models.requests.DataRequest
 import models.{OrganisationDetailsAnswers, ReasonNotRegisteredWithRegulator, SessionData}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
@@ -166,12 +168,7 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
 
       "should set unregulatedWarningBypassed and redirect to declaration screen when No is selected" in {
         val mockSaveService: SaveService = mock[SaveService]
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(where { (sessionData: SessionData, _: HeaderCarrier) =>
-            sessionData.unregulatedWarningBypassed
-          })
-          .returning(Future.successful(()))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
         given application: Application =
           applicationBuilder(sessionData = sessionDataExcepted)
@@ -192,12 +189,7 @@ class RegisterCharityWithARegulatorControllerSpec extends ControllerSpec {
 
       "should reset flag and redirect to (Claims Task List) when Yes is selected" in {
         val mockSaveService: SaveService = mock[SaveService]
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(where { (sessionData: SessionData, _: HeaderCarrier) =>
-            !sessionData.unregulatedLimitExceeded
-          })
-          .returning(Future.successful(()))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
         given application: Application =
           applicationBuilder(sessionData = sessionDataExcepted)

@@ -21,12 +21,13 @@ import services.SaveService
 import models.SessionData
 import controllers.ControllerSpec
 import forms.YesNoFormProvider
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
-import uk.gov.hmrc.http.HeaderCarrier
 import views.html.DeleteOrganisationClaimView
 import config.FrontendAppConfig
 import uk.gov.hmrc.auth.core.AffinityGroup
@@ -217,15 +218,9 @@ class DeleteOrganisationClaimControllerSpec extends ControllerSpec {
         val sessionData =
           models.SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
-        (mockClaimsConnector
-          .deleteClaim(_: String)(using _: HeaderCarrier))
-          .expects("test-claim-123", *)
-          .returning(Future.successful(true))
+        when(mockClaimsConnector.deleteClaim(eqTo("test-claim-123"))(using any())).thenReturn(Future.successful(true))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(
@@ -250,15 +245,9 @@ class DeleteOrganisationClaimControllerSpec extends ControllerSpec {
         val sessionData =
           models.SessionData.empty(testCharitiesReference).copy(unsubmittedClaimId = Some("test-claim-123"))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.successful(()))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.successful(()))
 
-        (mockClaimsConnector
-          .deleteClaim(_: String)(using _: HeaderCarrier))
-          .expects("test-claim-123", *)
-          .returning(Future.successful(false))
+        when(mockClaimsConnector.deleteClaim(eqTo("test-claim-123"))(using any())).thenReturn(Future.successful(false))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(
@@ -285,10 +274,7 @@ class DeleteOrganisationClaimControllerSpec extends ControllerSpec {
             .empty(testCharitiesReference)
             .copy(unsubmittedClaimId = Some("test-claim-123"))
 
-        (mockSaveService
-          .save(_: SessionData)(using _: HeaderCarrier))
-          .expects(*, *)
-          .returning(Future.failed(new RuntimeException("Save failed")))
+        when(mockSaveService.save(any())(using any())).thenReturn(Future.failed(new RuntimeException("Save failed")))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData)

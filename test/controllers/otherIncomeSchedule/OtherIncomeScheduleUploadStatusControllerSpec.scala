@@ -19,11 +19,12 @@ package controllers.otherIncomeSchedule
 import play.api.test.FakeRequest
 import services.ClaimsValidationService
 import util.TestResources
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.mvc.AnyContentAsEmpty
 import controllers.ControllerSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import models.{FileUploadReference, RepaymentClaimDetailsAnswers, *}
-import models.requests.DataRequest
 import play.api.{inject, Application}
 import play.api.libs.json.{JsBoolean, JsString, Json}
 
@@ -134,10 +135,8 @@ class OtherIncomeScheduleUploadStatusControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(fileUploadReference))
 
-        (mockService
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testAwaitingResponse))
+        when(mockService.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testAwaitingResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
@@ -162,10 +161,8 @@ class OtherIncomeScheduleUploadStatusControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(fileUploadReference))
 
-        (mockService
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testVerifyingResponse))
+        when(mockService.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testVerifyingResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
@@ -189,10 +186,8 @@ class OtherIncomeScheduleUploadStatusControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(fileUploadReference))
 
-        (mockService
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testValidatingResponse))
+        when(mockService.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testValidatingResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
@@ -217,10 +212,8 @@ class OtherIncomeScheduleUploadStatusControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(fileUploadReference))
 
-        (mockService
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testValidatedResponse))
+        when(mockService.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testValidatedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
@@ -245,10 +238,8 @@ class OtherIncomeScheduleUploadStatusControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(fileUploadReference))
 
-        (mockService
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testValidationFailedResponse))
+        when(mockService.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testValidationFailedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
@@ -273,10 +264,8 @@ class OtherIncomeScheduleUploadStatusControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(fileUploadReference))
 
-        (mockService
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.successful(testVerificationFailedRejectedResponse))
+        when(mockService.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.successful(testVerificationFailedRejectedResponse))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))
@@ -300,10 +289,8 @@ class OtherIncomeScheduleUploadStatusControllerSpec extends ControllerSpec {
           .and(RepaymentClaimDetailsAnswers.setClaimingTaxDeducted(true))
           .copy(otherIncomeScheduleFileUploadReference = Some(fileUploadReference))
 
-        (mockService
-          .getUploadResult(_: String, _: FileUploadReference)(using _: HeaderCarrier))
-          .expects(claimId, fileUploadReference, *)
-          .returning(Future.failed(new Exception("CLAIM_REFERENCE_DOES_NOT_EXIST")))
+        when(mockService.getUploadResult(eqTo(claimId), eqTo(fileUploadReference))(using any()))
+          .thenReturn(Future.failed(new Exception("CLAIM_REFERENCE_DOES_NOT_EXIST")))
 
         given application: Application = applicationBuilder(sessionData = sessionData)
           .overrides(inject.bind[ClaimsValidationService].toInstance(mockService))

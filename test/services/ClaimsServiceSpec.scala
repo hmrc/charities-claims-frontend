@@ -19,6 +19,8 @@ package services
 import play.api.test.Helpers.*
 import util.BaseSpec
 import connectors.ClaimsConnector
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import uk.gov.hmrc.http.HeaderCarrier
 import models.*
 
@@ -52,27 +54,18 @@ class ClaimsServiceSpec extends BaseSpec {
         repaymentClaimDetailsAnswers = Some(repaymentAnswers)
       )
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returns(Future.successful(Some(initialSessionData)))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(Some(initialSessionData)))
 
-      (mockConnector
-        .saveClaim(_: RepaymentClaimDetails)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(
-          Future.successful(SaveClaimResponse(claimId = "generated-claim-id", lastUpdatedReference = "0123456789"))
-        )
+      when(mockConnector.saveClaim(any())(using any())).thenReturn(
+        Future.successful(SaveClaimResponse(claimId = "generated-claim-id", lastUpdatedReference = "0123456789"))
+      )
 
       val expectedSessionData = initialSessionData.copy(
         unsubmittedClaimId = Some("generated-claim-id"),
         lastUpdatedReference = Some("0123456789")
       )
 
-      (mockSessionCache
-        .store(_: SessionData)(using _: HeaderCarrier))
-        .expects(expectedSessionData, *)
-        .returning(Future.successful(()))
+      when(mockSessionCache.store(eqTo(expectedSessionData))(using any())).thenReturn(Future.successful(()))
 
       await(service.save)
     }
@@ -99,20 +92,14 @@ class ClaimsServiceSpec extends BaseSpec {
         repaymentClaimDetailsAnswers = Some(repaymentAnswers)
       )
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returns(Future.successful(Some(initialSessionData)))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(Some(initialSessionData)))
 
-      (mockConnector
-        .updateClaim(_: String, _: UpdateClaimRequest)(using _: HeaderCarrier))
-        .expects(existingClaimId, *, *)
-        .returning(Future.successful(UpdateClaimResponse(success = true, lastUpdatedReference = "1234567891")))
+      when(mockConnector.updateClaim(eqTo(existingClaimId), any())(using any()))
+        .thenReturn(Future.successful(UpdateClaimResponse(success = true, lastUpdatedReference = "1234567891")))
 
-      (mockSessionCache
-        .store(_: SessionData)(using _: HeaderCarrier))
-        .expects(initialSessionData.copy(lastUpdatedReference = Some("1234567891")), *)
-        .returning(Future.successful(()))
+      when(
+        mockSessionCache.store(eqTo(initialSessionData.copy(lastUpdatedReference = Some("1234567891"))))(using any())
+      ).thenReturn(Future.successful(()))
 
       await(service.save)
     }
@@ -138,15 +125,10 @@ class ClaimsServiceSpec extends BaseSpec {
         isAgent = false
       )
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returns(Future.successful(Some(initialSessionData)))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(Some(initialSessionData)))
 
-      (mockConnector
-        .saveClaim(_: RepaymentClaimDetails)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.failed(UnsubmittedClaimsLimitExceededException()))
+      when(mockConnector.saveClaim(any())(using any()))
+        .thenReturn(Future.failed(UnsubmittedClaimsLimitExceededException()))
 
       an[OrganisationClaimAlreadyInProgressException] should be thrownBy await(service.save)
     }
@@ -172,15 +154,10 @@ class ClaimsServiceSpec extends BaseSpec {
         isAgent = true
       )
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returns(Future.successful(Some(initialSessionData)))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(Some(initialSessionData)))
 
-      (mockConnector
-        .saveClaim(_: RepaymentClaimDetails)(using _: HeaderCarrier))
-        .expects(*, *)
-        .returning(Future.failed(UnsubmittedClaimsLimitExceededException()))
+      when(mockConnector.saveClaim(any())(using any()))
+        .thenReturn(Future.failed(UnsubmittedClaimsLimitExceededException()))
 
       an[UnsubmittedClaimsLimitExceededException] should be thrownBy await(service.save)
     }
@@ -204,10 +181,7 @@ class ClaimsServiceSpec extends BaseSpec {
         repaymentClaimDetailsAnswers = Some(incompleteAnswers)
       )
 
-      (mockSessionCache
-        .get()(using _: HeaderCarrier))
-        .expects(*)
-        .returns(Future.successful(Some(initialSessionData)))
+      when(mockSessionCache.get()(using any())).thenReturn(Future.successful(Some(initialSessionData)))
 
       an[MissingRequiredFieldsException] should be thrownBy await(service.save)
     }

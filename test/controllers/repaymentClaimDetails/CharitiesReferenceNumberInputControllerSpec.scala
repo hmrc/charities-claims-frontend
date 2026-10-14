@@ -27,9 +27,10 @@ import play.api.test.FakeRequest
 import models.Mode.*
 import uk.gov.hmrc.auth.core.AffinityGroup
 import connectors.ClaimsConnector
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
 import play.api.inject.bind
 import play.api.inject.guice.GuiceableModule
-import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -133,10 +134,7 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
             repaymentClaimDetailsAnswers = Some(answers)
           )
 
-        (mockClaimsConnector
-          .hasUnsubmittedClaim(_: String)(using _: HeaderCarrier))
-          .expects(hmrcRef, *)
-          .returning(Future(true))
+        when(mockClaimsConnector.hasUnsubmittedClaim(eqTo(hmrcRef))(using any())).thenReturn(Future(true))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
@@ -165,10 +163,7 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
             repaymentClaimDetailsAnswers = Some(answers)
           )
 
-        (mockClaimsConnector
-          .hasUnsubmittedClaim(_: String)(using _: HeaderCarrier))
-          .expects(hmrcRef, *)
-          .returning(Future(false))
+        when(mockClaimsConnector.hasUnsubmittedClaim(eqTo(hmrcRef))(using any())).thenReturn(Future(false))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
@@ -201,10 +196,7 @@ class CharitiesReferenceNumberInputControllerSpec extends ControllerSpec {
             repaymentClaimDetailsAnswers = Some(answers)
           )
 
-        (mockClaimsConnector
-          .hasUnsubmittedClaim(_: String)(using _: HeaderCarrier))
-          .expects(hmrcRef, *)
-          .returning(Future(false))
+        when(mockClaimsConnector.hasUnsubmittedClaim(eqTo(hmrcRef))(using any())).thenReturn(Future(false))
 
         given application: Application =
           applicationBuilder(sessionData = sessionData, affinityGroup = AffinityGroup.Agent).build()
