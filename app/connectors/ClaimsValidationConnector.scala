@@ -134,7 +134,7 @@ class ClaimsValidationConnectorImpl @Inject() (
     reads: Reads[O],
     hc: HeaderCarrier
   ): Future[O] = {
-    logger.info(s"$method $url [requestId=${hc.requestId.map(_.value).getOrElse("-")}]")
+    logger.info(s"$method $url requestId=${hc.requestId.map(_.value).getOrElse("-")}")
     retryFor(s"$method $url") {
       case e if e.getMessage.contains("CLAIM_DOES_NOT_EXIST") => false
       case _                                                  => true
