@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import config.Constants
+@import config.Constants.Css
 @import controllers.repaymentClaimDetails.routes
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
@@ -37,15 +39,15 @@
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
-    <span class="govuk-caption-l">@messages("enterCharityName.caption")</span>
+    <span class="@Css.captionLLabelCssClass">@messages("enterCharityName.caption")</span>
 
     @formHelper(action = routes.EnterCharityNameController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @govukTextareaCharacterCount(
             CharacterCountViewModel(
                 field = form("value"),
-                label = Label(content = Text(messages("enterCharityName.heading")),isPageHeading = true,classes = "govuk-fieldset__legend--l"),
-                maxLength = 160
+                label = Label(content = Text(messages("enterCharityName.heading")),isPageHeading = true,classes = Css.fieldsetLegendLCssClass),
+                maxLength = Constants.maxCharityNameLength
             ).withHint(
                 HintViewModel(Text(messages("enterCharityName.hint")))
             )

@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.repaymentClaimDetails.routes
 
 @this(
@@ -49,19 +50,19 @@ govukErrorSummary: GovukErrorSummary
        @govukErrorSummary(ErrorSummaryViewModel(form))
    }
 
-    <span class="govuk-caption-l">@messages(captionMessage)</span>
+    <span class="@Css.captionLLabelCssClass">@messages(captionMessage)</span>
 
    @formHelper(action = routes.ClaimReferenceNumberInputController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = Label(content = Text(messages(headingMessage)),isPageHeading = true,classes = "govuk-fieldset__legend--l")
+                label = Label(content = Text(messages(headingMessage)),isPageHeading = true,classes = Css.fieldsetLegendLCssClass)
                 ).withHint(
                     HintViewModel(Text(messages("claimReferenceNumber.hint")))
                         .withId("value-hint")
                 )
-                .withCssClass("govuk-input--width-20")
+                .withCssClass(Css.inputWidth20CssClass)
                 .withAutocomplete("off")
         )
 

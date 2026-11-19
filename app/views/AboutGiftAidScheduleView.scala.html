@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.giftAidSchedule.routes
 
 @this(
@@ -28,16 +29,16 @@
     pageTitle    = titleNoForm(messages("aboutGiftAidSchedule.title"))
 ) {
 
-    <span class="govuk-caption-l">@messages("aboutGiftAidSchedule.caption")</span>
-    <h1 class="govuk-heading-l">@messages("aboutGiftAidSchedule.heading")</h1>
+    <span class="@Css.captionLLabelCssClass">@messages("aboutGiftAidSchedule.caption")</span>
+    <h1 class="@Css.headingLCssClass">@messages("aboutGiftAidSchedule.heading")</h1>
     @if(isAgent) {
-        <p class="govuk-body">@messages("aboutGiftAidSchedule.paragraph.agent.one")</p>
+        <p class="@Css.bodyCssClass">@messages("aboutGiftAidSchedule.paragraph.agent.one")</p>
     } else {
-        <p class="govuk-body">@messages("aboutGiftAidSchedule.paragraph.one")</p>
+        <p class="@Css.bodyCssClass">@messages("aboutGiftAidSchedule.paragraph.one")</p>
     }
     
-    <p class="govuk-body">@messages("aboutGiftAidSchedule.paragraph.two")</p>
-    <p class="govuk-body">@Html(messages("aboutGiftAidSchedule.paragraph.url", giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl))</p>
+    <p class="@Css.bodyCssClass">@messages("aboutGiftAidSchedule.paragraph.two")</p>
+    <p class="@Css.bodyCssClass">@Html(messages("aboutGiftAidSchedule.paragraph.url", giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl))</p>
 
     @formHelper(action = routes.AboutGiftAidScheduleController.onSubmit) {
 

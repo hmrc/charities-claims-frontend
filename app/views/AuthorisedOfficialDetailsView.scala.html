@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.organisationDetails.routes
 @import models.AuthorisedOfficialDetails
 @import models.Mode.*
@@ -37,8 +38,8 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="govuk-caption-l">@messages("authorisedOfficialDetails.caption")</span>
-    <h1 class="govuk-heading-l">@messages("authorisedOfficialDetails.heading")</h1>
+    <span class="@Css.captionLLabelCssClass">@messages("authorisedOfficialDetails.caption")</span>
+    <h1 class="@Css.headingLCssClass">@messages("authorisedOfficialDetails.heading")</h1>
 
     @formHelper(action = routes.AuthorisedOfficialDetailsController.onSubmit(mode)) {
 
@@ -46,28 +47,28 @@
         InputViewModel(
             field = form("title"),
             label = LabelViewModel(messages("authorisedOfficialDetails.titleField"))
-        ).withCssClass("govuk-input--width-4")
+        ).withCssClass(Css.inputWidth4CssClass)
              .withAutocomplete("honorific-prefix"))
 
     @govukInput(
         InputViewModel(
              field = form("firstName"),
              label = LabelViewModel(messages("authorisedOfficialDetails.firstName"))
-        ).withCssClass("govuk-input--width-20")
+        ).withCssClass(Css.inputWidth20CssClass)
               .withAutocomplete("given-name"))
 
     @govukInput(
         InputViewModel(
              field = form("lastName"),
              label = LabelViewModel(messages("authorisedOfficialDetails.lastName"))
-         ).withCssClass("govuk-input--width-20")
+         ).withCssClass(Css.inputWidth20CssClass)
                .withAutocomplete("family-name"))
 
     @govukInput(
          InputViewModel(
               field = form("phoneNumber"),
               label = LabelViewModel(messages("authorisedOfficialDetails.phoneNumber"))
-         ).withCssClass("govuk-input--width-20")
+         ).withCssClass(Css.inputWidth20CssClass)
             .withInputType("tel")
               .withAutocomplete("tel"))
 
@@ -76,7 +77,7 @@
             InputViewModel(
                  field = form("postcode"),
                  label = LabelViewModel(messages("authorisedOfficialDetails.postcode"))
-            ).withCssClass("govuk-input--width-10")
+            ).withCssClass(Css.inputWidth10CssClass)
             .withAutocomplete("postal-code"))
     }
 

@@ -98,29 +98,28 @@ class CheckYourGiftAidScheduleController @Inject() (
                     )
                   )
                 },
-                answer =>
-                  answer match {
-                    case true =>
-                      Future.successful(Redirect(routes.UpdateGiftAidScheduleController.onPageLoad))
+                {
+                  case true =>
+                    Future.successful(Redirect(routes.UpdateGiftAidScheduleController.onPageLoad))
 
-                    case false =>
-                      if request.sessionData.giftAidScheduleCompleted
-                      then {
-                        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
-                      } else {
-                        for {
-                          _ <- saveService.save(
-                                 request.sessionData.copy(
-                                   giftAidScheduleCompleted = true,
-                                   giftAidScheduleData = None,
-                                   prevOverclaimedGiftAid = giftAidScheduleData.prevOverclaimedGiftAid,
-                                   isAgent = request.isAgent
-                                 )
+                  case false =>
+                    if request.sessionData.giftAidScheduleCompleted
+                    then {
+                      Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+                    } else {
+                      for {
+                        _ <- saveService.save(
+                               request.sessionData.copy(
+                                 giftAidScheduleCompleted = true,
+                                 giftAidScheduleData = None,
+                                 prevOverclaimedGiftAid = giftAidScheduleData.prevOverclaimedGiftAid,
+                                 isAgent = request.isAgent
                                )
-                          _ <- claimsService.save
-                        } yield Redirect(routes.GiftAidScheduleUploadSuccessfulController.onPageLoad)
-                      }
-                  }
+                             )
+                        _ <- claimsService.save
+                      } yield Redirect(routes.GiftAidScheduleUploadSuccessfulController.onPageLoad)
+                    }
+                }
               )
 
           }

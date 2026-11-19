@@ -15,6 +15,7 @@
  *@
 
 @import play.twirl.api.Html
+@import config.Constants.Css
 
 @this(
     layout: templates.Layout
@@ -23,10 +24,10 @@
 @(pageTitle: String, heading: String, message: String, messageArgs: Seq[String] = Seq.empty)(implicit request:Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm(pageTitle), showBackLink = false) {
-    <h1 class="govuk-heading-xl">@messages(heading)</h1>
+    <h1 class="@Css.headingXLCssClass">@messages(heading)</h1>
 
     @messages(message, messageArgs*).split("<br>").map { line =>
-        <p class="govuk-body">@Html(line.trim)</p>
+        <p class="@Css.bodyCssClass">@Html(line.trim)</p>
     }
     
 }

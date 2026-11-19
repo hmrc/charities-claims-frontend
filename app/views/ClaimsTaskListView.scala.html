@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import viewmodels.ClaimsTaskListViewModel
 @import viewmodels.govuk.tasklist.*
 @import viewmodels.TimeoutMode
@@ -32,24 +33,24 @@
 
     @if(isAgent) {
        @organisationName.map { name =>
-          <span class="govuk-caption-l charity-name-caption">@name</span>
+          <span class="@Css.captionLLabelCssClass @Css.charityNameCaptionCssClass">@name</span>
        }
     }
-    <h1 class="govuk-heading-l">@messages("claimsTaskList.heading")</h1>
+    <h1 class="@Css.headingLCssClass">@messages("claimsTaskList.heading")</h1>
 
     @for(section <- viewModel.sections) {
-        <h2 class="govuk-heading-m">@messages(section.headingKey)</h2>
+        <h2 class="@Css.headingMCssClass">@messages(section.headingKey)</h2>
         @govukTaskList(TaskListViewModel(section))
     }
 
     @viewModel.deleteClaimUrl.map { url =>
-        <p class="govuk-body govuk-!-margin-top-6">
-            <a class="govuk-link" href="@url">@messages("claimsTaskList.link.deleteClaim")</a>
+        <p class="@Css.bodyCssClass @Css.marginTop6CssClass">
+            <a class="@Css.linkCssClass" href="@url">@messages("claimsTaskList.link.deleteClaim")</a>
         </p>
     }
 
-    <p class="govuk-body">
-        <a class="govuk-link" href="@viewModel.dashboardUrl">@messages("claimsTaskList.link.goToDashboard")</a>
+    <p class="@Css.bodyCssClass">
+        <a class="@Css.linkCssClass" href="@viewModel.dashboardUrl">@messages("claimsTaskList.link.goToDashboard")</a>
     </p>
 
 }

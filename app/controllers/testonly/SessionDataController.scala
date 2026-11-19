@@ -85,7 +85,7 @@ class SessionDataController @Inject() (
 
   }
 
-  def renderPage(sessionData: String, error: Option[String] = None): Html = Html(
+  private def renderPage(sessionData: String, error: Option[String] = None): Html = Html(
     s"""
     |  <html>
     |  <head>

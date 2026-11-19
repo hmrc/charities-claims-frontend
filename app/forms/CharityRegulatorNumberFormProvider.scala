@@ -16,6 +16,7 @@
 
 package forms
 
+import config.Constants
 import forms.Mappings
 import play.api.data.Form
 
@@ -25,14 +26,12 @@ class CharityRegulatorNumberFormProvider @Inject() extends Mappings {
 
   private val numberRegex = """^\d+$"""
 
-  private val maxLength = 20
-
   def apply(): Form[String] = Form(
     "value" -> text("charityRegulatorNumber.error.required")
       .verifying(
         firstError(
           regexp(numberRegex, "charityRegulatorNumber.error.format"),
-          maxLength(maxLength, "charityRegulatorNumber.error.length")
+          maxLength(Constants.maxCharityRegulatorNumberLength, "charityRegulatorNumber.error.length")
         )
       )
   )

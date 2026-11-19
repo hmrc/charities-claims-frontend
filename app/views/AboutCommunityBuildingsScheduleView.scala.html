@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.communityBuildingsSchedule.routes
 
 @this(
@@ -33,12 +34,12 @@
     pageTitle    = titleNoForm(messages("aboutCommunityBuildingsSchedule.title"))
 ) {
 
-    <span class="govuk-caption-l">@messages("aboutCommunityBuildingsSchedule.caption")</span>
-    <h1 class="govuk-heading-l">@messages("aboutCommunityBuildingsSchedule.heading")</h1>
+    <span class="@Css.captionLLabelCssClass">@messages("aboutCommunityBuildingsSchedule.caption")</span>
+    <h1 class="@Css.headingLCssClass">@messages("aboutCommunityBuildingsSchedule.heading")</h1>
 
-    <p class="govuk-body">@messages(paragraphOneMessage)</p>
-    <p class="govuk-body">@messages("aboutCommunityBuildingsSchedule.paragraph.two")</p>
-    <p class="govuk-body">@Html(messages("aboutCommunityBuildingsSchedule.paragraph.url", communityBuildingsScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl))</p>
+    <p class="@Css.bodyCssClass">@messages(paragraphOneMessage)</p>
+    <p class="@Css.bodyCssClass">@messages("aboutCommunityBuildingsSchedule.paragraph.two")</p>
+    <p class="@Css.bodyCssClass">@Html(messages("aboutCommunityBuildingsSchedule.paragraph.url", communityBuildingsScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl))</p>
 
     @formHelper(action = routes.AboutCommunityBuildingsScheduleController.onSubmit) {
 

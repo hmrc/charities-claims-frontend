@@ -20,6 +20,7 @@ import models.Mode.*
 import services.SaveService
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import com.google.inject.Inject
+import config.Constants
 import controllers.BaseController
 import views.html.ClaimReferenceNumberInputView
 import controllers.actions.{Actions, GuardAction}
@@ -42,7 +43,7 @@ class ClaimReferenceNumberInputController @Inject() (
 
   val form: Form[String] = formProvider(
     "claimReferenceNumber.error.required",
-    (20, "claimReferenceNumber.error.length"),
+    (Constants.maxClaimsReferenceNumberLength, "claimReferenceNumber.error.length"),
     "claimReferenceNumber.error.regex"
   )
 

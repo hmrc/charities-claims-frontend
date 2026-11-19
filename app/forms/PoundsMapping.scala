@@ -54,7 +54,7 @@ object PoundsMapping extends Mappings {
   ): Formatter[BigDecimal] =
     bigDecimalFormat(precision = 15, scale = 2, errorRequired, formatErrorMsg, maxLengthErrorMsg)
 
-  def bigDecimalFormat(
+  private def bigDecimalFormat(
     precision: Int,
     scale: Int,
     errorRequired: String,

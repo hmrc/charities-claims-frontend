@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
@@ -27,19 +29,19 @@
 @layout(
     pageTitle = titleNoForm(messages(messagesKeyPrefix + agentPrefix + ".title")), showBackLink = false
 ) {
-    <h1 class="govuk-heading-l">@messages(messagesKeyPrefix + agentPrefix + ".heading")</h1>
+    <h1 class="@Css.headingLCssClass">@messages(messagesKeyPrefix + agentPrefix + ".heading")</h1>
 
     @formHelper(action = submitAction, Symbol("autoComplete") -> "off") {
 
-        <p class="govuk-body">@messages(messagesKeyPrefix + agentPrefix + ".hint")</p>
+        <p class="@Css.bodyCssClass">@messages(messagesKeyPrefix + agentPrefix + ".hint")</p>
         
         @govukButton(
             ButtonViewModel(Text(messages("scheduleUploadFailure.continue")))
-            .withCssClass("govuk-!-margin-bottom-3")
+            .withCssClass(Css.marginBottom3CssClass)
         )
 
-        <div class="govuk-button-group">
-            <a class="govuk-link" href="@dashboardLink.url">@messages("scheduleUploadFailure.link")</a>
+        <div class="@Css.buttonGroupCssClass">
+            <a class="@Css.linkCssClass" href="@dashboardLink.url">@messages("scheduleUploadFailure.link")</a>
         </div>
     }
 }

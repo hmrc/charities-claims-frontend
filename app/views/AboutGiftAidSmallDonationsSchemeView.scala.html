@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.giftAidSmallDonationsScheme.routes
 
 @this(
@@ -28,13 +29,13 @@
     pageTitle    = titleNoForm(messages("aboutGiftAidSmallDonationsScheme.title"))
 ) {
 
-    <span class="govuk-caption-l">@messages("aboutGiftAidSmallDonationsScheme.caption")</span>
-    <h1 class="govuk-heading-l">@messages("aboutGiftAidSmallDonationsScheme.heading")</h1>
+    <span class="@Css.captionLLabelCssClass">@messages("aboutGiftAidSmallDonationsScheme.caption")</span>
+    <h1 class="@Css.headingLCssClass">@messages("aboutGiftAidSmallDonationsScheme.heading")</h1>
 
     @formHelper(action = routes.AboutGiftAidSmallDonationsSchemeController.onSubmit) {
 
-    <p class="govuk-body">@messages(if(isAgent) "aboutGiftAidSmallDonationsScheme.paragraph.one.agent" else "aboutGiftAidSmallDonationsScheme.paragraph.one")
-    <p class="govuk-body">@messages("aboutGiftAidSmallDonationsScheme.paragraph.two")</p>
+    <p class="@Css.bodyCssClass">@messages(if(isAgent) "aboutGiftAidSmallDonationsScheme.paragraph.one.agent" else "aboutGiftAidSmallDonationsScheme.paragraph.one")
+    <p class="@Css.bodyCssClass">@messages("aboutGiftAidSmallDonationsScheme.paragraph.two")</p>
 
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))
     }

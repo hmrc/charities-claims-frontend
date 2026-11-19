@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import models.*
 @import uk.gov.hmrc.govukfrontend.views.html.components.*
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.table.*
@@ -33,7 +34,7 @@
         )),
         rows = errors.map { error =>
             Seq(
-                TableRow(content = Text(error.field.toRowNumber), classes = "govuk-table__header"),
+                TableRow(content = Text(error.field.toRowNumber), classes = "@Css.tableHeaderCssClass"),
                 (error.error, earliestTaxYear) match
                 case ("validationService.communityBuildings.message.15", Some(year)) =>
                     TableRow(content = Text(messages(error.error, s"${year}")))

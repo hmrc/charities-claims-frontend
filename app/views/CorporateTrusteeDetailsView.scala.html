@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.organisationDetails.routes
 
 @this(
@@ -34,8 +35,8 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="govuk-caption-l">@messages("corporateTrusteeDetails.caption")</span>
-    <h1 class="govuk-heading-l">@messages("corporateTrusteeDetails.heading")</h1>
+    <span class="@Css.captionLLabelCssClass">@messages("corporateTrusteeDetails.caption")</span>
+    <h1 class="@Css.headingLCssClass">@messages("corporateTrusteeDetails.heading")</h1>
 
     @formHelper(action = routes.CorporateTrusteeDetailsController.onSubmit(mode),Symbol("autoComplete") -> "on") {
 
@@ -43,14 +44,14 @@
         InputViewModel(
             field = form("nameOfCorporateTrustee"),
             label = LabelViewModel(messages("corporateTrusteeDetails.name.label"))
-        ).withCssClass("govuk-input--width-20")
+        ).withCssClass(Css.inputWidth20CssClass)
         .withAutocomplete("name"))
 
     @govukInput(
         InputViewModel(
             field = form("corporateTrusteeDaytimeTelephoneNumber"),
             label = LabelViewModel(messages("corporateTrusteeDetails.phone.label"))
-                ).withCssClass("govuk-input--width-20")
+                ).withCssClass(Css.inputWidth20CssClass)
                 .withInputType("tel")
                 .withAutocomplete("tel"))
     @if(isUKAddress){
@@ -58,7 +59,7 @@
             InputViewModel(
                 field = form("corporateTrusteePostcode"),
                 label = LabelViewModel(messages("corporateTrusteeDetails.postcode.label"))
-           ).withCssClass("govuk-input--width-10")
+           ).withCssClass(Css.inputWidth10CssClass)
             .withAutocomplete("postal-code")
         )
     }

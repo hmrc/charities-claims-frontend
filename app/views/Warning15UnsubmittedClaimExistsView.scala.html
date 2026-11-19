@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this(
     layout: templates.Layout
 )
@@ -25,12 +27,12 @@
     showBackLink = false
 ) {
 
-    <h1 class="govuk-heading-l">
+    <h1 class="@Css.headingLCssClass">
         @messages("warning15UnsubmittedClaimExists.heading")
     </h1>
 
-    <p class="govuk-body">@messages("warning15UnsubmittedClaimExists.paragraph.1")</p>
+    <p class="@Css.bodyCssClass">@messages("warning15UnsubmittedClaimExists.paragraph.1")</p>
 
-    <p class="govuk-body">@messages("warning15UnsubmittedClaimExists.paragraph.2")</p>
+    <p class="@Css.bodyCssClass">@messages("warning15UnsubmittedClaimExists.paragraph.2")</p>
 
 }

@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.repaymentClaimDetails.routes
 
 @this(
@@ -30,22 +31,22 @@ govukButton: GovukButton
 
 
 @if(isAgent) {
-    <span class="govuk-caption-l">@messages("repaymentClaimDetails.agent.subheading")</span>
+    <span class="@Css.captionLLabelCssClass">@messages("repaymentClaimDetails.agent.subheading")</span>
 } else {
-    <span class="govuk-caption-l">@messages("repaymentClaimDetails.subheading")</span>
+    <span class="@Css.captionLLabelCssClass">@messages("repaymentClaimDetails.subheading")</span>
 }
 
-<h1 class="govuk-heading-l">@messages("repaymentClaimDetails.heading")</h1>
+<h1 class="@Css.headingLCssClass">@messages("repaymentClaimDetails.heading")</h1>
 
 @if(isAgent) {
-    <p class="govuk-body">@messages("repaymentClaimDetails.agent.p1")</p>
+    <p class="@Css.bodyCssClass">@messages("repaymentClaimDetails.agent.p1")</p>
 } else {
-    <p class="govuk-body">@messages("repaymentClaimDetails.p1")</p>
+    <p class="@Css.bodyCssClass">@messages("repaymentClaimDetails.p1")</p>
 }
 
 
 
-<ul class="govuk-list govuk-list--bullet">
+<ul class="@Css.bulletListCssClass">
     <li>@messages("repaymentClaimDetails.bullet1")</li>
     <li>@messages("repaymentClaimDetails.bullet2")</li>
     <li>@messages("repaymentClaimDetails.bullet3")</li>

@@ -98,27 +98,26 @@ class CheckYourCommunityBuildingsScheduleController @Inject() (
                     )
                   )
                 },
-                answer =>
-                  answer match {
-                    case true =>
-                      Future.successful(Redirect(routes.UpdateCommunityBuildingsScheduleController.onPageLoad))
+                {
+                  case true =>
+                    Future.successful(Redirect(routes.UpdateCommunityBuildingsScheduleController.onPageLoad))
 
-                    case false =>
-                      if request.sessionData.communityBuildingsScheduleCompleted
-                      then {
-                        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
-                      } else {
-                        for {
-                          _ <- saveService.save(
-                                 request.sessionData.copy(
-                                   communityBuildingsScheduleCompleted = true,
-                                   communityBuildingsScheduleData = None
-                                 )
+                  case false =>
+                    if request.sessionData.communityBuildingsScheduleCompleted
+                    then {
+                      Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+                    } else {
+                      for {
+                        _ <- saveService.save(
+                               request.sessionData.copy(
+                                 communityBuildingsScheduleCompleted = true,
+                                 communityBuildingsScheduleData = None
                                )
-                          _ <- claimsService.save
-                        } yield Redirect(routes.CommunityBuildingsScheduleUploadSuccessfulController.onPageLoad)
-                      }
-                  }
+                             )
+                        _ <- claimsService.save
+                      } yield Redirect(routes.CommunityBuildingsScheduleUploadSuccessfulController.onPageLoad)
+                    }
+                }
               )
           }
       }

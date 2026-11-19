@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.connectedCharitiesSchedule.routes
 @import models.*
 @import views.html.components.*
@@ -47,8 +48,8 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="govuk-caption-l">@messages("checkYourConnectedCharitiesSchedule.caption")</span>
-    <h1 class="govuk-heading-l">@messages(if(isAgent) "checkYourConnectedCharitiesSchedule.heading.agent" else "checkYourConnectedCharitiesSchedule.heading")</h1>
+    <span class="@Css.captionLLabelCssClass">@messages("checkYourConnectedCharitiesSchedule.caption")</span>
+    <h1 class="@Css.headingLCssClass">@messages(if(isAgent) "checkYourConnectedCharitiesSchedule.heading.agent" else "checkYourConnectedCharitiesSchedule.heading")</h1>
 
     @connectedCharitiesTable(connectedCharities)
 

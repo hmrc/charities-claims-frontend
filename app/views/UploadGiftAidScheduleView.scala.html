@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.giftAidSchedule.routes
 @import models.UpscanInitiateResponse
 
@@ -48,17 +49,17 @@
         ))
     }
     
-    <span class="govuk-caption-l">@messages("uploadGiftAidSchedule.caption")</span>
-    <h1 class="govuk-heading-l">@messages("uploadGiftAidSchedule.heading")</h1>
+    <span class="@Css.captionLLabelCssClass">@messages("uploadGiftAidSchedule.caption")</span>
+    <h1 class="@Css.headingLCssClass">@messages("uploadGiftAidSchedule.heading")</h1>
 
     @if(isAgent) {
-        <p class="govuk-body">@messages("uploadGiftAidSchedule.agent.paragraph.one")</p>
+        <p class="@Css.bodyCssClass">@messages("uploadGiftAidSchedule.agent.paragraph.one")</p>
     } else {
-        <p class="govuk-body">@messages("uploadGiftAidSchedule.paragraph.one")</p>
+        <p class="@Css.bodyCssClass">@messages("uploadGiftAidSchedule.paragraph.one")</p>
     }
-    <p class="govuk-body">@Html(messages("uploadGiftAidSchedule.paragraph.url", giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl))</p>
+    <p class="@Css.bodyCssClass">@Html(messages("uploadGiftAidSchedule.paragraph.url", giftAidScheduleSpreadsheetsToClaimBackTaxOnDonationsUrl))</p>
 
-    <form action="@upscanInitiateResponse.uploadRequest.href" method="POST" enctype="multipart/form-data" class="js-form file-upload" novalidate>
+    <form action="@upscanInitiateResponse.uploadRequest.href" method="POST" enctype="multipart/form-data" class="@Css.jsFormCssClass @Css.fileUploadCssClass" novalidate>
 
             @upscanInitiateResponse.uploadRequest.fields.map { case (key, value) =>
                 <input type="hidden" id="@key" name="@key" value="@value">
@@ -79,7 +80,7 @@
                     chooseFilesButtonText = Some(messages("fileUpload.button")),
                     dropInstructionText = Some(messages("fileUpload.dropInstruction")),
                     noFileChosenText = Some(messages("fileUpload.noFileChosen")),
-                    classes = "govuk-file-upload--error",
+                    classes = Css.fileUploadErrorCssClass,
                     attributes = Map(
                         "accept" -> filePickerAcceptFilter,
                         "data-msg-required" -> messages("uploadGiftAidSchedule.error.file-upload.required"),
@@ -96,10 +97,10 @@
                     preventDoubleClick = Some(true),
                     classes = "file-upload__submit"
                 ))
-                <div class="file-upload__spinner ccms-loader hidden"></div>
+                <div class="@Css.fileUploadSpinnerCssClass @Css.ccmsLoaderHiddenCssClass"></div>
             </div>
 
-            <div class="file-upload__loading-container" aria-live="polite" role="region">
+            <div class="@Css.fileUploadLoadingContainerCssClass" aria-live="polite" role="region">
 
             </div>
 

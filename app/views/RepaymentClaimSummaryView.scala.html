@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import viewmodels.RepaymentClaimSummaryHelper
 @import models.SubmissionSummaryResponse
 @import config.FrontendAppConfig
@@ -34,16 +35,16 @@
     timeOutMode = TimeoutMode.Normal
 ) {
 
-    <h1 class="govuk-heading-l">@messages("repaymentClaimSummary.heading")</h1>
+    <h1 class="@Css.headingLCssClass">@messages("repaymentClaimSummary.heading")</h1>
 
-    <h2 class="govuk-heading-m">@messages("repaymentClaimSummary.claimDetails.heading")</h2>
+    <h2 class="@Css.headingMCssClass">@messages("repaymentClaimSummary.claimDetails.heading")</h2>
 
     @govukSummaryList(
         RepaymentClaimSummaryHelper.claimDetails(summaryRes)
     )
 
     @summaryRes.giftAidDetails.map { _ =>
-        <h2 class="govuk-heading-m">
+        <h2 class="@Css.headingMCssClass">
             @messages("repaymentClaimSummary.giftAidDetails.heading")
         </h2>
 
@@ -53,7 +54,7 @@
     }
 
     @summaryRes.otherIncomeDetails.map { _ =>
-        <h2 class="govuk-heading-m">
+        <h2 class="@Css.headingMCssClass">
             @messages("repaymentClaimSummary.otherIncomeDetails.heading")
         </h2>
 
@@ -63,7 +64,7 @@
     }
 
     @summaryRes.gasdsDetails.map { _ =>
-        <h2 class="govuk-heading-m">
+        <h2 class="@Css.headingMCssClass">
             @messages("repaymentClaimSummary.gasdsDetails.heading")
         </h2>
 
@@ -73,7 +74,7 @@
     }
 
     @summaryRes.adjustmentDetails.map { _ =>
-        <h2 class="govuk-heading-m">
+        <h2 class="@Css.headingMCssClass">
             @messages("repaymentClaimSummary.adjustmentDetails.heading")
         </h2>
 
@@ -82,22 +83,22 @@
         )
     }
 
-    <div class="govuk-!-margin-top-6">
-        <p id="print-this-page" class="govuk-list govuk-link print-link hmrc-!-js-visible govuk-!-display-none-print">
-            <a href="#" class="govuk-link hmrc-!-js-visible" data-module="hmrc-print-link">
+    <div class="@Css.marginTop6CssClass">
+        <p id="print-this-page" class="@Css.listCssClass @Css.linkCssClass @Css.printLinkCssClass @Css.jsVisibleCssClass @Css.displayNonePrintCssClass">
+            <a href="#" class="@Css.linkCssClass @Css.jsVisibleCssClass" data-module="hmrc-print-link">
                 @messages("repaymentClaimSummary.printSummary.button.label")
             </a>
         </p>
 
-        <p class="govuk-body">
-            <a class="govuk-link"
+        <p class="@Css.bodyCssClass">
+            <a class="@Css.linkCssClass"
                href="@config.signOutUrl">
                 @messages("repaymentClaimSummary.logout.link")
             </a>
         </p>
 
-        <p class="govuk-body">
-            <a class="govuk-link"
+        <p class="@Css.bodyCssClass">
+            <a class="@Css.linkCssClass"
                href="@config.accountUrl">
                 @messages("repaymentClaimSummary.goToHmrcServices.link")
             </a>

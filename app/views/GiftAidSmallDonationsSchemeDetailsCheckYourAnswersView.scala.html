@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import views.html.components.*
 @import controllers.giftAidSmallDonationsScheme.routes
 @import models.GiftAidSmallDonationsSchemeDonationDetailsAnswers
@@ -32,15 +33,15 @@
     pageTitle = titleNoForm(messages(if(isAgent) "giftAidSmallDonationsSchemeDetailsCheckYourAnswers.title.agent" else "giftAidSmallDonationsSchemeDetailsCheckYourAnswers.title"))
 ) {
 
-    <span class="govuk-caption-l">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.caption")</span>
-    <h1 class="govuk-heading-l">@messages(if(isAgent) "giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading.agent" else "giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading")</h1>
+    <span class="@Css.captionLLabelCssClass">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.caption")</span>
+    <h1 class="@Css.headingLCssClass">@messages(if(isAgent) "giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading.agent" else "giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading")</h1>
     @if(oSummaryListForAdjustmentToGiftAidOverclaimed.isDefined) {
-        <h2 class="govuk-heading-m">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.1")</h2>
+        <h2 class="@Css.headingMCssClass">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.1")</h2>
         @govukSummaryList(oSummaryListForAdjustmentToGiftAidOverclaimed.get)
     }
 
     @if(oSummaryListForNumberOfTaxYearsAdded.isDefined) {
-        <h2 class="govuk-heading-m">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.2")</h2>
+        <h2 class="@Css.headingMCssClass">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.2")</h2>
         @govukSummaryList(oSummaryListForNumberOfTaxYearsAdded.get)
     }
 

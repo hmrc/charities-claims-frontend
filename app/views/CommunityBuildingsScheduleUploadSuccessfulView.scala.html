@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.communityBuildingsSchedule.routes
 @import models.*
 @import views.html.components.*
@@ -37,13 +38,13 @@
 ) {
 
 
-    <div class="govuk-panel govuk-panel--confirmation">
-        <h1 class="govuk-panel__title">
+    <div class="@Css.panelCssClass @Css.panelConfirmationCssClass">
+        <h1 class="@Css.panelTitleCssClass">
             @messages("communityBuildingsScheduleUploadSuccessful.message.1")
         </h1>
     </div>
 
-    <p class="govuk-body">@messages(paragraphMessageTwo)</p>
+    <p class="@Css.bodyCssClass">@messages(paragraphMessageTwo)</p>
 
     @formHelper(action = routes.CommunityBuildingsScheduleUploadSuccessfulController.onSubmit) {
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))

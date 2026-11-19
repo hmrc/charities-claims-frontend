@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.repaymentClaimDetails.routes
 @import models.RepaymentClaimDetailsAnswers
 @import viewmodels.RepaymentClaimDetailsCheckYourAnswersHelper
@@ -45,13 +46,13 @@
 @layout(
     pageTitle = titleNoForm(messages(titleMessage))) {
 
-    <span class="govuk-caption-l">@messages(captionMessage)</span>
-    <h1 class="govuk-heading-l">@messages(headingMessage)</h1>
+    <span class="@Css.captionLLabelCssClass">@messages(captionMessage)</span>
+    <h1 class="@Css.headingLCssClass">@messages(headingMessage)</h1>
 
     @if(isAgent) {
-        <h2 class="govuk-heading-m">@messages("repaymentClaimDetailsCheckYourAnswers.agent.heading2.1")</h2>
+        <h2 class="@Css.headingMCssClass">@messages("repaymentClaimDetailsCheckYourAnswers.agent.heading2.1")</h2>
         @govukSummaryList(RepaymentClaimDetailsCheckYourAnswersHelper.buildSummaryListForAgent(answers))
-        <h2 class="govuk-heading-m">@messages("repaymentClaimDetailsCheckYourAnswers.agent.heading2.2")</h2>
+        <h2 class="@Css.headingMCssClass">@messages("repaymentClaimDetailsCheckYourAnswers.agent.heading2.2")</h2>
     }
 
     @govukSummaryList(RepaymentClaimDetailsCheckYourAnswersHelper.buildSummaryList(answers))

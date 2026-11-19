@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @import controllers.giftAidSmallDonationsScheme.routes
 
 @this(
@@ -34,11 +36,11 @@ govukErrorSummary: GovukErrorSummary
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="govuk-caption-l">@messages(if(index == 1) "whichTaxYearAreYouClaimingFor.caption" else "whichTaxYearAreYouClaimingFor.caption.multipleYears",index)</span>
+    <span class="@Css.captionLLabelCssClass">@messages(if(index == 1) "whichTaxYearAreYouClaimingFor.caption" else "whichTaxYearAreYouClaimingFor.caption.multipleYears",index)</span>
 
-    <h1 class="govuk-heading-l">@messages(if (isAgent) "whichTaxYearAreYouClaimingFor.heading.agent" else "whichTaxYearAreYouClaimingFor.heading")</h1>
+    <h1 class="@Css.headingLCssClass">@messages(if (isAgent) "whichTaxYearAreYouClaimingFor.heading.agent" else "whichTaxYearAreYouClaimingFor.heading")</h1>
 
-    <p class="govuk-body">
+    <p class="@Css.bodyCssClass">
         @messages("whichTaxYearAreYouClaimingFor.paragraph")
     </p>
     @formHelper(action = routes.WhichTaxYearAreYouClaimingForController.onSubmit(index, mode), Symbol("autoComplete") -> "on") {
@@ -46,12 +48,12 @@ govukErrorSummary: GovukErrorSummary
     @govukInput(
         InputViewModel(
             field = form("value"),
-            label = Label(content = Text(messages(if(isAgent) "whichTaxYearAreYouClaimingFor.heading.agent" else "whichTaxYearAreYouClaimingFor.heading")), isPageHeading = false, classes = "govuk-visually-hidden")
+            label = Label(content = Text(messages(if(isAgent) "whichTaxYearAreYouClaimingFor.heading.agent" else "whichTaxYearAreYouClaimingFor.heading")), isPageHeading = false, classes = Css.visuallyHiddenCssClass)
         ).withHint(
             HintViewModel(Text(messages("whichTaxYearAreYouClaimingFor.hint")))
             .withId("value-hint")
         )
-        .withCssClass("govuk-input--width-4")
+        .withCssClass(Css.inputWidth4CssClass)
         .withAttribute("autocomplete" -> "off")
     )
 

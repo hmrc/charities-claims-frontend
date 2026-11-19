@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.organisationDetails.routes
 @import models.AgentUserOrganisationDetailsAnswers
 @import viewmodels.AgentOrganisationDetailsCheckYourAnswersHelper
@@ -35,10 +36,10 @@ val summary = AgentOrganisationDetailsCheckYourAnswersHelper
 @layout(
    pageTitle = titleNoForm(messages("agentOrganisationDetailsCheckYourAnswers.title"))) {
 
-   <span class="govuk-caption-l">@messages("agentOrganisationDetailsCheckYourAnswers.caption")</span>
-   <h1 class="govuk-heading-l">@messages("agentOrganisationDetailsCheckYourAnswers.heading")</h1>
+   <span class="@Css.captionLLabelCssClass">@messages("agentOrganisationDetailsCheckYourAnswers.caption")</span>
+   <h1 class="@Css.headingLCssClass">@messages("agentOrganisationDetailsCheckYourAnswers.heading")</h1>
 
-    <h2 class="govuk-heading-m">
+    <h2 class="@Css.headingMCssClass">
         @messages("agentOrganisationDetailsCheckYourAnswers.charityDetails.subheader")
     </h2>
 
@@ -46,7 +47,7 @@ val summary = AgentOrganisationDetailsCheckYourAnswersHelper
         AgentOrganisationDetailsCheckYourAnswersHelper.buildSummaryLists(answers, isCASCCharityRef).charityDetails
     )
 
-    <h2 class="govuk-heading-m">
+    <h2 class="@Css.headingMCssClass">
         @messages("agentOrganisationDetailsCheckYourAnswers.agentDetails.subheader")
     </h2>
 

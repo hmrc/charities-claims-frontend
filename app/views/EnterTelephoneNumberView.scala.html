@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.organisationDetails.routes
 
 @this(
@@ -34,9 +35,9 @@ govukErrorSummary: GovukErrorSummary
        @govukErrorSummary(ErrorSummaryViewModel(form))
    }
 
-    <span class="govuk-caption-l">@messages("enterTelephoneNumber.caption")</span>
-    <h1 class="govuk-heading-l">@messages("enterTelephoneNumber.heading")</h1>
-    <p class="govuk-body">
+    <span class="@Css.captionLLabelCssClass">@messages("enterTelephoneNumber.caption")</span>
+    <h1 class="@Css.headingLCssClass">@messages("enterTelephoneNumber.heading")</h1>
+    <p class="@Css.bodyCssClass">
         @messages("enterTelephoneNumber.p")
     </p>
    @formHelper(action = routes.EnterTelephoneNumberController.onSubmit(mode), Symbol("autoComplete") -> "off") {
@@ -44,12 +45,12 @@ govukErrorSummary: GovukErrorSummary
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = Label(content = Text(messages("enterTelephoneNumber.heading")), isPageHeading = false, classes = "govuk-visually-hidden")
+                label = Label(content = Text(messages("enterTelephoneNumber.heading")), isPageHeading = false, classes = Css.visuallyHiddenCssClass)
                 ).withHint(
                     HintViewModel(Text(messages("enterTelephoneNumber.hint")))
                         .withId("value-hint")
                 )
-                .withCssClass("govuk-input--width-20")
+                .withCssClass(Css.inputWidth20CssClass)
                 .withInputType("tel")
                 .withAutocomplete("tel")
         )

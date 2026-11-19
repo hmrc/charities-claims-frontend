@@ -386,7 +386,7 @@ class ClaimsValidationServiceImpl @Inject() (
                 Future.unit
             }
           }
-          .flatMap { case _ =>
+          .flatMap { _ =>
             val modifiedSessionData = validationType match {
               case ValidationType.GiftAid            =>
                 request.sessionData.copy(

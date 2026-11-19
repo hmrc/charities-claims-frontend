@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.routes
 
 @this(
@@ -38,17 +39,17 @@ else messages(s"registerCharityWithARegulator.$key", registerCharityWithARegulat
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <h1 class="govuk-heading-l">@messageKey("heading")</h1>
+    <h1 class="@Css.headingLCssClass">@messageKey("heading")</h1>
 
-    <div class="govuk-warning-text">
-        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-        <strong class="govuk-warning-text__text">
-            <span class="govuk-visually-hidden">@messages("warning.text")</span>
+    <div class="@Css.warningTextCssClass">
+        <span class="@Css.warningTextIconCssClass" aria-hidden="true">!</span>
+        <strong class="@Css.warningTextTextCssClass">
+            <span class="@Css.visuallyHiddenCssClass">@messages("warning.text")</span>
             @Html(messageKey("warning"))
         </strong>
     </div>
 
-    <p class="govuk-body govuk-!-margin-bottom-8">@Html(messageKey("paragraph"))</p>
+    <p class="@Css.bodyCssClass @Css.marginBottom8CssClass">@Html(messageKey("paragraph"))</p>
 
     @formHelper(action = routes.RegisterCharityWithARegulatorController.onSubmit, Symbol("autoComplete") -> "off") {
 
@@ -69,7 +70,7 @@ else messages(s"registerCharityWithARegulator.$key", registerCharityWithARegulat
                 ),
                 Fieldset(
                     legend = Some(Legend(content = Text(messageKey("legend")), isPageHeading = false,
-                    classes = "govuk-fieldset__legend--m"))
+                    classes = Css.fieldsetLegendMCssClass))
                 )
             )
         )

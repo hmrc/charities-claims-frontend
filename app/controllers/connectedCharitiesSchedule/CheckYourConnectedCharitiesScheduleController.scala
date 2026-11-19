@@ -96,27 +96,26 @@ class CheckYourConnectedCharitiesScheduleController @Inject() (
                     )
                   )
                 },
-                answer =>
-                  answer match {
-                    case true =>
-                      Future.successful(Redirect(routes.UpdateConnectedCharitiesScheduleController.onPageLoad))
+                {
+                  case true =>
+                    Future.successful(Redirect(routes.UpdateConnectedCharitiesScheduleController.onPageLoad))
 
-                    case false =>
-                      if request.sessionData.connectedCharitiesScheduleCompleted
-                      then {
-                        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
-                      } else {
-                        for {
-                          _ <- saveService.save(
-                                 request.sessionData.copy(
-                                   connectedCharitiesScheduleCompleted = true,
-                                   connectedCharitiesScheduleData = None
-                                 )
+                  case false =>
+                    if request.sessionData.connectedCharitiesScheduleCompleted
+                    then {
+                      Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+                    } else {
+                      for {
+                        _ <- saveService.save(
+                               request.sessionData.copy(
+                                 connectedCharitiesScheduleCompleted = true,
+                                 connectedCharitiesScheduleData = None
                                )
-                          _ <- claimsService.save
-                        } yield Redirect(routes.ConnectedCharitiesScheduleUploadSuccessfulController.onPageLoad)
-                      }
-                  }
+                             )
+                        _ <- claimsService.save
+                      } yield Redirect(routes.ConnectedCharitiesScheduleUploadSuccessfulController.onPageLoad)
+                    }
+                }
               )
 
           }

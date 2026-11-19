@@ -16,6 +16,7 @@
 
 package controllers.claimDeclaration
 
+import config.Constants
 import connectors.UnregulatedDonationsConnector
 import controllers.ControllerSpec
 import forms.AdjustmentToThisClaimFormProvider
@@ -40,7 +41,7 @@ class AdjustmentToThisClaimControllerSpec extends ControllerSpec {
 
   val form: Form[Option[String]] = new AdjustmentToThisClaimFormProvider()(
     "adjustmentToThisClaim.error.required",
-    (20, "adjustmentToThisClaim.error.length"),
+    (Constants.maxAdjustmentToClaimLength, "adjustmentToThisClaim.error.length"),
     "adjustmentToThisClaim.error.regex",
     true
   )

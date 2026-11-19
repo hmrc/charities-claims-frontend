@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.giftAidSchedule.routes
 
 @this(
@@ -41,7 +42,7 @@
                 form("value"),
                 Fieldset(
                     legend = Some(Legend(content = Text(messages("deleteGiftAidSchedule.heading")), isPageHeading = true,
-                    classes = "govuk-fieldset__legend--l"))
+                    classes = Css.fieldsetLegendLCssClass))
                 )
             )
         )

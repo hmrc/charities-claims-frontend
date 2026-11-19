@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.giftAidSchedule.routes
 @import models.*
 @import views.html.components.*
@@ -32,16 +33,16 @@
 ) {
 
 
-    <div class="govuk-panel govuk-panel--confirmation">
-        <h1 class="govuk-panel__title">
+    <div class="@Css.panelCssClass @Css.panelConfirmationCssClass">
+        <h1 class="@Css.panelTitleCssClass">
             @messages("giftAidScheduleUploadSuccessful.message.1")
         </h1>
     </div>
 
   @if(isAgent) {
-      <p class="govuk-body">@messages("giftAidScheduleUploadSuccessful.agent.message.2")</p>
+      <p class="@Css.bodyCssClass">@messages("giftAidScheduleUploadSuccessful.agent.message.2")</p>
   }else{
-      <p class="govuk-body">@messages("giftAidScheduleUploadSuccessful.message.2")</p>
+      <p class="@Css.bodyCssClass">@messages("giftAidScheduleUploadSuccessful.message.2")</p>
   }
     @formHelper(action = routes.GiftAidScheduleUploadSuccessfulController.onSubmit) {
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))

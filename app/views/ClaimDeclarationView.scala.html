@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.claimDeclaration.routes
 
 @this(
@@ -28,19 +29,19 @@
     pageTitle = titleNoForm(messages("claimDeclaration.title"))
 ) {
 
-    <h1 class="govuk-heading-l">@messages("claimDeclaration.heading")</h1>
+    <h1 class="@Css.headingLCssClass">@messages("claimDeclaration.heading")</h1>
 
-    <p class="govuk-body">@messages("claimDeclaration.paragraph")</p>
+    <p class="@Css.bodyCssClass">@messages("claimDeclaration.paragraph")</p>
 
-    <ul class="govuk-list govuk-list--bullet">
+    <ul class="@Css.bulletListCssClass">
         <li>@messages("claimDeclaration.bullet.one")</li>
         <li>@messages("claimDeclaration.bullet.two")</li>
         <li>@messages("claimDeclaration.bullet.three")</li>
     </ul>
-    <div class = "govuk-warning-text">
-        <span class = "govuk-warning-text__icon" aria-hidden = "true">!</span>
-        <strong class="govuk-warning-text__text" >
-            <span class="govuk-visually-hidden">@messages("warning.text")</span>
+    <div class="@Css.warningTextCssClass">
+        <span class="@Css.warningTextIconCssClass" aria-hidden = "true">!</span>
+        <strong class="@Css.warningTextTextCssClass" >
+            <span class="@Css.visuallyHiddenCssClass">@messages("warning.text")</span>
             @messages("claimDeclaration.warning")
         </strong>
     </div>
