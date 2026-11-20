@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.organisationDetails.routes
 
 @this(
@@ -32,11 +33,11 @@ govukButton: GovukButton
     pageTitle    = titleNoForm(messages("aboutTheOrganisation.title"))
 ) {
 
-<span class="govuk-caption-l">@messages("aboutTheOrganisation.caption")</span>
-<h1 class="govuk-heading-l">@messages("aboutTheOrganisation.heading")</h1>
+<span class="@Css.captionLCssClass">@messages("aboutTheOrganisation.caption")</span>
+<h1 class="@Css.headingLCssClass">@messages("aboutTheOrganisation.heading")</h1>
 
-<p class="govuk-body">@messages("aboutTheOrganisation.paragraph.one")</p>
-<p class="govuk-body">@messages(paragraphTwoMessage)</p>
+<p class="@Css.bodyCssClass">@messages("aboutTheOrganisation.paragraph.one")</p>
+<p class="@Css.bodyCssClass">@messages(paragraphTwoMessage)</p>
 
 
 @formHelper(action = routes.AboutTheOrganisationController.onSubmit) {

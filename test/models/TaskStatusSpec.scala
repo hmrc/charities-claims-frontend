@@ -16,6 +16,7 @@
 
 package models
 
+import config.Constants.Css
 import play.api.i18n.Messages
 import play.api.test.Helpers.stubMessages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -38,7 +39,7 @@ class TaskStatusSpec extends BaseSpec {
       val result = TaskStatus.NotStarted.toTaskListStatus
 
       result.tag               shouldBe defined
-      result.tag.value.classes   should include("govuk-tag--blue")
+      result.tag.value.classes   should include(Css.blueTagCssClass)
       result.tag.value.content shouldBe Text(messages("claimsTaskList.status.notStarted"))
     }
 
@@ -53,7 +54,7 @@ class TaskStatusSpec extends BaseSpec {
       val result = TaskStatus.InProgress.toTaskListStatus
 
       result.tag               shouldBe defined
-      result.tag.value.classes   should include("govuk-tag--green")
+      result.tag.value.classes   should include(Css.greenTagCssClass)
       result.tag.value.content shouldBe Text(messages("claimsTaskList.status.inProgress"))
     }
   }

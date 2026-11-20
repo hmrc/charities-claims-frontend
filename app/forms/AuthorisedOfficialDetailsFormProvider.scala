@@ -16,6 +16,8 @@
 
 package forms
 
+import config.Constants
+
 import javax.inject.Inject
 import models.AuthorisedOfficialDetails
 import play.api.data.Form
@@ -27,7 +29,6 @@ class AuthorisedOfficialDetailsFormProvider @Inject() extends Mappings {
   private val firstNameRegex = "^( *[A-Za-z][A-Za-z'\\-]* *)$"
   private val lastNameRegex  = "^[A-Za-z0-9 ,\\.\\(\\)/&\\-']+$"
   private val phoneRegex     = "^[0-9\\(\\)\\-\\s]{1,30}$"
-  private val maxPhoneLength = 30
 
   def apply(isUkAddress: Boolean): Form[AuthorisedOfficialDetails] = Form(
     mapping(
@@ -35,7 +36,7 @@ class AuthorisedOfficialDetailsFormProvider @Inject() extends Mappings {
         text("")
           .verifying(
             firstError(
-              maxLength(4, "authorisedOfficialDetails.title.error.length"),
+              maxLength(Constants.maxTitleLength, "authorisedOfficialDetails.title.error.length"),
               regexp(titleRegex, "authorisedOfficialDetails.title.error.format")
             )
           )
@@ -43,21 +44,21 @@ class AuthorisedOfficialDetailsFormProvider @Inject() extends Mappings {
       "firstName"   -> text("authorisedOfficialDetails.firstName.error.required")
         .verifying(
           firstError(
-            maxLength(35, "authorisedOfficialDetails.firstName.error.length"),
+            maxLength(Constants.maxAddressLineLength, "authorisedOfficialDetails.firstName.error.length"),
             regexp(firstNameRegex, "authorisedOfficialDetails.firstName.error.format")
           )
         ),
       "lastName"    -> text("authorisedOfficialDetails.lastName.error.required")
         .verifying(
           firstError(
-            maxLength(35, "authorisedOfficialDetails.lastName.error.length"),
+            maxLength(Constants.maxAddressLineLength, "authorisedOfficialDetails.lastName.error.length"),
             regexp(lastNameRegex, "authorisedOfficialDetails.lastName.error.format")
           )
         ),
       "phoneNumber" -> text("authorisedOfficialDetails.phoneNumber.error.required")
         .verifying(
           firstError(
-            maxLength(maxPhoneLength, "authorisedOfficialDetails.phoneNumber.error.length"),
+            maxLength(Constants.maxPhoneNumberLength, "authorisedOfficialDetails.phoneNumber.error.length"),
             regexp(phoneRegex, "authorisedOfficialDetails.phoneNumber.error.format")
           )
         ),

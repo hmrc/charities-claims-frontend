@@ -16,6 +16,7 @@
 
 package views
 
+import config.Constants.Css
 import play.twirl.api.Html
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
@@ -50,14 +51,14 @@ trait HtmlHelper {
     mainContent(html).getElementsByTag("span").iterator().asScala.map(_.text()).toList
 
   def panel(html: Html): Panel = {
-    val parent    = mainContent(html).getElementsByClass("govuk-panel").first()
-    val title     = parent.getElementsByClass("govuk-panel__title").first()
-    val maybeBody = parent.getElementsByClass("govuk-panel__body").iterator().asScala.toList.headOption
+    val parent    = mainContent(html).getElementsByClass(Css.panelCssClass).first()
+    val title     = parent.getElementsByClass(Css.panelTitleCssClass).first()
+    val maybeBody = parent.getElementsByClass(Css.panelBodyCssClass).iterator().asScala.toList.headOption
     Panel(title, maybeBody)
   }
 
   def dividers(html: Html): List[Element] =
-    mainContent(html).getElementsByClass("govuk-radios__divider").iterator().asScala.toList
+    mainContent(html).getElementsByClass(Css.radiosDividerCssClass).iterator().asScala.toList
 
   def labels(html: Html): List[String] =
     mainContent(html).getElementsByTag("label").iterator().asScala.map(_.text()).toList
@@ -68,7 +69,7 @@ trait HtmlHelper {
   def inputByClass(html: Html)(cssClass: String): Element =
     mainContent(html).select(s"input.$cssClass").first()
 
-  def upload(html: Html): Element = inputByClass(html)("govuk-file-upload")
+  def upload(html: Html): Element = inputByClass(html)(Css.govukFileUploadCssClass)
 
   def inputHint(html: Html)(name: String): Element =
     mainContent(html).getElementById(s"$name-hint")
@@ -84,7 +85,7 @@ trait HtmlHelper {
       )
 
   def inset(html: Html): Element =
-    mainContent(html).getElementsByClass("govuk-inset-text").first()
+    mainContent(html).getElementsByClass(Css.insetTextCssClass).first()
 
   def details(html: Html): Element =
     mainContent(html).selectFirst("details.govuk-details")
@@ -95,22 +96,22 @@ trait HtmlHelper {
   def button(html: Html): Element = buttons(html).first()
 
   def errorSummary(html: Html): Elements =
-    mainContent(html).getElementsByClass("govuk-error-summary")
+    mainContent(html).getElementsByClass(Css.errorSummaryCssClass)
 
   def errorMessage(html: Html): Elements =
-    mainContent(html).getElementsByClass("govuk-error-message")
+    mainContent(html).getElementsByClass(Css.errorMessageCssClass)
 
   def summaryListKeys(html: Html): List[String] =
-    mainContent(html).getElementsByClass("govuk-summary-list__key").iterator().asScala.toList.map(_.text())
+    mainContent(html).getElementsByClass(Css.summaryListKeyCssClass).iterator().asScala.toList.map(_.text())
 
   def summaryListValues(html: Html): List[String] =
-    mainContent(html).getElementsByClass("govuk-summary-list__value").iterator().asScala.toList.map(_.text())
+    mainContent(html).getElementsByClass(Css.summaryListValueCssClass).iterator().asScala.toList.map(_.text())
 
   def summaryListRows(html: Html): List[Element] =
-    mainContent(html).getElementsByClass("govuk-summary-list__row").iterator().asScala.toList
+    mainContent(html).getElementsByClass(Css.summaryListRowCssClass).iterator().asScala.toList
 
   def radioListRows(html: Html): List[Element] =
-    mainContent(html).getElementsByClass("govuk-radios__item").iterator().asScala.toList
+    mainContent(html).getElementsByClass(Css.radiosItemCssClass).iterator().asScala.toList
 
   def paginationLabel(html: Html): Option[String] =
     Option(mainContent(html).getElementById("pagination-label")).map(_.text())

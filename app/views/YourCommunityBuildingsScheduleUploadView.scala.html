@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.communityBuildingsSchedule.routes
 @import models.*
 
@@ -47,40 +48,40 @@
     scriptsBlock = if (screenLocked) Some(checkUploadStatusScript(uploadStatusCall, refreshIntervalSeconds)) else None
 ) {
 
-    <span class="govuk-caption-l">@messages("yourCommunityBuildingsScheduleUpload.caption")</span>
-    <h1 class="govuk-heading-l">@messages(headingMessage)</h1>
-    <p class="govuk-body">@messages(if(isAgent) "yourCommunityBuildingsScheduleUpload.agent.paragraph.one" else "yourCommunityBuildingsScheduleUpload.paragraph.one")</p>
+    <span class="@Css.captionLCssClass">@messages("yourCommunityBuildingsScheduleUpload.caption")</span>
+    <h1 class="@Css.headingLCssClass">@messages(headingMessage)</h1>
+    <p class="@Css.bodyCssClass">@messages(if(isAgent) "yourCommunityBuildingsScheduleUpload.agent.paragraph.one" else "yourCommunityBuildingsScheduleUpload.paragraph.one")</p>
 
     @if(screenLocked) {
-        <p class="govuk-body" id="refreshLink">
-            <a href="@reloadPageCall.url" class="govuk-link">@messages("fileUpload.refreshPageLink")</a>
+        <p class="@Css.bodyCssClass" id="refreshLink">
+            <a href="@reloadPageCall.url" class="@Css.linkCssClass">@messages("fileUpload.refreshPageLink")</a>
         </p>
     }
 
     @formHelper(action = routes.YourCommunityBuildingsScheduleUploadController.onSubmit) {
 
-    <dl class="govuk-summary-list govuk-summary-list--long-key">
+    <dl class="@Css.summaryListCssClass @Css.summaryListLongKeyCssClass">
 
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
+        <div class="@Css.summaryListRowCssClass">
+            <dt class="@Css.summaryListKeyCssClass">
                 @messages("yourCommunityBuildingsScheduleUpload.file")
             </dt>
-            <dd class="govuk-summary-list__value">
+            <dd class="@Css.summaryListValueCssClass">
                 @defining(
                 if (uploadResult.fileStatus.toString == "VALIDATED" ||
                     uploadResult.fileStatus.toString == "VALIDATION_FAILED")
-                    "govuk-tag--green"
+                    Css.greenTagCssClass
                 else
-                    "govuk-tag--yellow"
+                    Css.yellowTagCssClass
                 ) { tagColour =>
 
-                    <strong id="upload-status-tag" class="govuk-tag @tagColour" aria-live="polite">
+                    <strong id="upload-status-tag" class="@Css.tagCssClass @tagColour" aria-live="polite">
                         @messages(s"fileUpload.status.${uploadResult.fileStatus.toString}")
                     </strong>
                 }
             </dd>
-            <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="@controllers.communityBuildingsSchedule.routes.YourCommunityBuildingsScheduleUploadController.onRemove.url">@messages("site.remove")</a><span class="govuk-visually-hidden">@messages("yourCommunityBuildingsScheduleUpload.file")</span>
+            <dd class="@Css.summaryListActionsCssClass">
+                <a class="@Css.linkCssClass" href="@controllers.communityBuildingsSchedule.routes.YourCommunityBuildingsScheduleUploadController.onRemove.url">@messages("site.remove")</a><span class="@Css.visuallyHiddenCssClass">@messages("yourCommunityBuildingsScheduleUpload.file")</span>
             </dd>
         </div>
     </dl>

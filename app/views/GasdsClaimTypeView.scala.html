@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.repaymentClaimDetails.routes
 @import models.GasdsClaimTypeCheckBox
 
@@ -35,39 +36,39 @@ pageTitle = title(form, messages("gasdsClaimType.title"))
     @govukErrorSummary(ErrorSummaryViewModel(form))
 }
 
-<span class="govuk-caption-l">@messages(if(isAgent) "gasdsClaimType.caption.agent" else "gasdsClaimType.caption")</span>
-<h1 class="govuk-heading-l">@messages("gasdsClaimType.heading")</h1>
+<span class="@Css.captionLCssClass">@messages(if(isAgent) "gasdsClaimType.caption.agent" else "gasdsClaimType.caption")</span>
+<h1 class="@Css.headingLCssClass">@messages("gasdsClaimType.heading")</h1>
 
-<p class="govuk-body">@messages(if(isAgent) "gasdsClaimType.description.agent" else "gasdsClaimType.description")</p>
+<p class="@Css.bodyCssClass">@messages(if(isAgent) "gasdsClaimType.description.agent" else "gasdsClaimType.description")</p>
 
-<h2 class="govuk-heading-m">@messages(if(isAgent) "gasdsClaimType.youCanClaim.agent" else "gasdsClaimType.youCanClaim")</h2>
+<h2 class="@Css.headingMCssClass">@messages(if(isAgent) "gasdsClaimType.youCanClaim.agent" else "gasdsClaimType.youCanClaim")</h2>
 
-<ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-6">
-    <li class="govuk-!-margin-bottom-3">
-      <span class="govuk-body">
+<ul class="@Css.bulletListCssClass @Css.marginBottom6CssClass">
+    <li class="@Css.marginBottom3CssClass">
+      <span class="@Css.bodyCssClass">
         @messages("gasdsClaimType.topUp")
       </span>
-        <p class="claim-type-hint govuk-!-margin-top-1 govuk-!-margin-bottom-0">
+        <p class="@Css.claimTypeHintCssClass @Css.marginTop1CssClass @Css.marginBottom0CssClass">
             @messages("gasdsClaimType.topUp.desc")
         </p>
     </li>
 
     @if(!isCASCCharityReference) {
-        <li class="govuk-!-margin-bottom-3">
-            <span class="govuk-body">
+        <li class="@Css.marginBottom3CssClass">
+            <span class="@Css.bodyCssClass">
               @messages("gasdsClaimType.community")
             </span>
-            <p class="claim-type-hint govuk-!-margin-top-1 govuk-!-margin-bottom-0">
+            <p class="@Css.claimTypeHintCssClass @Css.marginTop1CssClass @Css.marginBottom0CssClass">
                 @messages("gasdsClaimType.community.desc")
             </p>
         </li>
     }
 
-    <li class="govuk-!-margin-bottom-3">
-      <span class="govuk-body">
+    <li class="@Css.marginBottom3CssClass">
+      <span class="@Css.bodyCssClass">
         @messages("gasdsClaimType.connected")
       </span>
-        <p class="claim-type-hint govuk-!-margin-top-1 govuk-!-margin-bottom-0">
+        <p class="@Css.claimTypeHintCssClass @Css.marginTop1CssClass @Css.marginBottom0CssClass">
             @messages(if(isAgent) "gasdsClaimType.connected.desc.agent" else "gasdsClaimType.connected.desc")
         </p>
     </li>
@@ -84,7 +85,7 @@ pageTitle = title(form, messages("gasdsClaimType.title"))
                   Legend(
                     content = Text(messages(if(isAgent) "gasdsClaimType.question.agent" else "gasdsClaimType.question")),
                     isPageHeading = false,
-                    classes = "govuk-fieldset__legend--m"
+                    classes = Css.fieldsetLegendMCssClass
                   )
                 )
               )

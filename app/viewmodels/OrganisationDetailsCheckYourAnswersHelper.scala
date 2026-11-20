@@ -16,6 +16,7 @@
 
 package viewmodels
 
+import config.Constants.Css
 import models.Mode.*
 import models.NameOfCharityRegulator.{EnglandAndWales, NorthernIreland, Scottish}
 import models.*
@@ -420,15 +421,15 @@ object OrganisationDetailsCheckYourAnswersHelper {
     HtmlContent(
       s"""
          |<div style="max-width: 520px;">
-         |  <p class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">
+         |  <p class="${Css.marginTop0CssClass} ${Css.marginBottom2CssClass}">
          |    ${messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.excepted.label")}
          |  </p>
          |
-         |  <p class="govuk-body-s">
+         |  <p class="${Css.bodySCssClass}">
          |    ${messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.excepted.description")}
          |  </p>
          |
-         |  <ul class="govuk-list govuk-list--bullet govuk-body-s">
+         |  <ul class="${Css.bulletListCssClass} ${Css.bodySCssClass}">
          |    <li>${messages("reasonNotRegistered.excepted.bullet1")}</li>
          |    <li>${messages("reasonNotRegistered.excepted.bullet2")}</li>
          |    <li>${messages("reasonNotRegistered.excepted.bullet3")}</li>
@@ -443,15 +444,15 @@ object OrganisationDetailsCheckYourAnswersHelper {
     HtmlContent(
       s"""
          |<div style="max-width: 520px;">
-         |  <p class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">
+         |  <p class="${Css.marginTop0CssClass} ${Css.marginBottom2CssClass}">
          |    ${messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.exempt.label")}
          |  </p>
          |
-         |  <p class="govuk-body-s">
+         |  <p class="${Css.bodySCssClass}">
          |    ${messages("organisationDetailsCheckYourAnswers.reasonNotRegistered.exempt.description")}
          |  </p>
          |
-         |  <ul class="govuk-list govuk-list--bullet govuk-body-s">
+         |  <ul class="${Css.bulletListCssClass} ${Css.bodySCssClass}">
          |    <li>${messages("reasonNotRegistered.exempt.bullet1")}</li>
          |    <li>${messages("reasonNotRegistered.exempt.bullet2")}</li>
          |    <li>${messages("reasonNotRegistered.exempt.bullet3")}</li>
@@ -491,9 +492,9 @@ object OrganisationDetailsCheckYourAnswersHelper {
       key = Key(content = Text(label)),
       value = Value(
         content = HtmlContent(
-          s"""<a class="govuk-link" href="$href">
+          s"""<a class="${Css.linkCssClass}" href="$href">
              |${messages("site.enter")}
-             |<span class="govuk-visually-hidden">$hiddenText</span>
+             |<span class="${Css.visuallyHiddenCssClass}">$hiddenText</span>
              |</a>""".stripMargin
         )
       ),

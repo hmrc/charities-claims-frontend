@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.giftAidSmallDonationsScheme.routes
 @import viewmodels.GasdsAdjustmentAmountCheckYourAnswersHelper
 
@@ -29,8 +30,8 @@
 @layout(
    pageTitle = titleNoForm(messages(if(isAgent) "gasdsAdjustmentAmountCheckYourAnswers.title.agent" else "gasdsAdjustmentAmountCheckYourAnswers.title"))) {
 
-   <span class="govuk-caption-l">@messages("gasdsAdjustmentAmountCheckYourAnswers.caption")</span>
-   <h1 class="govuk-heading-l">@messages(if(isAgent) "gasdsAdjustmentAmountCheckYourAnswers.heading.agent" else "gasdsAdjustmentAmountCheckYourAnswers.heading")</h1>
+   <span class="@Css.captionLCssClass">@messages("gasdsAdjustmentAmountCheckYourAnswers.caption")</span>
+   <h1 class="@Css.headingLCssClass">@messages(if(isAgent) "gasdsAdjustmentAmountCheckYourAnswers.heading.agent" else "gasdsAdjustmentAmountCheckYourAnswers.heading")</h1>
 
    @govukSummaryList(GasdsAdjustmentAmountCheckYourAnswersHelper.buildSummaryList(answers))
 

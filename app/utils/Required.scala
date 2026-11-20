@@ -30,12 +30,12 @@ object Required {
     val extracted = field(obj)
     val idx       = values.indexWhere(_ == extracted) // compare whole field value
 
-    if idx == -1 then Failure(new MissingRequiredFieldsException("Field not found"))
+    if idx == -1 then Failure(MissingRequiredFieldsException("Field not found"))
     else
       val name = labels(idx)
       extracted match
         case Some(v) => Success(v)
-        case None    => Failure(new MissingRequiredFieldsException(s"Missing required field: $name"))
+        case None    => Failure(MissingRequiredFieldsException(s"Missing required field: $name"))
 
   inline def summonLabels[T <: Tuple]: List[String] =
     inline erasedValue[T] match

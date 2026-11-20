@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.otherIncomeSchedule.routes
 @import models.*
 
@@ -42,44 +43,44 @@
     scriptsBlock = if (screenLocked) Some(checkUploadStatusScript(uploadStatusCall, refreshIntervalSeconds)) else None
 ) {
 
-    <span class="govuk-caption-l">@messages("yourOtherIncomeScheduleUpload.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("yourOtherIncomeScheduleUpload.caption")</span>
     @if(isAgent){
-        <h1 class="govuk-heading-l">@messages("yourOtherIncomeScheduleUpload.agent.heading")</h1>
-        <p class="govuk-body">@messages("yourOtherIncomeScheduleUpload.agent.paragraph.one")</p>
+        <h1 class="@Css.headingLCssClass">@messages("yourOtherIncomeScheduleUpload.agent.heading")</h1>
+        <p class="@Css.bodyCssClass">@messages("yourOtherIncomeScheduleUpload.agent.paragraph.one")</p>
     }else {
-        <h1 class="govuk-heading-l">@messages("yourOtherIncomeScheduleUpload.heading")</h1>
-        <p class="govuk-body">@messages("yourOtherIncomeScheduleUpload.paragraph.one")</p>
+        <h1 class="@Css.headingLCssClass">@messages("yourOtherIncomeScheduleUpload.heading")</h1>
+        <p class="@Css.bodyCssClass">@messages("yourOtherIncomeScheduleUpload.paragraph.one")</p>
     }
 
     @if(screenLocked) {
-        <p class="govuk-body" id="refreshLink">
-        <a href="@reloadPageCall.url" class="govuk-link">@messages("fileUpload.refreshPageLink")</a>
+        <p class="@Css.bodyCssClass" id="refreshLink">
+        <a href="@reloadPageCall.url" class="@Css.linkCssClass">@messages("fileUpload.refreshPageLink")</a>
         </p>
     }
     
     @formHelper(action = routes.YourOtherIncomeScheduleUploadController.onSubmit) {
-        <dl class="govuk-summary-list govuk-summary-list--long-key">
+        <dl class="@Css.summaryListCssClass @Css.summaryListLongKeyCssClass">
         
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
+            <div class="@Css.summaryListRowCssClass">
+                <dt class="@Css.summaryListKeyCssClass">
                     @messages("yourOtherIncomeScheduleUpload.table.key")
                 </dt>
-                <dd class="govuk-summary-list__value">
+                <dd class="@Css.summaryListValueCssClass">
                     @defining(
                         if (uploadResult.fileStatus.toString == "VALIDATED" ||
                         uploadResult.fileStatus.toString == "VALIDATION_FAILED")
-                            "govuk-tag--green"
+                            Css.greenTagCssClass
                         else
-                            "govuk-tag--yellow"
+                            Css.yellowTagCssClass
                         ) { tagColour =>
 
-                            <strong id="upload-status-tag" class="govuk-tag @tagColour" aria-live="polite">
+                            <strong id="upload-status-tag" class="@Css.tagCssClass @tagColour" aria-live="polite">
                                 @messages(s"fileUpload.status.${uploadResult.fileStatus.toString}")
                             </strong>
                     }
                 </dd>
-                <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="@controllers.otherIncomeSchedule.routes.YourOtherIncomeScheduleUploadController.onRemove.url">@messages("site.remove")</a><span class="govuk-visually-hidden">@messages("yourOtherIncomeScheduleUpload.table.key")</span>
+                <dd class="@Css.summaryListActionsCssClass">
+                    <a class="@Css.linkCssClass" href="@controllers.otherIncomeSchedule.routes.YourOtherIncomeScheduleUploadController.onRemove.url">@messages("site.remove")</a><span class="@Css.visuallyHiddenCssClass">@messages("yourOtherIncomeScheduleUpload.table.key")</span>
                 </dd>
             </div>
         </dl>   

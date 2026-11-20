@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import views.html.helper.CSPNonce
 
 @this()
@@ -38,8 +39,8 @@
                 if(uploadStatusTag && data.uploadStatus){
                     uploadStatusTag.textContent = data.uploadStatus;
                     if (data.isFinal) {
-                        uploadStatusTag.classList.remove('govuk-tag--yellow');
-                        uploadStatusTag.classList.add('govuk-tag--green');
+                        uploadStatusTag.classList.remove('@Css.yellowTagCssClass');
+                        uploadStatusTag.classList.add('@Css.greenTagCssClass');
                     }
                 }
                 if(continueButton && data.isFinal){

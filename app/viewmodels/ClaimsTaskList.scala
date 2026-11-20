@@ -16,6 +16,7 @@
 
 package viewmodels
 
+import config.Constants.Css
 import play.api.i18n.Messages
 import play.api.mvc.Call
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -31,21 +32,21 @@ enum TaskStatus {
         TaskListItemStatus(content = Text(messages("claimsTaskList.status.completed")))
 
       case NotStarted =>
-        TaskListItemStatus(tag = Some(tag("claimsTaskList.status.notStarted", "govuk-tag--blue")))
+        TaskListItemStatus(tag = Some(tag("claimsTaskList.status.notStarted", Css.blueTagCssClass)))
 
       case InProgress =>
-        TaskListItemStatus(tag = Some(tag("claimsTaskList.status.inProgress", "govuk-tag--green")))
+        TaskListItemStatus(tag = Some(tag("claimsTaskList.status.inProgress", Css.greenTagCssClass)))
 
       case CannotStartYet =>
         TaskListItemStatus(
           content = Text(messages("claimsTaskList.status.cannotStartYet")),
-          classes = "govuk-task-list__status govuk-task-list__status--cannot-start-yet"
+          classes = s"${Css.taskListStatusCssClass} ${Css.taskListStatsCannotStartYetCssClass}"
         )
 
   private def tag(messageKey: String, colour: String)(using messages: Messages): Tag =
     Tag(
       content = Text(messages(messageKey)),
-      classes = s"govuk-tag $colour"
+      classes = s"${Css.tagCssClass} $colour"
     )
 }
 

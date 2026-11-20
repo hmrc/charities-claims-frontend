@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.repaymentClaimDetails.routes
 
 @this(
@@ -33,12 +34,12 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="govuk-caption-l">@messages(if(isAgent) "changePreviousGASDSClaim.caption.agent" else "changePreviousGASDSClaim.caption")</span>
+    <span class="@Css.captionLCssClass">@messages(if(isAgent) "changePreviousGASDSClaim.caption.agent" else "changePreviousGASDSClaim.caption")</span>
 
     @formHelper(action = routes.ChangePreviousGASDSClaimController.onSubmit(mode), Symbol("autoComplete") -> "off") {
-        <h1 class="govuk-heading-l">@messages("changePreviousGASDSClaim.heading")</h1>
+        <h1 class="@Css.headingLCssClass">@messages("changePreviousGASDSClaim.heading")</h1>
 
-        <p class="govuk-body">@messages(if(isAgent) "changePreviousGASDSClaim.paragraph.agent" else "changePreviousGASDSClaim.paragraph")</p>
+        <p class="@Css.bodyCssClass">@messages(if(isAgent) "changePreviousGASDSClaim.paragraph.agent" else "changePreviousGASDSClaim.paragraph")</p>
 
         @govukRadios(
             RadiosViewModel.yesNo(

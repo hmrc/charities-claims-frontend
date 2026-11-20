@@ -16,21 +16,22 @@
 
 package forms
 
+import config.Constants
 import forms.Mappings
 import play.api.data.Form
+
 import javax.inject.Inject
 
 class CharityNameFormProvider @Inject() extends Mappings {
 
-  private val charityNameRegex     = "^[A-Za-z 0-9\\-']{1,160}$"
-  private val maxCharityNameLength = 160
+  private val charityNameRegex = "^[A-Za-z 0-9\\-']{1,160}$"
 
   def apply(): Form[String] =
     Form(
       "value" -> text("enterCharityName.error.required")
         .verifying(
           firstError(
-            maxLength(maxCharityNameLength, "enterCharityName.error.length"),
+            maxLength(Constants.maxCharityNameLength, "enterCharityName.error.length"),
             regexp(charityNameRegex, "enterCharityName.error.regex")
           )
         )

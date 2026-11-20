@@ -16,6 +16,7 @@
 
 package controllers.repaymentClaimDetails
 
+import config.Constants
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import controllers.ControllerSpec
 import views.html.ClaimReferenceNumberInputView
@@ -31,7 +32,7 @@ class ClaimReferenceNumberInputControllerSpec extends ControllerSpec {
 
   private val form: Form[String] = new TextInputFormProvider()(
     "claimReferenceNumber.error.required",
-    (20, "claimReferenceNumber.error.length"),
+    (Constants.maxClaimsReferenceNumberLength, "claimReferenceNumber.error.length"),
     "claimReferenceNumber.error.regex"
   )
 

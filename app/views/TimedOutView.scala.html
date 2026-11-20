@@ -15,6 +15,7 @@
  *@
 
 @import play.twirl.api.Html
+@import config.Constants.Css
 @import viewmodels.TimeoutMode
 
 @this(
@@ -25,11 +26,11 @@
 
 @layout(pageTitle = titleNoForm(messages("timedOut.title")), showBackLink = false) {
     
-    <h1 class="govuk-heading-l">
+    <h1 class="@Css.headingLCssClass">
         @messages("timedOut.heading")
     </h1>
 
-    <p class="govuk-body">
+    <p class="@Css.bodyCssClass">
     @(mode match {
         case TimeoutMode.NotSaved => messages("timedOut.message.not-saved")
         case TimeoutMode.Saved => messages("timedOut.message.saved")
@@ -37,8 +38,8 @@
     })
     </p>
 
-    <p class="govuk-body">
-        <a href="@routes.StartController.start.url" class="govuk-button">
+    <p class="@Css.bodyCssClass">
+        <a href="@routes.StartController.start.url" class="@Css.buttonCssClass">
             @messages("timedOut.button")
         </a>
     </p>

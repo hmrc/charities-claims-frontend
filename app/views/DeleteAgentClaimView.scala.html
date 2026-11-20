@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.routes
 @import uk.gov.hmrc.govukfrontend.views.html.components.*
 @import views.ViewUtils.title
@@ -39,8 +40,8 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <h1 class="govuk-heading-l">@messages("deleteAgentClaim.heading")</h1>
-    <p class="govuk-body">@messages("deleteAgentClaim.body", charityName)</p>
+    <h1 class="@Css.headingLCssClass">@messages("deleteAgentClaim.heading")</h1>
+    <p class="@Css.bodyCssClass">@messages("deleteAgentClaim.body", charityName)</p>
 
     @formHelper(action = routes.DeleteAgentClaimController.onSubmit, Symbol("autoComplete") -> "off") {
 
@@ -51,7 +52,7 @@
                 form("value"),
                 Fieldset(
                     legend = Some(Legend(content = Text(messages("deleteAgentClaim.caution")), isPageHeading = false,
-                    classes = "govuk-fieldset__legend--m"))
+                    classes = Css.fieldsetLegendMCssClass))
                 )
             )
         )

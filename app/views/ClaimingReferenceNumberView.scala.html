@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.repaymentClaimDetails.routes
 
 @this(
@@ -48,7 +49,7 @@
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
-    <span class="govuk-caption-l">@messages(captionMessage)</span>
+    <span class="@Css.captionLCssClass">@messages(captionMessage)</span>
 
     @formHelper(action = routes.ClaimingReferenceNumberController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -57,7 +58,7 @@
                 form("value"),
                 Fieldset(
                     legend = Some(Legend(content = Text(messages(radioLegendMessage)), isPageHeading = true,
-                    classes = "govuk-fieldset__legend--l"))
+                    classes = Css.fieldsetLegendLCssClass))
                 )
             )
         )

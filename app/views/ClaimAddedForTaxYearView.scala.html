@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import views.html.components.*
 @import controllers.giftAidSmallDonationsScheme.routes
 
@@ -37,8 +38,8 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="govuk-caption-l">@messages("claimAddedForTaxYear.caption")</span>
-    <h1 class="govuk-heading-l">@messages("claimAddedForTaxYear.heading", countOfTaxYears, singularOrPlural)</h1>
+    <span class="@Css.captionLCssClass">@messages("claimAddedForTaxYear.caption")</span>
+    <h1 class="@Css.headingLCssClass">@messages("claimAddedForTaxYear.heading", countOfTaxYears, singularOrPlural)</h1>
 
     @if(oRows.isDefined) {
         @customSummaryList(oRows.get)

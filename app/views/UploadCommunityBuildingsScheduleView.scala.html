@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.communityBuildingsSchedule.routes
 @import models.UpscanInitiateResponse
 
@@ -54,14 +55,14 @@
         )
     }
 
-    <span class="govuk-caption-l">@messages("uploadCommunityBuildingsSchedule.caption")</span>
-    <h1 class="govuk-heading-l">@messages("uploadCommunityBuildingsSchedule.heading")</h1>
+    <span class="@Css.captionLCssClass">@messages("uploadCommunityBuildingsSchedule.caption")</span>
+    <h1 class="@Css.headingLCssClass">@messages("uploadCommunityBuildingsSchedule.heading")</h1>
 
-    <p class="govuk-body">@messages(paragraphOneMessage)</p>
-    <p class="govuk-body">@Html(messages("uploadCommunityBuildingsSchedule.paragraph.url", communityBuildingsScheduleSpreadsheetGuidancesUrl))</p>
+    <p class="@Css.bodyCssClass">@messages(paragraphOneMessage)</p>
+    <p class="@Css.bodyCssClass">@Html(messages("uploadCommunityBuildingsSchedule.paragraph.url", communityBuildingsScheduleSpreadsheetGuidancesUrl))</p>
 
 
-    <form action="@upscanInitiateResponse.uploadRequest.href" method="POST" enctype="multipart/form-data" class="js-form file-upload" novalidate>
+    <form action="@upscanInitiateResponse.uploadRequest.href" method="POST" enctype="multipart/form-data" class="@Css.jsFormCssClass @Css.fileUploadCssClass" novalidate>
 
         @upscanInitiateResponse.uploadRequest.fields.map { case (key, value) =>
             <input type="hidden" id="@key" name="@key" value="@value">
@@ -82,7 +83,7 @@
                 chooseFilesButtonText = Some(messages("fileUpload.button")),
                 dropInstructionText = Some(messages("fileUpload.dropInstruction")),
                 noFileChosenText = Some(messages("fileUpload.noFileChosen")),
-                classes = "govuk-file-upload--error",
+                classes = Css.fileUploadErrorCssClass,
                 attributes = Map(
                     "accept" -> filePickerAcceptFilter,
                     "data-msg-required" -> messages("uploadCommunityBuildingsSchedule.error.file-upload.required"),
@@ -99,10 +100,10 @@
             preventDoubleClick = Some(true),
             classes = "file-upload__submit"
             ))
-            <div class="file-upload__spinner ccms-loader hidden"></div>
+            <div class="@Css.fileUploadSpinnerCssClass @Css.ccmsLoaderHiddenCssClass @Css.hiddenCssClass"></div>
         </div>
 
-        <div class="file-upload__loading-container" aria-live="polite" role="region">
+        <div class="@Css.fileUploadLoadingContainerCssClass" aria-live="polite" role="region">
 
         </div>
 

@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this(
     layout: templates.Layout
 )
@@ -22,8 +24,8 @@
 
 @layout(pageTitle = titleNoForm(messages("cannotViewOrManageClaim.title")), showBackLink = true) {
 
-    <h1 class="govuk-heading-l">@messages("cannotViewOrManageClaim.heading")</h1>
+    <h1 class="@Css.headingLCssClass">@messages("cannotViewOrManageClaim.heading")</h1>
 
-    <p class="govuk-body">@Html(messages("cannotViewOrManageClaim.paragraph", makeCharityRepaymentClaimUrl))</p>
+    <p class="@Css.bodyCssClass">@Html(messages("cannotViewOrManageClaim.paragraph", makeCharityRepaymentClaimUrl))</p>
 
 }

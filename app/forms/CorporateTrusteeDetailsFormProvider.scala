@@ -16,6 +16,7 @@
 
 package forms
 
+import config.Constants
 import models.CorporateTrusteeDetails
 import play.api.data.Form
 import play.api.data.Forms.*
@@ -25,11 +26,9 @@ import javax.inject.Inject
 class CorporateTrusteeDetailsFormProvider @Inject() extends Mappings {
 
   val nameOfCorporateTrustee = "nameOfCorporateTrustee"
-  private val nameMaxLength  = 160
   private val nameRegex      = "^([a-zA-Z0-9 ]{1,160})$"
 
   val corporateTrusteeDaytimeTelephoneNumber = "corporateTrusteeDaytimeTelephoneNumber"
-  private val trusteePhoneNumberMaxLength    = 30
   private val trusteePhoneNumberRegex        = "^[0-9\\(\\)\\-\\s]{1,30}$"
 
   val corporateTrusteePostcode = "corporateTrusteePostcode"
@@ -50,13 +49,13 @@ class CorporateTrusteeDetailsFormProvider @Inject() extends Mappings {
       mapping(
         nameOfCorporateTrustee                 -> text(trusteeNameRequired).verifying(
           firstError(
-            maxLength(nameMaxLength, trusteeNameLength),
+            maxLength(Constants.maxTrusteeNameLength, trusteeNameLength),
             regexp(nameRegex, trusteeNameInvalid)
           )
         ),
         corporateTrusteeDaytimeTelephoneNumber -> text(trusteePhoneNumberRequired).verifying(
           firstError(
-            maxLength(trusteePhoneNumberMaxLength, trusteePhoneNumberLength),
+            maxLength(Constants.maxPhoneNumberLength, trusteePhoneNumberLength),
             regexp(trusteePhoneNumberRegex, trusteePhoneNumberInvalid)
           )
         ),

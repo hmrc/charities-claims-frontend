@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.giftAidSmallDonationsScheme.routes
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
@@ -33,7 +34,7 @@
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
-    <span class="govuk-caption-l">@messages("adjustmentToGiftAidOverclaimed.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("adjustmentToGiftAidOverclaimed.caption")</span>
 
     @formHelper(action = routes.AdjustmentToGiftAidOverclaimedController.onSubmit(mode)) {
 
@@ -42,7 +43,7 @@
             form("amount"),
             Label(
                 isPageHeading = true,
-                classes = "govuk-label--l",
+                classes = Css.labelLCssClass,
                 content = Text(messages("adjustmentToGiftAidOverclaimed.heading"))
             )
         )
@@ -51,7 +52,7 @@
         .withHint(Hint(
             content = Text(messages("adjustmentToGiftAidOverclaimed.hint"))
         ))
-        .withCssClass("govuk-input--width-5")
+        .withCssClass(Css.inputWidth5CssClass)
         .withSpellcheck(false)
         .withPrefix(PrefixOrSuffix(content = Text("£")))
         .withAttribute("autocomplete" -> "off")

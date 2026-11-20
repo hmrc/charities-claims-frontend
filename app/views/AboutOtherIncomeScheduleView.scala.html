@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.otherIncomeSchedule.routes
 
 @this(
@@ -28,15 +29,15 @@
     pageTitle    = titleNoForm(messages("aboutOtherIncomeSchedule.title"))
 ) {
 
-    <span class="govuk-caption-l">@messages("aboutOtherIncomeSchedule.caption")</span>
-    <h1 class="govuk-heading-l">@messages("aboutOtherIncomeSchedule.heading")</h1>
+    <span class="@Css.captionLCssClass">@messages("aboutOtherIncomeSchedule.caption")</span>
+    <h1 class="@Css.headingLCssClass">@messages("aboutOtherIncomeSchedule.heading")</h1>
     @if(isAgent){
-        <p class="govuk-body">@messages("aboutOtherIncomeSchedule.agent.paragraph.one")</p>
+        <p class="@Css.bodyCssClass">@messages("aboutOtherIncomeSchedule.agent.paragraph.one")</p>
     }else {
-        <p class="govuk-body">@messages("aboutOtherIncomeSchedule.paragraph.one")</p>
+        <p class="@Css.bodyCssClass">@messages("aboutOtherIncomeSchedule.paragraph.one")</p>
     }
-    <p class="govuk-body">@messages("aboutOtherIncomeSchedule.paragraph.two")</p>
-    <p class="govuk-body">@Html(messages("aboutOtherIncomeSchedule.paragraph.url", otherIncomeScheduleSpreadsheetsUrl))</p>
+    <p class="@Css.bodyCssClass">@messages("aboutOtherIncomeSchedule.paragraph.two")</p>
+    <p class="@Css.bodyCssClass">@Html(messages("aboutOtherIncomeSchedule.paragraph.url", otherIncomeScheduleSpreadsheetsUrl))</p>
 
     @formHelper(action = routes.AboutOtherIncomeScheduleController.onSubmit) {
 

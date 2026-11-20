@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.Constants.Css
 import util.*
 import play.api.mvc.{Security as _, *}
 import play.api.Application
@@ -863,8 +864,8 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val request = FakeRequest(GET, url)
           val result  = route(application, request).value
 
-          contentAsString(result) should include("""<h1 class="govuk-heading-l">""")
-          contentAsString(result) shouldNot include("""<h1 class="govuk-heading-xl">""")
+          contentAsString(result) should include(s"""<h1 class="${Css.headingLCssClass}">""")
+          contentAsString(result) shouldNot include(s"""<h1 class="${Css.headingXLCssClass}">""")
         }
       }
 
@@ -1011,7 +1012,7 @@ class ClaimsTaskListControllerSpec extends ControllerSpec {
           val result  = route(application, request).value
           val content = contentAsString(result)
 
-          content should include("""class="govuk-caption-l charity-name-caption"""")
+          content should include(s"""class="${Css.captionLCssClass} ${Css.charityNameCaptionCssClass}"""")
           content should include("Test Charity Name")
         }
       }

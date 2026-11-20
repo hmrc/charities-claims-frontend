@@ -23,14 +23,13 @@ import forms.{CheckBoxListFormProvider, YesNoFormProvider}
 import models.{Mode, RepaymentClaimDetailsAnswers, RepaymentClaimType, SessionData}
 import models.requests.DataRequest
 import controllers.repaymentClaimDetails.routes
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import play.api.data.Form
 import services.SaveService
 import views.html.{RepaymentClaimTypeView, UpdateRepaymentClaimView}
 import models.Mode.*
 
 import scala.concurrent.{ExecutionContext, Future}
-import play.api.mvc.Call
 
 class RepaymentClaimTypeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -62,7 +61,7 @@ class RepaymentClaimTypeController @Inject() (
       }
     }
 
-  def handleQuestionSubmit(mode: Mode, isAgent: Boolean)(implicit request: DataRequest[AnyContent]) = {
+  private def handleQuestionSubmit(mode: Mode, isAgent: Boolean)(implicit request: DataRequest[AnyContent]) = {
     val previousAnswer: Option[RepaymentClaimType] = RepaymentClaimDetailsAnswers.getRepaymentClaimType
     form
       .bindFromRequest()
@@ -91,7 +90,7 @@ class RepaymentClaimTypeController @Inject() (
       )
   }
 
-  def handleUpdateConfirmationSubmit(mode: Mode)(implicit request: DataRequest[AnyContent]) = {
+  private def handleUpdateConfirmationSubmit(mode: Mode)(implicit request: DataRequest[AnyContent]) = {
     val checkboxValues = getCheckboxValuesFromRequest
     confirmUpdateForm
       .bindFromRequest()

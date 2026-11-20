@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.communityBuildingsSchedule.routes
 @import models.*
 @import views.html.components.*
@@ -60,8 +61,8 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="govuk-caption-l">@messages("checkYourCommunityBuildingsSchedule.caption")</span>
-    <h1 class="govuk-heading-l">@messages(headingMessage)</h1>
+    <span class="@Css.captionLCssClass">@messages("checkYourCommunityBuildingsSchedule.caption")</span>
+    <h1 class="@Css.headingLCssClass">@messages(headingMessage)</h1>
 
     @govukSummaryList(SummaryList(
         card = Some(Card(
@@ -74,12 +75,12 @@
             SummaryListRow(
                 key = Key(content = Text(messages("checkYourCommunityBuildingsSchedule.summary.item.1"))),
                 value = Value(content = Text(communityBuildingsScheduleData.totalOfAllAmounts.map(_.toAmountString).getOrElse(messages("data.notApplicable")))),
-                classes = "custom-summary-list"
+                classes = Css.customSummaryListCssClass
             )
         )
     ))
 
-    <div class="govuk-!-margin-bottom-9"></div>
+    <div class="@Css.marginBottom9CssClass"></div>
 
     @communityBuildingsTable(communityBuildings)
 

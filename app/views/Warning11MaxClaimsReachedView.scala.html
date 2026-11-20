@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.routes
 @import models.*
 @import views.html.components.*
@@ -31,11 +32,11 @@
     showBackLink = true
 ) {
 
-    <h1 class="govuk-heading-l">
+    <h1 class="@Css.headingLCssClass">
         @messages("warning11MaxClaimsReached.message.1")
     </h1>
 
-    <p class="govuk-body">@messages("warning11MaxClaimsReached.message.2", agentUnsubmittedClaimLimit)</p>
+    <p class="@Css.bodyCssClass">@messages("warning11MaxClaimsReached.message.2", agentUnsubmittedClaimLimit)</p>
 
     @formHelper(action = routes.Warning11MaxClaimsReachedController.onSubmit) {
         @govukButton(ButtonViewModel(Text(messages("site.continue"))))

@@ -16,6 +16,7 @@
 
 package controllers.repaymentClaimDetails
 
+import config.Constants.Css
 import models.Mode.NormalMode
 import org.jsoup.Jsoup
 import org.scalatest.OptionValues.convertOptionToValuable
@@ -45,7 +46,7 @@ class ClaimingReferenceNumberControllerISpec
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.getElementsByClass("govuk-caption-l").text() should include(msg("claimingReferenceNumber.caption"))
+      doc.getElementsByClass(Css.captionLCssClass).text() should include(msg("claimingReferenceNumber.caption"))
     }
 
     "render the claiming reference number page for an agent" in {
@@ -59,7 +60,7 @@ class ClaimingReferenceNumberControllerISpec
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.getElementsByClass("govuk-caption-l").text() should include(msg("claimingReferenceNumber.agent.caption"))
+      doc.getElementsByClass(Css.captionLCssClass).text() should include(msg("claimingReferenceNumber.agent.caption"))
     }
   }
 

@@ -16,6 +16,7 @@
 
 package viewmodels
 
+import config.Constants.Css
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.*
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -331,8 +332,8 @@ object RepaymentClaimDetailsCheckYourAnswersHelper {
       key = Key(content = Text(label)),
       value = Value(
         content = HtmlContent(
-          s"""<a class="govuk-link" href="$href">
-             |${messages("site.enter")} <span class="govuk-visually-hidden">$hiddenText</span>
+          s"""<a class="${Css.linkCssClass}" href="$href">
+             |${messages("site.enter")} <span class="${Css.visuallyHiddenCssClass}">$hiddenText</span>
              |</a>""".stripMargin
         )
       ),

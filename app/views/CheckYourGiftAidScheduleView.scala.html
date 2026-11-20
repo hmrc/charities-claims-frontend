@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.giftAidSchedule.routes
 @import models.*
 @import views.html.components.*
@@ -50,11 +51,11 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="govuk-caption-l">@messages("checkYourGiftAidSchedule.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("checkYourGiftAidSchedule.caption")</span>
   @if(isAgent) {
-      <h1 class="govuk-heading-l">@messages("checkYourGiftAidSchedule.agent.heading")</h1>
+      <h1 class="@Css.headingLCssClass">@messages("checkYourGiftAidSchedule.agent.heading")</h1>
   }else{
-      <h1 class="govuk-heading-l">@messages("checkYourGiftAidSchedule.heading")</h1>
+      <h1 class="@Css.headingLCssClass">@messages("checkYourGiftAidSchedule.heading")</h1>
   }
     @govukSummaryList(SummaryList(
         card = Some(Card(
@@ -67,22 +68,22 @@
             SummaryListRow(
                 key = Key(content = Text(messages("checkYourGiftAidSchedule.summary.item.1"))),
                 value = Value(content = Text(giftAidScheduleData.earliestDonationDate.map(_.toGdsDateString).getOrElse(messages("data.notApplicable")))),
-                classes = "custom-summary-list"
+                classes = Css.customSummaryListCssClass
             ),
             SummaryListRow(
                 key = Key(content = Text(messages("checkYourGiftAidSchedule.summary.item.2"))),
                 value = Value(content = Text(giftAidScheduleData.prevOverclaimedGiftAid.map(_.toAmountString).getOrElse(messages("data.notApplicable")))),
-                classes = "custom-summary-list"
+                classes = Css.customSummaryListCssClass
             ),
             SummaryListRow(
                 key = Key(content = Text(messages("checkYourGiftAidSchedule.summary.item.3"))),
                 value = Value(content = Text(giftAidScheduleData.totalDonations.map(_.toAmountString).getOrElse(messages("data.notApplicable")))),
-                classes = "custom-summary-list"
+                classes = Css.customSummaryListCssClass
             )
         )
     ))
 
-    <div class="govuk-!-margin-bottom-9"></div>
+    <div class="@Css.marginBottom9CssClass"></div>
 
     @donationsTable(donations)
     

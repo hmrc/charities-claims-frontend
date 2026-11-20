@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this( 
     layout: templates.Layout, 
     govukButton: GovukButton
@@ -23,7 +25,7 @@
 
 @layout( pageTitle = titleNoForm(messages("authLoginStub.title")) ) {
 
-<h1 class="govuk-heading-l">Sign in using test credentials</h1>
+<h1 class="@Css.headingLCssClass">Sign in using test credentials</h1>
 
 <form method="POST" novalidate="" action="@postAction" id="inputForm">
   <input type="hidden" name="usersName" value="Test User" />
@@ -45,13 +47,13 @@
 
   <input type="hidden" name="redirectionUrl" value="@continueUrl" />
 
-  <div class="govuk-form-group">
-    <label class="govuk-label" for="authorityId">User ID</label>
-    <div id="userId-hint" class="govuk-hint">
+  <div class="@Css.formGroupCssClass">
+    <label class="@Css.labelCssClass" for="authorityId">User ID</label>
+    <div id="userId-hint" class="@Css.hintCssClass">
       The identifier of the assumed testing user.
     </div>
     <input
-      class="govuk-input"
+      class="@Css.inputCssClass"
       id="input-value"
       name="authorityId"
       type="text"
@@ -60,20 +62,20 @@
     />
   </div>
 
-  <div class="govuk-form-group">
-    <fieldset class="govuk-fieldset" aria-describedby="value-hint">
-      <div id="value-hint" class="govuk-hint">
+  <div class="@Css.formGroupCssClass">
+    <fieldset class="@Css.fieldsetClass" aria-describedby="value-hint">
+      <div id="value-hint" class="@Css.hintCssClass">
         Choose the user group you want to sign in as.
       </div>
 
       <div
-        class="govuk-radios govuk-radios--inline"
+        class="@Css.radiosCssClass @Css.inlineRadiosCssClass"
         data-module="govuk-radios"
         data-govuk-radios-init=""
       >
-        <div class="govuk-radios__item">
+        <div class="@Css.radiosItemCssClass">
           <input
-            class="govuk-radios__input"
+            class="@Css.radiosInputCssClass"
             id="value"
             name="affinityGroup"
             type="radio"
@@ -81,21 +83,21 @@
             checked
           />
 
-          <label class="govuk-label govuk-radios__label" for="value">
+          <label class="@Css.labelCssClass @Css.radiosLabelCssClass" for="value">
             Organisation
           </label>
         </div>
 
-        <div class="govuk-radios__item">
+        <div class="@Css.radiosItemCssClass">
           <input
-            class="govuk-radios__input"
+            class="@Css.radiosInputCssClass"
             id="value-no"
             name="affinityGroup"
             type="radio"
             value="Agent"
           />
 
-          <label class="govuk-label govuk-radios__label" for="value-no">
+          <label class="@Css.labelCssClass @Css.radiosLabelCssClass" for="value-no">
             Agent
           </label>
         </div>
@@ -103,10 +105,10 @@
     </fieldset>
   </div>
 
-  <div class="govuk-form-group">
-    <label class="govuk-label" for="enrolment[0].taxIdentifier[0].value">HRMC Charity Reference</label>
+  <div class="@Css.formGroupCssClass">
+    <label class="@Css.labelCssClass" for="enrolment[0].taxIdentifier[0].value">HRMC Charity Reference</label>
     <input
-      class="govuk-input"
+      class="@Css.inputCssClass"
       id="input-value"
       name="enrolment[0].taxIdentifier[0].value"
       type="text"
@@ -114,10 +116,10 @@
     />
   </div>
 
-  <div class="govuk-form-group">
-    <label class="govuk-label" for="enrolment[1].taxIdentifier[0].value">Agent Reference</label>
+  <div class="@Css.formGroupCssClass">
+    <label class="@Css.labelCssClass" for="enrolment[1].taxIdentifier[0].value">Agent Reference</label>
     <input
-      class="govuk-input"
+      class="@Css.inputCssClass"
       id="input-value"
       name="enrolment[1].taxIdentifier[0].value"
       type="text"

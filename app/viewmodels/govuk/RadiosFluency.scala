@@ -16,6 +16,7 @@
 
 package viewmodels.govuk
 
+import config.Constants.Css
 import play.api.data.Field
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Empty
@@ -139,6 +140,6 @@ trait RadiosFluency {
       radios.copy(attributes = radios.attributes + attribute)
 
     def inline(): Radios =
-      radios.withCssClass("govuk-radios--inline")
+      radios.withCssClass(Css.inlineRadiosCssClass)
   }
 }

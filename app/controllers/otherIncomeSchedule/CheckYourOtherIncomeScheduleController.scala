@@ -97,29 +97,28 @@ class CheckYourOtherIncomeScheduleController @Inject() (
                     )
                   )
                 },
-                answer =>
-                  answer match {
-                    case true =>
-                      Future.successful(Redirect(routes.UpdateOtherIncomeScheduleController.onPageLoad))
+                {
+                  case true =>
+                    Future.successful(Redirect(routes.UpdateOtherIncomeScheduleController.onPageLoad))
 
-                    case false =>
-                      if request.sessionData.otherIncomeScheduleCompleted
-                      then {
-                        Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
-                      } else {
-                        for {
-                          _ <- saveService.save(
-                                 request.sessionData.copy(
-                                   otherIncomeScheduleCompleted = true,
-                                   otherIncomeScheduleData = None,
-                                   adjustmentForOtherIncomePreviousOverClaimed =
-                                     Some(otherIncomeScheduleData.adjustmentForOtherIncomePreviousOverClaimed)
-                                 )
+                  case false =>
+                    if request.sessionData.otherIncomeScheduleCompleted
+                    then {
+                      Future.successful(Redirect(controllers.routes.ClaimsTaskListController.onPageLoad))
+                    } else {
+                      for {
+                        _ <- saveService.save(
+                               request.sessionData.copy(
+                                 otherIncomeScheduleCompleted = true,
+                                 otherIncomeScheduleData = None,
+                                 adjustmentForOtherIncomePreviousOverClaimed =
+                                   Some(otherIncomeScheduleData.adjustmentForOtherIncomePreviousOverClaimed)
                                )
-                          _ <- claimsService.save
-                        } yield Redirect(routes.OtherIncomeScheduleUploadSuccessfulController.onPageLoad)
-                      }
-                  }
+                             )
+                        _ <- claimsService.save
+                      } yield Redirect(routes.OtherIncomeScheduleUploadSuccessfulController.onPageLoad)
+                    }
+                }
               )
 
           }

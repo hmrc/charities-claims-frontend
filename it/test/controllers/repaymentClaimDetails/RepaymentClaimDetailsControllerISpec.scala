@@ -16,6 +16,7 @@
 
 package controllers.repaymentClaimDetails
 
+import config.Constants.Css
 import models.Mode.NormalMode
 import org.jsoup.Jsoup
 import org.scalatest.OptionValues.convertOptionToValuable
@@ -40,7 +41,7 @@ class RepaymentClaimDetailsControllerISpec extends ComponentSpecHelper with Test
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.getElementsByClass("govuk-caption-l").text() should include(msg("repaymentClaimDetails.subheading"))
+      doc.getElementsByClass(Css.captionLCssClass).text() should include(msg("repaymentClaimDetails.subheading"))
     }
 
     "render the repayment claim details page for an agent" in {
@@ -54,7 +55,7 @@ class RepaymentClaimDetailsControllerISpec extends ComponentSpecHelper with Test
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.getElementsByClass("govuk-caption-l").text() should include(msg("repaymentClaimDetails.agent.subheading"))
+      doc.getElementsByClass(Css.captionLCssClass).text() should include(msg("repaymentClaimDetails.agent.subheading"))
     }
   }
 
