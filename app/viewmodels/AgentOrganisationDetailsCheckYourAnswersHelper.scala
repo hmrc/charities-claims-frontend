@@ -416,7 +416,7 @@ object AgentOrganisationDetailsCheckYourAnswersHelper {
       key = Key(Text(label)),
       value = Value(
         HtmlContent(
-          s"""<a class="{${Css.linkCssClass}" href="$href">
+          s"""<a class="${Css.linkCssClass}" href="$href">
              |${messages("site.enter")}
              |<span class="${Css.visuallyHiddenCssClass}">$hiddenText</span>
              |</a>""".stripMargin

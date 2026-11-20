@@ -72,8 +72,5 @@ trait CharacterCountFluency {
 
     def fullWidth(): CharacterCount =
       withCssClass(Css.inputWidth50CssClass)
-
-    def withCharactersOverLimitText(): CharacterCount =
-      characterCount.copy(charactersOverLimitText = Some(Map("test" -> "sdsd")))
   }
 }
