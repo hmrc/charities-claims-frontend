@@ -165,8 +165,11 @@ class ClaimsConnectorImpl @Inject() (
 
   final def hasUnsubmittedClaim(charitiesReference: String)(using hc: HeaderCarrier): Future[Boolean] =
     val url: String = s"$claimsApiUrl/charities/$charitiesReference/unsubmitted"
-    logger.info(s"GET $url [requestId=${hc.requestId.map(_.value).getOrElse("-")}]")
+
+    logger.info(s"GET $url requestId=${hc.requestId.map(_.value).getOrElse("-")}")
+  
     retryFor("hasUnsubmittedClaim") { case _ => true } {
+
       http
         .get(URL(url))
         .execute[HttpResponse]
@@ -190,7 +193,7 @@ class ClaimsConnectorImpl @Inject() (
     reads: Reads[O],
     hc: HeaderCarrier
   ): Future[O] = {
-    logger.info(s"$method $url [requestId=${hc.requestId.map(_.value).getOrElse("-")}]")
+    logger.info(s"$method $url requestId=${hc.requestId.map(_.value).getOrElse("-")}")
     retryFor(s"$method $url") {
       case _: UpdatedByAnotherUserException             => false
       case _: UnsubmittedClaimsLimitExceededException   => false
