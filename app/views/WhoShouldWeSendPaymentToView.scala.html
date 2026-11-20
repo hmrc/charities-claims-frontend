@@ -35,7 +35,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <span class="@Css.captionLLabelCssClass">@messages("whoShouldWeSendPaymentTo.caption")</span>
+        <span class="@Css.captionLCssClass">@messages("whoShouldWeSendPaymentTo.caption")</span>
 
         @formHelper(action = routes.WhoShouldWeSendPaymentToController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 

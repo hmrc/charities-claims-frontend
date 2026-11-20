@@ -16,6 +16,7 @@
 
 package controllers.repaymentClaimDetails
 
+import config.Constants.Css
 import org.jsoup.Jsoup
 import org.scalatest.OptionValues.convertOptionToValuable
 import play.api.http.HeaderNames.LOCATION
@@ -40,7 +41,7 @@ class ClaimReferenceNumberInputControllerISpec
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.getElementsByClass("govuk-caption-l").text() should include(msg("claimReferenceNumber.caption"))
+      doc.getElementsByClass(Css.captionLCssClass).text() should include(msg("claimReferenceNumber.caption"))
     }
 
     "render the claim reference number page for an agent" in {
@@ -54,7 +55,7 @@ class ClaimReferenceNumberInputControllerISpec
       result.status shouldBe OK
 
       val doc = Jsoup.parse(result.body)
-      doc.getElementsByClass("govuk-caption-l").text() should include(msg("claimReferenceNumber.agent.caption"))
+      doc.getElementsByClass(Css.captionLCssClass).text() should include(msg("claimReferenceNumber.agent.caption"))
     }
 
   }

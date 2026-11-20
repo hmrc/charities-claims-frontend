@@ -49,7 +49,7 @@
         ))
     }
     
-    <span class="@Css.captionLLabelCssClass">@messages("uploadOtherIncomeSchedule.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("uploadOtherIncomeSchedule.caption")</span>
     <h1 class="@Css.headingLCssClass">@messages("uploadOtherIncomeSchedule.heading")</h1>
 
     @if(isAgent){
@@ -97,7 +97,7 @@
                     preventDoubleClick = Some(true),
                     classes = "file-upload__submit"
                 ))
-                <div class="@Css.fileUploadSpinnerCssClass @Css.ccmsLoaderHiddenCssClass"></div>
+                <div class="@Css.fileUploadSpinnerCssClass @Css.ccmsLoaderHiddenCssClass @Css.hiddenCssClass"></div>
             </div>
 
             <div class="@Css.fileUploadLoadingContainerCssClass" aria-live="polite" role="region">

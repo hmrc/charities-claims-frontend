@@ -38,9 +38,9 @@
     }
 
     @if(isAgent) {
-        <span class="@Css.captionLLabelCssClass">@messages("repaymentClaimDetails.agent.subheading")</span>
+        <span class="@Css.captionLCssClass">@messages("repaymentClaimDetails.agent.subheading")</span>
     } else {
-        <span class="@Css.captionLLabelCssClass">@messages("repaymentClaimType.caption")</span>
+        <span class="@Css.captionLCssClass">@messages("repaymentClaimType.caption")</span>
     }
 
     @formHelper(action = routes.RepaymentClaimTypeController.onSubmit(mode),Symbol("autoComplete") -> "on") {

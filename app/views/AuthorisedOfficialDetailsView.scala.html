@@ -38,7 +38,7 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="@Css.captionLLabelCssClass">@messages("authorisedOfficialDetails.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("authorisedOfficialDetails.caption")</span>
     <h1 class="@Css.headingLCssClass">@messages("authorisedOfficialDetails.heading")</h1>
 
     @formHelper(action = routes.AuthorisedOfficialDetailsController.onSubmit(mode)) {

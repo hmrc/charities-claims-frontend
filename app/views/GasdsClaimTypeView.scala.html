@@ -36,7 +36,7 @@ pageTitle = title(form, messages("gasdsClaimType.title"))
     @govukErrorSummary(ErrorSummaryViewModel(form))
 }
 
-<span class="@Css.captionLLabelCssClass">@messages(if(isAgent) "gasdsClaimType.caption.agent" else "gasdsClaimType.caption")</span>
+<span class="@Css.captionLCssClass">@messages(if(isAgent) "gasdsClaimType.caption.agent" else "gasdsClaimType.caption")</span>
 <h1 class="@Css.headingLCssClass">@messages("gasdsClaimType.heading")</h1>
 
 <p class="@Css.bodyCssClass">@messages(if(isAgent) "gasdsClaimType.description.agent" else "gasdsClaimType.description")</p>

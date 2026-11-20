@@ -49,7 +49,7 @@
         ))
     }
     
-    <span class="@Css.captionLLabelCssClass">@messages("uploadConnectedCharitiesSchedule.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("uploadConnectedCharitiesSchedule.caption")</span>
     <h1 class="@Css.headingLCssClass">@messages("uploadConnectedCharitiesSchedule.heading")</h1>
 
     <p class="@Css.bodyCssClass">@messages(if(isAgent) "uploadConnectedCharitiesSchedule.paragraph.one.agent" else "uploadConnectedCharitiesSchedule.paragraph.one")</p>
@@ -93,7 +93,7 @@
                     preventDoubleClick = Some(true),
                     classes = "file-upload__submit"
                 ))
-                <div class="@Css.fileUploadSpinnerCssClass @Css.ccmsLoaderHiddenCssClass"></div>
+                <div class="@Css.fileUploadSpinnerCssClass @Css.ccmsLoaderHiddenCssClass @Css.hiddenCssClass"></div>
             </div>
 
             <div class="@Css.fileUploadLoadingContainerCssClass" aria-live="polite" role="region">

@@ -33,7 +33,7 @@
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
-    <span class="@Css.captionLLabelCssClass">@messages("nameOfCharityRegulator.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("nameOfCharityRegulator.caption")</span>
 
     @formHelper(action = routes.NameOfCharityRegulatorController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 

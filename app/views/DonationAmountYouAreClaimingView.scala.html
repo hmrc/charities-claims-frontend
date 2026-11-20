@@ -34,7 +34,7 @@
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
-    <span class="@Css.captionLLabelCssClass">@messages(if(index == 1) "donationAmountYouAreClaiming.caption" else "donationAmountYouAreClaiming.caption.multipleYears", index.toString)</span>
+    <span class="@Css.captionLCssClass">@messages(if(index == 1) "donationAmountYouAreClaiming.caption" else "donationAmountYouAreClaiming.caption.multipleYears", index.toString)</span>
 
     @formHelper(action = routes.DonationAmountYouAreClaimingController.onSubmit(index, mode)) {
 

@@ -48,7 +48,7 @@
     scriptsBlock = if (screenLocked) Some(checkUploadStatusScript(uploadStatusCall, refreshIntervalSeconds)) else None
 ) {
 
-    <span class="@Css.captionLLabelCssClass">@messages("yourCommunityBuildingsScheduleUpload.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("yourCommunityBuildingsScheduleUpload.caption")</span>
     <h1 class="@Css.headingLCssClass">@messages(headingMessage)</h1>
     <p class="@Css.bodyCssClass">@messages(if(isAgent) "yourCommunityBuildingsScheduleUpload.agent.paragraph.one" else "yourCommunityBuildingsScheduleUpload.paragraph.one")</p>
 

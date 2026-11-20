@@ -35,7 +35,7 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="@Css.captionLLabelCssClass">@messages("corporateTrusteeDetails.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("corporateTrusteeDetails.caption")</span>
     <h1 class="@Css.headingLCssClass">@messages("corporateTrusteeDetails.heading")</h1>
 
     @formHelper(action = routes.CorporateTrusteeDetailsController.onSubmit(mode),Symbol("autoComplete") -> "on") {

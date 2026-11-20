@@ -38,7 +38,7 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="@Css.captionLLabelCssClass">@messages("claimAddedForTaxYear.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("claimAddedForTaxYear.caption")</span>
     <h1 class="@Css.headingLCssClass">@messages("claimAddedForTaxYear.heading", countOfTaxYears, singularOrPlural)</h1>
 
     @if(oRows.isDefined) {

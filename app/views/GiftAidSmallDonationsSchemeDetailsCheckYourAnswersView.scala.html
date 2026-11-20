@@ -33,7 +33,7 @@
     pageTitle = titleNoForm(messages(if(isAgent) "giftAidSmallDonationsSchemeDetailsCheckYourAnswers.title.agent" else "giftAidSmallDonationsSchemeDetailsCheckYourAnswers.title"))
 ) {
 
-    <span class="@Css.captionLLabelCssClass">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.caption")</span>
     <h1 class="@Css.headingLCssClass">@messages(if(isAgent) "giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading.agent" else "giftAidSmallDonationsSchemeDetailsCheckYourAnswers.heading")</h1>
     @if(oSummaryListForAdjustmentToGiftAidOverclaimed.isDefined) {
         <h2 class="@Css.headingMCssClass">@messages("giftAidSmallDonationsSchemeDetailsCheckYourAnswers.subheading.1")</h2>

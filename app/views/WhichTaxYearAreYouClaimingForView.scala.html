@@ -36,7 +36,7 @@ govukErrorSummary: GovukErrorSummary
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="@Css.captionLLabelCssClass">@messages(if(index == 1) "whichTaxYearAreYouClaimingFor.caption" else "whichTaxYearAreYouClaimingFor.caption.multipleYears",index)</span>
+    <span class="@Css.captionLCssClass">@messages(if(index == 1) "whichTaxYearAreYouClaimingFor.caption" else "whichTaxYearAreYouClaimingFor.caption.multipleYears",index)</span>
 
     <h1 class="@Css.headingLCssClass">@messages(if (isAgent) "whichTaxYearAreYouClaimingFor.heading.agent" else "whichTaxYearAreYouClaimingFor.heading")</h1>
 

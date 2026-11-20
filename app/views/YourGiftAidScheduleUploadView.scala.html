@@ -43,7 +43,7 @@
     scriptsBlock = if (screenLocked) Some(checkUploadStatusScript(uploadStatusCall, refreshIntervalSeconds)) else None
 ) {
 
-    <span class="@Css.captionLLabelCssClass">@messages("yourGiftAidScheduleUpload.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("yourGiftAidScheduleUpload.caption")</span>
     @if(isAgent) {
         <h1 class="@Css.headingLCssClass">@messages("yourGiftAidScheduleUpload.agent.heading")</h1>
         <p class="@Css.bodyCssClass">@messages("yourGiftAidScheduleUpload.agent.paragraph.one")</p>

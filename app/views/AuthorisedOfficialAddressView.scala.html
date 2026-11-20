@@ -34,7 +34,7 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="@Css.captionLLabelCssClass">@messages("authorisedOfficialAddress.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("authorisedOfficialAddress.caption")</span>
 
     @formHelper(action = routes.AuthorisedOfficialAddressController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 

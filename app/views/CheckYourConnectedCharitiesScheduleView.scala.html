@@ -48,7 +48,7 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="@Css.captionLLabelCssClass">@messages("checkYourConnectedCharitiesSchedule.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("checkYourConnectedCharitiesSchedule.caption")</span>
     <h1 class="@Css.headingLCssClass">@messages(if(isAgent) "checkYourConnectedCharitiesSchedule.heading.agent" else "checkYourConnectedCharitiesSchedule.heading")</h1>
 
     @connectedCharitiesTable(connectedCharities)

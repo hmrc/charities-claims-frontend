@@ -16,6 +16,7 @@
 
 package viewmodels.govuk
 
+import config.Constants.Css
 import play.api.data.Field
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
@@ -70,7 +71,7 @@ trait CharacterCountFluency {
       characterCount.copy(spellcheck = Some(on))
 
     def fullWidth(): CharacterCount =
-      withCssClass("govuk-input--width-50")
+      withCssClass(Css.inputWidth50CssClass)
 
     def withCharactersOverLimitText(): CharacterCount =
       characterCount.copy(charactersOverLimitText = Some(Map("test" -> "sdsd")))

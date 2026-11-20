@@ -20,7 +20,7 @@
 
 @(rows: Seq[(String, Seq[(String, String, String)])])(implicit messages: Messages)
 
-<dl class="@Css.summaryListCssClass hmrc-list-with-actions hmrc-list-with-actions--short">
+<dl class="@Css.summaryListCssClass @Css.listWithActionsCssClass @Css.listWithActionsShortCssClass">
     @for((item, links) <- rows) {
     <div class="@Css.summaryListRowCssClass">
         <dt id="@item.toLowerCase.replaceAll("\\s+", "-")" class="@Css.summaryListKeyCssClass">

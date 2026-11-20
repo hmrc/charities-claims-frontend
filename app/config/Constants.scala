@@ -33,7 +33,8 @@ object Constants {
   inline val maxTrusteeNameLength = 160
 
   object Css {
-    inline val bodyCssClass = "govuk-body"
+    inline val bodyCssClass  = "govuk-body"
+    inline val bodySCssClass = "govuk-body-s"
 
     inline val linkCssClass                = "govuk-link"
     inline val linkTextCssClass            = "link-text"
@@ -47,28 +48,44 @@ object Constants {
 
     inline val jsFormCssClass = "js-form"
 
+    inline val govukFileUploadCssClass            = "govuk-file-upload"
     inline val fileUploadCssClass                 = "file-upload"
     inline val fileUploadLoadingContainerCssClass = "file-upload__loading-container"
     inline val fileUploadSpinnerCssClass          = "file-upload__spinner"
     inline val fileUploadErrorCssClass            = "govuk-file-upload--error"
-    inline val ccmsLoaderHiddenCssClass           = "ccms-loader hidden"
+    inline val ccmsLoaderHiddenCssClass           = "ccms-loader"
+
+    inline val hiddenCssClass = "hidden"
+
+    inline val errorSummaryCssClass = "govuk-error-summary"
+    inline val errorMessageCssClass = "govuk-error-message"
 
     inline val displayNonePrintCssClass = "govuk-!-display-none-print"
 
-    inline val buttonCssClass      = "govuk-button"
-    inline val buttonGroupCssClass = "govuk-button-group"
+    inline val buttonCssClass          = "govuk-button"
+    inline val buttonGroupCssClass     = "govuk-button-group"
+    inline val buttonSecondaryCssClass = "govuk-button--secondary"
+    inline val buttonWarningCssClass   = "govuk-button--warning"
 
-    inline val radiosCssClass       = "govuk-radios"
-    inline val inlineRadiosCssClass = "govuk-radios--inline"
-    inline val radiosInputCssClass  = "govuk-radios__input"
-    inline val radiosItemCssClass   = "govuk-radios__item"
-    inline val radiosLabelCssClass  = "govuk-radios__label"
+    inline val radiosCssClass        = "govuk-radios"
+    inline val inlineRadiosCssClass  = "govuk-radios--inline"
+    inline val radiosInputCssClass   = "govuk-radios__input"
+    inline val radiosItemCssClass    = "govuk-radios__item"
+    inline val radiosLabelCssClass   = "govuk-radios__label"
+    inline val radiosDividerCssClass = "govuk-radios__divider"
 
     inline val hmrcTagCssClass = "hmrc-status-tag"
     inline val tagCssClass     = "govuk-tag"
 
-    inline val yellowTagCssClass = "govuk-tag--yellow"
-    inline val greenTagCssClass  = "govuk-tag--green"
+    inline val greyTagCssClass      = "govuk-tag--grey"
+    inline val greenTagCssClass     = "govuk-tag--green"
+    inline val turquoiseTagCssClass = "govuk-tag--turquoise"
+    inline val blueTagCssClass      = "govuk-tag--blue"
+    inline val purpleTagCssClass    = "govuk-tag--purple"
+    inline val pinkTagCssClass      = "govuk-tag--pink"
+    inline val redTagCssClass       = "govuk-tag--red"
+    inline val orangeTagCssClass    = "govuk-tag--orange"
+    inline val yellowTagCssClass    = "govuk-tag--yellow"
 
     inline val headingXLCssClass = "govuk-heading-xl"
     inline val headingLCssClass  = "govuk-heading-l"
@@ -77,7 +94,7 @@ object Constants {
     inline val labelCssClass  = "govuk-label"
     inline val labelLCssClass = "govuk-label--l"
 
-    inline val captionLLabelCssClass = "govuk-caption-l"
+    inline val captionLCssClass = "govuk-caption-l"
 
     inline val fieldsetClass = "govuk-fieldset"
 
@@ -89,10 +106,14 @@ object Constants {
     inline val characterCountCssClass        = "govuk-character-count"
     inline val characterCountMessageCssClass = "govuk-character-count__message"
 
+    inline val insetTextCssClass = "govuk-inset-text"
+
+    inline val marginTop0CssClass = "govuk-!-margin-top-0"
     inline val marginTop1CssClass = "govuk-!-margin-top-1"
     inline val marginTop6CssClass = "govuk-!-margin-top-6"
 
     inline val marginBottom0CssClass = "govuk-!-margin-bottom-0"
+    inline val marginBottom2CssClass = "govuk-!-margin-bottom-2"
     inline val marginBottom3CssClass = "govuk-!-margin-bottom-3"
     inline val marginBottom6CssClass = "govuk-!-margin-bottom-6"
     inline val marginBottom7CssClass = "govuk-!-margin-bottom-7"
@@ -101,10 +122,14 @@ object Constants {
 
     inline val inputCssClass = "govuk-input"
 
+    inline val inputErrorCssClass = "govuk-input--error"
+
+    inline val inputWidth2CssClass  = "govuk-input--width-2"
     inline val inputWidth4CssClass  = "govuk-input--width-4"
     inline val inputWidth5CssClass  = "govuk-input--width-5"
     inline val inputWidth10CssClass = "govuk-input--width-10"
     inline val inputWidth20CssClass = "govuk-input--width-20"
+    inline val inputWidth50CssClass = "govuk-input--width-50"
 
     inline val listCssClass       = "govuk-list"
     inline val bulletListCssClass = "govuk-list govuk-list--bullet"
@@ -143,6 +168,9 @@ object Constants {
     inline val taskListItemsCssClass         = "app-task-list__items"
     inline val taskListTaskNameCssClass      = "app-task-list__task-name"
 
+    inline val taskListStatusCssClass              = "govuk-task-list__status"
+    inline val taskListStatsCannotStartYetCssClass = "govuk-task-list__status--cannot-start-yet"
+
     inline val autocompleteWrapperCssClass = "autocomplete-wrapper"
 
     inline val tableHeaderCssClass = "govuk-table__header"
@@ -159,6 +187,10 @@ object Constants {
     inline val hmrcSummaryListActionsCssClass     = "hmrc-summary-list__actions"
     inline val hmrcSummaryListActionsListCssClass = "govuk-summary-list__actions-list"
     inline val summaryListActionsListItemCssClass = "govuk-summary-list__actions-list-item"
+    inline val summaryListNoBorderCssClass        = "govuk-summary-list--no-border"
+
+    inline val listWithActionsCssClass      = "hmrc-list-with-actions"
+    inline val listWithActionsShortCssClass = "hmrc-list-with-actions--short"
 
     inline val customSummaryListCssClass   = "custom-summary-list"
     inline val customPaddingHeaderCssClass = "custom-padding-header"

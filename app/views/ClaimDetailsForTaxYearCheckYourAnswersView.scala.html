@@ -30,7 +30,7 @@
 @layout(
    pageTitle = titleNoForm(messages(if(isAgent) "claimForTaxYearCheckYourAnswers.title.agent" else "claimForTaxYearCheckYourAnswers.title", index))) {
 
-   <span class="@Css.captionLLabelCssClass">@messages("claimForTaxYearCheckYourAnswers.caption")</span>
+   <span class="@Css.captionLCssClass">@messages("claimForTaxYearCheckYourAnswers.caption")</span>
    <h1 class="@Css.headingLCssClass">@messages(if(isAgent) "claimForTaxYearCheckYourAnswers.heading.agent" else"claimForTaxYearCheckYourAnswers.heading", index)</h1>
 
    @govukSummaryList(ClaimDetailsForTaxYearCheckYourAnswersHelper.buildSummaryList(answers, index))

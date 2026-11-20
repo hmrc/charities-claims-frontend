@@ -33,7 +33,7 @@
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
-    <span class="@Css.captionLLabelCssClass">@messages("doYouHaveAgentUKAddress.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("doYouHaveAgentUKAddress.caption")</span>
 
     @formHelper(action = routes.AgentHasUKAddressController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 

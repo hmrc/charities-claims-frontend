@@ -49,7 +49,7 @@
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
-    <span class="@Css.captionLLabelCssClass">@messages(captionMessage)</span>
+    <span class="@Css.captionLCssClass">@messages(captionMessage)</span>
 
     @formHelper(action = routes.ClaimingReferenceNumberController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 

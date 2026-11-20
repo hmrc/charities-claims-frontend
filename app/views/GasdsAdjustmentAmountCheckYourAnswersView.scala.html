@@ -30,7 +30,7 @@
 @layout(
    pageTitle = titleNoForm(messages(if(isAgent) "gasdsAdjustmentAmountCheckYourAnswers.title.agent" else "gasdsAdjustmentAmountCheckYourAnswers.title"))) {
 
-   <span class="@Css.captionLLabelCssClass">@messages("gasdsAdjustmentAmountCheckYourAnswers.caption")</span>
+   <span class="@Css.captionLCssClass">@messages("gasdsAdjustmentAmountCheckYourAnswers.caption")</span>
    <h1 class="@Css.headingLCssClass">@messages(if(isAgent) "gasdsAdjustmentAmountCheckYourAnswers.heading.agent" else "gasdsAdjustmentAmountCheckYourAnswers.heading")</h1>
 
    @govukSummaryList(GasdsAdjustmentAmountCheckYourAnswersHelper.buildSummaryList(answers))

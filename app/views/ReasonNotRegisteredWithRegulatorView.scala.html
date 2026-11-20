@@ -54,7 +54,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <span class="@Css.captionLLabelCssClass">@messages("reasonNotRegisteredWithRegulator.caption")</span>
+        <span class="@Css.captionLCssClass">@messages("reasonNotRegisteredWithRegulator.caption")</span>
 
         @formHelper(action = routes.ReasonNotRegisteredWithRegulatorController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 

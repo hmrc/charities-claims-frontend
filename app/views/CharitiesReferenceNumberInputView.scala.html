@@ -35,7 +35,7 @@ govukErrorSummary: GovukErrorSummary
        @govukErrorSummary(ErrorSummaryViewModel(form))
    }
 
-    <span class="@Css.captionLLabelCssClass">@messages("charitiesReferenceNumber.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("charitiesReferenceNumber.caption")</span>
 
    @formHelper(action = routes.CharitiesReferenceNumberInputController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 

@@ -34,7 +34,7 @@
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
 
-    <span class="@Css.captionLLabelCssClass">@messages(if(isAgent) "changePreviousGASDSClaim.caption.agent" else "changePreviousGASDSClaim.caption")</span>
+    <span class="@Css.captionLCssClass">@messages(if(isAgent) "changePreviousGASDSClaim.caption.agent" else "changePreviousGASDSClaim.caption")</span>
 
     @formHelper(action = routes.ChangePreviousGASDSClaimController.onSubmit(mode), Symbol("autoComplete") -> "off") {
         <h1 class="@Css.headingLCssClass">@messages("changePreviousGASDSClaim.heading")</h1>
