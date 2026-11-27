@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @import controllers.organisationDetails.routes
 
 @this(
@@ -33,7 +35,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        <span class="govuk-caption-l">@messages("whoShouldWeSendPaymentTo.caption")</span>
+        <span class="@Css.captionLCssClass">@messages("whoShouldWeSendPaymentTo.caption")</span>
 
         @formHelper(action = routes.WhoShouldWeSendPaymentToController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -54,7 +56,7 @@
                 ),
                 Fieldset(
                     legend = Some(Legend(content = Text(messages("whoShouldWeSendPaymentTo.heading")), isPageHeading = true,
-                    classes = "govuk-fieldset__legend--l" ))
+                    classes = Css.fieldsetLegendLCssClass))
                 )
             )
         )

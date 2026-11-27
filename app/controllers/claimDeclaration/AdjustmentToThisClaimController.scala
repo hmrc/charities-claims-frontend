@@ -17,6 +17,7 @@
 package controllers.claimDeclaration
 
 import com.google.inject.Inject
+import config.Constants
 import controllers.BaseController
 import controllers.actions.Actions
 import forms.AdjustmentToThisClaimFormProvider
@@ -48,7 +49,7 @@ class AdjustmentToThisClaimController @Inject() (
         // derive if there is previous overpayment, then text input is mandatory
         val form: Form[Option[String]] = formProvider(
           "adjustmentToThisClaim.error.required",
-          (350, "adjustmentToThisClaim.error.length"),
+          (Constants.maxAdjustmentToClaimLength, "adjustmentToThisClaim.error.length"),
           "adjustmentToThisClaim.error.regex",
           sessionData.adjustmentForOtherIncomePreviousOverClaimed
             .exists(_ > BigDecimal(0.0)) || sessionData.prevOverclaimedGiftAid.exists(_ > BigDecimal(0.0))
@@ -91,7 +92,7 @@ class AdjustmentToThisClaimController @Inject() (
       .async { implicit request =>
         val form: Form[Option[String]] = formProvider(
           "adjustmentToThisClaim.error.required",
-          (350, "adjustmentToThisClaim.error.length"),
+          (Constants.maxAdjustmentToClaimLength, "adjustmentToThisClaim.error.length"),
           "adjustmentToThisClaim.error.regex",
           sessionData.adjustmentForOtherIncomePreviousOverClaimed
             .exists(_ > BigDecimal(0.0)) || sessionData.prevOverclaimedGiftAid.exists(_ > BigDecimal(0.0))

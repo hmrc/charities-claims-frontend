@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.input.InputWrapper
 
 @this(govukTextarea: GovukTextarea,
@@ -74,7 +75,7 @@ govukHint: GovukHint)
 
 @characterCountMessage = {
     @govukHint(Hint(id=Some(nonEmptyId+"-info"),
-    classes = toClasses("govuk-character-count__message", if (countMessageClasses.isEmpty) "" else s" $countMessageClasses"),
+    classes = toClasses(Css.characterCountMessageCssClass, if (countMessageClasses.isEmpty) "" else s" $countMessageClasses"),
     content = customInput
     ))
 }
@@ -94,11 +95,11 @@ govukHint: GovukHint)
     hint = hint,
     errorMessage = errorMessage,
     formGroup = formGroup.copy(
-        classes = Some(toClasses("govuk-character-count", formGroup.classes.getOrElse(""))),
+        classes = Some(toClasses(Css.characterCountCssClass, formGroup.classes.getOrElse(""))),
         beforeInput = Some(HtmlContent(characterCountMessage)),
         attributes = dataAttributes ++ formGroup.attributes,
         afterInput = formGroup.afterInput
     ),
-    classes = toClasses("govuk-js-character-count", if (classes.isEmpty) "" else s" $classes"),
+    classes = toClasses(Css.jsCharacterCountCssClass, if (classes.isEmpty) "" else s" $classes"),
     attributes = attributes + ("autocomplete" -> "off")
     ))

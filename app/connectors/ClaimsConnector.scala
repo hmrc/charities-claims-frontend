@@ -165,8 +165,11 @@ class ClaimsConnectorImpl @Inject() (
 
   final def hasUnsubmittedClaim(charitiesReference: String)(using hc: HeaderCarrier): Future[Boolean] =
     val url: String = s"$claimsApiUrl/charities/$charitiesReference/unsubmitted"
+
     logger.info(s"GET $url requestId=${hc.requestId.map(_.value).getOrElse("-")}")
-    retryFor(s"hasUnsubmittedClaim") { case _ => true } {
+  
+    retryFor("hasUnsubmittedClaim") { case _ => true } {
+
       http
         .get(URL(url))
         .execute[HttpResponse]

@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.claimDeclaration.routes
 @import models.*
 @import views.html.components.*
@@ -34,21 +35,21 @@
     timeOutMode = TimeoutMode.Normal
 ) {
 
-    <div class="govuk-panel govuk-panel--confirmation">
-        <h1 class="govuk-panel__title">
+    <div class="@Css.panelCssClass @Css.panelConfirmationCssClass">
+        <h1 class="@Css.panelTitleCssClass">
             @messages("claimComplete.title")
         </h1>
-        <div class="govuk-panel__body">
+        <div class="@Css.panelBodyCssClass">
             @messages("claimComplete.message.2")
             <br>
-            <strong class="claim-reference-number">@messages("claimComplete.claimRefNumber",claimRefNumber)</strong>
+            <strong class="@Css.claimReferenceNumberCssClass">@messages("claimComplete.claimRefNumber",claimRefNumber)</strong>
 
         </div>
     </div>
-    <h2 class="govuk-heading-m">@messages("claimComplete.subheading")</h2>
+    <h2 class="@Css.headingMCssClass">@messages("claimComplete.subheading")</h2>
 
-    <p class="govuk-body">@messages(if(isAgent) "claimComplete.para.1.agent" else "claimComplete.para.1")</p>
-    <p class="govuk-body">@messages(if(isAgent) "claimComplete.para.2.agent" else "claimComplete.para.2")</p>
-    <p class="govuk-body">@Html(messages(if(isAgent) "claimComplete.printSummaryLink.agent" else "claimComplete.printSummaryLink", nextPage))</p>
+    <p class="@Css.bodyCssClass">@messages(if(isAgent) "claimComplete.para.1.agent" else "claimComplete.para.1")</p>
+    <p class="@Css.bodyCssClass">@messages(if(isAgent) "claimComplete.para.2.agent" else "claimComplete.para.2")</p>
+    <p class="@Css.bodyCssClass">@Html(messages(if(isAgent) "claimComplete.printSummaryLink.agent" else "claimComplete.printSummaryLink", nextPage))</p>
 
 }

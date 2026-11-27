@@ -16,19 +16,19 @@
 
 package forms
 
+import config.Constants
 import forms.Mappings
 
 object UKPostcodeMapping extends Mappings {
 
-  val addressPostcodeMaxLength = 8
-  val addressPostcodeRegex     =
+  val addressPostcodeRegex =
     "^\\s*((GIR 0AA)|((([a-zA-Z][0-9][0-9]?)|(([a-zA-Z][a-hj-yA-HJ-Y][0-9][0-9]?)|(([a-zA-Z][0-9][a-zA-Z])|([a-zA-Z][a-hj-yA-HJ-Y][0-9]?[a-zA-Z]))))\\s?[0-9][a-zA-Z]{2})\\s*)$"
 
   def apply(addressPostcodeRequired: String, addressPostcodeLength: String, addressPostcodeInvalid: String) =
     text(addressPostcodeRequired)
       .verifying(
         firstError(
-          maxLength(addressPostcodeMaxLength, addressPostcodeLength),
+          maxLength(Constants.maxPostcodeLength, addressPostcodeLength),
           regexp(addressPostcodeRegex, addressPostcodeInvalid)
         )
       )

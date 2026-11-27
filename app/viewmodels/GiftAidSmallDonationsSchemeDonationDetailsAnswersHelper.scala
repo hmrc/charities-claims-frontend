@@ -16,6 +16,7 @@
 
 package viewmodels
 
+import config.Constants.Css
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{ActionItem, Actions, Key, SummaryListRow, Value}
@@ -117,8 +118,8 @@ object GiftAidSmallDonationsSchemeDonationDetailsAnswersHelper {
       key = Key(content = Text(label)),
       value = Value(
         content = HtmlContent(
-          s"""<a class="govuk-link" href="$href">
-             |${messages("site.enter")} <span class="govuk-visually-hidden">$hiddenText</span>
+          s"""<a class="${Css.linkCssClass}" href="$href">
+             |${messages("site.enter")} <span class="${Css.visuallyHiddenCssClass}">$hiddenText</span>
              |</a>""".stripMargin
         )
       ),

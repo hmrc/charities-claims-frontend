@@ -22,7 +22,7 @@ import java.time.Instant
 
 object ISODateTime {
 
-  val formatter = DateTimeFormatter
+  private val formatter = DateTimeFormatter
     .ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     .withZone(ZoneOffset.UTC)
 

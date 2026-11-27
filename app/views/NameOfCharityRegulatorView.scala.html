@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.organisationDetails.routes
 
 @this(
@@ -32,7 +33,7 @@
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form))
     }
-    <span class="govuk-caption-l">@messages("nameOfCharityRegulator.caption")</span>
+    <span class="@Css.captionLCssClass">@messages("nameOfCharityRegulator.caption")</span>
 
     @formHelper(action = routes.NameOfCharityRegulatorController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -64,7 +65,7 @@
                 ),
                 Fieldset(
                     legend = Some(Legend(content = Text(messages("nameOfCharityRegulator.heading")), isPageHeading = true,
-                    classes = "govuk-fieldset__legend--l"
+                    classes = Css.fieldsetLegendLCssClass
                     ))
                 )
             )

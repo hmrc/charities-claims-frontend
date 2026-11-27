@@ -24,9 +24,9 @@ import play.api.i18n.Messages
 
 object FormatUtils {
 
-  lazy val gdsFormatter: DateTimeFormatter           = DateTimeFormatter.ofPattern("d MMMM yyyy")
-  lazy val gdsShortMonthFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM yyyy")
-  lazy val ddMmYyyyFormatter: DateTimeFormatter      = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+  lazy val gdsFormatter: DateTimeFormatter              = DateTimeFormatter.ofPattern("d MMMM yyyy")
+  lazy val gdsShortMonthFormatter: DateTimeFormatter    = DateTimeFormatter.ofPattern("d MMM yyyy")
+  private lazy val ddMmYyyyFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
   private def formatDateToGds(localDate: LocalDate)(using messages: Messages): String = {
     val month = messages(s"month.${localDate.getMonthValue}.long")

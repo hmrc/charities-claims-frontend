@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import views.ViewUtils.titleNoForm
 
 @this(
@@ -30,28 +31,28 @@
 @layout(
     pageTitle = titleNoForm(messages("repaymentClaimDetailsIncompleteAnswers.title"))) {
 
-    <h1 class="govuk-heading-l">@messages("repaymentClaimDetailsIncompleteAnswers.heading")</h1>
+    <h1 class="@Css.headingLCssClass">@messages("repaymentClaimDetailsIncompleteAnswers.heading")</h1>
 
-    <div class="govuk-warning-text">
-        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-        <strong class="govuk-warning-text__text">
-            <span class="govuk-visually-hidden">@messages("warning.text")</span>
+    <div class="@Css.warningTextCssClass">
+        <span class="@Css.warningTextIconCssClass" aria-hidden="true">!</span>
+        <strong class="@Css.warningTextTextCssClass">
+            <span class="@Css.visuallyHiddenCssClass">@messages("warning.text")</span>
             @messages("repaymentClaimDetailsIncompleteAnswers.warning")
         </strong>
     </div>
 
-    <p class="govuk-body">@messages("repaymentClaimDetailsIncompleteAnswers.message")</p>
+    <p class="@Css.bodyCssClass">@messages("repaymentClaimDetailsIncompleteAnswers.message")</p>
 
     @if(missingFields.nonEmpty) {
-        <ul class="govuk-list govuk-list--bullet">
+        <ul class="@Css.bulletListCssClass">
             @for(field <- missingFields) {
                 <li>@messages(field)</li>
             }
         </ul>
     }
 
-    <p class="govuk-body">
-        <a class="govuk-link" href="@repaymentClaimDetailsCheckYourAnswersUrl">
+    <p class="@Css.bodyCssClass">
+        <a class="@Css.linkCssClass" href="@repaymentClaimDetailsCheckYourAnswersUrl">
             @messages(returnLinkMessage)
         </a>
     </p>

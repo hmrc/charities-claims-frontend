@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import models.*
 @import uk.gov.hmrc.govukfrontend.views.html.components.*
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.table.*
@@ -26,7 +27,7 @@
 
 @govukTable(
     Table(
-        classes = "community-buildings-table",
+        classes = Css.communityBuildingsTableCssClass,
         head = Some(
             (1 to 8).map { index =>
                 HeadCell(content = Text(messages("checkYourCommunityBuildingsSchedule.table.column." + index)), classes = "")
@@ -34,7 +35,7 @@
         ),
         rows = communityBuildings.map { building =>
             Seq(
-                TableRow(content = Text(building.communityBuildingItem.map(_.toString).orNotApplicable), classes = "govuk-table__header"),
+                TableRow(content = Text(building.communityBuildingItem.map(_.toString).orNotApplicable), classes = Css.tableHeaderCssClass),
                 TableRow(content = Text(building.buildingName.orNotApplicable)),
                 TableRow(content = Text(building.firstLineOfAddress.orNotApplicable)),
                 TableRow(content = Text(building.postcode.orNotApplicable)),

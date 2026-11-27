@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.connectedCharitiesSchedule.routes
 
 @this(
@@ -28,12 +29,12 @@
     pageTitle    = titleNoForm(messages("aboutConnectedCharitiesSchedule.title"))
 ) {
 
-    <span class="govuk-caption-l">@messages("aboutConnectedCharitiesSchedule.caption")</span>
-    <h1 class="govuk-heading-l">@messages("aboutConnectedCharitiesSchedule.heading")</h1>
+    <span class="@Css.captionLCssClass">@messages("aboutConnectedCharitiesSchedule.caption")</span>
+    <h1 class="@Css.headingLCssClass">@messages("aboutConnectedCharitiesSchedule.heading")</h1>
 
-    <p class="govuk-body">@messages(if(isAgent) "aboutConnectedCharitiesSchedule.paragraph.one.agent" else "aboutConnectedCharitiesSchedule.paragraph.one")</p>
-    <p class="govuk-body">@messages("aboutConnectedCharitiesSchedule.paragraph.two")</p>
-    <p class="govuk-body">@Html(messages("aboutConnectedCharitiesSchedule.paragraph.url", connectedCharitiesScheduleSpreadsheetGuidanceUrl))</p>
+    <p class="@Css.bodyCssClass">@messages(if(isAgent) "aboutConnectedCharitiesSchedule.paragraph.one.agent" else "aboutConnectedCharitiesSchedule.paragraph.one")</p>
+    <p class="@Css.bodyCssClass">@messages("aboutConnectedCharitiesSchedule.paragraph.two")</p>
+    <p class="@Css.bodyCssClass">@Html(messages("aboutConnectedCharitiesSchedule.paragraph.url", connectedCharitiesScheduleSpreadsheetGuidanceUrl))</p>
 
     @formHelper(action = routes.AboutConnectedCharitiesScheduleController.onSubmit) {
 

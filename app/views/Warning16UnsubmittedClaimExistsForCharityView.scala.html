@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
+
 @this(
     layout: templates.Layout
 )
@@ -25,17 +27,17 @@
     showBackLink = false
 ) {
 
-    <h1 class="govuk-heading-l">
+    <h1 class="@Css.headingLCssClass">
         @messages("warning16UnsubmittedClaimExistsForCharity.heading")
     </h1>
 
    @if(nameOfCharity.isDefined && hmrcCharitiesReference.isDefined) {
-      <p class="govuk-body">@messages("warning16UnsubmittedClaimExistsForCharity.paragraph.1", nameOfCharity.get, hmrcCharitiesReference.get)</p>
+      <p class="@Css.bodyCssClass">@messages("warning16UnsubmittedClaimExistsForCharity.paragraph.1", nameOfCharity.get, hmrcCharitiesReference.get)</p>
    }
 
-    <p class="govuk-body">@messages("warning16UnsubmittedClaimExistsForCharity.paragraph.2")</p>
+    <p class="@Css.bodyCssClass">@messages("warning16UnsubmittedClaimExistsForCharity.paragraph.2")</p>
 
-    <p class="govuk-body">
-        <a class="govuk-link" href="@dashboardUrl">@messages("warning16UnsubmittedClaimExistsForCharity.link")</a>
+    <p class="@Css.bodyCssClass">
+        <a class="@Css.linkCssClass" href="@dashboardUrl">@messages("warning16UnsubmittedClaimExistsForCharity.link")</a>
     </p>
 }

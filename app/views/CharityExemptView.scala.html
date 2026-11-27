@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import controllers.organisationDetails.routes
 @import models.Mode
 
@@ -44,12 +45,12 @@ govukButton: GovukButton
     pageTitle = titleNoForm(messages(titleMessage))
 ) {
 
-<span class="govuk-caption-l">@messages("aboutTheOrganisation.caption")</span>
-<h1 class="govuk-heading-l">@messages(headingMessage)</h1>
+<span class="@Css.captionLCssClass">@messages("aboutTheOrganisation.caption")</span>
+<h1 class="@Css.headingLCssClass">@messages(headingMessage)</h1>
 
-<p class="govuk-body">@messages(p1Message)</p>
+<p class="@Css.bodyCssClass">@messages(p1Message)</p>
 
-<ul class="govuk-list govuk-list--bullet">
+<ul class="@Css.bulletListCssClass">
     <li>@messages("charityExempt.bullet.1")</li>
     <li>@messages("charityExempt.bullet.2")</li>
     <li>@messages("charityExempt.bullet.3")</li>

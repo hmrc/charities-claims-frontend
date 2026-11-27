@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import views.ViewUtils.titleNoForm
 
 @this(
@@ -25,28 +26,28 @@
 @layout(
     pageTitle = titleNoForm(messages("giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.title"))) {
 
-    <h1 class="govuk-heading-l">@messages("giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.heading")</h1>
+    <h1 class="@Css.headingLCssClass">@messages("giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.heading")</h1>
 
-    <div class="govuk-warning-text">
-        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-        <strong class="govuk-warning-text__text">
-            <span class="govuk-visually-hidden">@messages("warning.text")</span>
+    <div class="@Css.warningTextCssClass">
+        <span class="@Css.warningTextIconCssClass" aria-hidden="true">!</span>
+        <strong class="@Css.warningTextTextCssClass">
+            <span class="@Css.visuallyHiddenCssClass">@messages("warning.text")</span>
             @messages("giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.warning")
         </strong>
     </div>
 
-    <p class="govuk-body">@messages("giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.message")</p>
+    <p class="@Css.bodyCssClass">@messages("giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.message")</p>
 
     @if(missingFields.nonEmpty) {
-        <ul class="govuk-list govuk-list--bullet">
+        <ul class="@Css.bulletListCssClass">
             @for(field <- missingFields) {
                 <li>@messages(field)</li>
             }
         </ul>
     }
 
-    <p class="govuk-body">
-        <a class="govuk-link" href="@checkYourGasdsDonationDetailsUrl">
+    <p class="@Css.bodyCssClass">
+        <a class="@Css.linkCssClass" href="@checkYourGasdsDonationDetailsUrl">
             @messages(
                 if (isAgent)
                     "giftAidSmallDonationsSchemeDonationDetailsIncompleteAnswers.returnLink.agent"

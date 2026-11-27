@@ -16,6 +16,7 @@
 
 package viewmodels
 
+import config.Constants.Css
 import models.GiftAidSmallDonationsSchemeDonationDetailsAnswers
 import models.Mode.CheckMode
 import play.api.i18n.Messages
@@ -101,8 +102,8 @@ object GasdsAdjustmentAmountCheckYourAnswersHelper {
       key = Key(content = Text(label)),
       value = Value(
         content = HtmlContent(
-          s"""<a class="govuk-link" href="$href">
-             |${messages("site.enter")} <span class="govuk-visually-hidden">$hiddenText</span>
+          s"""<a class="${Css.linkCssClass}" href="$href">
+             |${messages("site.enter")} <span class="${Css.visuallyHiddenCssClass}">$hiddenText</span>
              |</a>""".stripMargin
         )
       ),

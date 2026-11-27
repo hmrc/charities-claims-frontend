@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import models.*
 @import uk.gov.hmrc.govukfrontend.views.html.components.*
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.table.*
@@ -37,7 +38,7 @@
         ),
         rows = donations.map { donation =>
             Seq(
-                TableRow(content = Text(donation.donationItem.map(_.toString).orNotApplicable), classes = "govuk-table__header"),
+                TableRow(content = Text(donation.donationItem.map(_.toString).orNotApplicable), classes = "@Css.tableHeaderCssClass"),
                 TableRow(content = Text(donation.donorTitle.orNotApplicable)),
                 TableRow(content = Text(donation.donorFirstName.orNotApplicable)),
                 TableRow(content = Text(donation.donorLastName.orNotApplicable)),

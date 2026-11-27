@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.Constants.Css
 @import models.*
 @import uk.gov.hmrc.govukfrontend.views.html.components.*
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.table.*
@@ -26,7 +27,7 @@
 
 @govukTable(
     Table(
-        classes = "connected-charities-table",
+        classes = Css.connectedCharitiesTableCssClass,
         head = Some(
             (1 to 3).map { index =>
                 HeadCell(content = Text(messages("checkYourConnectedCharitiesSchedule.table.column." + index)), classes = "")
@@ -34,7 +35,7 @@
         ),
         rows = connectedCharities.map { charity =>
             Seq(
-                TableRow(content = Text(charity.charityItem.map(_.toString).orNotApplicable), classes = "govuk-table__header"),
+                TableRow(content = Text(charity.charityItem.map(_.toString).orNotApplicable), classes = Css.tableHeaderCssClass),
                 TableRow(content = Text(charity.charityName.orNotApplicable)),
                 TableRow(content = Text(charity.charityReference.orNotApplicable))
             )

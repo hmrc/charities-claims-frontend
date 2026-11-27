@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import config.Constants
+@import config.Constants.Css
 @import controllers.claimDeclaration.routes
 
 @this(
@@ -40,8 +42,8 @@
     @govukTextareaCharacterCount(
         CharacterCountViewModel(
             field = form("value"),
-            label = Label(content = Text(messages("adjustmentToThisClaim.heading")),isPageHeading = true,classes = "govuk-fieldset__legend--l"),
-            maxLength = 350
+            label = Label(content = Text(messages("adjustmentToThisClaim.heading")),isPageHeading = true,classes = Css.fieldsetLegendLCssClass),
+            maxLength = Constants.maxAdjustmentToClaimLength
         ).withHint(
             HintViewModel(Text(messages(if(isAgent) "adjustmentToThisClaim.para.agent" else "adjustmentToThisClaim.para")))
         )
